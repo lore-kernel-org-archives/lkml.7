@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A453EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6927221D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7889220865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118888;
-	bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
+	s=default; t=1570118891;
+	bh=LRLzXY4lxIaXVuS1zaxS724Wx5viHfmn/b7LnGfNGhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VyPJZQ5nGv4EncfSev1kKvENCN3c729Ods0/Q7c3QrVET3MXyjQJRf50yykBk7KZm
-	 bdoaDSE1hB/eVBLN9Gixv+LTE7ESK191v8ac1MHHJr43klqeYOgBwVEON6gt5Q7ekZ
-	 hYGlZz0LkwZyd6bhV9yHkdQbcW+2GnXP+R+1pn9c=
+	b=cgh2iUIfMwyUcDUUmMC+ypvzA1J0MhrtNhAEktIfGvsLXe4sntpq80uVDoCSbonqJ
+	 4SOK5ZpKI4pjyJp1e80qaCJ8+hUV51imsaeIQRqdO8Dyk7Bo5ssp+jg/8v+h+GSniG
+	 cwJqqV9CagLTe1vPELxyWYqYbW8UJUY7MDHSsSJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732293AbfJCQIH (ORCPT
+        id S1732353AbfJCQIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733023AbfJCQHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:54 -0400
+        id S1733084AbfJCQIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B12215EA;
-        Thu,  3 Oct 2019 16:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E65BF20865;
+        Thu,  3 Oct 2019 16:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118874;
-        bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
+        s=default; t=1570118879;
+        bh=LRLzXY4lxIaXVuS1zaxS724Wx5viHfmn/b7LnGfNGhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZ7l1xtb029s3uOchxUA53F9IGdl6og0GwZCmacCHf7R9XvZ3kKUnxZMUbBBNcVvV
-         iIl9+MUg8Ytp5EJLfOlLJSoaiVCxDgeGw638QjG1t0DS+oNZyNGIjPRrwB1kJuSoIi
-         8IiwYjr5ULToWNH0X/xZrAbr707PP2aRbZv/asPs=
+        b=AL2koYopvm86VQyyxRuy9wd59HAdGGJAl2Y5mrU5IgRIFpNCNBThxxBwqYOQh9DYA
+         fhVvSOXDWWzE4wcx06k2LFj5fD+9HT2dxQHo2+8/fgKDb0YvqkRagOm1nusr+UTQ+M
+         cTkkJgRVdsq3OD0POpoeyu5YrWS0XV1VROl8n5gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
         Jiri Kosina <jkosina@suse.cz>,
-        syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 005/185] HID: prodikeys: Fix general protection fault during probe
-Date:   Thu,  3 Oct 2019 17:51:23 +0200
-Message-Id: <20191003154438.538516442@linuxfoundation.org>
+        syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 007/185] HID: logitech: Fix general protection fault caused by Logitech driver
+Date:   Thu,  3 Oct 2019 17:51:25 +0200
+Message-Id: <20191003154438.920158329@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,74 +62,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 98375b86c79137416e9fd354177b85e768c16e56 upstream.
+commit 5f9242775bb61f390f0885f23fc16397262c7538 upstream.
 
-The syzbot fuzzer provoked a general protection fault in the
-hid-prodikeys driver:
+The syzbot fuzzer found a general protection fault in the HID subsystem:
 
 kasan: CONFIG_KASAN_INLINE enabled
 kasan: GPF could be caused by NULL-ptr deref or user memory access
 general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
+CPU: 0 PID: 3715 Comm: syz-executor.3 Not tainted 5.2.0-rc6+ #15
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
-RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
-RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
-RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
-Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc
-48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
-85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
+RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
+Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48
+89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
+RSP: 0018:ffff8881d99d78e0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffc90003f3f000
+RDX: 0000000416d8686d RSI: ffffffff82676841 RDI: 00000020b6c3436a
+RBP: 00000020b6c340a9 R08: ffff8881c6d64800 R09: fffffbfff0e84c25
+R10: ffff8881d99d7940 R11: ffffffff87426127 R12: 0000000000000004
+R13: 0000000000000000 R14: ffff8881d9b94000 R15: ffffffff897f9048
+FS:  00007f047f542700(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30f21000 CR3: 00000001ca032000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
+  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
+  hid_hw_power include/linux/hid.h:1038 [inline]
+  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
+  chrdev_open+0x219/0x5c0 fs/char_dev.c:413
+  do_dentry_open+0x497/0x1040 fs/open.c:778
+  do_last fs/namei.c:3416 [inline]
+  path_openat+0x1430/0x3ff0 fs/namei.c:3533
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_sys_open+0x3c0/0x580 fs/open.c:1070
+  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The problem is caused by the fact that pcmidi_get_output_report() will
-return an error if the HID device doesn't provide the right sort of
-output report, but pcmidi_set_operational() doesn't bother to check
-the return code and assumes the function call always succeeds.
+It turns out the fault was caused by a bug in the HID Logitech driver,
+which violates the requirement that every pathway calling
+hid_hw_start() must also call hid_hw_stop().  This patch fixes the bug
+by making sure the requirement is met.
 
-This patch adds the missing check and aborts the probe operation if
-necessary.
-
-Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
 CC: <stable@vger.kernel.org>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-prodikeys.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/hid/hid-lg.c    |   10 ++++++----
+ drivers/hid/hid-lg4ff.c |    1 -
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/hid/hid-prodikeys.c
-+++ b/drivers/hid/hid-prodikeys.c
-@@ -556,10 +556,14 @@ static void pcmidi_setup_extra_keys(
+--- a/drivers/hid/hid-lg.c
++++ b/drivers/hid/hid-lg.c
+@@ -761,7 +761,7 @@ static int lg_probe(struct hid_device *h
  
- static int pcmidi_set_operational(struct pcmidi_snd *pm)
- {
-+	int rc;
-+
- 	if (pm->ifnum != 1)
- 		return 0; /* only set up ONCE for interace 1 */
+ 		if (!buf) {
+ 			ret = -ENOMEM;
+-			goto err_free;
++			goto err_stop;
+ 		}
  
--	pcmidi_get_output_report(pm);
-+	rc = pcmidi_get_output_report(pm);
-+	if (rc < 0)
-+		return rc;
- 	pcmidi_submit_output_report(pm, 0xc1);
+ 		ret = hid_hw_raw_request(hdev, buf[0], buf, sizeof(cbuf),
+@@ -793,9 +793,12 @@ static int lg_probe(struct hid_device *h
+ 		ret = lg4ff_init(hdev);
+ 
+ 	if (ret)
+-		goto err_free;
++		goto err_stop;
+ 
  	return 0;
++
++err_stop:
++	hid_hw_stop(hdev);
+ err_free:
+ 	kfree(drv_data);
+ 	return ret;
+@@ -806,8 +809,7 @@ static void lg_remove(struct hid_device
+ 	struct lg_drv_data *drv_data = hid_get_drvdata(hdev);
+ 	if (drv_data->quirks & LG_FF4)
+ 		lg4ff_deinit(hdev);
+-	else
+-		hid_hw_stop(hdev);
++	hid_hw_stop(hdev);
+ 	kfree(drv_data);
  }
-@@ -688,7 +692,11 @@ static int pcmidi_snd_initialise(struct
- 	spin_lock_init(&pm->rawmidi_in_lock);
  
- 	init_sustain_timers(pm);
--	pcmidi_set_operational(pm);
-+	err = pcmidi_set_operational(pm);
-+	if (err < 0) {
-+		pk_error("failed to find output report\n");
-+		goto fail_register;
-+	}
+--- a/drivers/hid/hid-lg4ff.c
++++ b/drivers/hid/hid-lg4ff.c
+@@ -1485,7 +1485,6 @@ int lg4ff_deinit(struct hid_device *hid)
+ 		}
+ 	}
+ #endif
+-	hid_hw_stop(hid);
+ 	drv_data->device_props = NULL;
  
- 	/* register it */
- 	err = snd_card_register(card);
+ 	kfree(entry);
 
 
