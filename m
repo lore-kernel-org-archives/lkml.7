@@ -6,69 +6,111 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28C0C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2E9C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726352086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1CE2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733253AbfJCVeD (ORCPT
+        id S1733303AbfJCVey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:34:03 -0400
-Received: from edison.jonmasters.org ([173.255.233.168]:45010 "EHLO
-        edison.jonmasters.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731694AbfJCVeD (ORCPT
+        Thu, 3 Oct 2019 17:34:54 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:57781 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731371AbfJCVey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:34:03 -0400
-X-Greylist: delayed 1394 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Oct 2019 17:34:03 EDT
-Received: from boston.jonmasters.org ([50.195.43.97] helo=tonnant.bos.jonmasters.org)
-        by edison.jonmasters.org with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.71)
-        (envelope-from <jcm@jonmasters.org>)
-        id 1iG8N4-0002a7-GX; Thu, 03 Oct 2019 21:10:46 +0000
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jan Kara <jack@suse.cz>, zhangjs <zachary@baishancloud.com>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190910042107.GA1517@darwi-home-pc>
-From:   Jon Masters <jcm@jonmasters.org>
-Message-ID: <60fc1d03-314a-6b0a-2c8f-100394b05969@jonmasters.org>
-Date:   Thu, 3 Oct 2019 17:10:45 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 3 Oct 2019 17:34:54 -0400
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id AB04B100005;
+        Thu,  3 Oct 2019 21:34:52 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 23:34:52 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162) RTC
+ devices
+Message-ID: <20191003213452.GT4106@piout.net>
+References: <20190911154803.15969-1-lukma@denx.de>
+ <20191003114831.GR4106@piout.net>
+ <20191003142150.3d73a9d7@jawa>
+ <20191003123538.GS4106@piout.net>
+ <20191003151434.49762715@jawa>
+ <20191003134329.GB575@piout.net>
+ <20191003161054.1eeae401@jawa>
+ <20191003142341.GD575@piout.net>
+ <20191003164906.2f4a1676@jawa>
 MIME-Version: 1.0
-In-Reply-To: <20190910042107.GA1517@darwi-home-pc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 50.195.43.97
-X-SA-Exim-Mail-From: jcm@jonmasters.org
-Subject: Re: Linux 5.3-rc8
-X-SA-Exim-Version: 4.2.1 (built Sun, 08 Nov 2009 07:31:22 +0000)
-X-SA-Exim-Scanned: Yes (on edison.jonmasters.org)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003164906.2f4a1676@jawa>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 12:21 AM, Ahmed S. Darwish wrote:
+On 03/10/2019 16:49:06+0200, Lukasz Majewski wrote:
+> Hi Alexandre,
+> I'm rather thinking about following use cases:
+> 
+> I. Adjusting time:
+> 
+> 1. I start with time < 01.01.2099
+> 
+> 2. I issue ioctl to set the time to e.g. 2100
+> 
+> 	- When driver receives such request I setup century bits
+> 
+> 	- and also perform in kernel driver time correction (and store
+> 	  corrected time in RTC)
+> 
+> 3. Subsequent reads from rtc use century bits to provide the time
+> (after year 2100). Century bits are set, so the correction may be
+> performed if needed.
+> 
+> 
+> II. The system is started at year 2098 and is supposed to run for e.g. 3
+> years:
+> 
+> 1. The time is read from the rtc - the "passing" of centuries need to
+> be detected.
+> 
+> From the documentation [1] (point 4.5):
+> 
+> "The two century bits, CB1 and CB0, are bits 7 and 6, respectively, in
+> the Month / Century register at address 06h. Together, they comprise a
+> 2 - bit counter which increments at the turn of each century. CB1 is
+> the most significant bit."
+> 
+> If those bits increment when we pass century boundaries, we can detect
+> this fact and correct time when ioctl is issued.
+> 
 
-> Can this even be considered a user-space breakage? I'm honestly not
-> sure. On my modern RDRAND-capable x86, just running rng-tools rngd(8)
-> early-on fixes the problem. I'm not sure about the status of older
-> CPUs though.
+No, you can't because you simply don't know if you still need to
+correct the time or if you already did it the last time the system was
+started.
 
-Tangent: I asked aloud on Twitter last night if anyone had exploited
-Rowhammer-like effects to generate entropy...and sure enough, the usual
-suspects have: https://arxiv.org/pdf/1808.04286.pdf
+Example:
 
-While this requires low level access to a memory controller, it's
-perhaps an example of something a platform designer could look at as a
-source to introduce boot-time entropy for e.g. EFI_RNG_PROTOCOL even on
-an existing platform without dedicated hardware for the purpose.
+Date is set to 2100-02-28, some time pass, the rtc now thinks it is
+2100-02-29. You correct it to 2100-03-01, fine.
+Now, date is set to 2100-02-28, the system is shutdown, some time pass,
+it starts on 2100-03-02, the rtc thinks 2100-03-01 you can't correct it
+because you can't know whether a day has been missed.
 
-Just a thought.
 
-Jon.
+> > The only useful range for an RTC is its fully contiguous range. 
+> 
+> Does the automatic increment of century bits count to "contiguous
+> range" ?
+> 
+
+No, because of the leap day issue.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
