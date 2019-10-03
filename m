@@ -2,60 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7849EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46846C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A108222D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E72520865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118830;
-	bh=NN1pVruRmKwEYEzP7tC27w3B8RxR6A5WUC+VH95oF3U=;
+	s=default; t=1570118835;
+	bh=BdKXf97jE2/UC69PLNlnqNXE5Myg2bfbhBoXkFScitU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4t1DMQkkdyjvR57RErYbtPTba4FuhrVhchNuH49C/9emIW7fxMt37F89BEbOXlSB
-	 AWSQVrs96W97/hQ76ai/LZg55rnujn6vVyAgPkiyRU2MPUeN6suJNHRZtWu+Phcwwc
-	 zO6rlyQIeMSI8VUHWDzph2wpwGJUVVJapvpoWbBU=
+	b=CE/+76uPkL3+GPVOQFmKCWOSepnXfJthGQ27MteWt8QYuutqN07lulhOnV+n1VNZu
+	 tpbpzkaL7/b0ikzSnzlMwAH4MTx9ZWwEzw+03A922u1hYmoNFtbzFHZyPWSEwOnZqH
+	 SnDakDs0lW20iOHPNaBo5ZfSWMt7ikZyGiTO8SRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbfJCQHI (ORCPT
+        id S1732908AbfJCQHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54498 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732858AbfJCQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:06:58 -0400
+        id S1732879AbfJCQHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01DAC222BE;
-        Thu,  3 Oct 2019 16:06:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B4D215EA;
+        Thu,  3 Oct 2019 16:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118817;
-        bh=NN1pVruRmKwEYEzP7tC27w3B8RxR6A5WUC+VH95oF3U=;
+        s=default; t=1570118825;
+        bh=BdKXf97jE2/UC69PLNlnqNXE5Myg2bfbhBoXkFScitU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SW5ZTXLtjO5LE2G38532uHkHNZaQwnIaFbWYoSb+iE39UGDpdLOdQV0Zu7dGBkrQN
-         SV2z1oAzyzYFz8MtukKb19VIJ8SAU/+DRMAaMn58fgHi5MC4lf5ZozaUOawrneMsBY
-         eg+AZwjYFDEwAw/nbWL4GlZIvTSP8Nbk+rziv4wo=
+        b=GnMC2Mrhp7/tyh8tjQ5B9lwjVHAbdyeSRgXSY1kNWm/4FvUQH8VaxEHVdjhywGqPg
+         esMDoGm1iIevfrE8RrxQe1rsOpcC9dxbfFgCDwiqG9GlGajkaZZz16hG2Ps1pd7Bt8
+         vzaaUJkUN7LWPi9k1cdHDdv7kOsOmxVEIuGuTRtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/185] locking/lockdep: Add debug_locks check in __lock_downgrade()
-Date:   Thu,  3 Oct 2019 17:51:38 +0200
-Message-Id: <20191003154442.180689450@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 023/185] PCI: hv: Avoid use of hv_pci_dev->pci_slot after freeing it
+Date:   Thu,  3 Oct 2019 17:51:41 +0200
+Message-Id: <20191003154442.941063740@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -68,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 71492580571467fb7177aade19c18ce7486267f5 ]
+[ Upstream commit 533ca1feed98b0bf024779a14760694c7cb4d431 ]
 
-Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-warning right after a previous lockdep warning. It is likely that the
-previous warning turned off lock debugging causing the lockdep to have
-inconsistency states leading to the lock downgrade warning.
+The slot must be removed before the pci_dev is removed, otherwise a panic
+can happen due to use-after-free.
 
-Fix that by add a check for debug_locks at the beginning of
-__lock_downgrade().
-
-Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 15becc2b56c6 ("PCI: hv: Add hv_pci_remove_slots() when we unload the driver")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/locking/lockdep.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/host/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3688,6 +3688,9 @@ static int __lock_downgrade(struct lockd
- 	unsigned int depth;
- 	int i;
- 
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
+diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
+index 5a9d945122327..70825689e5a08 100644
+--- a/drivers/pci/host/pci-hyperv.c
++++ b/drivers/pci/host/pci-hyperv.c
+@@ -2740,8 +2740,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 		/* Remove the bus from PCI's point of view. */
+ 		pci_lock_rescan_remove();
+ 		pci_stop_root_bus(hbus->pci_bus);
+-		pci_remove_root_bus(hbus->pci_bus);
+ 		hv_pci_remove_slots(hbus);
++		pci_remove_root_bus(hbus->pci_bus);
+ 		pci_unlock_rescan_remove();
+ 		hbus->state = hv_pcibus_removed;
+ 	}
+-- 
+2.20.1
+
 
 
