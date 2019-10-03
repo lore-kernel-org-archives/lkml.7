@@ -2,62 +2,118 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E73EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3F6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C905215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758DC20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbfJCWFa (ORCPT
+        id S2388277AbfJCWGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:05:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:41466 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfJCWFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:05:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 15:05:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="191396927"
-Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 15:05:23 -0700
-Date:   Fri, 4 Oct 2019 01:05:22 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     ivan.lazeev@gmail.com
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <20191003220522.GC30511@linux.intel.com>
-References: <20191002201212.32395-1-ivan.lazeev@gmail.com>
- <20191003120302.GB10038@linux.intel.com>
+        Thu, 3 Oct 2019 18:06:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46876 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbfJCWGL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:06:11 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iG9Ef-0005Eg-F1; Thu, 03 Oct 2019 23:06:09 +0100
+Received: from ben by deadeye with local (Exim 4.92.1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iG9Ef-0006YM-7d; Thu, 03 Oct 2019 23:06:09 +0100
+Message-ID: <8b056b3df2460d6830a0de97b9cbf3e41d434bbc.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 29/87] staging: iio: cdc: Don't put an else right
+ after a return
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Catalina Mocanu <catalina.mocanu@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Thu, 03 Oct 2019 23:06:03 +0100
+In-Reply-To: <de5e7cd39ce661f8441fb4f5bdf21ee37ada1366.camel@perches.com>
+References: <lsq.1570043211.136218297@decadent.org.uk>
+         <6436567dd141e5528a5363dd3aaad21815a1c111.camel@perches.com>
+         <3fe1cd65a7860464d3780b57c734d12880df4b92.camel@decadent.org.uk>
+         <de5e7cd39ce661f8441fb4f5bdf21ee37ada1366.camel@perches.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-K7+kU2VDaIgLJJPm0KQZ"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003120302.GB10038@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 03:03:02PM +0300, Jarkko Sakkinen wrote:
-> You could get away without iores_range by having an extra
-> terminator entry in the iores_array.
-> 
-> Overally this starts to look good.
 
-I'd also advice you to memset it with zeros so that you don't need to
-have a variable for number of entries.
+--=-K7+kU2VDaIgLJJPm0KQZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-/Jarkko
+On Thu, 2019-10-03 at 08:09 -0700, Joe Perches wrote:
+> On Thu, 2019-10-03 at 15:47 +0100, Ben Hutchings wrote:
+> > On Wed, 2019-10-02 at 14:36 -0700, Joe Perches wrote:
+> > > On Wed, 2019-10-02 at 20:06 +0100, Ben Hutchings wrote:
+> > > > 3.16.75-rc1 review patch.  If anyone has any objections, please let=
+ me know.
+> > >=20
+> > > This doesn't look necessary.
+> >=20
+> > It allows the next patch to apply cleanly.
+>=20
+> Perhaps when you pick patches that are unnecessary
+> for any other reason but to allow easier picking of
+> actual fixes, the nominal unnecessary patches could
+> be marked as necessary for follow-on patches.
+
+I have been doing that lately, but just forgot to do so for this patch.
+
+> Also, when you send these patch series, please use
+> an email delay of at least 1 second between each
+> entry in the series as the threading is otherwise
+> poor in various email clients when sorting by time.
+
+The dates are actually generated before I send them, but I can probably
+arrange to override them.  Thanks for the suggestion.
+
+Ben.
+
+--=20
+Ben Hutchings
+Unix is many things to many people,
+but it's never been everything to anybody.
+
+
+
+--=-K7+kU2VDaIgLJJPm0KQZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl2WcMwACgkQ57/I7JWG
+EQlNEBAAq72EtDC5xDcFYTXWF+om8rjKWt8yWTy9bJeDUZUnxvi1KgQpp9rOiWoN
+0t3U/2vey22gHD5KSwKfwiGdxJWLgbL0aK70/K2s7UmMrFUHiu+TA9ixIR5di+YQ
+i+BcEARttmq4dsuNwBme/aGtn2rvLH3MevWjJvtjJJdpusxsKUCBlDINSkRMeeTs
+Cgm9IIJAgfWwCuNjmWyUBPBpgmXsPZUYiaCbhgG26Fv0DT2ofc9V52x4E9QMG60b
+HIWp23SobHYtXXq/KBwky9CQG/Dop17HqsticqEl7yhv1G8q/QBOrj7Wxgll3OaT
+8FLzaWGcorBDbUx3Rq60ODUsX9+tp5sfEjxZXgDIcNFKGFvPGcK6Jl/B1+d0OgWd
+u0tPqvhywK9XsEny5TSATk0slqMDGuX1Zck6Vk9Lk2KtL514neGNEG7liBYAj9jd
+uEt3Q+RzfXlJGGpHkZTJGjyLaHMlFKG3th9CAkHB2Mqh4H7tY5dHFQZ8exTK9qvI
+9HiMcjkzBRugULF0A0NoGl3fdvemEjvreRzrpy7ISeDG9ldeabVij6VMf+P1OE+g
+FEiphWPmP/8o/o3wQBXkQ3FXIvD3fQgtAx/Ml9I76ZMYTBn7pe9Q2OKW3bOSn+xQ
+v6+VpAwbkqycR7vOWtG2/BJGbIfyNCkcifnY7151pCL+1WkX/Ls=
+=jIA7
+-----END PGP SIGNATURE-----
+
+--=-K7+kU2VDaIgLJJPm0KQZ--
