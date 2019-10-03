@@ -2,146 +2,168 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F8FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12697C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4066A2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05CA21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FuER+l0g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YdOPzNey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbfJCKB5 (ORCPT
+        id S1729758AbfJCKCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:01:57 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45788 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729643AbfJCKBz (ORCPT
+        Thu, 3 Oct 2019 06:02:10 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:40870 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfJCKCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:01:55 -0400
-Received: by mail-vs1-f65.google.com with SMTP id d204so1258885vsc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:01:55 -0700 (PDT)
+        Thu, 3 Oct 2019 06:02:09 -0400
+Received: by mail-ua1-f67.google.com with SMTP id i13so693524uaq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bQZgMiPBlch+da9eCpuVvMh7cDd98498ZGUQ3xlwUWM=;
-        b=FuER+l0gj2hl/fxpTFxvQ3nYlHiIWdyz8MM9HC+XQxx5GTIH0AH9LvMxKjOxn40Vro
-         o+KyzVClab/FiyZjLNkL5uvla+jp3D7dYdVVtEYEy44JiAKab3nvxz4nJd6Ys5vh0SUy
-         royoVNCuLwNLyUgLj8W8Kuh10mXwzsJo9jNwQvoyIDXn2nmCgvO3lybBQKlhuooIgcTk
-         MTwDkH6MQUPFv7fjj6JIj4n7fE/l+oVA44YgZLiT1EaCIAO6iROTdyF8i9qsSVZy9x6O
-         L44zkMJjvgyat95nf/WiY2dPlBJluv73B32vxzs2rYOxLxVvrEFQWW3MjOncsHTUgB4g
-         T4+w==
+        bh=zBQuLmzEEP5mC2BeRTIy+012Xlkl6GcCB3DclJcKQc8=;
+        b=YdOPzNeyUypkY4f2+s9Pl9vnLli9mq8zx1/TCiERslbqEEeHfntoU3+ohRn7IM3tyS
+         h4zOQfj0G+wk62ij1nf8QZjHa1mo8qclx2QJfxZinXA/Zkf6OHq38HC7WAu839P2C7ix
+         qIyvQA4s++l9jjYS6f8E/Dnim/cmIVEtuhEsUpzG8WuhmPDpoS8XNhTjNOgyXbURkOYH
+         YdQ9k7j2tl7A8bG/1MP4dCrpLpzvEwNNfvY56xL8e2UBsIT2e45k+THCR42pbXniAbRV
+         huhFxtC4VSRd0MH3LROkKNZRJJ840C0Z+4lP6MJFxs9LNwGQeHl1vxsph01uAwXeEQAT
+         YCtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bQZgMiPBlch+da9eCpuVvMh7cDd98498ZGUQ3xlwUWM=;
-        b=Med7Ur9LEyoB8LAT4tNiZmbgzB0l9oVH19qGHP4qWFcK54W2FH6/PstG+s25wboXn/
-         MrR97vVXl0bLYOdlcjVrvcYQS33emfvWWL+yHZoZdcVDc4yvrFhG8snEjLtytgorkCdv
-         gFsUUqLGSMPOk8rx/sUTbyUtBatfxbQmnOCrUuv+ytoDsLy+QSVzkil4JjT0QI1ed5MG
-         gasub4p4ZbVMmsgAkEObGvoVC4syhHUECISOnwT/Z8qYvVFJl/KequHjPvwEWO1aFzQM
-         PqX+xM1uFtT54b8HRX7/xZ9VPr1eXiTcBrsWGjRLS2E9h+hhdswM8ciZdzeu2Rh4yWoT
-         tsQQ==
-X-Gm-Message-State: APjAAAVtJRCqm6aBIT2knvgr4DuZnDXM7tbaIpTv36z0Ak/In/sQwgCG
-        AlXkwwOA3F6bCQNcvMuosuz02a8hCBUAdEx9RWy31Q==
-X-Google-Smtp-Source: APXvYqzuSKcUmTZ9N2NNO3rEXGfkm5tGlVKGyINBteWvalYdV0+g5zqRsur4hFkbU0QLK6GOzgBpgwJYcfHAKQXzTWE=
-X-Received: by 2002:a67:e414:: with SMTP id d20mr4534032vsf.191.1570096914812;
- Thu, 03 Oct 2019 03:01:54 -0700 (PDT)
+        bh=zBQuLmzEEP5mC2BeRTIy+012Xlkl6GcCB3DclJcKQc8=;
+        b=nIFPhI7ceV+UALRgD9SFrOgyEuUChZUL6X63FIonc3exgcRdJ6sW5KMBZV5WfYYWhn
+         KSYmCg+VdHcdMsz0BhjLPTTZpkrROIcRqxGa/JTq0PQJSjKZFkB2tl0d89jWItakURE6
+         pq/WEZrcqk7XIZYWU5bb0eKgnR8Ykk5uE3H1nWBn1T5ch6XgGNzObpetQSn/DxRGjSuE
+         XAo7ViLd0N4D7QIg5YdrUDUFij6wwRZZ+0oX0BFovguky/yzFeX7B1MNbCqki6YPrdPV
+         9tOeAT4iIi2jIqfSqJWUUcnr1KpqcbAf9AvqXSEEnXo+DXEHnE9yv34YaGKvnaHyyhuu
+         68Tw==
+X-Gm-Message-State: APjAAAV00oFwsXlY3AUkrUNEfVtHfyc+lt/y4WrNFiLGFyqjTmqU4oQr
+        ZTqkH5nqRcH+YPXl0REIGHl3td7S/MxdJln6YtyEWipe
+X-Google-Smtp-Source: APXvYqwDpqTe8ItD2ulVQunBpElEvgrn4CneFoE5CW5QAPlP41une3yqt6CvFMmGoITPH5SepzqIq7eNuuRlO7Zk0sY=
+X-Received: by 2002:ab0:1856:: with SMTP id j22mr4557733uag.19.1570096928603;
+ Thu, 03 Oct 2019 03:02:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org>
+References: <20191002152946.11586-1-geert+renesas@glider.be>
+In-Reply-To: <20191002152946.11586-1-geert+renesas@glider.be>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 3 Oct 2019 12:01:18 +0200
-Message-ID: <CAPDyKFqsZ1mZ53b9wLruATzi+ymFrUCLhxzx7NFUq48p5w0Gtw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Add SD/MMC driver for Actions Semi S900 SoC
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Thu, 3 Oct 2019 12:01:32 +0200
+Message-ID: <CAPDyKFprzytDRz10GMqwKuCj+9VKhKWprxZpnA0-hVCN7Ldzhg@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: renesas_sdhi: Do not use platform_get_irq() to
+ count interrupts
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>, thomas.liau@actions-semi.com,
-        linux-actions@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 at 17:46, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Wed, 2 Oct 2019 at 17:29, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 >
-> Hello,
+> As platform_get_irq() now prints an error when the interrupt does not
+> exist, counting interrupts by looping until failure causes the printing
+> of scary messages like:
 >
-> This patchset adds SD/MMC driver for Actions Semi S900 SoC from Owl
-> family SoCs. There are 4 SD/MMC controller present in this SoC but
-> only 2 are enabled currently for Bubblegum96 board to access uSD and
-> onboard eMMC. SDIO support for this driver is not currently implemented.
+>     renesas_sdhi_internal_dmac ee140000.sd: IRQ index 1 not found
 >
-> Note: Currently, driver uses 2 completion mechanisms for maintaining
-> the coherency between SDC and DMA interrupts and I know that it is not
-> efficient. Hence, I'd like to hear any suggestions for reimplementing
-> the logic if anyone has.
+> Fix this by using the platform_irq_count() helper to avoid touching
+> non-existent interrupts.
 >
-> With this driver, this patchset also fixes one clk driver issue and enables
-> the Actions Semi platform in ARM64 defconfig.
->
-> Thanks,
-> Mani
->
-> Changes in v4:
->
-> * Incorporated review comments from Rob on dt binding
->
-> Changes in v3:
->
-> * Incorporated a review comment from Andreas on board dts patch
-> * Modified the MAINTAINERS entry for devicetree YAML binding
->
-> Changes in v2:
->
-> * Converted the devicetree bindings to YAML
-> * Misc changes to bubblegum devicetree as per the review from Andreas
-> * Dropped the read/write wrappers and renamed all functions to use owl-
->   prefix as per the review from Ulf
-> * Renamed clk_val_best to owl_clk_val_best and added Reviewed-by tag
->   from Stephen
->
-> Manivannan Sadhasivam (7):
->   clk: actions: Fix factor clk struct member access
->   dt-bindings: mmc: Add Actions Semi SD/MMC/SDIO controller binding
->   arm64: dts: actions: Add MMC controller support for S900
->   arm64: dts: actions: Add uSD and eMMC support for Bubblegum96
->   mmc: Add Actions Semi Owl SoCs SD/MMC driver
->   MAINTAINERS: Add entry for Actions Semi SD/MMC driver and binding
->   arm64: configs: Enable Actions Semi platform in defconfig
->
->  .../devicetree/bindings/mmc/owl-mmc.yaml      |  59 ++
->  MAINTAINERS                                   |   2 +
->  .../boot/dts/actions/s900-bubblegum-96.dts    |  62 ++
->  arch/arm64/boot/dts/actions/s900.dtsi         |  45 ++
->  arch/arm64/configs/defconfig                  |   1 +
->  drivers/clk/actions/owl-factor.c              |   7 +-
->  drivers/mmc/host/Kconfig                      |   8 +
->  drivers/mmc/host/Makefile                     |   1 +
->  drivers/mmc/host/owl-mmc.c                    | 696 ++++++++++++++++++
->  9 files changed, 877 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/owl-mmc.yaml
->  create mode 100644 drivers/mmc/host/owl-mmc.c
->
-> --
-> 2.17.1
->
+> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-I have picked up the mmc patches for next and as Stephen picked the
-clock patch, the rest are now for arm-soc, I guess!?
+Applied for fixes, thanks!
 
 Kind regards
 Uffe
+
+
+> ---
+> v2:
+>   - Add Reviewed-by, Tested-by,
+>   - Return failure in case num_irqs is zero, as before.
+>
+> This is a fix for v5.4-rc1.
+> ---
+>  drivers/mmc/host/renesas_sdhi_core.c | 31 +++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
+> index d4ada5cca2d14f6a..234551a68739b65b 100644
+> --- a/drivers/mmc/host/renesas_sdhi_core.c
+> +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> @@ -646,8 +646,8 @@ int renesas_sdhi_probe(struct platform_device *pdev,
+>         struct tmio_mmc_dma *dma_priv;
+>         struct tmio_mmc_host *host;
+>         struct renesas_sdhi *priv;
+> +       int num_irqs, irq, ret, i;
+>         struct resource *res;
+> -       int irq, ret, i;
+>         u16 ver;
+>
+>         of_data = of_device_get_match_data(&pdev->dev);
+> @@ -825,24 +825,31 @@ int renesas_sdhi_probe(struct platform_device *pdev,
+>                 host->hs400_complete = renesas_sdhi_hs400_complete;
+>         }
+>
+> -       i = 0;
+> -       while (1) {
+> +       num_irqs = platform_irq_count(pdev);
+> +       if (num_irqs < 0) {
+> +               ret = num_irqs;
+> +               goto eirq;
+> +       }
+> +
+> +       /* There must be at least one IRQ source */
+> +       if (!num_irqs) {
+> +               ret = -ENXIO;
+> +               goto eirq;
+> +       }
+> +
+> +       for (i = 0; i < num_irqs; i++) {
+>                 irq = platform_get_irq(pdev, i);
+> -               if (irq < 0)
+> -                       break;
+> -               i++;
+> +               if (irq < 0) {
+> +                       ret = irq;
+> +                       goto eirq;
+> +               }
+> +
+>                 ret = devm_request_irq(&pdev->dev, irq, tmio_mmc_irq, 0,
+>                                        dev_name(&pdev->dev), host);
+>                 if (ret)
+>                         goto eirq;
+>         }
+>
+> -       /* There must be at least one IRQ source */
+> -       if (!i) {
+> -               ret = irq;
+> -               goto eirq;
+> -       }
+> -
+>         dev_info(&pdev->dev, "%s base at 0x%08lx max clock rate %u MHz\n",
+>                  mmc_hostname(host->mmc), (unsigned long)
+>                  (platform_get_resource(pdev, IORESOURCE_MEM, 0)->start),
+> --
+> 2.17.1
+>
