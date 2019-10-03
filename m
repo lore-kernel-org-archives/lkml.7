@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EE7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69834C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482BB2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340C22133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120275;
-	bh=kfvdiciDmqZ1VtqoBpuDh3Z6dlpATwLZE7GsvgO6uLo=;
+	s=default; t=1570120279;
+	bh=7mbt/MR23Cq3RngDGbuCsKYRWXTfMwedUxRS8ns4pmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOCjfIZZMLNBO0PnL8dkxMi+8kRcyTo3sClrXChYkdGUZo3wDOYFt1wZ6Cv63/cpU
-	 uPccWfUB1264E9ZS7aFiHa/qu3/f4+L7Z80m6VLjmCYuSrHctx+LZOVqxnoqQc/AgC
-	 2syuwkrZqRWfheLXShCeNkleWCfCl6srYxZn0OV0=
+	b=ZVvJcc4bQLC89WqBuYYxYqPng9+mAbsX3mCV/aLcVvxrMypNcq9D1pMiHOSm+RS7G
+	 nf7GlNytHwLFKSySoaLoGrmZ3SEzo+DbLsOqPWOIkGkDENpF4KFQU9OCnpsfjBjZAL
+	 XIgAoFuMmwNHylSW0qQFltpgPdbyw3u2jOeTGX3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390517AbfJCQbO (ORCPT
+        id S2391292AbfJCQbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403843AbfJCQbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:11 -0400
+        id S2390173AbfJCQbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:31:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 892CC2054F;
-        Thu,  3 Oct 2019 16:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B1920830;
+        Thu,  3 Oct 2019 16:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120271;
-        bh=kfvdiciDmqZ1VtqoBpuDh3Z6dlpATwLZE7GsvgO6uLo=;
+        s=default; t=1570120273;
+        bh=7mbt/MR23Cq3RngDGbuCsKYRWXTfMwedUxRS8ns4pmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q52m57zDVzeQXtqe3c2MsByjW5NjEPsUOJTGq/5JF05lkTmG1OdhNQPsL461O3B2E
-         rcFBANyLVVcutE5GNfW+imanZrbZnOXhHhx/2od1Puqn53ncboTtVi7REAfTjAXD/K
-         laMZCxOHLENmorIb8swfmbtqwk59fshJxygZNxy0=
+        b=BOrvTVzTgt5jW/joYCX0WHcrhiC6taD97q0lSEqMA7yv2E2xbYnP1zLF9Pg1BgR2P
+         Z8ooQgz9fgTwrnNYgpsvNILo7cBb/zoVVzNbDROQWfOkHh/rX5PyuOyDrT56NxBQOK
+         5tCUTGvVml+EEiGHd3sGClM+xMIYMgVHcxanU7+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 158/313] ASoC: fsl_ssi: Fix clock control issue in master mode
-Date:   Thu,  3 Oct 2019 17:52:16 +0200
-Message-Id: <20191003154548.494258620@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 122/313] nbd: add missing config put
+Date:   Thu,  3 Oct 2019 17:51:40 +0200
+Message-Id: <20191003154544.973960085@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,73 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Mike Christie <mchristi@redhat.com>
 
-[ Upstream commit 696d05225cebffd172008d212657be90e823eac0 ]
+[ Upstream commit 887e975c4172d0d5670c39ead2f18ba1e4ec8133 ]
 
-The test case is
-arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
-aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
+Fix bug added with the patch:
 
-There will be error after end of arecord:
-aplay: pcm_write:2051: write error: Input/output error
+commit 8f3ea35929a0806ad1397db99a89ffee0140822a
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Mon Jul 16 12:11:35 2018 -0400
 
-Capture and Playback work in parallel in master mode, one
-substream stops, the other substream is impacted, the
-reason is that clock is disabled wrongly.
+    nbd: handle unexpected replies better
 
-The clock's reference count is not increased when second
-substream starts, the hw_param() function returns in the
-beginning because first substream is enabled, then in end
-of first substream, the hw_free() disables the clock.
+where if the timeout handler runs when the completion path is and we fail
+to grab the mutex in the timeout handler we will leave a config reference
+and cannot free the config later.
 
-This patch is to move the clock enablement to the place
-before checking of the device enablement in hw_param().
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Link: https://lore.kernel.org/r/1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_ssi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/block/nbd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 09b2967befd96..d83be26d64467 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -799,15 +799,6 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 	u32 wl = SSI_SxCCR_WL(sample_size);
- 	int ret;
- 
--	/*
--	 * SSI is properly configured if it is enabled and running in
--	 * the synchronous mode; Note that AC97 mode is an exception
--	 * that should set separate configurations for STCCR and SRCCR
--	 * despite running in the synchronous mode.
--	 */
--	if (ssi->streams && ssi->synchronous)
--		return 0;
--
- 	if (fsl_ssi_is_i2s_master(ssi)) {
- 		ret = fsl_ssi_set_bclk(substream, dai, hw_params);
- 		if (ret)
-@@ -823,6 +814,15 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 		}
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 57aebc6e1c288..5d5e52c6509ce 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -355,8 +355,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
  	}
+ 	config = nbd->config;
  
-+	/*
-+	 * SSI is properly configured if it is enabled and running in
-+	 * the synchronous mode; Note that AC97 mode is an exception
-+	 * that should set separate configurations for STCCR and SRCCR
-+	 * despite running in the synchronous mode.
-+	 */
-+	if (ssi->streams && ssi->synchronous)
-+		return 0;
-+
- 	if (!fsl_ssi_is_ac97(ssi)) {
- 		/*
- 		 * Keep the ssi->i2s_net intact while having a local variable
+-	if (!mutex_trylock(&cmd->lock))
++	if (!mutex_trylock(&cmd->lock)) {
++		nbd_config_put(nbd);
+ 		return BLK_EH_RESET_TIMER;
++	}
+ 
+ 	if (config->num_connections > 1) {
+ 		dev_err_ratelimited(nbd_to_dev(nbd),
 -- 
 2.20.1
 
