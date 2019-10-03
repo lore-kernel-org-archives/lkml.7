@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD03FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D69FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B573F20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ADA215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120140;
-	bh=uYufKrDpTA1A5HijS+YC1Ff7fl9umsInfHim8PACkIQ=;
+	s=default; t=1570120147;
+	bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DM0lFucgWIpzF1OtCtmYtDc0RrBnkBIIggMtbjHxBhYIA3sEc0Yx9+yjgTnm8mt8V
-	 YH2jn05SVKhToAd5G1piW6e0RGuLMsHqYnEpFF7kfupU9pjypl9orE+C3r6v0pIH5D
-	 j3tl9+90/Kh3RV7lOUMU7FV3RID+gEGkgYZyN79s=
+	b=c67FuPRKZ3kr1E5rpl78aLYpQs6X8rUTvfNauk9ZqypBdUin9roHczygLGEMxuAwy
+	 yyAW/BWye4cBnlLSA7E+fb/dBNlEIw6JmMVvgjqWTHVCAqI4fdu4PRjaDHLDuJU+4u
+	 UhrElfSs9zUoKPIGU5vZOa+7EaGm/zYLG0LwW99M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389830AbfJCQ27 (ORCPT
+        id S2391583AbfJCQ3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33782 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391561AbfJCQ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:56 -0400
+        id S2391569AbfJCQ3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAC4B20867;
-        Thu,  3 Oct 2019 16:28:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C871020700;
+        Thu,  3 Oct 2019 16:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120136;
-        bh=uYufKrDpTA1A5HijS+YC1Ff7fl9umsInfHim8PACkIQ=;
+        s=default; t=1570120141;
+        bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2qwnJz/WH7QogxQYpzWuz62E+ssVxkk6LRRrvUv7CsIT4FmqQuGqRBot05SXuQ8B
-         337i+FmJyAYmMpevFveZSZDKSXZKt60tZ5VfjQ16R3fQ+K3PBDSKkSc/zrVsU36h55
-         +PHdwR3OLkAxJD8E4KsuaFojDX29GvC8VYCp5t5c=
+        b=a76UlBZjg2nPOoBDw6Nj0Xip40gFPqEazOMpXwD6ukCJumhqYCCDx5OuN5QKUeCjY
+         iGb8vI2MFUzXVPCa2GGx6XVLJvt2TachjVIxtj3g0FSxx6x45mqeUb3JT2Cfrnaa2v
+         E6tDpyR6dQIii7Q9q4olJURI5LJMmf9m+YaTSEvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stable@vger.kernel.org, Stefan Agner <stefan.agner@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 109/313] m68k: Prevent some compiler warnings in Coldfire builds
-Date:   Thu,  3 Oct 2019 17:51:27 +0200
-Message-Id: <20191003154543.582939749@linuxfoundation.org>
+Subject: [PATCH 5.2 111/313] ARM: dts: imx7-colibri: disable HS400
+Date:   Thu,  3 Oct 2019 17:51:29 +0200
+Message-Id: <20191003154543.769491448@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,112 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Stefan Agner <stefan.agner@toradex.com>
 
-[ Upstream commit 94c04390225bcd8283103fd0c04be20cc30cc979 ]
+[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
 
-Since commit d3b41b6bb49e ("m68k: Dispatch nvram_ops calls to Atari or
-Mac functions"), Coldfire builds generate compiler warnings due to the
-unconditional inclusion of asm/atarihw.h and asm/macintosh.h.
+Force HS200 by masking bit 63 of the SDHCI capability register.
+The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+that the stack checks bit 63 to descide whether HS400 is available.
+Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+HS200 as operating mode.
 
-The inclusion of asm/atarihw.h causes warnings like this:
+This prevents rare communication errors with minimal effect on
+performance:
+	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+		status REF not lock!
 
-In file included from ./arch/m68k/include/asm/atarihw.h:25:0,
-                 from arch/m68k/kernel/setup_mm.c:41,
-                 from arch/m68k/kernel/setup.c:3:
-./arch/m68k/include/asm/raw_io.h:39:0: warning: "__raw_readb" redefined
- #define __raw_readb in_8
-
-In file included from ./arch/m68k/include/asm/io.h:6:0,
-                 from arch/m68k/kernel/setup_mm.c:36,
-                 from arch/m68k/kernel/setup.c:3:
-./arch/m68k/include/asm/io_no.h:16:0: note: this is the location of the previous definition
- #define __raw_readb(addr) \
-...
-
-This issue is resolved by dropping the asm/raw_io.h include. It turns out
-that asm/io_mm.h already includes that header file.
-
-Moving the relevant macro definitions helps to clarify this dependency
-and make it safe to include asm/atarihw.h.
-
-The other warnings look like this:
-
-In file included from arch/m68k/kernel/setup_mm.c:48:0,
-                 from arch/m68k/kernel/setup.c:3:
-./arch/m68k/include/asm/macintosh.h:19:35: warning: 'struct irq_data' declared inside parameter list will not be visible outside of this definition or declaration
- extern void mac_irq_enable(struct irq_data *data);
-                                   ^~~~~~~~
-...
-
-This issue is resolved by adding the missing linux/irq.h include.
-
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/atarihw.h   | 9 ---------
- arch/m68k/include/asm/io_mm.h     | 6 +++++-
- arch/m68k/include/asm/macintosh.h | 1 +
- 3 files changed, 6 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/m68k/include/asm/atarihw.h b/arch/m68k/include/asm/atarihw.h
-index 533008262b691..5e5601c382b80 100644
---- a/arch/m68k/include/asm/atarihw.h
-+++ b/arch/m68k/include/asm/atarihw.h
-@@ -22,7 +22,6 @@
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index 895fbde4d4333..c1ed83131b495 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -323,6 +323,7 @@
+ 	vmmc-supply = <&reg_module_3v3>;
+ 	vqmmc-supply = <&reg_DCDC3>;
+ 	non-removable;
++	sdhci-caps-mask = <0x80000000 0x0>;
+ };
  
- #include <linux/types.h>
- #include <asm/bootinfo-atari.h>
--#include <asm/raw_io.h>
- #include <asm/kmap.h>
- 
- extern u_long atari_mch_cookie;
-@@ -132,14 +131,6 @@ extern struct atari_hw_present atari_hw_present;
-  */
- 
- 
--#define atari_readb   raw_inb
--#define atari_writeb  raw_outb
--
--#define atari_inb_p   raw_inb
--#define atari_outb_p  raw_outb
--
--
--
- #include <linux/mm.h>
- #include <asm/cacheflush.h>
- 
-diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
-index 6c03ca5bc4365..819f611dccf28 100644
---- a/arch/m68k/include/asm/io_mm.h
-+++ b/arch/m68k/include/asm/io_mm.h
-@@ -29,7 +29,11 @@
- #include <asm-generic/iomap.h>
- 
- #ifdef CONFIG_ATARI
--#include <asm/atarihw.h>
-+#define atari_readb   raw_inb
-+#define atari_writeb  raw_outb
-+
-+#define atari_inb_p   raw_inb
-+#define atari_outb_p  raw_outb
- #endif
- 
- 
-diff --git a/arch/m68k/include/asm/macintosh.h b/arch/m68k/include/asm/macintosh.h
-index d9a08bed4b128..f653b60f2afcf 100644
---- a/arch/m68k/include/asm/macintosh.h
-+++ b/arch/m68k/include/asm/macintosh.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/seq_file.h>
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- 
- #include <asm/bootinfo-mac.h>
- 
+ &iomuxc {
 -- 
 2.20.1
 
