@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38658C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBCDC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100B72086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDD12086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120400;
-	bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
+	s=default; t=1570120404;
+	bh=YdtB9ERDjqPMpLb1hhSKMnEGtL5LAfOBUuAxVN22O04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FX/Kk4E93P7pQdq11hbUk6M8uwH2Jy9lIGW2dx3DrnQdp8zxBInQ54K4i5RfcBHx8
-	 KmH9X+5d/ezE/o+yVPnyWzPDuaMM9SFrh4YYIZYFq4odZLGvtxhS9TF7AqrTFFuGPr
-	 hfHx01w9X+PJjV/jzTcnPfmWiM04/BNpX16Nj7DQ=
+	b=t7okMOOsQJ7Dfb5MNYe2wTbG1Rxn3ZI/fTwLVekMJSpYWsQpyedwwCZISFyPSS4FS
+	 Z8mi6kdTvKhVbyllEZK7FXAVSG3YAlm2NrUFhoLAbpPtUWjyN8bQ0vbND0rpT4HJM4
+	 /hSDQmbSJ0DF6wdE9yp+CuExk01bpKH4gQFpR/8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404029AbfJCQdS (ORCPT
+        id S2404065AbfJCQdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391274AbfJCQdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:15 -0400
+        id S2404124AbfJCQdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A2A2086A;
-        Thu,  3 Oct 2019 16:33:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42A89215EA;
+        Thu,  3 Oct 2019 16:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120394;
-        bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
+        s=default; t=1570120397;
+        bh=YdtB9ERDjqPMpLb1hhSKMnEGtL5LAfOBUuAxVN22O04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xj2RCNOx8xUR0JmPnUsIem2LeZ39ftM+2PufEbBvSa2+NepWEWp5no33EPaGdbjSq
-         kZmW0vrRlV/bKSXv3uJMJx+2MixOVm1TUtGI9hznE7a1gSkctQfwcxR51gnVhQSTq+
-         8ijgMJSuN0ytrNbxhUeQaeu7dq6ey1lbmWbcthds=
+        b=00wKocBBWNasNksPFmij14hafSI7lurfI5WALS/DKyy4noYBFn8Djx/cytniRSynM
+         JjkYrvV62P/TEvj1KdWhrfJYG2UhsRUaAU5AEjCIcAgKgMfISG+Xg8/5Kv5+/5iywP
+         EENE6VyPsOh4nThdJcqQ+m98ZaeN7KRDdMkyiv2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 168/313] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
-Date:   Thu,  3 Oct 2019 17:52:26 +0200
-Message-Id: <20191003154549.512120380@linuxfoundation.org>
+Subject: [PATCH 5.2 159/313] x86/mm/pti: Handle unaligned address gracefully in pti_clone_pagetable()
+Date:   Thu,  3 Oct 2019 17:52:17 +0200
+Message-Id: <20191003154548.602201222@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,58 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
+[ Upstream commit 825d0b73cd7526b0bb186798583fae810091cbac ]
 
-Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
-for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
-but it turned out that it supplies also some other critical parts and
-board freezes/crashes when it is turned off.
+pti_clone_pmds() assumes that the supplied address is either:
 
-The mentioned commit made Exynos TMU a consumer of that regulator and in
-typical case Exynos TMU driver keeps it enabled from early boot. However
-there are such configurations (example is multi_v7_defconfig), in which
-some of the regulators are compiled as modules and are not available
-from early boot. In such case it may happen that LDO10 is turned off by
-regulator core, because it has no consumers yet (in this case consumer
-drivers cannot get it, because the supply regulators for it are not yet
-available). This in turn causes the board to crash. This patch restores
-'always-on' property for the LDO10 regulator.
+ - properly PUD/PMD aligned
+or
+ - the address is actually mapped which means that independently
+   of the mapping level (PUD/PMD/PTE) the next higher mapping
+   exists.
 
-Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+If that's not the case the unaligned address can be incremented by PUD or
+PMD size incorrectly. All callers supply mapped and/or aligned addresses,
+but for the sake of robustness it's better to handle that case properly and
+to emit a warning.
+
+[ tglx: Rewrote changelog and added WARN_ON_ONCE() ]
+
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282352470.1938@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/mm/pti.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index f78db6809cca4..9eb48cabcca45 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -440,6 +440,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index e0f470fe54c81..4398f2d1fe881 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -440,6 +440,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index ba22b50f4eca2..7f2140414440d 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -330,13 +330,15 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+ 
+ 		pud = pud_offset(p4d, addr);
+ 		if (pud_none(*pud)) {
+-			addr += PUD_SIZE;
++			WARN_ON_ONCE(addr & ~PUD_MASK);
++			addr = round_up(addr + 1, PUD_SIZE);
+ 			continue;
+ 		}
+ 
+ 		pmd = pmd_offset(pud, addr);
+ 		if (pmd_none(*pmd)) {
+-			addr += PMD_SIZE;
++			WARN_ON_ONCE(addr & ~PMD_MASK);
++			addr = round_up(addr + 1, PMD_SIZE);
+ 			continue;
+ 		}
+ 
 -- 
 2.20.1
 
