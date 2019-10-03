@@ -2,285 +2,208 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBA7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E3EECE589
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AF521D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81758217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GeuzTzJN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EV1z/mkw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fV1omv2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfJCKbY (ORCPT
+        id S1729286AbfJCKcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:31:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44206 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbfJCKbY (ORCPT
+        Thu, 3 Oct 2019 06:32:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59128 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfJCKcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:31:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2E5646115D; Thu,  3 Oct 2019 10:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570098682;
-        bh=HyX1/FILi1Ga/lSpbk5aOyhw1PtgxVhFbJGC0NtbZy0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GeuzTzJNetBVwO69h0RI6chi4Z9hF3FuessztwHfSkkWGvqyUhc+c3ktExVnUoeyg
-         nm7kzaO527yNny62gxgqm4D6rngq8AX8+noYI46MyJk2K8BhNwNqC+WZjV1y0tnAX/
-         CfRkGUUryLMoPpvpnv3IDjo+lLQoJDVjbukF/kdI=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D89EB60AD9;
-        Thu,  3 Oct 2019 10:31:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570098681;
-        bh=HyX1/FILi1Ga/lSpbk5aOyhw1PtgxVhFbJGC0NtbZy0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EV1z/mkwMJvJLpao3tVcx00pWly+VW9qeQiwegpI3sNpsXF7ypygK6qOIlCZLZytk
-         Ln0InihWJwKyEmevKVmWQA1LC43RBpvN3pZAnQEg0WWrzeeToJBpNZ02lRSxV1KjMx
-         PZJ61UmF6SyaiWlZPp7HemlfS2zCHb2EjvPt3r+Q=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D89EB60AD9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <20190918095018.17979-4-tdas@codeaurora.org>
- <20190918213946.DC03521924@mail.kernel.org>
- <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
- <20190924231223.9012C207FD@mail.kernel.org>
- <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
- <20190925130346.42E0820640@mail.kernel.org>
- <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
- <20191001143825.CD3212054F@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
-Date:   Thu, 3 Oct 2019 16:01:15 +0530
+        Thu, 3 Oct 2019 06:32:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93ATQT0037217;
+        Thu, 3 Oct 2019 10:30:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=ir++mkQJfcEAASN1DoMDHnUr4GmG7owUrxYcR27Bluw=;
+ b=fV1omv2Zf9uP6tzCN12xv2NX/kzW1yZ26H6Hw6vk0QJb9n1badh/rofP7TKda5gR9me3
+ BJR9IYKq2Ip7nKL6StCFBSotta5ljLQb1csBQ+GzN6vgYOE9ZO1Tl0dYB/Y3Johe0vSm
+ hY12O0lkuIh2VtIwbgQlpHvDCUtwyq8VaATGwFME5W2bMmxpCYEr/nKLmNl7cLsQhF82
+ NNWkYsvCLJo6P2H3WVXvqEnixiVZfjpREpHymSt9WKV6tosP6RDHbG0c1qxNRJ9I6nbH
+ cScAJ/O71byeqN61hvq0qhXOkIMKHxvmOKhOHFHXniGgeRYKtCns2kaZHOprLZt/kyh+ kA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v9yfqjw50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 10:30:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93ASnou057692;
+        Thu, 3 Oct 2019 10:30:54 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vcg63bx65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 10:30:53 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x93AUlmi013736;
+        Thu, 3 Oct 2019 10:30:47 GMT
+Received: from [10.191.0.240] (/10.191.0.240)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 03:30:47 -0700
+Subject: Re: [PATCH v3 1/4] x86/kvm: Add "nopvspin" parameter to disable PV
+ spinlocks
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
+ <20191002171006.GB9615@linux.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <a789fb32-3830-e36b-f648-d070c742384f@oracle.com>
+Date:   Thu, 3 Oct 2019 18:30:43 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191001143825.CD3212054F@mail.kernel.org>
+In-Reply-To: <20191002171006.GB9615@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910030096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910030096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 2019/10/3 1:10, Sean Christopherson wrote:
 
-On 10/1/2019 8:08 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-09-27 00:37:57)
->> Hi Stephen,
+> On Mon, Sep 30, 2019 at 08:44:36PM +0800, Zhenzhong Duan wrote:
+>> There are cases where a guest tries to switch spinlocks to bare metal
+>> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+>> "hv_nopvspin" on HYPER_V).
 >>
->> On 9/25/2019 6:33 PM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2019-09-25 04:20:07)
->>>> Hi Stephen,
->>>>
->>>> Please find my comments.
->>>>
->>>> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
->>>>> Quoting Taniya Das (2019-09-23 01:01:11)
->>>>>> Hi Stephen,
->>>>>>
->>>>>> Thanks for your comments.
->>>>>>
->>>>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
->>>>>>> Quoting Taniya Das (2019-09-18 02:50:18)
->>>>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
->>>>>>>> new file mode 100644
->>>>>>>> index 000000000000..d47865d5408f
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>> [...]
->>>>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk = {
->>>>>>>> +       .halt_reg = 0x77094,
->>>>>>>> +       .halt_check = BRANCH_HALT,
->>>>>>>> +       .hwcg_reg = 0x77094,
->>>>>>>> +       .hwcg_bit = 1,
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0x77094,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_ufs_phy_phy_aux_clk",
->>>>>>>> +                       .parent_data = &(const struct clk_parent_data){
->>>>>>>> +                               .hw = &gcc_ufs_phy_phy_aux_clk_src.clkr.hw,
->>>>>>>> +                       },
->>>>>>>> +                       .num_parents = 1,
->>>>>>>> +                       .flags = CLK_SET_RATE_PARENT,
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
->>>>>>>> +       .halt_reg = 0x7701c,
->>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
->>>>>>>
->>>>>>> Again, nobody has fixed the UFS driver to not need to do this halt skip
->>>>>>> check for these clks? It's been over a year.
->>>>>>>
->>>>>>
->>>>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
->>>>>> configuration and thus during the late initcall of clk_disable there
->>>>>> could be warnings of "clock stuck ON" in the dmesg. That is the reason
->>>>>> also to use the BRANCH_HALT_SKIP flag.
->>>>>
->>>>> Oh that's bad. Why do the clks stay on when we try to turn them off?
->>>>>
->>>>
->>>> Those could be due to the configuration selected by HW and SW cannot
->>>> override them, so traditionally we have never polled for CLK_OFF for
->>>> these clocks.
->>>
->>> Is that the case or just a guess?
->>>
+>> That feature is missed on KVM, add a new parameter "nopvspin" to disable
+>> PV spinlocks for KVM guest.
 >>
->> This is the behavior :).
-> 
-> Ok. It's the same as sdm845 so I guess it's OK.
-> 
+>> This new parameter is also used to replace "xen_nopvspin" and
+>> "hv_nopvspin".
+> This is confusing as there are no Xen or Hyper-V changes in this patch.
+> Please make it clear that you're talking about future patches, e.g.:
+>
+>    The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
+>    parameters in future patches.
 
-Thanks.
+Will fix
 
->>
->>>>
->>>>>>
->>>>>> I would also check internally for the UFS driver fix you are referring here.
->>>>>
->>>>> Sure. I keep asking but nothing is done :(
->>>>>
->>>>>>
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0x7701c,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_ufs_phy_rx_symbol_0_clk",
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>> [...]
->>>>>>>> +
->>>>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
->>>>>>>> +       .halt_reg = 0xf058,
->>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
->>>>>>>
->>>>>>> Why does this need halt_skip?
->>>>>>
->>>>>> This is required as the source is external PHY, so we want to not check
->>>>>> for HALT.
->>>>>
->>>>> This doesn't really answer my question. If the source is an external phy
->>>>> then it should be listed as a clock in the DT binding and the parent
->>>>> should be specified here. Unless something doesn't work because of that?
->>>>>
->>>>
->>>> The USB phy is managed by the USB driver and clock driver is not aware
->>>> if USB driver models the phy as a clock. Thus we do want to keep a
->>>> dependency on the parent and not poll for CLK_ENABLE.
->>>
->>> The clk driver should be aware of the USB driver modeling the phy as a
->>> clk. We do that for other phys so what is the difference here?
->>>
->>
->> Let me check with the USB team, but could we keep them for now?
-> 
-> Ok. It's also the same as sdm845 so I guess it's OK. Would be nice to
-> properly model it though so we can be certain the clk is actually
-> enabled.
-> 
+>
+>> The global variable pvspin isn't defined as __initdata as it's used at
+>> runtime by XEN guest.
+> Same comment as above regarding what this patch is doing versus what will
+> be done in the future.  Arguably you should even mark it __initdata in
+> this patch and deal with conflict in the Xen patch, e.g. use it only to
+> set the existing xen_pvspin variable.
 
-I am going to follow it up and close on this.
+Will fix
 
->>
->>>>
->>>>>>
->>>>>>>
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0xf058,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
->>>>>>>> +       .halt_reg = 0x6a004,
->>>>>>>> +       .halt_check = BRANCH_HALT,
->>>>>>>> +       .hwcg_reg = 0x6a004,
->>>>>>>> +       .hwcg_bit = 1,
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0x6a004,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_usb_phy_cfg_ahb2phy_clk",
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
->>>>>>>
->>>>>>> There's no parent though... So I guess this means it keeps it enabled
->>>>>>> implicitly in hardware?
->>>>>>>
->>>>>>
->>>>>> These are not left enabled, but want to leave them enabled for clients
->>>>>> on config NOC.
->>>>>
->>>>> Sure. It just doesn't make sense to create clk structures and expose
->>>>> them in the kernel when we just want to turn the bits on and leave them
->>>>> on forever. Why not just do some register writes in probe for this
->>>>> driver? Doesn't that work just as well and use less memory?
->>>>>
->>>>
->>>> Even if I write these registers during probe, the late init check
->>>> 'clk_core_is_enabled' would return true and would be turned OFF, that is
->>>> the reason for marking them CRITICAL.
->>>>
->>>
->>> That wouldn't happen if the clks weren't registered though, no?
->>>
->>
->> I want to keep these clock CRITICAL and registered for now, but we
->> should be able to revisit/clean them up later.
->>
-> 
-> Why do you want to keep them critical and registered? I'm suggesting
-> that any clk that is marked critical and doesn't have a parent should
-> instead become a register write in probe to turn the clk on.
-> 
-Sure, let me do a one-time enable from probe for the clocks which 
-doesn't have a parent.
-But I would now have to educate the clients of these clocks to remove 
-using them.
+>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+......snip
 
---
+>>   /**
+>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>> index e820568..a4f108d 100644
+>> --- a/arch/x86/kernel/kvm.c
+>> +++ b/arch/x86/kernel/kvm.c
+>> @@ -842,6 +842,13 @@ void __init kvm_spinlock_init(void)
+>>   	if (num_possible_cpus() == 1)
+>>   		return;
+>>   
+>> +	if (!pvspin) {
+>> +		pr_info("PV spinlocks disabled\n");
+>> +		static_branch_disable(&virt_spin_lock_key);
+>> +		return;
+>> +	}
+>> +	pr_info("PV spinlocks enabled\n");
+> These prints could be confusing as KVM also disables PV spinlocks when it
+> sees KVM_HINTS_REALTIME.
+
+What about below:
+
+pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
+
+Or you prefer separate print for each disabling like below?
+
+         /* Does host kernel support KVM_FEATURE_PV_UNHALT? */
+         if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)) {
+                 pr_info("PV spinlocks disabled, KVM_FEATURE_PV_UNHALT feature needed.\n");
+                 return;
+         }
+
+         if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+                 pr_info("PV spinlocks disabled, having non-preemption hints.\n");
+                 return;
+         }
+
+         /* Don't use the pvqspinlock code if there is only 1 vCPU. */
+         if (num_possible_cpus() == 1) {
+                 pr_info("PV spinlocks disabled on UP.\n");
+                 return;
+         }
+	if (!pvspin) {
+		pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
+		static_branch_disable(&virt_spin_lock_key);
+		return;
+	}
+	pr_info("PV spinlocks enabled\n");
+
+>
+>> +
+>>   	__pv_init_lock_hash();
+>>   	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+>>   	pv_ops.lock.queued_spin_unlock =
+>> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+>> index 2473f10..945b510 100644
+>> --- a/kernel/locking/qspinlock.c
+>> +++ b/kernel/locking/qspinlock.c
+>> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>>   #include "qspinlock_paravirt.h"
+>>   #include "qspinlock.c"
+>>   
+>> +bool pvspin = true;
+> This can be __ro_after_init, or probably better __initdata and have Xen
+> snapshot the value for its use case.
+
+I will use __initdata
+
+>
+> Personal preference: I'd invert the bool and name it nopvspin to make it
+> easier to connect the variable to the kernel param.
+
+OK, will do that.  Thanks for review for all the patches.
+
+Zhenzhong
+
