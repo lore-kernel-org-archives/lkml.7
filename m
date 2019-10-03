@@ -2,94 +2,167 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A592AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8356DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB5520830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547ED20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570112839;
+	bh=0xDScbPy4Mcrc2P9bzOgOFRC9tf6RJLxGCodIbbEIu4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=S+GmuMObzgRi9WYRNWde3cRrtsbiFpALDtWaVRmrWCHQiFHEgLqSjtsPyUJ70KCct
+	 fL1HLA/B2df06mSLAOQc1khFKUiMRRkIG5j0NZffLwRWtOj/zAcy/wY9Y5TCZMyLpO
+	 SAtr3GiwcQGo5SyMt6MDInAtwmQxZXWoCbPej3vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfJCO0U (ORCPT
+        id S1730614AbfJCO1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:26:20 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:44202 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726393AbfJCO0U (ORCPT
+        Thu, 3 Oct 2019 10:27:18 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43126 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJCO1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:26:20 -0400
-Received: (qmail 3509 invoked by uid 2102); 3 Oct 2019 10:26:19 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Oct 2019 10:26:19 -0400
-Date:   Thu, 3 Oct 2019 10:26:19 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-cc:     mathias.nyman@intel.com, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "usb: Avoid unnecessary LPM enabling and disabling
- during suspend and resume"
-In-Reply-To: <123BCB7F-5ABA-4DDD-9599-46D3240903F6@canonical.com>
-Message-ID: <Pine.LNX.4.44L0.1910031024410.1797-100000@iolanthe.rowland.org>
+        Thu, 3 Oct 2019 10:27:18 -0400
+Received: by mail-qk1-f196.google.com with SMTP id h126so2513239qke.10;
+        Thu, 03 Oct 2019 07:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QoMfXeCBE2+e9NZxnjQG1SWoCD2staT4ZlOGYZkaxM4=;
+        b=V/ZZwApsQXkPKcYVsPp7lYdZdi8cvMG6jQ8XQetrU9Fq9JcaIIT9bRD+QTBBaUDgSu
+         JfWMPYIAYfgAbejz1js+pgC8JGVrFdrWlksiYLLv2YqMArXBKQlLWBDEeF1AuXh+v1yU
+         EeFDcX2TlJ2ZStwoYZecfp4bjbFB7fqXFbbIvBYge6ehthduNDZvyoTcDiBIXg8lHJUh
+         ERYZh++Cwnw7HbRVMFzsmMqQefKCrhd1eIo0QRIl3wrytXGlV+iwMAIEVPmAc9D9Cx+2
+         1csBowm+1F+TlBAqxsylxbqXVz0r1F+YiyzifhOJ0rM//SvS6ydRyT54B+5iIBVGF1lC
+         GfUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=QoMfXeCBE2+e9NZxnjQG1SWoCD2staT4ZlOGYZkaxM4=;
+        b=raQBFbOM2BKhuqopFfPqYgk5n25VlnquBZqXJvG194B4NRkfU3Nx7W3UnbDG+To5wd
+         gIfRufieTfY3UXqNNt6z41L06hRUDb7tIu5MhhWEM/R639YUDuilhsXfmVunqCnkwslh
+         6sAbWUq5Y+CxrmfpQUCazRe5fL52CniZHIrRL0GI9A3kgruF7NPfVKUOhD4HedVu6N90
+         2MLmwrUJHEeHy2uyW9SXHAgGLNRjNrUueqPoR9zutHEHyqAcW8cbhN379pABM8AzHSSk
+         idK/cpa51raEk0zyw7AkrrGgaV4imbqpqJL5s7A2V+4Nr9jjOKbCD5xcQBldJvYSPwnQ
+         zgOQ==
+X-Gm-Message-State: APjAAAUC8hB/BtTIKUwN+zkhY1nBTT2T2zKCPjNzY4WcOCajZ69q1Sbk
+        noyuU5NXfruN1z7lsclCTtI8/u6tJGw=
+X-Google-Smtp-Source: APXvYqwOxKIiaAX2C3B3METaTMp0USKJlj4RW8SRT/uLyS+USZQGJDU/pkgesWJYHyaOCXFekbPhSw==
+X-Received: by 2002:ae9:f50a:: with SMTP id o10mr1978279qkg.372.1570112835413;
+        Thu, 03 Oct 2019 07:27:15 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:9f72])
+        by smtp.gmail.com with ESMTPSA id d23sm1588317qkc.127.2019.10.03.07.27.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 07:27:14 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 07:27:13 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: Avoid getting stuck during cyclic writebacks
+Message-ID: <20191003142713.GA2622251@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Oct 2019, Kai-Heng Feng wrote:
+During a cyclic writeback, extent_write_cache_pages() uses done_index
+to update the writeback_index after the current run is over.  However,
+instead of current index + 1, it gets to to the current index itself.
 
-> > On Oct 2, 2019, at 23:47, Alan Stern <stern@rowland.harvard.edu> wrote:
-> > 
-> > On Wed, 2 Oct 2019, Kai-Heng Feng wrote:
-> > 
-> >> This reverts commit d590c23111505635e1beb01006612971e5ede8aa.
-> >> 
-> >> Dell WD15 dock has a topology like this:
-> >> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
-> >>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-> >>            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-> >> 
-> >> Their IDs:
-> >> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-> >> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp.
-> >> Bus 004 Device 004: ID 0bda:8153 Realtek Semiconductor Corp.
-> >> 
-> >> Ethernet cannot be detected after plugging ethernet cable to the dock,
-> >> the hub and roothub get runtime resumed and runtime suspended
-> >> immediately:
-> >> ...
-> > 
-> >> After some trial and errors, the issue goes away if LPM on the SMSC hub
-> >> is disabled. Digging further, enabling and disabling LPM during runtime
-> >> resume and runtime suspend respectively can solve the issue.
-> >> 
-> >> So bring back the old LPM behavior, which the SMSC hub inside Dell WD15
-> >> depends on.
-> >> 
-> >> Fixes: d590c2311150 ("usb: Avoid unnecessary LPM enabling and disabling during suspend and resume")
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > 
-> > Maybe it would be better to have a VID/PID-specific quirk for this?
-> 
-> Re-reading the spec, I think we need some clarification:
-> "If the value is 3, then host software wants to selectively suspend the
-> device connected to this port. The hub shall transition the link to U3
-> from any of the other U states using allowed link state transitions.
-> If the port is not already in the U0 state, then it shall transition the
-> port to the U0 state and then initiate the transition to U3."
-> 
-> The phrase "then it shall transition the port to the U0 state" what does "it" here refer to?
-> Is it the hub or the software?
-> If it's the former then it's indeed a buggy hub, but if it's the latter I think reverting the commit is the right thing to do.
+Unfortunately, this, combined with returning on EOF instead of looping
+back, can lead to the following pathlogical behavior.
 
-In my opinion, "it" here refers to the hub.  This is because of the 
-parallel construction with the preceding sentence ("... shall 
-transition the link/port"), which indicates that the subjects should be 
-the same.
+1. There is a single file which has accumulated enough dirty pages to
+   trigger balance_dirty_pages() and the writer appending to the file
+   with a series of short writes.
 
-Alan Stern
+2. bdp kicks in, wakes up background writeback and sleeps.
 
+3. Writeback kicks in and the cursor is on the last page of the dirty
+   file.  Writeback is started or skipped if already in progress.  As
+   it's EOF, extent_write_cache_pages() returns and the cursor is set
+   to done_index which is pointing to the last page.
+
+4. Writeback is done.  Nothing happens till bdp finishes, at which
+   point we go back to #1.
+
+This can almost completely stall out writing back of the file and keep
+the system over dirty threshold for a long time which can mess up the
+whole system.  We encountered this issue in production with a package
+handling application which can reliably reproduce the issue when
+running under tight memory limits.
+
+Reading the comment in the error handling section, this seems to be to
+avoid accidentally skipping a page in case the write attempt on the
+page doesn't succeed.  However, this concern seems bogus.
+
+On each page, the code either:
+
+* Skips and moves onto the next page.
+
+* Fails issue and sets done_index to index + 1.
+
+* Successfully issues and continue to the next page if budget allows
+  and not EOF.
+
+IOW, as long as it's not EOF and there's budget, the code never
+retries writing back the same page.  Only when a page happens to be
+the last page of a particular run, we end up retrying the page, which
+can't possibly guarantee anything data integrity related.  Besides,
+cyclic writes are only used for non-syncing writebacks meaning that
+there's no data integrity implication to begin with.
+
+Fix it by always setting done_index past the current page being
+processed.
+
+Note that this problem exists in other writepages too.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ fs/btrfs/extent_io.c |   12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index cceaf05aada2..4905f48587df 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4121,7 +4121,7 @@ static int extent_write_cache_pages(struct address_space *mapping,
+ 		for (i = 0; i < nr_pages; i++) {
+ 			struct page *page = pvec.pages[i];
+ 
+-			done_index = page->index;
++			done_index = page->index + 1;
+ 			/*
+ 			 * At this point we hold neither the i_pages lock nor
+ 			 * the page lock: the page may be truncated or
+@@ -4156,16 +4156,6 @@ static int extent_write_cache_pages(struct address_space *mapping,
+ 
+ 			ret = __extent_writepage(page, wbc, epd);
+ 			if (ret < 0) {
+-				/*
+-				 * done_index is set past this page,
+-				 * so media errors will not choke
+-				 * background writeout for the entire
+-				 * file. This has consequences for
+-				 * range_cyclic semantics (ie. it may
+-				 * not be suitable for data integrity
+-				 * writeout).
+-				 */
+-				done_index = page->index + 1;
+ 				done = 1;
+ 				break;
+ 			}
