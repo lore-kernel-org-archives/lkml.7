@@ -7,82 +7,84 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9846C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908F8C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C008B21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695E721A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqSVoiSh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mNFS4WZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfJCKCV (ORCPT
+        id S1729845AbfJCKCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:02:21 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:46442 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfJCKCU (ORCPT
+        Thu, 3 Oct 2019 06:02:25 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39706 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfJCKCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:02:20 -0400
-Received: by mail-vk1-f193.google.com with SMTP id o137so473273vka.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:02:20 -0700 (PDT)
+        Thu, 3 Oct 2019 06:02:24 -0400
+Received: by mail-ua1-f68.google.com with SMTP id b14so696256uap.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:02:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4+KY5ywrPHYVrJYnT/Bh9w1+Qmgw3NE8hQjMYcsTI1k=;
-        b=qqSVoiSh06E14trLCSHMQOJoJfg9OEuVBgr9YRPJBjwn+DHZapbRsX0KL0wEaN+tpy
-         2qb8e8BD0D0Gu/aDa0SRFnEiYPewzD8cpA3SIZc25bT0SG0EKCzzXvYWsnnMNoAytd+k
-         ES930igP2ZxogA+fsD6gvT8/CMHFtuLPAkR/C7ItRU1IobB/qzIl0V+nKXq5Xzy2ac7m
-         kc2naQX8sUSeH4calwjJqO1zsjPuFRKamnUUovhWANy+cTg0TYZdxAWi1F5HZ8R9vOr2
-         T+Qe+rn3HAKwQb210SUX4KI2+CaH8spLZBvZ7JSTNtzx40cpV98LtLLOLH8klfRjsSYr
-         238g==
+        bh=GOSpNy+f7VfEti+UMkQ6EpXD+06Um2caF49vqJkGTIU=;
+        b=mNFS4WZ5+nNrYnXE1BleojBJ2+Rbdf9JROYEgt4+yTQ6sosZS+zXZ7jEQyr/21qOHo
+         ZRca6pstZgoYwO9BQ0/ncegqwZbZUFaHeWkGiKx0arLsP5XWU3VfktsAcQBwl/+2OTM2
+         T9fEF6txKviVOAZgqdT5cgh+OjZ1LTAVTWFvUUx3k/hAo3IVDbE644ZWgpBEWNJabXCm
+         HmdLWMsm8FfT24M62fOYITbUDCYADpoBUhUrotqLgKqJ0MRVD4cY3KDvWH863ehV1Iow
+         Qs0qP+hrlw6y63wOaXkYg+NNKTxg1wjNZojN4iHAc4C9OB9alV/dPJaeEnxrYlm+L9fj
+         AWFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4+KY5ywrPHYVrJYnT/Bh9w1+Qmgw3NE8hQjMYcsTI1k=;
-        b=E7T/V0Ta1EK1ix/WGKw4gpjyObnUhsrX9TCY95BC7hTG6GHWk1/Tkk1C0BRBvVyV0s
-         jtT+0zdpnPThtGRNBXD+0fB0zYyVBxHB9hVXLygbKiISeoVs1MdEJhPmb+iLH/e509cK
-         cui+8Oflg9SByejsLVq9yfZw2f0iVwdAyEmsqSlO9SS9uYgI4B7az6p0F0je4wRkP7sk
-         hAknMCgBbPlNtTB4VkGwRXVeSkTRgFqHKBld2viyOyd9yjHxbgNUlAFClY6aYY1f26kC
-         iy3NbHVXWGO6dKan7NCMoHrDqR50uIhV4XbSG9fVchpYHYa3ASDzucv6CeB7Wc/1e24O
-         049Q==
-X-Gm-Message-State: APjAAAXcIZBLNwHf8OLpMAuYK12eqiztsu2DMWbdn+h36ejuitakezf3
-        VgmDFyeJUUFIkVMoORmmOf9P9e8aM3Lbe79CxRrq/Q==
-X-Google-Smtp-Source: APXvYqwcNdJGDVlZakhLGrvx148tAR191tZOT/k4c2coupoTTHeFcjkTwm+I5RMWJmhHKaZQYu2ZYh8VIr0dPyEOMhA=
-X-Received: by 2002:a1f:3491:: with SMTP id b139mr4711393vka.40.1570096939692;
- Thu, 03 Oct 2019 03:02:19 -0700 (PDT)
+        bh=GOSpNy+f7VfEti+UMkQ6EpXD+06Um2caF49vqJkGTIU=;
+        b=RlcUUzE/ztgFXF/xbsV6jnvBV9E/m3hCKFkI5W/fY8GCadLROFDl3p+VZoSlxuETcY
+         HInjKh++1QKQmddxvEoNFHjVsAXOS93kjSxhDAYXiRLpnLW6XcB7R8BqpNFuk2HAzm1D
+         ln94r8o6q7Dln4QRC9IiaJUulE1LXXKWWMsR1agbs8Ua99MeZn22T45LCw0jAv4fK1+P
+         yO35ZsdbG8D1m0d8pyc4ZB0Q244BtVOtbvcT88pXpWziKio8+T1weiRNy7/bam+EO8N7
+         yZ2mBQIGK1lg6iH30LOV+ZGJ4OwN2Hs+qokHpTMPcn5bvYsj4K+eqiQzAeFMXLi/2rCE
+         5knQ==
+X-Gm-Message-State: APjAAAXEAFOvP/ikRWV2mi7jKyxN1+klK99CU2/AJly0A8AvDQYeADkX
+        2pj2R8lDCMWVI26ivEaU9wFrkIMe+4W6Otu2BtdYvg==
+X-Google-Smtp-Source: APXvYqy1kKchXz+oPn0n/cgFca4K27JNgGB2h8SdeZvE8qZywL3z2hE+b/iLMb85HvQngCIZt5pFcC7UNWQtn0HAkug=
+X-Received: by 2002:a9f:24c4:: with SMTP id 62mr4434046uar.104.1570096943050;
+ Thu, 03 Oct 2019 03:02:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190918180253.GA11702@SD>
-In-Reply-To: <20190918180253.GA11702@SD>
+References: <4ad4cdb5-3623-4416-d3d2-b3c048a42139@web.de>
+In-Reply-To: <4ad4cdb5-3623-4416-d3d2-b3c048a42139@web.de>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 3 Oct 2019 12:01:43 +0200
-Message-ID: <CAPDyKFo0ExfCcOjBF31NnPAQuj1eekCoZa0m9xKvqevBsWM1cQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc: host: bcm2835: use devm_platform_ioremap_resource wrapper
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 3 Oct 2019 12:01:47 +0200
+Message-ID: <CAPDyKFpHdOGqSTDd95m=NjcE+vkW_p=61UFFegJ9QX8j3UdB0g@mail.gmail.com>
+Subject: Re: [PATCH] mmc: cavium-octeon: Use devm_platform_ioremap_resource()
+ in octeon_mmc_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Jan Glauber <jglauber@cavium.com>,
+        "Steven J. Hill" <Steven.Hill@cavium.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 20:03, Saiyam Doshi <saiyamdoshi.in@gmail.com> wrote:
+On Wed, 18 Sep 2019 at 14:28, Markus Elfring <Markus.Elfring@web.de> wrote:
 >
-> Use devm_platform_ioremap_resource helper which wraps
-> platform_get_resource() and devm_ioremap_resource() together.
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 18 Sep 2019 14:20:34 +0200
 >
-> Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
+> Simplify this function implementation by using a known wrapper function.
 >
-> More information about semantic patching is available at
-> http://coccinelle.lip6.fr/
+> This issue was detected by using the Coccinelle software.
 >
-> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
 Applied for next, thanks!
 
@@ -91,31 +93,47 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/bcm2835.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  drivers/mmc/host/cavium-octeon.c | 15 ++-------------
+>  1 file changed, 2 insertions(+), 13 deletions(-)
 >
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 148414d7f0c9..99f61fd2a658 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -1357,7 +1357,6 @@ static int bcm2835_probe(struct platform_device *pdev)
+> diff --git a/drivers/mmc/host/cavium-octeon.c b/drivers/mmc/host/cavium-octeon.c
+> index 22aded1065ae..916746c6c2c7 100644
+> --- a/drivers/mmc/host/cavium-octeon.c
+> +++ b/drivers/mmc/host/cavium-octeon.c
+> @@ -148,7 +148,6 @@ static int octeon_mmc_probe(struct platform_device *pdev)
 >  {
->         struct device *dev = &pdev->dev;
->         struct clk *clk;
-> -       struct resource *iomem;
->         struct bcm2835_host *host;
->         struct mmc_host *mmc;
->         const __be32 *regaddr_p;
-> @@ -1373,8 +1372,7 @@ static int bcm2835_probe(struct platform_device *pdev)
->         host->pdev = pdev;
->         spin_lock_init(&host->lock);
+>         struct device_node *cn, *node = pdev->dev.of_node;
+>         struct cvm_mmc_host *host;
+> -       struct resource *res;
+>         void __iomem *base;
+>         int mmc_irq[9];
+>         int i, ret = 0;
+> @@ -205,23 +204,13 @@ static int octeon_mmc_probe(struct platform_device *pdev)
 >
-> -       iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       host->ioaddr = devm_ioremap_resource(dev, iomem);
-> +       host->ioaddr = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(host->ioaddr)) {
->                 ret = PTR_ERR(host->ioaddr);
->                 goto err;
+>         host->last_slot = -1;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Platform resource[0] is missing\n");
+> -               return -ENXIO;
+> -       }
+> -       base = devm_ioremap_resource(&pdev->dev, res);
+> +       base = devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(base))
+>                 return PTR_ERR(base);
+>         host->base = (void __iomem *)base;
+>         host->reg_off = 0;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Platform resource[1] is missing\n");
+> -               return -EINVAL;
+> -       }
+> -       base = devm_ioremap_resource(&pdev->dev, res);
+> +       base = devm_platform_ioremap_resource(pdev, 1);
+>         if (IS_ERR(base))
+>                 return PTR_ERR(base);
+>         host->dma_base = (void __iomem *)base;
 > --
-> 2.20.1
+> 2.23.0
 >
