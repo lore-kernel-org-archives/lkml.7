@@ -2,113 +2,162 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E7C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A31C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036C221783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61015207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:00:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmRIHokB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388188AbfJCT7N (ORCPT
+        id S2388237AbfJCUAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:59:13 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:53875 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733122AbfJCT7J (ORCPT
+        Thu, 3 Oct 2019 16:00:19 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41544 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732997AbfJCUAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:59:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id w8so6949763iol.20
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:59:09 -0700 (PDT)
+        Thu, 3 Oct 2019 16:00:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r2so2768172lfn.8;
+        Thu, 03 Oct 2019 13:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NapHy1rPTgTDallxX4g8iFDr+uCGnEf2RFpdBhDGZzo=;
+        b=JmRIHokBIvo1DJcwBA6wVxzr2NF0vCRfmTDgbNOtuWwY7FsnwL9b5R6EbX0V7Q21B7
+         MPDWmgF7fyKUPOnKM0ugpIbFYdyuU7tbvcv5WIAaOPFU1eNmGE3azhoc69xYm+ZdaWfe
+         NDBK86Mm35USGQIJ7NGsaXptiRcvSwKIbHX2pkXYK1o/pEbzVR9R6kC2/9nq7TmwQiyB
+         9kOPa4+fySrly3ceHFupVzH1W63eXj+Bp01gXi+MuqeDTail+9pERNxDIPNgiMi2ima0
+         YRrTL07sG/Ub7umt16iMAYUA/mJtiT4MSETdZ1W7fOVBFoi94IgoUiZ7juedBezxZDV7
+         D53A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Nk67c/1XiJvvCr7lH+tigw1xQQrdQdPfq1HiTbDZaP4=;
-        b=sBKwMr7ipnJzlAYJ0OSGuK3z7lKdOwdUJRaFUyB1QsrLzTYY5O7ynyAMP65DolODqm
-         tuBr4ZXZXzlC/NN105s+XojW+Ykjfjp1jWto++b+ekAKLLcan1bfm6eRoIyvPFC4Ow6E
-         tge0CLjbgD8NctNSUpi38jzzguKQbxUTritEghHwBPeALy63fRXyLRHxffn1uUVm6Ogf
-         dfrn66Pq3V0MX+YB/ATgJZiGyEoEkbZFB7VRyS7476C8YgXcNF34FRYgMxepB82haVRM
-         h9ZQ0eO9wlmKu9wVFDsendbHAI84VpSQgMW51tLTEd0Ghifq24NK8CR4+oO1+3ReoqDe
-         UlEA==
-X-Gm-Message-State: APjAAAVvqJsY7vU/ciCOAyOLUgTR0zqwBI3WGzLH+YgbiaVKevX1OcRe
-        sfgv/48QIymNe9jsne0+INLcCReBU0vtnb2zzpgoEw/ofZZB
-X-Google-Smtp-Source: APXvYqxpmYR8n+dwXhic99PAr7TYlnMq5Xw2s/VJa9GyNPCBnJzeka7e9ZM9i1qfEyI7/lXL4/DDP4KTn5v5ssVj8x1DLllVE1o9
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NapHy1rPTgTDallxX4g8iFDr+uCGnEf2RFpdBhDGZzo=;
+        b=WYF/ZYdZo2kdWEmE4cdiX3YtpL6ay4kghptdB1dotYOt4TKIvpPgf4sHw28Nwim7d+
+         d+IInQ3I3OQIZszyx1m6dhys5/xZdHjcCyXxYMI/XggDBze1zazBpUJapyl1FnmYsk/c
+         303xGwWe/I3elS54jcNjk5N/ZvDchxhSDq4jpWe76ZSCVnR1J/7/Ur1DIZmdrZlBQxqz
+         z8HD9vfLNBfGGnXE/8NSiNcQbnhcvQq1qCVBI1Hom+KSO5mM+Y9G+6/bW2zovg6ipxI3
+         dKa552II8lG0f7Fn/j7JhTnwDu2uX7Hiip+SZaHUBGo7beXAms0ka989cTvZ2qFSnr/x
+         ny9g==
+X-Gm-Message-State: APjAAAWpZWPqRcpCJfQFez3yvjA07Xg6asdfMT/xwD2c/B/PPMAblpjX
+        MngQNqJbVyfdrqXmNkiGMGjIUIzw2uHR0PkWprA=
+X-Google-Smtp-Source: APXvYqxjyz+yXTHomDPcF221F5tJRzDJfLVexFr9a1wXp4hC6/B2cWUGfY2w1dyM4Exu3RTEzKbrGoZc/Rw2fbAQkcw=
+X-Received: by 2002:a19:f247:: with SMTP id d7mr6543695lfk.191.1570132816333;
+ Thu, 03 Oct 2019 13:00:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:60b:: with SMTP id x11mr11449655ilg.212.1570132748783;
- Thu, 03 Oct 2019 12:59:08 -0700 (PDT)
-Date:   Thu, 03 Oct 2019 12:59:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bdee330594070441@google.com>
-Subject: memory leak in cap_inode_getsecurity
-From:   syzbot <syzbot+942d5390db2d9624ced8@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191003144624.17899-1-daniel@qtec.com>
+In-Reply-To: <20191003144624.17899-1-daniel@qtec.com>
+From:   Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Date:   Thu, 3 Oct 2019 21:59:59 +0200
+Message-ID: <CAPybu_29m_PvzfA8TQGNANgQ_QFEQbhT-=ydQkE8RPJ_G_-1uQ@mail.gmail.com>
+Subject: Re: [PATCH] media: imx214: Fix stop streaming
+To:     Daniel Gomez <daniel@qtec.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Ups.... sorry about that. Hopefully it works fine also without the
+patch, but it needs to be fixed.
 
-syzbot found the following crash on:
+On Thu, Oct 3, 2019 at 4:46 PM Daniel Gomez <daniel@qtec.com> wrote:
+>
+> Stop video streaming when requested.
+>
+> When s_stream is called to stop the video streaming, if/else condition calls
+> start_streaming function instead of the one for stopping it.
+>
+> Fixes: 436190596241 ("media: imx214: Add imx214 camera sensor driver")
+> Signed-off-by: Daniel Gomez <daniel@qtec.com>
 
-HEAD commit:    0f1a7b3f timer-of: don't use conditional expression with m..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1329640d600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d66badf12ef344c
-dashboard link: https://syzkaller.appspot.com/bug?extid=942d5390db2d9624ced8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1107b513600000
+Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+> ---
+>
+> You can find some logs before/after running in the hardware. Notice 0x100
+> register is for starting/stopping the video streaming from the imx214 sensor.
+>
+> * Before patch:
+>
+> # media-ctl -d /dev/media0 -l '"msm_csiphy0":1->"msm_csid0":0[1],"msm_csid0":1->"msm_ispif0":0[1],"msm_ispif0":1->"msm_vfe0_rdi0":0[1]'
+> # media-ctl -d /dev/media0 -V '"imx214 3-001a":0[fmt:SRGGB10/1920x1080],"msm_csiphy0":0[fmt:SRGGB10/1920x1080],"msm_csid0":0[fmt:SRGGB10/1920x1080],"msm_ispif0":0[fmt:SRGGB10/1920x1080],"msm_vfe0_rdi0":0[fmt:SRGGB10/1920x1080]'
+> # yavta -f SRGGB10P -s 1920x1080 -n 1 --capture=5 /dev/v4l/by-path/platform-a34000.camss-video-index0
+> Device /dev/v4l/by-path/platform-a34000.camss-video-index0 opened.
+> Device `Qualcomm Camera Subsystem' on `platform:a34000.camss' (driver 'qcom-camss') supports video, capture, with mplanes.
+> Video format set: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
+>  * Stride 2400, buffer size 2592000
+> Video format: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
+>  * Stride 2400, buffer size 2592000
+> 1 buffers requested.
+> length: 1 offset: 4093609832 timestamp type/source: mono/EoF
+> Buffer 0/0 mapped at address 0xffff84b6b000.
+> 0 (0) [-] none 0 2592000 B 30.682759 30.705111 4.697 fps ts mono/EoF
+> 1 (0) [-] none 1 2592000 B 30.749391 30.771609 15.008 fps ts mono/EoF
+> 2 (0) [-] none 2 2592000 B 30.816042 30.838225 15.004 fps ts mono/EoF
+> 3 (0) [-] none 3 2592000 B 30.882690 30.904992 15.004 fps ts mono/EoF
+> 4 (0) [-] none 4 2592000 B 30.949333 30.971543 15.005 fps ts mono/EoF
+> Captured 5 frames in 0.501681 seconds (9.966480 fps, 0.000000 B/s).
+> 1 buffers released.
+> # v4l2-dbg -d /dev/v4l-subdev19 -g 0x100
+> ioctl: VIDIOC_DBG_G_REGISTER
+> Register 0x00000100 = 1h (1d  00000001b)
+>
+> * After patch:
+>
+> # media-ctl -d /dev/media0 -l '"msm_csiphy0":1->"msm_csid0":0[1],"msm_csid0":1->"msm_ispif0":0[1],"msm_ispif0":1->"msm_vfe0_rdi0":0[1]'
+> # media-ctl -d /dev/media0 -V '"imx214 3-001a":0[fmt:SRGGB10/1920x1080],"msm_csiphy0":0[fmt:SRGGB10/1920x1080],"msm_csid0":0[fmt:SRGGB10/1920x1080],"msm_ispif0":0[fmt:SRGGB10/1920x1080],"msm_vfe0_rdi0":0[fmt:SRGGB10/1920x1080]'
+> # yavta -f SRGGB10P -s 1920x1080 -n 1 --capture=5 /dev/v4l/by-path/platform-a34000.camss-video-index0
+> Device /dev/v4l/by-path/platform-a34000.camss-video-index0 opened.
+> Device `Qualcomm Camera Subsystem' on `platform:a34000.camss' (driver 'qcom-camss') supports video, capture, with mplanes.
+> Video format set: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
+>  * Stride 2400, buffer size 2592000
+> Video format: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
+>  * Stride 2400, buffer size 2592000
+> 1 buffers requested.
+> length: 1 offset: 3764913896 timestamp type/source: mono/EoF
+> Buffer 0/0 mapped at address 0xffffb62f7000.
+> 0 (0) [-] none 0 2592000 B 31.283473 31.306390 4.697 fps ts mono/EoF
+> 1 (0) [-] none 1 2592000 B 31.350115 31.372475 15.006 fps ts mono/EoF
+> 2 (0) [-] none 2 2592000 B 31.416765 31.439728 15.004 fps ts mono/EoF
+> 3 (0) [-] none 3 2592000 B 31.483410 31.505791 15.005 fps ts mono/EoF
+> 4 (0) [-] none 4 2592000 B 31.550058 31.573025 15.004 fps ts mono/EoF
+> Captured 5 frames in 0.502440 seconds (9.951430 fps, 0.000000 B/s).
+> 1 buffers released.
+> # v4l2-dbg -d /dev/v4l-subdev19 -g 0x100
+> ioctl: VIDIOC_DBG_G_REGISTER
+> Register 0x00000100 = 0h (0d  00000000b)
+>
+>  drivers/media/i2c/imx214.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index 159a3a604f0e..24659cb0d083 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -785,7 +785,7 @@ static int imx214_s_stream(struct v4l2_subdev *subdev, int enable)
+>                 if (ret < 0)
+>                         goto err_rpm_put;
+>         } else {
+> -               ret = imx214_start_streaming(imx214);
+> +               ret = imx214_stop_streaming(imx214);
+>                 if (ret < 0)
+>                         goto err_rpm_put;
+>                 pm_runtime_put(imx214->dev);
+> --
+> 2.20.1
+>
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+942d5390db2d9624ced8@syzkaller.appspotmail.com
 
-2019/10/03 14:00:37 executed programs: 36
-2019/10/03 14:00:43 executed programs: 44
-2019/10/03 14:00:49 executed programs: 63
-BUG: memory leak
-unreferenced object 0xffff8881202cb480 (size 32):
-   comm "syz-executor.0", pid 7246, jiffies 4294946879 (age 14.010s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a8379648>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a8379648>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<00000000a8379648>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000a8379648>] __do_kmalloc mm/slab.c:3653 [inline]
-     [<00000000a8379648>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3670
-     [<000000008858463c>] __do_krealloc mm/slab_common.c:1638 [inline]
-     [<000000008858463c>] krealloc+0x7f/0xb0 mm/slab_common.c:1689
-     [<0000000057f9eb8e>] vfs_getxattr_alloc+0x100/0x180 fs/xattr.c:289
-     [<00000000c2154e30>] cap_inode_getsecurity+0x9c/0x2c0  
-security/commoncap.c:389
-     [<00000000b2664a09>] security_inode_getsecurity+0x4c/0x90  
-security/security.c:1314
-     [<00000000921624c0>] xattr_getsecurity fs/xattr.c:244 [inline]
-     [<00000000921624c0>] vfs_getxattr+0xf2/0x1a0 fs/xattr.c:332
-     [<000000001ff6977b>] getxattr+0x97/0x240 fs/xattr.c:538
-     [<00000000b945681f>] path_getxattr+0x6b/0xc0 fs/xattr.c:566
-     [<000000001a9d3fce>] __do_sys_getxattr fs/xattr.c:578 [inline]
-     [<000000001a9d3fce>] __se_sys_getxattr fs/xattr.c:575 [inline]
-     [<000000001a9d3fce>] __x64_sys_getxattr+0x28/0x30 fs/xattr.c:575
-     [<000000002e998337>] do_syscall_64+0x73/0x1f0  
-arch/x86/entry/common.c:290
-     [<00000000f252aa21>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Ricardo Ribalda
