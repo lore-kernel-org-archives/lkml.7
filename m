@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2CBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CBFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C44420865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93D420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123229;
-	bh=06yTpw5L3yxHHbkzrBL/O9Pyp9ibvAP5y0E2ZisKh+Y=;
+	s=default; t=1570123237;
+	bh=D1XWRJt6ClMhPXFxGI9JJL0/zQQhSHeSVvnHbT7ij5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhHr1I48C73pS2IcLmqA4tC8fdX5xRO3VpYtdu7B7HpG5YWDo/30LSrG8XdKLxmnh
-	 JPeFl4mDfsEeHUYh+zBUaeBlm0GVWQTUwdz2Dl8rpBN/wsnOJmZ2lVPm26+mNWeNRJ
-	 xlwsELu1nOuL8YYBsH9Qw7P/NJsyAHd8/sx2qhpU=
+	b=esB5NhMFmJppPe6PVRyQe12ZuBnriVvGFXhNW3TYdyyXCxfQoPLAvK0QR75CQzKP0
+	 i2eFtcgjrBygme5RODVZTvWZFIhbxIdNByIlUXKuXVDWWCXQAgEXw9et7GW47utZ+c
+	 P5jUgV/6t+mSmA/WmgF2u8Ev6Xmt8YcLiZnYkPz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391031AbfJCRU2 (ORCPT
+        id S2390563AbfJCRUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45106 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:20:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387876AbfJCQSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:18:31 -0400
+        id S2387734AbfJCQSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:18:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A0720865;
-        Thu,  3 Oct 2019 16:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE2820700;
+        Thu,  3 Oct 2019 16:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119509;
-        bh=06yTpw5L3yxHHbkzrBL/O9Pyp9ibvAP5y0E2ZisKh+Y=;
+        s=default; t=1570119496;
+        bh=D1XWRJt6ClMhPXFxGI9JJL0/zQQhSHeSVvnHbT7ij5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MpIbgSPyNxDW2AH17VUYJR9/w4fJs1VkAo/LUikwo1IyHxgc0Yh1kPYBnMfaKZAsb
-         sRGknYMwaHHF/aGTSLtr/Z5M3YWxtIOpR4+eJk6BXuaQJvW+jZGXSyNmephNNj2cCx
-         x7YtHcTwIUZTKorPEPYvS9guZEi5WX2QwQWGuzOg=
+        b=cZL0OY5h+qYBxvkklmWMSM5oEUMnhOWu3V8h/InpddYlO4UmWeNBqUz+YlRMp2u/c
+         ixspXcLW3UU336DsnVlcXXceWRug1YjMfLXgqTaqVXg9K1TksyTIiPYHMoqFVGjbY3
+         F+28I71uk7dkGnoLmeqbahDQJBky3BBLBHn1p688=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/211] media: dvb-frontends: use ida for pll number
-Date:   Thu,  3 Oct 2019 17:52:37 +0200
-Message-Id: <20191003154507.805992774@linuxfoundation.org>
+Subject: [PATCH 4.19 087/211] ASoC: sun4i-i2s: Dont use the oversample to calculate BCLK
+Date:   Thu,  3 Oct 2019 17:52:33 +0200
+Message-Id: <20191003154506.862226120@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -62,219 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit c268e7adea52be0093de1164c425f3c8d8927770 ]
+[ Upstream commit 7df8f9a20196072162d9dc8fe99943f2d35f23d5 ]
 
-KASAN: global-out-of-bounds Read in dvb_pll_attach
+The BCLK divider should be calculated using the parameters that actually
+make the BCLK rate: the number of channels, the sampling rate and the
+sample width.
 
-Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
-accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
-that is more than size of 'id' which is DVB_PLL_MAX(64).
+We've been using the oversample_rate previously because in the former SoCs,
+the BCLK's parent is MCLK, which in turn is being used to generate the
+oversample rate, so we end up with something like this:
 
-Rather than increasing dvb_pll_devcount every time, use ida so that
-numbers are allocated correctly. This does mean that no more than
-64 devices can be attached at the same time, but this is more than
-sufficient.
+oversample = mclk_rate / sampling_rate
+bclk_div = oversample / word_size / channels
 
-usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
-software demuxer
-dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
-usb 1-1: media controller created
-dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
-tc90522 0-0018: Toshiba TC90522 attached.
-usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
-module)...
-dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
-module' registered.
-==================================================================
-BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
-drivers/media/dvb-frontends/dvb-pll.c:798
-Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+So, bclk_div = mclk_rate / sampling_rate / word_size / channels.
 
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
-  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
-  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
-  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
-  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
-  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
-  dvb_usbv2_adapter_frontend_init
-drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
-  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
-[inline]
-  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
-  dvb_usbv2_probe.cold+0x24dc/0x255d
-drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+And this is actually better, since the oversampling ratio only plays a role
+because the MCLK is its parent, not because of what BCLK is supposed to be.
 
-The buggy address belongs to the variable:
-  id+0x100/0x120
+Furthermore, that assumption of MCLK being the parent has been broken on
+newer SoCs, so let's use the proper formula, and have the parent rate as an
+argument.
 
-Memory state around the buggy address:
-  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
-  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
-                                                        ^
-  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-==================================================================
-
-Reported-by: syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
+Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/c3595e3a9788c2ef2dcc30aa3c8c4953bb5cc249.1566242458.git-series.maxime.ripard@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/dvb-pll.c | 40 ++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
-index 29836c1a40e98..ee830c76e4b30 100644
---- a/drivers/media/dvb-frontends/dvb-pll.c
-+++ b/drivers/media/dvb-frontends/dvb-pll.c
-@@ -18,6 +18,7 @@
- 
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/idr.h>
- #include <linux/dvb/frontend.h>
- #include <asm/types.h>
- 
-@@ -43,8 +44,7 @@ struct dvb_pll_priv {
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 6173dd86c62ce..18cf8404d27ca 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -223,10 +223,11 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
  };
  
- #define DVB_PLL_MAX 64
--
--static unsigned int dvb_pll_devcount;
-+static DEFINE_IDA(pll_ida);
+ static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
+-				  unsigned int oversample_rate,
++				  unsigned long parent_rate,
++				  unsigned int sampling_rate,
+ 				  unsigned int word_size)
+ {
+-	int div = oversample_rate / word_size / 2;
++	int div = parent_rate / sampling_rate / word_size / 2;
+ 	int i;
  
- static int debug;
- module_param(debug, int, 0644);
-@@ -796,6 +796,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	struct dvb_pll_priv *priv = NULL;
- 	int ret;
- 	const struct dvb_pll_desc *desc;
-+	int nr;
- 
- 	b1 = kmalloc(1, GFP_KERNEL);
- 	if (!b1)
-@@ -804,9 +805,14 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	b1[0] = 0;
- 	msg.buf = b1;
- 
--	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
--	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
--		pll_desc_id = id[dvb_pll_devcount];
-+	nr = ida_simple_get(&pll_ida, 0, DVB_PLL_MAX, GFP_KERNEL);
-+	if (nr < 0) {
-+		kfree(b1);
-+		return NULL;
-+	}
-+
-+	if (id[nr] > DVB_PLL_UNDEFINED && id[nr] < ARRAY_SIZE(pll_list))
-+		pll_desc_id = id[nr];
- 
- 	BUG_ON(pll_desc_id < 1 || pll_desc_id >= ARRAY_SIZE(pll_list));
- 
-@@ -817,24 +823,20 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 			fe->ops.i2c_gate_ctrl(fe, 1);
- 
- 		ret = i2c_transfer (i2c, &msg, 1);
--		if (ret != 1) {
--			kfree(b1);
--			return NULL;
--		}
-+		if (ret != 1)
-+			goto out;
- 		if (fe->ops.i2c_gate_ctrl)
- 			     fe->ops.i2c_gate_ctrl(fe, 0);
+ 	for (i = 0; i < ARRAY_SIZE(sun4i_i2s_bclk_div); i++) {
+@@ -316,8 +317,8 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 		return -EINVAL;
  	}
  
- 	priv = kzalloc(sizeof(struct dvb_pll_priv), GFP_KERNEL);
--	if (!priv) {
--		kfree(b1);
--		return NULL;
--	}
-+	if (!priv)
-+		goto out;
- 
- 	priv->pll_i2c_address = pll_addr;
- 	priv->i2c = i2c;
- 	priv->pll_desc = desc;
--	priv->nr = dvb_pll_devcount++;
-+	priv->nr = nr;
- 
- 	memcpy(&fe->ops.tuner_ops, &dvb_pll_tuner_ops,
- 	       sizeof(struct dvb_tuner_ops));
-@@ -867,6 +869,11 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	kfree(b1);
- 
- 	return fe;
-+out:
-+	kfree(b1);
-+	ida_simple_remove(&pll_ida, nr);
-+
-+	return NULL;
- }
- EXPORT_SYMBOL(dvb_pll_attach);
- 
-@@ -903,9 +910,10 @@ dvb_pll_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- static int dvb_pll_remove(struct i2c_client *client)
- {
--	struct dvb_frontend *fe;
-+	struct dvb_frontend *fe = i2c_get_clientdata(client);
-+	struct dvb_pll_priv *priv = fe->tuner_priv;
- 
--	fe = i2c_get_clientdata(client);
-+	ida_simple_remove(&pll_ida, priv->nr);
- 	dvb_pll_release(fe);
- 	return 0;
- }
+-	bclk_div = sun4i_i2s_get_bclk_div(i2s, oversample_rate,
+-					  word_size);
++	bclk_div = sun4i_i2s_get_bclk_div(i2s, i2s->mclk_freq,
++					  rate, word_size);
+ 	if (bclk_div < 0) {
+ 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
+ 		return -EINVAL;
 -- 
 2.20.1
 
