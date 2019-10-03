@@ -2,51 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FEAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AC9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC2D20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233592086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124314;
-	bh=vSrqal/SzB5QUm5IL0bgBfCKgXUI00hLARQdpo92fUQ=;
+	s=default; t=1570124316;
+	bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P5uFZUmGLQuFmIAmV2Hx45QzRvEhPAkjNeGObWcLe1pFIiBaIMpKDzkzNFG6U5b5B
-	 02ubBo1GbFxvpkPn2Alc2YsAwAkwNUStluhsAodxPzE8cAsUnUzPCA1f6/QEIMuYi9
-	 6/F8n2UFFeuKNMFxWHscSUnRaokcMn9bp16ZV3z8=
+	b=ts24BChotvyvusqnP3bxBRubCyx+M+vXzX3kTd6koDJ/oB80IDnSiWuP45jO7audK
+	 5IM5HMpNn16HKad+hKOTiB4rgYfbexB2Y3AditWKUrZhga1pVDOR2LBjRwhjcErLVH
+	 NuzzvDX2FALTHfc7xU8QpfyQKkiOUEiU807M2dHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389554AbfJCRid (ORCPT
+        id S2389625AbfJCRif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:38:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:38:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732009AbfJCQCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:33 -0400
+        id S1730476AbfJCQCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6C1120700;
-        Thu,  3 Oct 2019 16:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3AEA21A4C;
+        Thu,  3 Oct 2019 16:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118553;
-        bh=vSrqal/SzB5QUm5IL0bgBfCKgXUI00hLARQdpo92fUQ=;
+        s=default; t=1570118550;
+        bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG8HFG6pOZewtV/Hs4HnjvvAI+z5Kv4diy4Q2TmzeuL5qv8UkD5Nn0Wy1rlJPRYJr
-         IIt+Cw7M51OwK8fd+C65GkLGBszGY+umEjCSSoozwDpyRzkKKngHW9JonvXKnHMYCv
-         XNgdjkYxvNbzAQvhKUU3dXLmeyZZaIhroBpUVEXk=
+        b=yUvAjDIPqNZwqt7nAvnX1MJPoRgLk/AIayKKh6RspRbAEyv38YU+VRwQsVCpM/Jtf
+         2cUlmPA3HdPNY0DSgAOMHbo9GQCdYqCFruWlgJs21iZTFqsXORI+TOmXRIYXzludQs
+         j2hdwAly5ResitDqCehiE5vshUbegQZN/uclAug0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 035/129] appletalk: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:52:38 +0200
-Message-Id: <20191003154334.574549083@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 052/129] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
+Date:   Thu,  3 Oct 2019 17:52:55 +0200
+Message-Id: <20191003154340.598492120@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,34 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 6cc03e8aa36c51f3b26a0d21a3c4ce2809c842ac ]
+[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
 
-When creating a raw AF_APPLETALK socket, CAP_NET_RAW needs to be checked
-first.
+In build_adc_controls(), there is an if statement on line 773 to check
+whether ak->adc_info is NULL:
+    if (! ak->adc_info ||
+        ! ak->adc_info[mixer_ch].switch_name)
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+When ak->adc_info is NULL, it is used on line 792:
+    knew.name = ak->adc_info[mixer_ch].selector_name;
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, referring to lines 773 and 774, ak->adc_info
+and ak->adc_info[mixer_ch].selector_name are checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/appletalk/ddp.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/i2c/other/ak4xxx-adda.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1029,6 +1029,11 @@ static int atalk_create(struct net *net,
- 	 */
- 	if (sock->type != SOCK_RAW && sock->type != SOCK_DGRAM)
- 		goto out;
-+
-+	rc = -EPERM;
-+	if (sock->type == SOCK_RAW && !kern && !capable(CAP_NET_RAW))
-+		goto out;
-+
- 	rc = -ENOMEM;
- 	sk = sk_alloc(net, PF_APPLETALK, GFP_KERNEL, &ddp_proto, kern);
- 	if (!sk)
+diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
+index bf377dc192aa7..d33e02c317129 100644
+--- a/sound/i2c/other/ak4xxx-adda.c
++++ b/sound/i2c/other/ak4xxx-adda.c
+@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
+ 				return err;
+ 
+ 			memset(&knew, 0, sizeof(knew));
+-			knew.name = ak->adc_info[mixer_ch].selector_name;
+-			if (!knew.name) {
++			if (!ak->adc_info ||
++				!ak->adc_info[mixer_ch].selector_name) {
+ 				knew.name = "Capture Channel";
+ 				knew.index = mixer_ch + ak->idx_offset * 2;
+-			}
++			} else
++				knew.name = ak->adc_info[mixer_ch].selector_name;
+ 
+ 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+ 			knew.info = ak4xxx_capture_source_info;
+-- 
+2.20.1
+
 
 
