@@ -2,111 +2,107 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1361C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E861DC32792
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAB12086A
+	by mail.kernel.org (Postfix) with ESMTP id BB746215EA
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mtJWe9Bf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wMMj8W01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfJCVu5 (ORCPT
+        id S1730436AbfJCVvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:50:57 -0400
-Received: from mout.web.de ([217.72.192.78]:41403 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbfJCVu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:50:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570139445;
-        bh=+slu9oigrifofLBmSnoGBXNUCdUs8UMw+gAQMYZR/OU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=mtJWe9BfGLpk166deIOWv6NwNSVtqNu4zEFmltWTZO+Quufhq50MugB4t3PI53Dij
-         P75Ixq7hozzbk0+FHdq9w1smAfhLlT6WCPVlEGLVmzgVIbWf+qdMbLNHxgkPW11OH5
-         mvpxatuhvRgzbIbSTYrf6MF+3Mcs9GpROLzrOyrI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from platinum.fritz.box ([89.14.73.200]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LdVza-1hpIko3M5i-00ikbu; Thu, 03
- Oct 2019 23:50:44 +0200
-From:   Soeren Moch <smoch@web.de>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Soeren Moch <smoch@web.de>, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] arm64: dts: rockchip: fix RockPro64 vdd-log regulator settings
-Date:   Thu,  3 Oct 2019 23:50:34 +0200
-Message-Id: <20191003215036.15023-1-smoch@web.de>
-X-Mailer: git-send-email 2.17.1
-X-Provags-ID: V03:K1:sVWSznPIdgTeGmxS0/KuK5sR3zlLN0yEjQwtifgjotr6sUlPGeX
- SCaKNvjkY2xrsa2JwfaH4KWsSiYOkozaZoxo4JmqSc/EwguMpI45EebjNI3cQkwrCfPim6b
- 02b5Xj+b3kuMwjLS4tqXGFCniDNAIH3qhHOEWovdeCy4yOGDuzQye7qcb011wpp5K3Y+zv3
- u+KYJmttKbwcJdT8JijcQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vCe5hpyJPR8=:disR8f0omoqst11p1fIKAh
- iBAK1nFXc7AmOcAiFW44MeJNXdocthJHRd3VEcy9/B9yqK/hTjhNCgBGLXvhk3UzVzVTDK802
- kBf9cEBdt34sF6mLB40sUD5CXT7PaMoPa78w45lA9C3+dF/9UxU09+6fr6SVTgU3mu6Hn2JqJ
- nvfqFZiqINBWoePt9nqRkkTUrqgEyMT6qHHfJUTadp6PJeCXCeirRPUqFqdJ8vx+tsSMrD+G5
- fmZlzpPnl8Ky3j1gtFkLLcEAOMtAgzPfeEONvZiwK5J6n5MxwprBNRT7E07hW+xDfcQbQE0rD
- 8RGbx1mkzr2V92lpYcIRTNqde+Oh+/V4C4s6rQGxN+x/xws7iNpUeU9Rpv65WHyiheHZUcHs6
- 4n7JmhPiZXUCFzWUrmM6oJB7O70rL8WobnNCWQmNtYRuiqGautEew+TItXYvKBCtvFrALXdM+
- vb1+FrU03VriEuoHeRWwPEsO45SGVwhYIsolu6CRDFU9G4a0WdORqWZVYVP+0JvpMOe/lA2zY
- 2rl2QFH53x1+BtBVK20hHOh7W3xtLH+WzZFsAzmnNe3+61mRhxIzHfDY3otUHd7hUG+pyyhXw
- 6RI9YNTvxF2AQ1rzSvvCNNtPkovfmdPvPTfO2Sqig4TRyAE9/Un4zf1wnoho8+Hqw2w2gvh2g
- lFdajNupo7PiibkssZMeWpi2Yyw+Ql484vPZldLOBFiuDXWRwYHJA7n3CWPRqu4FkvqZI0woF
- iWwuOPIyYV09g8L2UPq4YiXXvNXKdJWpQh/x59dBhs26HHmbaZxBvFHrUY7FWo9HRjA0t8hvE
- oDTTozWqTW6xzbFzIwp0E29Vp6mciCpjiqoLv7MMTbg0U9pPnAQecIk11U33l0ZqVQyKSxq8G
- Fdwl4gLqiQcP6Y/Zm2wBLvnsSffYrkTmqpiQ6RjPOPPy9GxZHTglNZP6Cr4a5N3lHKv4+rvUV
- pKvy7jWH6ub53Ne6v/8q//sL+wQIbqfuTNNpvc+MI28YX7YthEldq1GRyRKJ5k4z6o2nrqUik
- oRx5AuvdO3oPcAIsUwKaeuXqRrTtC9M6kdubTFXOZ8EZzZtj1unz7h3zRztMQu37AvKSyHhxt
- k56zCWlbMOjoKO97tb/lVKVF80M81PnaiIOXQ9I9E3UIF2s95Wg/VbtVzkWi4oF6WwrqqO44y
- sthchBfNPGC/jUAm3c9UeqBDY4lM5Ilus4dUpjvn4gcHDKMGS6iu/KEEMEuL56mRaMcwg/xXM
- L5sIsGmzM7HYTjE4fJFm35NicLPlNwOqZLoaMsg==
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 17:51:10 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36823 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfJCVvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:51:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id j11so2141112plk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u1kLHx9hv/uJrNQB6ahsx1gOt2otfNUWLEU9WGV5Q6w=;
+        b=wMMj8W01v0c6TBX4YKoTsjZXCHhuvsim3OX99DX8f1E4V2zWBe1sm2HcSU89S4dOjN
+         1PgrJSlIJ9BcM7WWCgbrFJ3W/+rBDIuXdNADs+mpQJ4qK1Oy1+143AylzqaZXowCsi5Y
+         46NAJayqxluDFriZNGmeN+Rokj+fB/vLXI7+nwkuZFGasXnmMRytVLW5jDwnjouAtXPt
+         DPSTLiqvVyuWE4ZnFzgp9G98tThA/3YyIXsd8DwtulGKG1aGwxLkNPRY4IvRUm8SK0Y7
+         m4VU3k5vjbSi0rcrbbQk20k75A1/ObNlQJKSvvO7uTTMdIxU6Vp72tFZQAVCBcfnQ//z
+         f8Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u1kLHx9hv/uJrNQB6ahsx1gOt2otfNUWLEU9WGV5Q6w=;
+        b=hZWTsMS/jmO5Hli3wwe5hQdSxcOrnqFDNLyu4JSrmPPSxVFXKxu8IWF3J8uPsYGOh8
+         YhvRPUoz+slvgUGbRUp+v9C4+F2ghYR93B6JK4e9MdYhYEVYrWx5CRW1nNP26jV++oHV
+         9HYEjYe3tY5sICW/lhsZMQ8LhrBUaewXEej+AJNNk2o1tGHdIkq2kQVqLZv+GdAOG7az
+         dTlhC3wlbb7+KSGbd+Ux1N57+jX4FylttZumclkrBjAk9A7NVG/ZGp8SpsNYOyLj4lzp
+         DL5DBrhYGT5w9aBOXCLcpXYxbOhcxGBYJUIPNPAV5WYi6kojnDaXNmYZQ7cWW7u1ngG3
+         shog==
+X-Gm-Message-State: APjAAAVxuroRdjiu4aDE/tOSh5w47UUvAxCaG0Cu/2dmWG0CmlEbzLlA
+        kP4iovhb80gVfWx/q7v8z5i9udJlTvbIcMF460Yo8w==
+X-Google-Smtp-Source: APXvYqw9MGIP2qFWRcdt/2BFhkRt7r9d2GKSY8mVi8jppDndhl/UlLNYHSE6Z3rRmjSuRnw4bEgrKNZzGLaqOx5Hhgs=
+X-Received: by 2002:a17:902:bb87:: with SMTP id m7mr11548031pls.179.1570139467569;
+ Thu, 03 Oct 2019 14:51:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191003174838.8872-1-vincenzo.frascino@arm.com>
+ <20191003174838.8872-3-vincenzo.frascino@arm.com> <CAKwvOdmhyVHREHvyB0wL2GfMsE8GcJ1Ouj_8ifrR4hU8kBYukQ@mail.gmail.com>
+ <20191003204944.6wuzflqkjdpawzvp@willie-the-truck> <CAKwvOdm4ccfhXDDSKXgdN4qkn2NHwAHKCwRV7OqLEG_PQj09vQ@mail.gmail.com>
+ <20191003205931.d3vp4bh7wdu4oe7u@willie-the-truck>
+In-Reply-To: <20191003205931.d3vp4bh7wdu4oe7u@willie-the-truck>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 3 Oct 2019 14:50:55 -0700
+Message-ID: <CAKwvOdmMMXOG_GH6-+9iJ=2-+BA-Fg+o+33nyh5m46Rh63FBdQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] arm64: vdso32: Detect binutils support for dmb ishld
+To:     Will Deacon <will@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RockPro64 schematic [1] page 18 states a min voltage of 0.8V and a
-max voltage of 1.4V for the VDD_LOG pwm regulator. However, there is an
-additional note that the pwm parameter needs to be modified.
-=46rom the schematics a voltage range of 0.8V to 1.7V can be calculated.
-Additional voltage measurements on the board show that this fix indeed
-leads to the correct voltage, while without this fix the voltage was set
-too high.
+On Thu, Oct 3, 2019 at 1:59 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, Oct 03, 2019 at 01:56:39PM -0700, Nick Desaulniers wrote:
+> > On Thu, Oct 3, 2019 at 1:49 PM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Thu, Oct 03, 2019 at 01:18:16PM -0700, Nick Desaulniers wrote:
+> > > > On Thu, Oct 3, 2019 at 10:48 AM Vincenzo Frascino
+> > > > <vincenzo.frascino@arm.com> wrote:
+> > > > >
+> > > > > Older versions of binutils that do not support certain types of memory
+> > > > > barriers can cause build failure of the vdso32 library.
+> > > >
+> > > > Do you know specific version numbers of binutils that are affected?
+> > > > May be helpful to have in the commit message just for future
+> > > > travelers.
+> > >
+> > > A quick bit of archaeology suggests e797f7e0b2be added this back in 2012,
+> > > which seems to correlate with the 2.24 release.
+> >
+> > Cool, thanks for digging.  Vincenzo, can we please add that to the
+> > commit message?
+>
+> If this is the only change, then I can add it when I apply -- no need to
+> respin just for this! (although I'm also writing this to remind myself :)
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Ro=
-ckpro64")
-Signed-off-by: Soeren Moch <smoch@web.de>
-=2D--
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-=2D--
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm6=
-4/boot/dts/rockchip/rk3399-rockpro64.dts
-index 0401d4ec1f45..845eb070b5b0 100644
-=2D-- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -173,7 +173,7 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 		regulator-min-microvolt =3D <800000>;
--		regulator-max-microvolt =3D <1400000>;
-+		regulator-max-microvolt =3D <1700000>;
- 		vin-supply =3D <&vcc5v0_sys>;
- 	};
- };
-=2D-
-2.17.1
-
+Yep that's cool with me.  Feel free to add my Acked by tag to the
+series as well.  Thanks for pursuing this Vincenzo.
+-- 
+Thanks,
+~Nick Desaulniers
