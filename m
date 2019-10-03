@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C39C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5BEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E9220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F54120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123765;
-	bh=N9uKcJosbxuA8yjplpPHJhd3laP5PA0VuKho5o6Ctss=;
+	s=default; t=1570123768;
+	bh=FB4XVy2jvCqmDjccoNIb7z5U4Sf68+Zu8TPjSSL5quA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bxkrh/N6R3Qxw1JDSQ06n0HjaAZscYt9Vce739Dxmz2VSQh0OcNUsvC3wHVbyDxD9
-	 Yb1NWZEff5M1neP9aPlnAU6lkroRt75FV1TeQ9sNY9jYL417YexmobvRXAZkaE9DLs
-	 qj6ZPUVCmD2rrRDkeV/0c1knPd0YfrGrWm6dDqUI=
+	b=lxSCw1XArftR48IU7icq1nGXQWdkQ6wYk8gLuWrjPpCAf41LMM1AzalloS6ZsRKDo
+	 d4Rj2fLQ8pjDrliYU4rZ7Lkh3VcOQ9XQfVs4qICPuzvep/lOEp6QkWTSJNVTDbryEI
+	 4TTBhWxX8isGfCx6dni7IKM2LXM0WmbGPr/zcrS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388105AbfJCQMq (ORCPT
+        id S1730505AbfJCR31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35046 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388092AbfJCQMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:41 -0400
+        id S2388100AbfJCQMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A9E220700;
-        Thu,  3 Oct 2019 16:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 597E520865;
+        Thu,  3 Oct 2019 16:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119160;
-        bh=N9uKcJosbxuA8yjplpPHJhd3laP5PA0VuKho5o6Ctss=;
+        s=default; t=1570119163;
+        bh=FB4XVy2jvCqmDjccoNIb7z5U4Sf68+Zu8TPjSSL5quA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEwDWT1zAEpfyRSliCPYjtHM77S3txNLeHAnolLPa/F4jeHyGdsZcTCRVCa6oVFXG
-         qvyLb0RjEUGyCOy/5M4+8e+vkUXnynT+IFwasPHHEgPY6oL6EpBZzfWjXcIZDxP32W
-         IN2BWXGXq7gXu7goQtTI2tJUq9XdgWeJvxnDLPQY=
+        b=1ljPvCoHqJ/m+25ckhFZYrkAL6I5jyFPoCQEkn4jQtHdH/hiw6NwKsNTCdt6+aTqL
+         JaazPO0Jmhhx5/fO6nJlRdOp3+F5yiBQLVq/gx6iBZuzfWxShH4Ir0Q7MzzTlecRa6
+         oAZiIQEx0M/PMXdc5V/P5bbo0Ug6iQEB/tvneoLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Phil Scarr <phil.scarr@pm.me>
-Subject: [PATCH 4.14 148/185] parisc: Disable HP HSC-PCI Cards to prevent kernel crash
-Date:   Thu,  3 Oct 2019 17:53:46 +0200
-Message-Id: <20191003154512.411333182@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "stable@vger.kernel.org, x86@kernel.org,
+        clang-built-linux@googlegroups.com, Nathan Chancellor" 
+        <natechancellor@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 4.14 149/185] x86/retpolines: Fix up backport of a9d57ef15cbe
+Date:   Thu,  3 Oct 2019 17:53:47 +0200
+Message-Id: <20191003154512.704851856@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,73 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 5fa1659105fac63e0f3c199b476025c2e04111ce upstream.
+Commit a9d57ef15cbe ("x86/retpolines: Disable switch jump tables when
+retpolines are enabled") added -fno-jump-tables to workaround a GCC issue
+while deliberately avoiding adding this flag when CONFIG_CC_IS_CLANG is
+set, which is defined by the kconfig system when CC=clang is provided.
 
-The HP Dino PCI controller chip can be used in two variants: as on-board
-controller (e.g. in B160L), or on an Add-On card ("Card-Mode") to bridge
-PCI components to systems without a PCI bus, e.g. to a HSC/GSC bus.  One
-such Add-On card is the HP HSC-PCI Card which has one or more DEC Tulip
-PCI NIC chips connected to the on-card Dino PCI controller.
+However, this symbol was added in 4.18 in commit 469cb7376c06 ("kconfig:
+add CC_IS_CLANG and CLANG_VERSION") so it is always undefined in 4.14,
+meaning -fno-jump-tables gets added when using Clang.
 
-Dino in Card-Mode has a big disadvantage: All PCI memory accesses need
-to go through the DINO_MEM_DATA register, so Linux drivers will not be
-able to use the ioremap() function. Without ioremap() many drivers will
-not work, one example is the tulip driver which then simply crashes the
-kernel if it tries to access the ports on the HP HSC card.
+Fix this up by using the equivalent $(cc-name) comparison, which matches
+what upstream did until commit 076f421da5d4 ("kbuild: replace cc-name
+test with CONFIG_CC_IS_CLANG").
 
-This patch disables the HP HSC card if it finds one, and as such
-fixes the kernel crash on a HP D350/2 machine.
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-Noticed-by: Phil Scarr <phil.scarr@pm.me>
-Cc: stable@vger.kernel.org
+Fixes: e28951100515 ("x86/retpolines: Disable switch jump tables when retpolines are enabled")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parisc/dino.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/parisc/dino.c
-+++ b/drivers/parisc/dino.c
-@@ -160,6 +160,15 @@ struct dino_device
- 	(struct dino_device *)__pdata; })
- 
- 
-+/* Check if PCI device is behind a Card-mode Dino. */
-+static int pci_dev_is_behind_card_dino(struct pci_dev *dev)
-+{
-+	struct dino_device *dino_dev;
-+
-+	dino_dev = DINO_DEV(parisc_walk_tree(dev->bus->bridge));
-+	return is_card_dino(&dino_dev->hba.dev->id);
-+}
-+
- /*
-  * Dino Configuration Space Accessor Functions
-  */
-@@ -442,6 +451,21 @@ static void quirk_cirrus_cardbus(struct
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_CIRRUS, PCI_DEVICE_ID_CIRRUS_6832, quirk_cirrus_cardbus );
- 
-+#ifdef CONFIG_TULIP
-+static void pci_fixup_tulip(struct pci_dev *dev)
-+{
-+	if (!pci_dev_is_behind_card_dino(dev))
-+		return;
-+	if (!(pci_resource_flags(dev, 1) & IORESOURCE_MEM))
-+		return;
-+	pr_warn("%s: HP HSC-PCI Cards with card-mode Dino not yet supported.\n",
-+		pci_name(dev));
-+	/* Disable this card by zeroing the PCI resources */
-+	memset(&dev->resource[0], 0, sizeof(dev->resource[0]));
-+	memset(&dev->resource[1], 0, sizeof(dev->resource[1]));
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_DEC, PCI_ANY_ID, pci_fixup_tulip);
-+#endif /* CONFIG_TULIP */
- 
- static void __init
- dino_bios_init(void)
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -249,7 +249,7 @@ ifdef CONFIG_RETPOLINE
+   # retpoline builds, however, gcc does not for x86. This has
+   # only been fixed starting from gcc stable version 8.4.0 and
+   # onwards, but not for older ones. See gcc bug #86952.
+-  ifndef CONFIG_CC_IS_CLANG
++  ifneq ($(cc-name), clang)
+     KBUILD_CFLAGS += $(call cc-option,-fno-jump-tables)
+   endif
+ endif
 
 
