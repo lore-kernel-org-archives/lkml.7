@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB7EC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071CDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13D7222D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5817206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121030;
-	bh=Crki/rhPZBSSiGnUAfWFpCxUMjGFSdR3yUOWDXh92Rk=;
+	s=default; t=1570121034;
+	bh=hjmpnAIp7H1b+RS9Gb7JtQbLwf8dNp2GOvMS39yQNrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VdOT6/ERWm6OzrQRZbjFr+m2E/UnLr/JxbrGK8YLT/16B3rZYl4FifM3v3nunz3jH
-	 WoWIJU0gbforne+nuDRR95nNy+fLYDy46eDYL7K/4IWIScwbmcFfncoKGAhsTVcDED
-	 mIbJD9yFpRf6dpN4u5Gbhxsr19WhAbpP00yyUsiY=
+	b=Bu322rUDqBqeaIAEpoTtpBuLUvEyS5BEzF/QYEDXcyr4N1eaWyF22IE7/03LVNTOW
+	 kTtjUI2n6kfPnW/CLM01A0jWtdK1ryem7LEahy/VyYtHrnCXl6b7qROQmm/jTkFvMv
+	 RJpdFKdOSnd99CLf8vvCxP35j7aeen8GsfomHfOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405277AbfJCQnu (ORCPT
+        id S2404678AbfJCQnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55480 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405262AbfJCQns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:48 -0400
+        id S2404047AbfJCQnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 766D7206BB;
-        Thu,  3 Oct 2019 16:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EEE32070B;
+        Thu,  3 Oct 2019 16:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121028;
-        bh=Crki/rhPZBSSiGnUAfWFpCxUMjGFSdR3yUOWDXh92Rk=;
+        s=default; t=1570121030;
+        bh=hjmpnAIp7H1b+RS9Gb7JtQbLwf8dNp2GOvMS39yQNrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cj6kp27DIFwfNjW5BOuFupKgJ3Jeu4+w3PIL6b3QNRtBkEhOjlhIQhXBVvD8au24f
-         ssyx/Khf6a8/dX/S4UPVRr2kOpQAj9GNJ5ae4LpgqljE4qXTousWpMadd+Qr/wgk+S
-         dc+Q6xW1mOKWK3taF7ztmYTgXDSUx0+z/vtQokwE=
+        b=PSy5DLspyDm/CZxga2fmnnlkxbE5L5Yx3RGZfYY/W8s8QyqJpi6EIlHuzbTnchvli
+         vLuKgShG4w08/H/raQ3KxZJnKVK7ugYab+F80Wdh/LaMZd8E/OREmdT6AwvS6deCUj
+         6/kYItniw66b+VRkN5SdFIdX8QAFi69SN97teWlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
-Subject: [PATCH 5.3 127/344] media: radio/si470x: kill urb on error
-Date:   Thu,  3 Oct 2019 17:51:32 +0200
-Message-Id: <20191003154552.744696427@linuxfoundation.org>
+        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 128/344] media: hdpvr: add terminating 0 at end of string
+Date:   Thu,  3 Oct 2019 17:51:33 +0200
+Message-Id: <20191003154552.844002633@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,55 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
+[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
 
-In the probe() function radio->int_in_urb was not killed if an
-error occurred in the probe sequence. It was also missing in
-the disconnect.
+dev->usbc_buf was passed as argument for %s, but it was not safeguarded
+by a terminating 0.
 
 This caused this syzbot issue:
 
-https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
+https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
 
-Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
 
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
-index 49073747b1e7b..fedff68d8c496 100644
---- a/drivers/media/radio/si470x/radio-si470x-usb.c
-+++ b/drivers/media/radio/si470x/radio-si470x-usb.c
-@@ -734,7 +734,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 	/* start radio */
- 	retval = si470x_start_usb(radio);
- 	if (retval < 0)
--		goto err_all;
-+		goto err_buf;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index a0905c81d2cb2..b75c18a012a73 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -137,6 +137,7 @@ static int device_authorization(struct hdpvr_device *dev)
  
- 	/* set initial frequency */
- 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
-@@ -749,6 +749,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	dev->fw_ver = dev->usbc_buf[1];
  
- 	return 0;
- err_all:
-+	usb_kill_urb(radio->int_in_urb);
-+err_buf:
- 	kfree(radio->buffer);
- err_ctrl:
- 	v4l2_ctrl_handler_free(&radio->hdl);
-@@ -822,6 +824,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
- 	mutex_lock(&radio->lock);
- 	v4l2_device_disconnect(&radio->v4l2_dev);
- 	video_unregister_device(&radio->videodev);
-+	usb_kill_urb(radio->int_in_urb);
- 	usb_set_intfdata(intf, NULL);
- 	mutex_unlock(&radio->lock);
- 	v4l2_device_put(&radio->v4l2_dev);
++	dev->usbc_buf[46] = '\0';
+ 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
+ 			  dev->fw_ver, &dev->usbc_buf[2]);
+ 
 -- 
 2.20.1
 
