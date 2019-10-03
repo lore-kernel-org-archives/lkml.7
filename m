@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41379C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFFCC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0521921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8304222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119810;
-	bh=tdrSIakgkJxkwvj9PwAtp3A0fkdY/Sa05NmNhMrFOb4=;
+	s=default; t=1570119813;
+	bh=LSYGcopW8v0gGTdgoaDYFGwhSVxFFkrFimAdWZwNFWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKUMDvO+MomVK1Ew0RfTHxDbBQC+RJOlpEw7agPmbRq7kiXBqiIjoMtw/WXf/xcYU
-	 05W15BFkZGJbO8Be/7Ad1VloAVpmu9u9RvL6Bjldv5d9L10UgBIIgOFXY+dYQSEBi+
-	 NEynu00qpFlq8TaJ0AlK12zaEWUO+z6lZmSW6pBs=
+	b=cn1DmfKdUFDk3kp+VvXBCNVW3BdJNluU+ZF5xnJvDTJbc4tL32QMEjt0Bj+f+oFec
+	 64xxCkwfQiDSId7ayW+zL7psJdeAKd3LDGMGXXGR9FBO2/cRn3FDhdxAaNeANmIvCl
+	 bZUjQlVUW0Ly79juTap2Yh32/qgXmqLMZ4+vcsLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390578AbfJCQX2 (ORCPT
+        id S2390586AbfJCQXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52388 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389247AbfJCQXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:25 -0400
+        id S2390569AbfJCQX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E97E222BE;
-        Thu,  3 Oct 2019 16:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9770215EA;
+        Thu,  3 Oct 2019 16:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119804;
-        bh=tdrSIakgkJxkwvj9PwAtp3A0fkdY/Sa05NmNhMrFOb4=;
+        s=default; t=1570119807;
+        bh=LSYGcopW8v0gGTdgoaDYFGwhSVxFFkrFimAdWZwNFWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3dh0QGTromyDCeUb3O5Qbqf/PuGeSgRC+IbHhtj8g2yyx2G4CSf/IfTrcfT2Dolt
-         IahsWzn8CJPkgrzeA+EQYi9Pj0OUisJRaeRG99jf4/RjU50yyqWukOftVdJSaRTRBX
-         7jeIq9myEY42RoQa60jwTExM0OxU+stnouWGjRDs=
+        b=uu1fp/rxSxIEzj3nfXzFZkxtodq3PJGwVRg03MPVArlGHQ+cJkhTLDlRiFeFf08mj
+         IpclDyr3siPDpetkx2/xjWlcj2c8YPb+KPAfB5H952WP5/fB7TZqiHcHxnXKZzkHBK
+         dysRO3X2d+tMRWYVYMt23rx0+GTWOLjsGYtS7OLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Jan Stancek <jstancek@redhat.com>
-Subject: [PATCH 4.19 162/211] powerpc/imc: Dont create debugfs files for cpu-less nodes
-Date:   Thu,  3 Oct 2019 17:53:48 +0200
-Message-Id: <20191003154524.920770851@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH 4.19 153/211] printk: Do not lose last line in kmsg buffer dump
+Date:   Thu,  3 Oct 2019 17:53:39 +0200
+Message-Id: <20191003154522.843025564@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,107 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-commit 41ba17f20ea835c489e77bd54e2da73184e22060 upstream.
+commit c9dccacfccc72c32692eedff4a27a4b0833a2afd upstream.
 
-Commit <684d984038aa> ('powerpc/powernv: Add debugfs interface for
-imc-mode and imc') added debugfs interface for the nest imc pmu
-devices to support changing of different ucode modes. Primarily adding
-this capability for debug. But when doing so, the code did not
-consider the case of cpu-less nodes. So when reading the _cmd_ or
-_mode_ file of a cpu-less node will create this crash.
+kmsg_dump_get_buffer() is supposed to select all the youngest log
+messages which fit into the provided buffer.  It determines the correct
+start index by using msg_print_text() with a NULL buffer to calculate
+the size of each entry.  However, when performing the actual writes,
+msg_print_text() only writes the entry to the buffer if the written len
+is lesser than the size of the buffer.  So if the lengths of the
+selected youngest log messages happen to precisely fill up the provided
+buffer, the last log message is not included.
 
-  Faulting instruction address: 0xc0000000000d0d58
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  ...
-  CPU: 67 PID: 5301 Comm: cat Not tainted 5.2.0-rc6-next-20190627+ #19
-  NIP:  c0000000000d0d58 LR: c00000000049aa18 CTR:c0000000000d0d50
-  REGS: c00020194548f9e0 TRAP: 0300   Not tainted  (5.2.0-rc6-next-20190627+)
-  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:28022822  XER: 00000000
-  CFAR: c00000000049aa14 DAR: 000000000003fc08 DSISR:40000000 IRQMASK: 0
-  ...
-  NIP imc_mem_get+0x8/0x20
-  LR  simple_attr_read+0x118/0x170
-  Call Trace:
-    simple_attr_read+0x70/0x170 (unreliable)
-    debugfs_attr_read+0x6c/0xb0
-    __vfs_read+0x3c/0x70
-     vfs_read+0xbc/0x1a0
-    ksys_read+0x7c/0x140
-    system_call+0x5c/0x70
+We don't want to modify msg_print_text() to fill up the buffer and start
+returning a length which is equal to the size of the buffer, since
+callers of its other users, such as kmsg_dump_get_line(), depend upon
+the current behaviour.
 
-Patch fixes the issue with a more robust check for vbase to NULL.
+Instead, fix kmsg_dump_get_buffer() to compensate for this.
 
-Before patch, ls output for the debugfs imc directory
+For example, with the following two final prints:
 
-  # ls /sys/kernel/debug/powerpc/imc/
-  imc_cmd_0    imc_cmd_251  imc_cmd_253  imc_cmd_255  imc_mode_0    imc_mode_251  imc_mode_253  imc_mode_255
-  imc_cmd_250  imc_cmd_252  imc_cmd_254  imc_cmd_8    imc_mode_250  imc_mode_252  imc_mode_254  imc_mode_8
+[    6.427502] AAAAAAAAAAAAA
+[    6.427769] BBBBBBBB12345
 
-After patch, ls output for the debugfs imc directory
+A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
+patch:
 
-  # ls /sys/kernel/debug/powerpc/imc/
-  imc_cmd_0  imc_cmd_8  imc_mode_0  imc_mode_8
+ 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
+ 00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
+ 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+ 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 
-Actual bug here is that, we have two loops with potentially different
-loop counts. That is, in imc_get_mem_addr_nest(), loop count is
-obtained from the dt entries. But in case of export_imc_mode_and_cmd(),
-loop was based on for_each_nid() count. Patch fixes the loop count in
-latter based on the struct mem_info. Ideally it would be better to
-have array size in struct imc_pmu.
+After this patch:
 
-Fixes: 684d984038aa ('powerpc/powernv: Add debugfs interface for imc-mode and imc')
-Reported-by: Qian Cai <cai@lca.pw>
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190827101635.6942-1-maddy@linux.vnet.ibm.com
-Cc: Jan Stancek <jstancek@redhat.com>
+ 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
+ 00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
+ 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+ 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+
+Link: http://lkml.kernel.org/r/20190711142937.4083-1-vincent.whitchurch@axis.com
+Fixes: e2ae715d66bf4bec ("kmsg - kmsg_dump() use iterator to receive log buffer content")
+To: rostedt@goodmis.org
+Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v3.5+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/opal-imc.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/printk/printk.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -57,9 +57,9 @@ static void export_imc_mode_and_cmd(stru
- 				    struct imc_pmu *pmu_ptr)
- {
- 	static u64 loc, *imc_mode_addr, *imc_cmd_addr;
--	int chip = 0, nid;
- 	char mode[16], cmd[16];
- 	u32 cb_offset;
-+	struct imc_mem_info *ptr = pmu_ptr->mem_info;
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3210,7 +3210,7 @@ bool kmsg_dump_get_buffer(struct kmsg_du
+ 	/* move first record forward until length fits into the buffer */
+ 	seq = dumper->cur_seq;
+ 	idx = dumper->cur_idx;
+-	while (l > size && seq < dumper->next_seq) {
++	while (l >= size && seq < dumper->next_seq) {
+ 		struct printk_log *msg = log_from_idx(idx);
  
- 	imc_debugfs_parent = debugfs_create_dir("imc", powerpc_debugfs_root);
- 
-@@ -73,20 +73,20 @@ static void export_imc_mode_and_cmd(stru
- 	if (of_property_read_u32(node, "cb_offset", &cb_offset))
- 		cb_offset = IMC_CNTL_BLK_OFFSET;
- 
--	for_each_node(nid) {
--		loc = (u64)(pmu_ptr->mem_info[chip].vbase) + cb_offset;
-+	while (ptr->vbase != NULL) {
-+		loc = (u64)(ptr->vbase) + cb_offset;
- 		imc_mode_addr = (u64 *)(loc + IMC_CNTL_BLK_MODE_OFFSET);
--		sprintf(mode, "imc_mode_%d", nid);
-+		sprintf(mode, "imc_mode_%d", (u32)(ptr->id));
- 		if (!imc_debugfs_create_x64(mode, 0600, imc_debugfs_parent,
- 					    imc_mode_addr))
- 			goto err;
- 
- 		imc_cmd_addr = (u64 *)(loc + IMC_CNTL_BLK_CMD_OFFSET);
--		sprintf(cmd, "imc_cmd_%d", nid);
-+		sprintf(cmd, "imc_cmd_%d", (u32)(ptr->id));
- 		if (!imc_debugfs_create_x64(cmd, 0600, imc_debugfs_parent,
- 					    imc_cmd_addr))
- 			goto err;
--		chip++;
-+		ptr++;
- 	}
- 	return;
- 
+ 		l -= msg_print_text(msg, true, NULL, 0);
 
 
