@@ -2,78 +2,168 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8909C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DA2C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2AA20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570126866;
-	bh=GW9kG1g9n8dZDEbuOWx1EUaebZoX1KZ7MOS/WPdSz/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J7G2SIvaRAppYIDjmZhxju9oUbWUQrKmih/KahWYUqR11/Z00MPpFUJNiLqQl515Y
-	 mprqa1S/g4uBC1n2QXa5If+rlme/NzPDGW1PxC1JysNlxbimmksZO0cbVBdWyUaOEU
-	 R8PXFdJFsZ1yTZk8IVV3/a13lUvLouAYDCzYg/MY=
+	by mail.kernel.org (Postfix) with ESMTP id 5C92720830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5GX7ssQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388868AbfJCSVG (ORCPT
+        id S2388038AbfJCSXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbfJCSVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:21:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9FD820830;
-        Thu,  3 Oct 2019 18:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570126864;
-        bh=GW9kG1g9n8dZDEbuOWx1EUaebZoX1KZ7MOS/WPdSz/8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ksi0hPwPEfkkckf2MtmShbXR89JuE3dl0pOUChrXl1S0mCAgGz5ehD1iiRD+jYwWd
-         rpWoJgeF8KFnXtJG4fuT7ptHiACOvzA+vybaMFY84fbZi5zjz+LY/bnadRHmqAfSQS
-         qjOunk0oOtRj3/DGR3IHtdnVd/YdhM4985rgXOlI=
-Date:   Thu, 3 Oct 2019 20:21:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.3 204/344] SoC: simple-card-utils: set 0Hz to sysclk
- when shutdown
-Message-ID: <20191003182102.GD3457141@kroah.com>
-References: <20191003154540.062170222@linuxfoundation.org>
- <20191003154600.389003319@linuxfoundation.org>
- <20191003172849.GB6090@sirena.co.uk>
- <20191003173327.GC6090@sirena.co.uk>
+        Thu, 3 Oct 2019 14:23:02 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35364 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731438AbfJCSXC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:23:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id q10so7867818iop.2;
+        Thu, 03 Oct 2019 11:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4hW9F/rndnpcOOaucgLoBVdnGt4rBKKWToBojv2TwQ8=;
+        b=g5GX7ssQedVGoeidnbB19TwJyrGbYyrQ56f71dNBu0A8OcrSjhuRxGSKqZYDyobJQQ
+         ms4T4MldIgPmuEPzJKrKYjWMAOiTqSF/UesGGUKHF7chB0LdxZitzssq8zg/VwkNVSs9
+         jdVAbPe4Usvfz1W6Hke24nOMgUtcQvY7W9bFxeO/9fjSrnn7uiqh0fbgYRf5fTWXnptX
+         CGs79TDP7nO7iIiic/jjfJQ91iIhOczg1XCWRxxI6YxVbcYkRqi0bK4HLJTix/CL/8bV
+         CAbtoVMreqkOnYA6ArvTDm+jIJPcZMt/WgLbb3LYTlwldTwkxqd/kyVZP/JocvV65kzI
+         f42g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4hW9F/rndnpcOOaucgLoBVdnGt4rBKKWToBojv2TwQ8=;
+        b=BzXe2K/TVcu66yvADNmRDvHVR92mkgciDlM68OxpI3Gs/AoCYoz7SmYb6nPBoUHJBf
+         acD0Pezw6+JHOV6bEchwqWli1BviUx9wbUO6o3N/anXVzRkhLag29SlwyS22tzFelHhf
+         1ZR/jDdu+b8bF+neq2ec0bhhzEuVnYlclOWGKBfhzFQ+Tw6MxW0mvXr3SA6CpUnV9+3X
+         +8Ot9mzyfjuu1nO2BPm+dvN4sBY2pDWxhHIQpmknNE9QkWoGUUE2HbWerJSQpq4XyMaR
+         K9+1pVpYkqj+l3demndogze/1IT5ntRtdfETss7ymRPrx0cSaCFiWwNw00IX6vHypQsF
+         jgHQ==
+X-Gm-Message-State: APjAAAU1mYbfxLlI979h+VZHtz/bKuxds7P4fYGePr6ZdDZpgiStrDoR
+        J2gL1FnGeEFMyAxMSxkfeA==
+X-Google-Smtp-Source: APXvYqxEQ16JuFvRHP8l8h43Cr24aZkiqnUek1B6jbdlUSI62W5tom2z7Ji3+QqgSP/Su/9ZFAUIjQ==
+X-Received: by 2002:a6b:b88a:: with SMTP id i132mr8947932iof.215.1570126981182;
+        Thu, 03 Oct 2019 11:23:01 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id u124sm1287165ioe.63.2019.10.03.11.22.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Oct 2019 11:22:59 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 14:22:56 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] drivers: hv: vmbus: Introduce latency testing
+Message-ID: <20191003182256.GA8951@Test-Virtual-Machine>
+References: <cover.1568320416.git.brandonbonaby94@gmail.com>
+ <83b5fc34e8f25c882f2502931f766ef547c6c950.1568320416.git.brandonbonaby94@gmail.com>
+ <DM5PR21MB01373C2DB4DE6A4B6079C2BAD7890@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003173327.GC6090@sirena.co.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <DM5PR21MB01373C2DB4DE6A4B6079C2BAD7890@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 06:33:27PM +0100, Mark Brown wrote:
-> On Thu, Oct 03, 2019 at 06:28:49PM +0100, Mark Brown wrote:
-> > On Thu, Oct 03, 2019 at 05:52:49PM +0200, Greg Kroah-Hartman wrote:
+On Thu, Sep 19, 2019 at 10:52:41PM +0000, Michael Kelley wrote:
+> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Thursday, September 12, 2019 7:32 PM
+> > 
+> > +
+> > +static int hv_debugfs_delay_set(void *data, u64 val)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (val >= 0 && val <= 1000)
+> > +		*(u32 *)data = val;
+> > +	else
+> > +		ret = -EINVAL;
+> > +
+> > +	return ret;
+> > +}
 > 
-> > > Some codecs set rate constraints that derives from sysclk. This
-> > > mechanism works correctly if machine drivers give fixed frequency.
+> I should probably quit picking at your code, but I'm going to
+> do it one more time. :-)
 > 
-> > This is a new feature which seems out of scope for stable - I thought
-> > I'd raised this already?
+> The above test for val >=0 is redundant as 'val' is declared
+> as 'u64'.  As an unsigned value, it will always be >= 0.  More
+> broadly, the above function could be written as follows
+> with no loss of clarity.  This accomplishes the same thing in
+> only 4 lines of code instead of 6, and the main execution path
+> is in the sequential execution flow, not in an 'if' statement.
 > 
-> No, I didn't sorry - that was a similar patch in a device driver that
-> I'd flagged (and has been correctly dropped).
+> {
+> 	if (val > 1000)
+> 		return -EINVAL;
+> 	*(u32 *)data = val;
+> 	return 0;
+> }
+> 
+> Your code is correct as written, so this is arguably more a
+> matter of style, but Linux generally likes to do things clearly
+> and compactly with no extra motion.
+> 
 
-Now dropped from here and 5.2.y, thansk!
+Yea the less than 0 comparison isnt needed, so I'll update that
 
-greg k-h
+> +/* Delay buffer/message reads on a vmbus channel */
+> > +void hv_debug_delay_test(struct vmbus_channel *channel, enum delay delay_type)
+> > +{
+> > +	struct vmbus_channel *test_channel =    channel->primary_channel ?
+> > +						channel->primary_channel :
+> > +						channel;
+> > +	bool state = test_channel->fuzz_testing_state;
+> > +
+> > +	if (state) {
+> > +		if (delay_type == 0)
+> > +			udelay(test_channel->fuzz_testing_interrupt_delay);
+> > +		else
+> > +			udelay(test_channel->fuzz_testing_message_delay);
+> 
+> This 'if/else' statement got me thinking.  You have an enum declared below
+> that lists the two options -- INTERRUPT_DELAY or MESSAGE_DELAY.  The
+> implication is that we might add more options in the future.  But the
+> above 'if/else' statement isn't really set up to easily add more options, and
+> the individual fields for fuzz_testing_interrupt_delay and
+> fuzz_testing_message_delay mean adding more branches to the 'if/else'
+> statement whenever a new DELAY type is added to the enum.   And the
+> same is true when adding the entries into debugfs.  A more general
+> solution might use arrays and loops, and treat the enum value as an
+> index into an array of delay values.  Extending to add another delay type
+> could be as easy as adding another entry to the enum declaration.
+> 
+> The current code is for the case where n=2 (i.e., two different delay
+> types), and as such probably doesn't warrant the full index/looping
+> treatment.  But in the future, if we add additional delay types, we'll
+> probably revise the code to do the index/looping approach.
+> 
+> So to be clear, at this point I'm not asking you to change the existing
+> code.  My comments are more of an observation and something to
+> think about in the future.
+> 
+
+I do see your point, thanks for the input. I think since its just two
+it might be better to leave it but it definitely makes sense.
+
+> > 
+> > +enum delay {
+> > +	INTERRUPT_DELAY = 0,
+> > +	MESSAGE_DELAY   = 1,
+> > +};
+> > +
+> 
+> Michael
