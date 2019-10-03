@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83B7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4F9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A899E20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB00821783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118919;
-	bh=SJoa6ch7YWT88IzJRbD/Ujj7hZoK2RBN31oGU40WAAU=;
+	s=default; t=1570118922;
+	bh=g7ImD3Q5yFxdqIyESBY5o6a+si5j7yoFRXlz7SFGtl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajWgYHODPVPStBAndz1tWIXllfUFgp8yRNXKeu9ClG0gRObCWrKxKdDGJSbQqulWC
-	 VtmGoLjND5ijIxhXJ2z8iXh6AmGANl9VJEi8xuoltBogpA2HrjupmfsMQCGUEtg4IG
-	 X5JAReAPGFOnvB2Y+I0Cax4C7OQ1CB/HOJ8TjLTg=
+	b=FQGeVVoBkqz7W2D+Z/25MA1T4md4rrVAgUSIclj4aCXrHg4Dr9ePD6muxF32yOdaO
+	 sGPA9GVEWgmNqB9bU1GRD9qf6cIdJfy3qU4yTNbZYX22OAWGHJK5cTNOh/UG81Lw8B
+	 reYyJcIDPf+Jk15TUscXuK6XIcvfuKi+yD889yro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbfJCQIj (ORCPT
+        id S1729860AbfJCQIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733155AbfJCQI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:08:29 -0400
+        id S1731955AbfJCQIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BB9420865;
-        Thu,  3 Oct 2019 16:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F5A021848;
+        Thu,  3 Oct 2019 16:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118908;
-        bh=SJoa6ch7YWT88IzJRbD/Ujj7hZoK2RBN31oGU40WAAU=;
+        s=default; t=1570118914;
+        bh=g7ImD3Q5yFxdqIyESBY5o6a+si5j7yoFRXlz7SFGtl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mrYIfnLToqoIiUwjUIYIpObsg/4kiE+w150gRY09R+xaaX+McKXHLPzr6XgD21LSQ
-         Z8fyrRCuGzWUjD6IM2kKOzcVFJfkB33CyQ2DXhg2IoBGnelPLPqZIridXC0P6UqQdg
-         0fe23WICrsOc2dachQoCniTYXuG8U5Z0+zI1/VqQ=
+        b=bcpqZMH4WWkVQWHCxnP/6QZCEQCnMbkB2DnnE9U3UpknrhDMsjzLTC1Vi57Ng0t1H
+         PnwBCmna64JbH2RcIzpgIYiCmATf/VamxtuDxEHYy5ukUCsqkCVjVj7VmOSJSc0Ov1
+         DwhGd2aQ8u93mZ70wu4G627RzZxtG20lSzK3qHeE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Nick Stoughton <nstoughton@logitech.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/185] ASoC: sgtl5000: Fix charge pump source assignment
-Date:   Thu,  3 Oct 2019 17:52:13 +0200
-Message-Id: <20191003154449.941253223@linuxfoundation.org>
+Subject: [PATCH 4.14 057/185] leds: leds-lp5562 allow firmware files up to the maximum length
+Date:   Thu,  3 Oct 2019 17:52:15 +0200
+Message-Id: <20191003154450.192983537@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -64,53 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Nick Stoughton <nstoughton@logitech.com>
 
-[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
+[ Upstream commit ed2abfebb041473092b41527903f93390d38afa7 ]
 
-If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
-source can be assigned automatically [1].
+Firmware files are in ASCII, using 2 hex characters per byte. The
+maximum length of a firmware string is therefore
 
-[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
+16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
 
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
+Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/leds/leds-lp5562.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 0b11a2e01b2fc..b649675d190d2 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1084,12 +1084,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
- 					SGTL5000_INT_OSC_EN);
- 		/* Enable VDDC charge pump */
- 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
--	} else if (vddio >= 3100 && vdda >= 3100) {
-+	} else {
- 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
--		/* VDDC use VDDIO rail */
--		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
--		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
--			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		/*
-+		 * if vddio == vdda the source of charge pump should be
-+		 * assigned manually to VDDIO
-+		 */
-+		if (vddio == vdda) {
-+			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
-+			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
-+				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		}
- 	}
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index 05ffa34fb6ad0..9d9b673c873c6 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
  
- 	snd_soc_write(codec, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
+-	if (fw->size > LP5562_PROGRAM_LENGTH) {
++	/*
++	 * the firmware is encoded in ascii hex character, with 2 chars
++	 * per byte
++	 */
++	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
+ 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
+ 			fw->size);
+ 		return;
 -- 
 2.20.1
 
