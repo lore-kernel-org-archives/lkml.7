@@ -2,100 +2,153 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84370C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4DDC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A47B20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A95215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:36:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="gIprMk8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbfJCWZj (ORCPT
+        id S1730173AbfJCWg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:25:39 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46986 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728288AbfJCWZj (ORCPT
+        Thu, 3 Oct 2019 18:36:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39962 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727302AbfJCWg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:25:39 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iG9XV-0006Ib-1F; Thu, 03 Oct 2019 23:25:37 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iG9XU-0006w0-I1; Thu, 03 Oct 2019 23:25:36 +0100
-Message-ID: <0845242abbad163ce18709f3aa24153afa429b30.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 00/87] 3.16.75-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Thu, 03 Oct 2019 23:25:30 +0100
-In-Reply-To: <1a374d67-9908-6c7d-c428-219ee6d79ee4@roeck-us.net>
-References: <lsq.1570043210.379046399@decadent.org.uk>
-         <1a374d67-9908-6c7d-c428-219ee6d79ee4@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-75TA8VT7BoMBAJdWkljp"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 3 Oct 2019 18:36:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id f7so5947687qtq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 15:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=itG42API114huksgPQAHb88tSFIwWsAom19B6aoA+Qs=;
+        b=gIprMk8LelWg0uG/qfXeYCxNyxqYw9kTOe6Nwb6sO/SKr/62XIGhhY97GPaeuHbUU7
+         v8spLpK53iQXvC1sP3v/H2kNGQeNpcWMJUGYEHwVu58UrT8XfD+luRiWfjNXgmCtn7IT
+         6+AqMtubm/j7ah9AjiC+XqFP0+FgcIIgXmRkNrkGJCYibolqgVlaPPPzRDuZXlVjQMMd
+         Gf9zH3b4ebzGoAKIBFnVWPg1zL41TQlPX2rcCwJpR/HjE5sP8kOjOnMm+BeZOzav1D4W
+         1Xr1mcYvDlrs6gVvscSeoUqioGBkx77gfq+z6Mdl3OGExL73lZ+QlO4PXKdq0Agi2Nzb
+         iYqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=itG42API114huksgPQAHb88tSFIwWsAom19B6aoA+Qs=;
+        b=hnjNw/EL632YO/rg6Tzi0RShQwsAYXR1qJEtYPXmL4xMYM22U0J/lWqSjL+FXjZ+RG
+         u+Orw/J3qB4WQT3HWM3VptTcMVFOFEVFEcRixQUsrdjWoot5g73xcNoru6/F9adllXyA
+         FQoeD3UuPUS8S4ARXW9D1GZzZluU+yM9j1qOzsuHsDhkOQCRMFUGwcN07uESIt6CB1Rk
+         SocbGwUIsx84p1Fr835NagAKhcGj5svKDcQA6eo4cwQlvO/JYRU9uZCgR75PJFeKsfI6
+         /hn+7WNfJraU/asn7S/CwzlrkUUovrQeAdoC6phOlKZzdXlGGMfpIqCsggNTWMjbXb/7
+         +G1Q==
+X-Gm-Message-State: APjAAAVw+O0MeY/fKRV3Dl3CDDt6t+1UaI9cYxDD3LAKB6wIRYWYG4V7
+        ddOT8dvd3wHry9j9Nw+HnUv43Q==
+X-Google-Smtp-Source: APXvYqyJBL+Cwi7BNLxtZ/+uwGi0Sj7J6xZpTOr7ZfIMu6Q0WNIhJOV/vsOOtOMwEEfUfB0zGLoZPQ==
+X-Received: by 2002:ac8:5543:: with SMTP id o3mr12730023qtr.129.1570142215973;
+        Thu, 03 Oct 2019 15:36:55 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id z20sm2088520qtu.91.2019.10.03.15.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 15:36:55 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 15:36:48 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Donald Dutile <ddutile@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191003153648.786ad0bf@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20191003221007.GA209602@google.com>
+References: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
+        <20191003221007.GA209602@google.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-75TA8VT7BoMBAJdWkljp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-10-03 at 05:54 -0700, Guenter Roeck wrote:
-[...]
-> The error is:
+On Thu, 3 Oct 2019 17:10:07 -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > Le 02/10/2019 =C3=A0 01:45, Bjorn Helgaas a =C3=A9crit=C2=A0: =20
+> > > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote=
+: =20
+> > > > I also initially thought that kobject_uevent generated the netlink =
+event
+> > > > but this is not the case. This is generated by the specific driver =
+in use.
+> > > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> > > > i40e_pci_sriov_configure that sends the event.
+> > > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs t=
+hat
+> > > > finally calls the generic pci_enable_sriov function. =20
+> > > I don't know anything about netlink.  The script from the bugzilla
+> > > (https://bugzilla.kernel.org/show_bug.cgi?id=3D202991) looks like it
+> > > runs
+> > >=20
+> > >    ip monitor dev enp9s0f2
+> > >=20
+> > > What are the actual netlink events you see?  Are they related to a
+> > > device being removed? =20
+> >=20
+> > We have netlink events both when num_vfs goes from 0 to N and from N to=
+ 0.
+> > Indeed you have to go to 0 before going to M with M !=3D N. =20
 >=20
-> drivers/staging/iio/cdc/ad7150.c:9:10: fatal error: linux/bitfield.h: No =
-such file or directory
+> Right.
+
+FWIW I think this netlink event is an artefact of i40e implementation,
+and is not something the networking stack generates. Hopefully Alex can
+correct me if I'm wrong, but I don't think most drivers will generate
+such an event.
+
+> commit 0940fc95da45
+> Author: Pierre Cr=C3=A9gut <pierre.cregut@orange.com>
+> Date:   Wed Sep 11 09:27:36 2019 +0200
 >=20
-> which indeed does not exist in v3.16.y. Culprit is commit 6117323f0fbfb
-> ("staging:iio:ad7150: fix threshold mode config bit".
+>     PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+>    =20
+>     When sriov_numvfs is being updated, drivers may notify about new devi=
+ces
+>     before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+>     previously returned stale values.
+>    =20
+>     Serialize the sysfs read vs the write so the read returns the correct
+>     num_VFs value.
+>    =20
+>     Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D202991
+>     Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@=
+orange.com
+>     Signed-off-by: Pierre Cr=C3=A9gut <pierre.cregut@orange.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index b3f972e8cfed..e77562aabbae 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+>  				 char *buf)
+>  {
+>  	struct pci_dev *pdev =3D to_pci_dev(dev);
+> +	u16 num_vfs;
+> +
+> +	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+> +	device_lock(&pdev->dev);
+> +	num_vfs =3D pdev->sriov->num_VFs;
+> +	device_lock(&pdev->dev);
+> =20
+> -	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
+> +	return sprintf(buf, "%u\n", num_vfs);
+>  }
+> =20
+>  /*
 
-Thanks for checking.  I'll drop the two patches for this driver.
-
-Ben.
-
--=20
-Ben Hutchings
-Unix is many things to many people,
-but it's never been everything to anybody.
-
-
-
---=-75TA8VT7BoMBAJdWkljp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl2WdVsACgkQ57/I7JWG
-EQlVjw/+NhsqbT9hQNsRPwbFFOY8eaUYImkSYqWySY3TrTv7GRznbVgzNZtdKLaK
-PKGer3d0rkuFd4xdLIHg764QbKOoj1YWwY1VdTeGn0pWi0M8v3CVi6RzJRJWVwHi
-gAYPd5sfvcEMi/sJXKzvqs5gh35gL6PhZEXePfekhv01aMuJnmIENPP2NFTpFd6m
-rWz6geXlJV3+R5suGxKsWn0uhhPUKWY2iRTzKq8lHBflECQZ8PClX2vs7kUWNTVK
-wMigBHW3hsI+M6/WablYkdJt0RNF6m068aoQoCnPXgXa0c69Y0YgIqlpt/7sFy0c
-GeTepub7kWcmVhhFvebUE2s/bdFSLlt9ELxsQY26nOyHgzDB8J6BdHtgoWX+GNaA
-gafdio987QrOV0/hWtby+qpY2UYQ0PkvtRq/CfTrewQkMIJ/0uGaZRGn4Fuz09Ku
-aBepkhoc3Fgq2JJEloWzDv11YIos6gH8/Vo+lhY/HNbwDfo853fckUhZTjiUW59m
-7I5D4+bC0fepm7CtMcXDdkPY/IzPe/+rivBCF0XrMgRMHx47+iDUpFrxmbZoRO9J
-vh4+skqvBb7binYGHXf2EY5MSYDwO+HK05MUFYy1qXrovfzpfJ6YodxLlIJ2OceK
-w6yGf5VcEMDSRCVA3En4rQhWGx4+nUt23BQL/vhtQzs7UZqi4Z8=
-=bB9f
------END PGP SIGNATURE-----
-
---=-75TA8VT7BoMBAJdWkljp--
+The change makes sense to me!
