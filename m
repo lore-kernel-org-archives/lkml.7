@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A8CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05D7C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A662070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B8C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122207;
-	bh=J/bs4XMxCxNjfRh834VKdeds3kY5JdHtFEJmnLUJIb8=;
+	s=default; t=1570122212;
+	bh=FDrlU1PiRBI+pftJbsQpLFHChJmTaWWY3GczLZA6tEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TU+9W82IHy1uaH8sHRjHI3L9ELDaKAv429eEq0wwH74Gnq/AAUkP5EfrcS1Cax3bS
-	 ymVH2+S3ZN+BQvKrB8DKWT98LZe2WVnBYsrmX/QsfC0XvEgM6PHpjrx2NcQlA21L58
-	 LEqIRsgAMyQxCYsum6Kr4oEVEOdfzWNY0xHJ3lDY=
+	b=pUqMcCZGgh3NAXSEw1J4qx47YYU60QL2uIoa8KM0LIkko1s8NJPbVowHhLDtxfBTg
+	 B23XS877wPbwfq6uqleRLNRiL1R3E3584STF4kzY8yKf2529du2+SWilHLUyH1fYl1
+	 5MNaLw0gLdc3NIKG+MzLmASVn+ej4KkO5l5UTVa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392539AbfJCQl7 (ORCPT
+        id S2406041AbfJCRDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52520 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392305AbfJCQly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:54 -0400
+        id S2392515AbfJCQlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A1A2070B;
-        Thu,  3 Oct 2019 16:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E82622054F;
+        Thu,  3 Oct 2019 16:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120913;
-        bh=J/bs4XMxCxNjfRh834VKdeds3kY5JdHtFEJmnLUJIb8=;
+        s=default; t=1570120910;
+        bh=FDrlU1PiRBI+pftJbsQpLFHChJmTaWWY3GczLZA6tEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MaUw6kgzrrirYSfOKX1nsBGV4A32c5MQyXhlm7GjGQL3iTnEpzRIGCOl3ZideMOG
-         majMnZOocy9GIWir8IkQ9Kx2F/AzxEeRlSS/rdalB67TGk+2bdWTQDcaWVdfd93bgG
-         Nv27sfemaR/jOwcO391sPYhEqH5/JLZB3KNixaOk=
+        b=kpLiA4Cj4aBci5g5uPQkGE7NpuvULBYG7Vc6Ja9DfJ8OdZgwaY3UEzRlg7c3RdWNd
+         Cf6vFmUzcgRWnjE7Lsams4w+hXHGIvEDve5kqId1zMUuWO11/PH6vilboM4ovcfwsE
+         M+M0H8B+sjzDmrkHnQrY7LDo21JK+3ZU07V12A64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Kong <Leon.KONG@cn.bosch.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Grzegorz Halat <ghalat@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Don Zickus <dzickus@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 084/344] ASoC: rsnd: dont call clk_get_rate() under atomic context
-Date:   Thu,  3 Oct 2019 17:50:49 +0200
-Message-Id: <20191003154548.464548706@linuxfoundation.org>
+Subject: [PATCH 5.3 066/344] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
+Date:   Thu,  3 Oct 2019 17:50:31 +0200
+Message-Id: <20191003154546.612832903@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,87 +61,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Grzegorz Halat <ghalat@redhat.com>
 
-[ Upstream commit 06e8f5c842f2dbb232897ba967ea7b422745c271 ]
+[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
 
-ADG is using clk_get_rate() under atomic context, thus, we might
-have scheduling issue.
-To avoid this issue, we need to get/keep clk rate under
-non atomic context.
+A reboot request sends an IPI via the reboot vector and waits for all other
+CPUs to stop. If one or more CPUs are in critical regions with interrupts
+disabled then the IPI is not handled on those CPUs and the shutdown hangs
+if native_stop_other_cpus() is called with the wait argument set.
 
-We need to handle ADG as special device at Renesas Sound driver.
->From SW point of view, we want to impletent it as
-rsnd_mod_ops :: prepare, but it makes code just complicate.
+Such a situation can happen when one CPU was stopped within a lock held
+section and another CPU is trying to acquire that lock with interrupts
+disabled. There are other scenarios which can cause such a lockup as well.
 
-To avoid complicated code/patch, this patch adds new clk_rate[] array,
-and keep clk IN rate when rsnd_adg_clk_enable() was called.
+In theory the shutdown should be attempted by an NMI IPI after the timeout
+period elapsed. Though the wait loop after sending the reboot vector IPI
+prevents this. It checks the wait request argument and the timeout. If wait
+is set, which is true for sys_reboot() then it won't fall through to the
+NMI shutdown method after the timeout period has finished.
 
-Reported-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Link: https://lore.kernel.org/r/87v9vb0xkp.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This was an oversight when the NMI shutdown mechanism was added to handle
+the 'reboot IPI is not working' situation. The mechanism was added to deal
+with stuck panic shutdowns, which do not have the wait request set, so the
+'wait request' case was probably not considered.
+
+Remove the wait check from the post reboot vector IPI wait loop and enforce
+that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
+disabled or the registration of the NMI handler fails. That second wait
+loop will then hang if not all CPUs shutdown and the wait argument is set.
+
+[ tglx: Avoid the hard to parse line break in the NMI fallback path,
+  	add comments and massage the changelog ]
+
+Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>
+Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/adg.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/adg.c b/sound/soc/sh/rcar/adg.c
-index fce4e050a9b70..b9aacf3d3b29c 100644
---- a/sound/soc/sh/rcar/adg.c
-+++ b/sound/soc/sh/rcar/adg.c
-@@ -30,6 +30,7 @@ struct rsnd_adg {
- 	struct clk *clkout[CLKOUTMAX];
- 	struct clk_onecell_data onecell;
- 	struct rsnd_mod mod;
-+	int clk_rate[CLKMAX];
- 	u32 flags;
- 	u32 ckr;
- 	u32 rbga;
-@@ -114,9 +115,9 @@ static void __rsnd_adg_get_timesel_ratio(struct rsnd_priv *priv,
- 	unsigned int val, en;
- 	unsigned int min, diff;
- 	unsigned int sel_rate[] = {
--		clk_get_rate(adg->clk[CLKA]),	/* 0000: CLKA */
--		clk_get_rate(adg->clk[CLKB]),	/* 0001: CLKB */
--		clk_get_rate(adg->clk[CLKC]),	/* 0010: CLKC */
-+		adg->clk_rate[CLKA],	/* 0000: CLKA */
-+		adg->clk_rate[CLKB],	/* 0001: CLKB */
-+		adg->clk_rate[CLKC],	/* 0010: CLKC */
- 		adg->rbga_rate_for_441khz,	/* 0011: RBGA */
- 		adg->rbgb_rate_for_48khz,	/* 0100: RBGB */
- 	};
-@@ -302,7 +303,7 @@ int rsnd_adg_clk_query(struct rsnd_priv *priv, unsigned int rate)
- 	 * AUDIO_CLKA/AUDIO_CLKB/AUDIO_CLKC/AUDIO_CLKI.
- 	 */
- 	for_each_rsnd_clk(clk, adg, i) {
--		if (rate == clk_get_rate(clk))
-+		if (rate == adg->clk_rate[i])
- 			return sel_table[i];
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 96421f97e75cf..231fa230ebc73 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -179,6 +179,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
+ 	irq_exit();
+ }
+ 
++static int register_stop_handler(void)
++{
++	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
++				    NMI_FLAG_FIRST, "smp_stop");
++}
++
+ static void native_stop_other_cpus(int wait)
+ {
+ 	unsigned long flags;
+@@ -212,39 +218,41 @@ static void native_stop_other_cpus(int wait)
+ 		apic->send_IPI_allbutself(REBOOT_VECTOR);
+ 
+ 		/*
+-		 * Don't wait longer than a second if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than a second for IPI completion. The
++		 * wait request is not checked here because that would
++		 * prevent an NMI shutdown attempt in case that not all
++		 * CPUs reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_SEC;
+-		while (num_online_cpus() > 1 && (wait || timeout--))
++		while (num_online_cpus() > 1 && timeout--)
+ 			udelay(1);
+ 	}
+-	
+-	/* if the REBOOT_VECTOR didn't work, try with the NMI */
+-	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
+-		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
+-					 NMI_FLAG_FIRST, "smp_stop"))
+-			/* Note: we ignore failures here */
+-			/* Hope the REBOOT_IRQ is good enough */
+-			goto finish;
+-
+-		/* sync above data before sending IRQ */
+-		wmb();
+ 
+-		pr_emerg("Shutting down cpus with NMI\n");
++	/* if the REBOOT_VECTOR didn't work, try with the NMI */
++	if (num_online_cpus() > 1) {
++		/*
++		 * If NMI IPI is enabled, try to register the stop handler
++		 * and send the IPI. In any case try to wait for the other
++		 * CPUs to stop.
++		 */
++		if (!smp_no_nmi_ipi && !register_stop_handler()) {
++			/* Sync above data before sending IRQ */
++			wmb();
+ 
+-		apic->send_IPI_allbutself(NMI_VECTOR);
++			pr_emerg("Shutting down cpus with NMI\n");
+ 
++			apic->send_IPI_allbutself(NMI_VECTOR);
++		}
+ 		/*
+-		 * Don't wait longer than a 10 ms if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than 10 ms if the caller didn't
++		 * reqeust it. If wait is true, the machine hangs here if
++		 * one or more CPUs do not reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_MSEC * 10;
+ 		while (num_online_cpus() > 1 && (wait || timeout--))
+ 			udelay(1);
  	}
  
-@@ -369,10 +370,18 @@ void rsnd_adg_clk_control(struct rsnd_priv *priv, int enable)
- 
- 	for_each_rsnd_clk(clk, adg, i) {
- 		ret = 0;
--		if (enable)
-+		if (enable) {
- 			ret = clk_prepare_enable(clk);
--		else
-+
-+			/*
-+			 * We shouldn't use clk_get_rate() under
-+			 * atomic context. Let's keep it when
-+			 * rsnd_adg_clk_enable() was called
-+			 */
-+			adg->clk_rate[i] = clk_get_rate(adg->clk[i]);
-+		} else {
- 			clk_disable_unprepare(clk);
-+		}
- 
- 		if (ret < 0)
- 			dev_warn(dev, "can't use clk %d\n", i);
+-finish:
+ 	local_irq_save(flags);
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
 -- 
 2.20.1
 
