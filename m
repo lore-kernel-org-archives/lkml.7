@@ -2,52 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2B5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8DBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEA421783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BBD21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119793;
-	bh=bfNnloBEnrQgDb4wl5PGD1ICVTNAsUiA3C7wfmlOuGU=;
+	s=default; t=1570119802;
+	bh=6suo+Z3aj7Sg2Uc8YUHx3Plm8CYvVpCgbhvLq0ryHg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PinGphMXFWzVlo+ZUIpMMknK87FK7+AMjjiFn1JQrKtT15ys63jW17D/JsWQr8QxB
-	 r28vSNWV/shbLLcy8qSmsud5Mdhkd35mzEg3bLasRgOPywo0sdB3rE3AIygTGUfM+P
-	 E9y9mgVs1bKbJ1pUcJjLFi9g9nOj1QVLvQtk/GPA=
+	b=CPgvKlG0Oz5nOni/P0oMwRaRWgQvLzbgCeGqtk77eETWu1myhCo9Qd/lbtRvXnz1e
+	 HKvB4Z4i3ZzFkOD7TLQbq/zt2t54v1K2nreSwlCIXF6ntrWXITZjSB8jtDhRCg9Z6E
+	 E2SU9pHJ9WhCBVXgYWZcCf2evdAGqnCGFIXF/TWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390560AbfJCQXM (ORCPT
+        id S2390529AbfJCQXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390549AbfJCQXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:09 -0400
+        id S2390481AbfJCQXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE2221783;
-        Thu,  3 Oct 2019 16:23:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E9E21783;
+        Thu,  3 Oct 2019 16:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119788;
-        bh=bfNnloBEnrQgDb4wl5PGD1ICVTNAsUiA3C7wfmlOuGU=;
+        s=default; t=1570119796;
+        bh=6suo+Z3aj7Sg2Uc8YUHx3Plm8CYvVpCgbhvLq0ryHg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I6IdYaoP4wM/1GgamM9xWhk8nGzk7EGwj5wLK0X9++aRFRISXvvaRCErVLCin5MrA
-         jglfBxdsiwVO1lJpOdZTSUJ4paWMkvA6CrR5iLjGYj4XxV3iHR0CAs+KZY+hh/HNlP
-         37Qvcr2xok0dC4M4lZUtDjSeRq2zdFkyut8zsUus=
+        b=NTRy9EfBPK7r3tSd9lyh0F9OeWZEu3hIy7BAF//tB7jttqgvlwDjQxPYp1NI3u3T5
+         xWtu3xq/cRsGR0AUE3gsYw+5rGeVgi07YgN7kjIDpYFEJL6J3MnmxrRaz2IPbBA1nN
+         W9MDnZnLduXt0br5oKxhP3izzmsfDRzrAZ8rtr/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 192/211] btrfs: Relinquish CPUs in btrfs_compare_trees
-Date:   Thu,  3 Oct 2019 17:54:18 +0200
-Message-Id: <20191003154528.743918143@linuxfoundation.org>
+        stable@vger.kernel.org, Jan-Marek Glogowski <glogow@fbihome.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 159/211] ALSA: hda/realtek - PCI quirk for Medion E4254
+Date:   Thu,  3 Oct 2019 17:53:45 +0200
+Message-Id: <20191003154524.336232247@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,69 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-commit 6af112b11a4bc1b560f60a618ac9c1dcefe9836e upstream.
+[ Upstream commit bd9c10bc663dd2eaac8fe39dad0f18cd21527446 ]
 
-When doing any form of incremental send the parent and the child trees
-need to be compared via btrfs_compare_trees. This  can result in long
-loop chains without ever relinquishing the CPU. This causes softlockup
-detector to trigger when comparing trees with a lot of items. Example
-report:
+The laptop has a combined jack to attach headsets on the right.
+The BIOS encodes them as two different colored jacks at the front,
+but otherwise it seems to be configured ok. But any adaption of
+the pins config on its own doesn't fix the jack detection to work
+in Linux. Still Windows works correct.
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 24s! [snapperd:16153]
-CPU: 0 PID: 16153 Comm: snapperd Not tainted 5.2.9-1-default #1 openSUSE Tumbleweed (unreleased)
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40000005 (nZcv daif -PAN -UAO)
-pc : __ll_sc_arch_atomic_sub_return+0x14/0x20
-lr : btrfs_release_extent_buffer_pages+0xe0/0x1e8 [btrfs]
-sp : ffff00001273b7e0
-Call trace:
- __ll_sc_arch_atomic_sub_return+0x14/0x20
- release_extent_buffer+0xdc/0x120 [btrfs]
- free_extent_buffer.part.0+0xb0/0x118 [btrfs]
- free_extent_buffer+0x24/0x30 [btrfs]
- btrfs_release_path+0x4c/0xa0 [btrfs]
- btrfs_free_path.part.0+0x20/0x40 [btrfs]
- btrfs_free_path+0x24/0x30 [btrfs]
- get_inode_info+0xa8/0xf8 [btrfs]
- finish_inode_if_needed+0xe0/0x6d8 [btrfs]
- changed_cb+0x9c/0x410 [btrfs]
- btrfs_compare_trees+0x284/0x648 [btrfs]
- send_subvol+0x33c/0x520 [btrfs]
- btrfs_ioctl_send+0x8a0/0xaf0 [btrfs]
- btrfs_ioctl+0x199c/0x2288 [btrfs]
- do_vfs_ioctl+0x4b0/0x820
- ksys_ioctl+0x84/0xb8
- __arm64_sys_ioctl+0x28/0x38
- el0_svc_common.constprop.0+0x7c/0x188
- el0_svc_handler+0x34/0x90
- el0_svc+0x8/0xc
+This is somehow fixed by chaining ALC256_FIXUP_ASUS_HEADSET_MODE,
+which seems to register the microphone jack as a headset part and
+also results in fixing jack sensing, visible in dmesg as:
 
-Fix this by adding a call to cond_resched at the beginning of the main
-loop in btrfs_compare_trees.
+-snd_hda_codec_realtek hdaudioC0D0:      Mic=0x19
++snd_hda_codec_realtek hdaudioC0D0:      Headset Mic=0x19
 
-Fixes: 7069830a9e38 ("Btrfs: add btrfs_compare_trees function")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ Actually the essential change is the location of the jack; the
+  driver created "Front Mic Jack" without the matching volume / mute
+  control element due to its jack location, which confused PA.
+  -- tiwai ]
 
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/8f4f9b20-0aeb-f8f1-c02f-fd53c09679f1@fbihome.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_realtek.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -5516,6 +5516,7 @@ int btrfs_compare_trees(struct btrfs_roo
- 	advance_left = advance_right = 0;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e791379439be0..e1b08d6f2a519 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5679,6 +5679,7 @@ enum {
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
+ 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
++	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
+ };
  
- 	while (1) {
-+		cond_resched();
- 		if (advance_left && !left_end_reached) {
- 			ret = tree_advance(fs_info, left_path, &left_level,
- 					left_root_level,
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6717,6 +6718,16 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
++	[ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x04a11040 },
++			{ 0x21, 0x04211020 },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6980,6 +6991,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
+ 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
+ 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
++	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
+ 
+ #if 0
+ 	/* Below is a quirk table taken from the old code.
+@@ -7144,6 +7156,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC255_FIXUP_DELL_HEADSET_MIC, .name = "alc255-dell-headset"},
+ 	{.id = ALC295_FIXUP_HP_X360, .name = "alc295-hp-x360"},
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
++	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
+-- 
+2.20.1
+
 
 
