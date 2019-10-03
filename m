@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B54C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AA4C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DD32070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E8A2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122081;
-	bh=JynpDT/gW2P7z3FNimWG7u5TDUQgbp30m34PxCe32QM=;
+	s=default; t=1570122089;
+	bh=9m2JYGkvWDmA0P2yVuAEtBW885OyXdy4d9jpcGwBEes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kt8qKRbU6DhBEejkSMuPAzuJJyra5kDsUfBJjYrdKvelKzyeAJQ/43QPC7BttZ/69
-	 SHFbJpuiR73n5SZiqHPVO/A7zDplcVf80jjDt7FNX/FqU5UynDr2NS+NqYxdAucQ7+
-	 kBDWyGiws/Gm7a3NpI0Bjl9BGgHCayIRKGqpyaOA=
+	b=PSsoAod2HFjc1+d2vDjn33dz8xWK+didOknAGC2ALE1DiQm48+d2/SaRpQByFhUsM
+	 3wfci5R0PGk0wl/9FsrTUfIDNxr+opC4H/pHDHtpzZCgdd0NmLoTv5d7DziK4Fts8K
+	 lLzpyFVaK2VBAv8xInysx90TDDmLRKImkyAGuTGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405964AbfJCRBU (ORCPT
+        id S2406054AbfJCRB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:01:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732888AbfJCQpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:02 -0400
+        id S2404061AbfJCQou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85BE92054F;
-        Thu,  3 Oct 2019 16:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CEB2070B;
+        Thu,  3 Oct 2019 16:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121101;
-        bh=JynpDT/gW2P7z3FNimWG7u5TDUQgbp30m34PxCe32QM=;
+        s=default; t=1570121090;
+        bh=9m2JYGkvWDmA0P2yVuAEtBW885OyXdy4d9jpcGwBEes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uFpGAdJuV6HLaT+KPe355Fzom04/FY79vqdp3nE9YIa/+CRKbl3vwJoaiHd+lLk6S
-         cCAXfRbxr/XelGdDV27q80caAChYm0lJyo31YzAI3JD/8jsNc8KfUfJL1KpywARQ+I
-         wP8/VbTaxRQ5la9ADrKMJC0t69yWJcsnh7iz5Qj8=
+        b=HAqVn8C3Ne5s6xgUnc8yL3qGY80EsfVyuWir2PliRd2ygD5c6wgo8XJRe4FGxo55q
+         lqOACdUh8kb+G6FxdykGPoKvBmj3MgI71H7KeFxbFqrA+kZE8HozKSIcxi/SV6nhZh
+         HVwQbRrOGBrTHMySFus7n+dbFiHw4BlwlLnpd4Ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 155/344] PM / devfreq: exynos-bus: Correct clock enable sequence
-Date:   Thu,  3 Oct 2019 17:52:00 +0200
-Message-Id: <20191003154555.515579518@linuxfoundation.org>
+Subject: [PATCH 5.3 151/344] soc: renesas: Enable ARM_ERRATA_754322 for affected Cortex-A9
+Date:   Thu,  3 Oct 2019 17:51:56 +0200
+Message-Id: <20191003154555.146144185@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,99 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 2c2b20e0da89c76759ee28c6824413ab2fa3bfc6 ]
+[ Upstream commit 2eced4607a1e6f51f928ae3e521fe02be5cb7d23 ]
 
-Regulators should be enabled before clocks to avoid h/w hang. This
-require change in exynos_bus_probe() to move exynos_bus_parse_of()
-after exynos_bus_parent_parse_of() and change in error handling.
-Similar change is needed in exynos_bus_exit() where clock should be
-disabled before regulators.
+ARM Erratum 754322 affects Cortex-A9 revisions r2p* and r3p*.
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Automatically enable support code to mitigate the erratum when compiling
+a kernel for any of the affected Renesas SoCs:
+  - RZ/A1: r3p0,
+  - R-Mobile A1: r2p4,
+  - R-Car M1A: r2p2-00rel0,
+  - R-Car H1: r3p0,
+  - SH-Mobile AG5: r2p2.
+
+EMMA Mobile EV2 (r1p3) and RZ/A2 (r4p1) are not affected.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/exynos-bus.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/soc/renesas/Kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index d9f377912c104..7c06df8bd74fe 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -191,11 +191,10 @@ static void exynos_bus_exit(struct device *dev)
- 	if (ret < 0)
- 		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 2bbf49e5d4418..9583c542c47f7 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -55,6 +55,7 @@ config ARCH_EMEV2
  
--	if (bus->regulator)
--		regulator_disable(bus->regulator);
--
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+	if (bus->regulator)
-+		regulator_disable(bus->regulator);
- }
+ config ARCH_R7S72100
+ 	bool "RZ/A1H (R7S72100)"
++	select ARM_ERRATA_754322
+ 	select PM
+ 	select PM_GENERIC_DOMAINS
+ 	select RENESAS_OSTM
+@@ -78,6 +79,7 @@ config ARCH_R8A73A4
+ config ARCH_R8A7740
+ 	bool "R-Mobile A1 (R8A77400)"
+ 	select ARCH_RMOBILE
++	select ARM_ERRATA_754322
+ 	select RENESAS_INTC_IRQPIN
  
- /*
-@@ -383,6 +382,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	struct exynos_bus *bus;
- 	int ret, max_state;
- 	unsigned long min_freq, max_freq;
-+	bool passive = false;
+ config ARCH_R8A7743
+@@ -105,10 +107,12 @@ config ARCH_R8A77470
+ config ARCH_R8A7778
+ 	bool "R-Car M1A (R8A77781)"
+ 	select ARCH_RCAR_GEN1
++	select ARM_ERRATA_754322
  
- 	if (!np) {
- 		dev_err(dev, "failed to find devicetree node\n");
-@@ -396,27 +396,27 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	bus->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, bus);
- 
--	/* Parse the device-tree to get the resource information */
--	ret = exynos_bus_parse_of(np, bus);
--	if (ret < 0)
--		return ret;
--
- 	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
--	if (!profile) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!profile)
-+		return -ENOMEM;
- 
- 	node = of_parse_phandle(dev->of_node, "devfreq", 0);
- 	if (node) {
- 		of_node_put(node);
--		goto passive;
-+		passive = true;
- 	} else {
- 		ret = exynos_bus_parent_parse_of(np, bus);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
-+	/* Parse the device-tree to get the resource information */
-+	ret = exynos_bus_parse_of(np, bus);
- 	if (ret < 0)
--		goto err;
-+		goto err_reg;
-+
-+	if (passive)
-+		goto passive;
- 
- 	/* Initialize the struct profile and governor data for parent device */
- 	profile->polling_ms = 50;
-@@ -507,6 +507,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
- err:
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+err_reg:
-+	if (!passive)
-+		regulator_disable(bus->regulator);
- 
- 	return ret;
- }
+ config ARCH_R8A7779
+ 	bool "R-Car H1 (R8A77790)"
+ 	select ARCH_RCAR_GEN1
++	select ARM_ERRATA_754322
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select SYSC_R8A7779
+@@ -152,6 +156,7 @@ config ARCH_R9A06G032
+ config ARCH_SH73A0
+ 	bool "SH-Mobile AG5 (R8A73A00)"
+ 	select ARCH_RMOBILE
++	select ARM_ERRATA_754322
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select RENESAS_INTC_IRQPIN
 -- 
 2.20.1
 
