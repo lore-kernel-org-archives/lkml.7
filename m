@@ -2,113 +2,97 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9177FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695ED20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123601;
-	bh=CQg4llB20lc/ODXXWRGsZEH6sxP9m4w2YL2WQYMk5UM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crO1QdNZrMSs2b8FpmorgkyW0LKzo41+6mezWkz/f+tzqXfD+lYuujUniV/6NS7AZ
-	 4X+UyGB7qQC7IHZaSjo9Qo8c7qn/Ti7lBoqqWKnX94aNhFFLEsCrPNC5nfx4volGgk
-	 FhW4cghFgJMw7blWCyie5Kqm/VKoXu/ajmevYdVQ=
+	by mail.kernel.org (Postfix) with ESMTP id D0EB420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388287AbfJCQPj (ORCPT
+        id S1730155AbfJCR0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39850 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:26:49 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52006 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731470AbfJCQPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:15:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5935D20700;
-        Thu,  3 Oct 2019 16:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119335;
-        bh=CQg4llB20lc/ODXXWRGsZEH6sxP9m4w2YL2WQYMk5UM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCY1m51wIMuYl4w2ikygrhzlso9ErUOCQTxJoM3BJq1jEGoHBuEaToiVP2GcSeozT
-         LG751b6a/EbrzTcUr+EEZ2gslo1CSpEPjok0tjvSjMq/MDsuLUCklwWm8svB5ejnEv
-         MX77n0PbjkJmEE9M2vOC/tZ/2GXDM7obErsaEjvU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/211] ASoC: sgtl5000: Fix of unmute outputs on probe
-Date:   Thu,  3 Oct 2019 17:51:33 +0200
-Message-Id: <20191003154453.387351130@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
-References: <20191003154447.010950442@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727488AbfJCR0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:26:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 10:23:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="343728350"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 03 Oct 2019 10:23:44 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id C5CB3580378;
+        Thu,  3 Oct 2019 10:23:44 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v7 7/7] PCI: Skip Enhanced Allocation (EA) initialization
+ for VF device
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+References: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <0b86bafdeaf8293d6360bed1760586493935f16e.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <ecff2638-7a5a-3d5d-6f30-f9517b139696@linux.intel.com>
+Date:   Thu, 3 Oct 2019 10:21:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b86bafdeaf8293d6360bed1760586493935f16e.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Hi Bjorn,
 
-[ Upstream commit 631bc8f0134ae9620d86a96b8c5f9445d91a2dca ]
+On 8/28/19 3:14 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> As per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced Allocation
+> Capability. So skip pci_ea_init() for virtual devices.
+>
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+This patch was also dropped in your v8. Is this also intentional?
+> ---
+>   drivers/pci/pci.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 1b27b5af3d55..266600a11769 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3025,6 +3025,13 @@ void pci_ea_init(struct pci_dev *dev)
+>   	int offset;
+>   	int i;
+>   
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced
+> +	 * Allocation Capability.
+> +	 */
+> +	if (dev->is_virtfn)
+> +		return;
+> +
+>   	/* find PCI EA capability in list */
+>   	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+>   	if (!ea)
 
-To enable "zero cross detect" for ADC/HP, change
-HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
-CHIP_ANA_CTRL register.
-
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-6-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/sgtl5000.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 60764f6201b19..f9817029bffbb 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1280,6 +1280,7 @@ static int sgtl5000_probe(struct snd_soc_component *component)
- 	int ret;
- 	u16 reg;
- 	struct sgtl5000_priv *sgtl5000 = snd_soc_component_get_drvdata(component);
-+	unsigned int zcd_mask = SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
- 
- 	/* power up sgtl5000 */
- 	ret = sgtl5000_set_power_regs(component);
-@@ -1305,9 +1306,8 @@ static int sgtl5000_probe(struct snd_soc_component *component)
- 	reg = ((sgtl5000->lrclk_strength) << SGTL5000_PAD_I2S_LRCLK_SHIFT | 0x5f);
- 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
- 
--	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
--			SGTL5000_HP_ZCD_EN |
--			SGTL5000_ADC_ZCD_EN);
-+	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
-+		zcd_mask, zcd_mask);
- 
- 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
- 			SGTL5000_BIAS_R_MASK,
 -- 
-2.20.1
-
-
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
