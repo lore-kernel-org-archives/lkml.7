@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C3C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24327C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDD520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF51220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122639;
-	bh=dWZQeEXELj4oPCyvPKatzqbyZkyD3e/BEQa+Mm6YXN8=;
+	s=default; t=1570122646;
+	bh=g187vndwyMzQFiDGPL8Bhd9t6/8cXzXzq/6xcOQIgj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AL879RSOPEe7qTOVYIfmx1x+oW9JDmH2sYEFilgTI3HsjiNTp+qoBkuYRBkgD850W
-	 emkQdedOsbyacZk9UIZkv1CgcGSOUbY6xA6Rt8XEUQphGZweSwNodJR47Xo+WrPl3b
-	 PNKtdPWXMwNYYA3GboNv9PSH0E0b4A4Uu1Vz8xpM=
+	b=cUb5gR66h8foLroKd5lGt7cy9Yd+ik692X1t6xedqqPXUkh/W5iaMmn4tsuUfzuiL
+	 qFpuq1ZNhlRARsLRXTHlQKB/hjZLOWR73Jl8KqggSJBe/n8PdsT5P80vjTM3B0meKf
+	 huU+8VBMPMhb+9H9tq+vtqUQWaTTw33X8cTypXlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403986AbfJCQcy (ORCPT
+        id S2393441AbfJCRKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:10:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391132AbfJCQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:49 -0400
+        id S2403963AbfJCQck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A662133F;
-        Thu,  3 Oct 2019 16:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7789821783;
+        Thu,  3 Oct 2019 16:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120368;
-        bh=dWZQeEXELj4oPCyvPKatzqbyZkyD3e/BEQa+Mm6YXN8=;
+        s=default; t=1570120360;
+        bh=g187vndwyMzQFiDGPL8Bhd9t6/8cXzXzq/6xcOQIgj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUA/a6j3qT3l/QoSqU5tPdI//iQhN6/YLBRaUA4qzpM+ZHBUWHecjJGMHJzZkJu+F
-         CqGgKip6LiXmjPP8sHEGQZik8r++W/spBWrK6IodxuAxorXEOHgl+lfafat0D1DK0n
-         JrUDDnAAKNfGx3mvBu9SJGj0j3yfH8UlHvIqIWK0=
+        b=bM53Q1+plmpAjz1vYRMkPOqSL52DxqptPRvp9XmP4hSazY1l7q+Ee4G5Gt61NsX8G
+         3HkccfH6KwWIEuRgygcguX7pDDHXwvp0rLWdGRUS8qKZz5IvVXrJsMwmuwxmWTqtfE
+         m8uYrZG+u0lGA9yBn6sOvsV6HGHnGmJHIpWf4e3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 195/313] mmc: mtk-sd: Re-store SDIO IRQs mask at system resume
-Date:   Thu,  3 Oct 2019 17:52:53 +0200
-Message-Id: <20191003154552.181623706@linuxfoundation.org>
+Subject: [PATCH 5.2 192/313] mmc: core: Add helper function to indicate if SDIO IRQs is enabled
+Date:   Thu,  3 Oct 2019 17:52:50 +0200
+Message-Id: <20191003154551.890683592@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,41 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 1c81d69d4c98aab56c5a7d5a810f84aefdb37e9b ]
+[ Upstream commit bd880b00697befb73eff7220ee20bdae4fdd487b ]
 
-In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
-the driver. However, this still means msdc_runtime_suspend|resume() gets
-called during system suspend/resume, via pm_runtime_force_suspend|resume().
+To avoid each host driver supporting SDIO IRQs, from keeping track
+internally about if SDIO IRQs has been claimed, let's introduce a common
+helper function, sdio_irq_claimed().
 
-This means during system suspend/resume, the register context of the mtk-sd
-device most likely loses its register context, even in cases when SDIO IRQs
-have been enabled.
+The function returns true if SDIO IRQs are claimed, via using the
+information about the number of claimed irqs. This is safe, even without
+any locks, as long as the helper function is called only from
+runtime/system suspend callbacks of the host driver.
 
-To re-enable the SDIO IRQs during system resume, the mtk-sd driver
-currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
-the SDIO card, but this isn't the recommended solution. Instead, it's
-better to deal with this locally in the mtk-sd driver, so let's do that.
-
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mtk-sd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/mmc/host.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 33f4b6387ef71..978c8ccce7e31 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -2421,6 +2421,9 @@ static void msdc_restore_reg(struct msdc_host *host)
- 	} else {
- 		writel(host->save_para.pad_tune, host->base + tune_reg);
- 	}
-+
-+	if (sdio_irq_claimed(host->mmc))
-+		__msdc_enable_sdio_irq(host, 1);
- }
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 7ac3755444d3d..56a8ad506072c 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -493,6 +493,15 @@ void mmc_command_done(struct mmc_host *host, struct mmc_request *mrq);
  
- static int msdc_runtime_suspend(struct device *dev)
+ void mmc_cqe_request_done(struct mmc_host *host, struct mmc_request *mrq);
+ 
++/*
++ * May be called from host driver's system/runtime suspend/resume callbacks,
++ * to know if SDIO IRQs has been claimed.
++ */
++static inline bool sdio_irq_claimed(struct mmc_host *host)
++{
++	return host->sdio_irqs > 0;
++}
++
+ static inline void mmc_signal_sdio_irq(struct mmc_host *host)
+ {
+ 	host->ops->enable_sdio_irq(host, 0);
 -- 
 2.20.1
 
