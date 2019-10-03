@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FFEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2021C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6622420700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7A9207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118302;
-	bh=+/ggtlj+xPS8v3mnbHptst9iFj5utmAfBdLGqH5i4lc=;
+	s=default; t=1570118305;
+	bh=A5/n2+dnHsm+o2DAgqLkioXjOHxRa4b4U34TxnzTCeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nW/O7XX07NirT+xJ78CG5Lz6Gq50EP7tDq0HZtfeyYCQ9cHd0ElmuLcpIjBPlyyDI
-	 jLWjdnoCxksVThRM18j5830s/j4WEZY13bpqAqS14K8JkAzFYTfiArwm9F1+Ek7zxj
-	 piyJINtSo9JDXAZHpDiTPT1iCSoP6Cib27gcTgNk=
+	b=wKCbM/fJOJ/k/RwapB2CUSGdc70cbDfF7oE7BFxWa9uajgBW0SrCjptKXz3NLSKjb
+	 jGGnS+68ryDXTqXAcqgrPRYtI/HJryU7I7LflHsYTvGS7gSjqgtOzJ3p3iC2ZsVXro
+	 7JWYbLNoH6YqP4Uyx0PHp2AAMSSWu4Z4Dux/05A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbfJCP6V (ORCPT
+        id S1731160AbfJCP6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfJCP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:18 -0400
+        id S1731107AbfJCP6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E23820830;
-        Thu,  3 Oct 2019 15:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 131D3207FF;
+        Thu,  3 Oct 2019 15:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118297;
-        bh=+/ggtlj+xPS8v3mnbHptst9iFj5utmAfBdLGqH5i4lc=;
+        s=default; t=1570118300;
+        bh=A5/n2+dnHsm+o2DAgqLkioXjOHxRa4b4U34TxnzTCeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VK9g2ZFsvCIdE6U8ce5pT0a2ZTYEwOBT19mYquoDgNGAuv8RS5BhKgH4b8Mje/6TC
-         h0+qoTkvZtlDMPEnrTDrYcAjjoZdD6pxR7sOQSqRs9PUZnmwojzfuxCANVT39yTRxv
-         nYIoBRB4mcXzLOg9GlPdiXAnBqqqYnazsTnrC4is=
+        b=ZYaEwz50gzF78AM77s/CWbScRwzfqy5XtN4AVof8g2ak9IsDZdJc5/0+5gkz9Lx9j
+         6bRA6d0nm46eZTnOj2PTxvKEMhbhmCh3iBtq2j+KSo4a+OOSxU+9hoV9qPjhdE90xK
+         Rvg2nCP+HOUjnvDLohXee3wob52YedC4mRF5VYL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 43/99] ALSA: hda - Show the fatal CORB/RIRB error more clearly
-Date:   Thu,  3 Oct 2019 17:53:06 +0200
-Message-Id: <20191003154316.351539452@linuxfoundation.org>
+Subject: [PATCH 4.4 61/99] media: ov9650: add a sanity check
+Date:   Thu,  3 Oct 2019 17:53:24 +0200
+Message-Id: <20191003154326.183149833@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,42 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit dd65f7e19c6961ba6a69f7c925021b7a270cb950 ]
+[ Upstream commit 093347abc7a4e0490e3c962ecbde2dc272a8f708 ]
 
-The last fallback of CORB/RIRB communication error recovery is to turn
-on the single command mode, and this last resort usually means that
-something is really screwed up.  Instead of a normal dev_err(), show
-the error more clearly with dev_WARN() with the caller stack trace.
+As pointed by cppcheck:
 
-Also, show the bus-reset fallback also as an error, too.
+	[drivers/media/i2c/ov9650.c:706]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:707]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:721]: (error) Shifting by a negative value is undefined behaviour
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Prevent mangling with gains with invalid values.
+
+As pointed by Sylvester, this should never happen in practice,
+as min value of V4L2_CID_GAIN control is 16 (gain is always >= 16
+and m is always >= 0), but it is too hard for a static analyzer
+to get this, as the logic with validates control min/max is
+elsewhere inside V4L2 core.
+
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_controller.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov9650.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
-index 273364c39171c..9cdf86f04e037 100644
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -667,10 +667,13 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
- 	 */
- 	if (hbus->allow_bus_reset && !hbus->response_reset && !hbus->in_reset) {
- 		hbus->response_reset = 1;
-+		dev_err(chip->card->dev,
-+			"No response from codec, resetting bus: last cmd=0x%08x\n",
-+			bus->last_cmd[addr]);
- 		return -EAGAIN; /* give a chance to retry */
- 	}
+diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+index 1ee6a5527c384..d11de02ecb63e 100644
+--- a/drivers/media/i2c/ov9650.c
++++ b/drivers/media/i2c/ov9650.c
+@@ -707,6 +707,11 @@ static int ov965x_set_gain(struct ov965x *ov965x, int auto_gain)
+ 		for (m = 6; m >= 0; m--)
+ 			if (gain >= (1 << m) * 16)
+ 				break;
++
++		/* Sanity check: don't adjust the gain with a negative value */
++		if (m < 0)
++			return -EINVAL;
++
+ 		rgain = (gain - ((1 << m) * 16)) / (1 << m);
+ 		rgain |= (((1 << m) - 1) << 4);
  
--	dev_err(chip->card->dev,
-+	dev_WARN(chip->card->dev,
- 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
- 		bus->last_cmd[addr]);
- 	chip->single_cmd = 1;
 -- 
 2.20.1
 
