@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AC9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E26C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233592086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FF220865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124316;
-	bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
+	s=default; t=1570124328;
+	bh=D7YyxjKijRZ/TheVnJWsZBt5yFo5UywORh7hk3Psqe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ts24BChotvyvusqnP3bxBRubCyx+M+vXzX3kTd6koDJ/oB80IDnSiWuP45jO7audK
-	 5IM5HMpNn16HKad+hKOTiB4rgYfbexB2Y3AditWKUrZhga1pVDOR2LBjRwhjcErLVH
-	 NuzzvDX2FALTHfc7xU8QpfyQKkiOUEiU807M2dHY=
+	b=H4vHMUZP+uk7E/5T88zios7rHkM66FlroS/ReaLVEFmhONenORd93iZ3vSU4EswMX
+	 ZVABa06iKBoeBP8VXM+oPTiya67QbAaCLOEPwZtSfGTPZbCBlV5N5WXCYlQSPbJpp1
+	 Wdiqq5WKBX1uPpvh7Vkwqg5ZvMphGwrXCSdzgVS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389625AbfJCRif (ORCPT
+        id S2389630AbfJCRir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:38:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbfJCQCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:32 -0400
+        id S1730052AbfJCQCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3AEA21A4C;
-        Thu,  3 Oct 2019 16:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C16520700;
+        Thu,  3 Oct 2019 16:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118550;
-        bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
+        s=default; t=1570118534;
+        bh=D7YyxjKijRZ/TheVnJWsZBt5yFo5UywORh7hk3Psqe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yUvAjDIPqNZwqt7nAvnX1MJPoRgLk/AIayKKh6RspRbAEyv38YU+VRwQsVCpM/Jtf
-         2cUlmPA3HdPNY0DSgAOMHbo9GQCdYqCFruWlgJs21iZTFqsXORI+TOmXRIYXzludQs
-         j2hdwAly5ResitDqCehiE5vshUbegQZN/uclAug0=
+        b=ueEIWaIR2iF/Diqi8ESQo3NLcsP1QZS7w3GJp+6oone46SqFzS3hwVcAEMWtJMOnA
+         uPdKZH821mqL9ZnwvzJ58pkTp5LVlx8wbk75xNuMBj3ObpUc8xK35r2Tpmay2yLhAK
+         lFlrxdJC7MyVRk0b2Dix7LPZHExFgXnu2P2NUNrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 052/129] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Thu,  3 Oct 2019 17:52:55 +0200
-Message-Id: <20191003154340.598492120@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 046/129] media: hdpvr: Add device num check and handling
+Date:   Thu,  3 Oct 2019 17:52:49 +0200
+Message-Id: <20191003154338.531678370@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,52 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
+[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
+Add hdpvr device num check and error handling
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
+We need to increment the device count atomically before we checkout a
+device to make sure that we do not reach the max count, otherwise we get
+out-of-bounds errors as reported by syzbot.
 
-Thus, a possible null-pointer dereference may occur.
+Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
 
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index bf377dc192aa7..d33e02c317129 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index a20b60ac66ca4..7b34108f6587e 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -278,6 +278,7 @@ static int hdpvr_probe(struct usb_interface *interface,
+ #endif
+ 	size_t buffer_size;
+ 	int i;
++	int dev_num;
+ 	int retval = -ENOMEM;
  
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
+ 	/* allocate memory for our device state and initialize it */
+@@ -382,8 +383,17 @@ static int hdpvr_probe(struct usb_interface *interface,
+ 	}
+ #endif
  
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
++	dev_num = atomic_inc_return(&dev_nr);
++	if (dev_num >= HDPVR_MAX) {
++		v4l2_err(&dev->v4l2_dev,
++			 "max device number reached, device register failed\n");
++		atomic_dec(&dev_nr);
++		retval = -ENODEV;
++		goto reg_fail;
++	}
++
+ 	retval = hdpvr_register_videodev(dev, &interface->dev,
+-				    video_nr[atomic_inc_return(&dev_nr)]);
++				    video_nr[dev_num]);
+ 	if (retval < 0) {
+ 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
+ 		goto reg_fail;
 -- 
 2.20.1
 
