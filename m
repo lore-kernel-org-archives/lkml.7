@@ -2,112 +2,223 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498E3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D7BC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C11A215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CFA2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfJCWVm (ORCPT
+        id S1731083AbfJCWYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:21:42 -0400
-Received: from mailoutvs37.siol.net ([185.57.226.228]:33009 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728692AbfJCWVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:21:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 95C28524629;
-        Fri,  4 Oct 2019 00:21:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id UmRQVluGO7pv; Fri,  4 Oct 2019 00:21:38 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 4992852462A;
-        Fri,  4 Oct 2019 00:21:38 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Zimbra) with ESMTPSA id D4D13524629;
-        Fri,  4 Oct 2019 00:21:37 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: allwinner: a64: orangepi-win: Enable audio codec
-Date:   Fri,  4 Oct 2019 00:21:30 +0200
-Message-Id: <20191003222130.2015617-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.23.0
+        Thu, 3 Oct 2019 18:24:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:57830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728288AbfJCWYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:24:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 028501000;
+        Thu,  3 Oct 2019 15:24:54 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D2603F534;
+        Thu,  3 Oct 2019 15:24:51 -0700 (PDT)
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190301192017.39770-1-dianders@chromium.org>
+ <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+ <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
+ <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1f6f7eb0-e1dc-d5a8-fb38-44c5bd839894@arm.com>
+Date:   Thu, 3 Oct 2019 23:24:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables internal audio codec on OrangePi Win board by
-enabling all relevant nodes and adding appropriate routing. Board has
-on-board microphone (MIC1) and 3.5 mm jack with stereo audio and
-microphone (MIC2).
+On 2019-10-03 9:51 pm, Tim Harvey wrote:
+> On Thu, Oct 3, 2019 at 1:42 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> Hi Tim,
+>>
+>> On 2019-10-03 7:27 pm, Tim Harvey wrote:
+>>> On Fri, Mar 1, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
+>>>>
+>>>> If you're bisecting why your peripherals stopped working, it's
+>>>> probably this CL.  Specifically if you see this in your dmesg:
+>>>>     Unexpected global fault, this could be serious
+>>>> ...then it's almost certainly this CL.
+>>>>
+>>>> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
+>>>> is insecure and effectively disables the protection they provide.
+>>>> There are few reasons to allow unmatched stream bypass, and even fewer
+>>>> good ones.
+>>>>
+>>>> This patch starts the transition over to make it much harder to run
+>>>> your system insecurely.  Expected steps:
+>>>>
+>>>> 1. By default disable bypass (so anyone insecure will notice) but make
+>>>>      it easy for someone to re-enable bypass with just a KConfig change.
+>>>>      That's this patch.
+>>>>
+>>>> 2. After people have had a little time to come to grips with the fact
+>>>>      that they need to set their IOMMUs properly and have had time to
+>>>>      dig into how to do this, the KConfig will be eliminated and bypass
+>>>>      will simply be disabled.  Folks who are truly upset and still
+>>>>      haven't fixed their system can either figure out how to add
+>>>>      'arm-smmu.disable_bypass=n' to their command line or revert the
+>>>>      patch in their own private kernel.  Of course these folks will be
+>>>>      less secure.
+>>>>
+>>>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>>> ---
+>>>
+>>> Hi Doug / Robin,
+>>>
+>>> I ran into this breaking things on OcteonTx boards based on CN80XX
+>>> CPU. The IOMMU configuration is a bit beyond me and I'm hoping you can
+>>> offer some advice. The IOMMU here is cavium,smmu-v2 as defined in
+>>> https://github.com/Gateworks/dts-newport/blob/master/cn81xx-linux.dtsi
+>>>
+>>> Booting with 'arm-smmu.disable_bypass=n' does indeed work around the
+>>> breakage as the commit suggests.
+>>>
+>>> Any suggestions for a proper fix?
+>>
+>> Ah, you're using the old "mmu-masters" binding (and in a way which isn't
+>> well-defined - it's never been specified what the stream ID argument(s)
+>> would mean for a PCI host bridge, and Linux just ignores them). The
+>> ideal thing would be to update the DT to generic "iommu-map" properties
+>> - it's been a long time since I last played with a ThunderX, but I
+>> believe the SMMU stream IDs should just be the same as the ITS device
+>> IDs (which is how the "mmu-masters" mapping would have played out anyway).
+>>
+>> The arm-smmu driver support for the old binding has always relied on
+>> implicit bypass - there are technical reasons why we can't realistically
+>> support the full functionality offered to the generic bindings, but it
+>> would be possible to add some degree of workaround to prevent it
+>> interacting quite so poorly with disable_bypass, if necessary. Do you
+>> have deployed systems with DTs that can't be updated, but still might
+>> need to run new kernels?
+>>
+> 
+> Robin,
+> 
+> Thanks for the response. I don't care too much about supporting new
+> kernels with the current DT - I'm good with fixing this with a DT
+> change. Would you be able to give me an example? I would love to see
+> Cavium mainline an cn81xx dts/dtsi in arch/arm64/boot/dts to be used
+> as a base as the only thing we have to go off of currently is the
+> Cavium SDK which has fairly old kernel support.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- .../dts/allwinner/sun50i-a64-orangepi-win.dts | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+No promises (it's a late-night hack from my sofa), but try giving this a 
+go...
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 04446e4716c4..f54a415f2e3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -114,6 +114,19 @@
- 	};
- };
-=20
-+&codec {
-+	status =3D "okay";
-+};
-+
-+&codec_analog {
-+	cpvdd-supply =3D <&reg_eldo1>;
-+	status =3D "okay";
-+};
-+
-+&dai {
-+	status =3D "okay";
-+};
-+
- &de {
- 	status =3D "okay";
- };
-@@ -333,6 +346,22 @@
- 	vcc-hdmi-supply =3D <&reg_dldo1>;
- };
-=20
-+&sound {
-+	status =3D "okay";
-+	simple-audio-card,widgets =3D "Headphone", "Headphone Jack",
-+				    "Microphone", "Microphone Jack",
-+				    "Microphone", "Onboard Microphone";
-+	simple-audio-card,routing =3D
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Headphone Jack", "HP",
-+			"MIC2", "Microphone Jack",
-+			"Onboard Microphone", "MBIAS",
-+			"MIC1", "Onboard Microphone";
-+};
-+
- &spi0 {
- 	status =3D "okay";
-=20
---=20
-2.23.0
+Robin.
 
+----->8-----
+diff --git a/cn81xx-linux.dtsi b/cn81xx-linux.dtsi
+index 3b759d9575fe..dabc9047c674 100644
+--- a/cn81xx-linux.dtsi
++++ b/cn81xx-linux.dtsi
+@@ -234,7 +234,7 @@
+  			clocks = <&sclk>;
+  		};
+
+-		smmu0@830000000000 {
++		smmu: smmu0@830000000000 {
+  			compatible = "cavium,smmu-v2";
+  			reg = <0x8300 0x0 0x0 0x2000000>;
+  			#global-interrupts = <1>;
+@@ -249,23 +249,18 @@
+  				     <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>,
+  				     <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>,
+  				     <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>, <0 69 4>;
+-
+-			mmu-masters = <&ecam0 0x100>,
+-				      <&pem0  0x200>,
+-				      <&pem1  0x300>,
+-				      <&pem2  0x400>;
+-
++			#iommu-cells = <1>;
++			dma-coherent;
+  		};
+
+  		ecam0: pci@848000000000 {
+  			compatible = "pci-host-ecam-generic";
+  			device_type = "pci";
+-			msi-parent = <&its>;
+  			msi-map = <0 &its 0 0x10000>;
++			iommu-map = <0 &smmu 0 0x10000>;
+  			bus-range = <0 31>;
+  			#size-cells = <2>;
+  			#address-cells = <3>;
+-			#stream-id-cells = <1>;
+  			u-boot,dm-pre-reloc;
+  			dma-coherent;
+  			reg = <0x8480 0x00000000 0 0x02000000>;	 /* Configuration space */
+@@ -399,12 +394,11 @@
+
+  			compatible = "cavium,pci-host-thunder-pem";
+  			device_type = "pci";
+-			msi-parent = <&its>;
+  			msi-map = <0 &its 0 0x10000>;
++			iommu-map = <0 &smmu 0 0x10000>;
+  			bus-range = <0x1f 0x57>;
+  			#size-cells = <2>;
+  			#address-cells = <3>;
+-			#stream-id-cells = <1>;
+  			dma-coherent;
+  			reg = <0x8800 0x1f000000 0x0 0x39000000>,  /* Configuration space */
+  				<0x87e0 0xc0000000 0x0 0x01000000>; /* PEM space */
+@@ -424,12 +418,11 @@
+  		pem1: pci@87e0c1000000 {
+  			compatible = "cavium,pci-host-thunder-pem";
+  			device_type = "pci";
+-			msi-parent = <&its>;
+  			msi-map = <0 &its 0 0x10000>;
++			iommu-map = <0 &smmu 0 0x10000>;
+  			bus-range = <0x57 0x8f>;
+  			#size-cells = <2>;
+  			#address-cells = <3>;
+-			#stream-id-cells = <1>;
+  			dma-coherent;
+  			reg = <0x8840 0x57000000 0x0 0x39000000>,  /* Configuration space */
+  				<0x87e0 0xc1000000 0x0 0x01000000>; /* PEM space */
+@@ -449,12 +442,11 @@
+  		pem2: pci@87e0c2000000 {
+  			compatible = "cavium,pci-host-thunder-pem";
+  			device_type = "pci";
+-			msi-parent = <&its>;
+  			msi-map = <0 &its 0 0x10000>;
++			iommu-map = <0 &smmu 0 0x10000>;
+  			bus-range = <0x8f 0xc7>;
+  			#size-cells = <2>;
+  			#address-cells = <3>;
+-			#stream-id-cells = <1>;
+  			dma-coherent;
+  			reg = <0x8880 0x8f000000 0x0 0x39000000>,  /* Configuration space */
+  				<0x87e0 0xc2000000 0x0 0x01000000>; /* PEM space */
