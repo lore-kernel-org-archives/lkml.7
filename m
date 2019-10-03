@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86F3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AECC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF1420673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709DB2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121833;
-	bh=rv/sl+mL7lEXLkuRhSTikzTsj23M93TzHboTgmeC/qA=;
+	s=default; t=1570121836;
+	bh=RluXyseXMQYFzo+kd6pyD1sdBCaQFakvt+G1DrV2/6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFxdMleFw6xgYDvrMYZ+DLYdj7US6L3kqVmuRzqW+LcIeN2rm1jM0S2XPdWYR9KIk
-	 ZdC1jj80k0WJLidmjfDb1cdNo2/6bOGKi0H19i3ACJTG3SXjapZkHOQh0Ld94+IsVN
-	 bWiUdTFYPgjxa9mFOAleKH5rW+g54ggvn/ThPQgw=
+	b=dpclgRxR9TmCEYMR1zh55JbLHMsGTbyknAkAd46bbERItTrL1GUDEHrQjbpqedNgL
+	 df0s5wbzEDT3kbzCBjDBJH3KePX1wsS+/G4Baxth/yBej1NoEGid2EmeXXkpf+TZZX
+	 UEN1J5GE6UXNGRmMpLxMJ0AN53oqXiWn1eRkW634=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732288AbfJCQ5M (ORCPT
+        id S2405902AbfJCQuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405013AbfJCQuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:16 -0400
+        id S2405892AbfJCQuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C6D42070B;
-        Thu,  3 Oct 2019 16:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DFD92086A;
+        Thu,  3 Oct 2019 16:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121415;
-        bh=rv/sl+mL7lEXLkuRhSTikzTsj23M93TzHboTgmeC/qA=;
+        s=default; t=1570121407;
+        bh=RluXyseXMQYFzo+kd6pyD1sdBCaQFakvt+G1DrV2/6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aLQjdk8pZ4d7NGlmXUpgs/O86qZU2Ky1NB53C+tXQQQGfyXBJWSRXhuxyiSx8W7Wh
-         ao9YD6hCJr4f9qTWVJ+dUg5MdYIEw0FryzDIEt2J60A2k0EMLratJZ+2HewVhClnd2
-         +0YGtIYymLPKWZv7A3UJtI4scSZy/z5k74ZMW3lQ=
+        b=zJGmGcWSEF6cPhscEZtt0UWdVDB+P/K9Zweeb5qvpy2drpsMLjP5wypslSwArZJkl
+         Wi89dPNEyQaa9y1Cf2klTxKwP6qwOXC2LdCeqSNpZiElmgvbpQYXJzGaUlTQvf4Bnt
+         oGWp/tMocnl39N5lfJt4BYq5Nc23/nnjKIdNGtuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Kellermann <max.kellermann@gmail.com>,
-        Wolfgang Rohdewald <wolfgang@rohdewald.de>,
-        Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.3 271/344] media: dont drop front-end reference count for ->detach
-Date:   Thu,  3 Oct 2019 17:53:56 +0200
-Message-Id: <20191003154606.976684706@linuxfoundation.org>
+Subject: [PATCH 5.3 268/344] media: videobuf-core.c: poll_wait needs a non-NULL buf pointer
+Date:   Thu,  3 Oct 2019 17:53:53 +0200
+Message-Id: <20191003154606.758995735@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,84 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit 14e3cdbb00a885eedc95c0cf8eda8fe28d26d6b4 upstream.
+commit 6f51fdfd8229d5358c2d6e272cf73478866e8ddc upstream.
 
-A bugfix introduce a link failure in configurations without CONFIG_MODULES:
+poll_wait uses &buf->done, but buf is NULL. Move the poll_wait to later
+in the function once buf is correctly set and only call it if it is
+non-NULL.
 
-In file included from drivers/media/usb/dvb-usb/pctv452e.c:20:0:
-drivers/media/usb/dvb-usb/pctv452e.c: In function 'pctv452e_frontend_attach':
-drivers/media/dvb-frontends/stb0899_drv.h:151:36: error: weak declaration of 'stb0899_attach' being applied to a already existing, static definition
-
-The problem is that the !IS_REACHABLE() declaration of stb0899_attach()
-is a 'static inline' definition that clashes with the weak definition.
-
-I further observed that the bugfix was only done for one of the five users
-of stb0899_attach(), the other four still have the problem.  This reverts
-the bugfix and instead addresses the problem by not dropping the reference
-count when calling '->detach()', instead we call this function directly
-in dvb_frontend_put() before dropping the kref on the front-end.
-
-I first submitted this in early 2018, and after some discussion it
-was apparently discarded.  While there is a long-term plan in place,
-that plan is obviously not nearing completion yet, and the current
-kernel is still broken unless this patch is applied.
-
-Link: https://patchwork.kernel.org/patch/10140175/
-Link: https://patchwork.linuxtv.org/patch/54831/
-
-Cc: Max Kellermann <max.kellermann@gmail.com>
-Cc: Wolfgang Rohdewald <wolfgang@rohdewald.de>
-Cc: stable@vger.kernel.org
-Fixes: f686c14364ad ("[media] stb0899: move code to "detach" callback")
-Fixes: 6cdeaed3b142 ("media: dvb_usb_pctv452e: module refcount changes were unbalanced")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: bb436cbeb918 ("media: videobuf: fix epoll() by calling poll_wait first")
+Cc: <stable@vger.kernel.org>      # for v5.1 and up
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/dvb-core/dvb_frontend.c |    4 +++-
- drivers/media/usb/dvb-usb/pctv452e.c  |    8 --------
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ drivers/media/v4l2-core/videobuf-core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -152,6 +152,9 @@ static void dvb_frontend_free(struct kre
+--- a/drivers/media/v4l2-core/videobuf-core.c
++++ b/drivers/media/v4l2-core/videobuf-core.c
+@@ -1123,7 +1123,6 @@ __poll_t videobuf_poll_stream(struct fil
+ 	struct videobuf_buffer *buf = NULL;
+ 	__poll_t rc = 0;
  
- static void dvb_frontend_put(struct dvb_frontend *fe)
- {
-+	/* call detach before dropping the reference count */
-+	if (fe->ops.detach)
-+		fe->ops.detach(fe);
- 	/*
- 	 * Check if the frontend was registered, as otherwise
- 	 * kref was not initialized yet.
-@@ -3040,7 +3043,6 @@ void dvb_frontend_detach(struct dvb_fron
- 	dvb_frontend_invoke_release(fe, fe->ops.release_sec);
- 	dvb_frontend_invoke_release(fe, fe->ops.tuner_ops.release);
- 	dvb_frontend_invoke_release(fe, fe->ops.analog_ops.release);
--	dvb_frontend_invoke_release(fe, fe->ops.detach);
- 	dvb_frontend_put(fe);
- }
- EXPORT_SYMBOL(dvb_frontend_detach);
---- a/drivers/media/usb/dvb-usb/pctv452e.c
-+++ b/drivers/media/usb/dvb-usb/pctv452e.c
-@@ -909,14 +909,6 @@ static int pctv452e_frontend_attach(stru
- 						&a->dev->i2c_adap);
- 	if (!a->fe_adap[0].fe)
- 		return -ENODEV;
--
--	/*
--	 * dvb_frontend will call dvb_detach for both stb0899_detach
--	 * and stb0899_release but we only do dvb_attach(stb0899_attach).
--	 * Increment the module refcount instead.
--	 */
--	symbol_get(stb0899_attach);
--
- 	if ((dvb_attach(lnbp22_attach, a->fe_adap[0].fe,
- 					&a->dev->i2c_adap)) == NULL)
- 		err("Cannot attach lnbp22\n");
+-	poll_wait(file, &buf->done, wait);
+ 	videobuf_queue_lock(q);
+ 	if (q->streaming) {
+ 		if (!list_empty(&q->stream))
+@@ -1143,7 +1142,9 @@ __poll_t videobuf_poll_stream(struct fil
+ 		}
+ 		buf = q->read_buf;
+ 	}
+-	if (!buf)
++	if (buf)
++		poll_wait(file, &buf->done, wait);
++	else
+ 		rc = EPOLLERR;
+ 
+ 	if (0 == rc) {
 
 
