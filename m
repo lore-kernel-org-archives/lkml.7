@@ -2,127 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61FCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07803C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821F4222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="O0iZExLA"
+	by mail.kernel.org (Postfix) with ESMTP id DD9BB21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbfJCIta (ORCPT
+        id S1728769AbfJCIwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:49:30 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:39982 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfJCIta (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:49:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Q5TExg+4TQhLrghJSY1icmd2xGrFxJ2aG5hPkzrxoDo=; b=O0iZExLAO4uc+e/CglOD7o1sG
-        XdeWeGADcm11wnkviHeLVMjXiFkSMEWsnB1aRuOrg9pdfhW8cxOvVxNDAdjCd5pzB1Y/YnaV0t8gt
-        c3d7A++vtECK+gMCtq/WDZ4Jf4kZ5R1nHi+5NSiRPmW6qfzg/qgM1TyywcHJn69oFbwOowhMGxOw6
-        ZDq+Bifokb3wN/D2qf+bWxeB7djWt+ji4fUoBA6EIZGgvundyQudFgIZOZ4wm14wWBDRbZMBie4L2
-        GrZZhAnjCg/zZPwp6zKGNlvY6rlgE8P7qYeZITFAKoitL+TigifTruIavCHkhzJPLypp60ntvNzBc
-        6PbFqSvIw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:47020)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFwnY-0005L4-41; Thu, 03 Oct 2019 09:49:20 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFwnS-0001bt-8g; Thu, 03 Oct 2019 09:49:14 +0100
-Date:   Thu, 3 Oct 2019 09:49:14 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 00/21] Refine memblock API
-Message-ID: <20191003084914.GV25745@shell.armlinux.org.uk>
-References: <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
- <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
- <20190926160433.GD32311@linux.ibm.com>
- <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
- <20190928073331.GA5269@linux.ibm.com>
- <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
- <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
- <20191002073605.GA30433@linux.ibm.com>
- <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
- <20191003053451.GA23397@linux.ibm.com>
+        Thu, 3 Oct 2019 04:52:23 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17229 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727382AbfJCIwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:52:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:52:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="205569989"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 03 Oct 2019 01:52:17 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 03 Oct 2019 11:52:17 +0300
+Date:   Thu, 3 Oct 2019 11:52:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     linux-usb@vger.kernel.org,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Mario.Limonciello@dell.com,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC PATCH 20/22] thunderbolt: Add support for USB tunnels
+Message-ID: <20191003085217.GP2819@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-21-mika.westerberg@linux.intel.com>
+ <1570092176.18913.7.camel@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003053451.GA23397@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1570092176.18913.7.camel@suse.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 08:34:52AM +0300, Mike Rapoport wrote:
-> (trimmed the CC)
-> 
-> On Wed, Oct 02, 2019 at 06:14:11AM -0500, Adam Ford wrote:
-> > On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > >
+On Thu, Oct 03, 2019 at 10:42:56AM +0200, Oliver Neukum wrote:
+> Am Dienstag, den 01.10.2019, 14:38 +0300 schrieb Mika Westerberg:
+> > From: Rajmohan Mani <rajmohan.mani@intel.com>
 > > 
-> > Before the patch:
+> > USB4 added a capability to tunnel USB 3.x protocol over the USB4
+> > fabric. USB4 device routers may include integrated SuperSpeed HUB or a
+> > function or both. USB tunneling follows PCIe so that the tunnel is
+> > created between the parent and the child router from USB downstream
+> > adapter port to USB upstream adapter port over a single USB4 link.
 > > 
-> > # cat /sys/kernel/debug/memblock/memory
-> >    0: 0x10000000..0x8fffffff
-> > # cat /sys/kernel/debug/memblock/reserved
-> >    0: 0x10004000..0x10007fff
-> >   34: 0x2fffff88..0x3fffffff
+> > This adds support for USB tunneling and also capability to discover
+> > existing USB tunnels (for example created by connection manager in boot
+> > firmware).
 > > 
+> > Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+> > Co-developed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> >  drivers/thunderbolt/switch.c  |  35 ++++++++
+> >  drivers/thunderbolt/tb.c      | 153 ++++++++++++++++++++++++++------
+> >  drivers/thunderbolt/tb.h      |  15 ++++
+> >  drivers/thunderbolt/tb_regs.h |   9 +-
+> >  drivers/thunderbolt/tunnel.c  | 158 +++++++++++++++++++++++++++++++++-
+> >  drivers/thunderbolt/tunnel.h  |   9 ++
+> >  drivers/thunderbolt/usb4.c    |  41 ++++++++-
+> >  7 files changed, 393 insertions(+), 27 deletions(-)
 > > 
-> > After the patch:
-> > # cat /sys/kernel/debug/memblock/memory
-> >    0: 0x10000000..0x8fffffff
-> > # cat /sys/kernel/debug/memblock/reserved
-> >    0: 0x10004000..0x10007fff
-> >   36: 0x80000000..0x8fffffff
+> > diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+> > index 58e3f54ddbb9..5a3236fefb76 100644
+> > --- a/drivers/thunderbolt/switch.c
+> > +++ b/drivers/thunderbolt/switch.c
+> > @@ -1025,11 +1025,46 @@ bool tb_port_is_enabled(struct tb_port *port)
+> >  	case TB_TYPE_DP_HDMI_OUT:
+> >  		return tb_dp_port_is_enabled(port);
+> >  
+> > +	case TB_TYPE_USB_UP:
+> > +	case TB_TYPE_USB_DOWN:
+> > +		return tb_usb_port_is_enabled(port);
+> > +
+> >  	default:
+> >  		return false;
+> >  	}
+> >  }
+> >  
+> > +/**
+> > + * tb_usb_port_is_enabled() - Is the USB adapter port enabled
+> > + * @port: USB port to check
+> > + */
+> > +bool tb_usb_port_is_enabled(struct tb_port *port)
 > 
-> I'm still not convinced that the memblock refactoring didn't uncovered an
-> issue in etnaviv driver.
+> Should these functions be called tb_usb3_port... ?
+> This looks like all USB would need this.
+
+Yes, I agree it follows the spec better that way.
+
+> > -static const char * const tb_tunnel_names[] = { "PCI", "DP", "DMA" };
+> > +static const char * const tb_tunnel_names[] = { "PCI", "DP", "DMA", "USB"};
 > 
-> Why moving the CMA area from 0x80000000 to 0x30000000 makes it fail?
+> USB3 ?
 
-I think you have that the wrong way round.
-
-> BTW, the code that complained about "command buffer outside valid memory
-> window" has been removed by the commit 17e4660ae3d7 ("drm/etnaviv:
-> implement per-process address spaces on MMUv2"). 
-> 
-> Could be that recent changes to MMU management of etnaviv resolve the
-> issue?
-
-The iMX6 does not have MMUv2 hardware, it has MMUv1.  With MMUv1
-hardware requires command buffers within the first 2GiB of physical
-RAM.
-
-I've reported the problem previously but there was no resolution,
-other than pointing the blame at CMA.
-
-https://lists.freedesktop.org/archives/dri-devel/2019-June/thread.html#223516
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Sure.
