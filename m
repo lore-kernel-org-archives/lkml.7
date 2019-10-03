@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F9BC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85318C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3E6215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5906E21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120340;
-	bh=PFmsVWFZwfpmAheslFDDoN3WmtOQ4A68VbTVliDI6Oc=;
+	s=default; t=1570120343;
+	bh=5eDikgOSaSe6iEg5YcefwyC0Wju1DF4Oj1szVWREBus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgvrH6EOas4vUnfaX7sWy6KcqC09Nby04wxVrfsoPg7Xsaut4LVpce9dXbxzbTCvK
-	 Y371wmYLpGPaFH0jTUqVPqtY/zntYQs/Z8WwLHOU+SvUPJaVPALwTIT9Hasmv8Z+LK
-	 7VJaA/wFwVc9iMQZDAeWRrh79w7FdggQH9QgpOkU=
+	b=XyNsw04WVSmfA+u2o5g0N/DWPwu2pHl+sh6uxovUMf8MLuIt4dORZQiAzVd4u8Of/
+	 8RB8r/Zm+n/ZtTIIhHHEYUIbQmRQDiQUGu72ivt6+jZIwlSErelQfbU5K1KbHVgecS
+	 nTvunzHdzpXcWV1d8yq7RcxM3Z9leRv1rm6k8/fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390367AbfJCQcT (ORCPT
+        id S2391911AbfJCQcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39712 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391889AbfJCQcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:16 -0400
+        id S2391510AbfJCQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253D421848;
-        Thu,  3 Oct 2019 16:32:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E495B215EA;
+        Thu,  3 Oct 2019 16:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120335;
-        bh=PFmsVWFZwfpmAheslFDDoN3WmtOQ4A68VbTVliDI6Oc=;
+        s=default; t=1570120338;
+        bh=5eDikgOSaSe6iEg5YcefwyC0Wju1DF4Oj1szVWREBus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qdF/L0P47ywsBJkj8y0CSQL7w3Qj/6PrVHpk0g6fKrOp0cUlhq9frvrKXQDsAk112
-         9nfSFYrD/K+S7LWycK5W95hvC9FVvQ2YKZPcAo0o6jeKN9C4VVDoKnncerVn3tLfju
-         ZKQIhboX0jV37wFncH23faD0OOeaSjSdbEWNnNrc=
+        b=QcG+Bp2/AcX0FSl/0lHaoqgzL8mPnbtZ+bjKe4P561yHNexuNJtqpIA7wIQbrCKf8
+         Eo4AW+2J5FwmfNq91/dF+gvacRyyYgSPM2OeAdon20rdNUve1YpO7ZC3C5ZTo+3iWq
+         +ers22w2PPMPn5Uae3r2ki04tLkIz/olpimpOJbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Arthur She <arthur.she@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 184/313] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
-Date:   Thu,  3 Oct 2019 17:52:42 +0200
-Message-Id: <20191003154551.123149795@linuxfoundation.org>
+Subject: [PATCH 5.2 185/313] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
+Date:   Thu,  3 Oct 2019 17:52:43 +0200
+Message-Id: <20191003154551.208360676@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,68 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 2458adb8f92ad4d07ef7ab27c5bafa1d3f4678d6 ]
+[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
 
-This patch set 0Hz to sysclk when shutdown the card.
+Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
+other purposes.
 
-Some codecs set rate constraints that derives from sysclk. This
-mechanism works correctly if machine drivers give fixed frequency.
+Currently it is left empty with the dmaengine-pcm, in this case copy the
+pcm->id string as pcm->name.
 
-But simple-audio and audio-graph card set variable clock rate if
-'mclk-fs' property exists. In this case, rate constraints will go
-bad scenario. For example a codec accepts three limited rates
-(mclk / 256, mclk / 384, mclk / 512).
+For example IGT is using this to find the HDMI PCM for testing audio on it.
 
-Bad scenario as follows (mclk-fs = 256):
-   - Initialize sysclk by correct value (Ex. 12.288MHz)
-     - Codec set constraints of PCM rate by sysclk
-       48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
-   - Play 48kHz sound, it's acceptable
-   - Sysclk is not changed
-
-   - Play 32kHz sound, it's acceptable
-   - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
-     - Codec set constraints of PCM rate by sysclk
-       32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
-
-   - Play 48kHz again, but it's NOT acceptable because constraints
-     do not allow 48kHz
-
-So codecs treat 0Hz sysclk as signal of applying no constraints to
-avoid this problem.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Link: https://lore.kernel.org/r/20190907174501.19833-1-katsuhiro@katsuster.net
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reported-by: Arthur She <arthur.she@linaro.org>
+Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/generic/simple-card-utils.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index f4c6375d11c7a..ef1adf87cbc8b 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -224,10 +224,17 @@ EXPORT_SYMBOL_GPL(asoc_simple_startup);
- void asoc_simple_shutdown(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	struct simple_dai_props *dai_props =
- 		simple_priv_to_props(priv, rtd->num);
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index 748f5f641002e..d93db2c2b5270 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -306,6 +306,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
  
-+	if (dai_props->mclk_fs) {
-+		snd_soc_dai_set_sysclk(codec_dai, 0, 0, SND_SOC_CLOCK_IN);
-+		snd_soc_dai_set_sysclk(cpu_dai, 0, 0, SND_SOC_CLOCK_OUT);
-+	}
+ 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
+ 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
 +
- 	asoc_simple_clk_disable(dai_props->cpu_dai);
++		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
++			strncpy(rtd->pcm->streams[i].pcm->name,
++				rtd->pcm->streams[i].pcm->id,
++				sizeof(rtd->pcm->streams[i].pcm->name));
++		}
+ 	}
  
- 	asoc_simple_clk_disable(dai_props->codec_dai);
+ 	return 0;
 -- 
 2.20.1
 
