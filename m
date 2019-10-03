@@ -2,51 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDD5C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AB2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D43B20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFBE20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124279;
-	bh=ma1CarYG2lqqBfk2dF+ebJNDWLLYYaQ94NCINGFyuyM=;
+	s=default; t=1570124283;
+	bh=FUo7+AM5G1HtGd+uzgYEtJ+YHg9f4YGf1zd1fEXlen0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJaTo6E9TeDN+hzoHwIXMa19UadZotHpJzJbEoXUurx8mnTJ3uP3N9/jQQ+0iefJR
-	 FhSVnStDLpLGrpw4dM61pScyAFO7+QuXa0hdWY1UqmVxuFIWwyVozl9ANSTY3pWOhe
-	 HwYG6wHzEZbsZt1xheDJkd8vwOW0rSjlM68eoak8=
+	b=Fnw2ZOy+terpGZGEc5mQgtma8FqdkmV3/u6ZBkntt7C84pLx/OvzOze69ZY7GDGCp
+	 Zju5GWRyEc3b79YpkzS18Gu1WRX9eJWUVSErGA8EhwpJ8tZfNFFQEyDIuVLGvqqJIw
+	 a9QYH9H88zA0LTpWTh0fFSyKCK+AvNt0nMC5k6QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389221AbfJCRh6 (ORCPT
+        id S2389277AbfJCRiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbfJCQDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:03 -0400
+        id S1729496AbfJCQCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751E1207FF;
-        Thu,  3 Oct 2019 16:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4C721D81;
+        Thu,  3 Oct 2019 16:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118582;
-        bh=ma1CarYG2lqqBfk2dF+ebJNDWLLYYaQ94NCINGFyuyM=;
+        s=default; t=1570118569;
+        bh=FUo7+AM5G1HtGd+uzgYEtJ+YHg9f4YGf1zd1fEXlen0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbWn0Ss+phf26cIDgytDOt+oI4UgTmbV+PqKOjYMWlPOn+DyrUNpeXFe8MO8buXAc
-         RTnlBEFy/WtreDZbLwZXLVsuturjUYhE3JCpkrVghUg3oPilQw2lI9IW1ocnMukgsZ
-         QwRkCLlTDXv2Js3GEow6K99poB+qdd+7dnoaX6gE=
+        b=bb8O0UFHWMZ5OcSCY1dkOiL04D/yyxbtzaN/OpqRBsf+p3PB5fWZZJ+8xGK6as3i2
+         vyroAP/9G+9C2/vcrpLXtXA+0XozBEH88AFpGyye47eu51/Hc0OkXzSXtnQYudVyOI
+         7+YbCTZnCXp5/UqenYalt0e66l69HHKkezJ8x+Zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 036/129] ax25: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:52:39 +0200
-Message-Id: <20191003154334.777142597@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 058/129] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
+Date:   Thu,  3 Oct 2019 17:53:01 +0200
+Message-Id: <20191003154345.384807398@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,31 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 0614e2b73768b502fc32a75349823356d98aae2c ]
+[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
 
-When creating a raw AF_AX25 socket, CAP_NET_RAW needs to be checked
-first.
+When add one disk to array, the md_reap_sync_thread is responsible
+to activate the spare and set In_sync flag for the new member in
+spare_active().
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But if raid1 has one member disk A, and disk B is added to the array.
+Then we offline A before all the datas are synchronized from A to B,
+obviously B doesn't have the latest data as A, but B is still marked
+with In_sync flag.
+
+So let's not call spare_active under the condition, otherwise B is
+still showed with 'U' state which is not correct.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ax25/af_ax25.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -859,6 +859,8 @@ static int ax25_create(struct net *net,
- 		break;
- 
- 	case SOCK_RAW:
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		break;
- 	default:
- 		return -ESOCKTNOSUPPORT;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 765a16dab2e5f..c1c514792457a 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8573,7 +8573,8 @@ void md_reap_sync_thread(struct mddev *mddev)
+ 	/* resync has finished, collect result */
+ 	md_unregister_thread(&mddev->sync_thread);
+ 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+-	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
++	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
++	    mddev->degraded != mddev->raid_disks) {
+ 		/* success...*/
+ 		/* activate any spares */
+ 		if (mddev->pers->spare_active(mddev)) {
+-- 
+2.20.1
+
 
 
