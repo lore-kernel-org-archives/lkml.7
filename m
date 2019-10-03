@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1EEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707BBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8917207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A2521D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118660;
-	bh=ZIaieDLicGUG3TmJV9/uGk86iXiemrKdvkHze4wayDE=;
+	s=default; t=1570118662;
+	bh=9xj/IygZkiSrQY5ZhHFgDvpKtojt7eZBxnzxtv4bORo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkhZJLB+RbQ76KeFDz7Xo7tZHif64SHUgGMtu11ceRgCXCwi1QRCpcbiDs1dFBC4y
-	 9OIKvxAcyR8MqqueEkbt6U1ZowyIG9NHEO7/GIFYiiCv2e0O+XKXBLzqAD+4at7tZu
-	 z0wqTl/Haqg8WBE+jlvLLmBJYHSByei9vgEzAg1U=
+	b=tbMOXU8eMUdjjLeoo4AR3M7Z02dtwGwm5zatFaZEgu9hw7bNicDHAV6BRgZga2WaI
+	 0D3C4I/rIG3pDZCDcqSMucHec7Vf/CBiwmfdTZ4NqR1sTYxFC/4nwqCWBK+gP61oWQ
+	 VONcRq1Aplc6EpHUuvPucjb6fYEz1CyAF/Ksju3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbfJCQES (ORCPT
+        id S1732385AbfJCQEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732361AbfJCQEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:13 -0400
+        id S1732361AbfJCQET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E9021A4C;
-        Thu,  3 Oct 2019 16:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3AD321A4C;
+        Thu,  3 Oct 2019 16:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118653;
-        bh=ZIaieDLicGUG3TmJV9/uGk86iXiemrKdvkHze4wayDE=;
+        s=default; t=1570118658;
+        bh=9xj/IygZkiSrQY5ZhHFgDvpKtojt7eZBxnzxtv4bORo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeC8VERHdksWvXeWzYeG2JQWcA2/n77g+Mw2RLi2oc4Mwu8gBfMWIowjyev1zZfFk
-         aC2LY34sMKNHuCVpr75ACKjDEETVUtlTo09g9KfJ0uXBVPjBuhUrxLLkstVRLUpFQC
-         ec6d8hCkEBPywlLNMmM2kKeKIgIZVpnztqwpO6uk=
+        b=HcFehfyszGvWufx6nL6VI59M25VDQhQhP1Tbcv6ua3zlTVIsHV8QuGtTdqplpn1NL
+         dnBdgjrAzvm4xRqT1k61R+zReTWFipDJkeeTtWEeieYeBlREVZRE5UoDfX3Xgfb5d8
+         7Wz5ALO0gYVbO2c6m67C4vOjulVRJt9P2GUemYns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Easton <kevin@guarana.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 090/129] libertas: Add missing sentinel at end of if_usb.c fw_table
-Date:   Thu,  3 Oct 2019 17:53:33 +0200
-Message-Id: <20191003154400.287463515@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 074/129] media: ov9650: add a sanity check
+Date:   Thu,  3 Oct 2019 17:53:17 +0200
+Message-Id: <20191003154351.988178811@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Easton <kevin@guarana.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
+[ Upstream commit 093347abc7a4e0490e3c962ecbde2dc272a8f708 ]
 
-This sentinel tells the firmware loading process when to stop.
+As pointed by cppcheck:
 
-Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-Signed-off-by: Kevin Easton <kevin@guarana.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+	[drivers/media/i2c/ov9650.c:706]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:707]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:721]: (error) Shifting by a negative value is undefined behaviour
+
+Prevent mangling with gains with invalid values.
+
+As pointed by Sylvester, this should never happen in practice,
+as min value of V4L2_CID_GAIN control is 16 (gain is always >= 16
+and m is always >= 0), but it is too hard for a static analyzer
+to get this, as the logic with validates control min/max is
+elsewhere inside V4L2 core.
+
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov9650.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
-index a605d569f663a..9d147b11ee516 100644
---- a/drivers/net/wireless/marvell/libertas/if_usb.c
-+++ b/drivers/net/wireless/marvell/libertas/if_usb.c
-@@ -49,7 +49,8 @@ static const struct lbs_fw_table fw_table[] = {
- 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
- 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
- 	{ MODEL_8388, "usb8388.bin", NULL },
--	{ MODEL_8682, "libertas/usb8682.bin", NULL }
-+	{ MODEL_8682, "libertas/usb8682.bin", NULL },
-+	{ 0, NULL, NULL }
- };
+diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+index 502c72238a4a5..db962e2108adf 100644
+--- a/drivers/media/i2c/ov9650.c
++++ b/drivers/media/i2c/ov9650.c
+@@ -708,6 +708,11 @@ static int ov965x_set_gain(struct ov965x *ov965x, int auto_gain)
+ 		for (m = 6; m >= 0; m--)
+ 			if (gain >= (1 << m) * 16)
+ 				break;
++
++		/* Sanity check: don't adjust the gain with a negative value */
++		if (m < 0)
++			return -EINVAL;
++
+ 		rgain = (gain - ((1 << m) * 16)) / (1 << m);
+ 		rgain |= (((1 << m) - 1) << 4);
  
- static struct usb_device_id if_usb_table[] = {
 -- 
 2.20.1
 
