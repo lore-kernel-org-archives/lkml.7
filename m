@@ -2,110 +2,200 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7911BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9927C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3FE21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB04E2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfJCKtJ (ORCPT
+        id S1729642AbfJCKyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:49:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:41264 "EHLO foss.arm.com"
+        Thu, 3 Oct 2019 06:54:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45674 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727756AbfJCKtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:49:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 428721000;
-        Thu,  3 Oct 2019 03:49:08 -0700 (PDT)
-Received: from [10.37.12.210] (unknown [10.37.12.210])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A282B3F706;
-        Thu,  3 Oct 2019 03:49:04 -0700 (PDT)
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-To:     daniel.thompson@linaro.org, mathieu.poirier@linaro.org
-Cc:     saiprakash.ranjan@codeaurora.org, jeffrey.l.hugo@gmail.com,
-        mark.rutland@arm.com, rnayak@codeaurora.org,
-        alexander.shishkin@linux.intel.com, linux-arm-msm@vger.kernel.org,
-        marc.w.gonzalez@free.fr, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, david.brown@linaro.org,
-        agross@kernel.org, sibis@codeaurora.org, leo.yan@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm-owner@vger.kernel.org
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
- <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
- <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
- <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
- <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
- <5b8835905a704fb813714694a792df54@codeaurora.org>
- <CANLsYkxPOOorqcnPrbhZLzGV9Y7EGWUUyxvi-Cm5xxnzhx=Ecg@mail.gmail.com>
- <20191003102023.qk6ik5vmatheaofs@holly.lan>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <57349bda-0e86-5fe0-3be0-55b12748c346@arm.com>
-Date:   Thu, 3 Oct 2019 11:52:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1729241AbfJCKyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:54:08 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6E1A587638
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 10:54:07 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id n3so976506wmf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:54:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=GffyjIVlPnvsrRSrHxajUWEZWrzULU9iPsHRwjh280A=;
+        b=K49/nF1+FqGJ0B0VgBaCZH73m9vv+XvOMqdhUyBTGUcsuRmi6QY4G5bV/AMIbxjFLT
+         jexUqmTu9uIQjg4gjQaLV+mvfq4mfLV+bHk85rNXmCZM5M3mWhWfaeoxmScQXtonqB48
+         r1kR3niizYjJa70gxXpUEnSxwpUgTfWzJcm8ETOM+UqrCYunrAUBjX+DXLTM9Lf8NAyK
+         h+oBBlVA9BfyLtU0kPCfXHZjJjQQ381F2Jbpb/CgRDBxOMrK3iOKx/4HZ8YTmIzGEtZT
+         Q1NDOBQaiIWlrzC6/xWoO6c38OU63G8sEHHbNhggVMl9Ux+QDi/3CkWBPmBDNWb9j+h2
+         G65g==
+X-Gm-Message-State: APjAAAVoDlqSwo6Q8dMDH009+5Ntw4O8c8m1selUKqGcFNI0ymkCyWMB
+        qhMRcvlL1aneaf0Ed4224WLTHkAvlU7RqP6NH1uIN+DW1aVHtmsdVGcpDf5nRnUqZ989AK6zEk0
+        62urof7NB/j4n190/lxu9y8eE
+X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr6708222wrv.248.1570100045802;
+        Thu, 03 Oct 2019 03:54:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyv3Z0Cd9/KSakZBKWO86WJgzxHATqe7HQh3z6HK3wpvt0UzrjZziBeGUCN3si1Uj2bHlWO1w==
+X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr6708199wrv.248.1570100045516;
+        Thu, 03 Oct 2019 03:54:05 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id z5sm3892422wrs.54.2019.10.03.03.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 03:54:04 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Roman Kagan <rkagan@virtuozzo.com>
+Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+In-Reply-To: <20191002101923.4981-1-rkagan@virtuozzo.com>
+References: <20191002101923.4981-1-rkagan@virtuozzo.com>
+Date:   Thu, 03 Oct 2019 12:54:03 +0200
+Message-ID: <87muei14ms.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191003102023.qk6ik5vmatheaofs@holly.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/2019 11:20 AM, Daniel Thompson wrote:
-> On Wed, Oct 02, 2019 at 09:03:59AM -0600, Mathieu Poirier wrote:
->> On Tue, 1 Oct 2019 at 12:05, Sai Prakash Ranjan
->> <saiprakash.ranjan@codeaurora.org> wrote:
->>>
->>> On 2019-10-01 11:01, Jeffrey Hugo wrote:
->>>> On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
->>>> <saiprakash.ranjan@codeaurora.org> wrote:
->>>>>
->>>>>
->>>>> Haan then likely it's the firmware issue.
->>>>> We should probably disable coresight in soc dtsi and enable only for
->>>>> MTP. For now you can add a status=disabled for all coresight nodes in
->>>>> msm8998.dtsi and I will send the patch doing the same in a day or
->>>>> two(sorry I am travelling currently).
->>>>
->>>> This sounds sane to me (and is what I did while bisecting the issue).
->>>> When you do create the patch, feel free to add the following tags as
->>>> you see fit.
->>>>
->>>> Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->>>> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->>>
->>> Thanks Jeffrey, I will add them.
->>> Hope Mathieu and Suzuki are OK with this.
->>
->> The problem here is that a debug and production device are using the
->> same device tree, i.e msm8998.dtsi.  Disabling coresight devices in
->> the DTS file will allow the laptop to boot but completely disabled
->> coresight blocks on the MTP board.  Leaving things as is breaks the
->> laptop but allows coresight to be used on the MTP board.  One of three
->> things can happen:
->>
->> 1) Nothing gets done and production board can't boot without DTS modifications.
->> 2) Disable tags are added to the DTS file and the debug board can't
->> use coresight without modifications.
->> 2) The handling of the debug power domain is done properly on the
->> MSM8998 rather than relying on the bootloader to enable it.
->> 3) The DTS file is split or reorganised to account for debug/production devices.
-> 
-> msm8998.dtsi is a SoC include file. Can't whatever default it adopts be
-> reversed in the board include files such as msm8998-mtp.dtsi or
-> msm8998-clamshell.dtsi ?
+Roman Kagan <rkagan@virtuozzo.com> writes:
 
-Or like Mathieu said, all the Coresight specific nodes could be moved in
-to say, msm8998-coresight.dtsi and could be included into the platforms
-where it actually works.
+> Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
+> when supported by the vcpus.
+>
+> However, the apic access functions for Hyper-V enlightened apic assume
+> xapic mode only.
+>
+> As a result, Linux fails to bring up secondary cpus when run as a guest
+> in QEMU/KVM with both hv_apic and x2apic enabled.
+>
+> I didn't manage to make my instance of Hyper-V expose x2apic to the
+> guest; nor does Hyper-V spec document the expected behavior.  However,
+> a Windows guest running in QEMU/KVM with hv_apic and x2apic and a big
+> number of vcpus (so that it turns on x2apic mode) does use enlightened
+> apic MSRs passing unshifted 32bit destination id and falls back to the
+> regular x2apic MSRs for less frequently used apic fields.
+>
+> So implement the same behavior, by replacing enlightened apic access
+> functions (only those where it makes a difference) with their
+> x2apic-aware versions when x2apic is in use.
+>
+> Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
+> Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
+> ---
+> v1 -> v2:
+> - add ifdefs to handle !CONFIG_X86_X2APIC
+>
+>  arch/x86/hyperv/hv_apic.c | 54 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 51 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 5c056b8aebef..eb1434ae9e46 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -84,6 +84,44 @@ static void hv_apic_write(u32 reg, u32 val)
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_X86_X2APIC
+> +static void hv_x2apic_icr_write(u32 low, u32 id)
+> +{
+> +	wrmsr(HV_X64_MSR_ICR, low, id);
+> +}
 
-Suzuki
+AFAIU you're trying to mirror native_x2apic_icr_write() here but this is
+different from what hv_apic_icr_write() does
+(SET_APIC_DEST_FIELD(id)). Is it actually correct? (I think you've
+tested this and it is but) Michael, could you please shed some light
+here?
+
+> +
+> +static u32 hv_x2apic_read(u32 reg)
+> +{
+> +	u32 reg_val, hi;
+> +
+> +	switch (reg) {
+> +	case APIC_EOI:
+> +		rdmsr(HV_X64_MSR_EOI, reg_val, hi);
+> +		return reg_val;
+> +	case APIC_TASKPRI:
+> +		rdmsr(HV_X64_MSR_TPR, reg_val, hi);
+> +		return reg_val;
+> +
+> +	default:
+> +		return native_apic_msr_read(reg);
+> +	}
+> +}
+> +
+> +static void hv_x2apic_write(u32 reg, u32 val)
+> +{
+> +	switch (reg) {
+> +	case APIC_EOI:
+> +		wrmsr(HV_X64_MSR_EOI, val, 0);
+> +		break;
+> +	case APIC_TASKPRI:
+> +		wrmsr(HV_X64_MSR_TPR, val, 0);
+> +		break;
+> +	default:
+> +		native_apic_msr_write(reg, val);
+> +	}
+> +}
+> +#endif /* CONFIG_X86_X2APIC */
+> +
+>  static void hv_apic_eoi_write(u32 reg, u32 val)
+>  {
+>  	struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
+> @@ -262,9 +300,19 @@ void __init hv_apic_init(void)
+>  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+>  		pr_info("Hyper-V: Using MSR based APIC access\n");
+>  		apic_set_eoi_write(hv_apic_eoi_write);
+> -		apic->read      = hv_apic_read;
+> -		apic->write     = hv_apic_write;
+> -		apic->icr_write = hv_apic_icr_write;
+> +#ifdef CONFIG_X86_X2APIC
+> +		if (x2apic_enabled()) {
+> +			apic->read      = hv_x2apic_read;
+> +			apic->write     = hv_x2apic_write;
+> +			apic->icr_write = hv_x2apic_icr_write;
+> +		} else {
+> +#endif
+> +			apic->read      = hv_apic_read;
+> +			apic->write     = hv_apic_write;
+> +			apic->icr_write = hv_apic_icr_write;
+
+(just wondering): Is it always safe to assume that we cannot switch
+between apic_flat/x2apic in runtime? Moreover, the only difference
+between hv_apic_read/hv_apic_write and hv_x2apic_read/hv_x2apic_write is
+native_apic_mem_{read,write} -> native_apic_msr_{read,write}. Would it
+make sense to move if (x2apic_enabled()) and merge these functions?
+
+> +#ifdef CONFIG_X86_X2APIC
+> +		}
+> +#endif
+>  		apic->icr_read  = hv_apic_icr_read;
+>  	}
+>  }
+
+-- 
+Vitaly
