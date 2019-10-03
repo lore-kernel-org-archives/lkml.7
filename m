@@ -2,136 +2,110 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2874C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE74C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99EAE2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F372133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OCbwbBH8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WY4aT7Dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730999AbfJCXPn (ORCPT
+        id S1731345AbfJCXXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 19:15:43 -0400
-Received: from mail-eopbgr720112.outbound.protection.outlook.com ([40.107.72.112]:39779
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727452AbfJCXPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 19:15:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D98oGlwfDaAAAWho+FJXzifbicXDYRRfmsUv+W4A+aQO4WRy1mV+2+kli9XHal37+ZWAJGdyfH+S6MrLf3pBvFFMxJ1puo2z0xKxrseqTUCHdoguQ8nIuuzAAoJI99uzh2xW/Pra7wwcIGnb+iRJbBpupjI5ga+j9x5wh0onr9NyxNNdBrdMJdhrvfdfVnECOpJeBsKLAShe9zrqMZTM7I3gIPOl/2cZYC56w/lJCte4xOYoNLoAPjNFO/Z1AU+xPbKdP3TSCFV8sX/mO7gUWzOE0Kbh7fOTXGkJlv23nrQrtNIe2A3dzYCN2v3gVAJt0F9gmGxCn9YcTZQvYIatwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RFyZ0txkBQ6NR7kMT3u5xZJ6+YwZoez3T3THaxKTBjQ=;
- b=UnfnW4gMbqgAnYFKMNkcpmf+Yd8sLXnRja+Q1r0KYQr/n6ASmHrQJ4UIsMSxL/YxgsSr1m/4ompmOVdM7CWIZG5nu3zs6b/9xwRA473PCajKoeiLu13nIc38eoxV1uHXVSNJC9auVJXCEoQmkogJBdBgIen51DeVFggkoP6OTSL+vgikM3uKD6kwhFTQ17Dh3bqH/i79MXnlSKj+xmkjuNgbZOViAbgCBTCmlU9ywupghRHHMJ6UtBQZexmRljBz0RUVojMNSaY1XZhYCp9l9SXf6weHZu32Tc1EeHT/jBUQmqEe5iUMBFrhBeyldrTckXo84l8eo2QzYBrQfanruA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RFyZ0txkBQ6NR7kMT3u5xZJ6+YwZoez3T3THaxKTBjQ=;
- b=OCbwbBH8Lbk8GZfiCSRTF5l/7RNxUIP5ihULKIcyp5zVZCsW6XBX3U41DjqnK3jgbvdPd4aaYvqDWYRYH1VTApju27HRoEajBZLqLYLXpgSHMudU0Y7jmFjI5KtM2th7x+PznN39abcd8hb/IEPp0TZCfjIaX8K6pwbp4cfVX0o=
-Received: from CY4PR21MB0136.namprd21.prod.outlook.com (10.173.189.18) by
- CY4PR21MB0696.namprd21.prod.outlook.com (10.175.121.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.8; Thu, 3 Oct 2019 23:15:40 +0000
-Received: from CY4PR21MB0136.namprd21.prod.outlook.com
- ([fe80::a849:fd6f:615d:64e9]) by CY4PR21MB0136.namprd21.prod.outlook.com
- ([fe80::a849:fd6f:615d:64e9%10]) with mapi id 15.20.2327.009; Thu, 3 Oct 2019
- 23:15:40 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Subject: RE: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
-Thread-Topic: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
-Thread-Index: AQHVegKONOQa53Lxu0KKenjrGuzu3adJjEvw
-Date:   Thu, 3 Oct 2019 23:15:39 +0000
-Message-ID: <CY4PR21MB01366C1E5858DA8BBDA3886AD79F0@CY4PR21MB0136.namprd21.prod.outlook.com>
-References: <20191003155200.22022-1-parri.andrea@gmail.com>
-In-Reply-To: <20191003155200.22022-1-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T23:15:37.9996390Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7e10b395-64ac-4c3b-8ac8-cb0ae0776f17;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fee20eef-17e5-4624-46ad-08d748579b44
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: CY4PR21MB0696:|CY4PR21MB0696:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR21MB0696FB6673244BB761EB80E5D79F0@CY4PR21MB0696.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(189003)(199004)(22452003)(4326008)(2201001)(186003)(71190400001)(2906002)(9686003)(7696005)(7736002)(76116006)(8936002)(229853002)(8990500004)(55016002)(86362001)(81166006)(8676002)(81156014)(66066001)(6246003)(6116002)(33656002)(26005)(99286004)(71200400001)(446003)(66946007)(66476007)(64756008)(6436002)(66446008)(476003)(11346002)(66556008)(486006)(256004)(14444005)(54906003)(10290500003)(74316002)(52536014)(6506007)(478600001)(4744005)(10090500001)(5660300002)(102836004)(14454004)(305945005)(110136005)(76176011)(2501003)(316002)(25786009)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0696;H:CY4PR21MB0136.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: E3ujCQ4ExFR2BHdi4Ercn2ZhrRkEuyAd8cgZxDPjHRac7avLMP8pk7MBYjrBRLo14o3iR0tnaSvGHLJW0aMyLIVmDGTjo/FqNm4YGkG+Yaf+UVQOHkqweRnkt2JctxTXGzcilGM3Bnpd+K5denPhep+hzS0oBjxwChrhk+Rv4GaoJsYcKJeXhvTqmNHueat8V8zC0L17mJFa0UY9U0ECsRCYq78t6y1ujWVzXtEGwqrAtnwACRMKdRzdlTbyXY7YZlkrIWqIgk+SXowi/Gscre+9U4DR9/LdRzHqXI4zoHkx8QVi++xEW4/y5O6U/aJL+pLtXlcg50G9JWZ7JpajwMe+tc4mLenAj8rFzMI0org1fNbcPzkq5YV+DcU0Uaqr49WTYRN8kbhEu9u8lWubDpVLk6sQ7uYFxQNJI3EzXZo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 19:23:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36881 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfJCXXE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 19:23:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u20so2228884plq.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 16:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=TiQAIr9ujj+zBKHfm8KctaRq17mtsGT6UynXcmjKAZc=;
+        b=WY4aT7DqS6IE6Gh2reTYnoeEJWe4VpS+j3vX3ix0BQe83t331uITUPgiKeEnabROhP
+         Oxc+enz2CsjCq00kr0/IXVwvGVTMdOMfGbfWz0felSjYhJsh0CZJHP2y/C/Cp+kxomU5
+         8scxJbiIK7o5xWZNYnTTsu4LSc71Ge3BRxvXk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=TiQAIr9ujj+zBKHfm8KctaRq17mtsGT6UynXcmjKAZc=;
+        b=taeze6TrZ+UGrlOTXSkumHSgIQE/DoMUjxVZr8+Q76kLSSt3ozhXEXHrq/406/B2NV
+         d0pw988ct3Mo3lM2UI7RTt2mb+910I1soMou02Cwa7cts1oxGED6o42PAhW8jSVeQnf7
+         XZito4lsqmj2sSSYLiUObSIgRzIiwQDNtOPsyon9omWOHtYdC5S+BBd9Z1Dea9E/3NiG
+         Ba3zWTyQu8sSMQv/8iMHw3Onfs61GOJH213wkwJM610NX4oCvYNAHu91JgRA/yfG2+ch
+         0fe6kSERyX4gRQzwaq75c+eYTBEod0biZj43HKosNnYL0ifcOWU9h18uaSQms+f1J5ki
+         xvnw==
+X-Gm-Message-State: APjAAAVqk8qVhwJ1pJ9KIaKFzcdcxh80Myn5N9MWosl8UkQnnvdOUCD9
+        YgxRdYcbLkDSBX0/2bJ0AS9ssw==
+X-Google-Smtp-Source: APXvYqwa8ClrHoSx3+ILUpKWaD9UmZCA+Ooz3j2P/NN8Tj5I9zGlyJEhqu7+JzCyCf/0ukStyC030A==
+X-Received: by 2002:a17:902:b909:: with SMTP id bf9mr12302497plb.60.1570144981888;
+        Thu, 03 Oct 2019 16:23:01 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z21sm3847587pfa.119.2019.10.03.16.23.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 16:23:01 -0700 (PDT)
+Message-ID: <5d9682d5.1c69fb81.4efda.d786@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fee20eef-17e5-4624-46ad-08d748579b44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 23:15:39.7673
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oWdB1+qf6ZeYCwINBOsqjUvBA2Z31TOpk4V36VxBmfXZx09t1h8QSXfQz6Ne2gw8B8TTgzPxeiK2PHWzo+Quckq4Da8x0Dp5QvypYHvxcG8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0696
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
+References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Murali Nalajala <mnalajal@codeaurora.org>,
+        gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     mnalajal@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 16:22:59 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Thursday, October 3, 2019=
- 8:52 AM
->=20
-> If the hardware supports TSC scaling, Hyper-V will set bit 15 of the
-> HV_PARTITION_PRIVILEGE_MASK in guest VMs with a compatible Hyper-V
-> configuration version.  Bit 15 corresponds to the
-> AccessTscInvariantControls privilege.  If this privilege bit is set,
-> guests can access the HvSyntheticInvariantTscControl MSR: guests can
-> set bit 0 of this synthetic MSR to enable the InvariantTSC feature.
-> After setting the synthetic MSR, CPUID will enumerate support for
-> InvariantTSC.
->=20
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h | 5 +++++
->  arch/x86/kernel/cpu/mshyperv.c     | 7 ++++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
->=20
+Quoting Murali Nalajala (2019-10-02 17:06:14)
+> @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
+>  struct soc_device *soc_device_register(struct soc_device_attribute *soc_=
+dev_attr)
+>  {
+>         struct soc_device *soc_dev;
+> +       const struct attribute_group **soc_attr_groups =3D NULL;
 
-As noted in a separate email, this patch is standalone, not 1 of 2 as
-indicated in the subject line.  Modulo that,
+Don't initialize this to NULL because it is only tested after it's been
+unconditionally assigned to the result of the allocation.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>         int ret;
+> =20
+>         if (!soc_bus_type.p) {
+> @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct soc_d=
+evice_attribute *soc_dev_attr
+>                 goto out1;
+>         }
+> =20
+> +       soc_attr_groups =3D kzalloc(sizeof(*soc_attr_groups) *
+
+Please use kcalloc() instead and drop the define for NUM_ATTR_GROUPS
+because it's used once.
+
+> +                                               NUM_ATTR_GROUPS, GFP_KERN=
+EL);
+> +       if (!soc_attr_groups) {
+> +               ret =3D -ENOMEM;
+> +               goto out2;
+> +       }
+> +       soc_attr_groups[0] =3D &soc_attr_group;
+> +       soc_attr_groups[1] =3D soc_dev_attr->custom_attr_group;
+> +       soc_attr_groups[2] =3D NULL;
+
+Drop this assignment to NULL because kzalloc() and kcalloc() zero out
+the memory anyway.
+
