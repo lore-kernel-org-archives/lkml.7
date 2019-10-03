@@ -4,68 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2407DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9846C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03AC21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C008B21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDwNgTSk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqSVoiSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbfJCKCR (ORCPT
+        id S1729823AbfJCKCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:02:17 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40681 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729779AbfJCKCQ (ORCPT
+        Thu, 3 Oct 2019 06:02:21 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:46442 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfJCKCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:02:16 -0400
-Received: by mail-vs1-f65.google.com with SMTP id v10so1273990vsc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:02:14 -0700 (PDT)
+        Thu, 3 Oct 2019 06:02:20 -0400
+Received: by mail-vk1-f193.google.com with SMTP id o137so473273vka.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=L9j8LD9n1/rnTvXeM15o45g67BHvuZ5Bz7byS7S6kVc=;
-        b=ZDwNgTSke7WQvmLJiRzveQ1bKNNP6yyU67i3nwD4J5JDwu+g7sfX2+Q2M9Q1eUSrAU
-         bmJoF+j1vbH5mci4/tcG+b2ZIkCFUVJwEzc6jWSSmoZzLZezzLdzfwzs5RCNuMp9lBUk
-         lV7ECYvYJGT4g3nILS711DFDgTCTKkl7yzyprXlgnwnSbKC1h8R7/bShr9pZZ81K3xpU
-         +G5oQ7XJuTu0hcPbta6kdGA5PCZU27uFWtR88ol+XoUbYhN0RT9wXY2ZP29hBy6EyBDA
-         VDXP/j92bz+JwyACQ0AffJE4cJFJKPSJyyty2bwZmLYo1K4t0gjzP+3sU2wpcDRZ2ffn
-         bHZw==
+        bh=4+KY5ywrPHYVrJYnT/Bh9w1+Qmgw3NE8hQjMYcsTI1k=;
+        b=qqSVoiSh06E14trLCSHMQOJoJfg9OEuVBgr9YRPJBjwn+DHZapbRsX0KL0wEaN+tpy
+         2qb8e8BD0D0Gu/aDa0SRFnEiYPewzD8cpA3SIZc25bT0SG0EKCzzXvYWsnnMNoAytd+k
+         ES930igP2ZxogA+fsD6gvT8/CMHFtuLPAkR/C7ItRU1IobB/qzIl0V+nKXq5Xzy2ac7m
+         kc2naQX8sUSeH4calwjJqO1zsjPuFRKamnUUovhWANy+cTg0TYZdxAWi1F5HZ8R9vOr2
+         T+Qe+rn3HAKwQb210SUX4KI2+CaH8spLZBvZ7JSTNtzx40cpV98LtLLOLH8klfRjsSYr
+         238g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L9j8LD9n1/rnTvXeM15o45g67BHvuZ5Bz7byS7S6kVc=;
-        b=uJiKJhUGGCN1PvgkeOtg+d+h1QJVqPPRA9XnhS75r2+iKPtrg+IteMrQho5IfeqcWm
-         PzSz9KGww1DolbTT3W4bMyqfJzyIaNyMU7WtaT8HsuEYifnw7DeJmZfnMyQvV6AcSVge
-         GaI4ga19r/DEpTNvAe/dOC4snfyLSRUBOlQROBUmtkYDzCCrNVLUELIORNROa37NzPFx
-         k2nJ98aFhu6d2lq7/nT0vfw1ZH+F8//CI2blKuaNtvkB0zbT2K78v8EQgc0liUZqFQaF
-         MfCObqVS1j8nQKnq0Dt6SqoAIyvUiPUGTdpNGpMDmGMLZmhYLSl9W3cBICOXHH3Mhakz
-         ictg==
-X-Gm-Message-State: APjAAAWdlPKvVIAE2DftF5DAMEsyas67TeWEi4Zw3Zq+8eHSp/JWhosJ
-        LO71wRnB+McI/8aBUKTNYPIZEZl35QDovE2ChWpi5q9J
-X-Google-Smtp-Source: APXvYqyNh+gLwIl1W9laIqP5ANou/nZUVmjlfSUUmVTGXPR2HMKTPYOw64WXP1acl6Q+S9RTPodCbv1xTNRFLaL1RLc=
-X-Received: by 2002:a67:eb84:: with SMTP id e4mr4474520vso.165.1570096933748;
- Thu, 03 Oct 2019 03:02:13 -0700 (PDT)
+        bh=4+KY5ywrPHYVrJYnT/Bh9w1+Qmgw3NE8hQjMYcsTI1k=;
+        b=E7T/V0Ta1EK1ix/WGKw4gpjyObnUhsrX9TCY95BC7hTG6GHWk1/Tkk1C0BRBvVyV0s
+         jtT+0zdpnPThtGRNBXD+0fB0zYyVBxHB9hVXLygbKiISeoVs1MdEJhPmb+iLH/e509cK
+         cui+8Oflg9SByejsLVq9yfZw2f0iVwdAyEmsqSlO9SS9uYgI4B7az6p0F0je4wRkP7sk
+         hAknMCgBbPlNtTB4VkGwRXVeSkTRgFqHKBld2viyOyd9yjHxbgNUlAFClY6aYY1f26kC
+         iy3NbHVXWGO6dKan7NCMoHrDqR50uIhV4XbSG9fVchpYHYa3ASDzucv6CeB7Wc/1e24O
+         049Q==
+X-Gm-Message-State: APjAAAXcIZBLNwHf8OLpMAuYK12eqiztsu2DMWbdn+h36ejuitakezf3
+        VgmDFyeJUUFIkVMoORmmOf9P9e8aM3Lbe79CxRrq/Q==
+X-Google-Smtp-Source: APXvYqwcNdJGDVlZakhLGrvx148tAR191tZOT/k4c2coupoTTHeFcjkTwm+I5RMWJmhHKaZQYu2ZYh8VIr0dPyEOMhA=
+X-Received: by 2002:a1f:3491:: with SMTP id b139mr4711393vka.40.1570096939692;
+ Thu, 03 Oct 2019 03:02:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191001180834.1158-1-geert+renesas@glider.be>
-In-Reply-To: <20191001180834.1158-1-geert+renesas@glider.be>
+References: <20190918180253.GA11702@SD>
+In-Reply-To: <20190918180253.GA11702@SD>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 3 Oct 2019 12:01:37 +0200
-Message-ID: <CAPDyKFo3_QmWHSwmKAXsvfr8F=UviP+vSGOuDMoJppYjv1_aNA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for
- optional interrupt
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+Date:   Thu, 3 Oct 2019 12:01:43 +0200
+Message-ID: <CAPDyKFo0ExfCcOjBF31NnPAQuj1eekCoZa0m9xKvqevBsWM1cQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: host: bcm2835: use devm_platform_ioremap_resource wrapper
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -74,52 +72,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Oct 2019 at 20:08, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+On Wed, 18 Sep 2019 at 20:03, Saiyam Doshi <saiyamdoshi.in@gmail.com> wrote:
 >
-> As platform_get_irq() now prints an error when the interrupt does not
-> exist, a scary warning may be printed for an optional interrupt:
+> Use devm_platform_ioremap_resource helper which wraps
+> platform_get_resource() and devm_ioremap_resource() together.
 >
->     sh_mmcif ee200000.mmc: IRQ index 1 not found
+> Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
 >
-> Fix this by calling platform_get_irq_optional() instead for the second
-> interrupt, which is optional.
+> More information about semantic patching is available at
+> http://coccinelle.lip6.fr/
 >
-> Remove the now superfluous error printing for the first interrupt, which
-> is mandatory.
->
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
 
-Applied for fixes, thanks!
+Applied for next, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
-> This is a fix for v5.4-rc1.
-> ---
->  drivers/mmc/host/sh_mmcif.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/mmc/host/bcm2835.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
-> index 81bd9afb0980525e..98c575de43c755ed 100644
-> --- a/drivers/mmc/host/sh_mmcif.c
-> +++ b/drivers/mmc/host/sh_mmcif.c
-> @@ -1393,11 +1393,9 @@ static int sh_mmcif_probe(struct platform_device *pdev)
->         const char *name;
+> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+> index 148414d7f0c9..99f61fd2a658 100644
+> --- a/drivers/mmc/host/bcm2835.c
+> +++ b/drivers/mmc/host/bcm2835.c
+> @@ -1357,7 +1357,6 @@ static int bcm2835_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+>         struct clk *clk;
+> -       struct resource *iomem;
+>         struct bcm2835_host *host;
+>         struct mmc_host *mmc;
+>         const __be32 *regaddr_p;
+> @@ -1373,8 +1372,7 @@ static int bcm2835_probe(struct platform_device *pdev)
+>         host->pdev = pdev;
+>         spin_lock_init(&host->lock);
 >
->         irq[0] = platform_get_irq(pdev, 0);
-> -       irq[1] = platform_get_irq(pdev, 1);
-> -       if (irq[0] < 0) {
-> -               dev_err(dev, "Get irq error\n");
-> +       irq[1] = platform_get_irq_optional(pdev, 1);
-> +       if (irq[0] < 0)
->                 return -ENXIO;
-> -       }
->
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         reg = devm_ioremap_resource(dev, res);
+> -       iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       host->ioaddr = devm_ioremap_resource(dev, iomem);
+> +       host->ioaddr = devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(host->ioaddr)) {
+>                 ret = PTR_ERR(host->ioaddr);
+>                 goto err;
 > --
-> 2.17.1
+> 2.20.1
 >
