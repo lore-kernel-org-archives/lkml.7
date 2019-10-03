@@ -2,126 +2,295 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F97C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CF8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9464121A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:11:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="U9Oi20ce"
+	by mail.kernel.org (Postfix) with ESMTP id 67180222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfJCCLH (ORCPT
+        id S1728102AbfJCCSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 22:11:07 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:48087 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfJCCLG (ORCPT
+        Wed, 2 Oct 2019 22:18:05 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58010 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726267AbfJCCSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 22:11:06 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x932AlhR006363;
-        Thu, 3 Oct 2019 11:10:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x932AlhR006363
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570068648;
-        bh=nkhw/a1oO0nPQOF4FHctSBWATyaUekhzHUNLh8TfmdI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U9Oi20ce/mJfbr+vphEd72H8PgoTVD9Fw38AS044QGcxorUEKgusj76nWtoQN+Mvx
-         Q0WkDIpdbuBWBK/ofkFggvSOl9/z8zsZyqN2cWF0ArHgOqDepSuR7KpRi/2bqOUUjW
-         m1OrML5IM/r54+hYlTxg7+wJqtEZA+4V3mlz2yZyUYymVk1gG1cbtXFIMb5CegbnsJ
-         3bNqNTR1J9egjTheAiaxfWOYjyj/MW/bZaGvSdjvehH47uM2uoRhgpMOY3ow/U/l/a
-         SmcJxKVvbTMLs/AHgKxQ2d7070t8r51T8z3aTbBbi9IunZDYvxdDB7yVVe1zkU3XcL
-         DXxNi39SNJYRg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id m22so603854vsl.9;
-        Wed, 02 Oct 2019 19:10:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAVTGHHYlBvtoIfIN3n4WamG7PI4pmYPIECnEr/XwhgPSaSe40g4
-        hSlXWlPyt2uPKi2AtxVjn8rkxOrieHr+MDH2mJE=
-X-Google-Smtp-Source: APXvYqwhStUT9XoBxKv1GG3lSyu6FtZbM6kKxm6u1LXlJXJeaStZRhpChAJ3SpGfaP4xJZUvm3NWPnHGp4CHsjr+4Xc=
-X-Received: by 2002:a67:1e87:: with SMTP id e129mr3884016vse.179.1570068647121;
- Wed, 02 Oct 2019 19:10:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com> <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 3 Oct 2019 11:10:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
-Message-ID: <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        Wed, 2 Oct 2019 22:18:05 -0400
+X-UUID: 6a934931ebee47a7b59356e638e1e5f6-20191003
+X-UUID: 6a934931ebee47a7b59356e638e1e5f6-20191003
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 356317875; Thu, 03 Oct 2019 10:18:00 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 3 Oct 2019 10:17:59 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 3 Oct 2019 10:17:58 +0800
+Message-ID: <1570069078.19702.57.camel@mtksdccf07>
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Thu, 3 Oct 2019 10:17:58 +0800
+In-Reply-To: <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
+References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
+         <1569594142.9045.24.camel@mtksdccf07>
+         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+         <1569818173.17361.19.camel@mtksdccf07>
+         <1570018513.19702.36.camel@mtksdccf07>
+         <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 5:46 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Wed, 2019-10-02 at 15:57 +0200, Dmitry Vyukov wrote:
+> On Wed, Oct 2, 2019 at 2:15 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 > >
+> > On Mon, 2019-09-30 at 12:36 +0800, Walter Wu wrote:
+> > > On Fri, 2019-09-27 at 21:41 +0200, Dmitry Vyukov wrote:
+> > > > On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > > >
+> > > > > On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
+> > > > > > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > > > > >
+> > > > > > > memmove() and memcpy() have missing underflow issues.
+> > > > > > > When -7 <= size < 0, then KASAN will miss to catch the underflow issue.
+> > > > > > > It looks like shadow start address and shadow end address is the same,
+> > > > > > > so it does not actually check anything.
+> > > > > > >
+> > > > > > > The following test is indeed not caught by KASAN:
+> > > > > > >
+> > > > > > >         char *p = kmalloc(64, GFP_KERNEL);
+> > > > > > >         memset((char *)p, 0, 64);
+> > > > > > >         memmove((char *)p, (char *)p + 4, -2);
+> > > > > > >         kfree((char*)p);
+> > > > > > >
+> > > > > > > It should be checked here:
+> > > > > > >
+> > > > > > > void *memmove(void *dest, const void *src, size_t len)
+> > > > > > > {
+> > > > > > >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> > > > > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> > > > > > >
+> > > > > > >         return __memmove(dest, src, len);
+> > > > > > > }
+> > > > > > >
+> > > > > > > We fix the shadow end address which is calculated, then generic KASAN
+> > > > > > > get the right shadow end address and detect this underflow issue.
+> > > > > > >
+> > > > > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+> > > > > > >
+> > > > > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > > > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > > > > ---
+> > > > > > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
+> > > > > > >  mm/kasan/generic.c |  8 ++++++--
+> > > > > > >  2 files changed, 42 insertions(+), 2 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > > > > > > index b63b367a94e8..8bd014852556 100644
+> > > > > > > --- a/lib/test_kasan.c
+> > > > > > > +++ b/lib/test_kasan.c
+> > > > > > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memset(void)
+> > > > > > >         kfree(ptr);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static noinline void __init kmalloc_oob_in_memmove_underflow(void)
+> > > > > > > +{
+> > > > > > > +       char *ptr;
+> > > > > > > +       size_t size = 64;
+> > > > > > > +
+> > > > > > > +       pr_info("underflow out-of-bounds in memmove\n");
+> > > > > > > +       ptr = kmalloc(size, GFP_KERNEL);
+> > > > > > > +       if (!ptr) {
+> > > > > > > +               pr_err("Allocation failed\n");
+> > > > > > > +               return;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       memset((char *)ptr, 0, 64);
+> > > > > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
+> > > > > > > +       kfree(ptr);
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static noinline void __init kmalloc_oob_in_memmove_overflow(void)
+> > > > > > > +{
+> > > > > > > +       char *ptr;
+> > > > > > > +       size_t size = 64;
+> > > > > > > +
+> > > > > > > +       pr_info("overflow out-of-bounds in memmove\n");
+> > > > > > > +       ptr = kmalloc(size, GFP_KERNEL);
+> > > > > > > +       if (!ptr) {
+> > > > > > > +               pr_err("Allocation failed\n");
+> > > > > > > +               return;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       memset((char *)ptr, 0, 64);
+> > > > > > > +       memmove((char *)ptr + size, (char *)ptr, 2);
+> > > > > > > +       kfree(ptr);
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static noinline void __init kmalloc_uaf(void)
+> > > > > > >  {
+> > > > > > >         char *ptr;
+> > > > > > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
+> > > > > > >         kmalloc_oob_memset_4();
+> > > > > > >         kmalloc_oob_memset_8();
+> > > > > > >         kmalloc_oob_memset_16();
+> > > > > > > +       kmalloc_oob_in_memmove_underflow();
+> > > > > > > +       kmalloc_oob_in_memmove_overflow();
+> > > > > > >         kmalloc_uaf();
+> > > > > > >         kmalloc_uaf_memset();
+> > > > > > >         kmalloc_uaf2();
+> > > > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > > > > > > index 616f9dd82d12..34ca23d59e67 100644
+> > > > > > > --- a/mm/kasan/generic.c
+> > > > > > > +++ b/mm/kasan/generic.c
+> > > > > > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n(unsigned long addr,
+> > > > > > >                                                 size_t size)
+> > > > > > >  {
+> > > > > > >         unsigned long ret;
+> > > > > > > +       void *shadow_start = kasan_mem_to_shadow((void *)addr);
+> > > > > > > +       void *shadow_end = kasan_mem_to_shadow((void *)addr + size - 1) + 1;
+> > > > > > >
+> > > > > > > -       ret = memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
+> > > > > > > -                       kasan_mem_to_shadow((void *)addr + size - 1) + 1);
+> > > > > > > +       if ((long)size < 0)
+> > > > > > > +               shadow_end = kasan_mem_to_shadow((void *)addr + size);
+> > > > > >
+> > > > > > Hi Walter,
+> > > > > >
+> > > > > > Thanks for working on this.
+> > > > > >
+> > > > > > If size<0, does it make sense to continue at all? We will still check
+> > > > > > 1PB of shadow memory? What happens when we pass such huge range to
+> > > > > > memory_is_nonzero?
+> > > > > > Perhaps it's better to produce an error and bail out immediately if size<0?
+> > > > >
+> > > > > I agree with what you said. when size<0, it is indeed an unreasonable
+> > > > > behavior, it should be blocked from continuing to do.
+> > > > >
+> > > > >
+> > > > > > Also, what's the failure mode of the tests? Didn't they badly corrupt
+> > > > > > memory? We tried to keep tests such that they produce the KASAN
+> > > > > > reports, but don't badly corrupt memory b/c/ we need to run all of
+> > > > > > them.
+> > > > >
+> > > > > Maybe we should first produce KASAN reports and then go to execute
+> > > > > memmove() or do nothing? It looks like it’s doing the following.or?
+> > > > >
+> > > > > void *memmove(void *dest, const void *src, size_t len)
+> > > > >  {
+> > > > > +       if (long(len) <= 0)
+> > > >
+> > > > /\/\/\/\/\/\
+> > > >
+> > > > This check needs to be inside of check_memory_region, otherwise we
+> > > > will have similar problems in all other places that use
+> > > > check_memory_region.
+> > > Thanks for your reminder.
 > > >
-> > > Then use the C preprocessor to force the inlining.  I'm sorry it's not
-> > > as pretty as static inline functions.
+> > >  bool check_memory_region(unsigned long addr, size_t size, bool write,
+> > >                                 unsigned long ret_ip)
+> > >  {
+> > > +       if (long(size) < 0) {
+> > > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> > > +               return false;
+> > > +       }
+> > > +
+> > >         return check_memory_region_inline(addr, size, write, ret_ip);
+> > >  }
+> > >
+> > > > But check_memory_region already returns a bool, so we could check that
+> > > > bool and return early.
+> > >
+> > > When size<0, we should only show one KASAN report, and should we only
+> > > limit to return when size<0 is true? If yse, then __memmove() will do
+> > > nothing.
+> > >
+> > >
+> > >  void *memmove(void *dest, const void *src, size_t len)
+> > >  {
+> > > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> > > +       if(!check_memory_region((unsigned long)src, len, false,
+> > > _RET_IP_)
+> > > +               && long(size) < 0)
+> > > +               return;
+> > > +
+> > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> > >
+> > >         return __memmove(dest, src, len);
+> > >
+> > > >
+> > Hi Dmitry,
 > >
-> > Which makes us lose the baby^H^H^H^Htype checking performed
-> > on function parameters, requiring to add more ugly checks.
->
-> I'm 100% agreed on this.
->
-> If the inline change is being pushed by people who say "you should
-> have used macros instead if you wanted inlining", then I will just
-> revert that stupid commit that is causing problems.
->
-> No, the preprocessor is not the answer.
->
-> That said, code that relies on inlining for _correctness_ should use
-> "__always_inline" and possibly even have a comment about why.
->
-> But I am considering just undoing commit 9012d011660e ("compiler:
-> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely.
+> > What do you think the following code is better than the above one.
+> > In memmmove/memset/memcpy, they need to determine whether size < 0 is
+> > true. we directly determine whether size is negative in memmove and
+> > return early. it avoid to generate repeated KASAN report. Is it better?
+> >
+> > void *memmove(void *dest, const void *src, size_t len)
+> > {
+> > +       if (long(size) < 0) {
+> > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> > +               return;
+> > +       }
+> > +
+> >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> >
+> >
+> > check_memory_region() still has to check whether the size is negative.
+> > but memmove/memset/memcpy generate invalid size KASAN report will not be
+> > there.
+> 
+> 
+> If check_memory_region() will do the check, why do we need to
+> duplicate it inside of memmove and all other range functions?
+> 
+Yes, I know it has duplication, but if we don't have to determine size<0
+in memmove, then all check_memory_region return false will do nothing,
+it includes other memory corruption behaviors, this is my original
+concern. 
 
-No, please do not.
+> I would do:
+> 
+> void *memmove(void *dest, const void *src, size_t len)
+> {
+>         if (check_memory_region((unsigned long)src, len, false, _RET_IP_))
+>                 return;
+if check_memory_region return TRUE is to do nothing, but it is no memory
+corruption? Should it return early when check_memory_region return a
+FALSE?
 
-Macrofying the 'inline' is a horrid mistake that makes incorrect code work.
-It would eternally prevent people from writing portable, correct code.
-Please do not encourage to hide problems.
+> 
+> This avoids duplicating the check, adds minimal amount of code to
+> range functions and avoids adding kasan_report_invalid_size.
+Thanks for your suggestion.
+We originally want to show complete information(destination address,
+source address, and its length), but add minimal amount of code into
+kasan_report(), it should be good.
 
 
-> The
-> advantages are questionable, and when the advantages are balanced
-> against actual regressions and the arguments are "use macros", that
-> just shows how badly thought out this was.
->
->                 Linus
-
-
-
--- 
-Best Regards
-Masahiro Yamada
