@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653B3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62931C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3652086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F2F215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124188;
-	bh=E4yPYwc32cIU2DIgfQp7vP06Bppdzxn0qHcM/XOaOkw=;
+	s=default; t=1570124205;
+	bh=fSQZjZgYqoFtPoY4OPB1K9rZwJJQaHChdCkYzfiW75o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWSoz5ZOsKpIn7okWn5RBfSPvs0k6GYZFyomQrPv4Ag11Fa7rl7ZcLJJo4A+PZL33
-	 zTexVEb3ROJAfWiuqnHDvED1e7nCtyvDDRhiE+P+9D5UXPh9Ty1ncde7ceI6LpOZXJ
-	 SB7WRObYToKa+RP05sbsOWjD7AZJXl9vDocERZlU=
+	b=ANXvmBkCjjFJNrJZwFIPT3wJPrwmTz8YlEG89pVIgLUQ4b5jQ7im/3X/fx9V7/2eb
+	 kngG/uPdb5mI4LPj/vVbL4Obg0rLbbtEKYbuKM58v1T036Gq5oRSqzsJJGGXt1X/Bp
+	 G64GgIVwU5LPjoE4HAXGKQhGe0upw5mNGdwhln7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388682AbfJCRg1 (ORCPT
+        id S1732375AbfJCRgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51164 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732480AbfJCQEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:52 -0400
+        id S1731056AbfJCQEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A5021D81;
-        Thu,  3 Oct 2019 16:04:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE3121D81;
+        Thu,  3 Oct 2019 16:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118691;
-        bh=E4yPYwc32cIU2DIgfQp7vP06Bppdzxn0qHcM/XOaOkw=;
+        s=default; t=1570118655;
+        bh=fSQZjZgYqoFtPoY4OPB1K9rZwJJQaHChdCkYzfiW75o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ke1xdcmudqcykcOZg4dcEkZISz2xhUafiGOyY8LydMpuN/UumesIHLQD32iMciBez
-         YnnwN3bg096MWrA9zCTPRynqZhdFgpxELvVRzCUgVdN0MaNsdZ37biqUwg6vp42Ivd
-         oMfOkqzSzgFyl+TBX8LkwhV+WN6EA7JGlZCWqtok=
+        b=fRk35zzT5IoM+BMUH2OvVbf5Mfx3HbCBMWrTmBpZG4TGqPgA7C7IBX0OQxbndYn+Y
+         LPaSFJS0ne+/JrslQwji6Q89z9e5QBHkC3+BLGk/tTV5lsEGQP3AykBhpebfiD4iOj
+         KNqw9M7SsgI9CSpHDFDcmMwqwRzG+rjcuV2JGMJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 102/129] printk: Do not lose last line in kmsg buffer dump
-Date:   Thu,  3 Oct 2019 17:53:45 +0200
-Message-Id: <20191003154405.768526041@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 091/129] e1000e: add workaround for possible stalled packet
+Date:   Thu,  3 Oct 2019 17:53:34 +0200
+Message-Id: <20191003154400.720507260@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,72 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit b46eff55ad5bd98e746c0a7022fe7ee071de5fee ]
+[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
 
-kmsg_dump_get_buffer() is supposed to select all the youngest log
-messages which fit into the provided buffer.  It determines the correct
-start index by using msg_print_text() with a NULL buffer to calculate
-the size of each entry.  However, when performing the actual writes,
-msg_print_text() only writes the entry to the buffer if the written len
-is lesser than the size of the buffer.  So if the lengths of the
-selected youngest log messages happen to precisely fill up the provided
-buffer, the last log message is not included.
+This works around a possible stalled packet issue, which may occur due to
+clock recovery from the PCH being too slow, when the LAN is transitioning
+from K1 at 1G link speed.
 
-We don't want to modify msg_print_text() to fill up the buffer and start
-returning a length which is equal to the size of the buffer, since
-callers of its other users, such as kmsg_dump_get_line(), depend upon
-the current behaviour.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
 
-Instead, fix kmsg_dump_get_buffer() to compensate for this.
-
-For example, with the following two final prints:
-
-[    6.427502] AAAAAAAAAAAAA
-[    6.427769] BBBBBBBB12345
-
-A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-patch:
-
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
- 00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-After this patch:
-
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
- 00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-Link: http://lkml.kernel.org/r/20190711142937.4083-1-vincent.whitchurch@axis.com
-Fixes: e2ae715d66bf4bec ("kmsg - kmsg_dump() use iterator to receive log buffer content")
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v3.5+
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
+ drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index df348d4eeb265..6607d77afe55a 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3131,7 +3131,7 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
- 	/* move first record forward until length fits into the buffer */
- 	seq = dumper->cur_seq;
- 	idx = dumper->cur_idx;
--	while (l > size && seq < dumper->next_seq) {
-+	while (l >= size && seq < dumper->next_seq) {
- 		struct printk_log *msg = log_from_idx(idx);
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+index dc7d671b903c5..625008e8cb0df 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+@@ -1447,6 +1447,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
+ 			else
+ 				phy_reg |= 0xFA;
+ 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
++
++			if (speed == SPEED_1000) {
++				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
++							    &phy_reg);
++
++				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
++
++				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
++							     phy_reg);
++			}
+ 		}
+ 		hw->phy.ops.release(hw);
  
- 		l -= msg_print_text(msg, true, NULL, 0);
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
+index 67163ca898ba2..6374c8fc76a8d 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
+@@ -227,7 +227,7 @@
+ 
+ /* PHY Power Management Control */
+ #define HV_PM_CTRL		PHY_REG(770, 17)
+-#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
++#define HV_PM_CTRL_K1_CLK_REQ		0x200
+ #define HV_PM_CTRL_K1_ENABLE		0x4000
+ 
+ #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
 -- 
 2.20.1
 
