@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619A3C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ADBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C99D2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2142086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122766;
-	bh=aF29muMYd0aFbQLCZ8bnN7wOIqz7jZ7RkN0z5SAUhJI=;
+	s=default; t=1570122773;
+	bh=sr+EgblRId/7wU5yaG1fEFxsM+CbrijiUWe8BT4QB5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJsoSFYLLvX8+rEhSHxOcvCjI6YZMmIZBdcxdMTX2JSZUdZ3suMl/cetFvcIirhBS
-	 2Jc/iwQHfRyi77vZBejTz4id9BumjLAwmjv7J9PSkJDSADxs1VL2lurPQ8Ga2c+kt0
-	 KVdMWZN1U7BkAa56w2/0zPVhRJv6qLf/f8jddz3A=
+	b=o2nz3mCcW6FnkKDTHguDsHvopaffqmIILgKTYYzTTAyZtM4n6BTJ4DX8uZuKyBwlF
+	 XIOjY8rHV0g+Q6TOebaT1C9PK6IBrfBVsu41qVNXjCDyMwi8gdxKFrKx8cpO1w+oAB
+	 hizkPVa3N6rngB96gBU74iF5AMbAy0inz3QLy2ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392168AbfJCRMp (ORCPT
+        id S2404489AbfJCRMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391619AbfJCQ3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:29:48 -0400
+        id S2390426AbfJCQ3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:29:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2291222C2;
-        Thu,  3 Oct 2019 16:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1730520867;
+        Thu,  3 Oct 2019 16:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120187;
-        bh=aF29muMYd0aFbQLCZ8bnN7wOIqz7jZ7RkN0z5SAUhJI=;
+        s=default; t=1570120176;
+        bh=sr+EgblRId/7wU5yaG1fEFxsM+CbrijiUWe8BT4QB5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i6MRSxIHoV5GORt+MHlWsVim9kyTyw3gRkS5fnghDzBhPghk9ASBpbGB0T6/kpYfR
-         /zeVg1UUC80tCayDl5ec/IGhvN2ImAVTYOz4H/Hv65flrO32C3frHEYAYp+znesL9N
-         X2BzQHFqeFbQ6pqO7zIyopXkp3vvx/WvuSCkH6rc=
+        b=NcI2LeZQrHbcWzY2Sll41POzDZA0PfUUlX/BxCDWow+Oroxc6b1fJ3tuecfM60XrC
+         4OA+akrtiADBZ7+nX6yrteVjBN5ADWy0WF6t0IyK9wVpUKod0t24Tv9x81YxvwqnzA
+         NoPNJLgUv7SDtEtiPPYUkw9/GZyl41MRfmGH5+0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 130/313] EDAC/amd64: Support more than two controllers for chip selects handling
-Date:   Thu,  3 Oct 2019 17:51:48 +0200
-Message-Id: <20191003154545.707291404@linuxfoundation.org>
+Subject: [PATCH 5.2 118/313] ASoC: sun4i-i2s: Dont use the oversample to calculate BCLK
+Date:   Thu,  3 Oct 2019 17:51:36 +0200
+Message-Id: <20191003154544.487329014@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,233 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit d971e28e2ce4696fcc32998c8aced5e47701fffe ]
+[ Upstream commit 7df8f9a20196072162d9dc8fe99943f2d35f23d5 ]
 
-The struct chip_select array that's used for saving chip select bases
-and masks is fixed at length of two. There should be one struct
-chip_select for each controller, so this array should be increased to
-support systems that may have more than two controllers.
+The BCLK divider should be calculated using the parameters that actually
+make the BCLK rate: the number of channels, the sampling rate and the
+sample width.
 
-Increase the size of the struct chip_select array to eight, which is the
-largest number of controllers per die currently supported on AMD
-systems.
+We've been using the oversample_rate previously because in the former SoCs,
+the BCLK's parent is MCLK, which in turn is being used to generate the
+oversample rate, so we end up with something like this:
 
-Fix number of DIMMs and Chip Select bases/masks on Family17h, because
-AMD Family 17h systems support 2 DIMMs, 4 CS bases, and 2 CS masks per
-channel.
+oversample = mclk_rate / sampling_rate
+bclk_div = oversample / word_size / channels
 
-Also, carve out the Family 17h+ reading of the bases/masks into a
-separate function. This effectively reverts the original bases/masks
-reading code to before Family 17h support was added.
+So, bclk_div = mclk_rate / sampling_rate / word_size / channels.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190821235938.118710-2-Yazen.Ghannam@amd.com
+And this is actually better, since the oversampling ratio only plays a role
+because the MCLK is its parent, not because of what BCLK is supposed to be.
+
+Furthermore, that assumption of MCLK being the parent has been broken on
+newer SoCs, so let's use the proper formula, and have the parent rate as an
+argument.
+
+Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
+Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
+Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/c3595e3a9788c2ef2dcc30aa3c8c4953bb5cc249.1566242458.git-series.maxime.ripard@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 123 +++++++++++++++++++++-----------------
- drivers/edac/amd64_edac.h |   5 +-
- 2 files changed, 71 insertions(+), 57 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 873437be86d9c..dd60cf5a3d969 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -810,7 +810,7 @@ static void debug_display_dimm_sizes_df(struct amd64_pvt *pvt, u8 ctrl)
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index fd7c37596f21a..1d946a1927088 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -219,10 +219,11 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
+ };
  
- 	edac_printk(KERN_DEBUG, EDAC_MC, "UMC%d chip selects:\n", ctrl);
- 
--	for (dimm = 0; dimm < 4; dimm++) {
-+	for (dimm = 0; dimm < 2; dimm++) {
- 		size0 = 0;
- 		cs0 = dimm * 2;
- 
-@@ -942,89 +942,102 @@ static void prep_chip_selects(struct amd64_pvt *pvt)
- 	} else if (pvt->fam == 0x15 && pvt->model == 0x30) {
- 		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
- 		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
-+	} else if (pvt->fam >= 0x17) {
-+		int umc;
-+
-+		for_each_umc(umc) {
-+			pvt->csels[umc].b_cnt = 4;
-+			pvt->csels[umc].m_cnt = 2;
-+		}
-+
- 	} else {
- 		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 8;
- 		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 4;
- 	}
- }
- 
-+static void read_umc_base_mask(struct amd64_pvt *pvt)
-+{
-+	u32 umc_base_reg, umc_mask_reg;
-+	u32 base_reg, mask_reg;
-+	u32 *base, *mask;
-+	int cs, umc;
-+
-+	for_each_umc(umc) {
-+		umc_base_reg = get_umc_base(umc) + UMCCH_BASE_ADDR;
-+
-+		for_each_chip_select(cs, umc, pvt) {
-+			base = &pvt->csels[umc].csbases[cs];
-+
-+			base_reg = umc_base_reg + (cs * 4);
-+
-+			if (!amd_smn_read(pvt->mc_node_id, base_reg, base))
-+				edac_dbg(0, "  DCSB%d[%d]=0x%08x reg: 0x%x\n",
-+					 umc, cs, *base, base_reg);
-+		}
-+
-+		umc_mask_reg = get_umc_base(umc) + UMCCH_ADDR_MASK;
-+
-+		for_each_chip_select_mask(cs, umc, pvt) {
-+			mask = &pvt->csels[umc].csmasks[cs];
-+
-+			mask_reg = umc_mask_reg + (cs * 4);
-+
-+			if (!amd_smn_read(pvt->mc_node_id, mask_reg, mask))
-+				edac_dbg(0, "  DCSM%d[%d]=0x%08x reg: 0x%x\n",
-+					 umc, cs, *mask, mask_reg);
-+		}
-+	}
-+}
-+
- /*
-  * Function 2 Offset F10_DCSB0; read in the DCS Base and DCS Mask registers
-  */
- static void read_dct_base_mask(struct amd64_pvt *pvt)
+ static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
+-				  unsigned int oversample_rate,
++				  unsigned long parent_rate,
++				  unsigned int sampling_rate,
+ 				  unsigned int word_size)
  {
--	int base_reg0, base_reg1, mask_reg0, mask_reg1, cs;
-+	int cs;
+-	int div = oversample_rate / word_size / 2;
++	int div = parent_rate / sampling_rate / word_size / 2;
+ 	int i;
  
- 	prep_chip_selects(pvt);
- 
--	if (pvt->umc) {
--		base_reg0 = get_umc_base(0) + UMCCH_BASE_ADDR;
--		base_reg1 = get_umc_base(1) + UMCCH_BASE_ADDR;
--		mask_reg0 = get_umc_base(0) + UMCCH_ADDR_MASK;
--		mask_reg1 = get_umc_base(1) + UMCCH_ADDR_MASK;
--	} else {
--		base_reg0 = DCSB0;
--		base_reg1 = DCSB1;
--		mask_reg0 = DCSM0;
--		mask_reg1 = DCSM1;
--	}
-+	if (pvt->umc)
-+		return read_umc_base_mask(pvt);
- 
- 	for_each_chip_select(cs, 0, pvt) {
--		int reg0   = base_reg0 + (cs * 4);
--		int reg1   = base_reg1 + (cs * 4);
-+		int reg0   = DCSB0 + (cs * 4);
-+		int reg1   = DCSB1 + (cs * 4);
- 		u32 *base0 = &pvt->csels[0].csbases[cs];
- 		u32 *base1 = &pvt->csels[1].csbases[cs];
- 
--		if (pvt->umc) {
--			if (!amd_smn_read(pvt->mc_node_id, reg0, base0))
--				edac_dbg(0, "  DCSB0[%d]=0x%08x reg: 0x%x\n",
--					 cs, *base0, reg0);
--
--			if (!amd_smn_read(pvt->mc_node_id, reg1, base1))
--				edac_dbg(0, "  DCSB1[%d]=0x%08x reg: 0x%x\n",
--					 cs, *base1, reg1);
--		} else {
--			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
--				edac_dbg(0, "  DCSB0[%d]=0x%08x reg: F2x%x\n",
--					 cs, *base0, reg0);
-+		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
-+			edac_dbg(0, "  DCSB0[%d]=0x%08x reg: F2x%x\n",
-+				 cs, *base0, reg0);
- 
--			if (pvt->fam == 0xf)
--				continue;
-+		if (pvt->fam == 0xf)
-+			continue;
- 
--			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
--				edac_dbg(0, "  DCSB1[%d]=0x%08x reg: F2x%x\n",
--					 cs, *base1, (pvt->fam == 0x10) ? reg1
--								: reg0);
--		}
-+		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
-+			edac_dbg(0, "  DCSB1[%d]=0x%08x reg: F2x%x\n",
-+				 cs, *base1, (pvt->fam == 0x10) ? reg1
-+							: reg0);
+ 	for (i = 0; i < ARRAY_SIZE(sun4i_i2s_bclk_div); i++) {
+@@ -312,8 +313,8 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
+ 		return -EINVAL;
  	}
  
- 	for_each_chip_select_mask(cs, 0, pvt) {
--		int reg0   = mask_reg0 + (cs * 4);
--		int reg1   = mask_reg1 + (cs * 4);
-+		int reg0   = DCSM0 + (cs * 4);
-+		int reg1   = DCSM1 + (cs * 4);
- 		u32 *mask0 = &pvt->csels[0].csmasks[cs];
- 		u32 *mask1 = &pvt->csels[1].csmasks[cs];
- 
--		if (pvt->umc) {
--			if (!amd_smn_read(pvt->mc_node_id, reg0, mask0))
--				edac_dbg(0, "    DCSM0[%d]=0x%08x reg: 0x%x\n",
--					 cs, *mask0, reg0);
--
--			if (!amd_smn_read(pvt->mc_node_id, reg1, mask1))
--				edac_dbg(0, "    DCSM1[%d]=0x%08x reg: 0x%x\n",
--					 cs, *mask1, reg1);
--		} else {
--			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
--				edac_dbg(0, "    DCSM0[%d]=0x%08x reg: F2x%x\n",
--					 cs, *mask0, reg0);
-+		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
-+			edac_dbg(0, "    DCSM0[%d]=0x%08x reg: F2x%x\n",
-+				 cs, *mask0, reg0);
- 
--			if (pvt->fam == 0xf)
--				continue;
-+		if (pvt->fam == 0xf)
-+			continue;
- 
--			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
--				edac_dbg(0, "    DCSM1[%d]=0x%08x reg: F2x%x\n",
--					 cs, *mask1, (pvt->fam == 0x10) ? reg1
--								: reg0);
--		}
-+		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
-+			edac_dbg(0, "    DCSM1[%d]=0x%08x reg: F2x%x\n",
-+				 cs, *mask1, (pvt->fam == 0x10) ? reg1
-+							: reg0);
- 	}
- }
- 
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index 8f66472f7adc2..4dce6a2ac75f9 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -96,6 +96,7 @@
- /* Hardware limit on ChipSelect rows per MC and processors per system */
- #define NUM_CHIPSELECTS			8
- #define DRAM_RANGES			8
-+#define NUM_CONTROLLERS			8
- 
- #define ON true
- #define OFF false
-@@ -351,8 +352,8 @@ struct amd64_pvt {
- 	u32 dbam0;		/* DRAM Base Address Mapping reg for DCT0 */
- 	u32 dbam1;		/* DRAM Base Address Mapping reg for DCT1 */
- 
--	/* one for each DCT */
--	struct chip_select csels[2];
-+	/* one for each DCT/UMC */
-+	struct chip_select csels[NUM_CONTROLLERS];
- 
- 	/* DRAM base and limit pairs F1x[78,70,68,60,58,50,48,40] */
- 	struct dram_range ranges[DRAM_RANGES];
+-	bclk_div = sun4i_i2s_get_bclk_div(i2s, oversample_rate,
+-					  word_size);
++	bclk_div = sun4i_i2s_get_bclk_div(i2s, i2s->mclk_freq,
++					  rate, word_size);
+ 	if (bclk_div < 0) {
+ 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
+ 		return -EINVAL;
 -- 
 2.20.1
 
