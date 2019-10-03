@@ -2,74 +2,112 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A55C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E57206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A2420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570121105;
+	bh=Jr0wGQmS0muJUE7fHZrs67QdfVNAOhdhj82RmrQrEgE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C24N7w4rkZeqwOU43Cwdq1uZfF4nLgc5sOf8/Bs38Xb3rAQkBxCjs9nxDiu8HmOjz
+	 F4B9lYGwSPI94SuaswutczaFZ182QE3YpNmxeNhYiR1gmU0BtWd/p3awJslJ8sNstY
+	 +2/vqvNQVP3fPGy8ioIfGEVFphBGQ4QAoZLOf2+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405455AbfJCQo6 (ORCPT
+        id S2405475AbfJCQpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:44:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34468 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 12:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405428AbfJCQor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:44:47 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2404806AbfJCQmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7447E8830A;
-        Thu,  3 Oct 2019 16:44:47 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D3AD5D9E1;
-        Thu,  3 Oct 2019 16:44:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix rxrpc_recvmsg tracepoint
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 03 Oct 2019 17:44:44 +0100
-Message-ID: <157012108434.20904.8998254800982940866.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mail.kernel.org (Postfix) with ESMTPSA id CAC5D2054F;
+        Thu,  3 Oct 2019 16:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570120974;
+        bh=Jr0wGQmS0muJUE7fHZrs67QdfVNAOhdhj82RmrQrEgE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oI5P9mxyiyqe+PK4SHXWVAWvtsyQEEWsRj+Xti7r5mbzToNUhYpOJnrKcCnvsX8nr
+         noWUyiWK43S9P+bo5DDi+23D9LAvlBmC1XK7srDPwpvyyTA8Zd/LhOn9sgmkggIk86
+         j5RWswJnjwKozp9DuGj84dHLX6R8gq9uDZeRo/OQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 071/344] rcu: Add destroy_work_on_stack() to match INIT_WORK_ONSTACK()
+Date:   Thu,  3 Oct 2019 17:50:36 +0200
+Message-Id: <20191003154547.138807171@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 03 Oct 2019 16:44:47 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the rxrpc_recvmsg tracepoint to handle being called with a NULL call
-parameter.
+From: Paul E. McKenney <paulmck@linux.ibm.com>
 
-Fixes: a25e21f0bcd2 ("rxrpc, afs: Use debug_ids rather than pointers in traces")
-Signed-off-by: David Howells <dhowells@redhat.com>
+[ Upstream commit fbad01af8c3bb9618848abde8054ab7e0c2330fe ]
+
+The synchronize_rcu_expedited() function has an INIT_WORK_ONSTACK(),
+but lacks the corresponding destroy_work_on_stack().  This commit
+therefore adds destroy_work_on_stack().
+
+Reported-by: Andrea Arcangeli <aarcange@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Acked-by: Andrea Arcangeli <aarcange@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ kernel/rcu/tree_exp.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
- include/trace/events/rxrpc.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index a13a62db3565..edc5c887a44c 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1068,7 +1068,7 @@ TRACE_EVENT(rxrpc_recvmsg,
- 			     ),
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index af7e7b9c86afa..513b403b683b7 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -792,6 +792,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
+  */
+ void synchronize_rcu_expedited(void)
+ {
++	bool boottime = (rcu_scheduler_active == RCU_SCHEDULER_INIT);
+ 	struct rcu_exp_work rew;
+ 	struct rcu_node *rnp;
+ 	unsigned long s;
+@@ -817,7 +818,7 @@ void synchronize_rcu_expedited(void)
+ 		return;  /* Someone else did our work for us. */
  
- 	    TP_fast_assign(
--		    __entry->call = call->debug_id;
-+		    __entry->call = call ? call->debug_id : 0;
- 		    __entry->why = why;
- 		    __entry->seq = seq;
- 		    __entry->offset = offset;
+ 	/* Ensure that load happens before action based on it. */
+-	if (unlikely(rcu_scheduler_active == RCU_SCHEDULER_INIT)) {
++	if (unlikely(boottime)) {
+ 		/* Direct call during scheduler init and early_initcalls(). */
+ 		rcu_exp_sel_wait_wake(s);
+ 	} else {
+@@ -835,5 +836,8 @@ void synchronize_rcu_expedited(void)
+ 
+ 	/* Let the next expedited grace period start. */
+ 	mutex_unlock(&rcu_state.exp_mutex);
++
++	if (likely(!boottime))
++		destroy_work_on_stack(&rew.rew_work);
+ }
+ EXPORT_SYMBOL_GPL(synchronize_rcu_expedited);
+-- 
+2.20.1
+
+
 
