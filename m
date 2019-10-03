@@ -2,141 +2,95 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABA8C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1EEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D2321A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8917207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570118660;
+	bh=ZIaieDLicGUG3TmJV9/uGk86iXiemrKdvkHze4wayDE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AkhZJLB+RbQ76KeFDz7Xo7tZHif64SHUgGMtu11ceRgCXCwi1QRCpcbiDs1dFBC4y
+	 9OIKvxAcyR8MqqueEkbt6U1ZowyIG9NHEO7/GIFYiiCv2e0O+XKXBLzqAD+4at7tZu
+	 z0wqTl/Haqg8WBE+jlvLLmBJYHSByei9vgEzAg1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732373AbfJCQEQ (ORCPT
+        id S1730841AbfJCQES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53288 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 12:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731056AbfJCQEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:09 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732361AbfJCQEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C3F0B3D966;
-        Thu,  3 Oct 2019 16:04:08 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-11.phx2.redhat.com [10.3.112.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F30E819C6A;
-        Thu,  3 Oct 2019 16:04:07 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 96DF211E4; Thu,  3 Oct 2019 13:04:04 -0300 (BRT)
-Date:   Thu, 3 Oct 2019 13:04:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Josh Hunt <johunt@akamai.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, john@metanate.com, jolsa@kernel.org,
-        alexander.shishkin@linux.intel.com, khlebnikov@yandex-team.ru,
-        namhyung@kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: 4.19 dwarf unwinding broken
-Message-ID: <20191003160404.GG3531@redhat.com>
-References: <ab87d20b-526c-9435-0532-c298beeb0318@akamai.com>
- <20191003100300.GA22784@krava>
- <d0e0a675-1344-a47b-c27e-ea05230d88b8@akamai.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E9021A4C;
+        Thu,  3 Oct 2019 16:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118653;
+        bh=ZIaieDLicGUG3TmJV9/uGk86iXiemrKdvkHze4wayDE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CeC8VERHdksWvXeWzYeG2JQWcA2/n77g+Mw2RLi2oc4Mwu8gBfMWIowjyev1zZfFk
+         aC2LY34sMKNHuCVpr75ACKjDEETVUtlTo09g9KfJ0uXBVPjBuhUrxLLkstVRLUpFQC
+         ec6d8hCkEBPywlLNMmM2kKeKIgIZVpnztqwpO6uk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kevin Easton <kevin@guarana.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 090/129] libertas: Add missing sentinel at end of if_usb.c fw_table
+Date:   Thu,  3 Oct 2019 17:53:33 +0200
+Message-Id: <20191003154400.287463515@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
+References: <20191003154318.081116689@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0e0a675-1344-a47b-c27e-ea05230d88b8@akamai.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 03 Oct 2019 16:04:09 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 03, 2019 at 08:17:38AM -0700, Josh Hunt escreveu:
-> On 10/3/19 3:03 AM, Jiri Olsa wrote:
-> >On Thu, Oct 03, 2019 at 12:54:09AM -0700, Josh Hunt wrote:
-> >>The following commit is breaking dwarf unwinding on 4.19 kernels:
-> >
-> >how?
-> 
-> When doing something like:
-> perf record -p $(cat /var/run/app.pid) -g --call-graph dwarf -F 999
-> -- sleep 3
-> 
-> with 4.19.75 perf I see things like:
-> 
-> app_Thr00 26247 1810131.375329:     168288 cycles:ppp:
-> 
-> app_Thr01 26767 1810131.377449:     344415 cycles:ppp:
-> 
-> uvm:WorkerThread 26746 1810131.383052:        504 cycles:ppp:
->         ffffffff9f77cce0 _raw_spin_lock+0x10 (/boot/vmlinux-4.19.46)
->         ffffffff9f181527 __perf_event_task_sched_in+0xf7
-> (/boot/vmlinux-4.19.46)
->         ffffffff9f09a7b8 finish_task_switch+0x158 (/boot/vmlinux-4.19.46)
->         ffffffff9f778276 __schedule+0x2f6 (/boot/vmlinux-4.19.46)
->         ffffffff9f7787f2 schedule+0x32 (/boot/vmlinux-4.19.46)
->         ffffffff9f77bb0a schedule_hrtimeout_range_clock+0x8a
-> (/boot/vmlinux-4.19.46)
->         ffffffff9f22ea12 poll_schedule_timeout.constprop.6+0x42
-> (/boot/vmlinux-4.19.46)
->         ffffffff9f22eeeb do_sys_poll+0x4ab (/boot/vmlinux-4.19.46)
->         ffffffff9f22fb7b __se_sys_poll+0x5b (/boot/vmlinux-4.19.46)
->         ffffffff9f0023de do_syscall_64+0x4e (/boot/vmlinux-4.19.46)
->         ffffffff9f800088 entry_SYSCALL_64+0x68 (/boot/vmlinux-4.19.46)
-> ---
-> 
-> and with 4.19.75 perf with e5adfc3e7e77 reverted those empty call
-> stacks go away and also other call stacks show more thread details:
-> 
-> uvm:WorkerThread 26746 1810207.336391:          1 cycles:ppp:
->         ffffffff9f181505 __perf_event_task_sched_in+0xd5
-> (/boot/vmlinux-4.19.46)
->         ffffffff9f09a7b8 finish_task_switch+0x158 (/boot/vmlinux-4.19.46)
->         ffffffff9f778276 __schedule+0x2f6 (/boot/vmlinux-4.19.46)
->         ffffffff9f7787f2 schedule+0x32 (/boot/vmlinux-4.19.46)
->         ffffffff9f77bb0a schedule_hrtimeout_range_clock+0x8a
-> (/boot/vmlinux-4.19.46)
->         ffffffff9f22ea12 poll_schedule_timeout.constprop.6+0x42
-> (/boot/vmlinux-4.19.46)
->         ffffffff9f22eeeb do_sys_poll+0x4ab (/boot/vmlinux-4.19.46)
->         ffffffff9f22fb7b __se_sys_poll+0x5b (/boot/vmlinux-4.19.46)
->         ffffffff9f0023de do_syscall_64+0x4e (/boot/vmlinux-4.19.46)
->         ffffffff9f800088 entry_SYSCALL_64+0x68 (/boot/vmlinux-4.19.46)
->             7f7ef3f5c90d [unknown] (/lib/x86_64-linux-gnu/libc-2.23.so)
->                  3eb5c99 poll+0xc9 (inlined)
->                  3eb5c99 colib::ipc::EventFd::wait+0xc9
-> (/usr/local/bin/app)
->                  3296779 uvm::WorkerThread::run+0x129 (/usr/local/bin/app)
->         ffffffffffffffff [unknown] ([unknown])
-> 
-> They also look the same as earlier kernel versions we have running.
-> 
-> In addition reading e8ba2906f6b's changelog sounded very similar to
-> what I was seeing. This application launches a # of threads and is
-> definitely already running before the invocation of perf.
-> 
-> Thanks for looking at this.
+From: Kevin Easton <kevin@guarana.org>
+
+[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
+
+This sentinel tells the firmware loading process when to stop.
+
+Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Signed-off-by: Kevin Easton <kevin@guarana.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
+index a605d569f663a..9d147b11ee516 100644
+--- a/drivers/net/wireless/marvell/libertas/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas/if_usb.c
+@@ -49,7 +49,8 @@ static const struct lbs_fw_table fw_table[] = {
+ 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
+ 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
+ 	{ MODEL_8388, "usb8388.bin", NULL },
+-	{ MODEL_8682, "libertas/usb8682.bin", NULL }
++	{ MODEL_8682, "libertas/usb8682.bin", NULL },
++	{ 0, NULL, NULL }
+ };
+ 
+ static struct usb_device_id if_usb_table[] = {
+-- 
+2.20.1
 
 
-So, if at __event__synthesize_thread()
 
-
-                if (pid == tgid &&
-                    perf_event__synthesize_mmap_events(tool, mmap_event, pid, tgid,
-                                                       process, machine, mmap_data))
-
-
-We did something like:
-
-	if (pid != tgid && machine__find_thread(tgid, tgid) == NULL) {
-		struct thread *t = thread__new(tgid, tgid);
-
-		then use the info for pid to get synthesize the thread
-                group leader so that the get the sharing we need?
-	}
-
-
-- Arnaldo
