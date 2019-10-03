@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E06AC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B263CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5624E20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B24D2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122040;
-	bh=CguQhBGjD/VMo7E6gLNngt9pIJo06htO8RE80jx/QE8=;
+	s=default; t=1570122049;
+	bh=aRnDWCac5Rp2zw7MueiQHhEBPV+CE2W1Bm3OSFT9eFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IsjShlC10em8YeFGp709zlUHFm6/Og1a4uKv88Nb4/uZZm6JrwwgTYFdEdOpqwJza
-	 cEt1bguVvqJN8wZXKNjw2RG/OcipGpQCyw4tImM2jQjhQMW5MEbJe1NeLx5LxhNSDH
-	 bVS6qRvYwx+k+fCpCT1Aw46wYqqH7lpEpnB62pY4=
+	b=hPOcSl1CvqFXrSCWYX0KgG7eZP6dgFliQeM5ZUMfIBvIw+br+cKGFRkW2GTjZUkpU
+	 LP0iXCY61Rj35akt9d2dPmVyZ1Rwt+1oFfhirTEUlAw45vQ5M3NcOhZgtvc0eXfse+
+	 aHoqgefgxL8d7lXtPy+Q0ZKi4eAYl7CaZCZkw7lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393285AbfJCRAj (ORCPT
+        id S2393290AbfJCRAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58388 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730540AbfJCQpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:44 -0400
+        id S2392807AbfJCQpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07A2120865;
-        Thu,  3 Oct 2019 16:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAD86215EA;
+        Thu,  3 Oct 2019 16:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121143;
-        bh=CguQhBGjD/VMo7E6gLNngt9pIJo06htO8RE80jx/QE8=;
+        s=default; t=1570121130;
+        bh=aRnDWCac5Rp2zw7MueiQHhEBPV+CE2W1Bm3OSFT9eFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3ZeyPJ/iE/kLs/vF2VROrP1aWOEa8bWyX2civ1SdGL9QiAyZIuZESKf/zYevkJY7
-         vMvI9vee0Uubxgujy3uBkIpkxxkZW33tyEAYum/CHv/qPcBb4kM0iooXdAGN2seiFF
-         kcYFTGqg0T+8le2MJYhnIPGvRpDtMTvWISJCRSAk=
+        b=UedKR3l6Y91uVjqxLjyWV2H9tiRm346q+Zyzj9J2kyLK3jNzuvsqf0THf8YSGwX2P
+         yw2R62S5KB2jyx/WRdneoBHoDv5RuloSmFAhIfkZGSeTRWFfJlMFX+b7+9dYVmGdr9
+         zsSSYENfAXueMIZ0C2i8EKNtRo+AAJB6ijC58MJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, djuran@redhat.com,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 170/344] x86/apic/vector: Warn when vector space exhaustion breaks affinity
-Date:   Thu,  3 Oct 2019 17:52:15 +0200
-Message-Id: <20191003154557.003290302@linuxfoundation.org>
+Subject: [PATCH 5.3 165/344] leds: lm3532: Fixes for the driver for stability
+Date:   Thu,  3 Oct 2019 17:52:10 +0200
+Message-Id: <20191003154556.527192344@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,62 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
+From: Dan Murphy <dmurphy@ti.com>
 
-[ Upstream commit 743dac494d61d991967ebcfab92e4f80dc7583b3 ]
+[ Upstream commit 6559ac32998248182572e1ccae79dc2eb40ac7c6 ]
 
-On x86, CPUs are limited in the number of interrupts they can have affined
-to them as they only support 256 interrupt vectors per CPU. 32 vectors are
-reserved for the CPU and the kernel reserves another 22 for internal
-purposes. That leaves 202 vectors for assignement to devices.
+Fixed misspelled words, added error check during probe
+on the init of the registers, and fixed ALS/I2C control
+mode.
 
-When an interrupt is set up or the affinity is changed by the kernel or the
-administrator, the vector assignment code attempts to honor the requested
-affinity mask. If the vector space on the CPUs in that affinity mask is
-exhausted the code falls back to a wider set of CPUs and assigns a vector
-on a CPU outside of the requested affinity mask silently.
-
-While the effective affinity is reflected in the corresponding
-/proc/irq/$N/effective_affinity* files the silent breakage of the requested
-affinity can lead to unexpected behaviour for administrators.
-
-Add a pr_warn() when this happens so that adminstrators get at least
-informed about it in the syslog.
-
-[ tglx: Massaged changelog and made the pr_warn() more informative ]
-
-Reported-by: djuran@redhat.com
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: djuran@redhat.com
-Link: https://lkml.kernel.org/r/20190822143421.9535-1-nhorman@tuxdriver.com
+Fixes: bc1b8492c764 ("leds: lm3532: Introduce the lm3532 LED driver")
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/vector.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/leds/leds-lm3532.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index fdacb864c3dd4..2c5676b0a6e7f 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -398,6 +398,17 @@ static int activate_reserved(struct irq_data *irqd)
- 		if (!irqd_can_reserve(irqd))
- 			apicd->can_reserve = false;
- 	}
-+
-+	/*
-+	 * Check to ensure that the effective affinity mask is a subset
-+	 * the user supplied affinity mask, and warn the user if it is not
-+	 */
-+	if (!cpumask_subset(irq_data_get_effective_affinity_mask(irqd),
-+			    irq_data_get_affinity_mask(irqd))) {
-+		pr_warn("irq %u: Affinity broken due to vector space exhaustion.\n",
-+			irqd->irq);
-+	}
-+
- 	return ret;
- }
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+index 180895b83b888..e55a64847fe2f 100644
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -40,7 +40,7 @@
+ #define LM3532_REG_ZN_3_LO	0x67
+ #define LM3532_REG_MAX		0x7e
  
+-/* Contorl Enable */
++/* Control Enable */
+ #define LM3532_CTRL_A_ENABLE	BIT(0)
+ #define LM3532_CTRL_B_ENABLE	BIT(1)
+ #define LM3532_CTRL_C_ENABLE	BIT(2)
+@@ -302,7 +302,7 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
+ 	int ret;
+ 
+ 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
+-					 ctrl_en_val, ~ctrl_en_val);
++					 ctrl_en_val, 0);
+ 	if (ret) {
+ 		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
+ 		return ret;
+@@ -321,7 +321,7 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
+ 
+ 	mutex_lock(&led->priv->lock);
+ 
+-	if (led->mode == LM3532_BL_MODE_ALS) {
++	if (led->mode == LM3532_ALS_CTRL) {
+ 		if (brt_val > LED_OFF)
+ 			ret = lm3532_led_enable(led);
+ 		else
+@@ -542,11 +542,14 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+ 		}
+ 
+ 		if (led->mode == LM3532_BL_MODE_ALS) {
++			led->mode = LM3532_ALS_CTRL;
+ 			ret = lm3532_parse_als(priv);
+ 			if (ret)
+ 				dev_err(&priv->client->dev, "Failed to parse als\n");
+ 			else
+ 				lm3532_als_configure(priv, led);
++		} else {
++			led->mode = LM3532_I2C_CTRL;
+ 		}
+ 
+ 		led->num_leds = fwnode_property_read_u32_array(child,
+@@ -590,7 +593,13 @@ static int lm3532_parse_node(struct lm3532_data *priv)
+ 			goto child_out;
+ 		}
+ 
+-		lm3532_init_registers(led);
++		ret = lm3532_init_registers(led);
++		if (ret) {
++			dev_err(&priv->client->dev, "register init err: %d\n",
++				ret);
++			fwnode_handle_put(child);
++			goto child_out;
++		}
+ 
+ 		i++;
+ 	}
 -- 
 2.20.1
 
