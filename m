@@ -2,118 +2,129 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD91C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20E9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26E420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946DB20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122467;
-	bh=judodVvtfyPO1QPUMh5cBC0ImVnKv7kctqKG1EVeODU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bIbd5WVG1lAGvKSUw07ZHQyh3l49u4jQEE2YMq26nRHaTAIbLOeLesYsvFbf+DeK7
-	 7kw2NCwSisn6AMNjw1vHYg2CxrhmOOfEraXM1/CYf3JGRVRKn11dX5I+/ql1GHnthP
-	 opsXDERTzJiKCK5IdZMW9SCSvYQkwOTB0Xku+tgM=
+	s=default; t=1570122485;
+	bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1emV1XbjZ3KRREWyGy3FTRMC2AeXS/YPs/oWBf8AVhcNv9mpESu+E15Pauru+LYmx
+	 KdwTTbjCx4iZ+fFLvMzuC3Cafm1Mg+v0gUp+SknAKuOX3XJg9jyuBA3ZUrhlBymc9F
+	 /kGQSt9Is5I+es7xg2vXZOAdMRTxZw7v6DJJJzco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404382AbfJCRHq (ORCPT
+        id S2404344AbfJCQfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404386AbfJCQgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:15 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S2404317AbfJCQfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C33F2070B;
-        Thu,  3 Oct 2019 16:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A16D2070B;
+        Thu,  3 Oct 2019 16:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120574;
-        bh=judodVvtfyPO1QPUMh5cBC0ImVnKv7kctqKG1EVeODU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w8bZ+hMV38XC1vWA/KGyoQUuiE4RMwZVD9yuxNZqO981Z3pQMRsrpGiZPZo57qbw1
-         2NiUg7aTcpDliYgmtTHGHRnbLrGUeclrjXfMhOUoXSYlXrxMkyKovSCk2lBulZwJOw
-         bNJJjmxrrIkGjj1w8uy8Xd6xBBr/QuxGzun0vLdI=
-Date:   Thu, 3 Oct 2019 17:36:08 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20191003163606.iqzcxvghaw7hdqb5@willie-the-truck>
-References: <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
- <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck>
- <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk>
- <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk>
- <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
- <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+        s=default; t=1570120546;
+        bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JVckwURk/YxqZoOPnM9aLww+siUUDwPYHOLqz1duzvIO+8IPNbI/52qLn6geNaUhS
+         oXB1Uvu1XbQrxKkR3sXfKS+6PpJ2uA6RlfAaBjtsAMxMe8kOXwlIeuxXBIc9/qg3NI
+         kN8/tJgF1lz4EsGvV0P33uCOauuE4s4o6NJ67tVo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Peter Jones <pjones@redhat.com>
+Subject: [PATCH 5.2 262/313] efifb: BGRT: Improve efifb_bgrt_sanity_check
+Date:   Thu,  3 Oct 2019 17:54:00 +0200
+Message-Id: <20191003154558.839409242@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
+References: <20191003154533.590915454@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:39:40PM -0700, Linus Torvalds wrote:
-> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > >
-> > > Then use the C preprocessor to force the inlining.  I'm sorry it's not
-> > > as pretty as static inline functions.
-> >
-> > Which makes us lose the baby^H^H^H^Htype checking performed
-> > on function parameters, requiring to add more ugly checks.
-> 
-> I'm 100% agreed on this.
-> 
-> If the inline change is being pushed by people who say "you should
-> have used macros instead if you wanted inlining", then I will just
-> revert that stupid commit that is causing problems.
-> 
-> No, the preprocessor is not the answer.
-> 
-> That said, code that relies on inlining for _correctness_ should use
-> "__always_inline" and possibly even have a comment about why.
-> 
-> But I am considering just undoing commit 9012d011660e ("compiler:
-> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
-> advantages are questionable, and when the advantages are balanced
-> against actual regressions and the arguments are "use macros", that
-> just shows how badly thought out this was.
+From: Hans de Goede <hdegoede@redhat.com>
 
-It's clear that opinions are divided on this issue, but you can add
-an enthusiastic:
+commit 51677dfcc17f88ed754143df670ff064eae67f84 upstream.
 
-Acked-by: Will Deacon <will@kernel.org>
+For various reasons, at least with x86 EFI firmwares, the xoffset and
+yoffset in the BGRT info are not always reliable.
 
-if you go ahead with the revert. I'm all for allowing the compiler to
-make its own inlining decisions, but not when the potential for
-miscompilation isn't fully understood and the proposed alternatives turn
-the source into an unreadable mess. Perhaps we can do something different
-for 5.5 (arch opt-in? clang only? invert the logic? work to move functions
-over to __always_inline /before/ flipping the CONFIG option? ...?)
+Extensive testing has shown that when the info is correct, the
+BGRT image is always exactly centered horizontally (the yoffset variable
+is more variable and not always predictable).
 
-Will
+This commit simplifies / improves the bgrt_sanity_check to simply
+check that the BGRT image is exactly centered horizontally and skips
+(re)drawing it when it is not.
+
+This fixes the BGRT image sometimes being drawn in the wrong place.
+
+Cc: stable@vger.kernel.org
+Fixes: 88fe4ceb2447 ("efifb: BGRT: Do not copy the boot graphics for non native resolutions")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Peter Jones <pjones@redhat.com>,
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190721131918.10115-1-hdegoede@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/video/fbdev/efifb.c |   27 ++++++---------------------
+ 1 file changed, 6 insertions(+), 21 deletions(-)
+
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -122,28 +122,13 @@ static void efifb_copy_bmp(u8 *src, u32
+  */
+ static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
+ {
+-	static const int default_resolutions[][2] = {
+-		{  800,  600 },
+-		{ 1024,  768 },
+-		{ 1280, 1024 },
+-	};
+-	u32 i, right_margin;
++	/*
++	 * All x86 firmwares horizontally center the image (the yoffset
++	 * calculations differ between boards, but xoffset is predictable).
++	 */
++	u32 expected_xoffset = (si->lfb_width - bmp_width) / 2;
+ 
+-	for (i = 0; i < ARRAY_SIZE(default_resolutions); i++) {
+-		if (default_resolutions[i][0] == si->lfb_width &&
+-		    default_resolutions[i][1] == si->lfb_height)
+-			break;
+-	}
+-	/* If not a default resolution used for textmode, this should be fine */
+-	if (i >= ARRAY_SIZE(default_resolutions))
+-		return true;
+-
+-	/* If the right margin is 5 times smaller then the left one, reject */
+-	right_margin = si->lfb_width - (bgrt_tab.image_offset_x + bmp_width);
+-	if (right_margin < (bgrt_tab.image_offset_x / 5))
+-		return false;
+-
+-	return true;
++	return bgrt_tab.image_offset_x == expected_xoffset;
+ }
+ #else
+ static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
+
+
