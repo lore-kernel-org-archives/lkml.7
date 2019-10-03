@@ -2,82 +2,77 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487EBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC3C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119CD21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570102276;
-	bh=L5QzbVAsls8qitJom+2MsYWRpUVL7rpChg5mZ9JGQ4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bo/va2X1dgSG35ftsSKOnPAvarHHkeLaTKVxWZlwnwTWWrqP6bbNi18Jc1/y47ixo
-	 iPEC1SgNk1ZT3Fek0kY2Ch3HOqBhHggqHPrGRYWe24rOTVG6JzKIp10htACl5+gKcY
-	 5guRJqaLgxTe6AscnVyY4Bm4vsPFTP36SYX/Wiqg=
+	by mail.kernel.org (Postfix) with ESMTP id 2C43420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbfJCLbP (ORCPT
+        id S1730094AbfJCLby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 07:31:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:42318 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729891AbfJCLbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:31:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C58B20830;
-        Thu,  3 Oct 2019 11:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570102274;
-        bh=L5QzbVAsls8qitJom+2MsYWRpUVL7rpChg5mZ9JGQ4s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mY93TulDp3NeDtrEixgOQs9CTaomFf/67X+WdbWC2iZCT7G7KwTb0XH7EYXhv8IxZ
-         FGh9k434aZIDwoDwTylrtKwuks9YkSUHw97a5ksjItDZ2PBU2sJrVS1KiWq7/Wm6S2
-         pAoFKtkP9zCYtRSYibIEF25IkHRbx9Xe4V2jTx/8=
-Date:   Thu, 3 Oct 2019 13:31:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tpm: migrate pubek_show to struct tpm_buf
-Message-ID: <20191003113112.GB2447460@kroah.com>
-References: <20191003112424.9036-1-jarkko.sakkinen@linux.intel.com>
- <20191003112424.9036-2-jarkko.sakkinen@linux.intel.com>
+        id S1729987AbfJCLby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:31:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97378337;
+        Thu,  3 Oct 2019 04:31:53 -0700 (PDT)
+Received: from [10.162.40.180] (p8cg001049571a15.blr.arm.com [10.162.40.180])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 695B83F706;
+        Thu,  3 Oct 2019 04:31:50 -0700 (PDT)
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+References: <37b43978-5652-576c-8990-451e751b7c67@arm.com>
+ <285C0297-BF27-4095-87B6-AFC88C1F3C0F@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d3a88afd-63c6-1091-cf4c-75cd10b7f547@arm.com>
+Date:   Thu, 3 Oct 2019 17:02:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003112424.9036-2-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <285C0297-BF27-4095-87B6-AFC88C1F3C0F@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:24:22PM +0300, Jarkko Sakkinen wrote:
-> commit da379f3c1db0c9a1fd27b11d24c9894b5edc7c75 upstream
+
+
+On 10/03/2019 04:49 PM, Qian Cai wrote:
 > 
-> Migrated pubek_show to struct tpm_buf and cleaned up its implementation.
-> Previously the output parameter structure was declared but left
-> completely unused. Now it is used to refer different fields of the
-> output. We can move it to tpm-sysfs.c as it does not have any use
-> outside of that file.
 > 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  drivers/char/tpm/tpm-sysfs.c | 87 ++++++++++++++++++++----------------
->  drivers/char/tpm/tpm.h       | 13 ------
->  2 files changed, 48 insertions(+), 52 deletions(-)
+>> On Oct 3, 2019, at 5:32 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>
+>> Even though page flags does contain reserved bit information, the problem
+>> is that we are explicitly printing the reason for this page dump. In this
+>> case it is caused by the fact that it is a reserved page.
+>>
+>> page dumped because: <reason>
+>>
+>> The proposed change makes it explicit that the dump is caused because a
+>> non movable page with reserved bit set. It also helps in differentiating 
+>> between reserved bit condition and the last one "if (found > count)".
+> 
+> Then, someone later would like to add a reason for every different page flags just because they *think* they are special.
+> 
 
-Again, what kernel tree(s) do you want this, and the other 2 patches
-applied to?  And why?
-
-thanks,
-
-greg k-h
+Ohh, never meant that the 'Reserved' bit is anything special here but it
+is a reason to make a page unmovable unlike many other flags.
