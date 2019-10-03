@@ -2,53 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9644C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119D3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEDD52054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D322820865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119213;
-	bh=kMSqb1COvxfyWSPk7B9om3wS+hW1HvQd+arBpdcOGrY=;
+	s=default; t=1570119216;
+	bh=yCZVOt1J1tDZ3vFmgpz5V6belzV7vZO46xYbyaVkHRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0y6zO1cMZgM/ZCmyW03dI9qEnpS/9eISx/u8Y95Fw5y9AYuur1uEt/tsZHFIiZu7
-	 d/evv2nt2BMRxGm7os+awVyiifopWNzBvK7RIumuZ3C/BsD6XqA3kCDkeyFeZp4WAy
-	 7ajbcp5dyX4yAhE5OSmU1N9gmqgFMbthG3tPP5T8=
+	b=rwOZoxENKkMH0jAxU+QmEUz/vuimS7ARIqocwmQIV4CYEI6FWuh1WMnxvvtoQonKz
+	 Dx8pRZqwhP7SF19gAqWpgJcIw8ug2wb4kW/5//AWH44vQ4ScJViWAliZpm2R+J/tQE
+	 MKin8fi1QNd+ywpyuyHavLJ8wE9yNdoQ+A4NRuFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbfJCQNc (ORCPT
+        id S2387517AbfJCQNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730660AbfJCQNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:30 -0400
+        id S2387482AbfJCQN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3F2B2054F;
-        Thu,  3 Oct 2019 16:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1851A21783;
+        Thu,  3 Oct 2019 16:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119209;
-        bh=kMSqb1COvxfyWSPk7B9om3wS+hW1HvQd+arBpdcOGrY=;
+        s=default; t=1570119206;
+        bh=yCZVOt1J1tDZ3vFmgpz5V6belzV7vZO46xYbyaVkHRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ahVUl7MLxmOWxhzTRvF7pPIiJDJ7EmxRAPdwT5Qk+kI0CKLEyWqv+4BoR5R6EVNx9
-         pX0NAdyYNkUFvrlJ3wS5U1fDWPE3bU5Hw60JiuSgjviA2FCynBF0zhKQImiuP9AlFk
-         eRN6lX+qgxWI2c1XV1jN6FExw/pVA4it7t0GKdkc=
+        b=iPGskqGMEqjioIK/Hwmjz2bbgejVQ6oowC/QAMp04iEOGU4CESPWRObYE8s9JDM5W
+         RZPRe6dioShQyOLMnlEBY/pRWj/AbebIqUv4pdEK8FJzDjZZnImzabDkWVQOz/wiLW
+         YIRk9yYyaSwBlNYwTe4i7MvzkqpF1w4lTHWJOkkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 127/185] raid5: dont set STRIPE_HANDLE to stripe which is in batch list
-Date:   Thu,  3 Oct 2019 17:53:25 +0200
-Message-Id: <20191003154506.492966994@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 4.14 163/185] gfs2: clear buf_in_tr when ending a transaction in sweep_bh_for_rgrps
+Date:   Thu,  3 Oct 2019 17:54:01 +0200
+Message-Id: <20191003154515.859562740@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,75 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 6ce220dd2f8ea71d6afc29b9a7524c12e39f374a ]
+commit f0b444b349e33ae0d3dd93e25ca365482a5d17d4 upstream.
 
-If stripe in batch list is set with STRIPE_HANDLE flag, then the stripe
-could be set with STRIPE_ACTIVE by the handle_stripe function. And if
-error happens to the batch_head at the same time, break_stripe_batch_list
-is called, then below warning could happen (the same report in [1]), it
-means a member of batch list was set with STRIPE_ACTIVE.
+In function sweep_bh_for_rgrps, which is a helper for punch_hole,
+it uses variable buf_in_tr to keep track of when it needs to commit
+pending block frees on a partial delete that overflows the
+transaction created for the delete. The problem is that the
+variable was initialized at the start of function sweep_bh_for_rgrps
+but it was never cleared, even when starting a new transaction.
 
-[7028915.431770] stripe state: 2001
-[7028915.431815] ------------[ cut here ]------------
-[7028915.431828] WARNING: CPU: 18 PID: 29089 at drivers/md/raid5.c:4614 break_stripe_batch_list+0x203/0x240 [raid456]
-[...]
-[7028915.431879] CPU: 18 PID: 29089 Comm: kworker/u82:5 Tainted: G           O    4.14.86-1-storage #4.14.86-1.2~deb9
-[7028915.431881] Hardware name: Supermicro SSG-2028R-ACR24L/X10DRH-iT, BIOS 3.1 06/18/2018
-[7028915.431888] Workqueue: raid5wq raid5_do_work [raid456]
-[7028915.431890] task: ffff9ab0ef36d7c0 task.stack: ffffb72926f84000
-[7028915.431896] RIP: 0010:break_stripe_batch_list+0x203/0x240 [raid456]
-[7028915.431898] RSP: 0018:ffffb72926f87ba8 EFLAGS: 00010286
-[7028915.431900] RAX: 0000000000000012 RBX: ffff9aaa84a98000 RCX: 0000000000000000
-[7028915.431901] RDX: 0000000000000000 RSI: ffff9ab2bfa15458 RDI: ffff9ab2bfa15458
-[7028915.431902] RBP: ffff9aaa8fb4e900 R08: 0000000000000001 R09: 0000000000002eb4
-[7028915.431903] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff9ab1736f1b00
-[7028915.431904] R13: 0000000000000000 R14: ffff9aaa8fb4e900 R15: 0000000000000001
-[7028915.431906] FS:  0000000000000000(0000) GS:ffff9ab2bfa00000(0000) knlGS:0000000000000000
-[7028915.431907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[7028915.431908] CR2: 00007ff953b9f5d8 CR3: 0000000bf4009002 CR4: 00000000003606e0
-[7028915.431909] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[7028915.431910] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[7028915.431910] Call Trace:
-[7028915.431923]  handle_stripe+0x8e7/0x2020 [raid456]
-[7028915.431930]  ? __wake_up_common_lock+0x89/0xc0
-[7028915.431935]  handle_active_stripes.isra.58+0x35f/0x560 [raid456]
-[7028915.431939]  raid5_do_work+0xc6/0x1f0 [raid456]
+This patch reinitializes the variable when the transaction is
+ended, so the next transaction starts out with it cleared.
 
-Also commit 59fc630b8b5f9f ("RAID5: batch adjacent full stripe write")
-said "If a stripe is added to batch list, then only the first stripe
-of the list should be put to handle_list and run handle_stripe."
+Fixes: d552a2b9b33e ("GFS2: Non-recursive delete")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-So don't set STRIPE_HANDLE to stripe which is already in batch list,
-otherwise the stripe could be put to handle_list and run handle_stripe,
-then the above warning could be triggered.
-
-[1]. https://www.spinics.net/lists/raid/msg62552.html
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid5.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/gfs2/bmap.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 65608c6b68361..cc0bd528136db 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5718,7 +5718,8 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
- 				do_flush = false;
- 			}
- 
--			set_bit(STRIPE_HANDLE, &sh->state);
-+			if (!sh->batch_head)
-+				set_bit(STRIPE_HANDLE, &sh->state);
- 			clear_bit(STRIPE_DELAYED, &sh->state);
- 			if ((!sh->batch_head || sh == sh->batch_head) &&
- 			    (bi->bi_opf & REQ_SYNC) &&
--- 
-2.20.1
-
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -1078,6 +1078,7 @@ out_unlock:
+ 			gfs2_dinode_out(ip, dibh->b_data);
+ 			up_write(&ip->i_rw_mutex);
+ 			gfs2_trans_end(sdp);
++			buf_in_tr = false;
+ 		}
+ 		gfs2_glock_dq_uninit(rd_gh);
+ 		cond_resched();
 
 
