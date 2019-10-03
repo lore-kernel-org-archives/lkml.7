@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53442C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DB0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262D32086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD0620862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121451;
-	bh=ajBjYAZiKmXhY3kJWE4D+XSVieiVoPua4IlPs8TFonc=;
+	s=default; t=1570121458;
+	bh=ZsSQ/Q9nhpssLAIx6yD5sSkzGLXOhaVzTnt0SeF9+v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cf7iBvuVsX59QoYB+/f4MPtPNVIMS6KD1CgkuHfpZkR/EeQEzgFF564GXFCX47fSM
-	 4QTAi4L1hoOkWdSbcGs0Ytxs2qIYKcFnUp5+NOh5oNRmE4D666z9vZLSW/vjpvQpRt
-	 fenPzmoU62Myi7dC3puAGUPmtaHXRV+gRzJqjcuA=
+	b=mDVfM41WOp+JpELo2cD8b84GGzfNRzYmvS+7FipYAV6CoJdj3etnCSPw5KzRkMy5y
+	 NyTzwqKx6H9p+2S3RWjZtSwXlPCd3f3jktYnWIpq4zBFVNvbh0oQHnRmNGUixdVZUZ
+	 jXbKyu3qibglx3qZRJmHdgO+CHO3CQgU9ftX12rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392586AbfJCQuu (ORCPT
+        id S2393111AbfJCQu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405938AbfJCQuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:37 -0400
+        id S2405956AbfJCQun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCED520865;
-        Thu,  3 Oct 2019 16:50:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3483720867;
+        Thu,  3 Oct 2019 16:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121437;
-        bh=ajBjYAZiKmXhY3kJWE4D+XSVieiVoPua4IlPs8TFonc=;
+        s=default; t=1570121442;
+        bh=ZsSQ/Q9nhpssLAIx6yD5sSkzGLXOhaVzTnt0SeF9+v0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=go0wWAoeEi4l9m0DcXBSeX4/KEjeG9E5bXyD0W2RrQTxs7heCkktxbSv6e3ZoHkhE
-         Ns2+BPYFboHLSEbETEZqb3KyZ5KQxg8r5SarYtKP2nk7718+2KtC0BDm3U7256WXl2
-         P5hECkFvZCe47z+WhsMWOJpQpMe/ibJ6kFi2N0C4=
+        b=h0j3XCAse7WTAOkqAJB8E5BX/2C0khQ1Kn15bYMo9wokc50zX/5mij1XfLuQWiNpR
+         JCTPW5fReqiu9MJlYtO6LDMGPHXGrH9HF4voIie/CS2C1yWvsIsVrxL53XGEMYQIE0
+         Z1tLKcoUdFLPP8DWGaZN7c7Jg+G9eK4z64uDSi+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.3 278/344] ASoC: Intel: Fix use of potentially uninitialized variable
-Date:   Thu,  3 Oct 2019 17:54:03 +0200
-Message-Id: <20191003154607.487361958@linuxfoundation.org>
+        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.3 280/344] ARM: samsung: Fix system restart on S3C6410
+Date:   Thu,  3 Oct 2019 17:54:05 +0200
+Message-Id: <20191003154607.625396811@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,37 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+From: Lihua Yao <ylhuajnu@outlook.com>
 
-commit 810f3b860850148788fc1ed8a6f5f807199fed65 upstream.
+commit 16986074035cc0205472882a00d404ed9d213313 upstream.
 
-If ipc->ops.reply_msg_match is NULL, we may end up using uninitialized
-mask value.
+S3C6410 system restart is triggered by watchdog reset.
 
-reported by smatch:
-sound/soc/intel/common/sst-ipc.c:266 sst_ipc_reply_find_msg() error: uninitialized symbol 'mask'.
-
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
-Link: https://lore.kernel.org/r/20190827141712.21015-3-amadeuszx.slawinski@linux.intel.com
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Fixes: 9f55342cc2de ("ARM: dts: s3c64xx: Fix infinite interrupt in soft mode")
+Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/intel/common/sst-ipc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/plat-samsung/watchdog-reset.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/intel/common/sst-ipc.c
-+++ b/sound/soc/intel/common/sst-ipc.c
-@@ -222,6 +222,8 @@ struct ipc_message *sst_ipc_reply_find_m
+--- a/arch/arm/plat-samsung/watchdog-reset.c
++++ b/arch/arm/plat-samsung/watchdog-reset.c
+@@ -62,6 +62,7 @@ void samsung_wdt_reset(void)
+ #ifdef CONFIG_OF
+ static const struct of_device_id s3c2410_wdt_match[] = {
+ 	{ .compatible = "samsung,s3c2410-wdt" },
++	{ .compatible = "samsung,s3c6410-wdt" },
+ 	{},
+ };
  
- 	if (ipc->ops.reply_msg_match != NULL)
- 		header = ipc->ops.reply_msg_match(header, &mask);
-+	else
-+		mask = (u64)-1;
- 
- 	if (list_empty(&ipc->rx_list)) {
- 		dev_err(ipc->dev, "error: rx list empty but received 0x%llx\n",
 
 
