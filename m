@@ -2,56 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ADBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F5C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5641121783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036C42133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120090;
-	bh=0hsYqkua7Amw8NXUD4oWNn9p7PeLlwgDiZhYrqNPV9Y=;
+	s=default; t=1570120092;
+	bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bzQWqAi9IHc7JuMv+qVeM3h4+lw3ru85odoihyLy/jmbhaMOJoyONOtAAb2zJeHem
-	 lZZeU3PiDBCdXnFRpzG2H6dIHGjGUUe+9nh5TfDHTmOR2PHVLz5LdDDj18SM8EQxEu
-	 bH2PhVsL9cSPXLGDNFhfEZiuMPAUuBo7XMbZwWWE=
+	b=2RAkHeoAGS3coE+mFBS42E4STLfRQMF5WyfgZWuyD9VMxRi9c7+v9O4tHKE3JbHGq
+	 EnXc7tsecwE7wgyVD+UoUHntiTWYmRv9lXoVlD8i27MP1+FDFIHG79Jx+wG1q37PjA
+	 StSQjAIpJN+kPdg21B00BuzYYTOgc8hdkmIP25hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391469AbfJCQ2J (ORCPT
+        id S2391478AbfJCQ2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60380 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391360AbfJCQ2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:03 -0400
+        id S2390304AbfJCQ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:28:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9E5215EA;
-        Thu,  3 Oct 2019 16:28:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38CAA215EA;
+        Thu,  3 Oct 2019 16:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120082;
-        bh=0hsYqkua7Amw8NXUD4oWNn9p7PeLlwgDiZhYrqNPV9Y=;
+        s=default; t=1570120087;
+        bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BxgiZ1VXX97M1ZKHGGj1AV3rXb7H7rS8LvDqF241bfG1x1/pO2W4t8RBF5BysVCu/
-         5fY5MSwA0+TMTjIwHim9IUUHQvUc78tybAOvq8wt1afElTPOBWQKMXpI4g3edPK4PW
-         ujXPF8kJRfcn38DNUiJbmTYaZQ/30LxNQUZQfXqo=
+        b=Z1tvSkLgov5VygmJBy0A1zbqQGz8QTF4iUHdKLFu8U+tCUz+6NaGK9aXTxZfa8clC
+         O1CGoSE3ZaJCsO/dFnsyTW46xITf431bAJdJFb2v0Ybt5AB9s1kasXw7zt4euqDyja
+         Zf7SdpzgkepgwDe9FUHc13NzPuyyY550j0qVtHMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 091/313] perf config: Honour $PERF_CONFIG env var to specify alternate .perfconfig
-Date:   Thu,  3 Oct 2019 17:51:09 +0200
-Message-Id: <20191003154541.822692059@linuxfoundation.org>
+Subject: [PATCH 5.2 093/313] media: mtk-mdp: fix reference count on old device tree
+Date:   Thu,  3 Oct 2019 17:51:11 +0200
+Message-Id: <20191003154542.031664368@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,44 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
 
-[ Upstream commit 61a461fcbd62d42c29a1ea6a9cc3838ad9f49401 ]
+[ Upstream commit 864919ea0380e62adb2503b89825fe358acb8216 ]
 
-We had this comment in Documentation/perf_counter/config.c, i.e. since
-when we got this from the git sources, but never really did that
-getenv("PERF_CONFIG"), do it now as I need to disable whatever
-~/.perfconfig root has so that tests parsing tool output are done for
-the expected default output or that we specify an alternate config file
-that when read will make the tools produce expected output.
+of_get_next_child() increments the reference count of the returning
+device_node. Decrement it in the check if we are using the old or the
+new DTB.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
-Link: https://lkml.kernel.org/n/tip-jo209zac9rut0dz1rqvbdlgm@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Acked-by: Houlong Wei <houlong.wei@mediatek.com>
+[hverkuil-cisco@xs4all.nl: use node instead of parent as temp variable]
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/perf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 72df4b6fa36fd..4c45cdf38adae 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -440,6 +440,9 @@ int main(int argc, const char **argv)
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+index fc9faec85edb6..5d44f2e92dd50 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+@@ -110,7 +110,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+ 	mutex_init(&mdp->vpulock);
  
- 	srandom(time(NULL));
- 
-+	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
-+	config_exclusive_filename = getenv("PERF_CONFIG");
-+
- 	err = perf_config(perf_default_config, NULL);
- 	if (err)
- 		return err;
+ 	/* Old dts had the components as child nodes */
+-	if (of_get_next_child(dev->of_node, NULL)) {
++	node = of_get_next_child(dev->of_node, NULL);
++	if (node) {
++		of_node_put(node);
+ 		parent = dev->of_node;
+ 		dev_warn(dev, "device tree is out of date\n");
+ 	} else {
 -- 
 2.20.1
 
