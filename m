@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55185C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1579DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23736222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D125E21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119586;
-	bh=DgPK/T0HZnKx0FixGTBXeg0NyxeriDAR+9mR7HWK4XU=;
+	s=default; t=1570119591;
+	bh=btn0rffe8Z/PwnT6eyxhGR75HhWAf/0nvsrDLZM3g+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hhVs4w6+cr6xod/3CjWAMn1scNQoZwuMDl0kZ7v6A3ZSXhHVBmSiCtAjcvzvFxTsx
-	 7s+KHIZjxxWtALHbXfF90dG1iVXr6MIJBkAPRdofrfdbA2qAgRCC1g3NMxh8XxkaLC
-	 WtAx1s1A6zM2+PddjqnYPCIOR0y2+RBDQ81MJOp0=
+	b=LxcKmlhhMS1eIKvds4Soz017VyWkWMpCoizE94KVyW6tjNbKT5Jp/a8q4O5C1F6fw
+	 1hmTrKfDPSG+XF0vQ3s5ygU4WCG9a5TxNTi1rlKDLeoBsPMcIyhRFpssCjCaRhqQ0l
+	 dzfF7L0vtXnRCfV4C5iVaPY1Oto0pm9Pmb4CDFqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbfJCQTp (ORCPT
+        id S2389777AbfJCQTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:19:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46798 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387906AbfJCQTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:19:39 -0400
+        id S2389461AbfJCQTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:19:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FC92054F;
-        Thu,  3 Oct 2019 16:19:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA9921848;
+        Thu,  3 Oct 2019 16:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119577;
-        bh=DgPK/T0HZnKx0FixGTBXeg0NyxeriDAR+9mR7HWK4XU=;
+        s=default; t=1570119582;
+        bh=btn0rffe8Z/PwnT6eyxhGR75HhWAf/0nvsrDLZM3g+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1S7gwfiat2L8VzAAbBaaB/KgPgDIgiIy1bjSPdMBlIoy1a3lWEl45XTFhcfq4Lak
-         MryVlLy3wfSAl23KoHtGvXXFL7SHb76mrv9ypvpSWvIB3SbTlX+b5qFITHcKQ7gr4N
-         J5ITTri7JjS41/qXlBdORLSgRMJhtFkTKeiUh8Hw=
+        b=dj4QyySQ+q6WSWlIzXYJMyer1CYYdl8vQd8ebPM1tubkHrJSRWAfTwbV73cyuSKrm
+         rED66mWN/xIwhQAvIdGBAAF/c4SxC0pLDPtaIAbrl9phoSdqf2U3VDrE9s2BGkVg0R
+         GZPAzLlEdyidvjqp17nNRH4cfWJM+YpqURdHvgBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/211] media: imx: mipi csi-2: Dont fail if initial state times-out
-Date:   Thu,  3 Oct 2019 17:52:24 +0200
-Message-Id: <20191003154505.303768265@linuxfoundation.org>
+Subject: [PATCH 4.19 070/211] media: fdp1: Reduce FCP not found message level to debug
+Date:   Thu,  3 Oct 2019 17:52:16 +0200
+Message-Id: <20191003154504.243295232@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -64,73 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 0d5078c7172c46db6c58718d817b9fcf769554b4 ]
+[ Upstream commit 4fd22938569c14f6092c05880ca387409d78355f ]
 
-Not all sensors will be able to guarantee a proper initial state.
-This may be either because the driver is not properly written,
-or (probably unlikely) because the hardware won't support it.
+When support for the IPMMU is not enabled, the FDP driver may be
+probe-deferred multiple times, causing several messages to be printed
+like:
 
-While the right solution in the former case is to fix the sensor
-driver, the real world not always allows right solutions, due to lack
-of available documentation and support on these sensors.
+    rcar_fdp1 fe940000.fdp1: FCP not found (-517)
+    rcar_fdp1 fe944000.fdp1: FCP not found (-517)
 
-Let's relax this requirement, and allow the driver to support stream start,
-even if the sensor initial sequence wasn't the expected.
+Fix this by reducing the message level to debug level, as is done in the
+VSP1 driver.
 
-Also improve the warning message to better explain the problem and provide
-a hint that the sensor driver needs to be fixed.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Fixes: 4710b752e029f3f8 ("[media] v4l: Add Renesas R-Car FDP1 Driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx6-mipi-csi2.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/media/platform/rcar_fdp1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-index ceeeb3069a024..212fa06f7c57c 100644
---- a/drivers/staging/media/imx/imx6-mipi-csi2.c
-+++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-@@ -247,7 +247,7 @@ static int __maybe_unused csi2_dphy_wait_ulp(struct csi2_dev *csi2)
- }
- 
- /* Waits for low-power LP-11 state on data and clock lanes. */
--static int csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
-+static void csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
- {
- 	u32 mask, reg;
- 	int ret;
-@@ -258,11 +258,9 @@ static int csi2_dphy_wait_stopstate(struct csi2_dev *csi2)
- 	ret = readl_poll_timeout(csi2->base + CSI2_PHY_STATE, reg,
- 				 (reg & mask) == mask, 0, 500000);
- 	if (ret) {
--		v4l2_err(&csi2->sd, "LP-11 timeout, phy_state = 0x%08x\n", reg);
--		return ret;
-+		v4l2_warn(&csi2->sd, "LP-11 wait timeout, likely a sensor driver bug, expect capture failures.\n");
-+		v4l2_warn(&csi2->sd, "phy_state = 0x%08x\n", reg);
- 	}
--
--	return 0;
- }
- 
- /* Wait for active clock on the clock lane. */
-@@ -320,9 +318,7 @@ static int csi2_start(struct csi2_dev *csi2)
- 	csi2_enable(csi2, true);
- 
- 	/* Step 5 */
--	ret = csi2_dphy_wait_stopstate(csi2);
--	if (ret)
--		goto err_assert_reset;
-+	csi2_dphy_wait_stopstate(csi2);
- 
- 	/* Step 6 */
- 	ret = v4l2_subdev_call(csi2->src_sd, video, s_stream, 1);
+diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
+index 0d14670288113..5a30f1d84fe17 100644
+--- a/drivers/media/platform/rcar_fdp1.c
++++ b/drivers/media/platform/rcar_fdp1.c
+@@ -2306,7 +2306,7 @@ static int fdp1_probe(struct platform_device *pdev)
+ 		fdp1->fcp = rcar_fcp_get(fcp_node);
+ 		of_node_put(fcp_node);
+ 		if (IS_ERR(fdp1->fcp)) {
+-			dev_err(&pdev->dev, "FCP not found (%ld)\n",
++			dev_dbg(&pdev->dev, "FCP not found (%ld)\n",
+ 				PTR_ERR(fdp1->fcp));
+ 			return PTR_ERR(fdp1->fcp);
+ 		}
 -- 
 2.20.1
 
