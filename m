@@ -2,86 +2,139 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D71C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A9FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3315D2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F6521848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570119273;
+	bh=yvUe+Z4dCAUpy9c9GEtQIJ0JPnNlbHZnmaNzpt+jDuo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VjQYRgyH1jEf8ysFgg+eNYOw0UalVKmbYMCHEfTfZibiNpPeMZuZRD9Dfebve7CO8
+	 fxog7gBhSyyp2h+quDxff37Rt6aISGWNeORKgnudcBCJmiwHA/ZlwRr7+RV6yh7k/i
+	 B7BXvhrM8CZ+O4Fsbdbl9HEV7S5qkQo1deJyOFbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733265AbfJCQO1 (ORCPT
+        id S2388637AbfJCQOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:14:27 -0400
-Received: from bout01.mta.xmission.com ([166.70.11.15]:50250 "EHLO
-        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388575AbfJCQOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:14:22 -0400
-Received: from mx01.mta.xmission.com ([166.70.13.211])
-        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1iG3Dz-0007yB-3W; Thu, 03 Oct 2019 09:41:03 -0600
-Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
-        by mx01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1iG3Dw-0003hb-Uu; Thu, 03 Oct 2019 09:41:03 -0600
-Received: from hacktheplanet (c-68-50-34-150.hsd1.in.comcast.net [68.50.34.150])
-        by plesk14.xmission.com (Postfix) with ESMTPSA id 47CDD1266F5;
-        Thu,  3 Oct 2019 15:40:59 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 11:40:53 -0400
-From:   Scott Bauer <sbauer@plzdonthack.me>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, axboe <axboe@kernel.dk>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        jonathan.derrick@intel.com, revanth.rajashekar@intel.com
-Message-ID: <20191003154053.GA2450@hacktheplanet>
-References: <82f70133-7242-d113-f041-9b89694685c0@infradead.org>
+        Thu, 3 Oct 2019 12:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388611AbfJCQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C354222D1;
+        Thu,  3 Oct 2019 16:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119268;
+        bh=yvUe+Z4dCAUpy9c9GEtQIJ0JPnNlbHZnmaNzpt+jDuo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rj3StsXflPofimykBTm6AwONwiD/c804TajZAJS7uyFKTvz5FwLflVXKh2Vs53h2H
+         5RsXpJe1xMAOtsxCS50+5Bhc3SHRO0//W2uTX2Wkg66YHpPkUM6e5rcrBr1nsN7xeg
+         7XF/AOr3aWLdvMmmx8UAs6WIE3K4a5zI6ujriEbU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 169/185] btrfs: qgroup: Fix the wrong target io_tree when freeing reserved data space
+Date:   Thu,  3 Oct 2019 17:54:07 +0200
+Message-Id: <20191003154518.448745892@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <82f70133-7242-d113-f041-9b89694685c0@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-XM-SPF: eid=1iG3Dw-0003hb-Uu;;;mid=<20191003154053.GA2450@hacktheplanet>;;;hst=mx01.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
-X-SA-Exim-Connect-IP: 166.70.198.161
-X-SA-Exim-Mail-From: sbauer@plzdonthack.me
-Subject: Re: [PATCH 2/2] block: sed-opal: fix sparse warning: convert __be64
- data
-X-SA-Exim-Version: 4.2.1 (built Mon, 03 Jun 2019 09:49:16 -0600)
-X-SA-Exim-Scanned: Yes (on mx01.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 07:23:15PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> sparse warns about incorrect type when using __be64 data.
-> It is not being converted to CPU-endian but it should be.
-> 
-> Fixes these sparse warnings:
-> 
-> ../block/sed-opal.c:375:20: warning: incorrect type in assignment (different base types)
-> ../block/sed-opal.c:375:20:    expected unsigned long long [usertype] align
-> ../block/sed-opal.c:375:20:    got restricted __be64 const [usertype] alignment_granularity
-> ../block/sed-opal.c:376:25: warning: incorrect type in assignment (different base types)
-> ../block/sed-opal.c:376:25:    expected unsigned long long [usertype] lowest_lba
-> ../block/sed-opal.c:376:25:    got restricted __be64 const [usertype] lowest_aligned_lba
-> 
-> Fixes: 455a7b238cd6 ("block: Add Sed-opal library")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Scott Bauer <scott.bauer@intel.com>
-> Cc: Rafael Antognolli <rafael.antognolli@intel.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: linux-block@vger.kernel.org
+From: Qu Wenruo <wqu@suse.com>
 
-+ Jon and Revanth,
+commit bab32fc069ce8829c416e8737c119f62a57970f9 upstream.
+
+[BUG]
+Under the following case with qgroup enabled, if some error happened
+after we have reserved delalloc space, then in error handling path, we
+could cause qgroup data space leakage:
+
+>From btrfs_truncate_block() in inode.c:
+
+	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
+					   block_start, blocksize);
+	if (ret)
+		goto out;
+
+ again:
+	page = find_or_create_page(mapping, index, mask);
+	if (!page) {
+		btrfs_delalloc_release_space(inode, data_reserved,
+					     block_start, blocksize, true);
+		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, true);
+		ret = -ENOMEM;
+		goto out;
+	}
+
+[CAUSE]
+In the above case, btrfs_delalloc_reserve_space() will call
+btrfs_qgroup_reserve_data() and mark the io_tree range with
+EXTENT_QGROUP_RESERVED flag.
+
+In the error handling path, we have the following call stack:
+btrfs_delalloc_release_space()
+|- btrfs_free_reserved_data_space()
+   |- btrsf_qgroup_free_data()
+      |- __btrfs_qgroup_release_data(reserved=@reserved, free=1)
+         |- qgroup_free_reserved_data(reserved=@reserved)
+            |- clear_record_extent_bits();
+            |- freed += changeset.bytes_changed;
+
+However due to a completion bug, qgroup_free_reserved_data() will clear
+EXTENT_QGROUP_RESERVED flag in BTRFS_I(inode)->io_failure_tree, other
+than the correct BTRFS_I(inode)->io_tree.
+Since io_failure_tree is never marked with that flag,
+btrfs_qgroup_free_data() will not free any data reserved space at all,
+causing a leakage.
+
+This type of error handling can only be triggered by errors outside of
+qgroup code. So EDQUOT error from qgroup can't trigger it.
+
+[FIX]
+Fix the wrong target io_tree.
+
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Fixes: bc42bda22345 ("btrfs: qgroup: Fix qgroup reserved space underflow by only freeing reserved ranges")
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/qgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2951,7 +2951,7 @@ static int qgroup_free_reserved_data(str
+ 		 * EXTENT_QGROUP_RESERVED, we won't double free.
+ 		 * So not need to rush.
+ 		 */
+-		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_failure_tree,
++		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree,
+ 				free_start, free_start + free_len - 1,
+ 				EXTENT_QGROUP_RESERVED, &changeset);
+ 		if (ret < 0)
 
 
-These look fine. They're currently unused, but may be useful in the future for sysfs or what ever else we add in.
