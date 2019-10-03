@@ -2,74 +2,121 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA1FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDDC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA7920830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A924720865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570123145;
+	bh=J4T6+B81gkpI9TCDtnorHdYhOeqwjXSYR9zZtDyn2aI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QviSHVDr4Q1hXWeZ1hTZl9qyG/tEPWFNe8ZWmQw9RX8UGIyeXD+32KKBD8qeZVVs9
+	 b0VYIX3fYNqda81zU3LrY3N6vBEyeRxaawxbHKhKaj7ggTKrPpWEPCTNcnRShTgHYE
+	 k8DFLKom89LWtR0dKvMsA0TdKwXYYn91QjQjsd0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389843AbfJCQUP (ORCPT
+        id S2389905AbfJCRTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:15 -0400
-Received: from mga17.intel.com ([192.55.52.151]:45983 "EHLO mga17.intel.com"
+        Thu, 3 Oct 2019 13:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389837AbfJCQUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 09:20:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="185962567"
-Received: from unknown (HELO [10.7.153.143]) ([10.7.153.143])
-  by orsmga008.jf.intel.com with ESMTP; 03 Oct 2019 09:20:10 -0700
-Subject: Re: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
-To:     ChiaWei Wang <chiawei_wang@aspeedtech.com>,
-        Joel Stanley <joel@jms.id.au>
-Cc:     Jason M Biils <jason.m.bills@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-References: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
- <70044749-785b-6ff3-7a28-fb049dcfec54@linux.intel.com>
- <CACPK8XfBxC+4PHHCkMoXr+twjfWaovcJ5c=hfCmHRJ6LpGNeFg@mail.gmail.com>
- <03d21443-aa9a-a126-dc77-a21f14f708c9@linux.intel.com>
- <4af9eb8fa6fd41fc87708fc8afdcc83e@TWMBX02.aspeed.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <b219c8e9-4f72-f91c-ba57-96ffab82ff2e@linux.intel.com>
-Date:   Thu, 3 Oct 2019 09:20:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2389850AbfJCQUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E5F22054F;
+        Thu,  3 Oct 2019 16:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119613;
+        bh=J4T6+B81gkpI9TCDtnorHdYhOeqwjXSYR9zZtDyn2aI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k2C4FMmwsMxPdf5liN/TObcI9X9x3BglL2n0aBWGpG1GGcLyaLTzO+otiskbLKwcN
+         hc2MPjzI/p7NoT81FLtlFAozZyeAigxFyI2LUzyxWtXIJnuJrn4A8buMdQH1jQo74R
+         6rVcyt94pggWvV/XRX8P8OLlpHs4K/YIUTFORIQU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 130/211] platform/x86: intel_pmc_core: Do not ioremap RAM
+Date:   Thu,  3 Oct 2019 17:53:16 +0200
+Message-Id: <20191003154516.641195729@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <4af9eb8fa6fd41fc87708fc8afdcc83e@TWMBX02.aspeed.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/2019 7:35 PM, ChiaWei Wang wrote:
-> Hi Jae Hyun,
-> 
-> Thanks for the feedback.
-> For now should I use GitHub pull-request to submit the patches of PECI-related change to OpenBMC dev-5.3 tree only?
+From: M. Vefa Bicakci <m.v.b@runbox.com>
 
-You could submit this patch series to OpenBMC mailing list with
-[PATCH linux dev-5.3] prefix.
+[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
 
-Thanks,
+On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
+intel_pmc_core fails initialization with the following warning message
+from the kernel, indicating that the driver is attempting to ioremap
+RAM:
 
-Jae
+  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
+  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
+...
+  Call Trace:
+   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+
+This issue appears to manifest itself because of the following fallback
+mechanism in the driver:
+
+	if (lpit_read_residency_count_address(&slp_s0_addr))
+		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+
+The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
+verified by the driver, which is what this patch introduces. With this
+patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
+not attempt to ioremap the aforementioned address.
+
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 088d1c2047e6b..36bd2545afb62 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -685,10 +685,14 @@ static int __init pmc_core_probe(void)
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
+ 		pmcdev->map = &cnp_reg_map;
+ 
+-	if (lpit_read_residency_count_address(&slp_s0_addr))
++	if (lpit_read_residency_count_address(&slp_s0_addr)) {
+ 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+-	else
++
++		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
++			return -ENODEV;
++	} else {
+ 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
++	}
+ 
+ 	pmcdev->regbase = ioremap(pmcdev->base_addr,
+ 				  pmcdev->map->regmap_length);
+-- 
+2.20.1
+
+
+
