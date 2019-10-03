@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D6BC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C189C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16502070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2FE215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121223;
-	bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+	s=default; t=1570121225;
+	bh=8Sr764RTcwSYEJAQGa+KrlDJKb7qohDjpHtG9LoQfEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XWzhow+qpdmmi8b+HFJbRSIcfzKdqf/9BPcf7LVki+en7s6OFjYi8nP4OnoPXx1sO
-	 2Wa14je5Jx2IboE3FUMp5NZd8ULvknZOx9D3wJBmuGEg63jjc60RIglw4JSaYISpX9
-	 rcK8hPV3CVhRJSYeuoFHo5YvgxseeTybw58m1Zu0=
+	b=cUz0gkravaKHgZvSrDloVD+OLKjvaO8uyqjnYdZuqhjZ/WBN4uMTBhD1Hvz3Yd+wf
+	 Zb8QuAXrk1VcSrCqYjiSzy3Z/liWd5YAbTQtGqLNfM8O2N9j2oUu2rjWVx4+BOxtdb
+	 TZdsykVELdggcQNu0GjIqbqYudFgnNaUaukj2g8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392990AbfJCQrC (ORCPT
+        id S2404518AbfJCQrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60428 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392977AbfJCQq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:59 -0400
+        id S2388761AbfJCQrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A12E720830;
-        Thu,  3 Oct 2019 16:46:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E6921783;
+        Thu,  3 Oct 2019 16:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121219;
-        bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+        s=default; t=1570121221;
+        bh=8Sr764RTcwSYEJAQGa+KrlDJKb7qohDjpHtG9LoQfEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HCPhPfzNy5QnKd8AGjizTiyufNWrl3OVeCU9jZvAlNdv4ns5Chfu1hP6TsI0GDNE8
-         QVn5u5bLfC8qhoYsXaIyo75nro3thu1HjSZQgvIyh44m9Kxb6ElgSrIsX9FxSyXrCU
-         cnWD2VcHAeKt0su9+mUG0PKx6OzjYzND2byAvflo=
+        b=10Ep8dMUhjsg7kPYkvQz9+UXACbgs8usStbaqWdEKf/+ZWmbvE5JJv9GQe6HVpVPF
+         9n44JrhpW0vxEnJ2pTAkWFPDIhub9Lp9eYjc1NAsp5uJfn1XgiMYuVytBvpDZYNo3D
+         I/lvUIpzLP00tbqkZJ9p0r/2m3GfZZTRPtGeNZI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 199/344] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-Date:   Thu,  3 Oct 2019 17:52:44 +0200
-Message-Id: <20191003154559.860229126@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxing Luo <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 200/344] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
+Date:   Thu,  3 Oct 2019 17:52:45 +0200
+Message-Id: <20191003154559.965757337@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,53 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
+[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
 
-With 'extra run-time crypto self tests' enabled, the selftest
-for s390-xts fails with
+When allocating a range of LPIs for a Multi-MSI capable device,
+this allocation extended to the closest power of 2.
 
-  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
-  test vector "random: len=0 klen=64"; expected_error=-22,
-  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
-  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
+But on the release path, the interrupts are released one by
+one. This results in not releasing the "extra" range, leaking
+the its_device. Trying to reprobe the device will then fail.
 
-This special case with nbytes=0 is not handled correctly and this
-fix now makes sure that -EINVAL is returned when there is en/decrypt
-called with 0 bytes to en/decrypt.
+Fix it by releasing the LPIs the same way we allocate them.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
+Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index d00f84add5f4c..6d2dbb5089d5c 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -586,6 +586,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 1b5c3672aea27..c3a8d732805f5 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2641,14 +2641,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct its_node *its = its_dev->its;
+ 	int i;
  
-+	if (!nbytes)
-+		return -EINVAL;
++	bitmap_release_region(its_dev->event_map.lpi_map,
++			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
++			      get_count_order(nr_irqs));
 +
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
- 
-@@ -600,6 +603,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
- 
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
- 
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		struct irq_data *data = irq_domain_get_irq_data(domain,
+ 								virq + i);
+-		u32 event = its_get_event_id(data);
+-
+-		/* Mark interrupt index as unused */
+-		clear_bit(event, its_dev->event_map.lpi_map);
+-
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
+ 	}
 -- 
 2.20.1
 
