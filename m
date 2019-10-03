@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B06C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFDDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708AC222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EF5222C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062505;
-	bh=TTWbSUu+VjBXirKgPkg65har3CKzOpn5Jt7wIGMmUOE=;
+	s=default; t=1570062507;
+	bh=oHmmW7XjfTpdoLzjci/kguegj7uwSOsahlm7Uupw2Jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ug6t1e7/EXQl92JrvsesK+FN9HzZYwy1AqhOgtP99zJ+/USS1fp7sNEWIEUGjhgJ/
-	 GO2wH6VO5dYFH0uF9om1N+uBvBB2rbhUcm/iepXCUzRU9tzNVNRn5FOJowvILIPVne
-	 hikAaE3OYjAwyFmU93PWDif0+/NJKUCzN2gKi6vM=
+	b=jeNHWkysa9Zyn2w4HMPzk5bI03gKZdW51A6zoECCSG01c092VhVBWbjfZ5I605Aok
+	 SWJ88+Kokp2fy7k8XC/pAfxeIkRa18jgzkH89+r7okGzpQ8RCWWfbcQrX2iJ38aiKP
+	 DJrqtN2hXLnJWBeWOu5QImSKIcoHNqbI58LjZMxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbfJCA04 (ORCPT
+        id S1730016AbfJCA20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729587AbfJCA0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:54 -0400
+        id S1729641AbfJCA05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A40222C9;
-        Thu,  3 Oct 2019 00:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB91222CE;
+        Thu,  3 Oct 2019 00:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062413;
-        bh=TTWbSUu+VjBXirKgPkg65har3CKzOpn5Jt7wIGMmUOE=;
+        s=default; t=1570062416;
+        bh=oHmmW7XjfTpdoLzjci/kguegj7uwSOsahlm7Uupw2Jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2K69PeLZmg7NZQnDu3yE6B1WhC3tBowXctylxG3D9ZY1rVe9meXZO+3aViaiZpbA
-         SI4a0qk0CAzmnyg3nTdjdsxU4fGsBAhIFel/GE24+A9w0gFykqEfaYOHbmNbXIepH6
-         vbJGxKpFR0ErH6NbL3N8E3b9ck/EhB3Pw85B0nTs=
+        b=Kn2WPu5d/6rmSPoKOnthSfyf8esmmXLgYdZIQkfTpQ9E2ux0nF0ua3E5eI8oxjedn
+         /vEDSdNRTftKCXtjmfWd4dS6giOx1xOCUnx6Vi/NO9SKu2zpxR4wnhVjf6k1bBxzOR
+         6b0QXT444WtWKrXqwTRy3tY/9UmnAM0HcYFHMBJg=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 05/32] tools/memory-model: Make judgelitmus.sh note timeouts
-Date:   Wed,  2 Oct 2019 17:26:23 -0700
-Message-Id: <20191003002650.11249-5-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 15/32] tools/memory-model: Make judgelitmus.sh ransack .litmus.out files
+Date:   Wed,  2 Oct 2019 17:26:33 -0700
+Message-Id: <20191003002650.11249-15-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,36 +59,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-Currently, judgelitmus.sh treats timeouts (as in the "--timeout" argument)
-as "!!! Verification error".  This can be misleading because it is quite
-possible that running the test longer would have produced a verification.
-This commit therefore changes judgelitmus.sh to check for timeouts and
-to report them with "!!! Timeout".
+The judgelitmus.sh script currently relies solely on the "Result:"
+comment in the .litmus file.  This is problematic when using the --hw
+argument, because it is necessary to check the hardware model against
+LKMM even in the absence of "Result:" comments.
+
+This commit therefore modifies judgelitmus.sh to check the observation
+in a .litmus.out file, in case one was generated by a previous LKMM run.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/judgelitmus.sh | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/memory-model/scripts/judgelitmus.sh | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
-index 0cc6387..d3c313b 100755
+index 6f3c600..fe9131f 100755
 --- a/tools/memory-model/scripts/judgelitmus.sh
 +++ b/tools/memory-model/scripts/judgelitmus.sh
-@@ -42,6 +42,14 @@ grep '^Observation' $LKMM_DESTDIR/$litmus.out
- if grep -q '^Observation' $LKMM_DESTDIR/$litmus.out
+@@ -8,7 +8,9 @@
+ # is provided, this is assumed to be a hardware test, and the output is
+ # assumed to be in file.HW.litmus.out, where "HW" is the --hw argument.
+ # In addition, non-Sometimes verification results will be noted, but
+-# forgiven.
++# forgiven.  Furthermore, if there is no "Result:" comment but there is
++# an LKMM .litmus.out file, the observation in that file will be used
++# to judge the assembly-language verification.
+ #
+ # Usage:
+ #	judgelitmus.sh file.litmus
+@@ -32,9 +34,11 @@ fi
+ if test -z "$LKMM_HW_MAP_FILE"
  then
- 	:
-+elif grep '^Command exited with non-zero status 124' $LKMM_DESTDIR/$litmus.out
-+then
-+	echo ' !!! Timeout' $litmus
-+	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
-+	then
-+		echo ' !!! Timeout' >> $LKMM_DESTDIR/$litmus.out 2>&1
-+	fi
-+	exit 124
+ 	litmusout=$litmus.out
++	lkmmout=
  else
- 	echo ' !!! Verification error' $litmus
- 	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
+ 	litmusout="`echo $litmus |
+ 		sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`.out"
++	lkmmout=$litmus.out
+ fi
+ if test -f "$LKMM_DESTDIR/$litmusout" -a -r "$LKMM_DESTDIR/$litmusout"
+ then
+@@ -46,6 +50,9 @@ fi
+ if grep -q '^ \* Result: ' $litmus
+ then
+ 	outcome=`grep -m 1 '^ \* Result: ' $litmus | awk '{ print $3 }'`
++elif test -n "$LKMM_HW_MAP_FILE" && grep -q '^Observation' $LKMM_DESTDIR/$lkmmout > /dev/null 2>&1
++then
++	outcome=`grep -m 1 '^Observation ' $LKMM_DESTDIR/$lkmmout | awk '{ print $3 }'`
+ else
+ 	outcome=specified
+ fi
 -- 
 2.9.5
 
