@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAFEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7836DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B371020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414E520830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122952;
-	bh=L+xO4ZeH3EGqd3+aM/8Rncwq+bXfmP+b1hrydvIjwyc=;
+	s=default; t=1570122957;
+	bh=SAVbqIJhRYHkOPmJ45qk1R9z0FcxOwplAbdfGkY42Zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mpI2/BB/fT/StR11qTDTR6k3wPhOMhpmP8IMKjdH/r482kAXDVWjc2eICwqIP1nbx
-	 wmNxXNFrq/kTYGx6b+mgmxQhFtf7Gb60OrKEyjPnjhsH32CeVQl4cDcrSoWqPWxk4m
-	 vJaH7RkNuoSKOrJTi5E+63uYscqMr5E7Vb2O7WBs=
+	b=y/80698Dbq8/xe0rg49HBzipakOHMfd4wjXfj/VvNAXuQaCp4lAQ3fFcSWVMuQup/
+	 MAfdQwUczZANrw2hnMXL5R/bgc9T8aoKC3akg2BzqfaBM3GxjBsBb0fjXZsClrUJG/
+	 R3fz4FY0U9WvWy5qwehTVw5xhcO8EOB+024lf4dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391007AbfJCRPw (ORCPT
+        id S2390877AbfJCQZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390897AbfJCQZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:10 -0400
+        id S2390430AbfJCQXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DD8F215EA;
-        Thu,  3 Oct 2019 16:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F5320867;
+        Thu,  3 Oct 2019 16:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119909;
-        bh=L+xO4ZeH3EGqd3+aM/8Rncwq+bXfmP+b1hrydvIjwyc=;
+        s=default; t=1570119780;
+        bh=SAVbqIJhRYHkOPmJ45qk1R9z0FcxOwplAbdfGkY42Zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1J82OM2adwVIRS57rkRGVn6y9BtukyB/IO8FX63G/8NEKnucYJvAiOp7Tr8PA7qY3
-         o+ZFWpVY7eqr9xM/mgimje9dlNvSv/0QWYfTxfnwJaPtYIiZjtkxWGxAfWQX/DZ67h
-         kJaAmXLj4wZCrTZ18/qsGgdtioy6O3KIlH/dIXN8=
+        b=yAEDHAFZwWkyOIuUE8SlvXNkDQkskt5PKaHiD0K/rqOUiaJ4ql8NdC9HIDC/X+EYW
+         v1ctPZCrdkza8I8QEFbk/+zFpAnSH+yUDfyJyF2jUEW4uHi4k8eC7gRvNHoSb1phu9
+         ZRULjYBhRFp3JD77ncgQBd/nl+gyKmhfZ8FRNByI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Marek Majkowski <marek@cloudflare.com>,
-        Jon Maxwell <jmaxwell37@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 026/313] tcp: better handle TCP_USER_TIMEOUT in SYN_SENT state
-Date:   Thu,  3 Oct 2019 17:50:04 +0200
-Message-Id: <20191003154535.920127454@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        linux-security-module@vger.kernel.org, kernel-team@android.com,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 189/211] ovl: filter of trusted xattr results in audit
+Date:   Thu,  3 Oct 2019 17:54:15 +0200
+Message-Id: <20191003154528.368762802@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,64 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mark Salyzyn <salyzyn@android.com>
 
-[ Upstream commit a66b10c05ee2d744189e9a2130394b070883d289 ]
+commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
 
-Yuchung Cheng and Marek Majkowski independently reported a weird
-behavior of TCP_USER_TIMEOUT option when used at connect() time.
+When filtering xattr list for reading, presence of trusted xattr
+results in a security audit log.  However, if there is other content
+no errno will be set, and if there isn't, the errno will be -ENODATA
+and not -EPERM as is usually associated with a lack of capability.
+The check does not block the request to list the xattrs present.
 
-When the TCP_USER_TIMEOUT is reached, tcp_write_timeout()
-believes the flow should live, and the following condition
-in tcp_clamp_rto_to_user_timeout() programs one jiffie timers :
+Switch to ns_capable_noaudit to reflect a more appropriate check.
 
-    remaining = icsk->icsk_user_timeout - elapsed;
-    if (remaining <= 0)
-        return 1; /* user timeout has passed; fire ASAP */
-
-This silly situation ends when the max syn rtx count is reached.
-
-This patch makes sure we honor both TCP_SYNCNT and TCP_USER_TIMEOUT,
-avoiding these spurious SYN packets.
-
-Fixes: b701a99e431d ("tcp: Add tcp_clamp_rto_to_user_timeout() helper to improve accuracy")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Yuchung Cheng <ycheng@google.com>
-Reported-by: Marek Majkowski <marek@cloudflare.com>
-Cc: Jon Maxwell <jmaxwell37@gmail.com>
-Link: https://marc.info/?l=linux-netdev&m=156940118307949&w=2
-Acked-by: Jon Maxwell <jmaxwell37@gmail.com>
-Tested-by: Marek Majkowski <marek@cloudflare.com>
-Signed-off-by: Marek Majkowski <marek@cloudflare.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-security-module@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org # v3.18+
+Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp_timer.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -210,7 +210,7 @@ static int tcp_write_timeout(struct sock
- 	struct inet_connection_sock *icsk = inet_csk(sk);
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	struct net *net = sock_net(sk);
--	bool expired, do_reset;
-+	bool expired = false, do_reset;
- 	int retry_until;
+---
+ fs/overlayfs/inode.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -386,7 +386,8 @@ static bool ovl_can_list(const char *s)
+ 		return true;
  
- 	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV)) {
-@@ -242,9 +242,10 @@ static int tcp_write_timeout(struct sock
- 			if (tcp_out_of_resources(sk, do_reset))
- 				return 1;
- 		}
-+	}
-+	if (!expired)
- 		expired = retransmits_timed_out(sk, retry_until,
- 						icsk->icsk_user_timeout);
--	}
- 	tcp_fastopen_active_detect_blackhole(sk, expired);
+ 	/* Never list trusted.overlay, list other trusted for superuser only */
+-	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
++	return !ovl_is_private_xattr(s) &&
++	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
+ }
  
- 	if (BPF_SOCK_OPS_TEST_FLAG(tp, BPF_SOCK_OPS_RTO_CB_FLAG))
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 
