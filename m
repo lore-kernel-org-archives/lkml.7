@@ -2,156 +2,137 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA15CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BACC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BE42070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WqbYuTBb"
+	by mail.kernel.org (Postfix) with ESMTP id 9F6F82070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570091400;
+	bh=Q+ALnmiIQm4I+dBjWKqJOW6YOe9VQb6alWxAIjH2W2w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Smi3ktcL75VXE4cvUh7tnitMajvRdlQY+8DqfsE9rRD8ykhgJ+UJ7zDpPTvLX70Jv
+	 c0bzRCZR4slTGMffQIbNwRWErqytaXusM9WCb5omFJHHA/OEsfAZSBs0TblRcX4tMs
+	 hJu2EakkqfuljWwRlF29of1csR8nEyQZjz/H6h2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfJCI2r (ORCPT
+        id S1728671AbfJCIaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:28:47 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36036 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbfJCI2c (ORCPT
+        Thu, 3 Oct 2019 04:30:00 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44786 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727357AbfJCI37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:28:32 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x938SNSY037716;
-        Thu, 3 Oct 2019 03:28:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570091304;
-        bh=JqcpVY+cllPhKIR7VpbA5/WIIYir2CvRhZ6o6hZeJBc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WqbYuTBbYzVOBGPHUqutLCNuRrXp4QekcHPFTwhVFHtZYfSwqyazU0IS+wlvo0gzn
-         5KzXXigt1Hysy3n3YN1fYkNxuu32Tvmmc7zy4vODfAR8dl/ztsLcBl3DvPUzgiggB9
-         uPIPS7NoP+Oaf3SRnzN1Und5cbRkzcum1VoSTlTo=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x938SN50117594
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Oct 2019 03:28:23 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 03:28:23 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 03:28:23 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x938SMIP082976;
-        Thu, 3 Oct 2019 03:28:23 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v8 3/5] leds: Add managed API to get a LED from a device driver
-Date:   Thu, 3 Oct 2019 10:28:10 +0200
-Message-ID: <20191003082812.28491-4-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003082812.28491-1-jjhiblot@ti.com>
-References: <20191003082812.28491-1-jjhiblot@ti.com>
+        Thu, 3 Oct 2019 04:29:59 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iFwUh-0004Iy-Pa; Thu, 03 Oct 2019 10:29:51 +0200
+Date:   Thu, 3 Oct 2019 09:29:50 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 5/7] irqchip/irq-bcm2836: Add support for the 7211
+ interrupt controller
+Message-ID: <20191003092950.04440d74@why>
+In-Reply-To: <72f07d2e-b070-301a-6a5d-8e89d32adcd7@gmail.com>
+References: <20191001224842.9382-1-f.fainelli@gmail.com>
+        <20191001224842.9382-6-f.fainelli@gmail.com>
+        <20191002134041.5a181d96@why>
+        <72f07d2e-b070-301a-6a5d-8e89d32adcd7@gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, eric@anholt.net, wahrenst@gmx.net, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the LED is acquired by a consumer device with devm_led_get(), it is
-automatically released when the device is detached.
+On Wed, 2 Oct 2019 10:06:31 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/leds/led-class.c | 49 ++++++++++++++++++++++++++++++++++++++++
- include/linux/leds.h     |  2 ++
- 2 files changed, 51 insertions(+)
+> On 10/2/19 5:40 AM, Marc Zyngier wrote:
+> > On Tue,  1 Oct 2019 15:48:40 -0700
+> > Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >   
+> >> The root interrupt controller on 7211 is about identical to the one
+> >> existing on BCM2836, except that the SMP cross call are done through the
+> >> standard ARM GIC-400 interrupt controller. This interrupt controller is
+> >> used for side band wake-up signals though.  
+> > 
+> > I don't fully grasp how this thing works.
+> > 
+> > If the 7211 interrupt controller is root and the GIC is used for SGIs,
+> > this means that the GIC outputs (IRQ/FIQ/VIRQ/VFIQ, times eight) are
+> > connected to individual inputs to the 7211 controller. Seems totally
+> > braindead, and unexpectedly so.
+> > 
+> > If the GIC is root and the 7211 outputs into the GIC all of its
+> > interrupts as a secondary irqchip, it would at least match an existing
+> > (and pretty bad) pattern.
+> > 
+> > So which one of the two is it?  
+> 
+> The nominal configuration on 7211 is to have all interrupts go through
+> the ARM GIC. It is possible however, to fallback to the legacy 2836 mode
+> whereby the root interrupt controller for peripheral interrupts is this
+> ARMCTL IC. There is a mux that the firmware can control which will
+> dictate which root interrupt controller is used for peripherals.
+> 
+> I have used this mostly for silicon verification and since those are
+> fairly harmless patches, just decided to send them out to avoid
+> maintaining them out of tree.
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 455545f5d663..80c96dd96afc 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -258,6 +258,55 @@ void led_put(struct led_classdev *led_cdev)
- }
- EXPORT_SYMBOL_GPL(led_put);
- 
-+static void devm_led_release(struct device *dev, void *res)
-+{
-+	struct led_classdev **p = res;
-+
-+	led_put(*p);
-+}
-+
-+/**
-+ * devm_of_led_get - Resource-managed request of a LED device
-+ * @dev:	LED consumer
-+ * @index:	index of the LED to obtain in the consumer
-+ *
-+ * The device node of the device is parse to find the request LED device.
-+ * The LED device returned from this function is automatically released
-+ * on driver detach.
-+ *
-+ * @return a pointer to a LED device or ERR_PTR(errno) on failure.
-+ */
-+struct led_classdev *__must_check devm_of_led_get(struct device *dev,
-+						  int index)
-+{
-+	struct led_classdev *led;
-+	struct led_classdev **dr;
-+
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* Not using device tree? */
-+	if (!IS_ENABLED(CONFIG_OF) || !dev->of_node)
-+		return ERR_PTR(-ENOTSUPP);
-+
-+	led = of_led_get(dev->of_node, index);
-+	if (IS_ERR(led))
-+		return led;
-+
-+	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
-+			  GFP_KERNEL);
-+	if (!dr) {
-+		led_put(led);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	*dr = led;
-+	devres_add(dev, dr);
-+
-+	return led;
-+}
-+EXPORT_SYMBOL_GPL(devm_of_led_get);
-+
- static int led_classdev_next_name(const char *init_name, char *name,
- 				  size_t len)
- {
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 6f7371bc7757..9b94cf752012 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -199,6 +199,8 @@ extern void led_classdev_resume(struct led_classdev *led_cdev);
- 
- extern struct led_classdev *of_led_get(struct device_node *np, int index);
- extern void led_put(struct led_classdev *led_cdev);
-+struct led_classdev *__must_check devm_of_led_get(struct device *dev,
-+						  int index);
- 
- /**
-  * led_blink_set - set blinking with software fallback
+This doesn't really answer my question. What I understand is that your
+system is laid out like this:
+
+     DEVICES -> ARMCTL -> CPUs
+                  ^
+                 GIC
+
+How are the various GIC outputs mapped into the ARMCTL? It has 4 of
+them per CPU (IRQ/FIQ + vIRQ/vFIQ), which the ARMCTL must somehow map
+to its own interrupts, specially if you want to signal IPIs using the
+GIC's SGIs (to which you hint in the commit log).
+
+There is a link I'm missing here.
+
+> We have a plan to use those as an "alternate" interrupt domain for low
+> power modes and use the fact that peripheral interrupts could be active
+> in both domains (GIC and ARMCTRL IC) to help support configuring and
+> identifying wake-up sources fro m within Linux.
+
+That's usually done with a hierarchy, where the ARMCTL IC would be a
+child of the GIC and see all interrupt configuration calls before they
+reach the GIC driver. We have plenty of examples in the tree already.
+
+Thanks,
+
+	M.
 -- 
-2.17.1
-
+Without deviation from the norm, progress is not possible.
