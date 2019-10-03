@@ -2,135 +2,129 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41025C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E579C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B0A20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121757;
-	bh=gcM49pIs5V6CjIgLxlY+ktdanqRuvASsW5wB900wZE4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L1yNCpZQeyd2TWBTWQVphAjQY+O9pe6LiuD5hEFbowCTn80WgbPDhmFGHKc2KCBA9
-	 10BmCsmdoibWtKrwg+SFuZ2sAjOd41UHJeh2SlnqKLMcyzsSE7wkOMbZpKTku7upwH
-	 iinaiqIbFfzKR0HPoZg2h0VztjP1mbcZ8PkQ1p5U=
+	by mail.kernel.org (Postfix) with ESMTP id 2EC4E20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393251AbfJCQz4 (ORCPT
+        id S2393259AbfJCQ4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:56:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58752 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405576AbfJCQvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2393157AbfJCQzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:55:55 -0400
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739CE2070B;
-        Thu,  3 Oct 2019 16:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121502;
-        bh=gcM49pIs5V6CjIgLxlY+ktdanqRuvASsW5wB900wZE4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xD0FtJNurnClovuB3DnLcOLWjFuKCfoncfiMKQAH+/DyEEKpY8Yc2+MBO7l9xRwvf
-         qgA8i3cQSje8SanssSFYNRzJL24COiOr1idlbaBcpBAnxV/vT8j3C1dQXf1Dl5lfBi
-         rUviiWVlFU+FGiDaD7RrR07bM1cN8kJ4w47/2LVg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.3 264/344] KVM: x86: Manually calculate reserved bits when loading PDPTRS
-Date:   Thu,  3 Oct 2019 17:53:49 +0200
-Message-Id: <20191003154606.467444489@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id A5CA3C05AA57
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 16:55:54 +0000 (UTC)
+Received: by mail-io1-f72.google.com with SMTP id e6so6262540iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:55:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=AFNw8r3ckdAQvRI7p3wli5RDRwpNcfmosa2xDA/j64M=;
+        b=KCXLnSdsk6z3AYK+mf6NolIMesPMVkzeqsjcKCwH4iqZfFgoibAKLuHKZMXRI+Ca9k
+         ZzBhmrnYCUO5F9f7cMBPkGy5wIeigbJpiZPjQcv2dgkRd8GQ61a96dh4xfM2EIoSTRFY
+         tJLFkV6vfvVS26YhmiC67SmOj3P/O2fTqS62iYphCmYNp4InboHJMBxcJXaZiXQKuxru
+         2+OsT1fw49p6QhJKwaR6RSpXGNRBBBjnDFejEwdjnRCB/CSwsA8Qhjn8jeOiXRI0ZTC1
+         ogDp/05+gjbEXDwIsryQLDtk3Zklz7ZoXXCzbCym/9gP+gBNXmA4jTXU1GGBdLuYjmNZ
+         GKqg==
+X-Gm-Message-State: APjAAAUQ7VdhPDrgdphVxJkLUMaFZ/DS6DGbP9U9aaokKmMAZ9oHik6n
+        wyDTH2B6rlaL4YoE/pU3qnUcYt7ZoLvCo9qthOXotl+XjM6DOhqHxNAqD61bdzDE4c0KSMMwLKC
+        Me4uqFOuJvGTUssP+FMqQanKu
+X-Received: by 2002:a02:93e5:: with SMTP id z92mr10465232jah.8.1570121753895;
+        Thu, 03 Oct 2019 09:55:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxYbHe9CmPEmiKy806Pfucrl7KItPoDlO28A1+KaO7DdJmPkt21jDcVK/cZHblEHgayJ4x1Og==
+X-Received: by 2002:a02:93e5:: with SMTP id z92mr10465197jah.8.1570121753579;
+        Thu, 03 Oct 2019 09:55:53 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id i67sm2007185ilf.84.2019.10.03.09.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 09:55:52 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 09:55:51 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexey Klimov <aklimov@redhat.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v4 0/4] tpm: add update_durations class op to allow
+ override of chip supplied values
+Message-ID: <20191003165551.whfzgmhpm5r6ejpw@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexey Klimov <aklimov@redhat.com>, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20190902142735.6280-1-jsnitsel@redhat.com>
+ <20191002203533.GA17766@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191002203533.GA17766@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Wed Oct 02 19, Jarkko Sakkinen wrote:
+>On Mon, Sep 02, 2019 at 07:27:32AM -0700, Jerry Snitselaar wrote:
+>> We've run into a case where a customer has an STM TPM 1.2 chip
+>> (version 1.2.8.28), that is getting into an inconsistent state and
+>> they end up getting tpm transmit errors.  In really old tpm code this
+>> wasn't seen because the code that grabbed the duration values from the
+>> chip could fail silently, and would proceed to just use default values
+>> and move forward. More recent code though successfully gets the
+>> duration values from the chip, and using those values this particular
+>> chip version gets into the state seen by the customer.
+>>
+>> The idea with this patchset is to provide a facility like the
+>> update_timeouts operation to allow the override of chip supplied
+>> values.
+>>
+>> changes from v3:
+>>     * Assign value to version when tpm1_getcap is successful for TPM 1.1 device
+>>       not when it fails.
+>>
+>> changes from v2:
+>>     * Added patch 1/3
+>>     * Rework tpm_tis_update_durations to make use of new version structs
+>>       and pull tpm1_getcap calls out of loop.
+>>
+>> changes from v1:
+>>     * Remove unneeded newline
+>>     * Formatting cleanups
+>>     * Change tpm_tis_update_durations to be a void function, and
+>>       use chip->duration_adjusted to track whether adjustment was
+>>       made.
+>>
+>> Jarkko Sakkinen (1):
+>>       tpm: Remove duplicate code from caps_show() in tpm-sysfs.c
+>>
+>> Jerry Snitselaar (2):
+>>       tpm: provide a way to override the chip returned durations
+>>       tpm_tis: override durations for STM tpm with firmware 1.2.8.28
+>>
+>>
+>
+>I applied to my master branch.
+>
+>Probably hard to get wide testing given the "niche" case when the
+>issue happens. Should be sufficient that the commonc case still
+>works.
+>
+>/Jarkko
 
-commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
-
-Manually generate the PDPTR reserved bit mask when explicitly loading
-PDPTRs.  The reserved bits that are being tracked by the MMU reflect the
-current paging mode, which is unlikely to be PAE paging in the vast
-majority of flows that use load_pdptrs(), e.g. CR0 and CR4 emulation,
-__set_sregs(), etc...  This can cause KVM to incorrectly signal a bad
-PDPTR, or more likely, miss a reserved bit check and subsequently fail
-a VM-Enter due to a bad VMCS.GUEST_PDPTR.
-
-Add a one off helper to generate the reserved bits instead of sharing
-code across the MMU's calculations and the PDPTR emulation.  The PDPTR
-reserved bits are basically set in stone, and pushing a helper into
-the MMU's calculation adds unnecessary complexity without improving
-readability.
-
-Oppurtunistically fix/update the comment for load_pdptrs().
-
-Note, the buggy commit also introduced a deliberate functional change,
-"Also remove bit 5-6 from rsvd_bits_mask per latest SDM.", which was
-effectively (and correctly) reverted by commit cd9ae5fe47df ("KVM: x86:
-Fix page-tables reserved bits").  A bit of SDM archaeology shows that
-the SDM from late 2008 had a bug (likely a copy+paste error) where it
-listed bits 6:5 as AVL and A for PDPTEs used for 4k entries but reserved
-for 2mb entries.  I.e. the SDM contradicted itself, and bits 6:5 are and
-always have been reserved.
-
-Fixes: 20c466b56168d ("KVM: Use rsvd_bits_mask in load_pdptrs()")
-Cc: stable@vger.kernel.org
-Cc: Nadav Amit <nadav.amit@gmail.com>
-Reported-by: Doug Reiland <doug.reiland@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kvm/x86.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -674,8 +674,14 @@ static int kvm_read_nested_guest_page(st
- 				       data, offset, len, access);
- }
- 
-+static inline u64 pdptr_rsvd_bits(struct kvm_vcpu *vcpu)
-+{
-+	return rsvd_bits(cpuid_maxphyaddr(vcpu), 63) | rsvd_bits(5, 8) |
-+	       rsvd_bits(1, 2);
-+}
-+
- /*
-- * Load the pae pdptrs.  Return true is they are all valid.
-+ * Load the pae pdptrs.  Return 1 if they are all valid, 0 otherwise.
-  */
- int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
- {
-@@ -694,8 +700,7 @@ int load_pdptrs(struct kvm_vcpu *vcpu, s
- 	}
- 	for (i = 0; i < ARRAY_SIZE(pdpte); ++i) {
- 		if ((pdpte[i] & PT_PRESENT_MASK) &&
--		    (pdpte[i] &
--		     vcpu->arch.mmu->guest_rsvd_check.rsvd_bits_mask[0][2])) {
-+		    (pdpte[i] & pdptr_rsvd_bits(vcpu))) {
- 			ret = 0;
- 			goto out;
- 		}
-
-
+Yeah, it is a pain. The people with the problem systems tested an
+earlier version of Alexey's patches. I have a system with a different
+rev STM device, so I did some testing with a modified patch that keyed
+off that revision, but it will be hard to get it wide exposure.
