@@ -2,290 +2,152 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FACC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08981C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BA4215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCE820865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123270;
-	bh=6+z8HPX3gQVp7v3MP3VMlQDEtk2bBbOhScr3L95UUC0=;
+	s=default; t=1570123274;
+	bh=KbEgSe4ZvyLxB0EItYaNK/wjlCzpKZkkH7Z6zjmx7e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=isvOqR4WSNFguglf5lhBCS0Xt0L4SF5dG9c3eqXy+HapaKaLwbkGUtBJs5VexvkbS
-	 ylLrinu8zeBw1XjbgdMJAK3lESsP8UHem+R/kRBRkBNkJ3lEwYvS3Wfm+VvNBfqREi
-	 tNY5zyrmzNDunEVRd5IY8CsZsXXWL0eRdCDkGpEg=
+	b=S2HJDJw/dSGLxhhch6tt/skisbQQlMayL9qrq4XVZWByzGnV+KCjyEtDAgTbneq8O
+	 0isYsQwr0GcNgkBil+AGcwVdVsylhhTofU9wlVe357hyDErPdqQe8IudFOaxs9H3VN
+	 odbICdvbuWVNvDDwZUzTWV/XlC5I97kb0VW7foyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389384AbfJCQSC (ORCPT
+        id S2390201AbfJCRVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:18:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44142 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389357AbfJCQR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:17:57 -0400
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2389353AbfJCQR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:17:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CE0621783;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DD2C20700;
         Thu,  3 Oct 2019 16:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570119475;
-        bh=6+z8HPX3gQVp7v3MP3VMlQDEtk2bBbOhScr3L95UUC0=;
+        bh=KbEgSe4ZvyLxB0EItYaNK/wjlCzpKZkkH7Z6zjmx7e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEUhSU6yLjIjJitOpe47ICQpXc2lS34flqRfpjgkq1bS8n6NFw0BiK5vOaMx+HkWX
-         n0kG//i93jAvaHy8IJwjbmosgR4T+hhVK6De7TwkESHLhgWwvi9kryXsgweAgMDeY/
-         +LS1MNma9pY9T28MsYDl+SqCfCuor5BM8c8dXXng=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Rik van Riel <riel@redhat.com>
-Subject: [PATCH 1/2] vtime: Rename vtime_account_system() to vtime_account_kernel()
-Date:   Thu,  3 Oct 2019 18:17:44 +0200
-Message-Id: <20191003161745.28464-2-frederic@kernel.org>
+        b=rDA0TOr5dnAehSa6RRVvNF4+S7TlkAUG5Mv2KCNQKcGhoxhwmx10LJao9R2c2TGlW
+         TfAsYTOk3tI5DEQ2KocZCRLdsNi7AzBfPftyk6bD8OyvfhEaRS2KC+C6wiv4gUtG8m
+         +9A67heNcY9/RN19L4YRpdfhBIGvbqPd+nIxFcQ8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Brad Love <brad@nextdimension.cc>,
+        syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 071/211] media: em28xx: modules workqueue not inited for 2nd device
+Date:   Thu,  3 Oct 2019 17:52:17 +0200
+Message-Id: <20191003154504.359157694@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003161745.28464-1-frederic@kernel.org>
-References: <20191003161745.28464-1-frederic@kernel.org>
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vtime_account_system() decides if we need to account the time to the
-system (__vtime_account_system()) or to the guest (vtime_account_guest()).
+From: Sean Young <sean@mess.org>
 
-So this function is a misnommer as we are on a higher level than
-"system". All we know when we call that function is that we are
-accounting kernel cputime. Whether it belongs to guest or system time
-is a lower level detail.
+[ Upstream commit 46e4a26615cc7854340e4b69ca59ee78d6f20c8b ]
 
-Rename this function to vtime_account_kernel(). This will clarify things
-and avoid too many underscored vtime_account_system() versions.
+syzbot reports an error on flush_request_modules() for the second device.
+This workqueue was never initialised so simply remove the offending line.
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+usb 1-1: USB disconnect, device number 2
+em28xx 1-1:1.153: Disconnecting em28xx #1
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 12 at kernel/workqueue.c:3031
+__flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #25
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:__flush_work.cold+0x2c/0x36 kernel/workqueue.c:3031
+Code: 9a 22 00 48 c7 c7 20 e4 c5 85 e8 d9 3a 0d 00 0f 0b 45 31 e4 e9 98 86
+ff ff e8 51 9a 22 00 48 c7 c7 20 e4 c5 85 e8 be 3a 0d 00 <0f> 0b 45 31 e4
+e9 7d 86 ff ff e8 36 9a 22 00 48 c7 c7 20 e4 c5 85
+RSP: 0018:ffff8881da20f720 EFLAGS: 00010286
+RAX: 0000000000000024 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed103b441ed6
+RBP: ffff8881da20f888 R08: 0000000000000024 R09: fffffbfff11acd9a
+R10: fffffbfff11acd99 R11: ffffffff88d66ccf R12: 0000000000000000
+R13: 0000000000000001 R14: ffff8881c6685df8 R15: ffff8881d2a85b78
+  flush_request_modules drivers/media/usb/em28xx/em28xx-cards.c:3325 [inline]
+  em28xx_usb_disconnect.cold+0x280/0x2a6
+drivers/media/usb/em28xx/em28xx-cards.c:4023
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1120 [inline]
+  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1151
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+  device_del+0x420/0xb10 drivers/base/core.c:2288
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+Fixes: be7fd3c3a8c5e ("media: em28xx: Hauppauge DualHD second tuner functionality)
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Brad Love <brad@nextdimension.cc>
+Reported-by: syzbot+b7f57261c521087d89bb@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/kernel/time.c          |  4 ++--
- arch/powerpc/kernel/time.c       |  6 +++---
- arch/s390/kernel/vtime.c         |  4 ++--
- include/linux/context_tracking.h |  4 ++--
- include/linux/vtime.h            |  6 +++---
- kernel/sched/cputime.c           | 18 +++++++++---------
- 6 files changed, 21 insertions(+), 21 deletions(-)
+ drivers/media/usb/em28xx/em28xx-cards.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/ia64/kernel/time.c b/arch/ia64/kernel/time.c
-index 1e95d32c8877..91b4024c9351 100644
---- a/arch/ia64/kernel/time.c
-+++ b/arch/ia64/kernel/time.c
-@@ -132,7 +132,7 @@ static __u64 vtime_delta(struct task_struct *tsk)
- 	return delta_stime;
- }
- 
--void vtime_account_system(struct task_struct *tsk)
-+void vtime_account_kernel(struct task_struct *tsk)
- {
- 	struct thread_info *ti = task_thread_info(tsk);
- 	__u64 stime = vtime_delta(tsk);
-@@ -146,7 +146,7 @@ void vtime_account_system(struct task_struct *tsk)
- 	else
- 		ti->stime += stime;
- }
--EXPORT_SYMBOL_GPL(vtime_account_system);
-+EXPORT_SYMBOL_GPL(vtime_account_kernel);
- 
- void vtime_account_idle(struct task_struct *tsk)
- {
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 694522308cd5..84827da01d45 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -338,7 +338,7 @@ static unsigned long vtime_delta(struct task_struct *tsk,
- 	return stime;
- }
- 
--void vtime_account_system(struct task_struct *tsk)
-+void vtime_account_kernel(struct task_struct *tsk)
- {
- 	unsigned long stime, stime_scaled, steal_time;
- 	struct cpu_accounting_data *acct = get_accounting(tsk);
-@@ -366,7 +366,7 @@ void vtime_account_system(struct task_struct *tsk)
- #endif
+diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+index 87b887b7604ef..3f59a98dbf9a1 100644
+--- a/drivers/media/usb/em28xx/em28xx-cards.c
++++ b/drivers/media/usb/em28xx/em28xx-cards.c
+@@ -4020,7 +4020,6 @@ static void em28xx_usb_disconnect(struct usb_interface *intf)
+ 		dev->dev_next->disconnected = 1;
+ 		dev_info(&dev->intf->dev, "Disconnecting %s\n",
+ 			 dev->dev_next->name);
+-		flush_request_modules(dev->dev_next);
  	}
- }
--EXPORT_SYMBOL_GPL(vtime_account_system);
-+EXPORT_SYMBOL_GPL(vtime_account_kernel);
  
- void vtime_account_idle(struct task_struct *tsk)
- {
-@@ -395,7 +395,7 @@ static void vtime_flush_scaled(struct task_struct *tsk,
- /*
-  * Account the whole cputime accumulated in the paca
-  * Must be called with interrupts disabled.
-- * Assumes that vtime_account_system/idle() has been called
-+ * Assumes that vtime_account_kernel/idle() has been called
-  * recently (i.e. since the last entry from usermode) so that
-  * get_paca()->user_time_scaled is up to date.
-  */
-diff --git a/arch/s390/kernel/vtime.c b/arch/s390/kernel/vtime.c
-index c475ca49cfc6..8df10d3c8f6c 100644
---- a/arch/s390/kernel/vtime.c
-+++ b/arch/s390/kernel/vtime.c
-@@ -247,9 +247,9 @@ void vtime_account_irq_enter(struct task_struct *tsk)
- }
- EXPORT_SYMBOL_GPL(vtime_account_irq_enter);
- 
--void vtime_account_system(struct task_struct *tsk)
-+void vtime_account_kernel(struct task_struct *tsk)
- __attribute__((alias("vtime_account_irq_enter")));
--EXPORT_SYMBOL_GPL(vtime_account_system);
-+EXPORT_SYMBOL_GPL(vtime_account_kernel);
- 
- /*
-  * Sorted add to a list. List is linear searched until first bigger
-diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-index d05609ad329d..558a209c247d 100644
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -141,7 +141,7 @@ static inline void guest_enter_irqoff(void)
- 	 * to assume that it's the stime pending cputime
- 	 * to flush.
- 	 */
--	vtime_account_system(current);
-+	vtime_account_kernel(current);
- 	current->flags |= PF_VCPU;
- 	rcu_virt_note_context_switch(smp_processor_id());
- }
-@@ -149,7 +149,7 @@ static inline void guest_enter_irqoff(void)
- static inline void guest_exit_irqoff(void)
- {
- 	/* Flush the guest cputime we spent on the guest */
--	vtime_account_system(current);
-+	vtime_account_kernel(current);
- 	current->flags &= ~PF_VCPU;
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
-diff --git a/include/linux/vtime.h b/include/linux/vtime.h
-index a26ed10a4eac..2fd247f90408 100644
---- a/include/linux/vtime.h
-+++ b/include/linux/vtime.h
-@@ -57,13 +57,13 @@ static inline void vtime_task_switch(struct task_struct *prev)
- }
- #endif /* __ARCH_HAS_VTIME_TASK_SWITCH */
- 
--extern void vtime_account_system(struct task_struct *tsk);
-+extern void vtime_account_kernel(struct task_struct *tsk);
- extern void vtime_account_idle(struct task_struct *tsk);
- 
- #else /* !CONFIG_VIRT_CPU_ACCOUNTING */
- 
- static inline void vtime_task_switch(struct task_struct *prev) { }
--static inline void vtime_account_system(struct task_struct *tsk) { }
-+static inline void vtime_account_kernel(struct task_struct *tsk) { }
- #endif /* !CONFIG_VIRT_CPU_ACCOUNTING */
- 
- #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
-@@ -86,7 +86,7 @@ extern void vtime_account_irq_enter(struct task_struct *tsk);
- static inline void vtime_account_irq_exit(struct task_struct *tsk)
- {
- 	/* On hard|softirq exit we always account to hard|softirq cputime */
--	vtime_account_system(tsk);
-+	vtime_account_kernel(tsk);
- }
- extern void vtime_flush(struct task_struct *tsk);
- #else /* !CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 46ed4e1383e2..b45932e27857 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -412,7 +412,7 @@ void vtime_common_task_switch(struct task_struct *prev)
- 	if (is_idle_task(prev))
- 		vtime_account_idle(prev);
- 	else
--		vtime_account_system(prev);
-+		vtime_account_kernel(prev);
- 
- 	vtime_flush(prev);
- 	arch_vtime_task_switch(prev);
-@@ -425,7 +425,7 @@ void vtime_common_task_switch(struct task_struct *prev)
- /*
-  * Archs that account the whole time spent in the idle task
-  * (outside irq) as idle time can rely on this and just implement
-- * vtime_account_system() and vtime_account_idle(). Archs that
-+ * vtime_account_kernel() and vtime_account_idle(). Archs that
-  * have other meaning of the idle time (s390 only includes the
-  * time spent by the CPU when it's in low power mode) must override
-  * vtime_account().
-@@ -436,7 +436,7 @@ void vtime_account_irq_enter(struct task_struct *tsk)
- 	if (!in_interrupt() && is_idle_task(tsk))
- 		vtime_account_idle(tsk);
- 	else
--		vtime_account_system(tsk);
-+		vtime_account_kernel(tsk);
- }
- EXPORT_SYMBOL_GPL(vtime_account_irq_enter);
- #endif /* __ARCH_HAS_VTIME_ACCOUNT */
-@@ -711,8 +711,8 @@ static u64 get_vtime_delta(struct vtime *vtime)
- 	return delta - other;
- }
- 
--static void __vtime_account_system(struct task_struct *tsk,
--				   struct vtime *vtime)
-+static void vtime_account_system(struct task_struct *tsk,
-+				 struct vtime *vtime)
- {
- 	vtime->stime += get_vtime_delta(vtime);
- 	if (vtime->stime >= TICK_NSEC) {
-@@ -731,7 +731,7 @@ static void vtime_account_guest(struct task_struct *tsk,
- 	}
- }
- 
--void vtime_account_system(struct task_struct *tsk)
-+void vtime_account_kernel(struct task_struct *tsk)
- {
- 	struct vtime *vtime = &tsk->vtime;
- 
-@@ -743,7 +743,7 @@ void vtime_account_system(struct task_struct *tsk)
- 	if (tsk->flags & PF_VCPU)
- 		vtime_account_guest(tsk, vtime);
- 	else
--		__vtime_account_system(tsk, vtime);
-+		vtime_account_system(tsk, vtime);
- 	write_seqcount_end(&vtime->seqcount);
- }
- 
-@@ -752,7 +752,7 @@ void vtime_user_enter(struct task_struct *tsk)
- 	struct vtime *vtime = &tsk->vtime;
- 
- 	write_seqcount_begin(&vtime->seqcount);
--	__vtime_account_system(tsk, vtime);
-+	vtime_account_system(tsk, vtime);
- 	vtime->state = VTIME_USER;
- 	write_seqcount_end(&vtime->seqcount);
- }
-@@ -782,7 +782,7 @@ void vtime_guest_enter(struct task_struct *tsk)
- 	 * that can thus safely catch up with a tickless delta.
- 	 */
- 	write_seqcount_begin(&vtime->seqcount);
--	__vtime_account_system(tsk, vtime);
-+	vtime_account_system(tsk, vtime);
- 	tsk->flags |= PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
+ 	dev->disconnected = 1;
 -- 
-2.23.0
+2.20.1
+
+
 
