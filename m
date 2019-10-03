@@ -2,52 +2,56 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB24C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050FD20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A25720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122553;
-	bh=4RZYoUsuUQLZ4s568q0GUzU5T/LBcXRptdcGVSEtYSw=;
+	s=default; t=1570122559;
+	bh=VvGjkM71cReN6WoRHeK5WYV1LuRx+NhLHQO/EKPu3xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=coB8w2nZB8BM22Pa6hS5MPtaAYeCmJW5SfoY3d6Y9ZB3UnjWnyFKweisRjL8xuLP7
-	 o/sdUCQ7iUULIi2cD/pg6Pf7n3OS5Mk/9bgAcqWTXJ1TMwOiLNtZYHPWeP7w1m5zLq
-	 mfcA0g6KgaLg//W8B+DRlWE1QpkOxn3E4hGS9pSE=
+	b=q/ix0fGYHkVu614LmGL2N7IfMAwXyKoLhazqXbM0SY65nIlsiC0HzQtb/AklJBLwl
+	 NhmYFY5jUfuJgr7AKwIE6uG58wyxhAPhfFO9Bp1tkuuA0FCNJGtS4bYQ1KGRmM8d6J
+	 pUG0RBkeP3DzkVK2fKiM0PwtbgPk2Y/Co9NdZpps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393362AbfJCRJM (ORCPT
+        id S2392131AbfJCQeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404179AbfJCQeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:31 -0400
+        id S2392114AbfJCQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1645420830;
-        Thu,  3 Oct 2019 16:34:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6714B20830;
+        Thu,  3 Oct 2019 16:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120470;
-        bh=4RZYoUsuUQLZ4s568q0GUzU5T/LBcXRptdcGVSEtYSw=;
+        s=default; t=1570120456;
+        bh=VvGjkM71cReN6WoRHeK5WYV1LuRx+NhLHQO/EKPu3xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJSHcWNcp+AF7Tmzmjop2V35BA2v6/Xo2qRJsDCXKf5v/JtN9MvdLU2dFXDoxAdsH
-         OYEQghwSiEWvorLTppkHnr93UOHKaXbUZ1jN2iy1PwjLbuogjJdJhzn/2t2oSIuJW5
-         EOl8lsopPYqorRb/pGySUC2sbJYWQ6+yUNFAhVfY=
+        b=Xk6HIYlwR9YgUwZ1l41VgLnRMUW0necqFEJYuXsMcYosDnHU99b+8m27U74Ym0fdW
+         L++bQ/wXgFzrikhKwNl5Y9+fj4wx7a74TtdjGX2chaLDOVRMxYbnob5uCu5zTlGlAO
+         JyzCLW1HbamN7ZktPqrkiCf6fNF6CmDTqzzP1qJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-stable@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.2 233/313] tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-Date:   Thu,  3 Oct 2019 17:53:31 +0200
-Message-Id: <20191003154555.951169029@linuxfoundation.org>
+        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 229/313] blk-mq: add callback of .cleanup_rq
+Date:   Thu,  3 Oct 2019 17:53:27 +0200
+Message-Id: <20191003154555.556015268@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,33 +64,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit 1ea32c83c699df32689d329b2415796b7bfc2f6e upstream.
+[ Upstream commit 226b4fc75c78f9c497c5182d939101b260cfb9f3 ]
 
-The tpm_tis_core has to set the TPM_CHIP_FLAG_IRQ before probing for
-interrupts since there is no other place in the code that would set
-it.
+SCSI maintains its own driver private data hooked off of each SCSI
+request, and the pridate data won't be freed after scsi_queue_rq()
+returns BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE. An upper layer driver
+(e.g. dm-rq) may need to retry these SCSI requests, before SCSI has
+fully dispatched them, due to a lower level SCSI driver's resource
+limitation identified in scsi_queue_rq(). Currently SCSI's per-request
+private data is leaked when the upper layer driver (dm-rq) frees and
+then retries these requests in response to BLK_STS_RESOURCE or
+BLK_STS_DEV_RESOURCE returns from scsi_queue_rq().
 
-Cc: linux-stable@vger.kernel.org
-Fixes: 570a36097f30 ("tpm: drop 'irq' from struct tpm_vendor_specific")
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This usecase is so specialized that it doesn't warrant training an
+existing blk-mq interface (e.g. blk_mq_free_request) to allow SCSI to
+account for freeing its driver private data -- doing so would add an
+extra branch for handling a special case that all other consumers of
+SCSI (and blk-mq) won't ever need to worry about.
 
+So the most pragmatic way forward is to delegate freeing SCSI driver
+private data to the upper layer driver (dm-rq).  Do so by adding
+new .cleanup_rq callback and calling a new blk_mq_cleanup_rq() method
+from dm-rq.  A following commit will implement the .cleanup_rq() hook
+in scsi_mq_ops.
+
+Cc: Ewan D. Milne <emilne@redhat.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: dm-devel@redhat.com
+Cc: <stable@vger.kernel.org>
+Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm_tis_core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/dm-rq.c     |  1 +
+ include/linux/blk-mq.h | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
 
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -981,6 +981,7 @@ int tpm_tis_core_init(struct device *dev
- 		}
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 5f7063f05ae07..b41ecb451c784 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -408,6 +408,7 @@ static int map_request(struct dm_rq_target_io *tio)
+ 		ret = dm_dispatch_clone_request(clone, rq);
+ 		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
+ 			blk_rq_unprep_clone(clone);
++			blk_mq_cleanup_rq(clone);
+ 			tio->ti->type->release_clone_rq(clone, &tio->info);
+ 			tio->clone = NULL;
+ 			return DM_MAPIO_REQUEUE;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 15d1aa53d96c4..a5a99b43f68e8 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -140,6 +140,7 @@ typedef int (poll_fn)(struct blk_mq_hw_ctx *);
+ typedef int (map_queues_fn)(struct blk_mq_tag_set *set);
+ typedef bool (busy_fn)(struct request_queue *);
+ typedef void (complete_fn)(struct request *);
++typedef void (cleanup_rq_fn)(struct request *);
  
- 		tpm_chip_start(chip);
-+		chip->flags |= TPM_CHIP_FLAG_IRQ;
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
- 						 irq);
+ 
+ struct blk_mq_ops {
+@@ -200,6 +201,12 @@ struct blk_mq_ops {
+ 	/* Called from inside blk_get_request() */
+ 	void (*initialize_rq_fn)(struct request *rq);
+ 
++	/*
++	 * Called before freeing one request which isn't completed yet,
++	 * and usually for freeing the driver private data
++	 */
++	cleanup_rq_fn		*cleanup_rq;
++
+ 	/*
+ 	 * If set, returns whether or not this queue currently is busy
+ 	 */
+@@ -366,4 +373,10 @@ static inline blk_qc_t request_to_qc_t(struct blk_mq_hw_ctx *hctx,
+ 			BLK_QC_T_INTERNAL;
+ }
+ 
++static inline void blk_mq_cleanup_rq(struct request *rq)
++{
++	if (rq->q->mq_ops->cleanup_rq)
++		rq->q->mq_ops->cleanup_rq(rq);
++}
++
+ #endif
+-- 
+2.20.1
+
 
 
