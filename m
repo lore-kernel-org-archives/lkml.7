@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9629AC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534E1C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6900320867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2365C2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121186;
-	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+	s=default; t=1570121192;
+	bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZQTQUi0gdvUBXaGB0rNbE0Dki3lgN9I6r4g0muS2ZinmeSurnVMRIKu3W04hqRdO
-	 D59s7B1nEfOhXl5w+bqHlJgLslbTNF537HeA5+HOwiKB1T+/liXvDQqVkLrcbOYpa1
-	 b1zDMQb4ye6gwSThgBRCXFKnxiLNtHIscsQmIV4Q=
+	b=voW4XVCHI2pOpxPx635jb6NfEP2L0m80AlDyacb2CgNURHWTELOtwmIUIJyEzer8y
+	 KE2arIvFwtGV5xNvPH7mkozhv+2EIVT+c7+yG0cyoTwSjo4NCzxVU8xT40mMGBTHnd
+	 OoNT2kivH/qj8kcMr9YI3W3ir9b7jZx8JtuIWc0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392899AbfJCQqZ (ORCPT
+        id S2392697AbfJCQqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:46:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392618AbfJCQqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:19 -0400
+        id S2387477AbfJCQq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9D220867;
-        Thu,  3 Oct 2019 16:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8E220830;
+        Thu,  3 Oct 2019 16:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121178;
-        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+        s=default; t=1570121186;
+        bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M74lGIjdsRlcpw41hHDnzcnC3OfIYeyd5v+/b4sGY326EyG3p3LspjUag/0nV+CyI
-         YzRyi6XoZeJAiRy7vLl9uydybNiK0iA4Fekf3sNwhdLofsOP77lcJKExdcItpoMjlh
-         /HjJYj80LIap6mNYSI/zgDHayjl25IC1kKk+igEo=
+        b=stslWFFf4FuAO5UQeLbipALmg6iwnJCuR/m9jarYnsTazsu3iSCKm/eJymj9yTHl9
+         eyR+0YBqIYG3nKoIQHqD6Jc0WJ32JK3J8gDSRo5LuaQf0rzaAaAWPRgE/M3BxZQ2A2
+         RDnkpuWjcQ0fRXgDsXFbBsW9j6jCYHVAbAOR97K4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerald Baeza <gerald.baeza@st.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 146/344] libperf: Fix alignment trap with xyarray contents in perf stat
-Date:   Thu,  3 Oct 2019 17:51:51 +0200
-Message-Id: <20191003154554.663779897@linuxfoundation.org>
+Subject: [PATCH 5.3 149/344] ARM: at91: move platform-specific asm-offset.h to arch/arm/mach-at91
+Date:   Thu,  3 Oct 2019 17:51:54 +0200
+Message-Id: <20191003154554.952579697@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -66,56 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald BAEZA <gerald.baeza@st.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
+[ Upstream commit 9fac85a6db8999922f2cd92dfe2e83e063b31a94 ]
 
-Following the patch 'perf stat: Fix --no-scale', an alignment trap
-happens in process_counter_values() on ARMv7 platforms due to the
-attempt to copy non 64 bits aligned double words (pointed by 'count')
-via a NEON vectored instruction ('vld1' with 64 bits alignment
-constraint).
+<generated/at91_pm_data-offsets.h> is only generated and included by
+arch/arm/mach-at91/, so it does not need to reside in the globally
+visible include/generated/.
 
-This patch sets a 64 bits alignment constraint on 'contents[]' field in
-'struct xyarray' since the 'count' pointer used above points to such a
-structure.
+I renamed it to arch/arm/mach-at91/pm_data-offsets.h since the prefix
+'at91_' is just redundant in mach-at91/.
 
-Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+My main motivation of this change is to avoid the race condition for
+the parallel build (-j) when CONFIG_IKHEADERS is enabled.
+
+When it is enabled, all the headers under include/ are archived into
+kernel/kheaders_data.tar.xz and exposed in the sysfs.
+
+In the parallel build, we have no idea in which order files are built.
+
+ - If at91_pm_data-offsets.h is built before kheaders_data.tar.xz,
+   the header will be included in the archive. Probably nobody will
+   use it, but it is harmless except that it will increase the archive
+   size needlessly.
+
+ - If kheaders_data.tar.xz is built before at91_pm_data-offsets.h,
+   the header will not be included in the archive. However, in the next
+   build, the archive will be re-generated to include the newly-found
+   at91_pm_data-offsets.h. This is not nice from the build system point
+   of view.
+
+ - If at91_pm_data-offsets.h and kheaders_data.tar.xz are built at the
+   same time, the corrupted header might be included in the archive,
+   which does not look nice either.
+
+This commit fixes the race.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20190823024346.591-1-yamada.masahiro@socionext.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/xyarray.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-at91/.gitignore   | 1 +
+ arch/arm/mach-at91/Makefile     | 5 +++--
+ arch/arm/mach-at91/pm_suspend.S | 2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/mach-at91/.gitignore
 
-diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
-index 7ffe562e7ae7f..2627b038b6f2a 100644
---- a/tools/perf/util/xyarray.h
-+++ b/tools/perf/util/xyarray.h
-@@ -2,6 +2,7 @@
- #ifndef _PERF_XYARRAY_H_
- #define _PERF_XYARRAY_H_ 1
+diff --git a/arch/arm/mach-at91/.gitignore b/arch/arm/mach-at91/.gitignore
+new file mode 100644
+index 0000000000000..2ecd6f51c8a95
+--- /dev/null
++++ b/arch/arm/mach-at91/.gitignore
+@@ -0,0 +1 @@
++pm_data-offsets.h
+diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
+index 31b61f0e1c077..de64301dcff25 100644
+--- a/arch/arm/mach-at91/Makefile
++++ b/arch/arm/mach-at91/Makefile
+@@ -19,9 +19,10 @@ ifeq ($(CONFIG_PM_DEBUG),y)
+ CFLAGS_pm.o += -DDEBUG
+ endif
  
-+#include <linux/compiler.h>
- #include <sys/types.h>
+-include/generated/at91_pm_data-offsets.h: arch/arm/mach-at91/pm_data-offsets.s FORCE
++$(obj)/pm_data-offsets.h: $(obj)/pm_data-offsets.s FORCE
+ 	$(call filechk,offsets,__PM_DATA_OFFSETS_H__)
  
- struct xyarray {
-@@ -10,7 +11,7 @@ struct xyarray {
- 	size_t entries;
- 	size_t max_x;
- 	size_t max_y;
--	char contents[];
-+	char contents[] __aligned(8);
- };
+-arch/arm/mach-at91/pm_suspend.o: include/generated/at91_pm_data-offsets.h
++$(obj)/pm_suspend.o: $(obj)/pm_data-offsets.h
  
- struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
+ targets += pm_data-offsets.s
++clean-files += pm_data-offsets.h
+diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
+index c751f047b1166..ed57c879d4e17 100644
+--- a/arch/arm/mach-at91/pm_suspend.S
++++ b/arch/arm/mach-at91/pm_suspend.S
+@@ -10,7 +10,7 @@
+ #include <linux/linkage.h>
+ #include <linux/clk/at91_pmc.h>
+ #include "pm.h"
+-#include "generated/at91_pm_data-offsets.h"
++#include "pm_data-offsets.h"
+ 
+ #define	SRAMC_SELF_FRESH_ACTIVE		0x01
+ #define	SRAMC_SELF_FRESH_EXIT		0x00
 -- 
 2.20.1
 
