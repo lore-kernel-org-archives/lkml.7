@@ -2,82 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F25C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBE2C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505E72086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOCmobAJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8CEA520873
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfJCTTa (ORCPT
+        id S1730997AbfJCTUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:19:30 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37242 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfJCTTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:19:30 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w67so2707129lff.4;
-        Thu, 03 Oct 2019 12:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1q7hatrsXylGJ/leGstyq+2XH4YzvxyGfEuE+/YjAEQ=;
-        b=WOCmobAJQzp/jdIXZkZkyJM76saoFhALN8YUnnJpKJ0RyVCfez+ThSPm87UmM9bqx4
-         whu6zm3N1nw7BNgkrreFGreZQHzEH/A0VsCSQROITdqU1x/fhAltZgkqX0GqbBKFQhcU
-         VTSEU1IdONj2DBSWqT6gaWQJYJCHb4u9Oz2gzyDh54b6W3yTvS3qW7lPPKd6foB+pBim
-         j1c87lup+uKhYAY6wSMl1il1RMlE0dmRNodsQEw6lhZcc7OyzI1cSqKOVN6k+wLEsKH7
-         58Chr2qGhRXqlYptZjKYS+Q3k3K5UWPwEnN80sjpJxwxcFV5wUfEQAXhFRJ9BM7Xxjrv
-         urpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1q7hatrsXylGJ/leGstyq+2XH4YzvxyGfEuE+/YjAEQ=;
-        b=ePkbtjLPsHhzB0r4XDEvsN6uKZ5sHM2yRk71CQTlbAYvPoRi2DadtoQA/M3tQ3M5o1
-         6Nk/hQ4hO8scS23ga2R949HtH8k64rR/0M+7iH40EGUKq9D+3m+2KS3Ugs4z1ENnS+i5
-         i4VK2VftEGtUCaWKwR+/XtBeEOgBBQbgKJsLrHi4IufLpLsB8Pzhg/pD16EFEiuKmdr0
-         BHprUcGQ34nh7xg5xjjc7BCK3ZltHvXGofJXMslUBYy7Km9yUcWbJunltBzqUSJh251r
-         +EUYBMlEnjo6Yj1QVTqPow0zoBE33hlU66Q2VBHE5KYsDwaomB6hyG3+PfD9BqfAoUN0
-         uFgA==
-X-Gm-Message-State: APjAAAXJBVOEKA/LBkzInKQ3OeBXo5Cbn3Xsj/RNC0cD/xVX0SWnYpy/
-        38CP4rCT20jP8rtioMOOGsLs8gVm4PQw6oujK70=
-X-Google-Smtp-Source: APXvYqxzdhMTuxHJcwNq0bPl2NnMbHWQl+07ePE8YyD4NWjJ8GdzIfpmr621URIZbkQvOWJ6uibc1aWTGor8Pu2u3UA=
-X-Received: by 2002:ac2:46d2:: with SMTP id p18mr6672914lfo.140.1570130367736;
- Thu, 03 Oct 2019 12:19:27 -0700 (PDT)
+        Thu, 3 Oct 2019 15:20:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:61339 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726677AbfJCTUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 15:20:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 12:20:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="192213607"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Oct 2019 12:20:40 -0700
+Date:   Thu, 3 Oct 2019 12:20:40 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v7 7/7] PCI: Skip Enhanced Allocation (EA) initialization
+ for VF device
+Message-ID: <20191003192040.GA54240@otc-nc-03>
+References: <ecff2638-7a5a-3d5d-6f30-f9517b139696@linux.intel.com>
+ <20191003185747.GA178031@google.com>
 MIME-Version: 1.0
-References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <20191003080539.2b13c03b@coco.lan> <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
- <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
- <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone>
- <20191003144225.0137bf6c@coco.lan> <20191003183200.GA2631@Limone> <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
-In-Reply-To: <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Thu, 3 Oct 2019 21:19:16 +0200
-Message-ID: <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-To:     JP <jp@jpvw.nl>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, crope@iki.fi,
-        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003185747.GA178031@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> try other firmware?
-> http://palosaari.fi/linux/v4l-dvb/firmware/Si2168/
+On Thu, Oct 03, 2019 at 01:57:47PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2019 at 10:21:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > Hi Bjorn,
+> > 
+> > On 8/28/19 3:14 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > 
+> > > As per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced Allocation
+> > > Capability. So skip pci_ea_init() for virtual devices.
+> > > 
+> > > Cc: Ashok Raj <ashok.raj@intel.com>
+> > > Cc: Keith Busch <keith.busch@intel.com>
+> > > Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > This patch was also dropped in your v8. Is this also intentional?
+> 
+> Yes, I dropped it because I didn't think there was much motivation for
+> it.
 
-I tried all of them. No difference.
+Agreed!
 
--- 
-g
+> 
+> If a device is broken, i.e., a VF has an EA capability, this patch
+> silently returns.  The existing code would try to use the EA
+> capability and something would probably blow up, so in that sense,
+> this patch makes the hardware issue less visible.
+> 
+> If a device is correct, i.e., a VF does *not* have an EA capability,
+> pci_find_capability() will fail anyway, so this patch doesn't change
+> the functional behavior.
+
+
+But do you think while at this can we atleast do a warning
+to make sure HW probably messed up just after the EA capability
+is read? Atleast it would be an early warning vs. it trying to break
+later. Like the other issues we ran into with the PIN interrupt
+accidently set in some hardware for VF's for instance. 
+
+> 
+> This patch *does* avoid the pci_find_capability() in that case, which
+> is a performance optimization.  We could merge it on that basis, but
+> we should try to quantify the benefit to see if it's really worthwhile
+> and the commit log should use that as the explicit motivation.
+> 
+> > > ---
+> > >   drivers/pci/pci.c | 7 +++++++
+> > >   1 file changed, 7 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 1b27b5af3d55..266600a11769 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -3025,6 +3025,13 @@ void pci_ea_init(struct pci_dev *dev)
+> > >   	int offset;
+> > >   	int i;
+> > > +	/*
+> > > +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced
+> > > +	 * Allocation Capability.
+> > > +	 */
+> > > +	if (dev->is_virtfn)
+> > > +		return;
+> > > +
+> > >   	/* find PCI EA capability in list */
+> > >   	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> > >   	if (!ea)
+> > 
+> > -- 
+> > Sathyanarayanan Kuppuswamy
+> > Linux kernel developer
+> > 
