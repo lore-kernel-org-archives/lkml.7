@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179D9C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42723C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F8420673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1910220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121902;
-	bh=xSp0s3xjdD6LHKjMRuHiGm3I43KY6sgKwlUbowY3+9Y=;
+	s=default; t=1570121908;
+	bh=WbgxNP3QFWxN6WoB3PxWw3/x2rMUsZ0UosLpkH6AAk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mb5eDCX4jR+m3KWTGPdBjNHTTKJkd2JTaJBUvDoVjN5EM0KXZDQMhLuiuPz1dQfxj
-	 AAVnQrd5duN3M8dLe/cQDB/SXXM0OOksqyg1HZaFODGTXiHOXrcQBKu15FS64VHuoD
-	 7EcBwNA8rxW/4F/BdruGhtrvxjv1moCP3OkXckB8=
+	b=iSqy5oh+2BUKiRMh+pGiVnJtYMdPHdVMUpwDb+pBUrRuShdyJIDitegiQfc6gOLZ6
+	 MrN1FP5CRgxrK2nM++3XlXZZcyVGXalNGUepRXnN3+qncM4Bdb3RtDYzW5l/11KXOt
+	 F6l0jcKSyRME5o0jIm57It0dgV+3szhmJ3N01LeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405742AbfJCQsr (ORCPT
+        id S2393226AbfJCQ61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405203AbfJCQsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:48:45 -0400
+        id S2405709AbfJCQsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D5E2070B;
-        Thu,  3 Oct 2019 16:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF36C2070B;
+        Thu,  3 Oct 2019 16:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121325;
-        bh=xSp0s3xjdD6LHKjMRuHiGm3I43KY6sgKwlUbowY3+9Y=;
+        s=default; t=1570121319;
+        bh=WbgxNP3QFWxN6WoB3PxWw3/x2rMUsZ0UosLpkH6AAk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4mc4b4QaRhtAi3FXt68ACSJZvh56tBKzrvyPmxSaAEGiQG8P+KBEihZ1LEJV5UlM
-         YCx+/nsbvMNt3zp2CwvM7zhBZjVvZFFTH4dy4xsaKRIxzNu0Q3h5TErD/BpjGFWuKE
-         LJus2wgT0Uw996C6M5nN2MyzhRVnd0mi0VDqvjKk=
+        b=sQOh18/STuF7C8Oglwo6AI29a1RtPw862w6baBhlBso9V6n9QYEWWF5F8ZC6lZXHD
+         Q078LZkhZwXkjhbHGkycWhiMTBoX4FvwoacdlnHf9/5Pg735mUswPohk9xrAbGaeNd
+         LRvxZZMg0dexwMNG18N4n773IzxTlqpzolJJzprY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 238/344] ALSA: firewire-tascam: handle error code when getting current source of clock
-Date:   Thu,  3 Oct 2019 17:53:23 +0200
-Message-Id: <20191003154603.849746243@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.3 236/344] ARM: omap2plus_defconfig: Fix missing video
+Date:   Thu,  3 Oct 2019 17:53:21 +0200
+Message-Id: <20191003154603.674004191@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,35 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Adam Ford <aford173@gmail.com>
 
-commit 2617120f4de6d0423384e0e86b14c78b9de84d5a upstream.
+commit 4957eccf979b025286b39388fd1a60cde601a10a upstream.
 
-The return value of snd_tscm_stream_get_clock() is ignored. This commit
-checks the value and handle error.
+When the panel-dpi driver was removed, the simple-panels driver
+was never enabled, so anyone who used the panel-dpi driver lost
+video, and those who used it inconjunction with simple-panels
+would have to manually enable CONFIG_DRM_PANEL_SIMPLE.
 
-Fixes: e453df44f0d6 ("ALSA: firewire-tascam: add PCM functionality")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20190910135152.29800-2-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This patch makes CONFIG_DRM_PANEL_SIMPLE a module in the same
+way the deprecated panel-dpi was.
+
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/tascam/tascam-pcm.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/configs/omap2plus_defconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/firewire/tascam/tascam-pcm.c
-+++ b/sound/firewire/tascam/tascam-pcm.c
-@@ -56,6 +56,9 @@ static int pcm_open(struct snd_pcm_subst
- 		goto err_locked;
- 
- 	err = snd_tscm_stream_get_clock(tscm, &clock);
-+	if (err < 0)
-+		goto err_locked;
-+
- 	if (clock != SND_TSCM_CLOCK_INTERNAL ||
- 	    amdtp_stream_pcm_running(&tscm->rx_stream) ||
- 	    amdtp_stream_pcm_running(&tscm->tx_stream)) {
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -363,6 +363,7 @@ CONFIG_DRM_OMAP_PANEL_TPO_TD028TTEC1=m
+ CONFIG_DRM_OMAP_PANEL_TPO_TD043MTEA1=m
+ CONFIG_DRM_OMAP_PANEL_NEC_NL8048HL11=m
+ CONFIG_DRM_TILCDC=m
++CONFIG_DRM_PANEL_SIMPLE=m
+ CONFIG_FB=y
+ CONFIG_FIRMWARE_EDID=y
+ CONFIG_FB_MODE_HELPERS=y
 
 
