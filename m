@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06635C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FFEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C9F21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6622420700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118297;
-	bh=22NbU2ULCWVXqeZj+g5k5KVDG+WB3nR9I3dWlexGVM0=;
+	s=default; t=1570118302;
+	bh=+/ggtlj+xPS8v3mnbHptst9iFj5utmAfBdLGqH5i4lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGt4B20aSBCY/AC6krKd4GGHVHR3lQy1VCxUt80U3io4vbj4YexzrlojfK5Peday/
-	 zETzFbUbR8zLJEX5UYphqmU/evThRc0lBfTWez//Tgz+qxRmNG2GVD8zWPWDCC5e4R
-	 UPMqnK+JJDiJWGt9ZFz2lQHbK+8Zp9Z+hei9MHa0=
+	b=nW/O7XX07NirT+xJ78CG5Lz6Gq50EP7tDq0HZtfeyYCQ9cHd0ElmuLcpIjBPlyyDI
+	 jLWjdnoCxksVThRM18j5830s/j4WEZY13bpqAqS14K8JkAzFYTfiArwm9F1+Ek7zxj
+	 piyJINtSo9JDXAZHpDiTPT1iCSoP6Cib27gcTgNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfJCP6R (ORCPT
+        id S1731113AbfJCP6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40820 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbfJCP6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:09 -0400
+        id S1726119AbfJCP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B351F20700;
-        Thu,  3 Oct 2019 15:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E23820830;
+        Thu,  3 Oct 2019 15:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118289;
-        bh=22NbU2ULCWVXqeZj+g5k5KVDG+WB3nR9I3dWlexGVM0=;
+        s=default; t=1570118297;
+        bh=+/ggtlj+xPS8v3mnbHptst9iFj5utmAfBdLGqH5i4lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=loeaSyaI54hGF+4BsnTj0v2Dsjc3FPY4Tv+eRhLixIiQ5tF+WBND1w7mqJqMEHp3H
-         Ctl6KbRk8HCmYlS+ATdTncYCS+LRBV9bXftX6Nl/rWU0oANCQDdrmhrbxutV5HNvlh
-         2XYd080d3XNuchIqLmMiIcqhVP2LiEm/OdANNZdw=
+        b=VK9g2ZFsvCIdE6U8ce5pT0a2ZTYEwOBT19mYquoDgNGAuv8RS5BhKgH4b8Mje/6TC
+         h0+qoTkvZtlDMPEnrTDrYcAjjoZdD6pxR7sOQSqRs9PUZnmwojzfuxCANVT39yTRxv
+         nYIoBRB4mcXzLOg9GlPdiXAnBqqqYnazsTnrC4is=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 58/99] media: saa7146: add cleanup in hexium_attach()
-Date:   Thu,  3 Oct 2019 17:53:21 +0200
-Message-Id: <20191003154323.924349672@linuxfoundation.org>
+Subject: [PATCH 4.4 43/99] ALSA: hda - Show the fatal CORB/RIRB error more clearly
+Date:   Thu,  3 Oct 2019 17:53:06 +0200
+Message-Id: <20191003154316.351539452@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -61,36 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
+[ Upstream commit dd65f7e19c6961ba6a69f7c925021b7a270cb950 ]
 
-If saa7146_register_device() fails, no cleanup is executed, leading to
-memory/resource leaks. To fix this issue, perform necessary cleanup work
-before returning the error.
+The last fallback of CORB/RIRB communication error recovery is to turn
+on the single command mode, and this last resort usually means that
+something is really screwed up.  Instead of a normal dev_err(), show
+the error more clearly with dev_WARN() with the caller stack trace.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Also, show the bus-reset fallback also as an error, too.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/hda_controller.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
-index d4b3ce8282856..343cd75fcd8d1 100644
---- a/drivers/media/pci/saa7146/hexium_gemini.c
-+++ b/drivers/media/pci/saa7146/hexium_gemini.c
-@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
- 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
- 	if (ret < 0) {
- 		pr_err("cannot register capture v4l2 device. skipping.\n");
-+		saa7146_vv_release(dev);
-+		i2c_del_adapter(&hexium->i2c_adapter);
-+		kfree(hexium);
- 		return ret;
+diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
+index 273364c39171c..9cdf86f04e037 100644
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -667,10 +667,13 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
+ 	 */
+ 	if (hbus->allow_bus_reset && !hbus->response_reset && !hbus->in_reset) {
+ 		hbus->response_reset = 1;
++		dev_err(chip->card->dev,
++			"No response from codec, resetting bus: last cmd=0x%08x\n",
++			bus->last_cmd[addr]);
+ 		return -EAGAIN; /* give a chance to retry */
  	}
  
+-	dev_err(chip->card->dev,
++	dev_WARN(chip->card->dev,
+ 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
+ 		bus->last_cmd[addr]);
+ 	chip->single_cmd = 1;
 -- 
 2.20.1
 
