@@ -2,79 +2,80 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE8AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F11C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F6520815
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29FD222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570090852;
+	bh=zma8b4WVQpeJfiL2fy1SEiHV9CPEtfvm4I+YEdFQC8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2E87pH+a96Z5pQmPV9TeqJZzmdhidm8n8yp0sQ9HiTgR5mThMmSy9Ugikz+wjWdnB
+	 Q4+Zn32ID+PEVr0u0TB6ZgRdmSJMiFFjVD2Pdbg/TomHJfBg7+X6lSrQknxkALDL+/
+	 gVMcixRQPykxiJ6mEaz9E8OVwygE1CJeZg/66kwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfJCITY (ORCPT
+        id S1727976AbfJCIUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:19:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63621 "EHLO mga05.intel.com"
+        Thu, 3 Oct 2019 04:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfJCITX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:19:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:19:23 -0700
-X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="182316984"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:19:16 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Mat King <mathewk@google.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>, rafael@kernel.org,
-        gregkh@linuxfoundation.org, Ross Zwisler <zwisler@google.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: New sysfs interface for privacy screens
-In-Reply-To: <20191002094650.3fc06a85@lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com> <20191002094650.3fc06a85@lwn.net>
-Date:   Thu, 03 Oct 2019 11:19:13 +0300
-Message-ID: <87muei9r7i.fsf@intel.com>
+        id S1727095AbfJCIUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:20:51 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91F5420815;
+        Thu,  3 Oct 2019 08:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570090851;
+        bh=zma8b4WVQpeJfiL2fy1SEiHV9CPEtfvm4I+YEdFQC8E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SsYTOmWDqV9ID1YtFhdNTo4rKkAHUlaSIYfzrJVjAX3mkR2RUeJLqk1fheLLP+tfm
+         LYQo2WAiz4OMYMR7aRvcDsPfOXbGuqrY1820xVzMbaIYNQ32Rjk/MyhfRI+VAze2z6
+         +fFsYyDXKyGnxi2yz41CRQYeG0MDkXKE0RaMtgrM=
+Date:   Thu, 3 Oct 2019 11:20:48 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] RDMA: release allocated skb
+Message-ID: <20191003082048.GK5855@unreal>
+References: <20190923050823.GL14368@unreal>
+ <20190923155300.20407-1-navid.emamdoost@gmail.com>
+ <20191001135430.GA27086@ziepe.ca>
+ <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 02 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> On Tue, 1 Oct 2019 10:09:46 -0600
-> Mat King <mathewk@google.com> wrote:
+On Wed, Oct 02, 2019 at 04:35:06PM -0500, Navid Emamdoost wrote:
+> Hi Jason,
 >
->> I have been looking into adding Linux support for electronic privacy
->> screens which is a feature on some new laptops which is built into the
->> display and allows users to turn it on instead of needing to use a
->> physical privacy filter. In discussions with my colleagues the idea of
->> using either /sys/class/backlight or /sys/class/leds but this new
->> feature does not seem to quite fit into either of those classes.
->
-> FWIW, it seems that you're not alone in this; 5.4 got some support for
-> such screens if I understand things correctly:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=110ea1d833ad
+> Thanks for the feedback. Yes, you are right if the skb release is
+> moved under err4 label it will cause a double free as
+> c4iw_ref_send_wait will release skb in case of error.
+> So, in order to avoid leaking skb in case of c4iw_bar2_addrs failure,
+> the kfree(skb) could be placed under the error check like the way
+> patch v1 did. Do you see any mistake in version 1?
+> https://lore.kernel.org/patchwork/patch/1128510/
 
-Oh, I didn't realize it got merged already, I thought this was
-related...
+No, it is not enough.
+c4iw_ref_send_wait() ->
+  c4iw_wait_for_reply() ->
+    return wr_waitp->ret; <--- can be -EIO
 
-So we've already replicated the backlight sysfs interface problem for
-privacy screens. :(
-
-BR,
-Jani.
-
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks
