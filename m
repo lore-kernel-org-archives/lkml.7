@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD5CC47404
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46FAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79800222CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A243222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570066993;
-	bh=8ZyFUmDNuP7YABnB8UvoPnBETWg/O9MNocg7cJfuRNw=;
+	s=default; t=1570066995;
+	bh=pecg14+rqKCe9+MU1znEqt1dgbZQC6DApkD13yS7z0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IYMcJQOk57B78/lwxo7X6Prtht61bVVG2EekMfRwuOPt9tEnMMQVpNbw3UfMeQNWA
-	 iaVscXL2DJhJl8KfFk729d8MCFzdIjLHA9SL/uLSYTBYjVYiVy2o+6/48JM0QQcXAb
-	 D1oFiLQV2lZX9tSWqpUiIv7Hfj271bw8C0IqZZYw=
+	b=EhVhToBiKbBcCkwnIFiq4CTU02vmk3wAKONQloAIkfHkt01mtg9MeFim1rOt1fr21
+	 ylbMV+WIpOSnn5BOPosubdtlF4/uR7SseM34fp9iEIaj5pNUeCbfxgS3vrcoZpKx5O
+	 ssIk2vZSjUh0K//i7Zh9Ow648sr6r1dLDYXvYjMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfJCBnM (ORCPT
+        id S1727447AbfJCBnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46304 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfJCBnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:43:12 -0400
+        id S1725799AbfJCBnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 21:43:13 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAFA9222BE;
-        Thu,  3 Oct 2019 01:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78982222CA;
+        Thu,  3 Oct 2019 01:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570066992;
-        bh=8ZyFUmDNuP7YABnB8UvoPnBETWg/O9MNocg7cJfuRNw=;
+        bh=pecg14+rqKCe9+MU1znEqt1dgbZQC6DApkD13yS7z0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNGveLuefBEOXKRlAldGI1HhLt9gVfQ/CIGR4V/4ARVom8+NkV50Luvws4dhcIcme
-         LB7zGCTf+Ewy57A6m4N8DqyLSjpb3z8K+GUszhS6jJiln3B6uKit9Hwg1XanBaRv0R
-         TY2k7hY2PSITbK53obreSvs10PAR0UnJDqGphFAI=
+        b=aR9o0x1NHONIbxPoNOj8+Ux2ZBnn1MPxi/Eaxd2edaSTIw39ipumC3Ndu4BXSFyag
+         7fSr1WKYBdYOcypMBAqTPl1y4f/M7W09FmEOoeFeg1kOl/FnKZ/PvU9nzUhm//Smok
+         Za9vci8Sk49LJWA2iNQ8Knf/e7tHAtyDSW+QF1uQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -48,14 +48,17 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH tip/core/rcu 1/9] rcu: Upgrade rcu_swap_protected() to rcu_replace()
-Date:   Wed,  2 Oct 2019 18:43:02 -0700
-Message-Id: <20191003014310.13262-1-paulmck@kernel.org>
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH tip/core/rcu 3/9] drivers/gpu: Replace rcu_swap_protected() with rcu_replace()
+Date:   Wed,  2 Oct 2019 18:43:04 -0700
+Message-Id: <20191003014310.13262-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003014153.GA13156@paulmck-ThinkPad-P72>
 References: <20191003014153.GA13156@paulmck-ThinkPad-P72>
@@ -66,55 +69,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Although the rcu_swap_protected() macro follows the example of swap(),
-the interactions with RCU make its update of its argument somewhat
-counter-intuitive.  This commit therefore introduces an rcu_replace()
-that returns the old value of the RCU pointer instead of doing the
-argument update.  Once all the uses of rcu_swap_protected() are updated
-to instead use rcu_replace(), rcu_swap_protected() will be removed.
+This commit replaces the use of rcu_swap_protected() with the more
+intuitively appealing rcu_replace() as a step towards removing
+rcu_swap_protected().
 
 Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
 Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Bart Van Assche <bart.vanassche@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Shane M Seymour <shane.seymour@hpe.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: <intel-gfx@lists.freedesktop.org>
+Cc: <dri-devel@lists.freedesktop.org>
 ---
- include/linux/rcupdate.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/gpu/drm/i915/gem/i915_gem_context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 75a2ede..3b73287 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -383,6 +383,24 @@ do {									      \
- } while (0)
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_context.c b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+index 1cdfe05..c5c22c4 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+@@ -1629,7 +1629,7 @@ set_engines(struct i915_gem_context *ctx,
+ 		i915_gem_context_set_user_engines(ctx);
+ 	else
+ 		i915_gem_context_clear_user_engines(ctx);
+-	rcu_swap_protected(ctx->engines, set.engines, 1);
++	set.engines = rcu_replace(ctx->engines, set.engines, 1);
+ 	mutex_unlock(&ctx->engines_mutex);
  
- /**
-+ * rcu_replace() - replace an RCU pointer, returning its old value
-+ * @rcu_ptr: RCU pointer, whose old value is returned
-+ * @ptr: regular pointer
-+ * @c: the lockdep conditions under which the dereference will take place
-+ *
-+ * Perform a replacement, where @rcu_ptr is an RCU-annotated
-+ * pointer and @c is the lockdep argument that is passed to the
-+ * rcu_dereference_protected() call used to read that pointer.  The old
-+ * value of @rcu_ptr is returned, and @rcu_ptr is set to @ptr.
-+ */
-+#define rcu_replace(rcu_ptr, ptr, c)					\
-+({									\
-+	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
-+	rcu_assign_pointer((rcu_ptr), (ptr));				\
-+	__tmp;								\
-+})
-+
-+/**
-  * rcu_swap_protected() - swap an RCU and a regular pointer
-  * @rcu_ptr: RCU pointer
-  * @ptr: regular pointer
+ 	call_rcu(&set.engines->rcu, free_engines_rcu);
 -- 
 2.9.5
 
