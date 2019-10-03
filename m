@@ -2,52 +2,50 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77A4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E7C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988B0222C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036C221783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388126AbfJCT7L (ORCPT
+        id S2388188AbfJCT7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:59:11 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:56831 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730393AbfJCT7K (ORCPT
+        Thu, 3 Oct 2019 15:59:13 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:53875 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733122AbfJCT7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:59:10 -0400
-Received: by mail-io1-f72.google.com with SMTP id a22so6885310ioq.23
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:59:08 -0700 (PDT)
+        Thu, 3 Oct 2019 15:59:09 -0400
+Received: by mail-io1-f69.google.com with SMTP id w8so6949763iol.20
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:59:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JEuIBFRKOYSaCm47uiBoRRTJNID9dTGxtLXD6DzuDZY=;
-        b=KebDp01YWaNhWzMeU4wN4HdvapRE6axMgChW8dYfsRWAuUyYkPDL7UFBH1nMiFmVWE
-         /97Av5mFH+dgF7/z48uFdqHfCo+IZsh3AwxhsyVxjjJJGIg8yaNK/LuokpzRGfOhwNwu
-         qsCZweCRKD3Gu5dEfHXKkuew+utHSMSvBcGwoAzjSuflD2TBvcZ3mktH5kx0VDBFzSuK
-         TFVtpw/52/hkb1XNIffJxA5C86y0l3Wleqh/UeREi7cI9n+x94M21H/XpHNmZ0QiwNUO
-         bpH5wjINNVQhRDO3gEq/vX4inApE4Ya2qV+6US5Nx7D86RUHsDATGR6MhTz/yHjU0DYi
-         ID3g==
-X-Gm-Message-State: APjAAAXXyv3RcoBzIWLz3C6xQ9gmqMcbpR1rNPfFLOWsLjFa3cSTKv5e
-        qU492tG0yuhJvsDx43ZSdKcFItLg9vVtt4U2If2accFUBRQJ
-X-Google-Smtp-Source: APXvYqy+RxsZP3ma9cwKHBKOlLQeJwioBfJmorc3/irw9xRcpPg1SmLigkk1KVDYmTwYI7Byg3cM1SFi2oKLTtXT4jTkVZxSuUxb
+        bh=Nk67c/1XiJvvCr7lH+tigw1xQQrdQdPfq1HiTbDZaP4=;
+        b=sBKwMr7ipnJzlAYJ0OSGuK3z7lKdOwdUJRaFUyB1QsrLzTYY5O7ynyAMP65DolODqm
+         tuBr4ZXZXzlC/NN105s+XojW+Ykjfjp1jWto++b+ekAKLLcan1bfm6eRoIyvPFC4Ow6E
+         tge0CLjbgD8NctNSUpi38jzzguKQbxUTritEghHwBPeALy63fRXyLRHxffn1uUVm6Ogf
+         dfrn66Pq3V0MX+YB/ATgJZiGyEoEkbZFB7VRyS7476C8YgXcNF34FRYgMxepB82haVRM
+         h9ZQ0eO9wlmKu9wVFDsendbHAI84VpSQgMW51tLTEd0Ghifq24NK8CR4+oO1+3ReoqDe
+         UlEA==
+X-Gm-Message-State: APjAAAVvqJsY7vU/ciCOAyOLUgTR0zqwBI3WGzLH+YgbiaVKevX1OcRe
+        sfgv/48QIymNe9jsne0+INLcCReBU0vtnb2zzpgoEw/ofZZB
+X-Google-Smtp-Source: APXvYqxpmYR8n+dwXhic99PAr7TYlnMq5Xw2s/VJa9GyNPCBnJzeka7e9ZM9i1qfEyI7/lXL4/DDP4KTn5v5ssVj8x1DLllVE1o9
 MIME-Version: 1.0
-X-Received: by 2002:a92:874e:: with SMTP id d14mr11664979ilm.143.1570132748472;
+X-Received: by 2002:a92:60b:: with SMTP id x11mr11449655ilg.212.1570132748783;
  Thu, 03 Oct 2019 12:59:08 -0700 (PDT)
 Date:   Thu, 03 Oct 2019 12:59:08 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b91acc05940704bc@google.com>
-Subject: KMSAN: uninit-value in pegasus_probe
-From:   syzbot <syzbot+02c9f70f3afae308464a@syzkaller.appspotmail.com>
-To:     glider@google.com, gregkh@linuxfoundation.org,
-        kai.heng.feng@canonical.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com, yuehaibing@huawei.com
+Message-ID: <000000000000bdee330594070441@google.com>
+Subject: memory leak in cap_inode_getsecurity
+From:   syzbot <syzbot+942d5390db2d9624ced8@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,75 +56,51 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    124037e0 kmsan: drop inlines, rename do_kmsan_task_create()
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d1ff6d600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=02c9f70f3afae308464a
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1115ed6b600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144964cb600000
+HEAD commit:    0f1a7b3f timer-of: don't use conditional expression with m..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1329640d600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9d66badf12ef344c
+dashboard link: https://syzkaller.appspot.com/bug?extid=942d5390db2d9624ced8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1107b513600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+02c9f70f3afae308464a@syzkaller.appspotmail.com
+Reported-by: syzbot+942d5390db2d9624ced8@syzkaller.appspotmail.com
 
-usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-usb 1-1: Product: syz
-usb 1-1: Manufacturer: syz
-usb 1-1: SerialNumber: syz
-usb 1-1: config 0 descriptor??
-(unnamed net_device) (uninitialized): read_eprom_word failed
-=====================================================
-BUG: KMSAN: uninit-value in usb_probe_interface+0xd19/0x1310  
-drivers/usb/core/driver.c:361
-CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  get_interrupt_interval drivers/net/usb/pegasus.c:758 [inline]
-  pegasus_probe+0x10b7/0x4be0 drivers/net/usb/pegasus.c:1189
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+2019/10/03 14:00:37 executed programs: 36
+2019/10/03 14:00:43 executed programs: 44
+2019/10/03 14:00:49 executed programs: 63
+BUG: memory leak
+unreferenced object 0xffff8881202cb480 (size 32):
+   comm "syz-executor.0", pid 7246, jiffies 4294946879 (age 14.010s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000a8379648>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000a8379648>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<00000000a8379648>] slab_alloc mm/slab.c:3319 [inline]
+     [<00000000a8379648>] __do_kmalloc mm/slab.c:3653 [inline]
+     [<00000000a8379648>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3670
+     [<000000008858463c>] __do_krealloc mm/slab_common.c:1638 [inline]
+     [<000000008858463c>] krealloc+0x7f/0xb0 mm/slab_common.c:1689
+     [<0000000057f9eb8e>] vfs_getxattr_alloc+0x100/0x180 fs/xattr.c:289
+     [<00000000c2154e30>] cap_inode_getsecurity+0x9c/0x2c0  
+security/commoncap.c:389
+     [<00000000b2664a09>] security_inode_getsecurity+0x4c/0x90  
+security/security.c:1314
+     [<00000000921624c0>] xattr_getsecurity fs/xattr.c:244 [inline]
+     [<00000000921624c0>] vfs_getxattr+0xf2/0x1a0 fs/xattr.c:332
+     [<000000001ff6977b>] getxattr+0x97/0x240 fs/xattr.c:538
+     [<00000000b945681f>] path_getxattr+0x6b/0xc0 fs/xattr.c:566
+     [<000000001a9d3fce>] __do_sys_getxattr fs/xattr.c:578 [inline]
+     [<000000001a9d3fce>] __se_sys_getxattr fs/xattr.c:575 [inline]
+     [<000000001a9d3fce>] __x64_sys_getxattr+0x28/0x30 fs/xattr.c:575
+     [<000000002e998337>] do_syscall_64+0x73/0x1f0  
+arch/x86/entry/common.c:290
+     [<00000000f252aa21>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Local variable description: ----data.i@pegasus_probe
-Variable was created at:
-  get_interrupt_interval drivers/net/usb/pegasus.c:1188 [inline]
-  pegasus_probe+0xef3/0x4be0 drivers/net/usb/pegasus.c:1189
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-=====================================================
 
 
 ---
