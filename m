@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC75C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254C5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E48222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE81D2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122103;
-	bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
+	s=default; t=1570122113;
+	bh=S2zNVlmqja7JUe4yh3eRIVAzXvsxaHQuJ0G0lZeEYmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DmhTfXSMQmQOEvqtFyttFhIN10QeGlKNPECdHCZmVlMWLquXEzQ2yFUCYBDNh2mnQ
-	 XtaM93J2nICm9d14AaBl0iHg/qRqFgq1LD42YKSZuIZiT9xKm0kstFabkbUv8FVabD
-	 QNSRhX1J+rNgqsfSojzAZ5XWbDXo5svprdop+Klg=
+	b=GzqOZOePF1p4pE64DCuBUa4CT1HLocST1FDAwpuepjgiTp3BUAcL1jP56q1FmT9ch
+	 at1c/Fn9j8b6dhODqaPNHlFnMXlC4Dj05PPBn1yLrQcv2KfYSKUbJV1K7M8dqKlDhI
+	 ImDe68/KOLxk61ZrTG0Q0743Z/JG4PQlgKlbswA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405374AbfJCQo1 (ORCPT
+        id S2392339AbfJCQoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56482 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405363AbfJCQoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:44:24 -0400
+        id S2392438AbfJCQoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BDB0206BB;
-        Thu,  3 Oct 2019 16:44:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D95206BB;
+        Thu,  3 Oct 2019 16:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121063;
-        bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
+        s=default; t=1570121047;
+        bh=S2zNVlmqja7JUe4yh3eRIVAzXvsxaHQuJ0G0lZeEYmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPJagvi6tVpQbA5/7qnPh3P1tOZE+6rI7biLJgrrCUTLftDiy9SLthfgR689da44O
-         DWcFNJXZJ2QbbpHzcQAMB2VoDDVizDagrmfuM3dXxBpz+Y1PkK/gxXQgMQHcbBlgDn
-         eWGLPLvmO6mkcn5jdPrxrH4Fp2jyPH8qPTg/kZi8=
+        b=yZggtgMGPKKQkCPFb0M/E3SmFIdOmib96shNLmkhSN9w/NKRsfaMmRKJBasIH9RvV
+         pw6ldugMze071U/pFWOLMh8MlwabG2Hx2iMUKmJWfIYh1SOOPWEvDKtrxiSjUyUu+T
+         NrAvVK+ZTyY19B2nre8UFZMbQ79oqXIL9goQyi1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 139/344] s390/kasan: provide uninstrumented __strlen
-Date:   Thu,  3 Oct 2019 17:51:44 +0200
-Message-Id: <20191003154553.940953422@linuxfoundation.org>
+Subject: [PATCH 5.3 133/344] ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running
+Date:   Thu,  3 Oct 2019 17:51:38 +0200
+Message-Id: <20191003154553.331678856@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,63 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-[ Upstream commit f45f7b5bdaa4828ce871cf03f7c01599a0de57a5 ]
+[ Upstream commit 0f6fc97501b790c971b11b52a654009d21c45238 ]
 
-s390 kasan code uses sclp_early_printk to report initialization
-failures. The code doing that should not be instrumented, because kasan
-shadow memory has not been set up yet. Even though sclp_early_core.c is
-compiled with instrumentation disabled it uses strlen function, which
-is instrumented and would produce shadow memory access if used. To
-avoid that, introduce uninstrumented __strlen function to be used
-instead.
+Since hw_free() can be called multiple times and not just after a stop
+trigger command, we should check whether the RX or TX ready interrupt was
+truly enabled previously. For this, we assure that the condition of the
+wait event is always true, except when RX/TX interrupts are enabled.
 
-Before commit 7e0d92f00246 ("s390/kasan: improve string/memory functions
-checks") few string functions (including strlen) were escaping kasan
-instrumentation due to usage of platform specific versions which are
-implemented in inline assembly.
-
-Fixes: 7e0d92f00246 ("s390/kasan: improve string/memory functions checks")
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20190820162411.24836-3-codrin.ciubotariu@microchip.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/string.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ sound/soc/atmel/mchp-i2s-mcc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/arch/s390/include/asm/string.h b/arch/s390/include/asm/string.h
-index 70d87db54e627..4c0690fc5167e 100644
---- a/arch/s390/include/asm/string.h
-+++ b/arch/s390/include/asm/string.h
-@@ -71,11 +71,16 @@ extern void *__memmove(void *dest, const void *src, size_t n);
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
- #define memset(s, c, n) __memset(s, c, n)
-+#define strlen(s) __strlen(s)
-+
-+#define __no_sanitize_prefix_strfunc(x) __##x
+diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
+index 86495883ca3f1..8272915fa09b9 100644
+--- a/sound/soc/atmel/mchp-i2s-mcc.c
++++ b/sound/soc/atmel/mchp-i2s-mcc.c
+@@ -686,22 +686,24 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
+ 		err = wait_event_interruptible_timeout(dev->wq_txrdy,
+ 						       dev->tx_rdy,
+ 						       msecs_to_jiffies(500));
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Tx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels));
++			dev->tx_rdy = 1;
++		}
+ 	} else {
+ 		err = wait_event_interruptible_timeout(dev->wq_rxrdy,
+ 						       dev->rx_rdy,
+ 						       msecs_to_jiffies(500));
+-	}
+-
+-	if (err == 0) {
+-		u32 idra;
+-
+-		dev_warn_once(dev->dev, "Timeout waiting for %s\n",
+-			      is_playback ? "Tx ready" : "Rx ready");
+-		if (is_playback)
+-			idra = MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels);
+-		else
+-			idra = MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels);
+-		regmap_write(dev->regmap, MCHP_I2SMCC_IDRA, idra);
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Rx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels));
++			dev->rx_rdy = 1;
++		}
+ 	}
  
- #ifndef __NO_FORTIFY
- #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
- #endif
+ 	if (!mchp_i2s_mcc_is_running(dev)) {
+@@ -809,6 +811,8 @@ static int mchp_i2s_mcc_dai_probe(struct snd_soc_dai *dai)
  
-+#else
-+#define __no_sanitize_prefix_strfunc(x) x
- #endif /* defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__) */
+ 	init_waitqueue_head(&dev->wq_txrdy);
+ 	init_waitqueue_head(&dev->wq_rxrdy);
++	dev->tx_rdy = 1;
++	dev->rx_rdy = 1;
  
- void *__memset16(uint16_t *s, uint16_t v, size_t count);
-@@ -163,8 +168,8 @@ static inline char *strcpy(char *dst, const char *src)
- }
- #endif
+ 	snd_soc_dai_init_dma_data(dai, &dev->playback, &dev->capture);
  
--#ifdef __HAVE_ARCH_STRLEN
--static inline size_t strlen(const char *s)
-+#if defined(__HAVE_ARCH_STRLEN) || (defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__))
-+static inline size_t __no_sanitize_prefix_strfunc(strlen)(const char *s)
- {
- 	register unsigned long r0 asm("0") = 0;
- 	const char *tmp = s;
 -- 
 2.20.1
 
