@@ -2,218 +2,102 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49380C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986DBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C94120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69DCD20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNx2/2uE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbfJCO1n (ORCPT
+        id S1730606AbfJCO33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:27:43 -0400
-Received: from mga17.intel.com ([192.55.52.151]:36468 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfJCO1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:27:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 07:27:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="192136409"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga007.fm.intel.com with SMTP; 03 Oct 2019 07:27:39 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 03 Oct 2019 17:27:38 +0300
-Date:   Thu, 3 Oct 2019 17:27:38 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     benjamin.gaignard@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
-Message-ID: <20191003142738.GM1208@intel.com>
-References: <20190909135205.10277-1-benjamin.gaignard@st.com>
- <20190909135205.10277-2-benjamin.gaignard@st.com>
+        Thu, 3 Oct 2019 10:29:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34938 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJCO33 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:29:29 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so3023968lji.2;
+        Thu, 03 Oct 2019 07:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pPX6hZuTAKscoMR2pVUc6O2c3J5blh2oSncwZUdgBs0=;
+        b=QNx2/2uEq3OIs68G+c7YaycV7Fq+Ty/tmEsjmJN2O1wK/L20mVZIg0TgD0Vn3YJDiU
+         44bumczvzhdkqZxYEV+Wyi37+06A8HeOnIcCFakx2Hi1/YEiHklQ2hQLtPqeHx5eNU6E
+         EDcU7okyDqkMBR7RycSpw2Dt5H/qjbL0qmzyXkybR+T4SOMn3cpb7SlqkPMqmKX+2wTM
+         gGnWt/PhrMniousn5W2B73m4sVahsXS/JGg9lLt5TegpnytwEmbboAvkZa02rvfgPslD
+         5wN/h5ZOt1fYdJuWgpEk5vhPx6WL2PGhmqbO1Sl6/rtyhDXsxn1tez9+/Ev+6IcD5GhO
+         YN3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pPX6hZuTAKscoMR2pVUc6O2c3J5blh2oSncwZUdgBs0=;
+        b=Lc1BNJf0n6t6XOWg7zNXfdp9SGz4moSG5d3DNVSVsNzed9Pcayp0TEV/WuYZ86KYM2
+         6HxxsgXNR5GINhg1l04fU+VA3CCHAXdnJTVGYtZwqFkrePRHVSEyQDGyMwGOjnAQYx74
+         9F1VXP62ou2rypi/GaPvXP5uWeC1GvxiAweGxUZyVK/iAomYD5mYhK0fXpd3QLuasegC
+         t70GeAhHM/Pg2F+YljUXreeDSYd8jxGiWLOrP8K1SlkUamWMlK5zuiE2jdpRsk5nvdA3
+         JlC5M8tYOEWs0nNnoVqJawm+YXLtg93A34bKh3lv+A9JbgISi8BXcsW/xTtIXI08fLjL
+         v0WA==
+X-Gm-Message-State: APjAAAUXgkFmscF7oOdlGX7Ntv8vBfAB6ufy0fEcjaNUTWEYQVNMWJ6U
+        vG9xyb6xfaZjEf2UUQP5+DRQOpuWmCJJfIiuLIQ=
+X-Google-Smtp-Source: APXvYqzrcxzFW/+/EqjTje5qh9q51U5wuUGgGdtKJsVPYwQHr3s96kYVhvW2iDIi5EcJCY8ThfZEOB8n0in7gNpCt0U=
+X-Received: by 2002:a2e:7d0d:: with SMTP id y13mr6366997ljc.170.1570112966775;
+ Thu, 03 Oct 2019 07:29:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190909135205.10277-2-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+ <20191003081742.0933264b@coco.lan> <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
+ <20191003094904.3aa5fdc7@coco.lan> <20191003095237.2efa0e7f@coco.lan>
+ <20191003130224.GA2596@Limone> <CANL0fFQR4KDU5PKeedK6wF45nSTu6dUyz_MBwmP1QsJxYQAWNg@mail.gmail.com>
+ <20191003110551.19f06922@coco.lan>
+In-Reply-To: <20191003110551.19f06922@coco.lan>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Thu, 3 Oct 2019 16:29:15 +0200
+Message-ID: <CANL0fFSPxJO597qyt9SgYaqAPxkP4P-R1ZuvdmOtav9KEX5qsQ@mail.gmail.com>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote:
-> Fix warnings with W=1.
-> Few for_each macro set variables that are never used later.
-> Prevent warning by marking these variables as __maybe_unused.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++------------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index aa16ea17ff9b..b69d17b0b9bd 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
->  	      struct drm_encoder *encoder)
->  {
->  	struct drm_crtc_state *crtc_state;
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
+> Try to reduce the bus speed to 10kbps
 
-Rather ugly. IMO would be nicer if we could hide something inside
-the iterator macros to suppress the warning.
+Nope:
 
->  	struct drm_connector_state *old_connector_state, *new_connector_state;
->  	int i;
->  
-> @@ -412,7 +412,7 @@ mode_fixup(struct drm_atomic_state *state)
->  {
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *new_crtc_state;
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
->  	struct drm_connector_state *new_conn_state;
->  	int i;
->  	int ret;
-> @@ -608,7 +608,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
->  {
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
->  	struct drm_connector_state *old_connector_state, *new_connector_state;
->  	int i, ret;
->  	unsigned connectors_mask = 0;
-> @@ -984,7 +984,7 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
->  static void
->  disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->  {
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
->  	struct drm_connector_state *old_conn_state, *new_conn_state;
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> @@ -1173,7 +1173,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
->  {
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *new_crtc_state;
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
->  	struct drm_connector_state *new_conn_state;
->  	int i;
->  
-> @@ -1294,7 +1294,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *old_crtc_state;
->  	struct drm_crtc_state *new_crtc_state;
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
->  	struct drm_connector_state *new_conn_state;
->  	int i;
->  
-> @@ -1384,7 +1384,7 @@ int drm_atomic_helper_wait_for_fences(struct drm_device *dev,
->  				      struct drm_atomic_state *state,
->  				      bool pre_swap)
->  {
-> -	struct drm_plane *plane;
-> +	struct drm_plane __maybe_unused *plane;
->  	struct drm_plane_state *new_plane_state;
->  	int i, ret;
->  
-> @@ -1431,7 +1431,7 @@ drm_atomic_helper_wait_for_vblanks(struct drm_device *dev,
->  		struct drm_atomic_state *old_state)
->  {
->  	struct drm_crtc *crtc;
-> -	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> +	struct drm_crtc_state __maybe_unused *old_crtc_state, *new_crtc_state;
->  	int i, ret;
->  	unsigned crtc_mask = 0;
->  
-> @@ -1621,7 +1621,7 @@ static void commit_work(struct work_struct *work)
->  int drm_atomic_helper_async_check(struct drm_device *dev,
->  				   struct drm_atomic_state *state)
->  {
-> -	struct drm_crtc *crtc;
-> +	struct drm_crtc __maybe_unused *crtc;
->  	struct drm_crtc_state *crtc_state;
->  	struct drm_plane *plane = NULL;
->  	struct drm_plane_state *old_plane_state = NULL;
-> @@ -1982,9 +1982,9 @@ int drm_atomic_helper_setup_commit(struct drm_atomic_state *state,
->  {
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> -	struct drm_connector *conn;
-> +	struct drm_connector __maybe_unused *conn;
->  	struct drm_connector_state *old_conn_state, *new_conn_state;
-> -	struct drm_plane *plane;
-> +	struct drm_plane __maybe_unused *plane;
->  	struct drm_plane_state *old_plane_state, *new_plane_state;
->  	struct drm_crtc_commit *commit;
->  	int i, ret;
-> @@ -2214,7 +2214,7 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
->   */
->  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
->  {
-> -	struct drm_crtc *crtc;
-> +	struct drm_crtc __maybe_unused *crtc;
->  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
->  	struct drm_crtc_commit *commit;
->  	int i;
-> @@ -2300,7 +2300,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit_cleanup_done);
->  int drm_atomic_helper_prepare_planes(struct drm_device *dev,
->  				     struct drm_atomic_state *state)
->  {
-> -	struct drm_connector *connector;
-> +	struct drm_connector __maybe_unused *connector;
->  	struct drm_connector_state *new_conn_state;
->  	struct drm_plane *plane;
->  	struct drm_plane_state *new_plane_state;
-> @@ -2953,9 +2953,9 @@ int drm_atomic_helper_disable_all(struct drm_device *dev,
->  {
->  	struct drm_atomic_state *state;
->  	struct drm_connector_state *conn_state;
-> -	struct drm_connector *conn;
-> +	struct drm_connector __maybe_unused *conn;
->  	struct drm_plane_state *plane_state;
-> -	struct drm_plane *plane;
-> +	struct drm_plane __maybe_unused *plane;
->  	struct drm_crtc_state *crtc_state;
->  	struct drm_crtc *crtc;
->  	int ret, i;
-> @@ -3199,11 +3199,11 @@ int drm_atomic_helper_commit_duplicated_state(struct drm_atomic_state *state,
->  {
->  	int i, ret;
->  	struct drm_plane *plane;
-> -	struct drm_plane_state *new_plane_state;
-> +	struct drm_plane_state __maybe_unused *new_plane_state;
->  	struct drm_connector *connector;
-> -	struct drm_connector_state *new_conn_state;
-> +	struct drm_connector_state __maybe_unused *new_conn_state;
->  	struct drm_crtc *crtc;
-> -	struct drm_crtc_state *new_crtc_state;
-> +	struct drm_crtc_state __maybe_unused *new_crtc_state;
->  
->  	state->acquire_ctx = ctx;
->  
-> -- 
-> 2.15.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+#define I2C_SPEED_REGISTER 260  // ~10k
+
+[  117.860961] si2168 1-0067: downloading firmware from file
+'dvb-demod-si2168-b40-01.fw'
+[  118.958355] si2168 1-0067: firmware version: B 4.0.25
+[  118.968882] si2157 2-0063: Bogus chip version, trying with new firmware
+[  118.968888] si2157 2-0063: found a 'Silicon Labs Si21255-\xff\xff\xff'
+[  118.972005] si2157 2-0063: downloading firmware from file
+'dvb-tuner-si2157-a30-01.fw'
+[  121.154130] si2157 2-0063: rebooting tuner...
+[  121.169626] si2157 2-0063: querying firmware version...
+[  121.172799] si2157 2-0063: firmware version: \xff.\xff.255
+[  121.172803] si2157 2-0063: querying chip revision...
+[  121.175911] si2157 2-0063: chip revision: 255.255.255.255
+
+g
+
+
 
 -- 
-Ville Syrjälä
-Intel
+g
