@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A048C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBCFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4919121783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BC320865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119383;
-	bh=E+8DDLBbjMszKWIYzvh2j4yfRBKcj4KQ5wwXpznjhCo=;
+	s=default; t=1570119400;
+	bh=QxwfXe+/+15AzX8GC/b3QQmGn58a1gt4LpsnXXULnUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iClC7AdZyvmYLvkmGezHSyHd5j3LtsuK931gQgCoYmF57FAnyl6kz95us1zqbPXIj
-	 7pw+TtWjNFrnFTKZCTrazuMYeTXphj+OdEgqQ75sGQsv08dn7suBG70Izul9FU3m3m
-	 SeRUyrSVsJCJqT5NRUqFzFQAsgpNIGH5YR9qQ4Y4=
+	b=lKLiEdU3tdaRGltoLyrx1RQ4Rlr3jBh+b9MOgXf3Fx1MCcpD1Y5/r6Qym4xnTaNvS
+	 Sq+xBqEFGWFDKZ79J1Oa88qWx7sbqz9ToLmJEMbpxxWIZsoENnyW9NfHVD47D0Q6iZ
+	 MXSDHzEXGl1Yz7oFTwkRpxyRAo2Q92awKmwXBmKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388972AbfJCQQW (ORCPT
+        id S2389048AbfJCQQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:16:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732434AbfJCQQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:16 -0400
+        id S2389025AbfJCQQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5F802133F;
-        Thu,  3 Oct 2019 16:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B39722054F;
+        Thu,  3 Oct 2019 16:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119376;
-        bh=E+8DDLBbjMszKWIYzvh2j4yfRBKcj4KQ5wwXpznjhCo=;
+        s=default; t=1570119395;
+        bh=QxwfXe+/+15AzX8GC/b3QQmGn58a1gt4LpsnXXULnUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uQdfMJr0wCK7i5qVaJu8q6Dj5MRrC3Rs5GftIgfdYWkL6bs7I140J9gzrU85kYMme
-         IGIufBi3aldGZAYalOh2pJAYAgOA/X/Tof8sykgWQGBlpwR9d2pt64lVxpbNJqxKil
-         w74OXrj3YwoS1iubOusfkuhtfpdswKscEN6XKklI=
+        b=Pcp5NaCIHx/gkXk3MGe3Wr/R2g3PjGbGb3Rd6FFYnhvSiWzi/HLUiTk94zi7GOsI/
+         YC0Gqx+qlYyRowoZluAH5GmiojkXp0AGlCSxkcbIs5VLAg0BQjpDqd464AebMrQwLq
+         wfN0+ex8MCQXWZarpVubFrog6TdCurfxI7amOdDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/211] x86/apic: Soft disable APIC before initializing it
-Date:   Thu,  3 Oct 2019 17:51:49 +0200
-Message-Id: <20191003154457.710618197@linuxfoundation.org>
+        stable@vger.kernel.org, Ard van Breemen <ard@kwaak.net>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 049/211] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
+Date:   Thu,  3 Oct 2019 17:51:55 +0200
+Message-Id: <20191003154459.161036002@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,45 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Ard van Breemen <ard@kwaak.net>
 
-[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
+[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
 
-If the APIC was already enabled on entry of setup_local_APIC() then
-disabling it soft via the SPIV register makes a lot of sense.
+The Linux kernel assumes that get_endpoint(alts,0) and
+get_endpoint(alts,1) are eachothers feedback endpoints.
+To reassure that validity it will test bsynchaddress to comply with that
+assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
+a wrong assumption and return an error.
+Fix: Skip the test if bSynchAddress is 0.
+Note: those with a valid bSynchAddress should have a code quirck added.
 
-That masks all LVT entries and brings it into a well defined state.
-
-Otherwise previously enabled LVTs which are not touched in the setup
-function stay unmasked and might surprise the just booting kernel.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
+Signed-off-by: Ard van Breemen <ard@kwaak.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/usb/pcm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 9bfbe1fa0339c..dfdd1caf0d55d 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1538,6 +1538,14 @@ static void setup_local_APIC(void)
- 		return;
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index 35c57a4204a8a..13ea63c959d39 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -464,6 +464,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
  	}
- 
-+	/*
-+	 * If this comes from kexec/kcrash the APIC might be enabled in
-+	 * SPIV. Soft disable it before doing further initialization.
-+	 */
-+	value = apic_read(APIC_SPIV);
-+	value &= ~APIC_SPIV_APIC_ENABLED;
-+	apic_write(APIC_SPIV, value);
-+
- #ifdef CONFIG_X86_32
- 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
- 	if (lapic_is_integrated() && apic->disable_esr) {
+ 	ep = get_endpoint(alts, 1)->bEndpointAddress;
+ 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
++	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
+ 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
+ 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
+ 		dev_err(&dev->dev,
 -- 
 2.20.1
 
