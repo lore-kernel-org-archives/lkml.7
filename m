@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3369CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B877AC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015FA21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE7821783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119908;
-	bh=dEBjpshsCeuXcjuGoGoCjRXuaWCERKqzYhfR42WBux4=;
+	s=default; t=1570119912;
+	bh=2xWpjil+l2o8gx5YUAJnFWxRnFzf0K1uH0omm+gh2xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQDCfJ9ijhM1W+S7nxg+g3OXqw9AQ1I7Y6220/uKYNPxFXaPrZG16aaoaoFgK7PU2
-	 KBVS6k1Y7DTzj+ZYIpc/JOQxVR1YGqzRNKOij9mMKH8MDABxGbn1sTkhlhtp3EgEEw
-	 8u3clrV2fSJ4P62qbn0d/Gddg98jBTXMXeRpsHog=
+	b=x+uzypWOtEPkxcC3jp0ZbKbJMkTK/vkIXvQ8Oy1HM1e+vtrSrntshFE4ITAsR7fAm
+	 k6l5sLFsXqtzG1xu/NT0F/1+L126/X1p8yHn9xL3uxzPkF9JhVV1U5PlHXigNUj01q
+	 NIteV+l3MfJZ/84VWEn/KGUKcPY2Brfj7jHXaRJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390887AbfJCQZH (ORCPT
+        id S2390908AbfJCQZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51916 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390464AbfJCQXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:04 -0400
+        id S2390890AbfJCQZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:25:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB46B2054F;
-        Thu,  3 Oct 2019 16:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93F0F20867;
+        Thu,  3 Oct 2019 16:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119783;
-        bh=dEBjpshsCeuXcjuGoGoCjRXuaWCERKqzYhfR42WBux4=;
+        s=default; t=1570119907;
+        bh=2xWpjil+l2o8gx5YUAJnFWxRnFzf0K1uH0omm+gh2xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=omyur6dod/l5yGmIu8M0emOlrlhGCxg40H+UeelZz5jvup2LYk1CeJbE2b9wwhCKZ
-         QeC/Jq7wwpdqdYRFVvTlXLK9WM2h41LJT6Ee5tQgscf23Yg+n+3+lKPpd2IbjYmI+u
-         aLdUrzUt1UEP6UQ7hrPFhdPm2h0DV+ieZNcgZujo=
+        b=MLyY78veFHHGV3FCfRGDq896XyyhsuMmD4ARRSQ9qp/mx8PLKJ25VfGKi0qVSLvi/
+         naN74nnGawrkOhVKfqp4ggWBeDVAi9a6/NbKVBz4/8tbexQJB4JiPyQiKN6eVZtkk8
+         yFTHpH/f9xysDsiybB6gVhCPGqsj09MRVX6J/UQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 190/211] btrfs: fix allocation of free space cache v1 bitmap pages
-Date:   Thu,  3 Oct 2019 17:54:16 +0200
-Message-Id: <20191003154528.483267215@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 025/313] net: sched: fix possible crash in tcf_action_destroy()
+Date:   Thu,  3 Oct 2019 17:50:03 +0200
+Message-Id: <20191003154535.830842603@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
-References: <20191003154447.010950442@linuxfoundation.org>
+In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
+References: <20191003154533.590915454@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,189 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 3acd48507dc43eeeb0a1fe965b8bad91cab904a7 upstream.
+[ Upstream commit 3d66b89c30f9220a72e92847768fc8ba4d027d88 ]
 
-Various notifications of type "BUG kmalloc-4096 () : Redzone
-overwritten" have been observed recently in various parts of the kernel.
-After some time, it has been made a relation with the use of BTRFS
-filesystem and with SLUB_DEBUG turned on.
+If the allocation done in tcf_exts_init() failed,
+we end up with a NULL pointer in exts->actions.
 
-[   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8198 Comm: syz-executor.3 Not tainted 5.3.0-rc8+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:tcf_action_destroy+0x71/0x160 net/sched/act_api.c:705
+Code: c3 08 44 89 ee e8 4f cb bb fb 41 83 fd 20 0f 84 c9 00 00 00 e8 c0 c9 bb fb 48 89 d8 48 b9 00 00 00 00 00 fc ff df 48 c1 e8 03 <80> 3c 08 00 0f 85 c0 00 00 00 4c 8b 33 4d 85 f6 0f 84 9d 00 00 00
+RSP: 0018:ffff888096e16ff0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: dffffc0000000000
+RDX: 0000000000040000 RSI: ffffffff85b6ab30 RDI: 0000000000000000
+RBP: ffff888096e17020 R08: ffff8880993f6140 R09: fffffbfff11cae67
+R10: fffffbfff11cae66 R11: ffffffff88e57333 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff888096e177a0 R15: 0000000000000001
+FS:  00007f62bc84a700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000758040 CR3: 0000000088b64000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tcf_exts_destroy+0x38/0xb0 net/sched/cls_api.c:3030
+ tcindex_set_parms+0xf7f/0x1e50 net/sched/cls_tcindex.c:488
+ tcindex_change+0x230/0x318 net/sched/cls_tcindex.c:519
+ tc_new_tfilter+0xa4b/0x1c70 net/sched/cls_api.c:2152
+ rtnetlink_rcv_msg+0x838/0xb00 net/core/rtnetlink.c:5214
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:657
+ ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+ __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
 
-[   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
-[   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
-[   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
-[   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
-[   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
-[   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
-[   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
-[   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
-[   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
-[   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
-[   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
-[   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
-[   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
-[   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
-[   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
-[   22.814107] 	generic_shutdown_super+0x80/0x110
-[   22.814250] 	kill_anon_super+0x18/0x30
-[   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
-[   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
-[   22.814841] 	proc_cgroup_show+0xc0/0x248
-[   22.814967] 	proc_single_show+0x54/0x98
-[   22.815086] 	seq_read+0x278/0x45c
-[   22.815190] 	__vfs_read+0x28/0x17c
-[   22.815289] 	vfs_read+0xa8/0x14c
-[   22.815381] 	ksys_read+0x50/0x94
-[   22.815475] 	ret_from_syscall+0x0/0x38
-
-Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead of
-memcpy") changed the way bitmap blocks are copied. But allthough bitmaps
-have the size of a page, they were allocated with kzalloc().
-
-Most of the time, kzalloc() allocates aligned blocks of memory, so
-copy_page() can be used. But when some debug options like SLAB_DEBUG are
-activated, kzalloc() may return unaligned pointer.
-
-On powerpc, memcpy(), copy_page() and other copying functions use
-'dcbz' instruction which provides an entire zeroed cacheline to avoid
-memory read when the intention is to overwrite a full line. Functions
-like memcpy() are writen to care about partial cachelines at the start
-and end of the destination, but copy_page() assumes it gets pages. As
-pages are naturally cache aligned, copy_page() doesn't care about
-partial lines. This means that when copy_page() is called with a
-misaligned pointer, a few leading bytes are zeroed.
-
-To fix it, allocate bitmaps through kmem_cache instead of using kzalloc()
-The cache pool is created with PAGE_SIZE alignment constraint.
-
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204371
-Fixes: 69d2480456d1 ("btrfs: use copy_page for copying pages instead of memcpy")
-Cc: stable@vger.kernel.org # 4.19+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ rename to btrfs_free_space_bitmap ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 90b73b77d08e ("net: sched: change action API to use array of pointers to actions")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Vlad Buslov <vladbu@mellanox.com>
+Cc: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/ctree.h            |    1 +
- fs/btrfs/free-space-cache.c |   18 +++++++++++-------
- fs/btrfs/inode.c            |    8 ++++++++
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ net/sched/cls_api.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -39,6 +39,7 @@ extern struct kmem_cache *btrfs_trans_ha
- extern struct kmem_cache *btrfs_bit_radix_cachep;
- extern struct kmem_cache *btrfs_path_cachep;
- extern struct kmem_cache *btrfs_free_space_cachep;
-+extern struct kmem_cache *btrfs_free_space_bitmap_cachep;
- struct btrfs_ordered_sum;
- 
- #ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -763,7 +763,8 @@ static int __load_free_space_cache(struc
- 		} else {
- 			ASSERT(num_bitmaps);
- 			num_bitmaps--;
--			e->bitmap = kzalloc(PAGE_SIZE, GFP_NOFS);
-+			e->bitmap = kmem_cache_zalloc(
-+					btrfs_free_space_bitmap_cachep, GFP_NOFS);
- 			if (!e->bitmap) {
- 				kmem_cache_free(
- 					btrfs_free_space_cachep, e);
-@@ -1864,7 +1865,7 @@ static void free_bitmap(struct btrfs_fre
- 			struct btrfs_free_space *bitmap_info)
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -3031,8 +3031,10 @@ out:
+ void tcf_exts_destroy(struct tcf_exts *exts)
  {
- 	unlink_free_space(ctl, bitmap_info);
--	kfree(bitmap_info->bitmap);
-+	kmem_cache_free(btrfs_free_space_bitmap_cachep, bitmap_info->bitmap);
- 	kmem_cache_free(btrfs_free_space_cachep, bitmap_info);
- 	ctl->total_bitmaps--;
- 	ctl->op->recalc_thresholds(ctl);
-@@ -2118,7 +2119,8 @@ new_bitmap:
- 		}
- 
- 		/* allocate the bitmap */
--		info->bitmap = kzalloc(PAGE_SIZE, GFP_NOFS);
-+		info->bitmap = kmem_cache_zalloc(btrfs_free_space_bitmap_cachep,
-+						 GFP_NOFS);
- 		spin_lock(&ctl->tree_lock);
- 		if (!info->bitmap) {
- 			ret = -ENOMEM;
-@@ -2130,7 +2132,8 @@ new_bitmap:
- out:
- 	if (info) {
- 		if (info->bitmap)
--			kfree(info->bitmap);
-+			kmem_cache_free(btrfs_free_space_bitmap_cachep,
-+					info->bitmap);
- 		kmem_cache_free(btrfs_free_space_cachep, info);
- 	}
- 
-@@ -2786,7 +2789,8 @@ out:
- 	if (entry->bytes == 0) {
- 		ctl->free_extents--;
- 		if (entry->bitmap) {
--			kfree(entry->bitmap);
-+			kmem_cache_free(btrfs_free_space_bitmap_cachep,
-+					entry->bitmap);
- 			ctl->total_bitmaps--;
- 			ctl->op->recalc_thresholds(ctl);
- 		}
-@@ -3594,7 +3598,7 @@ again:
- 	}
- 
- 	if (!map) {
--		map = kzalloc(PAGE_SIZE, GFP_NOFS);
-+		map = kmem_cache_zalloc(btrfs_free_space_bitmap_cachep, GFP_NOFS);
- 		if (!map) {
- 			kmem_cache_free(btrfs_free_space_cachep, info);
- 			return -ENOMEM;
-@@ -3624,7 +3628,7 @@ again:
- 	if (info)
- 		kmem_cache_free(btrfs_free_space_cachep, info);
- 	if (map)
--		kfree(map);
-+		kmem_cache_free(btrfs_free_space_bitmap_cachep, map);
- 	return 0;
+ #ifdef CONFIG_NET_CLS_ACT
+-	tcf_action_destroy(exts->actions, TCA_ACT_UNBIND);
+-	kfree(exts->actions);
++	if (exts->actions) {
++		tcf_action_destroy(exts->actions, TCA_ACT_UNBIND);
++		kfree(exts->actions);
++	}
+ 	exts->nr_actions = 0;
+ #endif
  }
- 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -72,6 +72,7 @@ static struct kmem_cache *btrfs_inode_ca
- struct kmem_cache *btrfs_trans_handle_cachep;
- struct kmem_cache *btrfs_path_cachep;
- struct kmem_cache *btrfs_free_space_cachep;
-+struct kmem_cache *btrfs_free_space_bitmap_cachep;
- 
- #define S_SHIFT 12
- static const unsigned char btrfs_type_by_mode[S_IFMT >> S_SHIFT] = {
-@@ -9361,6 +9362,7 @@ void __cold btrfs_destroy_cachep(void)
- 	kmem_cache_destroy(btrfs_trans_handle_cachep);
- 	kmem_cache_destroy(btrfs_path_cachep);
- 	kmem_cache_destroy(btrfs_free_space_cachep);
-+	kmem_cache_destroy(btrfs_free_space_bitmap_cachep);
- }
- 
- int __init btrfs_init_cachep(void)
-@@ -9390,6 +9392,12 @@ int __init btrfs_init_cachep(void)
- 	if (!btrfs_free_space_cachep)
- 		goto fail;
- 
-+	btrfs_free_space_bitmap_cachep = kmem_cache_create("btrfs_free_space_bitmap",
-+							PAGE_SIZE, PAGE_SIZE,
-+							SLAB_RED_ZONE, NULL);
-+	if (!btrfs_free_space_bitmap_cachep)
-+		goto fail;
-+
- 	return 0;
- fail:
- 	btrfs_destroy_cachep();
 
 
