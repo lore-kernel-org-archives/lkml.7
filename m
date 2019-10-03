@@ -2,62 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133D4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5D4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E063420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9FC20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123887;
-	bh=x3CIsCXcVinP9qVLbt8vSkv0DvTQeBfbKhDw/hdnX+M=;
+	s=default; t=1570123899;
+	bh=aLeUPhQywBnP/8Vt6D0GiKb7MLtaQeJ77BRgxl09D48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=po3KzeNskhcnNLpB/tNdIb/hUY6TIbBV+6/rHEh5ZlHCK7GaM7cma/NPAGv8T3gYy
-	 R4zDJc7C3utedRg0GdcjJRW/B2LBkd7AggFCGhlkafRCgg3jRAFZ38IcETSANOYXMO
-	 hlLkz76qp2GFIElcAxftajb7/p0bcA2Dc396bwuA=
+	b=sNLukQZ7Rb0r6dMyuxITsrT94mVmRbcwVs3My08sZqA4NL31w8zjx8TUOoySvgXte
+	 br1joXXiw5jiDPcql3R7O/f4gK2qUhfQnF3BM8TopLlMVhDs0BvmGrS/z2E1BFWtbM
+	 V2u1KKORAQUdnGmXR1KHMboejkm/xPxn8Aa+iqfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732076AbfJCRbZ (ORCPT
+        id S1732431AbfJCRbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387597AbfJCQKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:17 -0400
+        id S2387538AbfJCQKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E9F720865;
-        Thu,  3 Oct 2019 16:10:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0AE215EA;
+        Thu,  3 Oct 2019 16:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119015;
-        bh=x3CIsCXcVinP9qVLbt8vSkv0DvTQeBfbKhDw/hdnX+M=;
+        s=default; t=1570118999;
+        bh=aLeUPhQywBnP/8Vt6D0GiKb7MLtaQeJ77BRgxl09D48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pj0+Mx8rvbRuWzF7v7S/SrhTZbafj+ipLaFYIrwjdZZX02bmf4J9vrOtZsJ9pQqrV
-         tMaqYd6A16tKUKnevmXhgtwtNmytbwUZYbXfufeZfXlD1F9NqzGQimWH67gLbhbsoa
-         d4qHJ9euIyEXMXtHt6iVD1Mx7T63w6K60wYzdlSA=
+        b=dHDoOaeOUZQhRDjxi3lGlIHr2eYzGrEbmXBmaSvDuKaLMT0yZbjrz3HAKz1gubVqB
+         VuiL1Wnj1pRppoEYsGv0jKU9NjyPlu64U0f5v2xVTT0PvkgQP74+KSgShFLv4XqTlB
+         TChA2CydMfxHMDVwdOocqpsvjQBLQlVdNx30lkpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 095/185] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date:   Thu,  3 Oct 2019 17:52:53 +0200
-Message-Id: <20191003154459.713414437@linuxfoundation.org>
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        Yotam Gigi <yotam.gi@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 039/185] net/sched: act_sample: dont push mac header on ip6gre ingress
+Date:   Thu,  3 Oct 2019 17:51:57 +0200
+Message-Id: <20191003154446.354472289@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -70,76 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: André Draszik <git@andred.net>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
+[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
-("net: phy: at803x: disable delay only for RGMII mode")
-and commit cd28d1d6e52e
-("net: phy: at803x: Disable phy delay for RGMII mode")
-fix the AR8031 driver to configure the phy's (RX/TX)
-delays as per the 'phy-mode' in the device tree.
+current 'sample' action doesn't push the mac header of ingress packets if
+they are received by a layer 3 tunnel (like gre or sit); but it forgot to
+check for gre over ipv6, so the following script:
 
-This now prevents ethernet from working on this board.
+ # tc q a dev $d clsact
+ # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
+ > group 100 rate 1
+ # psample -v -g 100
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+dumps everything, including outer header and mac, when $d is a gre tunnel
+over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
-
-Update the device tree to restore functionality.
-
-Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sched/act_sample.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 3cc1fb9ce4418..60a28281d3d16 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -43,7 +43,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -69,7 +69,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
--- 
-2.20.1
-
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -132,6 +132,7 @@ static bool tcf_sample_dev_ok_push(struc
+ 	case ARPHRD_TUNNEL6:
+ 	case ARPHRD_SIT:
+ 	case ARPHRD_IPGRE:
++	case ARPHRD_IP6GRE:
+ 	case ARPHRD_VOID:
+ 	case ARPHRD_NONE:
+ 		return false;
 
 
