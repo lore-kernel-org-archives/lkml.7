@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FD5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E36C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7138E222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709AD222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118209;
-	bh=mP4xT7AyFhO2FlSlP+yDZXZQHSpTuhtD7Oi7dRd1moI=;
+	s=default; t=1570118212;
+	bh=Z5K104AeOyNdbPg+AtmXlyXO1njHendpyh/MCwlZFf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTqTtBd9hBhchwC9EumKksL8mtGOkvM6bdTNtqQwOB0nxMZnLmHbKkU1yRPjU+W2B
-	 7xvm+s/r4iToPZYhZ25lPeUTuglXF9HCpsRq4LAS/fecnof+EA7GJbj/Ij+pTTUC1W
-	 zuY5sUV04Vmbyf7Xt6wQ23rdH9dmDwFfMbQTeUy0=
+	b=i6+mWU8GfPZVV3dneBRuxcLICCN+whLsCJif8Cd1exeqO0C1WYN23GWx+xWiyyc8b
+	 LRh3Ogb5tLjtmn8RbTY5YAUqU+6GgV5rfX05M3krdPgOZA0iOjQCW/smECbNHCD3ge
+	 ilugwnBPH4aXgcXA8QB9ucO8U78fd+9OYBd8hU5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfJCP4s (ORCPT
+        id S1729398AbfJCP4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730735AbfJCP4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:46 -0400
+        id S1730765AbfJCP4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C0E321A4C;
-        Thu,  3 Oct 2019 15:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4EB2222BE;
+        Thu,  3 Oct 2019 15:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118205;
-        bh=mP4xT7AyFhO2FlSlP+yDZXZQHSpTuhtD7Oi7dRd1moI=;
+        s=default; t=1570118208;
+        bh=Z5K104AeOyNdbPg+AtmXlyXO1njHendpyh/MCwlZFf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLsaPvg+Th0vWmtUg0qQWkW13dzn7+2WY8OXnqiarkmt74wgC/qYiyOzQ9wK91EWk
-         8OMwhxprb1lc1FwhciCJ9McN1ffSVEuAKXE+AloJVom3NWo0bxzoQhdO9SS+h2GjGZ
-         IzHIQATebXVNVHuA/R0xc8+Ow29CH9WcqWGKE+zc=
+        b=V/qjaqGCPVNy5a1YDO5Gd2HimRq3JMegvfRuqKzGYqCGo2eJ2gkPhRoY5Gwt58AJX
+         zgxtfG12C+M4zamTjoeAND54SxRSbf8ZaXYYylBaoByN0eXNlpJaAUf3wFszLImTnj
+         H7olOOYm3M5/CsM1vJnY0PNjvVSZEDWNHC9FS0mI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 27/99] usbnet: sanity checking of packet sizes and device mtu
-Date:   Thu,  3 Oct 2019 17:52:50 +0200
-Message-Id: <20191003154307.806811919@linuxfoundation.org>
+Subject: [PATCH 4.4 28/99] mISDN: enforce CAP_NET_RAW for raw sockets
+Date:   Thu,  3 Oct 2019 17:52:51 +0200
+Message-Id: <20191003154308.059086207@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,41 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Ori Nimron <orinimron123@gmail.com>
 
-[ Upstream commit 280ceaed79f18db930c0cc8bb21f6493490bf29c ]
+[ Upstream commit b91ee4aa2a2199ba4d4650706c272985a5a32d80 ]
 
-After a reset packet sizes and device mtu can change and need
-to be reevaluated to calculate queue sizes.
-Malicious devices can set this to zero and we divide by it.
-Introduce sanity checking.
+When creating a raw AF_ISDN socket, CAP_NET_RAW needs to be checked
+first.
 
-Reported-and-tested-by:  syzbot+6102c120be558c885f04@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Ori Nimron <orinimron123@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/usbnet.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/isdn/mISDN/socket.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -352,6 +352,8 @@ void usbnet_update_max_qlen(struct usbne
- {
- 	enum usb_device_speed speed = dev->udev->speed;
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -763,6 +763,8 @@ base_sock_create(struct net *net, struct
  
-+	if (!dev->rx_urb_size || !dev->hard_mtu)
-+		goto insanity;
- 	switch (speed) {
- 	case USB_SPEED_HIGH:
- 		dev->rx_qlen = MAX_QUEUE_MEMORY / dev->rx_urb_size;
-@@ -367,6 +369,7 @@ void usbnet_update_max_qlen(struct usbne
- 		dev->tx_qlen = 5 * MAX_QUEUE_MEMORY / dev->hard_mtu;
- 		break;
- 	default:
-+insanity:
- 		dev->rx_qlen = dev->tx_qlen = 4;
- 	}
- }
+ 	if (sock->type != SOCK_RAW)
+ 		return -ESOCKTNOSUPPORT;
++	if (!capable(CAP_NET_RAW))
++		return -EPERM;
+ 
+ 	sk = sk_alloc(net, PF_ISDN, GFP_KERNEL, &mISDN_proto, kern);
+ 	if (!sk)
 
 
