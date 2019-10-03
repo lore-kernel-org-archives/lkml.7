@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1B7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A4AC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98E220673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA91220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122075;
-	bh=d6AmPNfDAj8KGd/fgbph9jyrUnZ5/VpvIL6yT6NRvUs=;
+	s=default; t=1570122078;
+	bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Jk46JLyoIG9YO012d6yk5akimP2vcctmJzVNBEliDKqiCPg0j9ghRDnfh14eVrA4
-	 F+LuIwlISDRa27Nl7/qdCsJyu/MMdFVnHlPU5YGcoJHodFG/GUp4r3MNarxiT8PA6q
-	 9Zra9xGWkpeIQHNpIQY/WF3Q+uRiRFWoMFDHSKWo=
+	b=E8i32DQmaGtksK1+Wpk32iiD5EepbkWYBanSSQc0pUsSp7o+QkFqP9zQA1lxt5D1h
+	 TqwITAHuy38QXyg2gE/5aO75eZ5L/8jiorLJ2xDDgbRrqJL3vuxJK8+cF4nfNJ6L2S
+	 drLWppYTSFU4QRWaMY0OAkfctLbMOG9AJrzULSP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405860AbfJCRBO (ORCPT
+        id S2405467AbfJCQpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404740AbfJCQpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:04 -0400
+        id S2404740AbfJCQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26C962070B;
-        Thu,  3 Oct 2019 16:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64AC7206BB;
+        Thu,  3 Oct 2019 16:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121103;
-        bh=d6AmPNfDAj8KGd/fgbph9jyrUnZ5/VpvIL6yT6NRvUs=;
+        s=default; t=1570121092;
+        bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKpUM0bqzt2zEC6HE6g9EIbKPJhZZjtEuUPEhdrv9UCHdaqRSw11WCL5WbG7tK7U2
-         h+MABdo/NfLoaYSYFYLcnxlcpgHyDFMA/zYQkHNwXMZWx0x1T73OA6xo2YoethDYa1
-         8sZ5MvKydIzJ2Rr1IkOwmKTkiJX9sSA0O5paMAq8=
+        b=exwgFh8qxuEtkDldN19X+pM7VHk/Pr64VVLAJALFRyN/uRIBaVv8iMeW+dz2e08C0
+         dhY4Rj6QFQ+KxffuzRw1nfwaFzOOYddQSHew1PIexKasay4PhkfFqtV1cHA3AoMEmn
+         COJnx5/4h/KQcTO5oiguJLN82+PllCJzZqLc5Qsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 156/344] media: cec-notifier: clear cec_adap in cec_notifier_unregister
-Date:   Thu,  3 Oct 2019 17:52:01 +0200
-Message-Id: <20191003154555.622936762@linuxfoundation.org>
+Subject: [PATCH 5.3 152/344] PM / devfreq: Fix kernel oops on governor module load
+Date:   Thu,  3 Oct 2019 17:51:57 +0200
+Message-Id: <20191003154555.236136924@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,45 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 14d5511691e5290103bc480998bc322e68f139d4 ]
+[ Upstream commit 7544fd7f384591038646d3cd9efb311ab4509e24 ]
 
-If cec_notifier_cec_adap_unregister() is called before
-cec_unregister_adapter() then everything is OK (and this is the
-case today). But if it is the other way around, then
-cec_notifier_unregister() is called first, and that doesn't
-set n->cec_adap to NULL.
+A bit unexpectedly (but still documented), request_module may
+return a positive value, in case of a modprobe error.
+This is currently causing issues in the devfreq framework.
 
-So if e.g. cec_notifier_set_phys_addr() is called after
-cec_notifier_unregister() but before cec_unregister_adapter()
-then n->cec_adap points to an unregistered and likely deleted
-cec adapter. So just set n->cec_adap->notifier and n->cec_adap
-to NULL for rubustness.
+When a request_module exits with a positive value, we currently
+return that via ERR_PTR. However, because the value is positive,
+it's not a ERR_VALUE proper, and is therefore treated as a
+valid struct devfreq_governor pointer, leading to a kernel oops.
 
-Eventually cec_notifier_unregister will disappear and this will
-be simplified substantially.
+Fix this by returning -EINVAL if request_module returns a positive
+value.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: b53b0128052ff ("PM / devfreq: Fix static checker warning in try_then_request_governor")
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-notifier.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/devfreq/devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
-index 52a867bde15fd..4d82a5522072e 100644
---- a/drivers/media/cec/cec-notifier.c
-+++ b/drivers/media/cec/cec-notifier.c
-@@ -218,6 +218,8 @@ void cec_notifier_unregister(struct cec_notifier *n)
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index ab22bf8a12d69..a0e19802149fc 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
+ 		/* Restore previous state before return */
+ 		mutex_lock(&devfreq_list_lock);
+ 		if (err)
+-			return ERR_PTR(err);
++			return (err < 0) ? ERR_PTR(err) : ERR_PTR(-EINVAL);
  
- 	mutex_lock(&n->lock);
- 	n->callback = NULL;
-+	n->cec_adap->notifier = NULL;
-+	n->cec_adap = NULL;
- 	mutex_unlock(&n->lock);
- 	cec_notifier_put(n);
- }
+ 		governor = find_devfreq_governor(name);
+ 	}
 -- 
 2.20.1
 
