@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CCEC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4931DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2409D20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D1E2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120929;
-	bh=iPazQ00aOuuilt+GzDQbr9bRbIVeHkRFhHoRkii1JTQ=;
+	s=default; t=1570120933;
+	bh=BhJwqG++4J9wEY2L8CXnAV4u3Z2d3St1190j766FZvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uc9gQl1pRRAI7Dwy176Hx4pt8hu20BBCbH8qUjWvjHCVrlJBYRtEb+lJPsjJiNRUc
-	 SD6CZyahBPbNC/+5qDlIF7NU5JXPjQXjJGwXVuGMtBwfUBsiniCW8oAMVvaED3tGJe
-	 2Z0oAyyX2M0Ug7SoCe1aicT+yG8PyeyPGJF/87zY=
+	b=kiKibJHcVVgc4LHxjQRhweR7xAuLUry5a3Mt7ejeifLjWjrdOQaCEGz4KdKh5E4r0
+	 mTwJSiUXHKif6cWvInzS+0/m2kf3DEGa/PUKm0sSYRZhPVBxLiJyumO11vQ27TH9ve
+	 FtVTIZ/+q/v1iPR9xeSXLSzANRlrQuGR3I6DYzjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392588AbfJCQmI (ORCPT
+        id S2392599AbfJCQmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52930 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392571AbfJCQmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:06 -0400
+        id S2392363AbfJCQmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C48702054F;
-        Thu,  3 Oct 2019 16:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 886232086A;
+        Thu,  3 Oct 2019 16:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120926;
-        bh=iPazQ00aOuuilt+GzDQbr9bRbIVeHkRFhHoRkii1JTQ=;
+        s=default; t=1570120928;
+        bh=BhJwqG++4J9wEY2L8CXnAV4u3Z2d3St1190j766FZvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNBk2NWoFmQW1a7DoqX5ryXdVfvFGZ7gvZZPkJz6IhqLxrXT3akuano3xdCQ96vGb
-         ZdYijPnVodlLkKCA/En5uPY750OdjeBstWub9DulHvM6Jr7hd3uSDmu1CojVM5/2/x
-         yDjjTroPNePSZoJbnxLxNEetBCZgHBb32Guui08A=
+        b=tIg6TQLbuZd/7/14dTryaTpWT6OBGUR9Kwz07cYqIJrLSe64XPBSbc97k/BHI7WHr
+         O+e82PmdSGM4sGxhY/xLToCL3GzMNVOmNeD7L0d8JZaUys4fc+3WwhJJTtuIfYKHmb
+         OVi28X+VA3gvFNkqgu3QcijjkVsNBbdJMZ88gbZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 089/344] media: media/platform: fsl-viu.c: fix build for MICROBLAZE
-Date:   Thu,  3 Oct 2019 17:50:54 +0200
-Message-Id: <20191003154548.942708930@linuxfoundation.org>
+Subject: [PATCH 5.3 090/344] media: staging: tegra-vde: Fix build error
+Date:   Thu,  3 Oct 2019 17:50:55 +0200
+Message-Id: <20191003154549.062096303@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,42 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6898dd580a045341f844862ceb775144156ec1af ]
+[ Upstream commit 6b2265975239ab655069d796b822835a593e1cc7 ]
 
-arch/microblaze/ defines out_be32() and in_be32(), so don't do that
-again in the driver source.
+If IOMMU_SUPPORT is not set, and COMPILE_TEST is y,
+IOMMU_IOVA may be set to m. So building will fails:
 
-Fixes these build warnings:
+drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
+iommu.c:(.text+0x41): undefined reference to `alloc_iova'
+iommu.c:(.text+0x56): undefined reference to `__free_iova'
 
-../drivers/media/platform/fsl-viu.c:36: warning: "out_be32" redefined
-../arch/microblaze/include/asm/io.h:50: note: this is the location of the previous definition
-../drivers/media/platform/fsl-viu.c:37: warning: "in_be32" redefined
-../arch/microblaze/include/asm/io.h:53: note: this is the location of the previous definition
+Select IOMMU_IOVA while COMPILE_TEST is set to fix this.
 
-Fixes: 29d750686331 ("media: fsl-viu: allow building it with COMPILE_TEST")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Dmitry Osipenko <digetx@gmail.com>
+Fixes: b301f8de1925 ("media: staging: media: tegra-vde: Add IOMMU support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/fsl-viu.c | 2 +-
+ drivers/staging/media/tegra-vde/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/fsl-viu.c b/drivers/media/platform/fsl-viu.c
-index 691be788e38b3..b74e4f50d7d9f 100644
---- a/drivers/media/platform/fsl-viu.c
-+++ b/drivers/media/platform/fsl-viu.c
-@@ -32,7 +32,7 @@
- #define VIU_VERSION		"0.5.1"
- 
- /* Allow building this driver with COMPILE_TEST */
--#ifndef CONFIG_PPC
-+#if !defined(CONFIG_PPC) && !defined(CONFIG_MICROBLAZE)
- #define out_be32(v, a)	iowrite32be(a, (void __iomem *)v)
- #define in_be32(a)	ioread32be((void __iomem *)a)
- #endif
+diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
+index 2e7f644ae5911..ba49ea50b8c0b 100644
+--- a/drivers/staging/media/tegra-vde/Kconfig
++++ b/drivers/staging/media/tegra-vde/Kconfig
+@@ -3,7 +3,7 @@ config TEGRA_VDE
+ 	tristate "NVIDIA Tegra Video Decoder Engine driver"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	select DMA_SHARED_BUFFER
+-	select IOMMU_IOVA if IOMMU_SUPPORT
++	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
+ 	select SRAM
+ 	help
+ 	    Say Y here to enable support for the NVIDIA Tegra video decoder
 -- 
 2.20.1
 
