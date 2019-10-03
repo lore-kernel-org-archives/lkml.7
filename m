@@ -2,85 +2,89 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE79C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CD9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502B32133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79F220873
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hS7K1kBy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oeBaiWZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387690AbfJCTkn (ORCPT
+        id S2387744AbfJCTl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:40:43 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39258 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729264AbfJCTkm (ORCPT
+        Thu, 3 Oct 2019 15:41:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35502 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730042AbfJCTl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:40:42 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y3so4068476ljj.6;
-        Thu, 03 Oct 2019 12:40:41 -0700 (PDT)
+        Thu, 3 Oct 2019 15:41:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so278424pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:41:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pSL4QLkrsIA0GWMBtimnD0jqvoSHa6naCjCGLwOOIBE=;
-        b=hS7K1kByEdZ1Al4+4rw4E3jAvr/pnLNoku7kN1SRVM1RM+lOdRNhu5eu5CToOMxt00
-         fGIBHJZVWgRe9ms716THfTdypLrLczOQti++xhontjhDZkF0nQBqxfC1Ok7kIXp7Wt54
-         6GT9f2NDpa04oVNzIc6SBxrT9v8cMLi7dKQI9zwe27mcc2O24dLGIczZ1FppMkrImoVy
-         cUb4/U3oR+nBQrk+SdAIFZD8x58cZ/Cb9GJ8cnkhETzdJfPl6d3Li0jWzuh6lwCU3XdQ
-         bqDdTTTDw1lu5FVjm0a1rbfWKgfwYQw9LgTjgMmwW8M3R4wGJEBLHWFihSqXyuL/4fEr
-         ZIMQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=WqnDNpxNJ9d9Ouc08nAl1wk/JWgZ2JMo7PTKSIvFr54=;
+        b=oeBaiWZuuazODZGGgj9OjBe+kOivMqRldWHKZZ72DgA86q5Bmn7toKuhzK3oD07KbP
+         nzWOirJi1qZF/+kx6/KkffOjv6Ef0K/OKsykCGkH5PtDcXuWnuQK9BO42XotJH36GMiO
+         0A8CTywz2Y15ZATut2Oq9ebVXsxwxp39DxLd6aaGSM6JvkqmByg1pg9UVY0zgfcmReVW
+         wFoMrh0wgR5++q7FJisXKPfc6ExSVHJveQ49rEaSlo9kjbC0nkVjmcB9zhOPZ6Ex8s4E
+         DvVlONXg7N+fAShn3FMLr18JXSP1tS/CQNQYCHi1KFv+IDIlkObdEVJ6V9ypCO1nfZdL
+         /TDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pSL4QLkrsIA0GWMBtimnD0jqvoSHa6naCjCGLwOOIBE=;
-        b=uMTL3gYsFOyfxXl5sIR0KHdJ2a3HgOkaM0AApMX4w+oGL/A8aem7wWpen7GNdkAbpF
-         knX6CZwApY7lfjoMiHWBPVhS4BcSNTMofZIBzMRFwPSaqh/meCEqmQaTO/p0jtVhkvwt
-         MMXA71clQHyA9zauvPL/gdBaRRdAiQVoHccyG2Qym4pp4FcYei4qRWSbatKXdEvtLHz4
-         H+nDJ8DMUSytwiFC/oS/qnqgx2/5P8cmTPjS3MC3L5wJgApTbhVnteBldln5+zxYmRih
-         RoFJoIqFSxcv8qHCZn8J2QQSgyh8n7TsejbHCPQS2AfFo8fBB59YsfiT6t1Cl5xk/tib
-         KYeA==
-X-Gm-Message-State: APjAAAUsQqYcmRI+ZAhH+5HjwpmQbTUtvu2lY2oL3Zoj+bJOIIAoBN6b
-        XGpQZr1kIvo2uw5VXqI4sN12Fq2WFDU27+XscQI=
-X-Google-Smtp-Source: APXvYqy5h5JwyW6moKpyZAad5fkQZ8tBNXSZxYVrgBzBaroaenrdAruQ0irXcreNxmc398SHyuMwLn1J0D6vHVBHHPg=
-X-Received: by 2002:a2e:4258:: with SMTP id p85mr7168646lja.172.1570131640635;
- Thu, 03 Oct 2019 12:40:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=WqnDNpxNJ9d9Ouc08nAl1wk/JWgZ2JMo7PTKSIvFr54=;
+        b=fzOWLB2PT74k2Aqzvh7dAEUVUQql/wZgT3lyybr+VFYs7uDu0O0z+tmdum+n5Q4/rg
+         AjNL1u62X4v+SUeANa22l9/brfk9WJyWpxXP4olbQKT/MjGid3bkEPronrRNM8yeGwZI
+         fUmIhQxCVDKi152vUgK+NlMrbysJY/Png41aU5dfjmtbdZ5WN2t/sBcLqwyiBw85R7xj
+         pi9v8NQanWuQQ+SuYXqZqwXtT1KqjswH3JWjR6Y3+Kj8wMHIVALfpcoirMiBS8MItH7c
+         SxtB/7w/HZF8UrhVuzQKZ4ILCOu/xfQbcH9Z+lZA+oqE43m4XX67Lo1KmA8LMfdPpCuF
+         LSVQ==
+X-Gm-Message-State: APjAAAXcDcw8GYa/8I+1KY2/V4twE/siBSH2cNFUgmo1MumU8PEqt0M7
+        nj8w9ZMxm2l7tud6H0/Id1yDwg==
+X-Google-Smtp-Source: APXvYqznYGmNd28LWoxGottlOF0mXioQrzWcto6GOK5OyHZzDF3NyaSndKmbLNindJw8P0iLQdukhg==
+X-Received: by 2002:a63:1101:: with SMTP id g1mr11311953pgl.320.1570131685547;
+        Thu, 03 Oct 2019 12:41:25 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id w134sm4632474pfd.4.2019.10.03.12.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 12:41:24 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 12:41:24 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+cc:     mgorman@techsingularity.net, hannes@cmpxchg.org, mhocko@suse.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: remove unused scan_control parameter from
+ pageout()
+In-Reply-To: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
+Message-ID: <alpine.DEB.2.21.1910031241141.88296@chino.kir.corp.google.com>
+References: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <20191003080539.2b13c03b@coco.lan> <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
- <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
- <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone>
- <20191003144225.0137bf6c@coco.lan> <20191003183200.GA2631@Limone>
- <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl> <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
-In-Reply-To: <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Thu, 3 Oct 2019 21:40:28 +0200
-Message-ID: <CANL0fFQCax1XHMaVj6Hvwe3JMzreH2w-dP-efr5VyGAc7Vd9aA@mail.gmail.com>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-To:     JP <jp@jpvw.nl>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, crope@iki.fi,
-        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From si2168.c:808:
-               /* Sometimes firmware returns bogus value */
-                if (utmp1 == 0xffff)
-                        utmp1 = 0;
+On Fri, 4 Oct 2019, Yang Shi wrote:
 
-Maybe we can include my "bogus" hack to get at least Logilink running.
-Maybe with an info message to tell users what is going on.
+> Since lumpy reclaim was removed in v3.5 scan_control is not used by
+> may_write_to_{queue|inode} and pageout() anymore, remove the unused
+> parameter.
+> 
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-g
+Acked-by: David Rientjes <rientjes@google.com>
