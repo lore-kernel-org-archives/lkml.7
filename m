@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFB8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8078BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B199207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A91B207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118409;
-	bh=WnnVwo0vVu77Z5Zp+V5yFZGva1AVLUgAKB4IXhlJmYI=;
+	s=default; t=1570118411;
+	bh=PISx2vyocSh8/A1YRwQdwLjLxS9DHcEQhiIdSzWqr9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uFGliTZhKDdWlMZG5a5lbysNjxEPEzaAD6L5k2wrCS/1vkOPHa3La0E8ZFELuT99W
-	 G29i9PaBT4uxZXIwk30lVMj4kVS7AAj+iiDUV5CGlJjwgDwQ1dWUrctwsm2Fd0rAsu
-	 b9vm6M+1MidoPd/hLel2mkamT35C6ouo476RVGFQ=
+	b=ZZiyp51dzNkHskavnC2IIlCmPQa+zvPTi8t6ibLWagffffOPn2omRak4VZxreHcWf
+	 jpILVZV10ysTQqOj3biPXPg5PbiGLo8xTJp9U5pyUxAxtrImNPzS7KiKVmYW0kmXo7
+	 Urb7xpRNuLzO9ncwCzjZd39ICDKY9w2b3eAbCxf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfJCQAI (ORCPT
+        id S1728219AbfJCQAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729858AbfJCQAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:05 -0400
+        id S1731518AbfJCQAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C916721848;
-        Thu,  3 Oct 2019 16:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8092A207FF;
+        Thu,  3 Oct 2019 16:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118405;
-        bh=WnnVwo0vVu77Z5Zp+V5yFZGva1AVLUgAKB4IXhlJmYI=;
+        s=default; t=1570118408;
+        bh=PISx2vyocSh8/A1YRwQdwLjLxS9DHcEQhiIdSzWqr9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6RY2DLD3s/kdlTw96/CvaJEd2kpAuyYPWCo5pjQ+bVB7T9dR2qKqH9oxf84dkCSH
-         QXI4GKZ5ATZI+T9QWI8vix6PmdZ+BI9A5MJt5/9f0Zs5gH2srLOJRF8sIKEHr3xvK3
-         swwaJiZrpufEJe8jREc3frZqGArYNU15vmPCN/qQ=
+        b=S/h0sB49amCiM7oia0tDRlZR5SlExBo+Efw+j/nHPBo7wPmJiWAlMP7K6NVeur42j
+         dYZBPru1VrrpktwDAwKht+P6+mHBzBdOyqHiGxzPU9kG/k+2D32Es1eMhlTsmGfbPi
+         racA94M56dV9cegK1XOiMrfln2WvhqobgwAu+YwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rui Salvaterra <rsalvaterra@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.4 84/99] media: sn9c20x: Add MSI MS-1039 laptop to flip_dmi_table
-Date:   Thu,  3 Oct 2019 17:53:47 +0200
-Message-Id: <20191003154337.063405867@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 85/99] ASoC: Intel: Fix use of potentially uninitialized variable
+Date:   Thu,  3 Oct 2019 17:53:48 +0200
+Message-Id: <20191003154337.467869715@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -61,41 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
 
-commit 7e0bb5828311f811309bed5749528ca04992af2f upstream.
+commit 810f3b860850148788fc1ed8a6f5f807199fed65 upstream.
 
-Like a bunch of other MSI laptops the MS-1039 uses a 0c45:627b
-SN9C201 + OV7660 webcam which is mounted upside down.
+If ipc->ops.reply_msg_match is NULL, we may end up using uninitialized
+mask value.
 
-Add it to the sn9c20x flip_dmi_table to deal with this.
+reported by smatch:
+sound/soc/intel/common/sst-ipc.c:266 sst_ipc_reply_find_msg() error: uninitialized symbol 'mask'.
 
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+Link: https://lore.kernel.org/r/20190827141712.21015-3-amadeuszx.slawinski@linux.intel.com
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/sn9c20x.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/intel/common/sst-ipc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/media/usb/gspca/sn9c20x.c
-+++ b/drivers/media/usb/gspca/sn9c20x.c
-@@ -139,6 +139,13 @@ static const struct dmi_system_id flip_d
- 		}
- 	},
- 	{
-+		.ident = "MSI MS-1039",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1039"),
-+		}
-+	},
-+	{
- 		.ident = "MSI MS-1632",
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
+--- a/sound/soc/intel/common/sst-ipc.c
++++ b/sound/soc/intel/common/sst-ipc.c
+@@ -211,6 +211,8 @@ struct ipc_message *sst_ipc_reply_find_m
+ 
+ 	if (ipc->ops.reply_msg_match != NULL)
+ 		header = ipc->ops.reply_msg_match(header, &mask);
++	else
++		mask = (u64)-1;
+ 
+ 	if (list_empty(&ipc->rx_list)) {
+ 		dev_err(ipc->dev, "error: rx list empty but received 0x%llx\n",
 
 
