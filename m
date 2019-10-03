@@ -2,90 +2,100 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC815C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B6EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908DE218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A08D218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BiohckBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfJCKS3 (ORCPT
+        id S1728864AbfJCKT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:18:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35916 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbfJCKS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:18:29 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 92A753098215;
-        Thu,  3 Oct 2019 10:18:29 +0000 (UTC)
-Received: from krava (unknown [10.43.17.55])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 719C4608C2;
-        Thu,  3 Oct 2019 10:18:28 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 12:18:27 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] perf script: Allow --time with --reltime
-Message-ID: <20191003101827.GA23291@krava>
-References: <20191002164642.1719-1-andi@firstfloor.org>
+        Thu, 3 Oct 2019 06:19:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41563 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfJCKT5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:19:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f5so2058463ljg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mx2mVdBYrakYmKxbPV66SmuQcwBPBGOoE53tUIGHR+A=;
+        b=BiohckBckv+eDTVkHIyBC8N7T6XQTXFT0oc1lxYcBVidzoZVAV7lN2qPws75YjQJom
+         1CmWc86k3OXNMIg+KGYFkKk6WH1jJwJc3SKei1E2Yu4AzBDEcm4ZJXgtKbt6RVaUVznD
+         CdfVW6NE3SjiWU+htl7iwmSSKUfC2xcuX9HoxBnoxGakn5KIslygdNV1woIbSjwhXpmv
+         91FSZG18vyp7hlyJqI11V2Tq/w5eEMXw+EWwG8DfaGipdHvG4Rwibr4fPOk7D9XW71ox
+         zmuEvTjefK87JRBKNAkHvnOPRBXGTu0uuHxeMbPjuuH67AfuFHpc7T0oayvOk58CB8C0
+         L8IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mx2mVdBYrakYmKxbPV66SmuQcwBPBGOoE53tUIGHR+A=;
+        b=bBDUD2QYUWjqk8EHlOLLL7SZmG59Bus/evTqIN/pxyn3H0K3J5Jhlw05lLdH+QLJRA
+         jtDf/3nFOjernJQefoOQbxkFoDMmfqzxi79oPgt55RNddZElmJY+kjuT8yhy/1rRK1PX
+         y+qxyvJXmt1sZR6ozl9aqw5kvOovqSNE2AeqZuxUnFg/CjY2dklMGVIlzs1dZW5+LMok
+         I62EaenCABAWeMvvhiubohjWn2ahCh84lsOAgP9BzzSCzR2p1gpU2jNunN3iYXa+/jBH
+         gwMtpfyUihjj8MmNX7/8nflkGMJPsZY+BrgJaRSqI7gb5r6x+ZsNjqvOwr3J2PYnrUun
+         0tSQ==
+X-Gm-Message-State: APjAAAVIDQVknfD1c1/0FADeQMdAzuKdtQZQAmWZE+aiWVedHbGlnRDG
+        +5M65ZxJJXS6+iMcgRxMk4N/wCsfEwVG8RWGqdQYcQ==
+X-Google-Smtp-Source: APXvYqxtEBgA75ZlWizzadlM7ku6Sc5eWq/YvW5BJWg+JWNU8Jj6xHbXWXCZZexLY3SRjk7ikjV1/YWyZXiTaMlU0qU=
+X-Received: by 2002:a2e:63da:: with SMTP id s87mr5494745lje.79.1570097994932;
+ Thu, 03 Oct 2019 03:19:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002164642.1719-1-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 03 Oct 2019 10:18:29 +0000 (UTC)
+References: <20190927031551.20074-1-hui.song_1@nxp.com>
+In-Reply-To: <20190927031551.20074-1-hui.song_1@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 3 Oct 2019 12:19:42 +0200
+Message-ID: <CACRpkdZh80H+G43-y0AGXJo0p=C5YADZBu3h1v2-3LvLj_Z=aQ@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 09:46:42AM -0700, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
-> 
-> The original --reltime patch forbid --time with --reltime.
-> 
-> But it turns out --time doesn't really care about --reltime, because
-> the relative time is only used at final output, while
-> the time filtering always works earlier on absolute time.
-> 
-> So just remove the check and allow combining the two options.
-> 
-> Fixes: 90b10f47c0ee ("perf script: Support relative time")
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+On Fri, Sep 27, 2019 at 5:26 AM Hui Song <hui.song_1@nxp.com> wrote:
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> More than one gpio controllers can share one interrupt, change the
+> driver to request shared irq.
+>
+> While this will work, it will mess up userspace accounting of the number
+> of interrupts per second in tools such as vmstat.  The reason is that
+> for every GPIO interrupt, /proc/interrupts records the count against GIC
+> interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+> interrupt, the total number of interrupts that the system has seen
+> increments by two
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 > ---
->  tools/perf/builtin-script.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 32b17d51c982..7481003b2761 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -3601,11 +3601,6 @@ int cmd_script(int argc, const char **argv)
->  		}
->  	}
->  
-> -	if (script.time_str && reltime) {
-> -		fprintf(stderr, "Don't combine --reltime with --time\n");
-> -		return -1;
-> -	}
-> -
->  	if (itrace_synth_opts.callchain &&
->  	    itrace_synth_opts.callchain_sz > scripting_max_stack)
->  		scripting_max_stack = itrace_synth_opts.callchain_sz;
-> -- 
-> 2.21.0
-> 
+>  Changes in v6:
+>         - change request_irq to devm_request_irq and add commit message
+
+There is some build error on the patch, can you look into it?
+
+Yours,
+Linus Walleij
