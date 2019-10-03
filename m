@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CCCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819A7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629C32070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5891720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121913;
-	bh=UxrkhlOJ5LfTfHbwZvKs7QiZcYpNZh7w2BoGwiaiP/4=;
+	s=default; t=1570121926;
+	bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDIGk/UxH2LoHj25yi9gIM8Vcyd8lZTR8jndx6DZDQNKdSdysMVpG+M0SA88z5tBk
-	 O2++I12lbHjVfU/0xJeiZ+c06SEFG898AIC+lwPuWLwipd8YF7UnI9UyJ4DqhXRDuE
-	 +AnNekC2jr/QMO4v69AJcs0C8d9UDjlKKrADk4ns=
+	b=m9k0midWf7NzpWOSPxIQP2VVgO8xoDL4BY1zyebJExSGSMZcp/aS9lTLe7klYGqMN
+	 6w3frIgcRRoH+jIAU8rdLEBvDlSUKz7x6efTdqsKgDhvrC9PB7FS8nf3rnmF9JteOP
+	 gVOG2kPTpbzFowPLGBHTh52jyE4xL64dUExk9EEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393284AbfJCQ6c (ORCPT
+        id S2392609AbfJCQsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405669AbfJCQsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:48:33 -0400
+        id S1730393AbfJCQsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF7162070B;
-        Thu,  3 Oct 2019 16:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC52621848;
+        Thu,  3 Oct 2019 16:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121313;
-        bh=UxrkhlOJ5LfTfHbwZvKs7QiZcYpNZh7w2BoGwiaiP/4=;
+        s=default; t=1570121286;
+        bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqYsD/ZIdnAn96MsA1+pW0F3bHwjnxH191+56ODtT0WJ657QWa8A6NZARdT/TxxIB
-         FZ2hLqs/nd0vVGsbZI4ubT4cexxL/88IOe0i00RUT3bZgzI/XXt7S5eS80YCJ41AmF
-         +Te3IVWdWFmomKxn9BqAkE/3dSX2HNudPuGXraQs=
+        b=dlkQGSMJvndGXc5UdImLxdlUTpY3bnuDGfS0taioldSVrd3OuupvH3oKiqWCDcECI
+         iDRma8MhvsGukVWK+rw1sElUrmRSMd4qbih1ceFFG7IMccDRMPOcTXYfcKZHKAgpQc
+         3UAAKqAcfs4BBaDor2b0KoHc5ANw64NQE1/b/YYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 234/344] PM / devfreq: passive: fix compiler warning
-Date:   Thu,  3 Oct 2019 17:53:19 +0200
-Message-Id: <20191003154603.470349649@linuxfoundation.org>
+Subject: [PATCH 5.3 187/344] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
+Date:   Thu,  3 Oct 2019 17:52:32 +0200
+Message-Id: <20191003154558.657691404@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,33 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 0465814831a926ce2f83e8f606d067d86745234e ]
+[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
 
-The recent commit of
-PM / devfreq: passive: Use non-devm notifiers
-had incurred compiler warning, "unused variable 'dev'".
+Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
+for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
+but it turned out that it supplies also some other critical parts and
+board freezes/crashes when it is turned off.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+The mentioned commit made Exynos TMU a consumer of that regulator and in
+typical case Exynos TMU driver keeps it enabled from early boot. However
+there are such configurations (example is multi_v7_defconfig), in which
+some of the regulators are compiled as modules and are not available
+from early boot. In such case it may happen that LDO10 is turned off by
+regulator core, because it has no consumers yet (in this case consumer
+drivers cannot get it, because the supply regulators for it are not yet
+available). This in turn causes the board to crash. This patch restores
+'always-on' property for the LDO10 regulator.
+
+Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index da485477065c5..be6eeab9c814e 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -149,7 +149,6 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
- static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 				unsigned int event, void *data)
- {
--	struct device *dev = devfreq->dev.parent;
- 	struct devfreq_passive_data *p_data
- 			= (struct devfreq_passive_data *)devfreq->data;
- 	struct devfreq *parent = (struct devfreq *)p_data->parent;
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index f78db6809cca4..9eb48cabcca45 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -440,6 +440,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index e0f470fe54c81..4398f2d1fe881 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -440,6 +440,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
 -- 
 2.20.1
 
