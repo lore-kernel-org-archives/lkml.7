@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294E9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A98DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28CF20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7183F2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121567;
-	bh=fWEaeGtp2H7l4xjNjdh86W44KFTLhlpFqGa86ZHBHj0=;
+	s=default; t=1570121570;
+	bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RnAgZfc5ILXQ/hejOEMdOmKNyxmdIuWEm0WU7bJCjdUOK0igbimamEq35q0HMrjjp
-	 U81IzP4cRMvoSXMnvy985dxIcq62D0wa+ZvMWE30rupEf7N6Sw0ZwAt85yT49fOutp
-	 xZ28jWbS1gnZfnVbYLjhDBqx4kQjWwaTJeN+QiTM=
+	b=WQ+HgMN1RStIdp/2MiWpCHIYhqJNk/dhR2TyCo8ZLDQFI8JqfDugxrzr6aWaAwdU6
+	 T8zAomCNV2sQfs+YSIlW+QD2iR7CFbXrNCl5JO4FMPlN9xnUriNS4WAPatyT/NZFWL
+	 hqlsR4aAhptdl9bn44Ds98OXB5Y9o51x+scPxoEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393015AbfJCQwq (ORCPT
+        id S2406243AbfJCQwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406218AbfJCQwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:39 -0400
+        id S2393171AbfJCQwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E37442070B;
-        Thu,  3 Oct 2019 16:52:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2CE2070B;
+        Thu,  3 Oct 2019 16:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121558;
-        bh=fWEaeGtp2H7l4xjNjdh86W44KFTLhlpFqGa86ZHBHj0=;
+        s=default; t=1570121566;
+        bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YG8Z297MdlE5WSMhmwMuNMSM32DDfHEr2ok4KQB1sovCbT7iSET/twAcsc2sl8FGL
-         15B2g/ZJBphGKIno/OF5Pq5DwJBhluOm8qTleI33NvkECvtkjE+mo5rbznv8cyIo7d
-         Et8+KVm7UP62oCXSEqRwjJHu7K6MPSeutcR1TFbI=
+        b=hKpv6+rxJwqgH/argdZvYyxf2ualZjqyAay5/+vzuDL9MUtneVqpA39vbxk1n0Uf2
+         xDdmiHrjsSTEdFUAXoYGnVjxW30J4iTxWDJMDTmBsbVtTWfQZ59cCwNm7mdj16c7IB
+         3Hj4LOwLRSq1rdkwGdJn5MrF2rQI1fHQ4YIpJw+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Kenzior <denkenz@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 323/344] cfg80211: Purge frame registrations on iftype change
-Date:   Thu,  3 Oct 2019 17:54:48 +0200
-Message-Id: <20191003154610.836574231@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Boaz Harrosh <boazh@netapp.com>, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 5.3 326/344] mm: Handle MADV_WILLNEED through vfs_fadvise()
+Date:   Thu,  3 Oct 2019 17:54:51 +0200
+Message-Id: <20191003154611.049777847@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,41 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Kenzior <denkenz@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit c1d3ad84eae35414b6b334790048406bd6301b12 upstream.
+commit 692fe62433d4ca47605b39f7c416efd6679ba694 upstream.
 
-Currently frame registrations are not purged, even when changing the
-interface type.  This can lead to potentially weird situations where
-frames possibly not allowed on a given interface type remain registered
-due to the type switching happening after registration.
+Currently handling of MADV_WILLNEED hint calls directly into readahead
+code. Handle it by calling vfs_fadvise() instead so that filesystem can
+use its ->fadvise() callback to acquire necessary locks or otherwise
+prepare for the request.
 
-The kernel currently relies on userspace apps to actually purge the
-registrations themselves, this is not something that the kernel should
-rely on.
-
-Add a call to cfg80211_mlme_purge_registrations() to forcefully remove
-any registrations left over prior to switching the iftype.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Kenzior <denkenz@gmail.com>
-Link: https://lore.kernel.org/r/20190828211110.15005-1-denkenz@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Reviewed-by: Boaz Harrosh <boazh@netapp.com>
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/util.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/madvise.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -960,6 +960,7 @@ int cfg80211_change_iface(struct cfg8021
- 		}
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -14,6 +14,7 @@
+ #include <linux/userfaultfd_k.h>
+ #include <linux/hugetlb.h>
+ #include <linux/falloc.h>
++#include <linux/fadvise.h>
+ #include <linux/sched.h>
+ #include <linux/ksm.h>
+ #include <linux/fs.h>
+@@ -275,6 +276,7 @@ static long madvise_willneed(struct vm_a
+ 			     unsigned long start, unsigned long end)
+ {
+ 	struct file *file = vma->vm_file;
++	loff_t offset;
  
- 		cfg80211_process_rdev_events(rdev);
-+		cfg80211_mlme_purge_registrations(dev->ieee80211_ptr);
+ 	*prev = vma;
+ #ifdef CONFIG_SWAP
+@@ -298,12 +300,20 @@ static long madvise_willneed(struct vm_a
+ 		return 0;
  	}
  
- 	err = rdev_change_virtual_intf(rdev, dev, ntype, params);
+-	start = ((start - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-	if (end > vma->vm_end)
+-		end = vma->vm_end;
+-	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-
+-	force_page_cache_readahead(file->f_mapping, file, start, end - start);
++	/*
++	 * Filesystem's fadvise may need to take various locks.  We need to
++	 * explicitly grab a reference because the vma (and hence the
++	 * vma's reference to the file) can go away as soon as we drop
++	 * mmap_sem.
++	 */
++	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
++	get_file(file);
++	up_read(&current->mm->mmap_sem);
++	offset = (loff_t)(start - vma->vm_start)
++			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
++	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
++	fput(file);
++	down_read(&current->mm->mmap_sem);
+ 	return 0;
+ }
+ 
 
 
