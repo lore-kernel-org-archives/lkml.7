@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25109C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA051C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A2821783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9939221783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118194;
-	bh=xYGgpdehUdPm4FDMOD+hC88oalwvoQQcY3B11xmlaQw=;
+	s=default; t=1570118195;
+	bh=dW48E+90Ju4Fq2BsIhzQSomBVKhPGaRolKXDtx/RzV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIuQrpa5E3VCvBrDgp9RkgklVmgpO5BSuu6968Gc836OcunNkmTEomi0UvCgRu/LY
-	 g8hnleRtjdOCOQqS5F/X9Niwd2NOLtLkTSs9WEArYIsqYhhw3Kv2GWxstmt3LULRjH
-	 yBc764QV0wJ6zNRtG7u+UY+7pV1vBizZoDDSFmLs=
+	b=BG7+1FoSVzC2+S6djW9XcBJEM8OuGFeKKdBObzAXZsGmkntFqMsOSBVCkYi7gGmWM
+	 FPcuUYh4yiB0FXvgwuKMpIt7ahSW6lErdM5/dpnjTr+/evgdPSJ3A5ammB6XourtTM
+	 vt2v1mFC1kllzXW1h7IgADmGZf7k33mw87XkFX+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbfJCP4a (ORCPT
+        id S1730645AbfJCP4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38098 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:56:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730550AbfJCP4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:19 -0400
+        id S1730567AbfJCP4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83DE721D71;
-        Thu,  3 Oct 2019 15:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E746222C4;
+        Thu,  3 Oct 2019 15:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118176;
-        bh=xYGgpdehUdPm4FDMOD+hC88oalwvoQQcY3B11xmlaQw=;
+        s=default; t=1570118179;
+        bh=dW48E+90Ju4Fq2BsIhzQSomBVKhPGaRolKXDtx/RzV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOVRObtq2YNHEHAPhveZX5Srrs8KjK5QKwyK57RCBBsSxW9hgUpbdImxqO/MprGIB
-         R4DrJFrA/gQgp2sPM39qHhLdSRsO7UOfuR+vwlWFm1EKv5M5mSNi9HxKR7FB8f5XOB
-         9reVdNJJw8iqEJWAjiboyRTrIz/xYWh82pTNgVfU=
+        b=KUPJEfWQyhEpZBr0M1LD7z6txpPwf02lAcVi9ky8D+33zIvuX8oDweKTc4JDd28xN
+         8wQBOaSh57UpvKVqK8gku6h21/3fd5nodhAcRm9FaXK0l0bx3uwsy4fe8VzZf8SEGJ
+         NdkEjs1dKoj8Y7MlFqArf/DQ7+wKVf+vdg0dF+O8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 18/99] drm: Flush output polling on shutdown
-Date:   Thu,  3 Oct 2019 17:52:41 +0200
-Message-Id: <20191003154302.729646198@linuxfoundation.org>
+Subject: [PATCH 4.4 19/99] Bluetooth: btrtl: Additional Realtek 8822CE Bluetooth devices
+Date:   Thu,  3 Oct 2019 17:52:42 +0200
+Message-Id: <20191003154302.862451073@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -60,130 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 3b295cb1a411d9c82bbfaa66bc17a8508716ed07 ]
+[ Upstream commit 6d0762b19c5963ff9e178e8af3626532ee04d93d ]
 
-We need to mark the output polling as disabled to prevent concurrent
-irqs from queuing new work as shutdown the probe -- causing that work to
-execute after we have freed the structs:
+The ASUS X412FA laptop contains a Realtek RTL8822CE device with an
+associated BT chip using a USB ID of 04ca:4005. This ID is added to the
+driver.
 
-<4> [341.846490] DEBUG_LOCKS_WARN_ON(mutex_is_locked(lock))
-<4> [341.846497] WARNING: CPU: 3 PID: 3300 at kernel/locking/mutex-debug.c:103 mutex_destroy+0x49/0x50
-<4> [341.846508] Modules linked in: i915(-) vgem thunderbolt snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic mei_hdcp x86_pkg_temp_thermal coretemp crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_hda_codec snd_hwdep snd_hda_core snd_pcm mcs7830 btusb usbnet btrtl mii btbcm btintel bluetooth ecdh_generic ecc mei_me mei prime_numbers i2c_hid pinctrl_sunrisepoint pinctrl_intel [last unloaded: i915]
-<4> [341.846546] CPU: 3 PID: 3300 Comm: i915_module_loa Tainted: G     U            5.2.0-rc2-CI-CI_DRM_6175+ #1
-<4> [341.846553] Hardware name: Dell Inc. XPS 13 9360/0823VW, BIOS 2.9.0 07/09/2018
-<4> [341.846560] RIP: 0010:mutex_destroy+0x49/0x50
-<4> [341.846565] Code: 00 00 5b c3 e8 a8 9f 3b 00 85 c0 74 ed 8b 05 3e 55 23 01 85 c0 75 e3 48 c7 c6 00 d0 08 82 48 c7 c7 a8 aa 07 82 e8 e7 08 fa ff <0f> 0b eb cc 0f 1f 00 48 b8 11 11 11 11 11 11 11 11 48 89 76 20 48
-<4> [341.846578] RSP: 0018:ffffc900006cfdb0 EFLAGS: 00010286
-<4> [341.846583] RAX: 0000000000000000 RBX: ffff88826759a168 RCX: 0000000000000000
-<4> [341.846589] RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffffffff8112844c
-<4> [341.846595] RBP: ffff8882708fa548 R08: 0000000000000000 R09: 0000000000039600
-<4> [341.846601] R10: 0000000000000000 R11: 0000000000000ce4 R12: ffffffffa07de1e0
-<4> [341.846607] R13: 0000000000000000 R14: 0000000000000000 R15: ffffffffa07de2d0
-<4> [341.846613] FS:  00007f62b5ae0e40(0000) GS:ffff888276380000(0000) knlGS:0000000000000000
-<4> [341.846620] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [341.846626] CR2: 000055a4e064f4a0 CR3: 0000000266b16006 CR4: 00000000003606e0
-<4> [341.846632] Call Trace:
-<4> [341.846639]  drm_fb_helper_fini.part.17+0xb3/0x100
-<4> [341.846682]  intel_fbdev_fini+0x20/0x80 [i915]
-<4> [341.846722]  intel_modeset_cleanup+0x9a/0x140 [i915]
-<4> [341.846750]  i915_driver_unload+0xa3/0x100 [i915]
-<4> [341.846778]  i915_pci_remove+0x19/0x30 [i915]
-<4> [341.846784]  pci_device_remove+0x36/0xb0
-<4> [341.846790]  device_release_driver_internal+0xd3/0x1b0
-<4> [341.846795]  driver_detach+0x3f/0x80
-<4> [341.846800]  bus_remove_driver+0x53/0xd0
-<4> [341.846805]  pci_unregister_driver+0x25/0xa0
-<4> [341.846843]  i915_exit+0x16/0x1c [i915]
-<4> [341.846849]  __se_sys_delete_module+0x162/0x210
-<4> [341.846855]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-<4> [341.846859]  ? do_syscall_64+0xd/0x1c0
-<4> [341.846864]  do_syscall_64+0x55/0x1c0
-<4> [341.846869]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-<4> [341.846875] RIP: 0033:0x7f62b51871b7
-<4> [341.846881] Code: 73 01 c3 48 8b 0d d1 8c 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 8c 2c 00 f7 d8 64 89 01 48
-<4> [341.846897] RSP: 002b:00007ffe7a227138 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-<4> [341.846904] RAX: ffffffffffffffda RBX: 00007ffe7a2272b0 RCX: 00007f62b51871b7
-<4> [341.846910] RDX: 0000000000000001 RSI: 0000000000000800 RDI: 0000557cd6b55948
-<4> [341.846916] RBP: 0000557cd6b558e0 R08: 0000557cd6b5594c R09: 00007ffe7a227160
-<4> [341.846922] R10: 00007ffe7a226134 R11: 0000000000000206 R12: 0000000000000000
-<4> [341.846927] R13: 00007ffe7a227820 R14: 0000000000000000 R15: 0000000000000000
-<4> [341.846936] irq event stamp: 3547847
-<4> [341.846940] hardirqs last  enabled at (3547847): [<ffffffff819aad2c>] _raw_spin_unlock_irqrestore+0x4c/0x60
-<4> [341.846949] hardirqs last disabled at (3547846): [<ffffffff819aab9d>] _raw_spin_lock_irqsave+0xd/0x50
-<4> [341.846957] softirqs last  enabled at (3547376): [<ffffffff81c0033a>] __do_softirq+0x33a/0x4b9
-<4> [341.846966] softirqs last disabled at (3547367): [<ffffffff810b6379>] irq_exit+0xa9/0xc0
-<4> [341.846973] WARNING: CPU: 3 PID: 3300 at kernel/locking/mutex-debug.c:103 mutex_destroy+0x49/0x50
-<4> [341.846980] ---[ end trace ba94ca8952ba970e ]---
-<7> [341.866547] [drm:intel_dp_detect [i915]] MST support? port A: no, sink: no, modparam: yes
-<7> [341.890480] [drm:drm_add_display_info] non_desktop set to 0
-<7> [341.890530] [drm:drm_add_edid_modes] ELD: no CEA Extension found
-<7> [341.890537] [drm:drm_add_display_info] non_desktop set to 0
-<7> [341.890578] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:86:eDP-1] probed modes :
-<7> [341.890589] [drm:drm_mode_debug_printmodeline] Modeline "3200x1800": 60 373250 3200 3248 3280 3360 1800 1803 1808 1852 0x48 0xa
-<7> [341.890602] [drm:drm_mode_debug_printmodeline] Modeline "3200x1800": 48 298600 3200 3248 3280 3360 1800 1803 1808 1852 0x40 0xa
-<4> [341.890628] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [341.890636] CPU: 0 PID: 508 Comm: kworker/0:4 Tainted: G     U  W         5.2.0-rc2-CI-CI_DRM_6175+ #1
-<4> [341.890646] Hardware name: Dell Inc. XPS 13 9360/0823VW, BIOS 2.9.0 07/09/2018
-<4> [341.890655] Workqueue: events output_poll_execute
-<4> [341.890663] RIP: 0010:drm_setup_crtcs+0x13e/0xbe0
-<4> [341.890669] Code: 00 41 8b 44 24 58 85 c0 0f 8e f9 01 00 00 44 8b 6c 24 20 44 8b 74 24 28 31 db 31 ed 49 8b 44 24 60 48 63 d5 44 89 ee 83 c5 01 <48> 8b 04 d0 44 89 f2 48 8b 38 48 8b 87 88 01 00 00 48 8b 40 20 e8
-<4> [341.890686] RSP: 0018:ffffc9000033fd40 EFLAGS: 00010202
-<4> [341.890692] RAX: 6b6b6b6b6b6b6b6b RBX: 0000000000000002 RCX: 0000000000000000
-<4> [341.890700] RDX: 0000000000000001 RSI: 0000000000000c80 RDI: 00000000ffffffff
-<4> [341.890707] RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-<4> [341.890715] R10: 0000000000000c80 R11: 0000000000000000 R12: ffff888267599fe8
-<4> [341.890722] R13: 0000000000000c80 R14: 0000000000000708 R15: 0000000000000007
-<4> [341.890730] FS:  0000000000000000(0000) GS:ffff888276200000(0000) knlGS:0000000000000000
-<4> [341.890739] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [341.890745] CR2: 000055a4e064f4a0 CR3: 000000026d234003 CR4: 00000000003606f0
-<4> [341.890752] Call Trace:
-<4> [341.890760]  drm_fb_helper_hotplug_event.part.24+0x89/0xb0
-<4> [341.890768]  drm_kms_helper_hotplug_event+0x21/0x30
-<4> [341.890774]  output_poll_execute+0x9d/0x1a0
-<4> [341.890782]  process_one_work+0x245/0x610
-<4> [341.890790]  worker_thread+0x37/0x380
-<4> [341.890796]  ? process_one_work+0x610/0x610
-<4> [341.890802]  kthread+0x119/0x130
-<4> [341.890808]  ? kthread_park+0x80/0x80
-<4> [341.890815]  ret_from_fork+0x3a/0x50
+The /sys/kernel/debug/usb/devices portion for this device is:
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109964
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Imre Deak <imre.deak@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603135910.15979-2-chris@chris-wilson.co.uk
+T:  Bus=01 Lev=01 Prnt=01 Port=09 Cnt=04 Dev#=  4 Spd=12   MxCh= 0
+D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=04ca ProdID=4005 Rev= 0.00
+S:  Manufacturer=Realtek
+S:  Product=Bluetooth Radio
+S:  SerialNumber=00e04c000001
+C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204707
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_probe_helper.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
-index 1fe4b8e6596bd..de1797b3a7461 100644
---- a/drivers/gpu/drm/drm_probe_helper.c
-+++ b/drivers/gpu/drm/drm_probe_helper.c
-@@ -338,6 +338,9 @@ static void output_poll_execute(struct work_struct *work)
- 	enum drm_connector_status old_status;
- 	bool repoll = false, changed;
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index b0a12e6dae439..fcc12c8796598 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -353,6 +353,9 @@ static const struct usb_device_id blacklist_table[] = {
+ 	/* Additional Realtek 8822BE Bluetooth devices */
+ 	{ USB_DEVICE(0x0b05, 0x185c), .driver_info = BTUSB_REALTEK },
  
-+	if (!dev->mode_config.poll_enabled)
-+		return;
++	/* Additional Realtek 8822CE Bluetooth devices */
++	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
 +
- 	/* Pick up any changes detected by the probe functions. */
- 	changed = dev->mode_config.delayed_event;
- 	dev->mode_config.delayed_event = false;
-@@ -501,7 +504,11 @@ EXPORT_SYMBOL(drm_kms_helper_poll_init);
-  */
- void drm_kms_helper_poll_fini(struct drm_device *dev)
- {
--	drm_kms_helper_poll_disable(dev);
-+	if (!dev->mode_config.poll_enabled)
-+		return;
-+
-+	dev->mode_config.poll_enabled = false;
-+	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
- }
- EXPORT_SYMBOL(drm_kms_helper_poll_fini);
+ 	/* Silicon Wave based devices */
+ 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
  
 -- 
 2.20.1
