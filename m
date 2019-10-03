@@ -2,313 +2,80 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D40C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F46620830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121159;
-	bh=JEDXQxD7XcF4gs8ZtNZblO3H6KrpbU4PtWGtaMIjRu0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kE0XGXz6Xe8+RPQEmwKgwMYyBEc/S97HQYxUSqHKus0ygFyfdeaV15FItzQ3NHV2t
-	 m18IdQJa4PcJE1msoDEwTBQlRmnMtYOoB09dXT50JmfYp1gnxlU7aNSpcsDXdp4BHL
-	 8SZKvv5EmnAYcDlxMsSHYzrW9d1H3tuA/v1mn7+s=
+	by mail.kernel.org (Postfix) with ESMTP id DC93120867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392868AbfJCQp6 (ORCPT
+        id S2392880AbfJCQqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58718 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:46:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48602 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392855AbfJCQpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731237AbfJCQp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:58 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A14B820830;
-        Thu,  3 Oct 2019 16:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121154;
-        bh=JEDXQxD7XcF4gs8ZtNZblO3H6KrpbU4PtWGtaMIjRu0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OrBkK1+VnlZxUgsrAOvxcDk59ESHG9r4/yfbWw4NuYCgjnhFxU1D5RfSlqXLdMiaC
-         y6Kyvu7kjKVhhmqWDPJqz5V7zFQ+377sRStrNC2y98MQPI51co/i5t1wHUQ0kp+IoS
-         XhM3SAvN+px0qDdDSb9T5JL9AciybgQbDjMkqkVk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 173/344] arm64: Use correct ll/sc atomic constraints
-Date:   Thu,  3 Oct 2019 17:52:18 +0200
-Message-Id: <20191003154557.294518177@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id C648065998;
+        Thu,  3 Oct 2019 16:45:58 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DD3CE46;
+        Thu,  3 Oct 2019 16:45:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net-next] rxrpc: Add missing "new peer" trace
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 03 Oct 2019 17:45:57 +0100
+Message-ID: <157012115701.21124.13973726693523106899.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 03 Oct 2019 16:45:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+There was supposed to be a trace indicating that a new peer had been
+created.  Add it.
 
-[ Upstream commit 580fa1b874711d633f9b145b7777b0e83ebf3787 ]
-
-The A64 ISA accepts distinct (but overlapping) ranges of immediates for:
-
- * add arithmetic instructions ('I' machine constraint)
- * sub arithmetic instructions ('J' machine constraint)
- * 32-bit logical instructions ('K' machine constraint)
- * 64-bit logical instructions ('L' machine constraint)
-
-... but we currently use the 'I' constraint for many atomic operations
-using sub or logical instructions, which is not always valid.
-
-When CONFIG_ARM64_LSE_ATOMICS is not set, this allows invalid immediates
-to be passed to instructions, potentially resulting in a build failure.
-When CONFIG_ARM64_LSE_ATOMICS is selected the out-of-line ll/sc atomics
-always use a register as they have no visibility of the value passed by
-the caller.
-
-This patch adds a constraint parameter to the ATOMIC_xx and
-__CMPXCHG_CASE macros so that we can pass appropriate constraints for
-each case, with uses updated accordingly.
-
-Unfortunately prior to GCC 8.1.0 the 'K' constraint erroneously accepted
-'4294967295', so we must instead force the use of a register.
-
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- arch/arm64/include/asm/atomic_ll_sc.h | 89 ++++++++++++++-------------
- 1 file changed, 47 insertions(+), 42 deletions(-)
 
-diff --git a/arch/arm64/include/asm/atomic_ll_sc.h b/arch/arm64/include/asm/atomic_ll_sc.h
-index c8c850bc3dfb0..6dd011e0b434a 100644
---- a/arch/arm64/include/asm/atomic_ll_sc.h
-+++ b/arch/arm64/include/asm/atomic_ll_sc.h
-@@ -26,7 +26,7 @@
-  * (the optimize attribute silently ignores these options).
+ net/rxrpc/peer_object.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index 9c3ac96f71cb..bf4dd6cf79a0 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -209,6 +209,7 @@ static void rxrpc_assess_MTU_size(struct rxrpc_sock *rx,
   */
+ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
+ {
++	const void *here = __builtin_return_address(0);
+ 	struct rxrpc_peer *peer;
  
--#define ATOMIC_OP(op, asm_op)						\
-+#define ATOMIC_OP(op, asm_op, constraint)				\
- __LL_SC_INLINE void							\
- __LL_SC_PREFIX(arch_atomic_##op(int i, atomic_t *v))			\
- {									\
-@@ -40,11 +40,11 @@ __LL_SC_PREFIX(arch_atomic_##op(int i, atomic_t *v))			\
- "	stxr	%w1, %w0, %2\n"						\
- "	cbnz	%w1, 1b"						\
- 	: "=&r" (result), "=&r" (tmp), "+Q" (v->counter)		\
--	: "Ir" (i));							\
-+	: #constraint "r" (i));						\
- }									\
- __LL_SC_EXPORT(arch_atomic_##op);
+ 	_enter("");
+@@ -230,6 +231,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
+ 			peer->cong_cwnd = 3;
+ 		else
+ 			peer->cong_cwnd = 4;
++		trace_rxrpc_peer(peer, rxrpc_peer_new, 1, here);
+ 	}
  
--#define ATOMIC_OP_RETURN(name, mb, acq, rel, cl, op, asm_op)		\
-+#define ATOMIC_OP_RETURN(name, mb, acq, rel, cl, op, asm_op, constraint)\
- __LL_SC_INLINE int							\
- __LL_SC_PREFIX(arch_atomic_##op##_return##name(int i, atomic_t *v))	\
- {									\
-@@ -59,14 +59,14 @@ __LL_SC_PREFIX(arch_atomic_##op##_return##name(int i, atomic_t *v))	\
- "	cbnz	%w1, 1b\n"						\
- "	" #mb								\
- 	: "=&r" (result), "=&r" (tmp), "+Q" (v->counter)		\
--	: "Ir" (i)							\
-+	: #constraint "r" (i)						\
- 	: cl);								\
- 									\
- 	return result;							\
- }									\
- __LL_SC_EXPORT(arch_atomic_##op##_return##name);
- 
--#define ATOMIC_FETCH_OP(name, mb, acq, rel, cl, op, asm_op)		\
-+#define ATOMIC_FETCH_OP(name, mb, acq, rel, cl, op, asm_op, constraint)	\
- __LL_SC_INLINE int							\
- __LL_SC_PREFIX(arch_atomic_fetch_##op##name(int i, atomic_t *v))	\
- {									\
-@@ -81,7 +81,7 @@ __LL_SC_PREFIX(arch_atomic_fetch_##op##name(int i, atomic_t *v))	\
- "	cbnz	%w2, 1b\n"						\
- "	" #mb								\
- 	: "=&r" (result), "=&r" (val), "=&r" (tmp), "+Q" (v->counter)	\
--	: "Ir" (i)							\
-+	: #constraint "r" (i)						\
- 	: cl);								\
- 									\
- 	return result;							\
-@@ -99,8 +99,8 @@ __LL_SC_EXPORT(arch_atomic_fetch_##op##name);
- 	ATOMIC_FETCH_OP (_acquire,        , a,  , "memory", __VA_ARGS__)\
- 	ATOMIC_FETCH_OP (_release,        ,  , l, "memory", __VA_ARGS__)
- 
--ATOMIC_OPS(add, add)
--ATOMIC_OPS(sub, sub)
-+ATOMIC_OPS(add, add, I)
-+ATOMIC_OPS(sub, sub, J)
- 
- #undef ATOMIC_OPS
- #define ATOMIC_OPS(...)							\
-@@ -110,17 +110,17 @@ ATOMIC_OPS(sub, sub)
- 	ATOMIC_FETCH_OP (_acquire,        , a,  , "memory", __VA_ARGS__)\
- 	ATOMIC_FETCH_OP (_release,        ,  , l, "memory", __VA_ARGS__)
- 
--ATOMIC_OPS(and, and)
--ATOMIC_OPS(andnot, bic)
--ATOMIC_OPS(or, orr)
--ATOMIC_OPS(xor, eor)
-+ATOMIC_OPS(and, and, )
-+ATOMIC_OPS(andnot, bic, )
-+ATOMIC_OPS(or, orr, )
-+ATOMIC_OPS(xor, eor, )
- 
- #undef ATOMIC_OPS
- #undef ATOMIC_FETCH_OP
- #undef ATOMIC_OP_RETURN
- #undef ATOMIC_OP
- 
--#define ATOMIC64_OP(op, asm_op)						\
-+#define ATOMIC64_OP(op, asm_op, constraint)				\
- __LL_SC_INLINE void							\
- __LL_SC_PREFIX(arch_atomic64_##op(s64 i, atomic64_t *v))		\
- {									\
-@@ -134,11 +134,11 @@ __LL_SC_PREFIX(arch_atomic64_##op(s64 i, atomic64_t *v))		\
- "	stxr	%w1, %0, %2\n"						\
- "	cbnz	%w1, 1b"						\
- 	: "=&r" (result), "=&r" (tmp), "+Q" (v->counter)		\
--	: "Ir" (i));							\
-+	: #constraint "r" (i));						\
- }									\
- __LL_SC_EXPORT(arch_atomic64_##op);
- 
--#define ATOMIC64_OP_RETURN(name, mb, acq, rel, cl, op, asm_op)		\
-+#define ATOMIC64_OP_RETURN(name, mb, acq, rel, cl, op, asm_op, constraint)\
- __LL_SC_INLINE s64							\
- __LL_SC_PREFIX(arch_atomic64_##op##_return##name(s64 i, atomic64_t *v))\
- {									\
-@@ -153,14 +153,14 @@ __LL_SC_PREFIX(arch_atomic64_##op##_return##name(s64 i, atomic64_t *v))\
- "	cbnz	%w1, 1b\n"						\
- "	" #mb								\
- 	: "=&r" (result), "=&r" (tmp), "+Q" (v->counter)		\
--	: "Ir" (i)							\
-+	: #constraint "r" (i)						\
- 	: cl);								\
- 									\
- 	return result;							\
- }									\
- __LL_SC_EXPORT(arch_atomic64_##op##_return##name);
- 
--#define ATOMIC64_FETCH_OP(name, mb, acq, rel, cl, op, asm_op)		\
-+#define ATOMIC64_FETCH_OP(name, mb, acq, rel, cl, op, asm_op, constraint)\
- __LL_SC_INLINE s64							\
- __LL_SC_PREFIX(arch_atomic64_fetch_##op##name(s64 i, atomic64_t *v))	\
- {									\
-@@ -175,7 +175,7 @@ __LL_SC_PREFIX(arch_atomic64_fetch_##op##name(s64 i, atomic64_t *v))	\
- "	cbnz	%w2, 1b\n"						\
- "	" #mb								\
- 	: "=&r" (result), "=&r" (val), "=&r" (tmp), "+Q" (v->counter)	\
--	: "Ir" (i)							\
-+	: #constraint "r" (i)						\
- 	: cl);								\
- 									\
- 	return result;							\
-@@ -193,8 +193,8 @@ __LL_SC_EXPORT(arch_atomic64_fetch_##op##name);
- 	ATOMIC64_FETCH_OP (_acquire,, a,  , "memory", __VA_ARGS__)	\
- 	ATOMIC64_FETCH_OP (_release,,  , l, "memory", __VA_ARGS__)
- 
--ATOMIC64_OPS(add, add)
--ATOMIC64_OPS(sub, sub)
-+ATOMIC64_OPS(add, add, I)
-+ATOMIC64_OPS(sub, sub, J)
- 
- #undef ATOMIC64_OPS
- #define ATOMIC64_OPS(...)						\
-@@ -204,10 +204,10 @@ ATOMIC64_OPS(sub, sub)
- 	ATOMIC64_FETCH_OP (_acquire,, a,  , "memory", __VA_ARGS__)	\
- 	ATOMIC64_FETCH_OP (_release,,  , l, "memory", __VA_ARGS__)
- 
--ATOMIC64_OPS(and, and)
--ATOMIC64_OPS(andnot, bic)
--ATOMIC64_OPS(or, orr)
--ATOMIC64_OPS(xor, eor)
-+ATOMIC64_OPS(and, and, L)
-+ATOMIC64_OPS(andnot, bic, )
-+ATOMIC64_OPS(or, orr, L)
-+ATOMIC64_OPS(xor, eor, L)
- 
- #undef ATOMIC64_OPS
- #undef ATOMIC64_FETCH_OP
-@@ -237,7 +237,7 @@ __LL_SC_PREFIX(arch_atomic64_dec_if_positive(atomic64_t *v))
- }
- __LL_SC_EXPORT(arch_atomic64_dec_if_positive);
- 
--#define __CMPXCHG_CASE(w, sfx, name, sz, mb, acq, rel, cl)		\
-+#define __CMPXCHG_CASE(w, sfx, name, sz, mb, acq, rel, cl, constraint)	\
- __LL_SC_INLINE u##sz							\
- __LL_SC_PREFIX(__cmpxchg_case_##name##sz(volatile void *ptr,		\
- 					 unsigned long old,		\
-@@ -265,29 +265,34 @@ __LL_SC_PREFIX(__cmpxchg_case_##name##sz(volatile void *ptr,		\
- 	"2:"								\
- 	: [tmp] "=&r" (tmp), [oldval] "=&r" (oldval),			\
- 	  [v] "+Q" (*(u##sz *)ptr)					\
--	: [old] "Kr" (old), [new] "r" (new)				\
-+	: [old] #constraint "r" (old), [new] "r" (new)			\
- 	: cl);								\
- 									\
- 	return oldval;							\
- }									\
- __LL_SC_EXPORT(__cmpxchg_case_##name##sz);
- 
--__CMPXCHG_CASE(w, b,     ,  8,        ,  ,  ,         )
--__CMPXCHG_CASE(w, h,     , 16,        ,  ,  ,         )
--__CMPXCHG_CASE(w,  ,     , 32,        ,  ,  ,         )
--__CMPXCHG_CASE( ,  ,     , 64,        ,  ,  ,         )
--__CMPXCHG_CASE(w, b, acq_,  8,        , a,  , "memory")
--__CMPXCHG_CASE(w, h, acq_, 16,        , a,  , "memory")
--__CMPXCHG_CASE(w,  , acq_, 32,        , a,  , "memory")
--__CMPXCHG_CASE( ,  , acq_, 64,        , a,  , "memory")
--__CMPXCHG_CASE(w, b, rel_,  8,        ,  , l, "memory")
--__CMPXCHG_CASE(w, h, rel_, 16,        ,  , l, "memory")
--__CMPXCHG_CASE(w,  , rel_, 32,        ,  , l, "memory")
--__CMPXCHG_CASE( ,  , rel_, 64,        ,  , l, "memory")
--__CMPXCHG_CASE(w, b,  mb_,  8, dmb ish,  , l, "memory")
--__CMPXCHG_CASE(w, h,  mb_, 16, dmb ish,  , l, "memory")
--__CMPXCHG_CASE(w,  ,  mb_, 32, dmb ish,  , l, "memory")
--__CMPXCHG_CASE( ,  ,  mb_, 64, dmb ish,  , l, "memory")
-+/*
-+ * Earlier versions of GCC (no later than 8.1.0) appear to incorrectly
-+ * handle the 'K' constraint for the value 4294967295 - thus we use no
-+ * constraint for 32 bit operations.
-+ */
-+__CMPXCHG_CASE(w, b,     ,  8,        ,  ,  ,         , )
-+__CMPXCHG_CASE(w, h,     , 16,        ,  ,  ,         , )
-+__CMPXCHG_CASE(w,  ,     , 32,        ,  ,  ,         , )
-+__CMPXCHG_CASE( ,  ,     , 64,        ,  ,  ,         , L)
-+__CMPXCHG_CASE(w, b, acq_,  8,        , a,  , "memory", )
-+__CMPXCHG_CASE(w, h, acq_, 16,        , a,  , "memory", )
-+__CMPXCHG_CASE(w,  , acq_, 32,        , a,  , "memory", )
-+__CMPXCHG_CASE( ,  , acq_, 64,        , a,  , "memory", L)
-+__CMPXCHG_CASE(w, b, rel_,  8,        ,  , l, "memory", )
-+__CMPXCHG_CASE(w, h, rel_, 16,        ,  , l, "memory", )
-+__CMPXCHG_CASE(w,  , rel_, 32,        ,  , l, "memory", )
-+__CMPXCHG_CASE( ,  , rel_, 64,        ,  , l, "memory", L)
-+__CMPXCHG_CASE(w, b,  mb_,  8, dmb ish,  , l, "memory", )
-+__CMPXCHG_CASE(w, h,  mb_, 16, dmb ish,  , l, "memory", )
-+__CMPXCHG_CASE(w,  ,  mb_, 32, dmb ish,  , l, "memory", )
-+__CMPXCHG_CASE( ,  ,  mb_, 64, dmb ish,  , l, "memory", L)
- 
- #undef __CMPXCHG_CASE
- 
--- 
-2.20.1
-
-
+ 	_leave(" = %p", peer);
 
