@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2920C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5DDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C422070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D38220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122272;
-	bh=DWKtDScol93RdvJbv9yCwIQTJp8Y0GXPef1Cydqd2G8=;
+	s=default; t=1570122289;
+	bh=8w1s5lfnGLvSVJ9z1WInK5LJrmxiaBT1G9gYmEMrPtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4Nyrr5cAClxFh1HlGIYWi+Y8pAqo0agCwX7/bebg/paaEDgioPfkhNKuYyccOtfl
-	 lHwvekY5gLhgS6EzrwO9BCSYd0N3sZVetNSedLQ5FH38JdphihZZgH9k39636PXYLZ
-	 xWng5ia3jPXYqPWcQkSrMW4RhIYsVGHgO6AbH4uc=
+	b=v4K+QtbzZutBsR375QNkQNLUlZOHa/O4hSWDa6b3aZw0rjEl8PumOoMqG+/xMQyCI
+	 WNQJD7Tas3EF0XkO02C3PH392THshzZzo0JeefHRuDn8AD2unAHt9vF2W1H6eFQ8I3
+	 TU76onjI+GuU+SOu7vc74MHG6NhXmixfvrtTghXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393324AbfJCREb (ORCPT
+        id S2393331AbfJCREs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51340 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404990AbfJCQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:00 -0400
+        id S2404919AbfJCQkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:40:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CB262054F;
-        Thu,  3 Oct 2019 16:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2420F215EA;
+        Thu,  3 Oct 2019 16:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120860;
-        bh=DWKtDScol93RdvJbv9yCwIQTJp8Y0GXPef1Cydqd2G8=;
+        s=default; t=1570120832;
+        bh=8w1s5lfnGLvSVJ9z1WInK5LJrmxiaBT1G9gYmEMrPtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9+1wupIFhNVoFtcxtSZB/NohI5WxOB6SpFOu20mMv8bSDQbJCYRHxSVoGbat/MBE
-         wMqkBHw5PRpgjjot9mVLqlq/MH7wBiDMNGefnJESfZEn0n2ci4nwoEPqsDt18eZxIm
-         0B9MDG6YzTgliQATc0r91GPp2VzaYh/vInJVsxHU=
+        b=Q3eHQbjJ2OGLM+CFGtWrjSum6jQHcxgK26184bDKeIPMejaH0Pws9A+vko7v8pB1Y
+         JJoQr+orn300sRm2F0tveK5+GEDvGz9cHPEsWYhZnqFTvAwtE0CifgaCYo6G7C7QJh
+         Xb3IY7WNAd9LK93yeZ6AEZDNmSRbaCCDo5iaPGJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, lizefan@huawei.com,
-        longman@redhat.com, luca.abeni@santannapisa.it,
-        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 063/344] sched/core: Fix CPU controller for !RT_GROUP_SCHED
-Date:   Thu,  3 Oct 2019 17:50:28 +0200
-Message-Id: <20191003154546.321555460@linuxfoundation.org>
+Subject: [PATCH 5.3 054/344] ASoC: SOF: pci: mark last_busy value at runtime PM init
+Date:   Thu,  3 Oct 2019 17:50:19 +0200
+Message-Id: <20191003154545.474856846@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -67,79 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Pan Xiuli <xiuli.pan@linux.intel.com>
 
-[ Upstream commit a07db5c0865799ebed1f88be0df50c581fb65029 ]
+[ Upstream commit f1b1b9b136827915624136624ff54aba5890a15b ]
 
-On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-move RT tasks between cgroups to which CPU controller has been attached;
-but it is oddly possible to first move tasks around and then make them
-RT (setschedule to FIFO/RR).
+If last_busy value is not set at runtime PM enable, the device will be
+suspend immediately after usage counter is 0. Set the last_busy value to
+make sure delay is working at first boot up.
 
-E.g.:
-
-  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
-  # chrt -fp 10 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  bash: echo: write error: Invalid argument
-  # chrt -op 0 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  # chrt -fp 10 $$
-  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  2345
-  2598
-  # chrt -p 2345
-  pid 2345's current scheduling policy: SCHED_FIFO
-  pid 2345's current scheduling priority: 10
-
-Also, as Michal noted, it is currently not possible to enable CPU
-controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
-are any kernel RT threads in root cgroup, they can't be migrated to the
-newly created CPU controller's root in cgroup_update_dfl_csses()).
-
-Existing code comes with a comment saying the "we don't support RT-tasks
-being in separate groups". Such comment is however stale and belongs to
-pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-are not performed at all in these cases.
-
-Make moving RT tasks between CPU controller groups viable by removing
-special case check for RT (and DEADLINE) tasks.
-
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: lizefan@huawei.com
-Cc: longman@redhat.com
-Cc: luca.abeni@santannapisa.it
-Cc: rostedt@goodmis.org
-Link: https://lkml.kernel.org/r/20190719063455.27328-1-juri.lelli@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190722141402.7194-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
+ sound/soc/sof/sof-pci-dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7fa8e74ad2ab4..d38f007afea74 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6980,10 +6980,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
- #ifdef CONFIG_RT_GROUP_SCHED
- 		if (!sched_rt_can_attach(css_tg(css), task))
- 			return -EINVAL;
--#else
--		/* We don't support RT-tasks being in separate groups */
--		if (task->sched_class != &fair_sched_class)
--			return -EINVAL;
- #endif
- 		/*
- 		 * Serialize against wake_up_new_task() such that if its
+diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
+index 65d1bac4c6b8b..6fd3df7c57a3a 100644
+--- a/sound/soc/sof/sof-pci-dev.c
++++ b/sound/soc/sof/sof-pci-dev.c
+@@ -223,6 +223,9 @@ static void sof_pci_probe_complete(struct device *dev)
+ 	 */
+ 	pm_runtime_allow(dev);
+ 
++	/* mark last_busy for pm_runtime to make sure not suspend immediately */
++	pm_runtime_mark_last_busy(dev);
++
+ 	/* follow recommendation in pci-driver.c to decrement usage counter */
+ 	pm_runtime_put_noidle(dev);
+ }
 -- 
 2.20.1
 
