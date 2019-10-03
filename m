@@ -2,52 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F692C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD6BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9B021848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A6E20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119338;
-	bh=01/b3bViCNm6jZBCBwJsYl/9WvWajsU4eHQQh4EqkJs=;
+	s=default; t=1570119341;
+	bh=BwIqEIHAFRGX7m8m0TfqC8bEZ2qfLxB+Kv6uE2zcoDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpFf0cB1XNdUawdTdCJtB1RD+8BRurakNx+P72HGGSH+kIQVB0/wjhdt9cVeXQvST
-	 gdNtTJaVbq2PSI455YnuAAfgHV7BQ3WmnB5VJHreMKOlkDm6sbA/JARXC83DvV9Ww7
-	 UpnBafpFz10A0IKajQkWZ5PLZuUSe1oKkR+t1jFU=
+	b=Iq2MK0QFsjqRA/MKJMvjprjsnCG+whKVteH0KQmuttS8bChwCEU3yf4lV7EO68xzm
+	 jCokEJeGW7aDMOzf8b5W6MB8lefhet5npsrD5SHEDF1mH3flEBrgQEq7pm8/e5rMxN
+	 Pf/6AacHigZulJiD79+PxUT4SvKWxwmD1OWtUQ4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732126AbfJCQPg (ORCPT
+        id S2388314AbfJCQPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39778 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732226AbfJCQPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:15:33 -0400
+        id S1732566AbfJCQPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:15:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0DD220865;
-        Thu,  3 Oct 2019 16:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 178ED20700;
+        Thu,  3 Oct 2019 16:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119333;
-        bh=01/b3bViCNm6jZBCBwJsYl/9WvWajsU4eHQQh4EqkJs=;
+        s=default; t=1570119338;
+        bh=BwIqEIHAFRGX7m8m0TfqC8bEZ2qfLxB+Kv6uE2zcoDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uj47XEgeKDL1Mnizir1pU2Phuy7ohhFHnZet8fuI38HtMq8da2Max3U4SwzRg3ewx
-         ZCWAs8YEotMihBw5196/IIKY6fd76nTcZwhIQ4mCnWa4jU4gNB+ltkNYybdBhJslRo
-         nwHl6vGkySwLaG9HbRs3+bY5xKNmik6r8dG87HMI=
+        b=PgxhYWJ8MwqdU03u6Csxkxzo9GXpFhIasqnG/nXYLgl71eXNCIbRyKpZEkh/CMvHY
+         iOpFpnepPMLGyEwBxb4GVtQxoDdtEPrWxwsKMqA8R0uBpK6yrysfRJOqunxIGdVMLx
+         wtYBwuH+x8ViUNQ2YUNpeFqY+8vLbn7I7ETKhyv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/211] ASoC: tlv320aic31xx: suppress error message for EPROBE_DEFER
-Date:   Thu,  3 Oct 2019 17:51:32 +0200
-Message-Id: <20191003154453.171303474@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 003/211] macsec: drop skb sk before calling gro_cells_receive
+Date:   Thu,  3 Oct 2019 17:51:09 +0200
+Message-Id: <20191003154447.921813005@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,50 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit b7e814deae33eb30f8f8c6528e8e69b107978d88 ]
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
-Both the supplies and reset GPIO might need a probe deferral for the
-resource to be available. Don't print a error message in that case, as
-it is a normal operating condition.
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Link: https://lore.kernel.org/r/20190719143637.2018-1-l.stach@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
+
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
+
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
+
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
+
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/macsec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index bf92d36b8f8ab..3c75dcf917417 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1441,7 +1441,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
- 						      GPIOD_OUT_LOW);
- 	if (IS_ERR(aic31xx->gpio_reset)) {
--		dev_err(aic31xx->dev, "not able to acquire gpio\n");
-+		if (PTR_ERR(aic31xx->gpio_reset) != -EPROBE_DEFER)
-+			dev_err(aic31xx->dev, "not able to acquire gpio\n");
- 		return PTR_ERR(aic31xx->gpio_reset);
- 	}
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1238,6 +1238,7 @@ deliver:
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
  
-@@ -1452,7 +1453,9 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 				      ARRAY_SIZE(aic31xx->supplies),
- 				      aic31xx->supplies);
- 	if (ret) {
--		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(aic31xx->dev,
-+				"Failed to request supplies: %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.20.1
-
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
 
 
