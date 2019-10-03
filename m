@@ -2,70 +2,119 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E443C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D685C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B2D2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570127416;
-	bh=UBjhMnDknMo9MBM+b7Q1nXNP29xUGsrYmOuL34RiEus=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ZCZswqmeXREU4heXU/dh5BfQZ5JGoW4ukEUVXxPDSnGwTUGazUh4+3zLnrYZ3PEfg
-	 I3M5oMFdEilID5r3DPgCs6detR+z2ygMApY6TyRWN2UZH0uOvA7CdIKGrXIr/yVN8u
-	 8MsAbLn5PZvExIiUpxigTkd/cWckEcZvIqsKLL7I=
+	by mail.kernel.org (Postfix) with ESMTP id 2F13C2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389156AbfJCSaP (ORCPT
+        id S2389224AbfJCSbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44018 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 14:31:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45441 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388727AbfJCSaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:30:14 -0400
-Subject: Re: [GIT PULL] kgdb changes v5.4-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570127414;
-        bh=UBjhMnDknMo9MBM+b7Q1nXNP29xUGsrYmOuL34RiEus=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=XJRaODP7UK2oVyVg5fcd8lali/Uv/uxeYkQGBmtI6MO8ywUGg1YjCEZUBGl+ZxNz/
-         x80UHBM9C5oeB1YYZ6jcJPCVJJRqvKKX90BfgVhfGYCD/PF8En1kZv5Kr/LTte7/A5
-         Z1Z9CqT244wkBJxH5fQhQOT7ktFmR9S+CuU26yAk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
-References: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/
- tags/kgdb-5.4-rc2
-X-PR-Tracked-Commit-Id: 086bf301f541eb4acfb5dadae7b1b207ad1b95a3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c1053cd122b23519322c8256ca24487e3b9695ce
-Message-Id: <157012741398.22675.8973403667311156197.pr-tracker-bot@kernel.org>
-Date:   Thu, 03 Oct 2019 18:30:13 +0000
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
+        id S1729064AbfJCSbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:31:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 11:31:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="216909589"
+Received: from jvalevi1-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Oct 2019 11:31:02 -0700
+Date:   Thu, 3 Oct 2019 21:31:01 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
+Message-ID: <20191003182934.GB20683@linux.intel.com>
+References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
+ <20190926124635.GA6040@linux.intel.com>
+ <20190926131227.GA6582@linux.intel.com>
+ <1570020024.4999.104.camel@linux.ibm.com>
+ <20191003113211.GC8933@linux.intel.com>
+ <1570106350.4421.166.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1570106350.4421.166.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 3 Oct 2019 16:56:06 +0100:
+On Thu, Oct 03, 2019 at 08:39:10AM -0400, Mimi Zohar wrote:
+> On Thu, 2019-10-03 at 14:32 +0300, Jarkko Sakkinen wrote:
+> > On Wed, Oct 02, 2019 at 08:40:24AM -0400, Mimi Zohar wrote:
+> > > On Thu, 2019-09-26 at 16:12 +0300, Jarkko Sakkinen wrote:
+> > > > On Thu, Sep 26, 2019 at 03:46:35PM +0300, Jarkko Sakkinen wrote:
+> > > > > On Wed, Sep 25, 2019 at 04:48:41PM +0300, Jarkko Sakkinen wrote:
+> > > > > > -		tpm_buf_reset(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_RANDOM);
+> > > > > > +		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE,
+> > > > > > +			      TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_EXTEND);
+> > > > > 
+> > > > > Oops.
+> > > > 
+> > > > Maybe we could use random as the probe for TPM version since we anyway
+> > > > send a TPM command as a probe for TPM version:
+> > > > 
+> > > > 1. Try TPM2 get random.
+> > > > 2. If fail, try TPM1 get random.
+> > > > 3. Output random number to klog.
+> > > > 
+> > > > Something like 8 bytes would be sufficient. This would make sure that
+> > > > no new change breaks tpm_get_random() and also this would give some
+> > > > feedback that TPM is at least somewhat working.
+> > > 
+> > > That involves sending 2 TPM commands.  At what point does this occur?
+> > >  On registration?  Whenever getting a random number?  Is the result
+> > > cached in chip->flags?
+> > 
+> > On registeration. It is just printed to klog.
+> 
+> What sets "TPM_CHIP_FLAG_TPM2" in chip->flags?  And when?
+> 
+> > 
+> > > Will this delay the TPM initialization, causing IMA to go into "TPM
+> > > bypass mode"?
+> > 
+> > Of course it will delay the init.
+> 
+> Delaying the init will most likely cause regressions on systems with
+> TPM 1.2 systems.
+> 
+> Instead of sending the TPM 2.0 command and on failure sending the TPM
+> 1.2 version of the command, could chip->flags be tested?  And if not
+> chip->flags, then provide the TPM version as part of registration.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.4-rc2
+No rush pushing this forward. I got your point.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c1053cd122b23519322c8256ca24487e3b9695ce
+> > As I've stated before the real fix for the bypass issue would be
+> > to make TPM as part of the core but this has not received much
+> > appeal. I think I've sent patch for this once.
+> 
+> I must have missed this discussion.
 
-Thank you!
+Yeah, I think that'd be a great idea. We need a better control on
+TPM core as multiple subsystem's depend on it in API level. Something
+to reconsider in future.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+/Jarkko
