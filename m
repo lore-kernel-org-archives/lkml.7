@@ -2,199 +2,202 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FBCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0279C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DAD20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4d6Nxh1"
+	by mail.kernel.org (Postfix) with ESMTP id A957420862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570126209;
+	bh=sB5Ps8gXl1Clpj94aGeMy9RyrsHpbQ1qiqUJfZHEo/o=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=EEcWnG2SYeSZqeXPcDB0Canv1Lcc2/9pzVmENGraQtQoMnQt0ZNIeEv+/6Yrq9cCl
+	 zyHcOphEkDCTwMe++Ao+Gx2EpZI3NmZA9P0Wz30gZUGLElLTVl5M6IR7jq+UV5hiHz
+	 OePhteuPwC7DFaPH/+K6CA+531ljKqBuTYIPqmlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbfJCSIx (ORCPT
+        id S1733299AbfJCSKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:08:53 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40602 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729906AbfJCSIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:08:52 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so2246602pfb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GuIjFVnstRywBL8Gyi4CDSaXWWKUxOeS5oqihjYg5Tc=;
-        b=V4d6Nxh1Ug2hw9/YMPEgUlF0wfzsKGUoO9wGWvJbmlcb3jK9jGKbw/fgUzlXs83bdS
-         xznqR9N8xoEDhYuD6Vo3ACaKFcNAIpR+zm4VE1WhRN+CtoLd7T7kkKrhg5XjmYwSOP8M
-         2pRJdR+CbXqDB3wuA0yPTt3Lr45kG4AWwav1alQkD1XS4HXFXG6vbuoapt/0/fPS5Qyo
-         9yMyxsbPL3EgA2TF4r06vxVJdQQGUj+ZWn0OAxWH3T/rmGBS6HdwWqUocN1TAjGY/CPh
-         IrWbmfjy2FOIOhx4sX/+G2fjoe1sWVkokBv2+gyCP7RwBmbq3d0IH44QYAou2temxAH0
-         6KUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GuIjFVnstRywBL8Gyi4CDSaXWWKUxOeS5oqihjYg5Tc=;
-        b=Or2F/bgVoIEJ/1YLsUkbH7Hv2FFQGQCCXVJ7qMas2rkCg3daXkZHy5I4xm2vHLZKAV
-         Z+bThHw1AQeJc1EuCqFCsfRT55TdsOMIxcTRELQJfZY38zvRONrFoP8dTe5IU0mphR4X
-         /xag+UtZ+Xma92Z5Qw0WXVnPZEl14A9fLFj9Qj/jmjKyKcLbwlThj1Cd0KOZvLAw4wSZ
-         sU3BeuQQb+UXiyabk3+zSRZUOZI3q02XyWRPLwtRfyDwJ62UMWHaoq/uAEjVDZg1Unbp
-         IrS59+PJD/YML22gV6asowAy/AuJPgFSJh3UOsxttH7AIIat3JYCTWqit46lAZT9Zm1+
-         6aUg==
-X-Gm-Message-State: APjAAAXdw54FGKu7lF6WjY9myJ9T/o2t38MKJHRIRnZHK+EQkVltnwKW
-        V1ZFql4lltszidnVj/jkWu8=
-X-Google-Smtp-Source: APXvYqxsZtWFc3C27TObF1Bf8YDcgjKQBSLOP1raeFKi2QXrViEBBv4akG/N65q/0B3ifb8vY6WomA==
-X-Received: by 2002:a63:747:: with SMTP id 68mr10449181pgh.377.1570126131161;
-        Thu, 03 Oct 2019 11:08:51 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id z13sm3711782pfq.121.2019.10.03.11.08.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 11:08:48 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dt: check MPIDR on MP devices built without SMP
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Cc:     "kernelci.org bot" <bot@kernelci.org>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net,
-        Russell King <linux@armlinux.org.uk>
-References: <20191002114508.1089-1-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <17976e82-04da-d22d-5779-f50db63f98a2@gmail.com>
-Date:   Thu, 3 Oct 2019 11:08:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 14:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731010AbfJCSKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:10:08 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D6D620679;
+        Thu,  3 Oct 2019 18:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570126207;
+        bh=sB5Ps8gXl1Clpj94aGeMy9RyrsHpbQ1qiqUJfZHEo/o=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=Ee2eg6M52ngE6uPWZT6vmU/q/8MON8SHGMolIrjrhaXt99aTxP7MORkqW72JwHLWX
+         GFovIgyUsk60pKR2azvezkOvf7B41KGqZjUnLOS519CJyMh4TG5KR5jR7+oAvMN6Bz
+         kkI9KGZWbT0OngnPIz3kDuiyq3nk4kBfNwSfjApg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191002114508.1089-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1569553244-3165-2-git-send-email-zhangqing@rock-chips.com>
+References: <1569553244-3165-1-git-send-email-zhangqing@rock-chips.com> <1569553244-3165-2-git-send-email-zhangqing@rock-chips.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
+Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
+        Finley Xiao <finley.xiao@rock-chips.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Subject: Re: [PATCH v3 1/5] clk: rockchip: Add supprot to limit input rate for fractional divider
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 11:10:06 -0700
+Message-Id: <20191003181007.4D6D620679@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 4:45 AM, Nicolas Saenz Julienne wrote:
-> Currently, in arm_dt_init_cpu_maps(), the hwid of the boot CPU is read
-> from MPIDR on SMP devices and set to 0 for non SMP. This value is then
-> matched with the DT cpu nodes' reg property in order to find the boot
-> CPU in DT.
+Quoting Elaine Zhang (2019-09-26 20:00:40)
+> diff --git a/drivers/clk/rockchip/clk-px30.c b/drivers/clk/rockchip/clk-p=
+x30.c
+> index 3a501896b280..6c2f53dc73b6 100644
+> --- a/drivers/clk/rockchip/clk-px30.c
+> +++ b/drivers/clk/rockchip/clk-px30.c
+> @@ -13,6 +13,7 @@
+>  #include "clk.h"
+> =20
+>  #define PX30_GRF_SOC_STATUS0           0x480
+> +#define PX30_FRAC_MAX_PRATE            600000000
+> =20
+>  enum px30_plls {
+>         apll, dpll, cpll, npll, apll_b_h, apll_b_l,
+> @@ -420,7 +421,7 @@ enum px30_pmu_plls {
+>         COMPOSITE_FRACMUX(0, "dclk_vopb_frac", "dclk_vopb_src", CLK_SET_R=
+ATE_PARENT,
+>                         PX30_CLKSEL_CON(6), 0,
+>                         PX30_CLKGATE_CON(2), 3, GFLAGS,
+> -                       &px30_dclk_vopb_fracmux),
+> +                       &px30_dclk_vopb_fracmux, 0),
+>         GATE(DCLK_VOPB, "dclk_vopb", "dclk_vopb_mux", CLK_SET_RATE_PARENT,
+>                         PX30_CLKGATE_CON(2), 4, GFLAGS),
+>         COMPOSITE(0, "dclk_vopl_src", mux_npll_cpll_p, 0,
+> @@ -429,7 +430,7 @@ enum px30_pmu_plls {
+>         COMPOSITE_FRACMUX(0, "dclk_vopl_frac", "dclk_vopl_src", CLK_SET_R=
+ATE_PARENT,
+>                         PX30_CLKSEL_CON(9), 0,
+>                         PX30_CLKGATE_CON(2), 7, GFLAGS,
+> -                       &px30_dclk_vopl_fracmux),
+> +                       &px30_dclk_vopl_fracmux, 0),
+>         GATE(DCLK_VOPL, "dclk_vopl", "dclk_vopl_mux", CLK_SET_RATE_PARENT,
+>                         PX30_CLKGATE_CON(2), 8, GFLAGS),
+> =20
+> @@ -555,7 +556,7 @@ enum px30_pmu_plls {
+>         COMPOSITE_FRACMUX(0, "clk_pdm_frac", "clk_pdm_src", CLK_SET_RATE_=
+PARENT,
 
-The code you change is about the "mpidr" variable, yet in your commit
-message you refer to "hwid", that is a tad confusing for the reader.
+Can you make a new macro COMPOSITE_FRACMUX_PRATE or something that
+passes in another argument so that we don't have to change the users
+of this macro when they don't care?
 
-> 
-> On MP devices build without SMP the cpu DT node contains the expected
-> MPIDR yet the hwid is set to 0. With this the function fails to match
-> the cpus and uses the default CPU logical map. Making it impossible to
-> get the CPU's DT node further down the line. This causes issues with
-> cpufreq-dt, as it triggers warnings when not finding a suitable DT node
-> on CPU0.
-> 
-> Change the way we choose whether to get MPIDR or not. Instead of
-> depending on SMP check the number of CPUs defined in DT. Anything > 1
-> means MPIDR will be available.
+>                         PX30_CLKSEL_CON(27), 0,
+>                         PX30_CLKGATE_CON(9), 10, GFLAGS,
+> -                       &px30_pdm_fracmux),
+> +                       &px30_pdm_fracmux, PX30_FRAC_MAX_PRATE),
+>         GATE(SCLK_PDM, "clk_pdm", "clk_pdm_mux", CLK_SET_RATE_PARENT,
+>                         PX30_CLKGATE_CON(9), 11, GFLAGS),
+> =20
+> diff --git a/drivers/clk/rockchip/clk-rk3399.c b/drivers/clk/rockchip/clk=
+-rk3399.c
+> index ce1d2446f142..bda5d50c5319 100644
+> --- a/drivers/clk/rockchip/clk-rk3399.c
+> +++ b/drivers/clk/rockchip/clk-rk3399.c
+> @@ -13,6 +13,12 @@
+>  #include <dt-bindings/clock/rk3399-cru.h>
+>  #include "clk.h"
+> =20
+> +#define RK3399_I2S_FRAC_MAX_PRATE       800000000
+> +#define RK3399_UART_FRAC_MAX_PRATE     800000000
+> +#define RK3399_SPDIF_FRAC_MAX_PRATE    600000000
+> +#define RK3399_VOP_FRAC_MAX_PRATE      600000000
+> +#define RK3399_WIFI_FRAC_MAX_PRATE     600000000
 
-Except if someone accidentally wrote their Device Tree such as to have >
-1 CPU nodes, yet the CPU is not MP capable and reading the MPIDR
-register does return the expected value, but that is wrong anyway.
+Is the "max rate" really just the frequency of the parent? If so, why
+can't round_rate() on the parent figure out what that value is and only
+provide that frequency?
 
-> 
-> This was seen on a Raspberry Pi 2 build with bcm2835_defconfig.
-> 
-> Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  arch/arm/kernel/devtree.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index 39c978698406..a924fda9abc8 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -74,7 +74,7 @@ void __init arm_dt_init_cpu_maps(void)
->  	struct device_node *cpu, *cpus;
->  	int found_method = 0;
->  	u32 i, j, cpuidx = 1;
-> -	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
-> +	u32 mpidr = 0;
->  
->  	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
->  	bool bootcpu_valid = false;
-> @@ -83,6 +83,9 @@ void __init arm_dt_init_cpu_maps(void)
->  	if (!cpus)
->  		return;
->  
-> +	if (is_smp() || of_get_child_count(cpus) > 1)
-> +		mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
 > +
->  	for_each_of_cpu_node(cpu) {
->  		const __be32 *cell;
->  		int prop_bytes;
-> 
+>  enum rk3399_plls {
+>         lpll, bpll, dpll, cpll, gpll, npll, vpll,
+>  };
+> diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+> index 546e810c3560..fac5a4a3f5c3 100644
+> --- a/drivers/clk/rockchip/clk.c
+> +++ b/drivers/clk/rockchip/clk.c
+> @@ -184,12 +184,26 @@ static void rockchip_fractional_approximation(struc=
+t clk_hw *hw,
+>         unsigned long p_rate, p_parent_rate;
+>         struct clk_hw *p_parent;
+>         unsigned long scale;
+> +       u32 div;
+
+Why u32 instead of unsigned long?
+
+> =20
+>         p_rate =3D clk_hw_get_rate(clk_hw_get_parent(hw));
+> -       if ((rate * 20 > p_rate) && (p_rate % rate !=3D 0)) {
+> +       if (((rate * 20 > p_rate) && (p_rate % rate !=3D 0)) ||
+> +           (fd->max_prate && fd->max_prate < p_rate)) {
+>                 p_parent =3D clk_hw_get_parent(clk_hw_get_parent(hw));
+>                 p_parent_rate =3D clk_hw_get_rate(p_parent);
+>                 *parent_rate =3D p_parent_rate;
+> +               if (fd->max_prate && p_parent_rate > fd->max_prate) {
+> +                       div =3D DIV_ROUND_UP(p_parent_rate, fd->max_prate=
+);
+> +                       *parent_rate =3D p_parent_rate / div;
+> +               }
+> +
+> +               if (*parent_rate < rate * 20) {
+
+20 seems very magical.
+
+> +                       pr_err("%s parent_rate(%ld) is low than rate(%ld)=
+*20, fractional div is not allowed\n",
+
+s/low/lower/?
+
+> +                              clk_hw_get_name(hw), *parent_rate, rate);
+> +                       *m =3D 0;
+> +                       *n =3D 1;
+> +                       return;
+> +               }
+>         }
+> =20
+>         /*
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 2ae7604783dd..30993c0630a3 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -624,6 +624,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct de=
+vice *dev,
+>   * @mwidth:    width of the numerator bit field
+>   * @nshift:    shift to the denominator bit field
+>   * @nwidth:    width of the denominator bit field
+> + * @max_parent:        the maximum frequency of fractional divider paren=
+t clock
+
+This doesn't match the name of the member.
+
+>   * @lock:      register lock
+>   *
+>   * Clock with adjustable fractional divider affecting its output frequen=
+cy.
+> @@ -647,6 +648,7 @@ struct clk_fractional_divider {
+>         u8              nwidth;
+>         u32             nmask;
+>         u8              flags;
+> +       unsigned long   max_prate;
 
 
--- 
-Florian
