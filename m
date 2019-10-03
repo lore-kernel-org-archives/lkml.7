@@ -2,169 +2,100 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3E6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EB2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F2A215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC03207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:12:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArVSWikM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfJCOLG (ORCPT
+        id S1730454AbfJCOMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:11:06 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:54451 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbfJCOLF (ORCPT
+        Thu, 3 Oct 2019 10:12:30 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35544 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728660AbfJCOMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:11:05 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46kZft3hGJz1rLFn;
-        Thu,  3 Oct 2019 16:11:02 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46kZft3G0yz1qqkM;
-        Thu,  3 Oct 2019 16:11:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 8_DMiCrKeOt7; Thu,  3 Oct 2019 16:11:01 +0200 (CEST)
-X-Auth-Info: DWv8BxMh/iTf0m4AnKrtt6dC4KfTKDUDo8wYmzBiBN4=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu,  3 Oct 2019 16:11:01 +0200 (CEST)
-Date:   Thu, 3 Oct 2019 16:10:53 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162)
- RTC devices
-Message-ID: <20191003161054.1eeae401@jawa>
-In-Reply-To: <20191003134329.GB575@piout.net>
-References: <20190911154803.15969-1-lukma@denx.de>
-        <20191003114831.GR4106@piout.net>
-        <20191003142150.3d73a9d7@jawa>
-        <20191003123538.GS4106@piout.net>
-        <20191003151434.49762715@jawa>
-        <20191003134329.GB575@piout.net>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 3 Oct 2019 10:12:30 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so3800611qtq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 07:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GAXwKmJVlFM3nofz1SY4eFcik+zJYFJoa54xFISWulU=;
+        b=ArVSWikMnrWcNsGfIhq8DSmkOBG68eLsO0RSwddcl/DB705piIXeHNyHF6PrJooYez
+         h8IVriT415m7cBrQX4yCiOS8dnXXXHRQI1KnDTkWvnviXERHE13EEn03S98jjvsN728C
+         DvRk7DSPjnNbYzpSGedP0hWi6Z5ZIRm6s40hgXjrJ/Rp12dUWA5A9N3+0+BCuyajKzbm
+         k4/ZVsdwkJL4cVfib9m5TGd545QKZ3rUfFFLIYlbidsgKyf7k7n/PIJpFzCyQw7inO5c
+         NOKeYOQDwLqKtjOLPAILqdGPX66iSXbHxjNJ2C62cQpE3WxrIU/ZaQrZVdOdQrV9W+nF
+         Ts4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GAXwKmJVlFM3nofz1SY4eFcik+zJYFJoa54xFISWulU=;
+        b=tgDoeuI5629vyaEt2HsEEyx4D9a5+IDEJu3Dnv6ggrIAsnRSaZQZB098u3OQIjgjq8
+         G4UY4S57CmZ3tv2xi7NwP8spDTZjKzT7x7IhfK1LkLWa2sHUS45cRhiCG+p0ERvwNRwV
+         RDjksqS0bg0NcnTgDLxass1LFn1yGXkrfdC9SSMhVtt44TE6vPPQ6sGMv0EiEkI2o1x6
+         tcd21KSsMq78/VXP+qfTBaidF7AvSS1vaTMT6KiYbiCT9tIp7zurDPssWEp8WA9tyBLd
+         MI+ztgGK/G7y+qFcYG/HU34QDN2AbA9D935Lq0GITj84KPiWd0ACw4KkjtApwrrOKdmA
+         MMFg==
+X-Gm-Message-State: APjAAAV845glWi55eeABhc0TuW0Xnk9fNAgzAyQOunHHOQG7Nuh2LkRT
+        Kz12TJVfkbg0gKw1n66bNdc7zyCO
+X-Google-Smtp-Source: APXvYqxqsnO6PM2vcL2CVFvSJuUsci4hI4yN0Qudwgxaz1V2MiMrglYmsJfBAeZy1OZeD0Ox/5OL8A==
+X-Received: by 2002:ac8:5181:: with SMTP id c1mr10355387qtn.29.1570111949755;
+        Thu, 03 Oct 2019 07:12:29 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id 44sm1880699qtt.13.2019.10.03.07.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 07:12:28 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7864440DD3; Thu,  3 Oct 2019 11:12:26 -0300 (-03)
+Date:   Thu, 3 Oct 2019 11:12:26 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf script: Allow --time with --reltime
+Message-ID: <20191003141226.GC18973@kernel.org>
+References: <20191002164642.1719-1-andi@firstfloor.org>
+ <20191003101827.GA23291@krava>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/hLnbrGCehw8PWPNow57OW+W"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003101827.GA23291@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hLnbrGCehw8PWPNow57OW+W
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Em Thu, Oct 03, 2019 at 12:18:27PM +0200, Jiri Olsa escreveu:
+> On Wed, Oct 02, 2019 at 09:46:42AM -0700, Andi Kleen wrote:
+> > From: Andi Kleen <ak@linux.intel.com>
+> > 
+> > The original --reltime patch forbid --time with --reltime.
+> > 
+> > But it turns out --time doesn't really care about --reltime, because
+> > the relative time is only used at final output, while
+> > the time filtering always works earlier on absolute time.
+> > 
+> > So just remove the check and allow combining the two options.
+> > 
+> > Fixes: 90b10f47c0ee ("perf script: Support relative time")
+> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Hi Alexandre,
+Thanks, applied.
 
-> On 03/10/2019 15:14:34+0200, Lukasz Majewski wrote:
-> > Hi Alexandre,
-> >  =20
-> > > On 03/10/2019 14:21:50+0200, Lukasz Majewski wrote: =20
-> > > > >=20
-> > > > > See the datasheet:
-> > > > >=20
-> > > > > "During any year which is a multiple of 4, the RV-4162 RTC
-> > > > > will automatically insert leap day, February 29.  Therefore,
-> > > > > the application software must correct for this during the
-> > > > > exception years (2100, 2200, etc.) as noted above."   =20
-> > > >=20
-> > > > I'm wondering what the phrase "application software" means here?
-> > > >=20
-> > > > If it is the userland SW, then we shall at least be able to set
-> > > > 2099 in this device and then count on software correction.
-> > > >=20
-> > > > If the "application software" is the kernel driver - the date
-> > > > correction shall be done there (maybe some lookup table?).
-> > > >=20
-> > > > Personally, I do prefer the first option - this means that with
-> > > > this patch we can set the time to e.g. 2234 year and then rely
-> > > > on userland software (or libc) to do the correction.
-> > > >    =20
-> > >=20
-> > > It is not possible to ensure this correction is properly done in
-> > > software, there is no point in letting the user set those bits.
-
-Sorry, but I do see some inconsistency here.
-
-The application note [1] says that the correction shall be done in
-application SW.
-
-The rtc-range.c program [2] sets and reads the time via ioctl (e.g.
-RTC_SET_TIME, RTC_RD_TIME).
-
-To pass your tests one needs to do the correction in linux kernel
-driver for drivers/rtc/rtc-m41t80.c.=20
-
-Please correct me if I'm wrong, but IMHO it shall be enough to adjust
-2100, 2200, 2300, years in this driver (the submitted patch shall be
-adjusted to support it - I can prepare proper v2).
-
-> > >=20
-> > >  =20
-> >=20
-> > I see your point.
-> >=20
-> > However, could you share your idea on testing setting RTC time to
-> > year 2100 on this particular IC (by using hctosys and friends)?
-> >  =20
->=20
-> You can use rtc from
-> https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/
->=20
-> You can also use rtc-range with your patch to observe that it fails in
-> 2100.
-
-Thanks for sharing useful links.
-
->=20
-
-
-Note:
-
-[1] -
-https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-416=
-2-C7_App-Manual.pdf
-(point 4.5 and 4.6).
-
-[2] -
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree=
-/rtc-range.c
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/hLnbrGCehw8PWPNow57OW+W
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2WAW4ACgkQAR8vZIA0
-zr08Kwf/YpzxMFrU14J1/zeQIdS2HX0KnJxnEjRfICLoEhuetfa4cjxXlSww7O3x
-6ErhNA2wvBwZKwABeufpN8aSUdAsRiwCTQojyzd2RBvuCokZz38SbEP3KgKc8XhU
-Z1sU/ASmBUd1KpSkH/A6FysimfnU7qxJN+HdxXJyX/SDEsQFAKq0WAcV72Oylr9q
-b+SgFhoy1QxKspTZcblhw4th1hiDSiYvz358l+HuDu66mTyxEEDASID3Gmyd9TV4
-8HYNwpvyaJPgyRiDwqqYbrZ7LVqSt8wBnPHoNaLEZXqVWXJBDRgVmMvlTZjYqOWS
-bm2oxVT/vNcORJc0DF9T4Ds4BTKy9w==
-=HmuE
------END PGP SIGNATURE-----
-
---Sig_/hLnbrGCehw8PWPNow57OW+W--
+- Arnaldo
