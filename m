@@ -2,85 +2,135 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2892BC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085FCC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F195820873
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:06:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FZZkj4w1"
+	by mail.kernel.org (Postfix) with ESMTP id E00CC20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732491AbfJCTGz (ORCPT
+        id S1732560AbfJCTI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:06:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59900 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbfJCTGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:06:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZkpF3LM0iqflsN07+qzKLa2yHC8ke6WjWjcY7ByQQD4=; b=FZZkj4w1234/z56BY008uekWFS
-        1cAc38EgzcOjtHHuJoV7hUK/tnfYf9H3YQhC0mOVLSshoTuAZ+5TdN+mLcAOyd2XZSl54sc2bsJ6K
-        AHIcRfvmaE7dq3mEssphtBD88fQ+WvazbubHYcvm+Ui8JlApL/9oWgRI/s9Airw2Slto=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iG6R9-0005yS-Lo; Thu, 03 Oct 2019 21:06:51 +0200
-Date:   Thu, 3 Oct 2019 21:06:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        manasa.mudireddy@broadcom.com, ray.jui@broadcom.com,
-        olteanv@gmail.com, rafal@milecki.pl
-Subject: Re: [PATCH 0/2] net: phy: broadcom: RGMII delays fixes
-Message-ID: <20191003190651.GB21875@lunn.ch>
-References: <20191003184352.24356-1-f.fainelli@gmail.com>
- <20191003185116.GA21875@lunn.ch>
- <0d5e4195-c407-2915-de96-3c4b3713ada0@gmail.com>
+        Thu, 3 Oct 2019 15:08:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45062 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732289AbfJCTI6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 15:08:58 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 0B9C528C499
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 0/4] Enable Hantro G1 post-processor
+Date:   Thu,  3 Oct 2019 16:08:29 -0300
+Message-Id: <20191003190833.29046-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d5e4195-c407-2915-de96-3c4b3713ada0@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:55:40AM -0700, Florian Fainelli wrote:
-> Hi Andrew,
-> 
-> On 10/3/19 11:51 AM, Andrew Lunn wrote:
-> > On Thu, Oct 03, 2019 at 11:43:50AM -0700, Florian Fainelli wrote:
-> >> Hi all,
-> >>
-> >> This patch series fixes the BCM54210E RGMII delay configuration which
-> >> could only have worked in a PHY_INTERFACE_MODE_RGMII configuration.
-> > 
-> > Hi Florian
-> > 
-> > So any DT blob which incorrectly uses one of the other RGMII modes is
-> > now going to break, where as before it was ignored.
-> 
-> Potentially yes. There is a precedent with the at803x PHY driver
+Hi all,
 
-Hi Florian
+The Hantro G1 VPU post-processor block can be pipelined with
+the decoder hardware, allowing to perform operations such as
+color conversion, scaling, rotation, cropping, among others.
 
-Yes that was an interesting learning experience. I'm not sure we want
-to do that again. A lot of devices broken, and a lot of people were
-unhappy.
+When the post-processor is enabled, the decoder hardware
+gets its own set of NV12 buffers (the native decoder format),
+and the post-processor is the owner of the CAPTURE buffers.
 
-If we are looking at a similar scale of breakage, i think i would
-prefer to add a broadcom,bcm54210e-phy-mode property in the DT which
-if present would override the phy_interface_t passed to the driver.
+This allows the application get processed
+(scaled, converted, etc) buffers, completely transparently.
 
-   Andrew
+This feature is implemented by exposing the post-processed pixel
+formats on ENUM_FMT. When the application sets a pixel format
+other than NV12, and if the post-processor is MC-linked,
+the driver will make use of it, transparently.
+
+On this v2, the media controller API is now required
+to "enable" (aka link, in topology jargon) the post-processor.
+Therefore, applications now have to explicitly request this feature.
+
+For instance, the post-processor is enabled using the media-ctl
+tool:
+
+media-ctl -l "'decoder':1 -> 'rockchip,rk3288-vpu-dec':0[0]"
+media-ctl -l "'postproc':1 -> 'rockchip,rk3288-vpu-dec':0[1]"
+
+v4l2-ctl -d 1 --list-formats
+ioctl: VIDIOC_ENUM_FMT
+	Type: Video Capture Multiplanar
+
+	[0]: 'NV12' (Y/CbCr 4:2:0)
+	[1]: 'YUYV' (YUYV 4:2:2)
+
+Patches 1 and 2 are simply cleanups needed to easier integrate the
+post-processor. Patch 2 is a bit invasive, but it's a step
+forward towards merging the implementation for RK3399 and RK3288.
+
+Patch 3 re-works the media-topology, making the decoder
+a v4l2_subdevice, instead of a bare entity. This allows
+to introduce a more accurate of the decoder+post-processor complex.
+
+Patch 4 introduces the post-processing support.
+
+This is tested on RK3288 platforms with MPEG-2, VP8 and
+H264 streams, decoding to YUY2 surfaces. For now, this series
+is only adding support for NV12-to-YUY2 conversion.
+
+The design and implementation is quite different from v1:
+
+* The decoder->post-processor topology is now exposed
+  explicitly and applications need to configure the pipeline.
+  By default, the decoder is enabled and the post-processor
+  is disabled.
+
+* RGB post-processing output has been dropped. We might
+  add this in the future, but for now, it seems it would
+  make the code more complex without a use-case in mind.
+  RGB is much more memory-consuming so less attractive
+  than YUV, and modern GPUs and display controllers support YUV.
+
+* The post-processor implementation still supports RK3288
+  only. However, a generic register infrastructure is introduced
+  to make addition of other variants such as RK3399 really easy.
+
+Ezequiel Garcia (4):
+  media: hantro: Cleanup format negotiation helpers
+  media: hantro: mpeg2_dec: Re-use common register macros
+  media: hantro: Rework media topology
+  media: hantro: Support color conversion via post-processing
+
+ drivers/staging/media/hantro/Makefile         |   1 +
+ drivers/staging/media/hantro/hantro.h         | 105 +++++-
+ drivers/staging/media/hantro/hantro_drv.c     | 336 ++++++++++++++----
+ .../staging/media/hantro/hantro_g1_h264_dec.c |   2 +-
+ .../media/hantro/hantro_g1_mpeg2_dec.c        | 188 ++++------
+ drivers/staging/media/hantro/hantro_g1_regs.h | 109 ++++--
+ .../staging/media/hantro/hantro_g1_vp8_dec.c  |   2 +-
+ drivers/staging/media/hantro/hantro_h264.c    |   6 +-
+ drivers/staging/media/hantro/hantro_hw.h      |  13 +
+ .../staging/media/hantro/hantro_postproc.c    | 141 ++++++++
+ drivers/staging/media/hantro/hantro_v4l2.c    | 116 ++++--
+ drivers/staging/media/hantro/rk3288_vpu_hw.c  |  10 +
+ 12 files changed, 754 insertions(+), 275 deletions(-)
+ create mode 100644 drivers/staging/media/hantro/hantro_postproc.c
+
+-- 
+2.22.0
+
