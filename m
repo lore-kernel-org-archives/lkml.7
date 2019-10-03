@@ -2,265 +2,143 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DAEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C767C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1079421D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638C0222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dLBEBmZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfJCGfI (ORCPT
+        id S1726354AbfJCGn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:35:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24154 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfJCGfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:35:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 23:35:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="205546053"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Oct 2019 23:35:06 -0700
-Received: from [10.226.39.36] (unknown [10.226.39.36])
-        by linux.intel.com (Postfix) with ESMTP id 86F485803A5;
-        Wed,  2 Oct 2019 23:35:03 -0700 (PDT)
-Subject: Re: Fwd: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas
- for the PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-References: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
- <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <655892bd-6b62-ec2b-ff85-89ca1f86326e@linux.intel.com>
-Date:   Thu, 3 Oct 2019 14:35:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 3 Oct 2019 02:43:27 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:14116 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725770AbfJCGn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 02:43:27 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x936hOZB028094
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 23:43:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=6DXtwSfVTxTQsg7OTAhIZXgsLk6C+uUhHjPiAO5wwjY=;
+ b=dLBEBmZ62kTmrmp57awYr6nJ79lFsBRMUGbKHuv6g7qkTYpUn2+OIx9UosJRybSBzX7b
+ MTZHwBn8ltvYqJBAN5U2Jey7kn15pQmka6VP3JrJWJ2DpojP5rdE/ljWa0Tj5DJ8jEPI
+ j0tsFdJ7j2xsQF0xp8e/rV404/9XOrTr2m8= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vc9fw8v2u-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:43:25 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Wed, 2 Oct 2019 23:43:22 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 8EA6762E311C; Wed,  2 Oct 2019 23:43:20 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>
+CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
+        <stable@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] perf/core: fix corner case in perf_rotate_context()
+Date:   Wed, 2 Oct 2019 23:43:17 -0700
+Message-ID: <20191003064317.3961135-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-03_03:2019-10-01,2019-10-03 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 adultscore=0 phishscore=0 suspectscore=1
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910030064
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+This is a rare corner case, but it does happen:
 
+In perf_rotate_context(), when the first cpu flexible event fail to
+schedule, cpu_rotate is 1, while cpu_event is NULL. Since cpu_event is
+NULL, perf_rotate_context will _NOT_ call cpu_ctx_sched_out(), thus
+cpuctx->ctx.is_active will have EVENT_FLEXIBLE set. Then, the next
+perf_event_sched_in() will skip all cpu flexible events because of the
+EVENT_FLEXIBLE bit.
 
-On 18/9/2019 2:56 PM, Dilip Kota wrote:
-> On 9/18/2019 2:40 AM, Rob Herring wrote:
->> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
->>> The Intel PCIe RC controller is Synopsys Designware
->>> based PCIe core. Add YAML schemas for PCIe in RC mode
->>> present in Intel Universal Gateway soc.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>> ---
->>> changes on v3:
->>> Add the appropriate License-Identifier
->>> Rename intel,rst-interval to 'reset-assert-us'
->>> Add additionalProperties: false
->>> Rename phy-names to 'pciephy'
->>> Remove the dtsi node split of SoC and board in the example
->>> Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>> Name yaml file with compatible name
->>>
->>> .../devicetree/bindings/pci/intel,lgm-pcie.yaml | 137 
->>> +++++++++++++++++++++
->>> 1 file changed, 137 insertions(+)
->>> create mode 100644 
->>> Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml 
->>> b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>> new file mode 100644
->>> index 000000000000..5e5cc7fd66cd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>> @@ -0,0 +1,137 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Intel AXI bus based PCI express root complex
->>> +
->>> +maintainers:
->>> + - Dilip Kota <eswara.kota@linux.intel.com>
->>> +
->>> +properties:
->>> + compatible:
->>> + const: intel,lgm-pcie
->>> +
->>> + device_type:
->>> + const: pci
->>> +
->>> + "#address-cells":
->>> + const: 3
->>> +
->>> + "#size-cells":
->>> + const: 2
->> These all belong in a common schema.
->>
->>> +
->>> + reg:
->>> + items:
->>> + - description: Controller control and status registers.
->>> + - description: PCIe configuration registers.
->>> + - description: Controller application registers.
->>> +
->>> + reg-names:
->>> + items:
->>> + - const: dbi
->>> + - const: config
->>> + - const: app
->>> +
->>> + ranges:
->>> + description: Ranges for the PCI memory and I/O regions.
->> And this.
->>
->>> +
->>> + resets:
->>> + maxItems: 1
->>> +
->>> + clocks:
->>> + description: PCIe registers interface clock.
->>> +
->>> + phys:
->>> + maxItems: 1
->>> +
->>> + phy-names:
->>> + const: pciephy
->>> +
->>> + reset-gpios:
->>> + maxItems: 1
->>> +
->>> + num-lanes:
->>> + description: Number of lanes to use for this port.
->>> +
->>> + linux,pci-domain:
->>> + $ref: /schemas/types.yaml#/definitions/uint32
->>> + description: PCI domain ID.
->> These 2 also should be common.
->>
->>> +
->>> + interrupts:
->>> + description: PCIe core integrated miscellaneous interrupt.
->> How many? No need for description if there's only 1.
->>
->>> +
->>> + '#interrupt-cells':
->>> + const: 1
->>> +
->>> + interrupt-map-mask:
->>> + description: Standard PCI IRQ mapping properties.
->>> +
->>> + interrupt-map:
->>> + description: Standard PCI IRQ mapping properties.
->>> +
->>> + max-link-speed:
->>> + description: Specify PCI Gen for link capability.
->>> +
->>> + bus-range:
->>> + description: Range of bus numbers associated with this controller.
->> All common.
-> You mean to remove all the common schema entries description!.
-> In most of the Documention/devicetree/binding/pci documents all the 
-> common entries are described so I followed the same.
+In the next call of perf_rotate_context(), cpu_rotate stays 1, and
+cpu_event stays NULL, so this process repeats. The end result is, flexible
+events on this cpu will not be scheduled (until another event being added
+to the cpuctx).
 
-If common schemas are removed, getting below warning during the 
-dt_binding_check.
+Similar issue may happen with the task_ctx. But it is usually not a
+problem because the task_ctx moves around different CPU.
 
-Documentation/devicetree/bindings/pci/intel,lgm-pcie.example.dt.yaml: 
-pcie@d0e00000: '#address-cells', '#interrupt-cells', '#size-cells', 
-'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 
-'interrupt-parent', 'linux,pci-domain', 'ranges', 'reset-gpios' do not 
-match any of the regexes: 'pinctrl-[0-9]+'
+Fix this corner case by using cpu_rotate and task_rotate to gate calls for
+(cpu_)ctx_sched_out and rotate_ctx. Also enable rotate_ctx() to handle
+event == NULL case.
 
-Regards,
-Dilip
+Fixes: 8d5bce0c37fa ("perf/core: Optimize perf_rotate_context() event scheduling")
+Cc: stable@vger.kernel.org # v4.17+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ kernel/events/core.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
->>
->>> +
->>> + reset-assert-ms:
->>> + description: |
->>> + Device reset interval in ms.
->>> + Some devices need an interval upto 500ms. By default it is 100ms.
->> This is a property of a device, so it belongs in a device node. How
->> would you deal with this without DT?
-> This property is for the PCIe RC to keep a delay before notifying the 
-> reset to the device.
-> If this entry is not present, PCIe driver will set a default value of 
-> 100ms.
->>
->>> +
->>> +required:
->>> + - compatible
->>> + - device_type
->>> + - reg
->>> + - reg-names
->>> + - ranges
->>> + - resets
->>> + - clocks
->>> + - phys
->>> + - phy-names
->>> + - reset-gpios
->>> + - num-lanes
->>> + - linux,pci-domain
->>> + - interrupts
->>> + - interrupt-map
->>> + - interrupt-map-mask
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> + - |
->>> + pcie10:pcie@d0e00000 {
->>> + compatible = "intel,lgm-pcie";
->>> + device_type = "pci";
->>> + #address-cells = <3>;
->>> + #size-cells = <2>;
->>> + reg = <
->>> + 0xd0e00000 0x1000
->>> + 0xd2000000 0x800000
->>> + 0xd0a41000 0x1000
->>> + >;
->>> + reg-names = "dbi", "config", "app";
->>> + linux,pci-domain = <0>;
->>> + max-link-speed = <4>;
->>> + bus-range = <0x00 0x08>;
->>> + interrupt-parent = <&ioapic1>;
->>> + interrupts = <67 1>;
->>> + #interrupt-cells = <1>;
->>> + interrupt-map-mask = <0 0 0 0x7>;
->>> + interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->>> + <0 0 0 2 &ioapic1 28 1>,
->>> + <0 0 0 3 &ioapic1 29 1>,
->>> + <0 0 0 4 &ioapic1 30 1>;
->>> + ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->>> + resets = <&rcu0 0x50 0>;
->>> + clocks = <&cgu0 LGM_GCLK_PCIE10>;
->>> + phys = <&cb0phy0>;
->>> + phy-names = "pciephy";
->>> + status = "okay";
->>> + reset-assert-ms = <500>;
->>> + reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->>> + num-lanes = <2>;
->>> + };
->>> -- 2.11.0
->>>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4655adbbae10..50021735f367 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3775,6 +3775,13 @@ static void rotate_ctx(struct perf_event_context *ctx, struct perf_event *event)
+ 	if (ctx->rotate_disable)
+ 		return;
+ 
++	/* if no event specified, try to rotate the first event */
++	if (!event)
++		event = rb_entry_safe(rb_first(&ctx->flexible_groups.tree),
++				      typeof(*event), group_node);
++	if (!event)
++		return;
++
+ 	perf_event_groups_delete(&ctx->flexible_groups, event);
+ 	perf_event_groups_insert(&ctx->flexible_groups, event);
+ }
+@@ -3816,14 +3823,14 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
+ 	 * As per the order given at ctx_resched() first 'pop' task flexible
+ 	 * and then, if needed CPU flexible.
+ 	 */
+-	if (task_event || (task_ctx && cpu_event))
++	if (task_rotate || (task_ctx && cpu_rotate))
+ 		ctx_sched_out(task_ctx, cpuctx, EVENT_FLEXIBLE);
+-	if (cpu_event)
++	if (cpu_rotate)
+ 		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
+ 
+-	if (task_event)
++	if (task_rotate)
+ 		rotate_ctx(task_ctx, task_event);
+-	if (cpu_event)
++	if (cpu_rotate)
+ 		rotate_ctx(&cpuctx->ctx, cpu_event);
+ 
+ 	perf_event_sched_in(cpuctx, task_ctx, current);
+-- 
+2.17.1
+
