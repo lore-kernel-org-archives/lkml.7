@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216F0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B02C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D8D2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD8520865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122996;
-	bh=XmbnGcaONG9HpypkGHQkc7eQpNqgmmYMiBsIZ+oy6Xk=;
+	s=default; t=1570122998;
+	bh=6BtUQ4/V1KszXMNqYKGNsb4im93ln/f6XS19k9g+gEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tvuIOftGCmnyaj/Wrn0nAyUncw13gFJAJvsC4nHU4MdVWf3uNFpbdDm2JCktbr7y8
-	 YGubLHgS9xJq8Bksj+td0GB/K3bE8KRhj+0vCzg9DLKelL3LGA6U9WormN49QwzBhu
-	 IKRPb5P1ouND3oxOTbP1niosuzX2r/9anRAh5uJw=
+	b=Oe1xt6VdUCQb1EJYgeTZ0qh+SFr+TRWnSWRry/7tEMnjvFI/LLGOciYseHLiTlZy8
+	 Kst0ZaASO2J68vvkHOckaU1cadQvc/y5O/E+InP7eFmztSjDX1zGcfSfZCs0CymNPx
+	 tCz9iDGq+LKP1cSoHhBXwlFJYmXFjE7pXprX6x3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391175AbfJCRQe (ORCPT
+        id S2389570AbfJCQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53550 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389869AbfJCQYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:24:05 -0400
+        id S2390650AbfJCQXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 836F12054F;
-        Thu,  3 Oct 2019 16:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F67A2054F;
+        Thu,  3 Oct 2019 16:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119845;
-        bh=XmbnGcaONG9HpypkGHQkc7eQpNqgmmYMiBsIZ+oy6Xk=;
+        s=default; t=1570119834;
+        bh=6BtUQ4/V1KszXMNqYKGNsb4im93ln/f6XS19k9g+gEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11hD+IM9y6MOGFApoG7muc4fmSGQYr20iwQK8Kn72/cmT48rbKnFJgPrazS8Kkygj
-         LjUoMD9b7opM+YINAFssFWQItcqHAPMuNnsZ8VD07YAJPHQxSB9UWIvUexBTYLB0Fk
-         E4l8dbSjVxTeD/XJRqHMpxoRpSfPehxg3Ekf02JE=
+        b=LGIoa2+ZrNUBPc3g+EmFSUQeDNfTxmqWOJc3aRpCmnhy3u+LrtkEXEjjGbREhJyEf
+         67LwsiKip6bpKDkSpoSQQV32D3glbsVeBEkemhOocMz1B2rwO0HmfxH63zpPFv8TmO
+         aocIZeTKHH3e9bqF/Bnfjuz3NXTo0tq8omSkDpBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 4.19 198/211] md: only call set_in_sync() when it is expected to succeed.
-Date:   Thu,  3 Oct 2019 17:54:24 +0200
-Message-Id: <20191003154529.445841708@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 211/211] drm/amd/display: Restore backlight brightness after system resume
+Date:   Thu,  3 Oct 2019 17:54:37 +0200
+Message-Id: <20191003154530.869163725@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,59 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 480523feae581ab714ba6610388a3b4619a2f695 upstream.
+commit bb264220d9316f6bd7c1fd84b8da398c93912931 upstream.
 
-Since commit 4ad23a976413 ("MD: use per-cpu counter for
-writes_pending"), set_in_sync() is substantially more expensive: it
-can wait for a full RCU grace period which can be 10s of milliseconds.
+Laptops with AMD APU doesn't restore display backlight brightness after
+system resume.
 
-So we should only call it when the cost is justified.
+This issue started when DC was introduced.
 
-md_check_recovery() currently calls set_in_sync() every time it finds
-anything to do (on non-external active arrays).  For an array
-performing resync or recovery, this will be quite often.
-Each call will introduce a delay to the md thread, which can noticeable
-affect IO submission latency.
+Let's use BL_CORE_SUSPENDRESUME so the backlight core calls
+update_status callback after system resume to restore the backlight
+level.
 
-In md_check_recovery() we only need to call set_in_sync() if
-'safemode' was non-zero at entry, meaning that there has been not
-recent IO.  So we save this "safemode was nonzero" state, and only
-call set_in_sync() if it was non-zero.
+Tested on Dell Inspiron 3180 (Stoney Ridge) and Dell Latitude 5495
+(Raven Ridge).
 
-This measurably reduces mean and maximum IO submission latency during
-resync/recovery.
-
-Reported-and-tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Fixes: 4ad23a976413 ("MD: use per-cpu counter for writes_pending")
-Cc: stable@vger.kernel.org (v4.12+)
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8807,6 +8807,7 @@ void md_check_recovery(struct mddev *mdd
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -1462,6 +1462,7 @@ static int amdgpu_dm_backlight_get_brigh
+ }
  
- 	if (mddev_trylock(mddev)) {
- 		int spares = 0;
-+		bool try_set_sync = mddev->safemode != 0;
- 
- 		if (!mddev->external && mddev->safemode == 1)
- 			mddev->safemode = 0;
-@@ -8852,7 +8853,7 @@ void md_check_recovery(struct mddev *mdd
- 			}
- 		}
- 
--		if (!mddev->external && !mddev->in_sync) {
-+		if (try_set_sync && !mddev->external && !mddev->in_sync) {
- 			spin_lock(&mddev->lock);
- 			set_in_sync(mddev);
- 			spin_unlock(&mddev->lock);
+ static const struct backlight_ops amdgpu_dm_backlight_ops = {
++	.options = BL_CORE_SUSPENDRESUME,
+ 	.get_brightness = amdgpu_dm_backlight_get_brightness,
+ 	.update_status	= amdgpu_dm_backlight_update_status,
+ };
 
 
