@@ -2,132 +2,83 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DA9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388ACC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E60621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0657D20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120446;
-	bh=uzBkc+s+9oH46cUKSh2Mhd08Dd+i7rdy0iLJBcc4poo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sg6M1lm8c9TWNatLxU/NYytUAMhszplgdfvGC1oRfqYMft94w78aBjF2KRwK8lXav
-	 fUQbfrpuoDJ5spR+1u0US/QubVoojo0oZ6PMTsdEK3HKdekK0+ziPO4MNv3TXxYnuE
-	 Id1cYW0PA0f8cLTbkO6pAhZu7vc43pa6Xr42CDAI=
+	s=default; t=1570120451;
+	bh=3Bz1OUoxGDjgeT98hppsGEw91e3Ye36LUrMKlBtqcSU=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=m65RKIKm23PrAH/ThRiYFrbZElIt97rVv6ZscI8dHl6rnx0dgOkP6IE2InP4ym2CG
+	 jUQJKIe1QNrrpnuvMTY5VMKhLk7YbgQKbp1J0Jzk674PvhUeAgBVKhphZRzvXCXuCX
+	 53fNlYqRF9CDqcOvvBS9zTpr6eVPuP9e+1L4amiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392100AbfJCQeG (ORCPT
+        id S2404151AbfJCQeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42260 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392084AbfJCQeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2392095AbfJCQeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:06 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A2E12086A;
-        Thu,  3 Oct 2019 16:34:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4263921783;
+        Thu,  3 Oct 2019 16:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120440;
-        bh=uzBkc+s+9oH46cUKSh2Mhd08Dd+i7rdy0iLJBcc4poo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TKNAzHemKIxbf4P0DUzEbYIQ1CPJu+nAUxQqdELlG1WAryyqB/eTBaKJ2qbN483W
-         7Crl5revkq4Y1GL3eRY6yd45phy2f5Iu0evZbyLhVLH0Cen1fkroz+fvvbT1hm86CG
-         HnmzIqmU6jOnkg+Hiz4zFAf3yt/bhBLwiRx/hiag=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.2 223/313] IB/hfi1: Do not update hcrc for a KDETH packet during fault injection
-Date:   Thu,  3 Oct 2019 17:53:21 +0200
-Message-Id: <20191003154555.004112690@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1570120445;
+        bh=3Bz1OUoxGDjgeT98hppsGEw91e3Ye36LUrMKlBtqcSU=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=j/K162GHR8smbdtnU3kJ9VWiqmsrEwDD+5DiuSNo/q0iv/ITY+YoqW2+yjI1POSoX
+         UhSWY7N6nAoeYF55YeI0ITa7Ya91LlcNCgn/L8LsNRbxn5mYuNKwbhWSHK+NX8cnXW
+         fLO2UPAEPnRh95wTpBNoIcAzJl/2QPOMSTploa9s=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191002160632.11140-1-krzk@kernel.org>
+References: <20191002160632.11140-1-krzk@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: power: Convert Generic Power Domain bindings to json-schema
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 09:34:04 -0700
+Message-Id: <20191003163405.4263921783@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+Quoting Krzysztof Kozlowski (2019-10-02 09:06:30)
+> Convert Generic Power Domain bindings to DT schema format using
+> json-schema.  The consumer bindings are split to separate file.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>=20
+> ---
 
-commit b2590bdd0b1dfb91737e6cb07ebb47bd74957f7e upstream.
-
-When a KDETH packet is subject to fault injection during transmission,
-HCRC is supposed to be omitted from the packet so that the hardware on the
-receiver side would drop the packet. When creating pbc, the PbcInsertHcrc
-field is set to be PBC_IHCRC_NONE if the KDETH packet is subject to fault
-injection, but overwritten with PBC_IHCRC_LKDETH when update_hcrc() is
-called later.
-
-This problem is fixed by not calling update_hcrc() when the packet is
-subject to fault injection.
-
-Fixes: 6b6cf9357f78 ("IB/hfi1: Set PbcInsertHcrc for TID RDMA packets")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190715164546.74174.99296.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/hfi1/verbs.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -874,16 +874,17 @@ int hfi1_verbs_send_dma(struct rvt_qp *q
- 			else
- 				pbc |= (ib_is_sc5(sc5) << PBC_DC_INFO_SHIFT);
- 
--			if (unlikely(hfi1_dbg_should_fault_tx(qp, ps->opcode)))
--				pbc = hfi1_fault_tx(qp, ps->opcode, pbc);
- 			pbc = create_pbc(ppd,
- 					 pbc,
- 					 qp->srate_mbps,
- 					 vl,
- 					 plen);
- 
--			/* Update HCRC based on packet opcode */
--			pbc = update_hcrc(ps->opcode, pbc);
-+			if (unlikely(hfi1_dbg_should_fault_tx(qp, ps->opcode)))
-+				pbc = hfi1_fault_tx(qp, ps->opcode, pbc);
-+			else
-+				/* Update HCRC based on packet opcode */
-+				pbc = update_hcrc(ps->opcode, pbc);
- 		}
- 		tx->wqe = qp->s_wqe;
- 		ret = build_verbs_tx_desc(tx->sde, len, tx, ahg_info, pbc);
-@@ -1030,12 +1031,12 @@ int hfi1_verbs_send_pio(struct rvt_qp *q
- 		else
- 			pbc |= (ib_is_sc5(sc5) << PBC_DC_INFO_SHIFT);
- 
-+		pbc = create_pbc(ppd, pbc, qp->srate_mbps, vl, plen);
- 		if (unlikely(hfi1_dbg_should_fault_tx(qp, ps->opcode)))
- 			pbc = hfi1_fault_tx(qp, ps->opcode, pbc);
--		pbc = create_pbc(ppd, pbc, qp->srate_mbps, vl, plen);
--
--		/* Update HCRC based on packet opcode */
--		pbc = update_hcrc(ps->opcode, pbc);
-+		else
-+			/* Update HCRC based on packet opcode */
-+			pbc = update_hcrc(ps->opcode, pbc);
- 	}
- 	if (cb)
- 		iowait_pio_inc(&priv->s_iowait);
-
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
