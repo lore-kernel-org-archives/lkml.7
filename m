@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A0DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26170C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9C520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EA421D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123093;
-	bh=uuylUrpLMtuJmJfDOorf9ABhNfHlTQiygNm4lHcTHYc=;
+	s=default; t=1570123097;
+	bh=8MmppN0wk6iJ6HlwRzJl5OGpV+msx+sgDG0ZWr1rF/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZNOt7eiL7gsXW60i+Bq+sC3a3jvUS3hCDecJ5tn9jteptz1WFkY+8KYRq4+OrsF/T
-	 kgmemDwyo/N8q1DLTSLThHMSV9o7NohYqLSFJbIyYOPPdYLxrrP9Lk7A8Gj/BaP9J1
-	 BfIaFgPCHnigzGLfPsRU31coZmfFRdxANJgC7EZI=
+	b=mYDOy8YPUubxs0ajN3jBVybgsVUFf/L7mmBKZ+WGvtnwypWrrf5ywNCMYSGjKLJwy
+	 FpJgFn5rC9nAQFC24pAmfFBOKU3oaXhxy+fziTtobxuqo3VFZjhv/auz0ANuQHpt2Z
+	 qB+ZQTdsjvXV6DEHbofYaftzYp/LWNj3tH7nWH3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390095AbfJCQVN (ORCPT
+        id S2391733AbfJCRSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49268 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390064AbfJCQVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:06 -0400
+        id S2390156AbfJCQVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AFE32054F;
-        Thu,  3 Oct 2019 16:21:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC3520659;
+        Thu,  3 Oct 2019 16:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119665;
-        bh=uuylUrpLMtuJmJfDOorf9ABhNfHlTQiygNm4lHcTHYc=;
+        s=default; t=1570119693;
+        bh=8MmppN0wk6iJ6HlwRzJl5OGpV+msx+sgDG0ZWr1rF/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FtujARgkpW/MKzbLv6qDsXYJKtwKqmPq+kn1jpOTBrnu8n3EHJZLGC5txlsaZ9q1V
-         pQfS5+mRcSbqkEEU90asG/X9uk9Sjwz9eXzrxTma0CvXJPUnGimBRLda8TaoX/mVdr
-         ZLBUkDgo4PntxhUUAjsx4JTPeLmXGIfKFqp3k8zU=
+        b=I9/F+duVd4sxMBCwIrCZjp3CyOBoW5b2cP+pB0mc0D6fCOpKmH1MPDlAsxJtnOjD9
+         K/5BZytGttEXhJWSrEWk6Q4rt1oNZWtrF+MevNy06AqHOmN9/Sy0QMr3GCKE35bbG4
+         bT/+xAK5usuWV16iAjeGevvFqXAAmLUKKyPN3jLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 147/211] PM / devfreq: passive: fix compiler warning
-Date:   Thu,  3 Oct 2019 17:53:33 +0200
-Message-Id: <20191003154521.329520890@linuxfoundation.org>
+Subject: [PATCH 4.19 119/211] libtraceevent: Change users plugin directory
+Date:   Thu,  3 Oct 2019 17:53:05 +0200
+Message-Id: <20191003154514.403362132@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,33 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit 0465814831a926ce2f83e8f606d067d86745234e ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-The recent commit of
-PM / devfreq: passive: Use non-devm notifiers
-had incurred compiler warning, "unused variable 'dev'".
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 22fd41b4c1098..8cfb69749d498 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -152,7 +152,6 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
- static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 				unsigned int event, void *data)
- {
--	struct device *dev = devfreq->dev.parent;
- 	struct devfreq_passive_data *p_data
- 			= (struct devfreq_passive_data *)devfreq->data;
- 	struct devfreq *parent = (struct devfreq *)p_data->parent;
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 0b4e833088a4d..95a43ccb6dd09 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -55,15 +55,15 @@ set_plugin_dir := 1
+ 
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index f17e25097e1e2..52874eb94acef 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -16,7 +16,7 @@
+ #include "event-parse.h"
+ #include "event-utils.h"
+ 
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
