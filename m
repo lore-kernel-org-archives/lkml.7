@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777DC10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C09C4360C
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091AC222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB67321D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfJCDjK (ORCPT
+        id S1728534AbfJCDjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 23:39:10 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:57060 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbfJCDjJ (ORCPT
+        Wed, 2 Oct 2019 23:39:08 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:57064 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbfJCDjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 23:39:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id a22so2865348ioq.23
+        Wed, 2 Oct 2019 23:39:08 -0400
+Received: by mail-io1-f69.google.com with SMTP id a22so2865366ioq.23
         for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 20:39:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=fNcmM8dDxJueHNsixPYAMzRv/o66qgp37A7jQpDFaDU=;
-        b=H+oy4X0SZWKgUqZhjZ29FuM1Vx1fkshRl2HZ6roUX+nA+JKkTLOt9mChH25rSl5A3q
-         6J9KvKbNUKkZo+HTA7qqleCqIUIRVyIvxcqN0ZnwWGooLNxhSS+47Vpv7bwN6KkeGEgd
-         w/mmtKOOZ48zR0SCm6K9fcOWQAKxhbS5G0fZ3gCbUi/YbeIfOYBXEdrWFSmvMZqTS2kQ
-         6seWkvqUM3HyZ5bmcClixS6sE8urD9ehER37WfMqFX0pwj4W20/FJpKeJpN56UxFoAMe
-         sVtlag211j63K5GTZ9s8Vy/+Z4+IAlv+nk50kiwhX3BUas/cR33EX/JR1ABvVS2fm8VE
-         segw==
-X-Gm-Message-State: APjAAAXKPMRLOTDcERJ1AclHjyRyku6xCmzjizkc71uLovFhr6sEGwUU
-        7Ur7sZATUwk9nGKDm5qgqu3XDuI9JShngQiieeXXaajNiPoA
-X-Google-Smtp-Source: APXvYqwFzhhBhYUtdnc9rPslh+XB3usOsuQcTSKUHt81F5Fwbea+PqEz88pROA3THyedDW94PkexFESBJJCjCpPBDRjU5iD/ggaV
+        bh=mvJOaHk+FTZL9FNb7UAf3Jmr8rKxImWpF0+2sR45UOw=;
+        b=CeTioO8HN//EQzh1cjV1kfv0iZ2q223oYO8//95ekL1liMpZqPzF2tsWi27K5ZbJoM
+         RwrineuXIVHjOZUrhUphUOxdTsJzJjRkcbVojtAIMG96MpDaK9Qkqrsijrucp4GZrexG
+         /tQiwo5cL6m4hQ/XakiBMrjioohlnhA0EOe9cS/H4aQyoh98/DmCAgJdklkFl0KXXuh3
+         0ddLKecfJNEI+/urDsyd99U14ZrkkmIGS3t53ZcbY6Jlv17b3LAPid6ye1+xCHEQuWLz
+         O490hJJE4GL8fTNxoVOWMhksdknaPFWWeLWWmmpIgLZOuvhGy0b89gf7uJyDV5AiGWr8
+         wvHw==
+X-Gm-Message-State: APjAAAXb1kpDj9jmXoBo8qYLEfw7vksAcZDMHwGGZ5JAgm1f7uUxusRY
+        7uXRnD0XiyrTiszevEB4gQ3wpQnNSGfwG6HUt/fflLmvKX0f
+X-Google-Smtp-Source: APXvYqyVfwzpbA6LMRrTu2ruIncppD+gfoB8uXriSv6YxjGTpOn6O9m0rZxAdq57PC7sPCzETPZKKSadSKsz/qGlMoKjB4wXdv4h
 MIME-Version: 1.0
-X-Received: by 2002:a92:cb10:: with SMTP id s16mr8001468ilo.79.1570073947045;
+X-Received: by 2002:a05:6e02:683:: with SMTP id o3mr7342118ils.58.1570073947326;
  Wed, 02 Oct 2019 20:39:07 -0700 (PDT)
 Date:   Wed, 02 Oct 2019 20:39:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e288f40593f953a9@google.com>
-Subject: KMSAN: uninit-value in sr9800_bind
-From:   syzbot <syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, oneukum@suse.com,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000e6d0f70593f953dd@google.com>
+Subject: KMSAN: uninit-value in cxusb_rc_query
+From:   syzbot <syzbot+98730b985cad4931a552@syzkaller.appspotmail.com>
+To:     glider@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        mkrufky@linuxtv.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,77 +57,66 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    124037e0 kmsan: drop inlines, rename do_kmsan_task_create()
+HEAD commit:    cebbfdbc kmsan: merge set_no_shadow_page() and set_no_orig..
 git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=10f7e0cd600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1277527e600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=f1842130bbcfb335bac1
+dashboard link: https://syzkaller.appspot.com/bug?extid=98730b985cad4931a552
 compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142acef3600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11811bbd600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a648e5600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156af545600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Reported-by: syzbot+98730b985cad4931a552@syzkaller.appspotmail.com
 
-CoreChips 2-1:0.159 (unnamed net_device) (uninitialized): Error reading  
-RX_CTL register:ffffffb9
-CoreChips 2-1:0.159 (unnamed net_device) (uninitialized): Failed to enable  
-software MII access
-CoreChips 2-1:0.159 (unnamed net_device) (uninitialized): Failed to enable  
-hardware MII access
-=====================================================
-BUG: KMSAN: uninit-value in usbnet_probe+0x10ae/0x3960  
-drivers/net/usb/usbnet.c:1722
-CPU: 1 PID: 11159 Comm: kworker/1:4 Not tainted 5.3.0-rc7+ #0
+dvb-usb: bulk message failed: -22 (1/-30591)
+==================================================================
+BUG: KMSAN: uninit-value in cxusb_rc_query+0x2f7/0x360  
+drivers/media/usb/dvb-usb/cxusb.c:547
+CPU: 0 PID: 761 Comm: kworker/0:2 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
+Workqueue: events dvb_usb_read_remote_control
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  sr_get_phyid drivers/net/usb/sr9800.c:380 [inline]
-  sr9800_bind+0xd39/0x1b10 drivers/net/usb/sr9800.c:800
-  usbnet_probe+0x10ae/0x3960 drivers/net/usb/usbnet.c:1722
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  cxusb_rc_query+0x2f7/0x360 drivers/media/usb/dvb-usb/cxusb.c:547
+  dvb_usb_read_remote_control+0xf9/0x290  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
   process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
   kthread+0x4b5/0x4f0 kernel/kthread.c:256
   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Local variable description: ----res@sr_mdio_read
+Local variable description: ----ircode@cxusb_rc_query
 Variable was created at:
-  sr_mdio_read+0x78/0x360 drivers/net/usb/sr9800.c:341
-  sr_get_phyid drivers/net/usb/sr9800.c:379 [inline]
-  sr9800_bind+0xce9/0x1b10 drivers/net/usb/sr9800.c:800
-=====================================================
+  cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
+  dvb_usb_read_remote_control+0xf9/0x290  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+==================================================================
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 761 Comm: kworker/0:2 Tainted: G    B             5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events dvb_usb_read_remote_control
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  panic+0x3c9/0xc1e kernel/panic.c:219
+  kmsan_report+0x2ca/0x2d0 mm/kmsan/kmsan_report.c:129
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  cxusb_rc_query+0x2f7/0x360 drivers/media/usb/dvb-usb/cxusb.c:547
+  dvb_usb_read_remote_control+0xf9/0x290  
+drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
