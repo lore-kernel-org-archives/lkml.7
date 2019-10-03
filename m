@@ -2,51 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FE6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAC8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7762070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161CC2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120487;
-	bh=e+vpEdynfvmz8PwJA4x8O4oVQGYU5GXH/XaFuuhjjPU=;
+	s=default; t=1570120494;
+	bh=q1F/PL9JH2Pgit/X0ETfmM9LtIBLM1x7XmdLoELO7aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I0Z4jobOU4ZXEAO4Cdh5704l+wWoo7s0wRJzoGFcLmx1JtNbQAgs641JFhSCrFJcW
-	 +s82Am8FASZBzJOhLUQZo9AzEw+qD/ELBSzxWlvkHvY7doxNEHVuPeDqrzmNXVaE2G
-	 /RXGk84DXBFkD44PikJqT7AHJJJ5JXziPDSYZsKs=
+	b=q8kvnT44YN+IARvDn2I5EcO8qULbyMep5rwxl43hRaNfX16RDk2vuwep1pypJURzZ
+	 SfdjqjiEEpW4Ufm2VXGh7Ort9fPz4+FIBwsWsX50p4IJpa0yqTevDEysmI5+JySp/W
+	 /7qs6A2Lv8U0EgL8qccObE7wtJGLtQaawiDelKFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392165AbfJCQeq (ORCPT
+        id S2404234AbfJCQex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730354AbfJCQeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:44 -0400
+        id S1730354AbfJCQeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 875BB2070B;
-        Thu,  3 Oct 2019 16:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5E02070B;
+        Thu,  3 Oct 2019 16:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120484;
-        bh=e+vpEdynfvmz8PwJA4x8O4oVQGYU5GXH/XaFuuhjjPU=;
+        s=default; t=1570120489;
+        bh=q1F/PL9JH2Pgit/X0ETfmM9LtIBLM1x7XmdLoELO7aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeTxsRsGjk8/8bunH+n0Rs2oAR2XqMwAe5PJzOcstlbuCdVlMTLTyQNPQnzF6Rdjd
-         YfWaiCdiWIqhQLE/njt6GtGdr79XxhREXuP8mkItoNb2UA2hWU5bmOPYk/wnD/7LDu
-         M8qf7B8ZQH0d2UNOXolFYK7DM4iqFOZaUiMZu0Hc=
+        b=fgYjORCoYUHPX4fjHCnBvrQC7fIIa/fMJ5F4cg8/BndyzLHqWu3FOSJGWqtSPG0bg
+         SslXTI8tZk1U43Tcd4Dst/sQsWChhJWi3D8XP+LLt4hO1MTFWIYDa0jUgyPvr02XtU
+         Nc8aXGP4nie7zhv7By1i8wKjqCqjFjIAM02R6gxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Phil Scarr <phil.scarr@pm.me>
-Subject: [PATCH 5.2 238/313] parisc: Disable HP HSC-PCI Cards to prevent kernel crash
-Date:   Thu,  3 Oct 2019 17:53:36 +0200
-Message-Id: <20191003154556.490294105@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 204/313] iommu/amd: Override wrong IVRS IOAPIC on Raven Ridge systems
+Date:   Thu,  3 Oct 2019 17:53:02 +0200
+Message-Id: <20191003154553.097789121@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,73 +60,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 5fa1659105fac63e0f3c199b476025c2e04111ce upstream.
+[ Upstream commit 93d051550ee02eaff9a2541d825605a7bd778027 ]
 
-The HP Dino PCI controller chip can be used in two variants: as on-board
-controller (e.g. in B160L), or on an Add-On card ("Card-Mode") to bridge
-PCI components to systems without a PCI bus, e.g. to a HSC/GSC bus.  One
-such Add-On card is the HP HSC-PCI Card which has one or more DEC Tulip
-PCI NIC chips connected to the on-card Dino PCI controller.
+Raven Ridge systems may have malfunction touchpad or hang at boot if
+incorrect IVRS IOAPIC is provided by BIOS.
 
-Dino in Card-Mode has a big disadvantage: All PCI memory accesses need
-to go through the DINO_MEM_DATA register, so Linux drivers will not be
-able to use the ioremap() function. Without ioremap() many drivers will
-not work, one example is the tulip driver which then simply crashes the
-kernel if it tries to access the ports on the HP HSC card.
+Users already found correct "ivrs_ioapic=" values, let's put them inside
+kernel to workaround buggy BIOS.
 
-This patch disables the HP HSC card if it finds one, and as such
-fixes the kernel crash on a HP D350/2 machine.
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-Noticed-by: Phil Scarr <phil.scarr@pm.me>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+BugLink: https://bugs.launchpad.net/bugs/1795292
+BugLink: https://bugs.launchpad.net/bugs/1837688
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parisc/dino.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/iommu/Makefile           |  2 +-
+ drivers/iommu/amd_iommu.h        | 14 +++++
+ drivers/iommu/amd_iommu_init.c   |  5 +-
+ drivers/iommu/amd_iommu_quirks.c | 92 ++++++++++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/iommu/amd_iommu.h
+ create mode 100644 drivers/iommu/amd_iommu_quirks.c
 
---- a/drivers/parisc/dino.c
-+++ b/drivers/parisc/dino.c
-@@ -156,6 +156,15 @@ static inline struct dino_device *DINO_D
- 	return container_of(hba, struct dino_device, hba);
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 8c71a15e986b5..826a5bbe0d09b 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -10,7 +10,7 @@ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
+ obj-$(CONFIG_IOMMU_IOVA) += iova.o
+ obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+-obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
++obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
+ obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
+ obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
+ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
+diff --git a/drivers/iommu/amd_iommu.h b/drivers/iommu/amd_iommu.h
+new file mode 100644
+index 0000000000000..12d540d9b59b0
+--- /dev/null
++++ b/drivers/iommu/amd_iommu.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef AMD_IOMMU_H
++#define AMD_IOMMU_H
++
++int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line);
++
++#ifdef CONFIG_DMI
++void amd_iommu_apply_ivrs_quirks(void);
++#else
++static void amd_iommu_apply_ivrs_quirks(void) { }
++#endif
++
++#endif
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 07d84dbab564e..6469f51282427 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -30,6 +30,7 @@
+ #include <asm/irq_remapping.h>
+ 
+ #include <linux/crash_dump.h>
++#include "amd_iommu.h"
+ #include "amd_iommu_proto.h"
+ #include "amd_iommu_types.h"
+ #include "irq_remapping.h"
+@@ -997,7 +998,7 @@ static void __init set_dev_entry_from_acpi(struct amd_iommu *iommu,
+ 	set_iommu_for_device(iommu, devid);
  }
  
-+/* Check if PCI device is behind a Card-mode Dino. */
-+static int pci_dev_is_behind_card_dino(struct pci_dev *dev)
-+{
-+	struct dino_device *dino_dev;
+-static int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
++int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
+ {
+ 	struct devid_map *entry;
+ 	struct list_head *list;
+@@ -1148,6 +1149,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 	if (ret)
+ 		return ret;
+ 
++	amd_iommu_apply_ivrs_quirks();
 +
-+	dino_dev = DINO_DEV(parisc_walk_tree(dev->bus->bridge));
-+	return is_card_dino(&dino_dev->hba.dev->id);
+ 	/*
+ 	 * First save the recommended feature enable bits from ACPI
+ 	 */
+diff --git a/drivers/iommu/amd_iommu_quirks.c b/drivers/iommu/amd_iommu_quirks.c
+new file mode 100644
+index 0000000000000..c235f79b7a200
+--- /dev/null
++++ b/drivers/iommu/amd_iommu_quirks.c
+@@ -0,0 +1,92 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++/*
++ * Quirks for AMD IOMMU
++ *
++ * Copyright (C) 2019 Kai-Heng Feng <kai.heng.feng@canonical.com>
++ */
++
++#ifdef CONFIG_DMI
++#include <linux/dmi.h>
++
++#include "amd_iommu.h"
++
++#define IVHD_SPECIAL_IOAPIC		1
++
++struct ivrs_quirk_entry {
++	u8 id;
++	u16 devid;
++};
++
++enum {
++	DELL_INSPIRON_7375 = 0,
++	DELL_LATITUDE_5495,
++	LENOVO_IDEAPAD_330S_15ARR,
++};
++
++static const struct ivrs_quirk_entry ivrs_ioapic_quirks[][3] __initconst = {
++	/* ivrs_ioapic[4]=00:14.0 ivrs_ioapic[5]=00:00.2 */
++	[DELL_INSPIRON_7375] = {
++		{ .id = 4, .devid = 0xa0 },
++		{ .id = 5, .devid = 0x2 },
++		{}
++	},
++	/* ivrs_ioapic[4]=00:14.0 */
++	[DELL_LATITUDE_5495] = {
++		{ .id = 4, .devid = 0xa0 },
++		{}
++	},
++	/* ivrs_ioapic[32]=00:14.0 */
++	[LENOVO_IDEAPAD_330S_15ARR] = {
++		{ .id = 32, .devid = 0xa0 },
++		{}
++	},
++	{}
++};
++
++static int __init ivrs_ioapic_quirk_cb(const struct dmi_system_id *d)
++{
++	const struct ivrs_quirk_entry *i;
++
++	for (i = d->driver_data; i->id != 0 && i->devid != 0; i++)
++		add_special_device(IVHD_SPECIAL_IOAPIC, i->id, (u16 *)&i->devid, 0);
++
++	return 0;
 +}
 +
- /*
-  * Dino Configuration Space Accessor Functions
-  */
-@@ -437,6 +446,21 @@ static void quirk_cirrus_cardbus(struct
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_CIRRUS, PCI_DEVICE_ID_CIRRUS_6832, quirk_cirrus_cardbus );
- 
-+#ifdef CONFIG_TULIP
-+static void pci_fixup_tulip(struct pci_dev *dev)
++static const struct dmi_system_id ivrs_quirks[] __initconst = {
++	{
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Dell Inspiron 7375",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7375"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_INSPIRON_7375],
++	},
++	{
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Dell Latitude 5495",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude 5495"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
++	},
++	{
++		.callback = ivrs_ioapic_quirk_cb,
++		.ident = "Lenovo ideapad 330S-15ARR",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "81FB"),
++		},
++		.driver_data = (void *)&ivrs_ioapic_quirks[LENOVO_IDEAPAD_330S_15ARR],
++	},
++	{}
++};
++
++void __init amd_iommu_apply_ivrs_quirks(void)
 +{
-+	if (!pci_dev_is_behind_card_dino(dev))
-+		return;
-+	if (!(pci_resource_flags(dev, 1) & IORESOURCE_MEM))
-+		return;
-+	pr_warn("%s: HP HSC-PCI Cards with card-mode Dino not yet supported.\n",
-+		pci_name(dev));
-+	/* Disable this card by zeroing the PCI resources */
-+	memset(&dev->resource[0], 0, sizeof(dev->resource[0]));
-+	memset(&dev->resource[1], 0, sizeof(dev->resource[1]));
++	dmi_check_system(ivrs_quirks);
 +}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_DEC, PCI_ANY_ID, pci_fixup_tulip);
-+#endif /* CONFIG_TULIP */
- 
- static void __init
- dino_bios_init(void)
++#endif
+-- 
+2.20.1
+
 
 
