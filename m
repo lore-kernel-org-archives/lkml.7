@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022F9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B3EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99BF20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CE92054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119110;
-	bh=d4ncFyiCsd77a457JAwmaPtaDLK0wuqOVsHZty0nllA=;
+	s=default; t=1570119114;
+	bh=CWplDRHvnU4qVEGUG6qVOqgU1eeqSvaAMKYt+59QDHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uh1mm6/SilXpFYGK7Vao5BNeP45NGVEER3wCfQa9s7d/Tw6lRbclhVpU8TGtKVO4I
-	 4nPcfDYRuxO3jbBwzUo+fPO11Z5WIT0ZpAX2cUqwju/AU4d5s6TaJwAASwi3girDTT
-	 VOldv1EuH/WO4UHYD15NzVdtOqx4Aj10B331WgFs=
+	b=NRaAiZ894GXSAPkZtJlv2eEtpVVXLsgG3XZHrh5r1n/oXKfdDssZemWaacTUjECkh
+	 YAxllCuCyACzaogjKop8OYwZ5FP3qjH4NbiRPNoRX4sYvCfMy83OgA28L3rYmzqeM8
+	 +DrlSUA8Fk5533LNzVtX7+gmnLzEMi4/jiC61HUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbfJCQLu (ORCPT
+        id S2387934AbfJCQLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732058AbfJCQLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:44 -0400
+        id S2387913AbfJCQLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE91E2054F;
-        Thu,  3 Oct 2019 16:11:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36FC82054F;
+        Thu,  3 Oct 2019 16:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119104;
-        bh=d4ncFyiCsd77a457JAwmaPtaDLK0wuqOVsHZty0nllA=;
+        s=default; t=1570119109;
+        bh=CWplDRHvnU4qVEGUG6qVOqgU1eeqSvaAMKYt+59QDHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ydGAcXZICFKvbA4VGGSHX5So3BAWRc1dFQkf1v0ZzqUdNG0Y91ID5REGxBvjf4MXk
-         N08kb2q8kxFTQJaik45pvWtnZJk7P8HNylcbnNLBwnnswiqjQU/L7ENPtfiIIuWXMW
-         1uUVDq68eD+wkJAqmXoaUfbvICTv6KWwf6Z2dOoU=
+        b=aVtmVfa+nuDMfq6l2+DOMVFb2H+dKhG/kDCcjEdQTyyBGfYMgIGXts/fzprCLfP/h
+         cWnMkiOP+aQkeEpnuUNGcZ5ohwlzegfSWoEcBp5FVVmvRCaE11sJ/wv82nfsQR+6KS
+         BphxEIf9gwmYfEVP0Cm2RzoMFqxbWde1jckkOLPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 089/185] dmaengine: iop-adma: use correct printk format strings
-Date:   Thu,  3 Oct 2019 17:52:47 +0200
-Message-Id: <20191003154458.411745147@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Douthit <stephend@silicom-usa.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 081/185] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
+Date:   Thu,  3 Oct 2019 17:52:39 +0200
+Message-Id: <20191003154455.825352683@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,106 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Stephen Douthit <stephend@silicom-usa.com>
 
-[ Upstream commit 00c9755524fbaa28117be774d7c92fddb5ca02f3 ]
+[ Upstream commit 29a3388bfcce7a6d087051376ea02bf8326a957b ]
 
-When compile-testing on other architectures, we get lots of warnings
-about incorrect format strings, like:
+Depending on how BIOS has marked the reserved region containing the 32KB
+MCHBAR you can get warnings like:
 
-   drivers/dma/iop-adma.c: In function 'iop_adma_alloc_slots':
-   drivers/dma/iop-adma.c:307:6: warning: format '%x' expects argument of type 'unsigned int', but argument 6 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans more than reserved [mem 0xfed10000-0xfed17fff]
+caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
 
-   drivers/dma/iop-adma.c: In function 'iop_adma_prep_dma_memcpy':
->> drivers/dma/iop-adma.c:518:40: warning: format '%u' expects argument of type 'unsigned int', but argument 5 has type 'size_t {aka long unsigned int}' [-Wformat=]
+Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
+MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
+size to ioremap() depending on which resource we're reading from.
 
-Use %zu for printing size_t as required, and cast the dma_addr_t
-arguments to 'u64' for printing with %llx. Ideally this should use
-the %pad format string, but that requires an lvalue argument that
-doesn't work here.
-
-Link: https://lore.kernel.org/r/20190809163334.489360-3-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/iop-adma.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/edac/pnd2_edac.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-index a410657f7bcd6..012584cf3c17b 100644
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@ -125,9 +125,9 @@ static void __iop_adma_slot_cleanup(struct iop_adma_chan *iop_chan)
- 	list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
- 					chain_node) {
- 		pr_debug("\tcookie: %d slot: %d busy: %d "
--			"this_desc: %#x next_desc: %#x ack: %d\n",
-+			"this_desc: %#x next_desc: %#llx ack: %d\n",
- 			iter->async_tx.cookie, iter->idx, busy,
--			iter->async_tx.phys, iop_desc_get_next_desc(iter),
-+			iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
- 			async_tx_test_ack(&iter->async_tx));
- 		prefetch(_iter);
- 		prefetch(&_iter->async_tx);
-@@ -315,9 +315,9 @@ iop_adma_alloc_slots(struct iop_adma_chan *iop_chan, int num_slots,
- 				int i;
- 				dev_dbg(iop_chan->device->common.dev,
- 					"allocated slot: %d "
--					"(desc %p phys: %#x) slots_per_op %d\n",
-+					"(desc %p phys: %#llx) slots_per_op %d\n",
- 					iter->idx, iter->hw_desc,
--					iter->async_tx.phys, slots_per_op);
-+					(u64)iter->async_tx.phys, slots_per_op);
+diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
+index 7f9bb9d9fcdc4..641ff19b2f57a 100644
+--- a/drivers/edac/pnd2_edac.c
++++ b/drivers/edac/pnd2_edac.c
+@@ -266,11 +266,14 @@ static u64 get_sideband_reg_base_addr(void)
+ 	}
+ }
  
- 				/* pre-ack all but the last descriptor */
- 				if (num_slots != slots_per_op)
-@@ -525,7 +525,7 @@ iop_adma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dma_dest,
- 		return NULL;
- 	BUG_ON(len > IOP_ADMA_MAX_BYTE_COUNT);
++#define DNV_MCHBAR_SIZE  0x8000
++#define DNV_SB_PORT_SIZE 0x10000
+ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *name)
+ {
+ 	struct pci_dev *pdev;
+ 	char *base;
+ 	u64 addr;
++	unsigned long size;
  
--	dev_dbg(iop_chan->device->common.dev, "%s len: %u\n",
-+	dev_dbg(iop_chan->device->common.dev, "%s len: %zu\n",
- 		__func__, len);
+ 	if (op == 4) {
+ 		pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
+@@ -285,15 +288,17 @@ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *na
+ 			addr = get_mem_ctrl_hub_base_addr();
+ 			if (!addr)
+ 				return -ENODEV;
++			size = DNV_MCHBAR_SIZE;
+ 		} else {
+ 			/* MMIO via sideband register base address */
+ 			addr = get_sideband_reg_base_addr();
+ 			if (!addr)
+ 				return -ENODEV;
+ 			addr += (port << 16);
++			size = DNV_SB_PORT_SIZE;
+ 		}
  
- 	spin_lock_bh(&iop_chan->lock);
-@@ -558,7 +558,7 @@ iop_adma_prep_dma_xor(struct dma_chan *chan, dma_addr_t dma_dest,
- 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
+-		base = ioremap((resource_size_t)addr, 0x10000);
++		base = ioremap((resource_size_t)addr, size);
+ 		if (!base)
+ 			return -ENODEV;
  
- 	dev_dbg(iop_chan->device->common.dev,
--		"%s src_cnt: %d len: %u flags: %lx\n",
-+		"%s src_cnt: %d len: %zu flags: %lx\n",
- 		__func__, src_cnt, len, flags);
- 
- 	spin_lock_bh(&iop_chan->lock);
-@@ -591,7 +591,7 @@ iop_adma_prep_dma_xor_val(struct dma_chan *chan, dma_addr_t *dma_src,
- 	if (unlikely(!len))
- 		return NULL;
- 
--	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %u\n",
-+	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %zu\n",
- 		__func__, src_cnt, len);
- 
- 	spin_lock_bh(&iop_chan->lock);
-@@ -629,7 +629,7 @@ iop_adma_prep_dma_pq(struct dma_chan *chan, dma_addr_t *dst, dma_addr_t *src,
- 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
- 
- 	dev_dbg(iop_chan->device->common.dev,
--		"%s src_cnt: %d len: %u flags: %lx\n",
-+		"%s src_cnt: %d len: %zu flags: %lx\n",
- 		__func__, src_cnt, len, flags);
- 
- 	if (dmaf_p_disabled_continue(flags))
-@@ -692,7 +692,7 @@ iop_adma_prep_dma_pq_val(struct dma_chan *chan, dma_addr_t *pq, dma_addr_t *src,
- 		return NULL;
- 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
- 
--	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %u\n",
-+	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %zu\n",
- 		__func__, src_cnt, len);
- 
- 	spin_lock_bh(&iop_chan->lock);
 -- 
 2.20.1
 
