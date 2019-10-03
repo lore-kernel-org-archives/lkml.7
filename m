@@ -2,92 +2,127 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C735C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A9BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0356320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pq/jSr1x"
+	by mail.kernel.org (Postfix) with ESMTP id 1933520865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570123840;
+	bh=tt0LCh4YXjzKOv/dvjz3XCtEM80VHmZtBK0kywOKkYo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VitKecLPb/B0k1q20LNfsFt03G+sP1OPISY4gVitNL26NEIEkcX9Isnh6Mq+2xo7c
+	 8lRkOzn24hOFKJ4Cc8GZyeRfWqmF8W1Kevttzrhe4N5F5eraVecHMSYVqbqcZI0zbx
+	 cpJA/j6vG7M/yDQCC5kdyAkVWNE2ui2C/yf6Uwsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387730AbfJCRad (ORCPT
+        id S2388365AbfJCRaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:30:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46878 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732191AbfJCQLT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:19 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so2037206pfg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:11:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=WCl0BJ/xg5z2POfrHRFKcHi5xkDivkEW/iGK30/2GP0=;
-        b=Pq/jSr1xmzlqjDuxBQh7dFDV5hRyr6MZtXVubXctjAF8kRjt+U6xL1O1zUsbiV9qug
-         ygNsoBsTe8l9J4vQh++/GIEgBZ3tc+dCBa+tnW6tuf4O22v4fqwHlcvMDTQXutYl4bj7
-         bWJISwhs7L3e2klQ4E9mPH1vemoDoOFTbhMxY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=WCl0BJ/xg5z2POfrHRFKcHi5xkDivkEW/iGK30/2GP0=;
-        b=pmbUJmBXwHY2sLgkCkrF496xUDkpx02mEiYv6TTnS35TJ3Xh+boqeX/JUdENiXWFcS
-         wifaUky7L0uS+1JIBeMUBixQ3OFFB2qgjImy9lhM3tq8r2TUPe71TgfzQRNzBHLLIgie
-         l1D0zGU0cwsD6s/KReT46Dsh+ljl2/fweibH9TuoNGkZTceTPQb/yu5YbkRspw6rAEEu
-         QTGre/jqXvQePsYySROptuSa7j/aB4bd53bTM1hL+o46ltHPXwkkQiR36/XCkAm3HVW/
-         3o+QhOvpEycBHar8H31a6UJgCMgHHSOPKkhT44RHKQRrtwL06+WTVpwCdFSwvRjNFUm0
-         KTHQ==
-X-Gm-Message-State: APjAAAXDMJ3XFVg3tRni+GzOtgjhK5K/Ydr9MkUUoyhWbN1fQfFeiudW
-        cq6JTs5KDLnRW+Rvrxj/WRPkRA==
-X-Google-Smtp-Source: APXvYqwgRSbE1eF4YKGVz+xu6rX+ntZRdmjPXT4BO1EQpfB2LWEVRFrJK7RpkgO+T9w/1Sx9rAIAHg==
-X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr11602435pjr.8.1570119078443;
-        Thu, 03 Oct 2019 09:11:18 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j25sm4527578pfi.113.2019.10.03.09.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 09:11:17 -0700 (PDT)
-Message-ID: <5d961da5.1c69fb81.f4dce.d93e@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191001180622.806-1-geert+renesas@glider.be>
-References: <20191001180622.806-1-geert+renesas@glider.be>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Joerg Roedel <joro@8bytes.org>
+        Thu, 3 Oct 2019 13:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730028AbfJCQLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76CB421783;
+        Thu,  3 Oct 2019 16:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119072;
+        bh=tt0LCh4YXjzKOv/dvjz3XCtEM80VHmZtBK0kywOKkYo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rky9rFU355z9Cpl81h7mh4rGgkiE1ZfvKrKxoLZHjRpKITWIMH8usRccI6IhN4X4T
+         IQ5dj6lSnFH0gAPWHip6T1/AScRAriiudhm9P2XLUwzzKQqSeai7zp7pImg0S5Hxrf
+         hxWAsuQaT6bvPsHdV/tJPixuiGBtPKI6vIApmk9I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-renesas-soc@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Only call platform_get_irq() when interrupt is mandatory
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 09:11:17 -0700
+        stable@vger.kernel.org, Tom Wu <tomwu@mellanox.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 114/185] nvmet: fix data units read and written counters in SMART log
+Date:   Thu,  3 Oct 2019 17:53:12 +0200
+Message-Id: <20191003154504.256361939@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2019-10-01 11:06:22)
-> As platform_get_irq() now prints an error when the interrupt does not
-> exist, calling it gratuitously causes scary messages like:
->=20
->     ipmmu-vmsa e6740000.mmu: IRQ index 0 not found
->=20
-> Fix this by moving the call to platform_get_irq() down, where the
-> existence of the interrupt is mandatory.
->=20
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
-platform_get_irq*()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
+From: Tom Wu <tomwu@mellanox.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
+
+In nvme spec 1.3 there is a definition for data write/read counters
+from SMART log, (See section 5.14.1.2):
+	This value is reported in thousands (i.e., a value of 1
+	corresponds to 1000 units of 512 bytes read) and is rounded up.
+
+However, in nvme target where value is reported with actual units,
+but not thousands of units as the spec requires.
+
+Signed-off-by: Tom Wu <tomwu@mellanox.com>
+Reviewed-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/target/admin-cmd.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index c4a0bf36e7521..0e94fd737eb4e 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -49,9 +49,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
+ 	}
+ 
+ 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
+-	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
++	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[READ]), 1000);
+ 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[WRITE]), 1000);
+ 
+ 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
+ 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
+@@ -77,11 +79,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link) {
+ 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
+-		data_units_read +=
+-			part_stat_read(ns->bdev->bd_part, sectors[READ]);
++		data_units_read += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
+ 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-		data_units_written +=
+-			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++		data_units_written += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
+ 
+ 	}
+ 	rcu_read_unlock();
+-- 
+2.20.1
+
+
 
