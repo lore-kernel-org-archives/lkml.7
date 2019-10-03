@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF190C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CAEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B692320862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8DF20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121595;
-	bh=UGqMufujAPeYf8XfJuRbDlboz+r/vDuLTwr5F1tDuSA=;
+	s=default; t=1570121599;
+	bh=am45y8iPUw91fkyP8mnH1HESaTd30Lg7H9muex1X1Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYKrJn5UndkU6+CeOxBefMLo0snaZIW4ddcMOq6A6NGAUmXlNAt+Z8IkDeXVbDSc/
-	 Rm0d0xeQu/mBxpEVYvzYUJMe1HZgv0x4kmCQnL5yB19k/7Xkh9ktrljtsWqU61ks4r
-	 3319gYOLI2Kcv1BhD/51Fv/FpdDFyGL8nLvJNgQE=
+	b=uybf77fx6DhYWuDpnXHrB6ufFrO5JNJtfhGV/Y3fe8NZtXwBLfSD+7awSEYYvDdOU
+	 6s8XPSfWhu6BICH3dcaCzXZAPhlt/LJ5ss4l5LbZrWHph+fZK9zc4kuPhD6N/4sh+C
+	 uVezDR0lwafnmVVT/BGkAqnZDiC7r6ygZYVv9Ufo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406317AbfJCQxO (ORCPT
+        id S2406364AbfJCQxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:53:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41054 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406266AbfJCQxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:53:08 -0400
+        id S2406319AbfJCQxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFDA020862;
-        Thu,  3 Oct 2019 16:53:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 877BF215EA;
+        Thu,  3 Oct 2019 16:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121588;
-        bh=UGqMufujAPeYf8XfJuRbDlboz+r/vDuLTwr5F1tDuSA=;
+        s=default; t=1570121596;
+        bh=am45y8iPUw91fkyP8mnH1HESaTd30Lg7H9muex1X1Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yorl1VqcjhFXp3xhEbMeqjD2fNYnzrk7ss6cDuOmvI/Ko97mvP34d4YE3dIMxUwC3
-         ai749Uxrm8ctj5IeR8dU/kLdBsG8JDvSF4zCQN4RLd1I108bLV1pkv1lEtaXC0MYcR
-         crzf3+V93zpHHJx9NFKBspc1SI5cFf6UOpTqvaAQ=
+        b=LEYh/9V7lvoZOtGJ8WQ/FZWKxZsTQeBLCnmwjhB52G+t6ajYjc3ixAhhMWY/S9JNo
+         ICAHpeu9qjFT01mKhFUSKFRgG0HFRYkOLamSw12NWy4gBGJxLsJcTBexn4qmrH9AfI
+         5berGH1MFegCkAzI5sDIQcPMSwGceX2zsXSMmcKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurent Vivier <lvivier@redhat.com>,
-        Theodore Tso <tytso@mit.edu>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.3 333/344] hwrng: core - dont wait on add_early_randomness()
-Date:   Thu,  3 Oct 2019 17:54:58 +0200
-Message-Id: <20191003154611.544359173@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 5.3 336/344] CIFS: Fix oplock handling for SMB 2.1+ protocols
+Date:   Thu,  3 Oct 2019 17:55:01 +0200
+Message-Id: <20191003154611.750132409@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,55 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Vivier <lvivier@redhat.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 78887832e76541f77169a24ac238fccb51059b63 upstream.
+commit a016e2794fc3a245a91946038dd8f34d65e53cc3 upstream.
 
-add_early_randomness() is called by hwrng_register() when the
-hardware is added. If this hardware and its module are present
-at boot, and if there is no data available the boot hangs until
-data are available and can't be interrupted.
+There may be situations when a server negotiates SMB 2.1
+protocol version or higher but responds to a CREATE request
+with an oplock rather than a lease.
 
-For instance, in the case of virtio-rng, in some cases the host can be
-not able to provide enough entropy for all the guests.
+Currently the client doesn't handle such a case correctly:
+when another CREATE comes in the server sends an oplock
+break to the initial CREATE and the client doesn't send
+an ack back due to a wrong caching level being set (READ
+instead of RWH). Missing an oplock break ack makes the
+server wait until the break times out which dramatically
+increases the latency of the second CREATE.
 
-We can have two easy ways to reproduce the problem but they rely on
-misconfiguration of the hypervisor or the egd daemon:
+Fix this by properly detecting oplocks when using SMB 2.1
+protocol version and higher.
 
-- if virtio-rng device is configured to connect to the egd daemon of the
-host but when the virtio-rng driver asks for data the daemon is not
-connected,
-
-- if virtio-rng device is configured to connect to the egd daemon of the
-host but the egd daemon doesn't provide data.
-
-The guest kernel will hang at boot until the virtio-rng driver provides
-enough data.
-
-To avoid that, call rng_get_data() in non-blocking mode (wait=0)
-from add_early_randomness().
-
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-Fixes: d9e797261933 ("hwrng: add randomness to system from rng...")
 Cc: <stable@vger.kernel.org>
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hw_random/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2ops.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -67,7 +67,7 @@ static void add_early_randomness(struct
- 	size_t size = min_t(size_t, 16, rng_buffer_size());
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -3301,6 +3301,11 @@ smb21_set_oplock_level(struct cifsInodeI
+ 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
+ 		return;
  
- 	mutex_lock(&reading_mutex);
--	bytes_read = rng_get_data(rng, rng_buffer, size, 1);
-+	bytes_read = rng_get_data(rng, rng_buffer, size, 0);
- 	mutex_unlock(&reading_mutex);
- 	if (bytes_read > 0)
- 		add_device_randomness(rng_buffer, bytes_read);
++	/* Check if the server granted an oplock rather than a lease */
++	if (oplock & SMB2_OPLOCK_LEVEL_EXCLUSIVE)
++		return smb2_set_oplock_level(cinode, oplock, epoch,
++					     purge_cache);
++
+ 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
+ 		new_oplock |= CIFS_CACHE_READ_FLG;
+ 		strcat(message, "R");
 
 
