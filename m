@@ -2,54 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77722C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C951C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B46E21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D610207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118851;
-	bh=r0NyGKfVp7kWPQ7tIqsR5FE0KOaG9y5lxXoDbToXw3E=;
+	s=default; t=1570118854;
+	bh=1LUJwptwuEKrRHmrKifsxa6dnt9TLOJz1E43bpOEK+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJ6udlJXLHupfPLpz/oth/mjWqrXsoTOCsvOY18nRl81F+uLqzKzjRBYfwH+J2dlF
-	 D4rowcFPLBK4zDPnpDrgz4kSjK8CDl35byOCpTYeEEubGfkd8QkStTGL+qUO+MoxmQ
-	 mZwUDvSKDkhURWoVC5p1mfMJxSrELQBIWf7COqrU=
+	b=hbvb56jyuEZtoO6h7XtN9Y4Hy7syKBsls/0pdaDrOF8X43VGJb+hoovG99XQESTA6
+	 rVEQ0EIoEOTSkwxMPFLHdOFnXpcUfoCunUCJK1AdA+sahsI7/lzB+joMjQD34yYWp9
+	 jnJqnOAq0QPvsA04xcMiVa3qyP+HJVn3FOHQKCX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732962AbfJCQHa (ORCPT
+        id S1732957AbfJCQH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732953AbfJCQH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:07:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730672AbfJCQHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF36721783;
-        Thu,  3 Oct 2019 16:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE1F215EA;
+        Thu,  3 Oct 2019 16:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118847;
-        bh=r0NyGKfVp7kWPQ7tIqsR5FE0KOaG9y5lxXoDbToXw3E=;
+        s=default; t=1570118844;
+        bh=1LUJwptwuEKrRHmrKifsxa6dnt9TLOJz1E43bpOEK+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAEoFtJWHBFXNHL38o//vJD87U/AaBhIonW5ETelc9KObl0CTlgzanteHhU13HNX1
-         p4sRfUc2vO6M7JJuaenpiogJGLITz6DLqntnPSe2WolTBntMWTHn9O0pO2xgZ7gcok
-         IPrJj/VKdqJezv+7Nw+hUHKPXkt96CyrL2gNPEuA=
+        b=2KEkv7B4J6hVCMJi7twB7gakPcGgLiH6PrWt+nh/5RhQN7gkDcqlZH5ymz5YCUu/+
+         0BqttHTf9aGI4cwljGN/nwuaxaqk9hcCOxjXv2/129SJD/tqAg1BQU060e3s5de8nh
+         7SsMPr27ZaE9nVLM/dx4/TAQc1i89hrcGcaOtwf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Kacper=20Piwi=C5=84ski?= <cosiekvfj@o2.pl>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 030/185] ACPI: video: Add new hw_changes_brightness quirk, set it on PB Easynote MZ35
-Date:   Thu,  3 Oct 2019 17:51:48 +0200
-Message-Id: <20191003154444.571196923@linuxfoundation.org>
+        stable@vger.kernel.org, Rolf Eike Beer <eb@emlix.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 003/185] objtool: Query pkg-config for libelf location
+Date:   Thu,  3 Oct 2019 17:51:21 +0200
+Message-Id: <20191003154438.213505914@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,102 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Rolf Eike Beer <eb@emlix.com>
 
-[ Upstream commit 4f7f96453b462b3de0fa18d18fe983960bb5ee7f ]
+commit 056d28d135bca0b1d0908990338e00e9dadaf057 upstream.
 
-Some machines change the brightness themselves when a brightness hotkey
-gets pressed, despite us telling them not to. This causes the brightness to
-go two steps up / down when the hotkey is pressed. This is esp. a problem
-on older machines with only a few brightness levels.
+If it is not in the default location, compilation fails at several points.
 
-This commit adds a new hw_changes_brightness quirk which makes
-acpi_video_device_notify() only call backlight_force_update(...,
-BACKLIGHT_UPDATE_HOTKEY) and not do anything else, notifying userspace
-that the brightness was changed and leaving it at that fixing the dual
-step problem.
+Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/91a25e992566a7968fedc89ec80e7f4c83ad0548.1553622500.git.jpoimboe@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204077
-Reported-by: Kacper Piwiński <cosiekvfj@o2.pl>
-Tested-by: Kacper Piwiński <cosiekvfj@o2.pl>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ Makefile               |    4 +++-
+ tools/objtool/Makefile |    7 +++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index e39a1489cc729..7df7abde1fcb7 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -73,6 +73,12 @@ module_param(report_key_events, int, 0644);
- MODULE_PARM_DESC(report_key_events,
- 	"0: none, 1: output changes, 2: brightness changes, 3: all");
+--- a/Makefile
++++ b/Makefile
+@@ -949,9 +949,11 @@ mod_sign_cmd = true
+ endif
+ export mod_sign_cmd
  
-+static int hw_changes_brightness = -1;
-+module_param(hw_changes_brightness, int, 0644);
-+MODULE_PARM_DESC(hw_changes_brightness,
-+	"Set this to 1 on buggy hw which changes the brightness itself when "
-+	"a hotkey is pressed: -1: auto, 0: normal 1: hw-changes-brightness");
++HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
 +
- /*
-  * Whether the struct acpi_video_device_attrib::device_id_scheme bit should be
-  * assumed even if not actually set.
-@@ -418,6 +424,14 @@ static int video_set_report_key_events(const struct dmi_system_id *id)
- 	return 0;
- }
+ ifdef CONFIG_STACK_VALIDATION
+   has_libelf := $(call try-run,\
+-		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null -lelf -,1,0)
++		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
+   ifeq ($(has_libelf),1)
+     objtool_target := tools/objtool FORCE
+   else
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -26,14 +26,17 @@ LIBSUBCMD		= $(LIBSUBCMD_OUTPUT)libsubcm
+ OBJTOOL    := $(OUTPUT)objtool
+ OBJTOOL_IN := $(OBJTOOL)-in.o
  
-+static int video_hw_changes_brightness(
-+	const struct dmi_system_id *d)
-+{
-+	if (hw_changes_brightness == -1)
-+		hw_changes_brightness = 1;
-+	return 0;
-+}
++LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
++LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
 +
- static const struct dmi_system_id video_dmi_table[] = {
- 	/*
- 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
-@@ -542,6 +556,21 @@ static const struct dmi_system_id video_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
- 		},
- 	},
-+	/*
-+	 * Some machines change the brightness themselves when a brightness
-+	 * hotkey gets pressed, despite us telling them not to. In this case
-+	 * acpi_video_device_notify() should only call backlight_force_update(
-+	 * BACKLIGHT_UPDATE_HOTKEY) and not do anything else.
-+	 */
-+	{
-+	 /* https://bugzilla.kernel.org/show_bug.cgi?id=204077 */
-+	 .callback = video_hw_changes_brightness,
-+	 .ident = "Packard Bell EasyNote MZ35",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "EasyNote MZ35"),
-+		},
-+	},
- 	{}
- };
+ all: $(OBJTOOL)
  
-@@ -1624,6 +1653,14 @@ static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)
- 	bus = video_device->video;
- 	input = bus->input;
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+ 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+-CFLAGS   += -Wall -Werror $(WARNINGS) -fomit-frame-pointer -O2 -g $(INCLUDES)
+-LDFLAGS  += -lelf $(LIBSUBCMD)
++CFLAGS   += -Wall -Werror $(WARNINGS) -fomit-frame-pointer -O2 -g $(INCLUDES) $(LIBELF_FLAGS)
++LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD)
  
-+	if (hw_changes_brightness > 0) {
-+		if (video_device->backlight)
-+			backlight_force_update(video_device->backlight,
-+					       BACKLIGHT_UPDATE_HOTKEY);
-+		acpi_notifier_call_chain(device, event, 0);
-+		return;
-+	}
-+
- 	switch (event) {
- 	case ACPI_VIDEO_NOTIFY_CYCLE_BRIGHTNESS:	/* Cycle brightness */
- 		brightness_switch_event(video_device, event);
--- 
-2.20.1
-
+ # Allow old libelf to be used:
+ elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E - | grep elf_getshdr)
 
 
