@@ -2,130 +2,82 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D156C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C14C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F3C20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778A920679
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="TSMsih4A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkB+TAk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbfJCPM3 (ORCPT
+        id S1729658AbfJCPMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:12:29 -0400
-Received: from mail-eopbgr1400092.outbound.protection.outlook.com ([40.107.140.92]:44032
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726364AbfJCPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:12:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SeWp63NJL4odvR3EecDLyOvCGXhYVtBtZRiwjtKiSyCCcBGHXV8KtbQtf4ti1//r/RAMtAM5GgZmlEtSWqyDYLLESlSJ2fl8drriymGfoJ3W8i2QpMYihLjRTYWY/otDqQ9Qb92Hrdv2C3aE2yahvbIu3FSeGuSpxk8MqLwxT3eKN6BbjxB84af43/JJV5i0IEfbNE5bVqlSgI2BeBfGh27i9v6tOfDbn/mCZUNeI0e0Pizt6o3EQkIlUsgVjwvTZh0evZaO1/X0/twPZzF1KfSrvUnLiLrsp4I5TJIuIFtuyfc+en+M5+fL5FOBHLSVdixrIWbyui5Mk3m/6eSxQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jMP90xpm/oH2VOa0gugfuxfjypFjWSjoxGrA3o2IXuE=;
- b=c/V5xpPIEb7gZqWXgMxFDiySSEkIdHBdRl8g7hhlexvm1YJlT/hF8c1A+xI9s7zyGstkQt6NpoS1M2AjQ0HKD5vaZh28CokxuLbtWYp/dsJ1xKB8XvYopg/P5JOU8UB1rv4KPIDd3xasSuGVB3HYneTIK6MmMwswUp9dBSz0r9PAMhafpbLSuKCMTdL8BlTWf4SmGZN+O7j2nX3Wn9ta62SkGyjDXDySxvPq3aiOxghji9kyjJkzyLc/iY6pCFsmogwtb/ujyW5q8L3p6fqm6sKWhJqwbtQ6xZyCx9tBBuUlEBCHo9TpjBmg1mDbG8pWppb7oj8C4Gjg2QMEpYGiKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Thu, 3 Oct 2019 11:12:42 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41416 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfJCPMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:12:41 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d16so4058239qtq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 08:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jMP90xpm/oH2VOa0gugfuxfjypFjWSjoxGrA3o2IXuE=;
- b=TSMsih4Ad7xs9HCK5XrD2ci2wl6rkJspuD/ArGbDBQgWshySP91yma+VS80/mNngeuikSyck1pCUnvu6upp/MFLLDrFz0NN/oFhFE++02Vqb0xwdxq8+H3kH/5zybRda39lmM/ARpFV5OtSbrKfFE2PdDSmw8GvUgK6xjEGvvpQ=
-Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
- OSAPR01MB5042.jpnprd01.prod.outlook.com (20.179.177.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Thu, 3 Oct 2019 15:12:25 +0000
-Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
- ([fe80::f193:eee6:cb3b:a3b5]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
- ([fe80::f193:eee6:cb3b:a3b5%3]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
- 15:12:25 +0000
-From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT ClockMatrix
- based PTP clock
-Thread-Topic: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT
- ClockMatrix based PTP clock
-Thread-Index: AQHVbly6xWB76P+IOkSrUCgqrhtfFqdGbPUAgAKwMIA=
-Date:   Thu, 3 Oct 2019 15:12:24 +0000
-Message-ID: <20191003145546.GA19695@renesas.com>
-References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
- <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com>
-In-Reply-To: <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [173.195.53.163]
-x-clientproxiedby: BYAPR11CA0087.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::28) To OSAPR01MB3025.jpnprd01.prod.outlook.com
- (2603:1096:604:2::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vincent.cheng.xh@renesas.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 87415c58-eac8-46ef-7ecb-08d7481418bd
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: OSAPR01MB5042:
-x-microsoft-antispam-prvs: <OSAPR01MB5042BA66C4EBB3DABE6F43E1D29F0@OSAPR01MB5042.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(189003)(199004)(1076003)(6436002)(229853002)(446003)(11346002)(6486002)(256004)(2906002)(71200400001)(71190400001)(36756003)(7736002)(5660300002)(305945005)(4326008)(99286004)(486006)(2616005)(476003)(6512007)(186003)(52116002)(76176011)(102836004)(386003)(6506007)(6246003)(26005)(54906003)(66066001)(86362001)(6916009)(33656002)(25786009)(8936002)(3846002)(6116002)(66946007)(66446008)(64756008)(66556008)(66476007)(81166006)(81156014)(8676002)(14454004)(478600001)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB5042;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jDFYV/+jK7bJXxGfylBCv7vZEU02Z1FGPsKgp/97H80SyPxQBgNbekPayRD1FWtKPFIN4NcgbXVZjZVuBz9TPpc/coJpLbjK4D3l1v1fU0v68zJX5YnazE212Y5dJC6ZxVACVOCosZoYHmHKw6N/nfT6wfsyAJj2UZaXzU68JW6izscBLDnj5DJXZIvEr3io4Md4moX8wnuG3GcecC7vy+/CgMfHs1TOSi2qDSw8cOegpiS0uPxFiq92wfgr+ppweBqwfyaNCJcbwbjshKtCZwfrBqZQEP/ebYEjpQlS4E9qXYgSucenmC66p9Wn2Am/rJzwMnjjr2jnAOQrJzu0sMhM1qM29CdX475wXqGFp81kLq04MVhxWWQkYjf4pJQAFtdbJRKaUz3TPoxmSDhsbS04STIw0rMcnfttAAX7ufo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <440A9CE6CF761845BBB59B4D03E3A6CC@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=doUapdd+t8q28td1ePGT0x1egG3GBDqT1obBNFclp3s=;
+        b=rkB+TAk0/GCkhRFGSfrPcLIYCh+incOaFYSQbR+OLj7OWhc5Z2PqpULOAkSmVNxxij
+         wzMaza2E5WbwRzTD/Lel4kN2ahqEbAPqgUZlq9UeiLWNaAzkHimKD/WaN0zN5i381oYx
+         dC2IM5CafP3P8MDghHhys5AM29Mej4tVGd8siWDjscUbjbHpVPuNIP2q4pxomQl6Mk7t
+         8Wh2Cu0ZNoWLeOJx+cjH7SRPRJvTHn2Pxz8Lh0pIDljlR2IZP9y92BoSLn563o3aDcJJ
+         F94D7sYAYUUqTIzVxbfjpQ/3Kb9sTkAP4x/zE+ZTRNC/u6o8RvPuD215lvofkNcA6QAA
+         RaiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=doUapdd+t8q28td1ePGT0x1egG3GBDqT1obBNFclp3s=;
+        b=AQb9LcHsbE3MNFGnEfrtC9Jrba3mY+bV8m+0VPJBzKtmVtKjfki2VocWyui6VukwGi
+         u3gbeL6h2GQTSNKHbR/ex/+Tr9fyKWQdop0kek55ylDrosUWytTVF+s5wTE6Jyj8fSR1
+         R3C11axAyVjNVPyMatk2rcmOVK64AtvXFLJBo4JsU5XzHbDFC6bS1zjP3NkE4RwZqbYR
+         5XJJmKuzphphayWu6eGVWeYMY1qr1eJDer7Xx/d87E9DPp0uWnvJQnoEpPZWyB4ZjGuE
+         9e06RA4ZUEDPYtzMYsz07rCkb/qU+Z6rrINUt8oTNa0+EErwuNAORJPtDYUYmRQWAMB1
+         602g==
+X-Gm-Message-State: APjAAAXnnnWjlGBI6XUGf0l61gYIrS2eAEsV+kmUHduErwzdQ+ellWtU
+        8gkAdCTIkKwWBV1awsxuFL80XxMq37A=
+X-Google-Smtp-Source: APXvYqxccZzwmhoM6CSMB64CFMTyUpNKgcyYZ8ETRu6+Nd+/8C02qvSJzmaH1gfcTc7CzwEhi14q8A==
+X-Received: by 2002:aed:38c7:: with SMTP id k65mr10637835qte.251.1570115560373;
+        Thu, 03 Oct 2019 08:12:40 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id b16sm2155084qtk.65.2019.10.03.08.12.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 08:12:39 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 3 Oct 2019 11:12:38 -0400
+To:     Greg Kroah-Hartman <grekh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: 5.3.y stable branch has been bumped to 5.3.3?
+Message-ID: <20191003151237.GA2887046@rani.riverdale.lan>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87415c58-eac8-46ef-7ecb-08d7481418bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 15:12:25.0030
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7z4CmbHWJpyFDWcYHElyFcKh56ffolmLFhTacZSQG5fDgUTGEHXmbkju6OdsF0aRqvbDRxMJFf7E05sG37k2OJwuSInM1CQ9JrIlZcDnNnU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB5042
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBPY3QgMDEsIDIwMTkgYXQgMDY6MDk6MDZQTSBFRFQsIFJvYiBIZXJyaW5nIHdyb3Rl
-Og0KPk9uIFdlZCwgU2VwIDE4LCAyMDE5IGF0IDA0OjA2OjM3UE0gLTA0MDAsIHZpbmNlbnQuY2hl
-bmcueGhAcmVuZXNhcy5jb20gd3JvdGU6DQo+PiBGcm9tOiBWaW5jZW50IENoZW5nIDx2aW5jZW50
-LmNoZW5nLnhoQHJlbmVzYXMuY29tPg0KDQpIaSBSb2IsDQoNCldlbGNvbWUgYmFjay4gIFRoYW5r
-LXlvdSBmb3IgcHJvdmlkaW5nIGZlZWRiYWNrLg0KDQo+PiANCj4+IEFkZCBkZXZpY2UgdHJlZSBi
-aW5kaW5nIGRvYyBmb3IgdGhlIElEVCBDbG9ja01hdHJpeCBQVFAgY2xvY2sgZHJpdmVyLg0KPg0K
-PkJpbmRpbmdzIGFyZSBmb3IgaC93LCBub3QgZHJpdmVycy4uLg0KDQpZZXMsIHdpbGwgcmVtb3Zl
-ICdkcml2ZXInLg0KDQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B0cC9w
-dHAtaWR0Y20udHh0IHwgMTUgKysrKysrKysrKysrKysrDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDE1
-IGluc2VydGlvbnMoKykNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3B0cC9wdHAtaWR0Y20udHh0DQo+DQo+UGxlYXNlIG1ha2UgdGhpcyBh
-IERUIHNjaGVtYS4NCg0KU3VyZSwgd2lsbCBnaXZlIGl0IGEgdHJ5Lg0KDQo+PiArICAtIGNvbXBh
-dGlibGUgIFNob3VsZCBiZSAiaWR0LDhhMzQwMHgtcHRwIiBmb3IgU3lzdGVtIFN5bmNocm9uaXpl
-cg0KPj4gKyAgICAgICAgICAgICAgICBTaG91bGQgYmUgImlkdCw4YTM0MDF4LXB0cCIgZm9yIFBv
-cnQgU3luY2hyb25pemVyDQo+PiArICAgICAgICAgICAgICAgIFNob3VsZCBiZSAiaWR0LDhhMzQw
-NHgtcHRwIiBmb3IgVW5pdmVyc2FsIEZyZXF1ZW5jeSBUcmFuc2xhdG9yIChVRlQpDQo+DQo+SWYg
-UFRQIGlzIHRoZSBvbmx5IGZ1bmN0aW9uIG9mIHRoZSBjaGlwLCB5b3UgZG9uJ3QgbmVlZCB0byBh
-cHBlbmQgDQo+Jy1wdHAnLg0KDQpPa2F5LCB3aWxsIHJlbW92ZSAnLXB0cCcuICBUaGFua3MuDQoN
-Cg0KPldoYXQncyB0aGUgJ3gnIGZvcj8gV2UgZ2VuZXJhbGx5IGRvbid0IHVzZSB3aWxkY2FyZHMg
-aW4gY29tcGF0aWJsZSANCj5zdHJpbmdzLg0KDQpXZSB3ZXJlIGhvcGluZyB0byB1c2UgJ3gnIHRv
-IHJlcHJlc2VudCBhIHNpbmdsZSBkcml2ZXIgdG8gbWF0Y2ggdGhlIHZhcmlvdXMNCnBhcnQgbnVt
-YmVycyA4QTM0MDAxLCA4QTM0MDAyLCA4QTM0MDAzLCA4QTM0MDA0LCA4QTM0MDExLCA4QTM0MDEy
-LCBldGMuDQoNCldoYXQgc2hvdWxkIGJlIHVzZWQgaW5zdGVhZCBvZiAneCc/DQoNClRoYW5rcywN
-ClZpbmNlbnQNCg==
+Hi Greg, I'm seeing what looks like an extra commit [1] in the 5.3.y branch
+post the 5.3.2 tag, bumping version in the Makefile to 5.3.3.
+Historically the version bump has only happened once all the stable
+patches have been applied and the new version is getting tagged -- is
+this a mistake or intentional change in process to pre-bump the version?
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.3.y&id=9c30694424ee15cc30a23f92a913d5322b9e5bd3
+
+Thanks.
