@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72E3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82708C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD9B20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B7620673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121886;
-	bh=sdIJXwtZRiE+/Dn9qgxRXGg8YGBtpMjfHtBtKXBAxa0=;
+	s=default; t=1570121889;
+	bh=LeERzmuctCeSuhuULVmF9fFXwSY41m5ogzB9ycAZJPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=domFFc9Y/y/FuQ7KL6TJB9NYZ4oOH4SuD288LxUaWsx9pUB9eGaf32UJsSr8S+7Tf
-	 V9b+6sQ+49kl0wqJSSRZaPatvZigHSxjT4IaVb4O15vt2XfrSWp7qzC6w1xqx3JFSF
-	 GU0evgdLZd3XyNJithPtOwg/gFYCLsoGfaEO2JVQ=
+	b=QVZ8ykhqK19EPYXg4sv+sIGxuULvGglE5YJxGud+hmM9C3JxFhmfM2DIWFp+sDaNK
+	 XveUbBgiPaBtbuW+wp4qv3ITg2ofIh0dx5e+DtHvYSs3UbTbl24E5sDIpLC0sN5A+9
+	 RznGDGvzsPLnKe8rHKyGK/MRnFvc9yZEUT/jtdgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfJCQtK (ORCPT
+        id S2405814AbfJCQtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35418 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405819AbfJCQtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:07 -0400
+        id S2405098AbfJCQs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8314020830;
-        Thu,  3 Oct 2019 16:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48ED620830;
+        Thu,  3 Oct 2019 16:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121346;
-        bh=sdIJXwtZRiE+/Dn9qgxRXGg8YGBtpMjfHtBtKXBAxa0=;
+        s=default; t=1570121337;
+        bh=LeERzmuctCeSuhuULVmF9fFXwSY41m5ogzB9ycAZJPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RMgh8Eaknjlsq52FNCrDxsKblFtu8BlveLRCO5IPdh1ED0qyiFDLgZRsccL0BTu3M
-         JMnxUW0q/bHjtBf2o7bVfQ4iwymnDBkJ97vzNvnGbRcx+Z+OBB/m3plYTqP5MwBaXk
-         nGOirQT3dzoumxsG4/CmYxUT5rGF8fHNcoUzGYoU=
+        b=jCuxibR0LV9Hut5zl/9tsoWXH6bQoQU7ndXrR0Vfqj8GfNf80WRjNc8N4aF0Oc12T
+         AvLKVMW2safzjp1AwHNoxKNwyxZJCdK87d++MbZ/n1U2x6bWK6Zsh9WaC/HcoTahxc
+         vbF+8mCc3hWDsfdlCQkMn5fHm+16OggNLnKIY4Vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.3 244/344] IB/hfi1: Define variables as unsigned long to fix KASAN warning
-Date:   Thu,  3 Oct 2019 17:53:29 +0200
-Message-Id: <20191003154604.470563537@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.3 241/344] scsi: qla2xxx: Fix Relogin to prevent modifying scan_state flag
+Date:   Thu,  3 Oct 2019 17:53:26 +0200
+Message-Id: <20191003154604.169402030@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,255 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Quinn Tran <qutran@marvell.com>
 
-commit f8659d68e2bee5b86a1beaf7be42d942e1fc81f4 upstream.
+commit 8b5292bcfcacf15182a77a973a98d310e76fd58b upstream.
 
-Define the working variables to be unsigned long to be compatible with
-for_each_set_bit and change types as needed.
+Relogin fails to move forward due to scan_state flag indicating device is
+not there. Before relogin process, Session delete process accidently
+modified the scan_state flag.
 
-While we are at it remove unused variables from a couple of functions.
+[mkp: typos plus corrected Fixes: sha as reported by sfr]
 
-This was found because of the following KASAN warning:
- ==================================================================
-   BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
-   Read of size 8 at addr ffff888362d778d0 by task kworker/u308:2/1889
-
-   CPU: 21 PID: 1889 Comm: kworker/u308:2 Tainted: G W         5.3.0-rc2-mm1+ #2
-   Hardware name: Intel Corporation W2600CR/W2600CR, BIOS SE5C600.86B.02.04.0003.102320141138 10/23/2014
-   Workqueue: ib-comp-unb-wq ib_cq_poll_work [ib_core]
-   Call Trace:
-    dump_stack+0x9a/0xf0
-    ? find_first_bit+0x19/0x70
-    print_address_description+0x6c/0x332
-    ? find_first_bit+0x19/0x70
-    ? find_first_bit+0x19/0x70
-    __kasan_report.cold.6+0x1a/0x3b
-    ? find_first_bit+0x19/0x70
-    kasan_report+0xe/0x12
-    find_first_bit+0x19/0x70
-    pma_get_opa_portstatus+0x5cc/0xa80 [hfi1]
-    ? ret_from_fork+0x3a/0x50
-    ? pma_get_opa_port_ectrs+0x200/0x200 [hfi1]
-    ? stack_trace_consume_entry+0x80/0x80
-    hfi1_process_mad+0x39b/0x26c0 [hfi1]
-    ? __lock_acquire+0x65e/0x21b0
-    ? clear_linkup_counters+0xb0/0xb0 [hfi1]
-    ? check_chain_key+0x1d7/0x2e0
-    ? lock_downgrade+0x3a0/0x3a0
-    ? match_held_lock+0x2e/0x250
-    ib_mad_recv_done+0x698/0x15e0 [ib_core]
-    ? clear_linkup_counters+0xb0/0xb0 [hfi1]
-    ? ib_mad_send_done+0xc80/0xc80 [ib_core]
-    ? mark_held_locks+0x79/0xa0
-    ? _raw_spin_unlock_irqrestore+0x44/0x60
-    ? rvt_poll_cq+0x1e1/0x340 [rdmavt]
-    __ib_process_cq+0x97/0x100 [ib_core]
-    ib_cq_poll_work+0x31/0xb0 [ib_core]
-    process_one_work+0x4ee/0xa00
-    ? pwq_dec_nr_in_flight+0x110/0x110
-    ? do_raw_spin_lock+0x113/0x1d0
-    worker_thread+0x57/0x5a0
-    ? process_one_work+0xa00/0xa00
-    kthread+0x1bb/0x1e0
-    ? kthread_create_on_node+0xc0/0xc0
-    ret_from_fork+0x3a/0x50
-
-   The buggy address belongs to the page:
-   page:ffffea000d8b5dc0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
-   flags: 0x17ffffc0000000()
-   raw: 0017ffffc0000000 0000000000000000 ffffea000d8b5dc8 0000000000000000
-   raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-   page dumped because: kasan: bad access detected
-
-   addr ffff888362d778d0 is located in stack of task kworker/u308:2/1889 at offset 32 in frame:
-    pma_get_opa_portstatus+0x0/0xa80 [hfi1]
-
-   this frame has 1 object:
-    [32, 36) 'vl_select_mask'
-
-   Memory state around the buggy address:
-    ffff888362d77780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-    ffff888362d77800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   >ffff888362d77880: 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2 00 00
-                                                    ^
-    ffff888362d77900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-    ffff888362d77980: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2
-
- ==================================================================
-
-Cc: <stable@vger.kernel.org>
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Link: https://lore.kernel.org/r/20190911113053.126040.47327.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 2dee5521028c ("scsi: qla2xxx: Fix login state machine freeze")
+Cc: stable@vger.kernel.org
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/mad.c |   45 ++++++++++++++++-----------------------
- 1 file changed, 19 insertions(+), 26 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c   |   25 ++++++++++++++++++++-----
+ drivers/scsi/qla2xxx/qla_os.c     |    1 +
+ drivers/scsi/qla2xxx/qla_target.c |    1 -
+ 3 files changed, 21 insertions(+), 6 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/mad.c
-+++ b/drivers/infiniband/hw/hfi1/mad.c
-@@ -2326,7 +2326,7 @@ struct opa_port_status_req {
- 	__be32 vl_select_mask;
- };
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -289,8 +289,13 @@ qla2x00_async_login(struct scsi_qla_host
+ 	struct srb_iocb *lio;
+ 	int rval = QLA_FUNCTION_FAILED;
  
--#define VL_MASK_ALL		0x000080ff
-+#define VL_MASK_ALL		0x00000000000080ffUL
+-	if (!vha->flags.online)
+-		goto done;
++	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT) ||
++	    fcport->loop_id == FC_NO_LOOP_ID) {
++		ql_log(ql_log_warn, vha, 0xffff,
++		    "%s: %8phC - not sending command.\n",
++		    __func__, fcport->port_name);
++		return rval;
++	}
  
- struct opa_port_status_rsp {
- 	__u8 port_num;
-@@ -2625,15 +2625,14 @@ static int pma_get_opa_classportinfo(str
- }
+ 	sp = qla2x00_get_sp(vha, fcport, GFP_KERNEL);
+ 	if (!sp)
+@@ -1262,8 +1267,13 @@ int qla24xx_async_gpdb(struct scsi_qla_h
+ 	struct port_database_24xx *pd;
+ 	struct qla_hw_data *ha = vha->hw;
  
- static void a0_portstatus(struct hfi1_pportdata *ppd,
--			  struct opa_port_status_rsp *rsp, u32 vl_select_mask)
-+			  struct opa_port_status_rsp *rsp)
- {
- 	if (!is_bx(ppd->dd)) {
- 		unsigned long vl;
- 		u64 sum_vl_xmit_wait = 0;
--		u32 vl_all_mask = VL_MASK_ALL;
-+		unsigned long vl_all_mask = VL_MASK_ALL;
+-	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT))
++	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT) ||
++	    fcport->loop_id == FC_NO_LOOP_ID) {
++		ql_log(ql_log_warn, vha, 0xffff,
++		    "%s: %8phC - not sending command.\n",
++		    __func__, fcport->port_name);
+ 		return rval;
++	}
  
--		for_each_set_bit(vl, (unsigned long *)&(vl_all_mask),
--				 8 * sizeof(vl_all_mask)) {
-+		for_each_set_bit(vl, &vl_all_mask, BITS_PER_LONG) {
- 			u64 tmp = sum_vl_xmit_wait +
- 				  read_port_cntr(ppd, C_TX_WAIT_VL,
- 						 idx_from_vl(vl));
-@@ -2730,12 +2729,12 @@ static int pma_get_opa_portstatus(struct
- 		(struct opa_port_status_req *)pmp->data;
- 	struct hfi1_devdata *dd = dd_from_ibdev(ibdev);
- 	struct opa_port_status_rsp *rsp;
--	u32 vl_select_mask = be32_to_cpu(req->vl_select_mask);
-+	unsigned long vl_select_mask = be32_to_cpu(req->vl_select_mask);
- 	unsigned long vl;
- 	size_t response_data_size;
- 	u32 nports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
- 	u8 port_num = req->port_num;
--	u8 num_vls = hweight32(vl_select_mask);
-+	u8 num_vls = hweight64(vl_select_mask);
- 	struct _vls_pctrs *vlinfo;
- 	struct hfi1_ibport *ibp = to_iport(ibdev, port);
- 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
-@@ -2770,7 +2769,7 @@ static int pma_get_opa_portstatus(struct
+ 	fcport->disc_state = DSC_GPDB;
  
- 	hfi1_read_link_quality(dd, &rsp->link_quality_indicator);
- 
--	rsp->vl_select_mask = cpu_to_be32(vl_select_mask);
-+	rsp->vl_select_mask = cpu_to_be32((u32)vl_select_mask);
- 	rsp->port_xmit_data = cpu_to_be64(read_dev_cntr(dd, C_DC_XMIT_FLITS,
- 					  CNTR_INVALID_VL));
- 	rsp->port_rcv_data = cpu_to_be64(read_dev_cntr(dd, C_DC_RCV_FLITS,
-@@ -2841,8 +2840,7 @@ static int pma_get_opa_portstatus(struct
- 	 * So in the for_each_set_bit() loop below, we don't need
- 	 * any additional checks for vl.
- 	 */
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		memset(vlinfo, 0, sizeof(*vlinfo));
- 
- 		tmp = read_dev_cntr(dd, C_DC_RX_FLIT_VL, idx_from_vl(vl));
-@@ -2883,7 +2881,7 @@ static int pma_get_opa_portstatus(struct
- 		vfi++;
+@@ -1953,8 +1963,11 @@ qla24xx_handle_plogi_done_event(struct s
+ 		return;
  	}
  
--	a0_portstatus(ppd, rsp, vl_select_mask);
-+	a0_portstatus(ppd, rsp);
+-	if (fcport->disc_state == DSC_DELETE_PEND)
++	if ((fcport->disc_state == DSC_DELETE_PEND) ||
++	    (fcport->disc_state == DSC_DELETED)) {
++		set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
+ 		return;
++	}
  
- 	if (resp_len)
- 		*resp_len += response_data_size;
-@@ -2930,16 +2928,14 @@ static u64 get_error_counter_summary(str
- 	return error_counter_summary;
- }
- 
--static void a0_datacounters(struct hfi1_pportdata *ppd, struct _port_dctrs *rsp,
--			    u32 vl_select_mask)
-+static void a0_datacounters(struct hfi1_pportdata *ppd, struct _port_dctrs *rsp)
- {
- 	if (!is_bx(ppd->dd)) {
- 		unsigned long vl;
- 		u64 sum_vl_xmit_wait = 0;
--		u32 vl_all_mask = VL_MASK_ALL;
-+		unsigned long vl_all_mask = VL_MASK_ALL;
- 
--		for_each_set_bit(vl, (unsigned long *)&(vl_all_mask),
--				 8 * sizeof(vl_all_mask)) {
-+		for_each_set_bit(vl, &vl_all_mask, BITS_PER_LONG) {
- 			u64 tmp = sum_vl_xmit_wait +
- 				  read_port_cntr(ppd, C_TX_WAIT_VL,
- 						 idx_from_vl(vl));
-@@ -2994,7 +2990,7 @@ static int pma_get_opa_datacounters(stru
- 	u64 port_mask;
- 	u8 port_num;
- 	unsigned long vl;
--	u32 vl_select_mask;
-+	unsigned long vl_select_mask;
- 	int vfi;
- 	u16 link_width;
- 	u16 link_speed;
-@@ -3071,8 +3067,7 @@ static int pma_get_opa_datacounters(stru
- 	 * So in the for_each_set_bit() loop below, we don't need
- 	 * any additional checks for vl.
- 	 */
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(req->vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		memset(vlinfo, 0, sizeof(*vlinfo));
- 
- 		rsp->vls[vfi].port_vl_xmit_data =
-@@ -3120,7 +3115,7 @@ static int pma_get_opa_datacounters(stru
- 		vfi++;
+ 	if (ea->sp->gen2 != fcport->login_gen) {
+ 		/* target side must have changed it. */
+@@ -6698,8 +6711,10 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_
  	}
  
--	a0_datacounters(ppd, rsp, vl_select_mask);
-+	a0_datacounters(ppd, rsp);
+ 	/* Clear all async request states across all VPs. */
+-	list_for_each_entry(fcport, &vha->vp_fcports, list)
++	list_for_each_entry(fcport, &vha->vp_fcports, list) {
+ 		fcport->flags &= ~(FCF_LOGIN_NEEDED | FCF_ASYNC_SENT);
++		fcport->scan_state = 0;
++	}
+ 	spin_lock_irqsave(&ha->vport_slock, flags);
+ 	list_for_each_entry(vp, &ha->vp_list, list) {
+ 		atomic_inc(&vp->vref_count);
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -5086,6 +5086,7 @@ void qla24xx_create_new_sess(struct scsi
+ 	if (fcport) {
+ 		fcport->id_changed = 1;
+ 		fcport->scan_state = QLA_FCPORT_FOUND;
++		fcport->chip_reset = vha->hw->base_qpair->chip_reset;
+ 		memcpy(fcport->node_name, e->u.new_sess.node_name, WWN_SIZE);
  
- 	if (resp_len)
- 		*resp_len += response_data_size;
-@@ -3215,7 +3210,7 @@ static int pma_get_opa_porterrors(struct
- 	struct _vls_ectrs *vlinfo;
- 	unsigned long vl;
- 	u64 port_mask, tmp;
--	u32 vl_select_mask;
-+	unsigned long vl_select_mask;
- 	int vfi;
- 
- 	req = (struct opa_port_error_counters64_msg *)pmp->data;
-@@ -3273,8 +3268,7 @@ static int pma_get_opa_porterrors(struct
- 	vlinfo = &rsp->vls[0];
- 	vfi = 0;
- 	vl_select_mask = be32_to_cpu(req->vl_select_mask);
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(req->vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		memset(vlinfo, 0, sizeof(*vlinfo));
- 		rsp->vls[vfi].port_vl_xmit_discards =
- 			cpu_to_be64(read_port_cntr(ppd, C_SW_XMIT_DSCD_VL,
-@@ -3485,7 +3479,7 @@ static int pma_set_opa_portstatus(struct
- 	u32 nports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
- 	u64 portn = be64_to_cpu(req->port_select_mask[3]);
- 	u32 counter_select = be32_to_cpu(req->counter_select_mask);
--	u32 vl_select_mask = VL_MASK_ALL; /* clear all per-vl cnts */
-+	unsigned long vl_select_mask = VL_MASK_ALL; /* clear all per-vl cnts */
- 	unsigned long vl;
- 
- 	if ((nports != 1) || (portn != 1 << port)) {
-@@ -3579,8 +3573,7 @@ static int pma_set_opa_portstatus(struct
- 	if (counter_select & CS_UNCORRECTABLE_ERRORS)
- 		write_dev_cntr(dd, C_DC_UNC_ERR, CNTR_INVALID_VL, 0);
- 
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		if (counter_select & CS_PORT_XMIT_DATA)
- 			write_port_cntr(ppd, C_TX_FLIT_VL, idx_from_vl(vl), 0);
+ 		if (pla) {
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1209,7 +1209,6 @@ static void qla24xx_chk_fcp_state(struct
+ 		sess->logout_on_delete = 0;
+ 		sess->logo_ack_needed = 0;
+ 		sess->fw_login_state = DSC_LS_PORT_UNAVAIL;
+-		sess->scan_state = 0;
+ 	}
+ }
  
 
 
