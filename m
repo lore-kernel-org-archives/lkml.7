@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4785C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01306C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29092133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41E7215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120362;
-	bh=OOYbtDl++mAga3Ve0irijuGjJiSWW+eTKM4eu1A5L8A=;
+	s=default; t=1570120367;
+	bh=8zGTGHMcYcZ5vPDHzmRtC8gsvJEvulmKyj4ydCxN5i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptSjn3oiiUz6mcXnPbOOYX82qpSW2pwCIMmHx/K1q+Vs4Mv+utTWEystX9F1rK8Qm
-	 hB5UFAnt9ZhB61QKQMK+yF3/scH7Eqs1IXuuYkt9xkqj4hlKvbKBGaQtdQS9rn8tFD
-	 5ovf0qY/mzWfxLggt9vwFeP0mkbzhKgXA7bxPcgU=
+	b=w+Kn/aYxC3P2JzC6S34VKtnUkPJaknFNIgCwlfxEhAN3NJmb8CWgI+KXTJmOKmQMZ
+	 vH4GBZgV7sqpCyocDTwi3VKZvhVgz1w3T2UylX4YLH8agoFcL5LnQJk4ERmUrxAYiE
+	 e0xqsmZX96VbAsdvhidNGCD4bYNpvkHjKj9XzFc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403976AbfJCQcl (ORCPT
+        id S2391954AbfJCQcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391538AbfJCQch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:37 -0400
+        id S2391132AbfJCQco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 915C92133F;
-        Thu,  3 Oct 2019 16:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 315872070B;
+        Thu,  3 Oct 2019 16:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120357;
-        bh=OOYbtDl++mAga3Ve0irijuGjJiSWW+eTKM4eu1A5L8A=;
+        s=default; t=1570120362;
+        bh=8zGTGHMcYcZ5vPDHzmRtC8gsvJEvulmKyj4ydCxN5i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dfkzdnDYkk32zIkOS+qYJt7w+ntEq0xzCn/sLTZ/yaonqyuzX3D53QYgKdtrFGHRv
-         nKif6mZAWT0sk2g1vEJxBAvVzmTmJejZUwTb7GZQ03ojjc8HaxBM0t4NiqgdCBmASA
-         dcQ/jwD10v9/yM2GDKCbykyoqQSZJr8rrKcU6pRA=
+        b=pJPdVEJ+fLf4XV3TRHQd4Y1q/js8wt2ElNWZstBC9gXOS5tfPibcJ5z0qrC0+3VcL
+         5CRQD+05wXUui5m3BvMiwBFUDTtUzQhr5Q0h2/GeIZPeDEOqJLoMYO/gzfAlEQXqzJ
+         M8k1CztFsqayDFkeHaRKuQ89MypxQNt1RyVv2M9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Al Cooper <alcooperx@gmail.com>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 191/313] mmc: sdhci: Fix incorrect switch to HS mode
-Date:   Thu,  3 Oct 2019 17:52:49 +0200
-Message-Id: <20191003154551.793211273@linuxfoundation.org>
+Subject: [PATCH 5.2 193/313] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+Date:   Thu,  3 Oct 2019 17:52:51 +0200
+Message-Id: <20191003154551.988411764@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,54 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Cooper <alcooperx@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37 ]
+[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
 
-When switching from any MMC speed mode that requires 1.8v
-(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
-ends up configured for SDR12 with a 50MHz clock which is an illegal
-mode.
+In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
+the driver. However, this still means dw_mci_runtime_suspend|resume() gets
+called during system suspend/resume, via pm_runtime_force_suspend|resume().
+This means during system suspend/resume, the register context of the dw_mmc
+device most likely loses its register context, even in cases when SDIO IRQs
+have been enabled.
 
-This happens because the SDHCI_CTRL_VDD_180 bit in the
-SDHCI_HOST_CONTROL2 register is left set and when this bit is
-set, the speed mode is controlled by the SDHCI_CTRL_UHS field
-in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
-will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
-because there is no UHS mode being set.
+To re-enable the SDIO IRQs during system resume, the dw_mmc driver
+currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
+the SDIO card, but this isn't the recommended solution. Instead, it's
+better to deal with this locally in the dw_mmc driver, so let's do that.
 
-The fix is to change sdhci_set_uhs_signaling() to set the
-SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
-any switch to HS mode.
-
-This was found on a new eMMC controller that does strict checking
-of the speed mode and the corresponding clock rate. It caused the
-switch to HS400 mode to fail because part of the sequence to switch
-to HS400 requires a switch from HS200 to HS before going to HS400.
-
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mmc/host/dw_mmc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index a5dc5aae973e6..c66e66fbaeb40 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1849,7 +1849,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
- 	else if (timing == MMC_TIMING_UHS_SDR12)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
--	else if (timing == MMC_TIMING_UHS_SDR25)
-+	else if (timing == MMC_TIMING_SD_HS ||
-+		 timing == MMC_TIMING_MMC_HS ||
-+		 timing == MMC_TIMING_UHS_SDR25)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
- 	else if (timing == MMC_TIMING_UHS_SDR50)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 60c3a06e3469a..45c3490546839 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -3482,6 +3482,10 @@ int dw_mci_runtime_resume(struct device *dev)
+ 	/* Force setup bus to guarantee available clock output */
+ 	dw_mci_setup_bus(host->slot, true);
+ 
++	/* Re-enable SDIO interrupts. */
++	if (sdio_irq_claimed(host->slot->mmc))
++		__dw_mci_enable_sdio_irq(host->slot, 1);
++
+ 	/* Now that slots are all setup, we can enable card detect */
+ 	dw_mci_enable_cd(host);
+ 
 -- 
 2.20.1
 
