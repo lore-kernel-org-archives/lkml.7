@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8318C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FB2C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9CE2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251A9222C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120506;
-	bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
+	s=default; t=1570120508;
+	bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2lB8764oe5IP3JPT7O2i3Wg45IFvKF7/DJLOH5UmfAJsvjsETMsB9LitBgKtjfxok
-	 xPtTgqz2+o0xQ86GjTov0w2s9060x9ioHr6l59Br4cuNFdi55RTU9TG+i72FPNdx4u
-	 PpPoRnQ0lcRdTtP37fbO3agW0UDZ5/WSEWbCoD0o=
+	b=YSHoO6V+sgpWMZP60xFWfdxCcr+bOhxhXdctX9nSU9R2O2eB2XglKyU9iHW5jLb0R
+	 nDtLPgSiiTQjSsaqdnuyYVH6DadbE0tuPmapQlIJUiXNSsI44PTBycuPKxmzlXTo9O
+	 OXd8qo25EsKKPyF2VMQU11Ejnm7uHMAcUq27BxyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404240AbfJCQfF (ORCPT
+        id S2391119AbfJCQfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43742 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392182AbfJCQfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:01 -0400
+        id S2404014AbfJCQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADFF215EA;
-        Thu,  3 Oct 2019 16:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4E5F2133F;
+        Thu,  3 Oct 2019 16:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120500;
-        bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
+        s=default; t=1570120384;
+        bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgjrIsC850x8vGQIQydt8JWvnQLLCzFrcoZwtlTWQKdztQu+Ol7pz8vzROXM287p0
-         LDIhcmendBiDlgjU2QTHDdvaOf2w10vztqG8iBXZN632SficUYvpVskj2JAeaDQLcL
-         nAwQUXvd3CROzoi1BMUmQh4Oo8V9ndTyjMOwVB9E=
+        b=ABGye2nzhNtpJV52C4Z0wJcxmKQBbUhCV7jycS0jFx/O2UMFp/pE9MsVyxye/r3RL
+         7FkQSl3avAxsOQgCaVlpYyYbkSo6RY7R8H0L9GQ9BtiONCSDwV6aa7lNt7ST0Ossif
+         zPvSV3zxw5NyaCENKLwFwYqxhDSyAvKMWzbRrKTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 206/313] btrfs: delayed-inode: Kill the BUG_ON() in btrfs_delete_delayed_dir_index()
-Date:   Thu,  3 Oct 2019 17:53:04 +0200
-Message-Id: <20191003154553.282845831@linuxfoundation.org>
+Subject: [PATCH 5.2 164/313] ASoC: Intel: Haswell: Adjust machine device private context
+Date:   Thu,  3 Oct 2019 17:52:22 +0200
+Message-Id: <20191003154549.108845163@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,79 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
 
-[ Upstream commit 933c22a7512c5c09b1fdc46b557384efe8d03233 ]
+[ Upstream commit ca964edf0ddbfec2cb10b3d251d09598e7ca9b13 ]
 
-There is one report of fuzzed image which leads to BUG_ON() in
-btrfs_delete_delayed_dir_index().
+Apart from Haswell machines, all other devices have their private data
+set to snd_soc_acpi_mach instance.
 
-Although that fuzzed image can already be addressed by enhanced
-extent-tree error handler, it's still better to hunt down more BUG_ON().
+Changes for HSW/ BDW boards introduced with series:
+https://patchwork.kernel.org/cover/10782035/
 
-This patch will hunt down two BUG_ON()s in
-btrfs_delete_delayed_dir_index():
-- One for error from btrfs_delayed_item_reserve_metadata()
-  Instead of BUG_ON(), we output an error message and free the item.
-  And return the error.
-  All callers of this function handles the error by aborting current
-  trasaction.
+added support for dai_link platform_name adjustments within card probe
+routines. These take for granted private_data points to
+snd_soc_acpi_mach whereas for Haswell, it's sst_pdata instead. Change
+private context of platform_device - representing machine board - to
+address this.
 
-- One for possible EEXIST from __btrfs_add_delayed_deletion_item()
-  That function can return -EEXIST.
-  We already have a good enough error message for that, only need to
-  clean up the reserved metadata space and allocated item.
-
-To help above cleanup, also modifiy __btrfs_remove_delayed_item() called
-in btrfs_release_delayed_item(), to skip unassociated item.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203253
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: e87055d732e3 ("ASoC: Intel: haswell: platform name fixup support")
+Fixes: 7e40ddcf974a ("ASoC: Intel: bdw-rt5677: platform name fixup support")
+Fixes: 2d067b2807f9 ("ASoC: Intel: broadwell: platform name fixup support")
+Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Link: https://lore.kernel.org/r/20190822113616.22702-2-cezary.rojewski@intel.com
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/delayed-inode.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ sound/soc/intel/common/sst-acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
-index 43fdb2992956a..6858a05606dd3 100644
---- a/fs/btrfs/delayed-inode.c
-+++ b/fs/btrfs/delayed-inode.c
-@@ -474,6 +474,9 @@ static void __btrfs_remove_delayed_item(struct btrfs_delayed_item *delayed_item)
- 	struct rb_root_cached *root;
- 	struct btrfs_delayed_root *delayed_root;
- 
-+	/* Not associated with any delayed_node */
-+	if (!delayed_item->delayed_node)
-+		return;
- 	delayed_root = delayed_item->delayed_node->root->fs_info->delayed_root;
- 
- 	BUG_ON(!delayed_root);
-@@ -1525,7 +1528,12 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
- 	 * we have reserved enough space when we start a new transaction,
- 	 * so reserving metadata failure is impossible.
- 	 */
--	BUG_ON(ret);
-+	if (ret < 0) {
-+		btrfs_err(trans->fs_info,
-+"metadata reservation failed for delayed dir item deltiona, should have been reserved");
-+		btrfs_release_delayed_item(item);
-+		goto end;
-+	}
- 
- 	mutex_lock(&node->mutex);
- 	ret = __btrfs_add_delayed_deletion_item(node, item);
-@@ -1534,7 +1542,8 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
- 			  "err add delayed dir index item(index: %llu) into the deletion tree of the delayed node(root id: %llu, inode id: %llu, errno: %d)",
- 			  index, node->root->root_key.objectid,
- 			  node->inode_id, ret);
--		BUG();
-+		btrfs_delayed_item_release_metadata(dir->root, item);
-+		btrfs_release_delayed_item(item);
+diff --git a/sound/soc/intel/common/sst-acpi.c b/sound/soc/intel/common/sst-acpi.c
+index 0e8e0a7a11df3..5854868650b9e 100644
+--- a/sound/soc/intel/common/sst-acpi.c
++++ b/sound/soc/intel/common/sst-acpi.c
+@@ -141,11 +141,12 @@ static int sst_acpi_probe(struct platform_device *pdev)
  	}
- 	mutex_unlock(&node->mutex);
- end:
+ 
+ 	platform_set_drvdata(pdev, sst_acpi);
++	mach->pdata = sst_pdata;
+ 
+ 	/* register machine driver */
+ 	sst_acpi->pdev_mach =
+ 		platform_device_register_data(dev, mach->drv_name, -1,
+-					      sst_pdata, sizeof(*sst_pdata));
++					      mach, sizeof(*mach));
+ 	if (IS_ERR(sst_acpi->pdev_mach))
+ 		return PTR_ERR(sst_acpi->pdev_mach);
+ 
 -- 
 2.20.1
 
