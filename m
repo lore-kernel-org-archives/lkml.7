@@ -2,226 +2,156 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B941BC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3D7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94EAB20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2AC420862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xs0UHHdS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbfJCMc1 (ORCPT
+        id S1730164AbfJCMcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:32:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50422 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfJCMcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:32:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:25 -0700
-X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="191255746"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:22 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 131E520FA7;
-        Thu,  3 Oct 2019 15:32:17 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1iG0HL-0002wN-PA; Thu, 03 Oct 2019 15:32:19 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v9 05/12] device property: Add fwnode_get_name for returning the name of a node
-Date:   Thu,  3 Oct 2019 15:32:12 +0300
-Message-Id: <20191003123219.11237-6-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
-References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+        Thu, 3 Oct 2019 08:32:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51172 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730027AbfJCMcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:32:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7fYz0vJ661x367z1HdxIQ8T0lQiWOwZl1Be5LTqF4ZE=; b=Xs0UHHdSC+UJC+tSmcoYeljSA
+        PnOky73ndEHrdXF4iMRu+TJd3ak2L74zMgu1wGVPUKyLQZ0aUtdGaQ2+eNYmqRdzZ8dR/6yG/bySz
+        tAPJpjkMKftuB3cOiuMqxIgSSGgyGnL8zim5cirp8Ak6G7E0BKpP1HOYmTG13Z6GfZJatvWzke4Sq
+        MSk5aMwF0dI+fDSXUCDNqwk/R31sFNR310ydIYjSfOex6vrg3AsL4IgB1YSPKFK09P96SGiWtRLDo
+        evcWPTw964PlMxqi27LEQhmdgZUAaBr3UkptRqL4O9y04m1OXejYfNLE8NLkaJd3kCalqOh94bYQq
+        hxuDNjrAg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG0Ha-0006sG-CU; Thu, 03 Oct 2019 12:32:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 41A2C3060F2;
+        Thu,  3 Oct 2019 14:31:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7DA7C201DF21A; Thu,  3 Oct 2019 14:32:31 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 14:32:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 1/3] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20191003123231.GK4581@hirez.programming.kicks-ass.net>
+References: <20190827180622.159326993@infradead.org>
+ <20190827181147.053490768@infradead.org>
+ <20191003140050.1d4cf59d3de8b5396d36c269@kernel.org>
+ <20191003082751.GQ4536@hirez.programming.kicks-ass.net>
+ <20191003110106.GI4581@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003110106.GI4581@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fwnode framework did not have means to obtain the name of a node. Add
-that now, in form of the fwnode_get_name() function and a corresponding
-get_name fwnode op. OF and ACPI support is included.
+On Thu, Oct 03, 2019 at 01:01:06PM +0200, Peter Zijlstra wrote:
+> Also, I think text_poke_bp(INT3) is broken, although I don't think
+> anybody actually does that. Still, let me fix that.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Rob Herring <robh@kernel.org> (for OF)
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Something like so should allow text_poke_bp(INT3) to work as expected.
+
 ---
- drivers/acpi/property.c  | 26 ++++++++++++++++++++++++++
- drivers/base/property.c  | 11 +++++++++++
- drivers/base/swnode.c    | 12 ++++++++++++
- drivers/of/property.c    |  6 ++++++
- include/linux/fwnode.h   |  2 ++
- include/linux/property.h |  1 +
- 6 files changed, 58 insertions(+)
-
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index ea3d700da3ca6..5a9397a390f41 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -1311,6 +1311,31 @@ acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
- 						  args_count, args);
- }
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -999,6 +999,13 @@ int poke_int3_handler(struct pt_regs *re
+ 	ip += tp->len;
  
-+static const char *acpi_fwnode_get_name(const struct fwnode_handle *fwnode)
-+{
-+	const struct acpi_device *adev;
-+	struct fwnode_handle *parent;
+ 	switch (tp->opcode) {
++	case INT3_INSN_OPCODE:
++		/*
++		 * Someone poked an explicit INT3, they'll want to handle it,
++		 * do not consume.
++		 */
++		return 0;
 +
-+	/* Is this the root node? */
-+	parent = fwnode_get_parent(fwnode);
-+	if (!parent)
-+		return "\\";
+ 	case CALL_INSN_OPCODE:
+ 		int3_emulate_call(regs, (long)ip + tp->rel32);
+ 		break;
+@@ -1040,8 +1047,8 @@ NOKPROBE_SYMBOL(poke_int3_handler);
+ void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+ {
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+-	int patched_all_but_first = 0;
+ 	unsigned int i;
++	int do_sync;
+ 
+ 	lockdep_assert_held(&text_mutex);
+ 
+@@ -1065,16 +1072,16 @@ void text_poke_bp_batch(struct text_poke
+ 	/*
+ 	 * Second step: update all but the first byte of the patched range.
+ 	 */
+-	for (i = 0; i < nr_entries; i++) {
++	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+ 		if (tp[i].len - sizeof(int3) > 0) {
+ 			text_poke((char *)tp[i].addr + sizeof(int3),
+ 				  (const char *)tp[i].text + sizeof(int3),
+ 				  tp[i].len - sizeof(int3));
+-			patched_all_but_first++;
++			do_sync++;
+ 		}
+ 	}
+ 
+-	if (patched_all_but_first) {
++	if (do_sync) {
+ 		/*
+ 		 * According to Intel, this core syncing is very likely
+ 		 * not necessary and we'd be safe even without it. But
+@@ -1087,10 +1094,17 @@ void text_poke_bp_batch(struct text_poke
+ 	 * Third step: replace the first byte (int3) by the first byte of
+ 	 * replacing opcode.
+ 	 */
+-	for (i = 0; i < nr_entries; i++)
++	for (do_sync = 0, i = 0; i < nr_entries; i++) {
++		if (tp[i].text[0] == INT3_INSN_OPCODE)
++			continue;
 +
-+	fwnode_handle_put(parent);
-+
-+	if (is_acpi_data_node(fwnode)) {
-+		const struct acpi_data_node *dn = to_acpi_data_node(fwnode);
-+
-+		return dn->name;
+ 		text_poke(tp[i].addr, tp[i].text, sizeof(int3));
++		do_sync++;
 +	}
 +
-+	adev = to_acpi_device_node(fwnode);
-+	if (WARN_ON(!adev))
-+		return NULL;
-+
-+	return acpi_device_bid(adev);
-+}
-+
- static struct fwnode_handle *
- acpi_fwnode_get_parent(struct fwnode_handle *fwnode)
- {
-@@ -1351,6 +1376,7 @@ acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
- 		.get_parent = acpi_node_get_parent,			\
- 		.get_next_child_node = acpi_get_next_subnode,		\
- 		.get_named_child_node = acpi_fwnode_get_named_child_node, \
-+		.get_name = acpi_fwnode_get_name,			\
- 		.get_reference_args = acpi_fwnode_get_reference_args,	\
- 		.graph_get_next_endpoint =				\
- 			acpi_graph_get_next_endpoint,			\
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index f2e555e68b56a..9b5ec88e72d8b 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -556,6 +556,17 @@ int device_add_properties(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(device_add_properties);
++	if (do_sync)
++		on_each_cpu(do_sync_core, NULL, 1);
  
-+/**
-+ * fwnode_get_name - Return the name of a node
-+ * @fwnode: The firmware node
-+ *
-+ * Returns a pointer to the node name.
-+ */
-+const char *fwnode_get_name(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_name);
-+}
-+
- /**
-  * fwnode_get_parent - Return parent firwmare node
-  * @fwnode: Firmware whose parent is retrieved
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 951e7efd47c23..ccbc3d9d6c5f5 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -515,6 +515,17 @@ static int software_node_read_string_array(const struct fwnode_handle *fwnode,
- 						propname, val, nval);
- }
+-	on_each_cpu(do_sync_core, NULL, 1);
+ 	/*
+ 	 * sync_core() implies an smp_mb() and orders this store against
+ 	 * the writing of the new instruction.
+@@ -1123,6 +1137,9 @@ void text_poke_loc_init(struct text_poke
+ 	tp->opcode = insn.opcode.bytes[0];
  
-+static const char *
-+software_node_get_name(const struct fwnode_handle *fwnode)
-+{
-+	const struct swnode *swnode = to_swnode(fwnode);
+ 	switch (tp->opcode) {
++	case INT3_INSN_OPCPDE:
++		break;
 +
-+	if (!swnode)
-+		return "(null)";
-+
-+	return kobject_name(&swnode->kobj);
-+}
-+
- static struct fwnode_handle *
- software_node_get_parent(const struct fwnode_handle *fwnode)
- {
-@@ -615,6 +626,7 @@ static const struct fwnode_operations software_node_ops = {
- 	.property_present = software_node_property_present,
- 	.property_read_int_array = software_node_read_int_array,
- 	.property_read_string_array = software_node_read_string_array,
-+	.get_name = software_node_get_name,
- 	.get_parent = software_node_get_parent,
- 	.get_next_child_node = software_node_get_next_child,
- 	.get_named_child_node = software_node_get_named_child_node,
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index d7fa75e31f224..5bed634551ea6 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -872,6 +872,11 @@ of_fwnode_property_read_string_array(const struct fwnode_handle *fwnode,
- 		of_property_count_strings(node, propname);
- }
- 
-+static const char *of_fwnode_get_name(const struct fwnode_handle *fwnode)
-+{
-+	return kbasename(to_of_node(fwnode)->full_name);
-+}
-+
- static struct fwnode_handle *
- of_fwnode_get_parent(const struct fwnode_handle *fwnode)
- {
-@@ -993,6 +998,7 @@ const struct fwnode_operations of_fwnode_ops = {
- 	.property_present = of_fwnode_property_present,
- 	.property_read_int_array = of_fwnode_property_read_int_array,
- 	.property_read_string_array = of_fwnode_property_read_string_array,
-+	.get_name = of_fwnode_get_name,
- 	.get_parent = of_fwnode_get_parent,
- 	.get_next_child_node = of_fwnode_get_next_child_node,
- 	.get_named_child_node = of_fwnode_get_named_child_node,
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index a11c8c56c78b4..c331e0ef31e80 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -56,6 +56,7 @@ struct fwnode_reference_args {
-  *				 otherwise.
-  * @property_read_string_array: Read an array of string properties. Return zero
-  *				on success, a negative error code otherwise.
-+ * @get_name: Return the name of an fwnode.
-  * @get_parent: Return the parent of an fwnode.
-  * @get_next_child_node: Return the next child node in an iteration.
-  * @get_named_child_node: Return a child node with a given name.
-@@ -82,6 +83,7 @@ struct fwnode_operations {
- 	(*property_read_string_array)(const struct fwnode_handle *fwnode_handle,
- 				      const char *propname, const char **val,
- 				      size_t nval);
-+	const char *(*get_name)(const struct fwnode_handle *fwnode);
- 	struct fwnode_handle *(*get_parent)(const struct fwnode_handle *fwnode);
- 	struct fwnode_handle *
- 	(*get_next_child_node)(const struct fwnode_handle *fwnode,
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 5450e7ec219ac..ebc5e2016bb66 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -80,6 +80,7 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- 					    const char *name,
- 					    unsigned int index);
- 
-+const char *fwnode_get_name(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
--- 
-2.20.1
-
+ 	case CALL_INSN_OPCODE:
+ 	case JMP32_INSN_OPCODE:
+ 	case JMP8_INSN_OPCODE:
