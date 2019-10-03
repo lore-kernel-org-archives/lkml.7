@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC9DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74428C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287E520700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB9421783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120131;
-	bh=CiyScJoSbjEh1dk6sz0/OoVDGfhZZEA9aBDwuupZISg=;
+	s=default; t=1570120134;
+	bh=Ykb93oMr+3gztSj7HV5KYl0vXoN7XcXRQ9o4/s8Ik+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EMnh0WBKdKGElKYhiMtLQnXaCgIABZuxwhhYZnrc3O22u+cJYARs66BtLQk3oAwfJ
-	 Fh7yWhHtgWmeRDzodbjVUvu4zN1lq0yiscrNXJ9k+2GP0P1z640U7mY/OFv7CaXtjD
-	 2Tc4Xs5/QoxTcu0So17gwMNeDEOffw7VMoHAEHiA=
+	b=dDu7hsZ3HgUbEKfxGX5s10boF/BqyYchpgzLC15qjkH6rPu3FVIdVKvs79qWvke2J
+	 iq4SVZcEBNYJkzsvzMAytlvgUUFp7OozdI9PLPDE8YLixj8u8s2Fy4tbxNSk97yLJA
+	 7ZPDVMu7efUmSMGzZlWvLpkzmYD9+KKlg1d4juAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391542AbfJCQ2u (ORCPT
+        id S2391551AbfJCQ2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33414 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391530AbfJCQ2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:46 -0400
+        id S2389668AbfJCQ2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:28:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA24F20700;
-        Thu,  3 Oct 2019 16:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44CD121783;
+        Thu,  3 Oct 2019 16:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120125;
-        bh=CiyScJoSbjEh1dk6sz0/OoVDGfhZZEA9aBDwuupZISg=;
+        s=default; t=1570120130;
+        bh=Ykb93oMr+3gztSj7HV5KYl0vXoN7XcXRQ9o4/s8Ik+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbaOhLbJohhm0NilMXi1PNp5Dfg7ABIG84LZc1Zv7nyfKymBDkTpqNc6vDipP0F8A
-         HfupYqzh79+CcKmO5JJWpXq9TO1ZhIxd0BSJLWH3ROMmDWiu0RLSnoQfzjmSchGsIC
-         xweQTeV7AI8b4oHduAyXZRPOUeltY2IFwIUsY/GM=
+        b=tbiuOhcpeJVUS6D/UN+I0kPopwEElWSVZovHrY+GWiiC9EAL1Z6WvLGUPyzAGhP9D
+         T7nArGXv9rw3thDRI9+Tnh6qwTXLcuozpcolB7VACFb9fhDHkZIHvfHQ/q0kQlDMgy
+         OMjM3Zive/byRWdaDJMZ/jPxJhI+yqtnpizTSCBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac@vger.kernel.org, x86@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 079/313] RAS: Build debugfs.o only when enabled in Kconfig
-Date:   Thu,  3 Oct 2019 17:50:57 +0200
-Message-Id: <20191003154540.628683957@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 107/313] kasan/arm64: fix CONFIG_KASAN_SW_TAGS && KASAN_INLINE
+Date:   Thu,  3 Oct 2019 17:51:25 +0200
+Message-Id: <20191003154543.398677051@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,47 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit b6ff24f7b5101101ff897dfdde3f37924e676bc2 ]
+[ Upstream commit 34b5560db40d2941cfbe82eca1641353d5aed1a9 ]
 
-In addition, the 0day bot reported this build error:
+The generic Makefile.kasan propagates CONFIG_KASAN_SHADOW_OFFSET into
+KASAN_SHADOW_OFFSET, but only does so for CONFIG_KASAN_GENERIC.
 
-  >> drivers/ras/debugfs.c:10:5: error: redefinition of 'ras_userspace_consumers'
-      int ras_userspace_consumers(void)
-          ^~~~~~~~~~~~~~~~~~~~~~~
-     In file included from drivers/ras/debugfs.c:3:0:
-     include/linux/ras.h:14:19: note: previous definition of 'ras_userspace_consumers' was here
-      static inline int ras_userspace_consumers(void) { return 0; }
-                      ^~~~~~~~~~~~~~~~~~~~~~~
+Since commit:
 
-for a riscv-specific .config where CONFIG_DEBUG_FS is not set. Fix all
-that by making debugfs.o depend on that define.
+  6bd1d0be0e97936d ("arm64: kasan: Switch to using KASAN_SHADOW_OFFSET")
 
- [ bp: Rewrite commit message. ]
+... arm64 defines CONFIG_KASAN_SHADOW_OFFSET in Kconfig rather than
+defining KASAN_SHADOW_OFFSET in a Makefile. Thus, if
+CONFIG_KASAN_SW_TAGS && KASAN_INLINE are selected, we get build time
+splats due to KASAN_SHADOW_OFFSET not being set:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/7053.1565218556@turing-police
+| [mark@lakrids:~/src/linux]% usellvm 8.0.1 usekorg 8.1.0  make ARCH=arm64 CROSS_COMPILE=aarch64-linux- CC=clang
+| scripts/kconfig/conf  --syncconfig Kconfig
+|   CC      scripts/mod/empty.o
+| clang (LLVM option parsing): for the -hwasan-mapping-offset option: '' value invalid for uint argument!
+| scripts/Makefile.build:273: recipe for target 'scripts/mod/empty.o' failed
+| make[1]: *** [scripts/mod/empty.o] Error 1
+| Makefile:1123: recipe for target 'prepare0' failed
+| make: *** [prepare0] Error 2
+
+Let's fix this by always propagating CONFIG_KASAN_SHADOW_OFFSET into
+KASAN_SHADOW_OFFSET if CONFIG_KASAN is selected, moving the existing
+common definition of +CFLAGS_KASAN_NOSANITIZE to the top of
+Makefile.kasan.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Tested-by Steve Capper <steve.capper@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/Makefile.kasan | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-index ef6777e14d3df..6f0404f501071 100644
---- a/drivers/ras/Makefile
-+++ b/drivers/ras/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_RAS)	+= ras.o debugfs.o
-+obj-$(CONFIG_RAS)	+= ras.o
-+obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
- obj-$(CONFIG_RAS_CEC)	+= cec.o
+diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
+index 6410bd22fe387..03757cc60e06c 100644
+--- a/scripts/Makefile.kasan
++++ b/scripts/Makefile.kasan
+@@ -1,4 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
++ifdef CONFIG_KASAN
++CFLAGS_KASAN_NOSANITIZE := -fno-builtin
++KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
++endif
++
+ ifdef CONFIG_KASAN_GENERIC
+ 
+ ifdef CONFIG_KASAN_INLINE
+@@ -7,8 +12,6 @@ else
+ 	call_threshold := 0
+ endif
+ 
+-KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
+-
+ CFLAGS_KASAN_MINIMAL := -fsanitize=kernel-address
+ 
+ cc-param = $(call cc-option, -mllvm -$(1), $(call cc-option, --param $(1)))
+@@ -45,7 +48,3 @@ CFLAGS_KASAN := -fsanitize=kernel-hwaddress \
+ 		$(instrumentation_flags)
+ 
+ endif # CONFIG_KASAN_SW_TAGS
+-
+-ifdef CONFIG_KASAN
+-CFLAGS_KASAN_NOSANITIZE := -fno-builtin
+-endif
 -- 
 2.20.1
 
