@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534E1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F35EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2365C2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30D420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121192;
-	bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
+	s=default; t=1570121199;
+	bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voW4XVCHI2pOpxPx635jb6NfEP2L0m80AlDyacb2CgNURHWTELOtwmIUIJyEzer8y
-	 KE2arIvFwtGV5xNvPH7mkozhv+2EIVT+c7+yG0cyoTwSjo4NCzxVU8xT40mMGBTHnd
-	 OoNT2kivH/qj8kcMr9YI3W3ir9b7jZx8JtuIWc0I=
+	b=Mzo4qgcr5OBhs9H8x6ogBkCN2v+VOafLAral8s4CgyAVd7UrF+7ComSlxd0ztNZh0
+	 +rfipB8hv2N16BUbfoYMjyt8ppKvwkbq74zlwYPK+mSKikRuWrBOEmkLaML0Ba3l1o
+	 rDG8lFIIEValWFZpYyzLIn9MwMRlqQVcdrfo58ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392697AbfJCQqb (ORCPT
+        id S2392938AbfJCQqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59742 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387477AbfJCQq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:28 -0400
+        id S2392920AbfJCQqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8E220830;
-        Thu,  3 Oct 2019 16:46:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8DE20830;
+        Thu,  3 Oct 2019 16:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121186;
-        bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
+        s=default; t=1570121194;
+        bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stslWFFf4FuAO5UQeLbipALmg6iwnJCuR/m9jarYnsTazsu3iSCKm/eJymj9yTHl9
-         eyR+0YBqIYG3nKoIQHqD6Jc0WJ32JK3J8gDSRo5LuaQf0rzaAaAWPRgE/M3BxZQ2A2
-         RDnkpuWjcQ0fRXgDsXFbBsW9j6jCYHVAbAOR97K4=
+        b=0UBU1QTWXMuiMfoerzaAozStQruHsbg9CI+YDk/HleKmMryOVKPxNf5PGSbSHg/6m
+         /KcJnrbuldM6ZxnjdFkG5aJReyeF6i4ZFnN4x9Bne9RiSlL1iCzUKHAxV1vdgHJw+m
+         Ldx2nD62nULq9nbj8qejBD3AgSHKYi80mnGr7xHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 149/344] ARM: at91: move platform-specific asm-offset.h to arch/arm/mach-at91
-Date:   Thu,  3 Oct 2019 17:51:54 +0200
-Message-Id: <20191003154554.952579697@linuxfoundation.org>
+Subject: [PATCH 5.3 182/344] ASoC: Intel: Haswell: Adjust machine device private context
+Date:   Thu,  3 Oct 2019 17:52:27 +0200
+Message-Id: <20191003154558.167017826@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,90 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
 
-[ Upstream commit 9fac85a6db8999922f2cd92dfe2e83e063b31a94 ]
+[ Upstream commit ca964edf0ddbfec2cb10b3d251d09598e7ca9b13 ]
 
-<generated/at91_pm_data-offsets.h> is only generated and included by
-arch/arm/mach-at91/, so it does not need to reside in the globally
-visible include/generated/.
+Apart from Haswell machines, all other devices have their private data
+set to snd_soc_acpi_mach instance.
 
-I renamed it to arch/arm/mach-at91/pm_data-offsets.h since the prefix
-'at91_' is just redundant in mach-at91/.
+Changes for HSW/ BDW boards introduced with series:
+https://patchwork.kernel.org/cover/10782035/
 
-My main motivation of this change is to avoid the race condition for
-the parallel build (-j) when CONFIG_IKHEADERS is enabled.
+added support for dai_link platform_name adjustments within card probe
+routines. These take for granted private_data points to
+snd_soc_acpi_mach whereas for Haswell, it's sst_pdata instead. Change
+private context of platform_device - representing machine board - to
+address this.
 
-When it is enabled, all the headers under include/ are archived into
-kernel/kheaders_data.tar.xz and exposed in the sysfs.
-
-In the parallel build, we have no idea in which order files are built.
-
- - If at91_pm_data-offsets.h is built before kheaders_data.tar.xz,
-   the header will be included in the archive. Probably nobody will
-   use it, but it is harmless except that it will increase the archive
-   size needlessly.
-
- - If kheaders_data.tar.xz is built before at91_pm_data-offsets.h,
-   the header will not be included in the archive. However, in the next
-   build, the archive will be re-generated to include the newly-found
-   at91_pm_data-offsets.h. This is not nice from the build system point
-   of view.
-
- - If at91_pm_data-offsets.h and kheaders_data.tar.xz are built at the
-   same time, the corrupted header might be included in the archive,
-   which does not look nice either.
-
-This commit fixes the race.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lore.kernel.org/r/20190823024346.591-1-yamada.masahiro@socionext.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: e87055d732e3 ("ASoC: Intel: haswell: platform name fixup support")
+Fixes: 7e40ddcf974a ("ASoC: Intel: bdw-rt5677: platform name fixup support")
+Fixes: 2d067b2807f9 ("ASoC: Intel: broadwell: platform name fixup support")
+Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Link: https://lore.kernel.org/r/20190822113616.22702-2-cezary.rojewski@intel.com
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/.gitignore   | 1 +
- arch/arm/mach-at91/Makefile     | 5 +++--
- arch/arm/mach-at91/pm_suspend.S | 2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/mach-at91/.gitignore
+ sound/soc/intel/common/sst-acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-at91/.gitignore b/arch/arm/mach-at91/.gitignore
-new file mode 100644
-index 0000000000000..2ecd6f51c8a95
---- /dev/null
-+++ b/arch/arm/mach-at91/.gitignore
-@@ -0,0 +1 @@
-+pm_data-offsets.h
-diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-index 31b61f0e1c077..de64301dcff25 100644
---- a/arch/arm/mach-at91/Makefile
-+++ b/arch/arm/mach-at91/Makefile
-@@ -19,9 +19,10 @@ ifeq ($(CONFIG_PM_DEBUG),y)
- CFLAGS_pm.o += -DDEBUG
- endif
+diff --git a/sound/soc/intel/common/sst-acpi.c b/sound/soc/intel/common/sst-acpi.c
+index 0e8e0a7a11df3..5854868650b9e 100644
+--- a/sound/soc/intel/common/sst-acpi.c
++++ b/sound/soc/intel/common/sst-acpi.c
+@@ -141,11 +141,12 @@ static int sst_acpi_probe(struct platform_device *pdev)
+ 	}
  
--include/generated/at91_pm_data-offsets.h: arch/arm/mach-at91/pm_data-offsets.s FORCE
-+$(obj)/pm_data-offsets.h: $(obj)/pm_data-offsets.s FORCE
- 	$(call filechk,offsets,__PM_DATA_OFFSETS_H__)
+ 	platform_set_drvdata(pdev, sst_acpi);
++	mach->pdata = sst_pdata;
  
--arch/arm/mach-at91/pm_suspend.o: include/generated/at91_pm_data-offsets.h
-+$(obj)/pm_suspend.o: $(obj)/pm_data-offsets.h
+ 	/* register machine driver */
+ 	sst_acpi->pdev_mach =
+ 		platform_device_register_data(dev, mach->drv_name, -1,
+-					      sst_pdata, sizeof(*sst_pdata));
++					      mach, sizeof(*mach));
+ 	if (IS_ERR(sst_acpi->pdev_mach))
+ 		return PTR_ERR(sst_acpi->pdev_mach);
  
- targets += pm_data-offsets.s
-+clean-files += pm_data-offsets.h
-diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
-index c751f047b1166..ed57c879d4e17 100644
---- a/arch/arm/mach-at91/pm_suspend.S
-+++ b/arch/arm/mach-at91/pm_suspend.S
-@@ -10,7 +10,7 @@
- #include <linux/linkage.h>
- #include <linux/clk/at91_pmc.h>
- #include "pm.h"
--#include "generated/at91_pm_data-offsets.h"
-+#include "pm_data-offsets.h"
- 
- #define	SRAMC_SELF_FRESH_ACTIVE		0x01
- #define	SRAMC_SELF_FRESH_EXIT		0x00
 -- 
 2.20.1
 
