@@ -2,103 +2,124 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9B9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2F3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB392086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D062086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:27:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="Hi1MkI/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbfJCS0v (ORCPT
+        id S1732634AbfJCS1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:26:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:12625 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbfJCS0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:26:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 11:26:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="275795994"
-Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
-  by orsmga001.jf.intel.com with ESMTP; 03 Oct 2019 11:26:46 -0700
-Date:   Thu, 3 Oct 2019 21:26:44 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-integrity@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
-Message-ID: <20191003182644.GA20683@linux.intel.com>
-References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
- <1569420226.3642.24.camel@HansenPartnership.com>
- <20190927130657.GA5556@linux.intel.com>
- <1570020105.4999.106.camel@linux.ibm.com>
- <20191003113506.GE8933@linux.intel.com>
- <1570107054.4421.174.camel@linux.ibm.com>
+        Thu, 3 Oct 2019 14:27:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34745 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729199AbfJCS1v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:27:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a11so3847921wrx.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fi4XGjAW8IL22UQ2E3MLgTRkUEhWQPz4pB1hOvF/+fA=;
+        b=Hi1MkI/qpCxDbo6JZhKQmKaxIfwr4T4/k99ZbBFtrHb3q4zw4ByDCYUdD64t29C+gj
+         jVQ2d7m6uw7VArrSuymO7GOFOw0xAjsY1rOrejvNUM/CWj5UQkatSjG1q/5u8wGFu44X
+         adzpD3zXTL4dmCzurjzLoCdmCYYyAlYC9Nnh28F6IWKNhnFhLA/FeCYphMw3rixYFew0
+         Zd+7JUBPLll2xu2/2sVF2JxGdc3dQdcK5N+5sIFIFY29oE9lBrj8yuNFrneVgttifo9J
+         rD/bOUSj1RMwnG0WRsbbYtMqFD8WoJ5ODZLwcMNPWz9rAl1uw5hW7ef8uqkisLu7P5pb
+         O9SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fi4XGjAW8IL22UQ2E3MLgTRkUEhWQPz4pB1hOvF/+fA=;
+        b=TD3DinxBkAP43v4vGPWBE7quHmo6NxpPQ7d95EQR3RCMNpEe5j1tvR7Dr3MGttC6ae
+         XgGxJDOrd183gV52/8WhhzypGEdiW6/6YzufLnZsl+quQWZPQGYl5IRtkErnxuTugJQh
+         da0kRebDXQ+BRDsNna4cNarYEwMrvB7ALY/2A+ExRewObNxgvVnkFjTgvFGebFkGjkt7
+         Pp5tsOvVMxTuiqKa/ASKOkHrQBfmaXyuthxHXdFDqgxYMmmvIcqw3I88GPDRYOwGSGbU
+         jMXK4qhx0RRdGN4Vo/bbz/3JvR/BtFUuWqcCmccT7rxSfm0zdVzO99RUxTPYXPtiizEg
+         NsRA==
+X-Gm-Message-State: APjAAAV+1jaFtCbm5GikDMdVpc1moSH5PS5Ll9Zcih88KdXX93FXltf8
+        Gzv5X8E0RYV7TO0UUVy4nf0Imcp/aEgBTt1Mq5zXaw==
+X-Google-Smtp-Source: APXvYqxbFaYgQESHFT0ejIDrfC9cSb6nt3hGDE7e+F1jf57qtk9/E/O4Le3nxo8YcgqHg6K6YkTwO5gXuwhpzDsp1ZQ=
+X-Received: by 2002:adf:fe8b:: with SMTP id l11mr4115663wrr.23.1570127268783;
+ Thu, 03 Oct 2019 11:27:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570107054.4421.174.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190301192017.39770-1-dianders@chromium.org>
+In-Reply-To: <20190301192017.39770-1-dianders@chromium.org>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Thu, 3 Oct 2019 11:27:37 -0700
+Message-ID: <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Douglas Anderson <dianders@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 08:50:54AM -0400, Mimi Zohar wrote:
-> On Thu, 2019-10-03 at 14:35 +0300, Jarkko Sakkinen wrote:
-> > On Wed, Oct 02, 2019 at 08:41:45AM -0400, Mimi Zohar wrote:
-> > > On Fri, 2019-09-27 at 16:06 +0300, Jarkko Sakkinen wrote:
-> > > > On Wed, Sep 25, 2019 at 10:03:46AM -0400, James Bottomley wrote:
-> > > > > On Wed, 2019-09-25 at 16:48 +0300, Jarkko Sakkinen wrote:
-> > > > > [...]
-> > > > > > +	data_page = alloc_page(GFP_HIGHUSER);
-> > > > > > +	if (!data_page)
-> > > > > > +		return -ENOMEM;
-> > > > > > +
-> > > > > > +	data_ptr = kmap(data_page);
-> > > > > 
-> > > > > I don't think this is such a good idea.  On 64 bit it's no different
-> > > > > from GFP_KERNEL and on 32 bit where we do have highmem, kmap space is
-> > > > > at a premium, so doing a highmem allocation + kmap is more wasteful of
-> > > > > resources than simply doing GFP_KERNEL.  In general, you should only do
-> > > > > GFP_HIGHMEM if the page is going to be mostly used by userspace, which
-> > > > > really isn't the case here.
-> > > > 
-> > > > Changing that in this commit would be wrong even if you are right.
-> > > > After this commit has been applied it is somewhat easier to make
-> > > > best choices for allocation in each call site (probably most will
-> > > > end up using stack).
-> > > 
-> > > Agreed, but it could be a separate patch, prior to this one.  Why
-> > > duplicate the problem all over only to change it later?
-> > 
-> > What problem exactly it is duplicating? The existing allocation
-> > scheme here works correctly.
-> 
-> In the current code "alloc_page(GFP_HIGHUSER)" exists in a single
-> function.  With this patch, "alloc_page(GFP_HIGHUSER)" is duplicated
-> 24 times.  If it is incorrect and we shouldn't be using GFP_HIGHUSER,
-> as James said, then why duplicate it 24 times?  Fix it as a separate
-> patch first, that could be backported if needed, and then make the
-> change.
+On Fri, Mar 1, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> If you're bisecting why your peripherals stopped working, it's
+> probably this CL.  Specifically if you see this in your dmesg:
+>   Unexpected global fault, this could be serious
+> ...then it's almost certainly this CL.
+>
+> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
+> is insecure and effectively disables the protection they provide.
+> There are few reasons to allow unmatched stream bypass, and even fewer
+> good ones.
+>
+> This patch starts the transition over to make it much harder to run
+> your system insecurely.  Expected steps:
+>
+> 1. By default disable bypass (so anyone insecure will notice) but make
+>    it easy for someone to re-enable bypass with just a KConfig change.
+>    That's this patch.
+>
+> 2. After people have had a little time to come to grips with the fact
+>    that they need to set their IOMMUs properly and have had time to
+>    dig into how to do this, the KConfig will be eliminated and bypass
+>    will simply be disabled.  Folks who are truly upset and still
+>    haven't fixed their system can either figure out how to add
+>    'arm-smmu.disable_bypass=n' to their command line or revert the
+>    patch in their own private kernel.  Of course these folks will be
+>    less secure.
+>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-Sorry I mixed this with Jerry's proposal :-) I can do that of course.
+Hi Doug / Robin,
 
-/Jarkko
+I ran into this breaking things on OcteonTx boards based on CN80XX
+CPU. The IOMMU configuration is a bit beyond me and I'm hoping you can
+offer some advice. The IOMMU here is cavium,smmu-v2 as defined in
+https://github.com/Gateworks/dts-newport/blob/master/cn81xx-linux.dtsi
+
+Booting with 'arm-smmu.disable_bypass=n' does indeed work around the
+breakage as the commit suggests.
+
+Any suggestions for a proper fix?
+
+Best Regards,
+
+Tim
