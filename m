@@ -2,121 +2,117 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A649C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68FC215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F01120700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HDnbvcVK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ki7WXgc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfJCMyf (ORCPT
+        id S1730304AbfJCMyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:54:35 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33757 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbfJCMye (ORCPT
+        Thu, 3 Oct 2019 08:54:46 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36402 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730208AbfJCMyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:54:34 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y127so1775942lfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:54:33 -0700 (PDT)
+        Thu, 3 Oct 2019 08:54:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 23so1747785pgk.3;
+        Thu, 03 Oct 2019 05:54:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vsh1XlcqiCbV/88Hqb8SdUEhr0I4PfdhVYwP9WbaWkc=;
-        b=HDnbvcVK0V61vUTZJgZ1ltT+xAb7sL8Eq9t4zdVEeMYUnUxdGezi6uaNdah1XaWkHW
-         FbCVERnF3VQR3C5cP8nidxlTwVoA68xsuqnUCbQtbfbrrdulerIxyrrfXfU4R6qKdsMN
-         3W/PA57dXkYb2xwQpzzKuIWYcqWJ3u6RZRDz9H4PyQZ4ovpIvPT1Em27gtDUZ6PT5gMW
-         5uNJeip80oUeyDfp35poDXbSEI0kRX1Jy/Ct0L3oubqvhieRWGHXx1AK01GDeKF08zKK
-         6DcMck0p2dAJ72r6WXNmwali2eFZF430J4rLAuYJPDLnDkBhvQWidZiAlaSc90PhsCjj
-         tiQA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3KwiyzQXnyUJv1x/MpX8d1dxJ0H+8l16xNQfdlBiu7Q=;
+        b=Ki7WXgc3hN/m65nEvTuJa+uSDNFti0pDLKU0okGj1ewDEUaaeJHorGdPZtOksopZpl
+         DKDH5I5rAEOnD894ytQVVWiAv0YTUDVgOpxXblBzaqDR6yJhS6dXUqWAmTPvHFE72rqT
+         IMfui+z3v77jS1XjCRtzy8RhFKgUqQjsZKYHnZ4lX05WApaHrlAbkubZONZKchxO9QlL
+         D4gwXaUb12kYGrh9WKWfRs9ef6sjT4ERyIk6C6lpIsBI+lgWlxgwZ6bbvlGQkHW84dzC
+         lJZZYO22PQfFCoILqICadeFaikNHBMW3aNbBGHFNWdC1r+r/xI6kirTjjVhnQZp7TAC8
+         tW1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vsh1XlcqiCbV/88Hqb8SdUEhr0I4PfdhVYwP9WbaWkc=;
-        b=dUfnAZ1ZGhGvnFacy8+8j0cqmYZqe1OGKPIEsyUBQ2A1oziQ3TKJK1XTLJbCa77xUZ
-         Wx0XvrysGFb5jdZ76QTUGM9BJiv3KO81a/cuTs+72lXvYseuSPqjHqFoppL3UBaffIWB
-         xnlF3gv7t+DbOOPiXIHzcCo0LaZB4dXKTOiwow8FT/BctQBmsqesmujsRBDUVlSn6C1h
-         AWaZcAmBSXHFJYcKWFkH/S93SYy1RoSytJRjq82Xi17M2UmWoM1gNHBJ/+iOWNa56M+T
-         aIGkH5rICk5v0DjtDi/MBBBRLCUBIpbFhXeW2bVJpOcsFeTCukDw6lwcUF+hwvWYFzjn
-         xz0w==
-X-Gm-Message-State: APjAAAVz/r+r1elY5qgvhYx9nuEHUR8RksjhQ5fpBGFUP2waNpvgBMHb
-        hOKoUNbPKX0npuu+77z+Cei/ViJqC6K/mbh/6G3tFQ==
-X-Google-Smtp-Source: APXvYqyU0/XkmTAMfgX7X2G6a1zIl0KzjJAR0ocDPRzs/WhQvO+9c7gr7UN9bMALbMJAx7kliOdpxbteMul42ZmbKXY=
-X-Received: by 2002:a19:117:: with SMTP id 23mr5753856lfb.115.1570107272881;
- Thu, 03 Oct 2019 05:54:32 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3KwiyzQXnyUJv1x/MpX8d1dxJ0H+8l16xNQfdlBiu7Q=;
+        b=q/G6vE4mvtbVUoxA5VHp9rOUP+dIyTy9S0qFILANdNTwqcfu9SL1XWZU2Yfv7DrDlz
+         DAXrQpVXI48og+nJE2LtDRseAlWYlaOy4+Ge8MUeyNPgVwkP/csHPHn6cHI4ioxmVUCa
+         slCGJkPPyzNlClFI6Us6x7x1u0K2U9+MQ/Q9F02cQpDjtzDCZJPj5fETPYNkJ3FZyP7x
+         1BtCNiIIN2VZqDPeaAqNVQq7VTojND9nAbLZVdFeVldW0xmVF//xVP5zFpGW1bU+l7dv
+         26n4ECGJX9lZBgtMUQOhvdJvaXIu65OsPvoYcXgJGH+MCO8buLiPptjo7Ve8xCrWIxBI
+         whFg==
+X-Gm-Message-State: APjAAAXof1aysUbSrGiZ8zvC6Y6zctyWd0QqxP1cqtOMNkzdW9zQ/uc4
+        adnsC671sPrzBb6ErIiB4lM=
+X-Google-Smtp-Source: APXvYqyEIaDgDSzD8DdoQRFBDstfMRvl2zMjJnbtV8041AXWaa/1PccwYt4WDZQDa124/NUEXYAcpg==
+X-Received: by 2002:a17:90a:356d:: with SMTP id q100mr10627772pjb.53.1570107283855;
+        Thu, 03 Oct 2019 05:54:43 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c6sm5516569pgk.65.2019.10.03.05.54.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 05:54:42 -0700 (PDT)
+Subject: Re: [PATCH 3.16 00/87] 3.16.75-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+References: <lsq.1570043210.379046399@decadent.org.uk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <1a374d67-9908-6c7d-c428-219ee6d79ee4@roeck-us.net>
+Date:   Thu, 3 Oct 2019 05:54:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191002124206.22928-1-will@kernel.org>
-In-Reply-To: <20191002124206.22928-1-will@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 3 Oct 2019 14:54:21 +0200
-Message-ID: <CACRpkdYFzrUT9YE3VvRdWpx-n9szyvoOnEBM7GWLZAv8t1drww@mail.gmail.com>
-Subject: Re: [RESEND PATCH] pinctrl: devicetree: Avoid taking direct reference
- to device name string
-To:     Will Deacon <will@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 2:42 PM Will Deacon <will@kernel.org> wrote:
-
-> When populating the pinctrl mapping table entries for a device, the
-> 'dev_name' field for each entry is initialised to point directly at the
-> string returned by 'dev_name()' for the device and subsequently used by
-> 'create_pinctrl()' when looking up the mappings for the device being
-> probed.
+On 10/2/19 12:06 PM, Ben Hutchings wrote:
+> This is the start of the stable review cycle for the 3.16.75 release.
+> There are 87 patches in this series, which will be posted as responses
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri Oct 04 19:06:50 UTC 2019.
+> Anything received after that time might be too late.
 >
-> This is unreliable in the presence of calls to 'dev_set_name()', which may
-> reallocate the device name string leaving the pinctrl mappings with a
-> dangling reference. This then leads to a use-after-free every time the
-> name is dereferenced by a device probe:
->
->   | BUG: KASAN: invalid-access in strcmp+0x20/0x64
->   | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
->   | Pointer tag: [13], memory tag: [fe]
->   |
->   | Call trace:
->   |  __kasan_report+0x16c/0x1dc
->   |  kasan_report+0x10/0x18
->   |  check_memory_region
->   |  __hwasan_load1_noabort+0x4c/0x54
->   |  strcmp+0x20/0x64
->   |  create_pinctrl+0x18c/0x7f4
->   |  pinctrl_get+0x90/0x114
->   |  devm_pinctrl_get+0x44/0x98
->   |  pinctrl_bind_pins+0x5c/0x450
->   |  really_probe+0x1c8/0x9a4
->   |  driver_probe_device+0x120/0x1d8
->
-> Follow the example of sysfs, and duplicate the device name string before
-> stashing it away in the pinctrl mapping entries.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Reported-by: Elena Petrova <lenaptr@google.com>
-> Tested-by: Elena Petrova <lenaptr@google.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
+For v3.16.74-87-g815992c3a9a0:
 
-Patch applied, sorry for not getting back to you earlier.
+Build results:
+	total: 136 pass: 122 fail: 14
+Failed builds:
+	alpha:allmodconfig
+	arm:allmodconfig
+	arm64:allmodconfig
+	i386:allyesconfig
+	i386:allmodconfig
+	m68k:allmodconfig
+	mips:allmodconfig
+	parisc:allmodconfig
+	powerpc:allmodconfig
+	s390:allmodconfig
+	sparc64:allmodconfig
+	x86_64:allyesconfig
+	x86_64:allmodconfig
+	xtensa:allmodconfig
+Qemu test results:
+	total: 229 pass: 229 fail: 0
 
-The fact that dev_set_name() is reallocating the name is a bit
-scary, it doesn't feel super-stable, but I suppose there is some
-particularly good reason for it.
+The error is:
 
-I guess the look-up table still refers to the struct device *
-directly so pin control functionality will work, but the pin controller
-device name down in /sys/kernel/debug/pinctrl
-is going to be bogus, am I right? Like the name given there
-will be whatever the name was before the call to dev_set_name().
+drivers/staging/iio/cdc/ad7150.c:9:10: fatal error: linux/bitfield.h: No such file or directory
 
-Yours,
-Lnus Walleij
+which indeed does not exist in v3.16.y. Culprit is commit 6117323f0fbfb
+("staging:iio:ad7150: fix threshold mode config bit".
+
+Guenter
