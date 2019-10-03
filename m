@@ -2,134 +2,92 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FE6C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C735C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14222086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123830;
-	bh=LsYsdVGs4V7IkchSF2wWNLWdAyxE/UN89uLgORJq4c4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4e/LrwuaTGndPPnITvIM8TE/DEOZ9PPwNqqo4YFeB8SubgoAeV1UU0YjuT5OOdBE
-	 PoNIl7yoLWSI+GDmcxZMQbriuK6l7czxzdMEcO81Q4REGrDtflXND6N7Cjl81n6Mn+
-	 Y/uPcr7KcXWVAzm6GshGlUKlK04boFzY+p3x57As=
+	by mail.kernel.org (Postfix) with ESMTP id 0356320830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pq/jSr1x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387831AbfJCQLY (ORCPT
+        id S2387730AbfJCRad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387817AbfJCQLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 528F920700;
-        Thu,  3 Oct 2019 16:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119079;
-        bh=LsYsdVGs4V7IkchSF2wWNLWdAyxE/UN89uLgORJq4c4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hGWeEUCH7mnh/AmoSiKOtsrenhMYaU1uoqT0Y5Vi1P/PnkjjBcxgQ/gsQnnIb7M8Y
-         Pi0sORCPBy33NGme9fMGHrUct03WhxNaSijIjSGduu4kUNMarv4VH886ytCl5jUWBw
-         SmRw2Qc84PXDw4A89OTtApN7YuscauKK4felGXD0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 117/185] libtraceevent: Change users plugin directory
-Date:   Thu,  3 Oct 2019 17:53:15 +0200
-Message-Id: <20191003154504.677497152@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:30:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46878 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732191AbfJCQLT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so2037206pfg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=WCl0BJ/xg5z2POfrHRFKcHi5xkDivkEW/iGK30/2GP0=;
+        b=Pq/jSr1xmzlqjDuxBQh7dFDV5hRyr6MZtXVubXctjAF8kRjt+U6xL1O1zUsbiV9qug
+         ygNsoBsTe8l9J4vQh++/GIEgBZ3tc+dCBa+tnW6tuf4O22v4fqwHlcvMDTQXutYl4bj7
+         bWJISwhs7L3e2klQ4E9mPH1vemoDoOFTbhMxY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=WCl0BJ/xg5z2POfrHRFKcHi5xkDivkEW/iGK30/2GP0=;
+        b=pmbUJmBXwHY2sLgkCkrF496xUDkpx02mEiYv6TTnS35TJ3Xh+boqeX/JUdENiXWFcS
+         wifaUky7L0uS+1JIBeMUBixQ3OFFB2qgjImy9lhM3tq8r2TUPe71TgfzQRNzBHLLIgie
+         l1D0zGU0cwsD6s/KReT46Dsh+ljl2/fweibH9TuoNGkZTceTPQb/yu5YbkRspw6rAEEu
+         QTGre/jqXvQePsYySROptuSa7j/aB4bd53bTM1hL+o46ltHPXwkkQiR36/XCkAm3HVW/
+         3o+QhOvpEycBHar8H31a6UJgCMgHHSOPKkhT44RHKQRrtwL06+WTVpwCdFSwvRjNFUm0
+         KTHQ==
+X-Gm-Message-State: APjAAAXDMJ3XFVg3tRni+GzOtgjhK5K/Ydr9MkUUoyhWbN1fQfFeiudW
+        cq6JTs5KDLnRW+Rvrxj/WRPkRA==
+X-Google-Smtp-Source: APXvYqwgRSbE1eF4YKGVz+xu6rX+ntZRdmjPXT4BO1EQpfB2LWEVRFrJK7RpkgO+T9w/1Sx9rAIAHg==
+X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr11602435pjr.8.1570119078443;
+        Thu, 03 Oct 2019 09:11:18 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j25sm4527578pfi.113.2019.10.03.09.11.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 09:11:17 -0700 (PDT)
+Message-ID: <5d961da5.1c69fb81.f4dce.d93e@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191001180622.806-1-geert+renesas@glider.be>
+References: <20191001180622.806-1-geert+renesas@glider.be>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-renesas-soc@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Only call platform_get_irq() when interrupt is mandatory
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 09:11:17 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Quoting Geert Uytterhoeven (2019-10-01 11:06:22)
+> As platform_get_irq() now prints an error when the interrupt does not
+> exist, calling it gratuitously causes scary messages like:
+>=20
+>     ipmmu-vmsa e6740000.mmu: IRQ index 0 not found
+>=20
+> Fix this by moving the call to platform_get_irq() down, where the
+> existence of the interrupt is mandatory.
+>=20
+> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
+platform_get_irq*()")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
-
-To be compliant with XDG user directory layout, the user's plugin
-directory is changed from ~/.traceevent/plugins to
-~/.local/lib/traceevent/plugins/
-
-Suggested-by: Patrick McLean <chutzpah@gentoo.org>
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Patrick McLean <chutzpah@gentoo.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
-Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/lib/traceevent/Makefile       | 6 +++---
- tools/lib/traceevent/event-plugin.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 46cd5f871ad76..a26c44cf31aa4 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -55,15 +55,15 @@ set_plugin_dir := 1
- 
- # Set plugin_dir to preffered global plugin location
- # If we install under $HOME directory we go under
--# $(HOME)/.traceevent/plugins
-+# $(HOME)/.local/lib/traceevent/plugins
- #
- # We dont set PLUGIN_DIR in case we install under $HOME
- # directory, because by default the code looks under:
--# $(HOME)/.traceevent/plugins by default.
-+# $(HOME)/.local/lib/traceevent/plugins by default.
- #
- ifeq ($(plugin_dir),)
- ifeq ($(prefix),$(HOME))
--override plugin_dir = $(HOME)/.traceevent/plugins
-+override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
- set_plugin_dir := 0
- else
- override plugin_dir = $(libdir)/traceevent/plugins
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index a16756ae35267..5fe7889606a23 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -30,7 +30,7 @@
- #include "event-parse.h"
- #include "event-utils.h"
- 
--#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
-+#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
- 
- static struct registered_plugin_options {
- 	struct registered_plugin_options	*next;
--- 
-2.20.1
-
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
