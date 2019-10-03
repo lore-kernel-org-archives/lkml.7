@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C5FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7E8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8766222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59990215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118748;
-	bh=kEUcyf9ce6ZSDzVBodKAh4owIQCPHcgVn4yCbQNmwCo=;
+	s=default; t=1570118751;
+	bh=nv5tyfbfrOt8/5M/vZRl8GRVLkrUHUar+IwteF0cp3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6SEZs2ATjaZjBIylvmDH4sKGlhq3PQE8twy1QymJYWVVYLc7/M8dZ+JHxJzPM3Uy
-	 66jP+vvVPFnWtfp+7Ry2glwjIPGpXRNrtK9nJJG6z7rja9Nj8VH44yHKXFzRH3zQJs
-	 2IJtlllg1e+FwboHJgvvwpAAfIh9xIDgbjuxCmrs=
+	b=Tz2UUK9lxT4OhE9YnSD6Ni7dndusZrMPBN3WGOEkWnStb0qMqiA5+Pqx3H+FeLijk
+	 3npYitJglI2qKt6cxAbl43STCOf6eLxBdD85zNGLPmMSwDV08cgYTLh2EOIfRep5CJ
+	 TCV0VKJGT3E8Dg53z9DkV+6kKigbNWaxQhL9NNyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfJCQFr (ORCPT
+        id S1732630AbfJCQFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732585AbfJCQFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:05:43 -0400
+        id S1731745AbfJCQFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:05:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA68C215EA;
-        Thu,  3 Oct 2019 16:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6989221D81;
+        Thu,  3 Oct 2019 16:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118742;
-        bh=kEUcyf9ce6ZSDzVBodKAh4owIQCPHcgVn4yCbQNmwCo=;
+        s=default; t=1570118747;
+        bh=nv5tyfbfrOt8/5M/vZRl8GRVLkrUHUar+IwteF0cp3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fSIIcZSWtl5i9KDff6jHHx74AcrcDwu2TfStvHOSsdWIc55mCop/BmPs3lm7VW3rd
-         ktzviS2SheGRi0RcWfdkmePPlIoOLqjqfgxag93YEks5cwFAa7FgErS05LaJFbChmA
-         fQ9QMeUDfrTB5pbvK7eRAyG9hfC8vULi+pzX8K3Q=
+        b=xjixCnmR4tKa415uhuzpvtawIRI4TWP6+fIEq3jZ2JuMLTMIE2+wxzVMyO7J+vMt9
+         szhyMyLVciYrRSiNFga8nTh60aJy8I7jmW/n/J0k1uoOyS3h+lNAnA1zak5FdFSYa7
+         tUitJXrPXxTnWvpZqXM0aWMj/SzJkIz6bLye8Xr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.9 123/129] quota: fix wrong condition in is_quota_modification()
-Date:   Thu,  3 Oct 2019 17:54:06 +0200
-Message-Id: <20191003154415.939074938@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.9 125/129] i2c: riic: Clear NACK in tend isr
+Date:   Thu,  3 Oct 2019 17:54:08 +0200
+Message-Id: <20191003154416.575317081@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,47 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Chris Brandt <chris.brandt@renesas.com>
 
-commit 6565c182094f69e4ffdece337d395eb7ec760efc upstream.
+commit a71e2ac1f32097fbb2beab098687a7a95c84543e upstream.
 
-Quoted from
-commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+The NACKF flag should be cleared in INTRIICNAKI interrupt processing as
+description in HW manual.
 
-" At LSF we decided that if we truncate up from isize we shouldn't trim
-  fallocated blocks that were fallocated with KEEP_SIZE and are past the
- new i_size.  This patch fixes ext4 to do this. "
+This issue shows up quickly when PREEMPT_RT is applied and a device is
+probed that is not plugged in (like a touchscreen controller). The result
+is endless interrupts that halt system boot.
 
-And generic/092 of fstest have covered this case for long time, however
-is_quota_modification() didn't adjust based on that rule, so that in
-below condition, we will lose to quota block change:
-- fallocate blocks beyond EOF
-- remount
-- truncate(file_path, file_size)
-
-Fix it.
-
-Link: https://lore.kernel.org/r/20190911093650.35329-1-yuchao0@huawei.com
-Fixes: 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
-CC: stable@vger.kernel.org
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 310c18a41450 ("i2c: riic: add driver")
+Cc: stable@vger.kernel.org
+Reported-by: Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/quotaops.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-riic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -21,7 +21,7 @@ static inline struct quota_info *sb_dqop
- /* i_mutex must being held */
- static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
- {
--	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
-+	return (ia->ia_valid & ATTR_SIZE) ||
- 		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
- 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
- }
+--- a/drivers/i2c/busses/i2c-riic.c
++++ b/drivers/i2c/busses/i2c-riic.c
+@@ -212,6 +212,7 @@ static irqreturn_t riic_tend_isr(int irq
+ 	if (readb(riic->base + RIIC_ICSR2) & ICSR2_NACKF) {
+ 		/* We got a NACKIE */
+ 		readb(riic->base + RIIC_ICDRR);	/* dummy read */
++		riic_clear_set_bit(riic, ICSR2_NACKF, 0, RIIC_ICSR2);
+ 		riic->err = -ENXIO;
+ 	} else if (riic->bytes_left) {
+ 		return IRQ_NONE;
 
 
