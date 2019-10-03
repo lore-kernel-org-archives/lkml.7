@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813E1C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B44C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59746207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1C3207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119071;
-	bh=a2nwVqqc8EXzF104rsu8lIS0cR7c6+55UGrR7SNgc6w=;
+	s=default; t=1570119074;
+	bh=/LpltrAgNejfjNwAl2+uhOAMJdYtq16InXFtN/oWKtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6JGWb8jIjtfm/inUvXcy2Z8sC3rsztIg2Tk7ad8774xpRJ+BlVy4x843zMeg5fk8
-	 7yupvWwqtW9qQkTwzL4HJ9P3FnGlInerqiB2CGvwDXQAslieUlSFhTsXjZHTRek8t4
-	 tX45At6Fq3Dh6nq8qc6CiyF78twjD4iqpoF2m1RM=
+	b=soEk3C/KqG1rT+6mtuyrbOQ/ymxNah9wPmTtIK5XJafxJCgYZyHxk0vSFZiD0j7as
+	 z9sNTvFQYwEbXuomB0fFznMvUp2xD8Szcnr8gLGo8AubcsydomndtXBF2WdOaktDiD
+	 U6v4rp/hS/+PWUYCfuDGbKH84UQxSDZ6Z7J0einc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387785AbfJCQLK (ORCPT
+        id S2387794AbfJCQLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60858 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387749AbfJCQLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:07 -0400
+        id S2387769AbfJCQLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1102C20700;
-        Thu,  3 Oct 2019 16:11:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35C120700;
+        Thu,  3 Oct 2019 16:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119066;
-        bh=a2nwVqqc8EXzF104rsu8lIS0cR7c6+55UGrR7SNgc6w=;
+        s=default; t=1570119069;
+        bh=/LpltrAgNejfjNwAl2+uhOAMJdYtq16InXFtN/oWKtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZXlPqvA7aZx4noOBatCET7w1GbIoQR5ZyMtZbNfomA++f2mJ1mdyeTtwuq09zIQiN
-         vYoV59rMEglD80lsqupM6X5hp+S+jXrgW4FUMG8h86hNY4sIQg91m2SqI4pmVtGgSu
-         2jYjknYBssxHB9G4YN/bcnXUPypFeMAFj/6hRvbM=
+        b=J8iGZuptbkta6pFDD6mdZfXP8K40PHG9zdeoSpZ76QXXXdf6IYq8WIvyVQRZwHUrX
+         Vg+FPOXcaJpD1A8AdLFZKQkqR8/QrLdi7engL6eaz9zbOE0hEd+NL85D2d9CAENnp7
+         yb6DpYmE26ke4iB6k4E6zLnychHPYLY0LaeKSqGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Stone <ahs3@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 112/185] ACPI / CPPC: do not require the _PSD method
-Date:   Thu,  3 Oct 2019 17:53:10 +0200
-Message-Id: <20191003154504.032457138@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 113/185] arm64: kpti: ensure patched kernel text is fetched from PoU
+Date:   Thu,  3 Oct 2019 17:53:11 +0200
+Message-Id: <20191003154504.138415870@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,53 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Stone <ahs3@redhat.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
+[ Upstream commit f32c7a8e45105bd0af76872bf6eef0438ff12fb2 ]
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+While the MMUs is disabled, I-cache speculation can result in
+instructions being fetched from the PoC. During boot we may patch
+instructions (e.g. for alternatives and jump labels), and these may be
+dirty at the PoU (and stale at the PoC).
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
+Thus, while the MMU is disabled in the KPTI pagetable fixup code we may
+load stale instructions into the I-cache, potentially leading to
+subsequent crashes when executing regions of code which have been
+modified at runtime.
 
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
+Similarly to commit:
 
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
+  8ec41987436d566f ("arm64: mm: ensure patched kernel text is fetched from PoU")
 
-Signed-off-by: Al Stone <ahs3@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+... we can invalidate the I-cache after enabling the MMU to prevent such
+issues.
+
+The KPTI pagetable fixup code itself should be clean to the PoC per the
+boot protocol, so no maintenance is required for this code.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/cppc_acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/mm/proc.S | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index e5b47f032d9af..7bf1948b1223b 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -365,8 +365,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 034a3a2a38ee8..65b0401521846 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -280,6 +280,15 @@ skip_pgd:
+ 	msr	sctlr_el1, x18
+ 	isb
  
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
-+	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+					    &buffer, ACPI_TYPE_PACKAGE);
-+	if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+		return 0;
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
++	/*
++	 * Invalidate the local I-cache so that any instructions fetched
++	 * speculatively from the PoC are discarded, since they may have
++	 * been dynamically patched at the PoU.
++	 */
++	ic	iallu
++	dsb	nsh
++	isb
++
+ 	/* Set the flag to zero to indicate that we're all done */
+ 	str	wzr, [flag_ptr]
+ 	ret
 -- 
 2.20.1
 
