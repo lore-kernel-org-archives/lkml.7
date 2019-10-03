@@ -2,375 +2,190 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A0EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C81C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF7B21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:28:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QqpipN7E"
+	by mail.kernel.org (Postfix) with ESMTP id 76C4A21D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfJCG0U (ORCPT
+        id S1727221AbfJCG3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:26:20 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33792 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCG0T (ORCPT
+        Thu, 3 Oct 2019 02:29:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45948 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725827AbfJCG3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:26:19 -0400
-Received: by mail-qk1-f195.google.com with SMTP id q203so1276582qke.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:26:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4nvCkkxF3tpM+x3xn7dqGTYCKi4uqYijHIaCGSNEFak=;
-        b=QqpipN7EMDqzJcJTh0HXH3pImXUAJj1qZxUtb9nADFwf8s/d55LY0oy68TUrGcs7fn
-         zcYsYyVQFp96/OwwO4ywRcEMMNkYPUB8eMweO8PYMkFbw5BO95m7nqyju6BdJ8J7LGlo
-         ytDNCIZChy2QNPXKrtx5jTKZacLX43iZHn15KdjmT5EXfX9ra7njx10fnAg46rW9CvZL
-         tx1GymzkezMBjCSm1Hdq/rN0d2X0+7tWcobDwXsj1VVVJeOdRD49urUnbTlWoqVv6D1X
-         eUb3XERXFZCtP3ZRlogRaRomOUE4KbS8ykVaa/4IOHqOwWHdpPaoCoag6clzi/AFWHAz
-         6suA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4nvCkkxF3tpM+x3xn7dqGTYCKi4uqYijHIaCGSNEFak=;
-        b=FhIWdO6lM7ugMBhHOmjXetwdT14XIHRqJzpwrxO1EEt7wbp2cBUiuUa8ZBnIwKocNY
-         /QssHWqYaM2wkBuhEKIOAGjioDnPR9kW70VZxK4mfIxcj2ZVUgvL2xlAag2heYTD1z/w
-         n5uVxrzhS8Ov6PNblnxyq6uKQOprhnv1U0HBxhXXpySz72NDbxFn48XE9W9gy9Ge+lBq
-         c08eoCflFF08M1BMiGQfXdvtuz1boOBkOAFJwz+OA4tjJXvoyoMBAzkzrJRCIdBCdHEo
-         lsLzOIkR6YvYJoMAMLUedTPb5d6O2q1KMW0cy9w0a9SExiPTC59aTpuzH0XWsxVPAMkO
-         vS8w==
-X-Gm-Message-State: APjAAAXGjBC3MWSHl/1CC3pTgugNJ+9rRZXyobLzVJS2GKhABoMbo3KW
-        Te/i0XioqaeMwnxyDvZV2jL6y1kbTi8ypZkYPqm0Vg==
-X-Google-Smtp-Source: APXvYqxIREVbBImMq1Sd3hJ0qSIhsSEVDSAmIv+m9Zg7dDKQA3vme42/DHdm+M2/umOtaygTIyLhqF8ypS8tGx9L8ug=
-X-Received: by 2002:a37:9202:: with SMTP id u2mr2854753qkd.8.1570083977128;
- Wed, 02 Oct 2019 23:26:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
- <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
- <1569594142.9045.24.camel@mtksdccf07> <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
- <1569818173.17361.19.camel@mtksdccf07> <1570018513.19702.36.camel@mtksdccf07>
- <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com> <1570069078.19702.57.camel@mtksdccf07>
-In-Reply-To: <1570069078.19702.57.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 3 Oct 2019 08:26:05 +0200
-Message-ID: <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 02:29:47 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x936LpXu145591
+        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 02:29:46 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd9e6k9tt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:29:46 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Thu, 3 Oct 2019 07:29:44 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 3 Oct 2019 07:29:40 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x936TdJa57737422
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Oct 2019 06:29:39 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7FB4A4060;
+        Thu,  3 Oct 2019 06:29:39 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47B74A4068;
+        Thu,  3 Oct 2019 06:29:38 +0000 (GMT)
+Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  3 Oct 2019 06:29:38 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     npiggin@gmail.com, rjw@rjwysocki.net, daniel.lezcano@linaro.org,
+        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, dja@axtens.net,
+        Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [PATCH v5 0/3] Forced-wakeup for stop states on Powernv
+Date:   Thu,  3 Oct 2019 01:26:43 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19100306-0020-0000-0000-000003748F25
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100306-0021-0000-0000-000021CA96CD
+Message-Id: <20191003062646.54258-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910030061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 4:18 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> On Wed, 2019-10-02 at 15:57 +0200, Dmitry Vyukov wrote:
-> > On Wed, Oct 2, 2019 at 2:15 PM Walter Wu <walter-zh.wu@mediatek.com> wr=
-ote:
-> > >
-> > > On Mon, 2019-09-30 at 12:36 +0800, Walter Wu wrote:
-> > > > On Fri, 2019-09-27 at 21:41 +0200, Dmitry Vyukov wrote:
-> > > > > On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.=
-com> wrote:
-> > > > > >
-> > > > > > On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
-> > > > > > > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@media=
-tek.com> wrote:
-> > > > > > > >
-> > > > > > > > memmove() and memcpy() have missing underflow issues.
-> > > > > > > > When -7 <=3D size < 0, then KASAN will miss to catch the un=
-derflow issue.
-> > > > > > > > It looks like shadow start address and shadow end address i=
-s the same,
-> > > > > > > > so it does not actually check anything.
-> > > > > > > >
-> > > > > > > > The following test is indeed not caught by KASAN:
-> > > > > > > >
-> > > > > > > >         char *p =3D kmalloc(64, GFP_KERNEL);
-> > > > > > > >         memset((char *)p, 0, 64);
-> > > > > > > >         memmove((char *)p, (char *)p + 4, -2);
-> > > > > > > >         kfree((char*)p);
-> > > > > > > >
-> > > > > > > > It should be checked here:
-> > > > > > > >
-> > > > > > > > void *memmove(void *dest, const void *src, size_t len)
-> > > > > > > > {
-> > > > > > > >         check_memory_region((unsigned long)src, len, false,=
- _RET_IP_);
-> > > > > > > >         check_memory_region((unsigned long)dest, len, true,=
- _RET_IP_);
-> > > > > > > >
-> > > > > > > >         return __memmove(dest, src, len);
-> > > > > > > > }
-> > > > > > > >
-> > > > > > > > We fix the shadow end address which is calculated, then gen=
-eric KASAN
-> > > > > > > > get the right shadow end address and detect this underflow =
-issue.
-> > > > > > > >
-> > > > > > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D199341
-> > > > > > > >
-> > > > > > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > > > > > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> > > > > > > > ---
-> > > > > > > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++=
-++
-> > > > > > > >  mm/kasan/generic.c |  8 ++++++--
-> > > > > > > >  2 files changed, 42 insertions(+), 2 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > > > > > > > index b63b367a94e8..8bd014852556 100644
-> > > > > > > > --- a/lib/test_kasan.c
-> > > > > > > > +++ b/lib/test_kasan.c
-> > > > > > > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oo=
-b_in_memset(void)
-> > > > > > > >         kfree(ptr);
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > > +static noinline void __init kmalloc_oob_in_memmove_underfl=
-ow(void)
-> > > > > > > > +{
-> > > > > > > > +       char *ptr;
-> > > > > > > > +       size_t size =3D 64;
-> > > > > > > > +
-> > > > > > > > +       pr_info("underflow out-of-bounds in memmove\n");
-> > > > > > > > +       ptr =3D kmalloc(size, GFP_KERNEL);
-> > > > > > > > +       if (!ptr) {
-> > > > > > > > +               pr_err("Allocation failed\n");
-> > > > > > > > +               return;
-> > > > > > > > +       }
-> > > > > > > > +
-> > > > > > > > +       memset((char *)ptr, 0, 64);
-> > > > > > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
-> > > > > > > > +       kfree(ptr);
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > > +static noinline void __init kmalloc_oob_in_memmove_overflo=
-w(void)
-> > > > > > > > +{
-> > > > > > > > +       char *ptr;
-> > > > > > > > +       size_t size =3D 64;
-> > > > > > > > +
-> > > > > > > > +       pr_info("overflow out-of-bounds in memmove\n");
-> > > > > > > > +       ptr =3D kmalloc(size, GFP_KERNEL);
-> > > > > > > > +       if (!ptr) {
-> > > > > > > > +               pr_err("Allocation failed\n");
-> > > > > > > > +               return;
-> > > > > > > > +       }
-> > > > > > > > +
-> > > > > > > > +       memset((char *)ptr, 0, 64);
-> > > > > > > > +       memmove((char *)ptr + size, (char *)ptr, 2);
-> > > > > > > > +       kfree(ptr);
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > >  static noinline void __init kmalloc_uaf(void)
-> > > > > > > >  {
-> > > > > > > >         char *ptr;
-> > > > > > > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(vo=
-id)
-> > > > > > > >         kmalloc_oob_memset_4();
-> > > > > > > >         kmalloc_oob_memset_8();
-> > > > > > > >         kmalloc_oob_memset_16();
-> > > > > > > > +       kmalloc_oob_in_memmove_underflow();
-> > > > > > > > +       kmalloc_oob_in_memmove_overflow();
-> > > > > > > >         kmalloc_uaf();
-> > > > > > > >         kmalloc_uaf_memset();
-> > > > > > > >         kmalloc_uaf2();
-> > > > > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > > > > > > > index 616f9dd82d12..34ca23d59e67 100644
-> > > > > > > > --- a/mm/kasan/generic.c
-> > > > > > > > +++ b/mm/kasan/generic.c
-> > > > > > > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_=
-poisoned_n(unsigned long addr,
-> > > > > > > >                                                 size_t size=
-)
-> > > > > > > >  {
-> > > > > > > >         unsigned long ret;
-> > > > > > > > +       void *shadow_start =3D kasan_mem_to_shadow((void *)=
-addr);
-> > > > > > > > +       void *shadow_end =3D kasan_mem_to_shadow((void *)ad=
-dr + size - 1) + 1;
-> > > > > > > >
-> > > > > > > > -       ret =3D memory_is_nonzero(kasan_mem_to_shadow((void=
- *)addr),
-> > > > > > > > -                       kasan_mem_to_shadow((void *)addr + =
-size - 1) + 1);
-> > > > > > > > +       if ((long)size < 0)
-> > > > > > > > +               shadow_end =3D kasan_mem_to_shadow((void *)=
-addr + size);
-> > > > > > >
-> > > > > > > Hi Walter,
-> > > > > > >
-> > > > > > > Thanks for working on this.
-> > > > > > >
-> > > > > > > If size<0, does it make sense to continue at all? We will sti=
-ll check
-> > > > > > > 1PB of shadow memory? What happens when we pass such huge ran=
-ge to
-> > > > > > > memory_is_nonzero?
-> > > > > > > Perhaps it's better to produce an error and bail out immediat=
-ely if size<0?
-> > > > > >
-> > > > > > I agree with what you said. when size<0, it is indeed an unreas=
-onable
-> > > > > > behavior, it should be blocked from continuing to do.
-> > > > > >
-> > > > > >
-> > > > > > > Also, what's the failure mode of the tests? Didn't they badly=
- corrupt
-> > > > > > > memory? We tried to keep tests such that they produce the KAS=
-AN
-> > > > > > > reports, but don't badly corrupt memory b/c/ we need to run a=
-ll of
-> > > > > > > them.
-> > > > > >
-> > > > > > Maybe we should first produce KASAN reports and then go to exec=
-ute
-> > > > > > memmove() or do nothing? It looks like it=E2=80=99s doing the f=
-ollowing.or?
-> > > > > >
-> > > > > > void *memmove(void *dest, const void *src, size_t len)
-> > > > > >  {
-> > > > > > +       if (long(len) <=3D 0)
-> > > > >
-> > > > > /\/\/\/\/\/\
-> > > > >
-> > > > > This check needs to be inside of check_memory_region, otherwise w=
-e
-> > > > > will have similar problems in all other places that use
-> > > > > check_memory_region.
-> > > > Thanks for your reminder.
-> > > >
-> > > >  bool check_memory_region(unsigned long addr, size_t size, bool wri=
-te,
-> > > >                                 unsigned long ret_ip)
-> > > >  {
-> > > > +       if (long(size) < 0) {
-> > > > +               kasan_report_invalid_size(src, dest, len, _RET_IP_)=
-;
-> > > > +               return false;
-> > > > +       }
-> > > > +
-> > > >         return check_memory_region_inline(addr, size, write, ret_ip=
-);
-> > > >  }
-> > > >
-> > > > > But check_memory_region already returns a bool, so we could check=
- that
-> > > > > bool and return early.
-> > > >
-> > > > When size<0, we should only show one KASAN report, and should we on=
-ly
-> > > > limit to return when size<0 is true? If yse, then __memmove() will =
-do
-> > > > nothing.
-> > > >
-> > > >
-> > > >  void *memmove(void *dest, const void *src, size_t len)
-> > > >  {
-> > > > -       check_memory_region((unsigned long)src, len, false, _RET_IP=
-_);
-> > > > +       if(!check_memory_region((unsigned long)src, len, false,
-> > > > _RET_IP_)
-> > > > +               && long(size) < 0)
-> > > > +               return;
-> > > > +
-> > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP=
-_);
-> > > >
-> > > >         return __memmove(dest, src, len);
-> > > >
-> > > > >
-> > > Hi Dmitry,
-> > >
-> > > What do you think the following code is better than the above one.
-> > > In memmmove/memset/memcpy, they need to determine whether size < 0 is
-> > > true. we directly determine whether size is negative in memmove and
-> > > return early. it avoid to generate repeated KASAN report. Is it bette=
-r?
-> > >
-> > > void *memmove(void *dest, const void *src, size_t len)
-> > > {
-> > > +       if (long(size) < 0) {
-> > > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
-> > > +               return;
-> > > +       }
-> > > +
-> > >         check_memory_region((unsigned long)src, len, false, _RET_IP_)=
-;
-> > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_)=
-;
-> > >
-> > >
-> > > check_memory_region() still has to check whether the size is negative=
-.
-> > > but memmove/memset/memcpy generate invalid size KASAN report will not=
- be
-> > > there.
-> >
-> >
-> > If check_memory_region() will do the check, why do we need to
-> > duplicate it inside of memmove and all other range functions?
-> >
-> Yes, I know it has duplication, but if we don't have to determine size<0
-> in memmove, then all check_memory_region return false will do nothing,
+Currently, the cpuidle governors determine what idle state a idling CPU
+should enter into based on heuristics that depend on the idle history on
+that CPU. Given that no predictive heuristic is perfect, there are cases
+where the governor predicts a shallow idle state, hoping that the CPU will
+be busy soon. However, if no new workload is scheduled on that CPU in the
+near future, the CPU will end up in the shallow state.
 
-But they will produce a KASAN report, right? They are asked to check
-if 18446744073709551614 bytes are good. 18446744073709551614 bytes
-can't be good.
+Motivation
+----------
+In case of POWER, this is problematic, when the predicted state in the
+aforementioned scenario is a shallow stop state on a tickless system. As
+we might get stuck into shallow states even for hours, in absence of ticks
+or interrupts.
+
+To address this, We forcefully wakeup the cpu by setting the decrementer.
+The decrementer is set to a value that corresponds with the residency of
+the next available state. Thus firing up a timer that will forcefully
+wakeup the cpu. Few such iterations will essentially train the governor to
+select a deeper state for that cpu, as the timer here corresponds to the
+next available cpuidle state residency. Thus, cpu will eventually end up
+in the deepest possible state and we won't get stuck in a shallow state
+for long duration.
+
+Experiment
+----------
+For earlier versions when this feature was meat to be only for shallow lite
+states, I performed experiments for three scenarios to collect some data.
+
+case 1 :
+Without this patch and without tick retained, i.e. in a upstream kernel,
+It would spend more than even a second to get out of stop0_lite.
+
+case 2 : With tick retained in a upstream kernel -
+
+Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+it to take 8 sched tick to get out of stop0_lite. Experimentally,
+observation was
+
+=========================================================
+sample          min            max           99percentile
+20              4ms            12ms          4ms
+=========================================================
+
+It would take atleast one sched tick to get out of stop0_lite.
+
+case 2 :  With this patch (not stopping tick, but explicitly queuing a
+          timer)
+
+============================================================
+sample          min             max             99percentile
+============================================================
+20              144us           192us           144us
+============================================================
 
 
-> it includes other memory corruption behaviors, this is my original
-> concern.
->
-> > I would do:
-> >
-> > void *memmove(void *dest, const void *src, size_t len)
-> > {
-> >         if (check_memory_region((unsigned long)src, len, false, _RET_IP=
-_))
-> >                 return;
-> if check_memory_region return TRUE is to do nothing, but it is no memory
-> corruption? Should it return early when check_memory_region return a
-> FALSE?
+Description of current implementation
+-------------------------------------
 
-Maybe. I just meant the overall idea: check_memory_region should
-detect that 18446744073709551614 bytes are bad, print an error, return
-an indication that bytes were bad, memmove should return early if the
-range is bad.
+We calculate timeout for the current idle state as the residency value
+of the next available idle state. If the decrementer is set to be
+greater than this timeout, we update the decrementer value with the
+residency of next available idle state. Thus, essentially training the
+governor to select the next available deeper state until we reach the
+deepest state. Hence, we won't get stuck unnecessarily in shallow states
+for longer duration.
 
+--------------------------------
+v1 of auto-promotion : https://lkml.org/lkml/2019/3/22/58 This patch was
+implemented only for shallow lite state in generic cpuidle driver.
 
-> > This avoids duplicating the check, adds minimal amount of code to
-> > range functions and avoids adding kasan_report_invalid_size.
-> Thanks for your suggestion.
-> We originally want to show complete information(destination address,
-> source address, and its length), but add minimal amount of code into
-> kasan_report(), it should be good.
->
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/kasan-dev/1570069078.19702.57.camel%40mtksdccf07.
+v2 : Removed timeout_needed and rebased to current
+upstream kernel
+
+Then,
+v1 of forced-wakeup : Moved the code to cpuidle powernv driver and started
+as forced wakeup instead of auto-promotion
+
+v2 : Extended the forced wakeup logic for all states.
+Setting the decrementer instead of queuing up a hrtimer to implement the
+logic.
+
+v3 : 1) Cleanly handle setting the decrementer after exiting out of stop
+       states.
+     2) Added a disable_callback feature to compute timeout whenever a
+        state is enbaled or disabled instead of computing everytime in fast
+        idle path.
+     3) Use disable callback to recompute timeout whenever state usage
+        is changed for a state. Also, cleaned up the get_snooze_timeout
+        function.
+
+v4 :    Changed the type and name of set/reset decrementer function.
+        Handled irq work pending in try_set_dec_before_idle.
+        No change in patch 2 and 3.
+
+v5 :	Removed forced wakeup for the last state. We dont want to wakeup
+	unnecessarily when already in deepest state. It was a mistake in
+	previous patches that was found out in recent experiments.
+	No change in patch 2 and 3.
+
+Abhishek Goel (3):
+  cpuidle-powernv : forced wakeup for stop states
+  cpuidle : Add callback whenever a state usage is enabled/disabled
+  cpuidle-powernv : Recompute the idle-state timeouts when state usage
+    is enabled/disabled
+
+ arch/powerpc/include/asm/time.h   |  2 ++
+ arch/powerpc/kernel/time.c        | 43 ++++++++++++++++++++++++
+ drivers/cpuidle/cpuidle-powernv.c | 55 +++++++++++++++++++++++--------
+ drivers/cpuidle/sysfs.c           | 15 ++++++++-
+ include/linux/cpuidle.h           |  4 +++
+ 5 files changed, 105 insertions(+), 14 deletions(-)
+
+-- 
+2.17.1
+
