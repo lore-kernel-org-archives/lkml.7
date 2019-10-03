@@ -2,115 +2,141 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679B4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABA8C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD1D21D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118654;
-	bh=PbIiOLM0DJ9qzm4pkSrym9+Krz9yvQDe/PPmbtwoJn4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vc1sSBmGQqAG9zbcvue0Qi8C0IKc9fbWKcoozHGm5D6jXaFHfoGqQmCKCZ4haYAEU
-	 ZvvgXelUI5BaqkJ1+C9UMjl7AEslfvG4j4ZZhLMGWgcCY4tGIih4TbXS7bHgNVjus4
-	 kBXDRuktrBopZxJNXsxkJ36Nw6iDtlMXL64YZnYk=
+	by mail.kernel.org (Postfix) with ESMTP id D4D2321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732362AbfJCQEN (ORCPT
+        id S1732373AbfJCQEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49990 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53288 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfJCQEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731056AbfJCQEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:09 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E501B21D81;
-        Thu,  3 Oct 2019 16:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118650;
-        bh=PbIiOLM0DJ9qzm4pkSrym9+Krz9yvQDe/PPmbtwoJn4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vhtpto8QM3kTaPCzGL6HcGVaPBjuzEsgBswp5fzmiJnvPtnIqyE6SDUp0ezj4mp+a
-         V7sgTTPuXz8St41ETdh5WBL1gLtjSBENGO4gc8UFhPxIseXgWnHnk78DNOXo2ECjNx
-         RR12Skgakn15zJ3mDjFCNaa0uqW5nANQ2hOYLoNs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/129] mmc: sdhci: Fix incorrect switch to HS mode
-Date:   Thu,  3 Oct 2019 17:53:32 +0200
-Message-Id: <20191003154359.739116847@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-References: <20191003154318.081116689@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id C3F0B3D966;
+        Thu,  3 Oct 2019 16:04:08 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-11.phx2.redhat.com [10.3.112.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F30E819C6A;
+        Thu,  3 Oct 2019 16:04:07 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 96DF211E4; Thu,  3 Oct 2019 13:04:04 -0300 (BRT)
+Date:   Thu, 3 Oct 2019 13:04:04 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Josh Hunt <johunt@akamai.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, john@metanate.com, jolsa@kernel.org,
+        alexander.shishkin@linux.intel.com, khlebnikov@yandex-team.ru,
+        namhyung@kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: 4.19 dwarf unwinding broken
+Message-ID: <20191003160404.GG3531@redhat.com>
+References: <ab87d20b-526c-9435-0532-c298beeb0318@akamai.com>
+ <20191003100300.GA22784@krava>
+ <d0e0a675-1344-a47b-c27e-ea05230d88b8@akamai.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0e0a675-1344-a47b-c27e-ea05230d88b8@akamai.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 03 Oct 2019 16:04:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Cooper <alcooperx@gmail.com>
+Em Thu, Oct 03, 2019 at 08:17:38AM -0700, Josh Hunt escreveu:
+> On 10/3/19 3:03 AM, Jiri Olsa wrote:
+> >On Thu, Oct 03, 2019 at 12:54:09AM -0700, Josh Hunt wrote:
+> >>The following commit is breaking dwarf unwinding on 4.19 kernels:
+> >
+> >how?
+> 
+> When doing something like:
+> perf record -p $(cat /var/run/app.pid) -g --call-graph dwarf -F 999
+> -- sleep 3
+> 
+> with 4.19.75 perf I see things like:
+> 
+> app_Thr00 26247 1810131.375329:     168288 cycles:ppp:
+> 
+> app_Thr01 26767 1810131.377449:     344415 cycles:ppp:
+> 
+> uvm:WorkerThread 26746 1810131.383052:        504 cycles:ppp:
+>         ffffffff9f77cce0 _raw_spin_lock+0x10 (/boot/vmlinux-4.19.46)
+>         ffffffff9f181527 __perf_event_task_sched_in+0xf7
+> (/boot/vmlinux-4.19.46)
+>         ffffffff9f09a7b8 finish_task_switch+0x158 (/boot/vmlinux-4.19.46)
+>         ffffffff9f778276 __schedule+0x2f6 (/boot/vmlinux-4.19.46)
+>         ffffffff9f7787f2 schedule+0x32 (/boot/vmlinux-4.19.46)
+>         ffffffff9f77bb0a schedule_hrtimeout_range_clock+0x8a
+> (/boot/vmlinux-4.19.46)
+>         ffffffff9f22ea12 poll_schedule_timeout.constprop.6+0x42
+> (/boot/vmlinux-4.19.46)
+>         ffffffff9f22eeeb do_sys_poll+0x4ab (/boot/vmlinux-4.19.46)
+>         ffffffff9f22fb7b __se_sys_poll+0x5b (/boot/vmlinux-4.19.46)
+>         ffffffff9f0023de do_syscall_64+0x4e (/boot/vmlinux-4.19.46)
+>         ffffffff9f800088 entry_SYSCALL_64+0x68 (/boot/vmlinux-4.19.46)
+> ---
+> 
+> and with 4.19.75 perf with e5adfc3e7e77 reverted those empty call
+> stacks go away and also other call stacks show more thread details:
+> 
+> uvm:WorkerThread 26746 1810207.336391:          1 cycles:ppp:
+>         ffffffff9f181505 __perf_event_task_sched_in+0xd5
+> (/boot/vmlinux-4.19.46)
+>         ffffffff9f09a7b8 finish_task_switch+0x158 (/boot/vmlinux-4.19.46)
+>         ffffffff9f778276 __schedule+0x2f6 (/boot/vmlinux-4.19.46)
+>         ffffffff9f7787f2 schedule+0x32 (/boot/vmlinux-4.19.46)
+>         ffffffff9f77bb0a schedule_hrtimeout_range_clock+0x8a
+> (/boot/vmlinux-4.19.46)
+>         ffffffff9f22ea12 poll_schedule_timeout.constprop.6+0x42
+> (/boot/vmlinux-4.19.46)
+>         ffffffff9f22eeeb do_sys_poll+0x4ab (/boot/vmlinux-4.19.46)
+>         ffffffff9f22fb7b __se_sys_poll+0x5b (/boot/vmlinux-4.19.46)
+>         ffffffff9f0023de do_syscall_64+0x4e (/boot/vmlinux-4.19.46)
+>         ffffffff9f800088 entry_SYSCALL_64+0x68 (/boot/vmlinux-4.19.46)
+>             7f7ef3f5c90d [unknown] (/lib/x86_64-linux-gnu/libc-2.23.so)
+>                  3eb5c99 poll+0xc9 (inlined)
+>                  3eb5c99 colib::ipc::EventFd::wait+0xc9
+> (/usr/local/bin/app)
+>                  3296779 uvm::WorkerThread::run+0x129 (/usr/local/bin/app)
+>         ffffffffffffffff [unknown] ([unknown])
+> 
+> They also look the same as earlier kernel versions we have running.
+> 
+> In addition reading e8ba2906f6b's changelog sounded very similar to
+> what I was seeing. This application launches a # of threads and is
+> definitely already running before the invocation of perf.
+> 
+> Thanks for looking at this.
 
-[ Upstream commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37 ]
 
-When switching from any MMC speed mode that requires 1.8v
-(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
-ends up configured for SDR12 with a 50MHz clock which is an illegal
-mode.
-
-This happens because the SDHCI_CTRL_VDD_180 bit in the
-SDHCI_HOST_CONTROL2 register is left set and when this bit is
-set, the speed mode is controlled by the SDHCI_CTRL_UHS field
-in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
-will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
-because there is no UHS mode being set.
-
-The fix is to change sdhci_set_uhs_signaling() to set the
-SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
-any switch to HS mode.
-
-This was found on a new eMMC controller that does strict checking
-of the speed mode and the corresponding clock rate. It caused the
-switch to HS400 mode to fail because part of the sequence to switch
-to HS400 requires a switch from HS200 to HS before going to HS400.
-
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mmc/host/sdhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index df306caba296a..0347742a495a6 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1557,7 +1557,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
- 	else if (timing == MMC_TIMING_UHS_SDR12)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
--	else if (timing == MMC_TIMING_UHS_SDR25)
-+	else if (timing == MMC_TIMING_SD_HS ||
-+		 timing == MMC_TIMING_MMC_HS ||
-+		 timing == MMC_TIMING_UHS_SDR25)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
- 	else if (timing == MMC_TIMING_UHS_SDR50)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
--- 
-2.20.1
+So, if at __event__synthesize_thread()
 
 
+                if (pid == tgid &&
+                    perf_event__synthesize_mmap_events(tool, mmap_event, pid, tgid,
+                                                       process, machine, mmap_data))
 
+
+We did something like:
+
+	if (pid != tgid && machine__find_thread(tgid, tgid) == NULL) {
+		struct thread *t = thread__new(tgid, tgid);
+
+		then use the info for pid to get synthesize the thread
+                group leader so that the get the sharing we need?
+	}
+
+
+- Arnaldo
