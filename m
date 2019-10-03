@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D3EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451B6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2C02054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1705B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121465;
-	bh=M6VcYHds2t3Z7mJRluXiW0l6s3aloK5gfnKNOcKV3R4=;
+	s=default; t=1570121471;
+	bh=nXQIQUChDQTJepmXhuT4OoVw16fDzfRJkyUABc3APIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LAMrEp2hJ7TyBRh/cRspGYDIMwfC7D0Juqc2h21/7rZozAq/X4GagtLO29yqaABh
-	 DG/HQvao20ZrrXNLLf2FOKOuxzEHIVV9GbTPP5pU2wqql0uI4O/tTNfq+3dqHkM/Uv
-	 XnNurdruDrVsB4RrnsPwK6FeBw+OP3EO09Dl76uk=
+	b=RoajJqZh4OVUwpyakLUgUaOOm6KM8xy0RMyw/zctvH9W+yVZF4flrBA1T7W+YSCL5
+	 Reo31VAENHoPcj2dY0ICY5sTNVOn5n1dGG99FtSuLQ+KonHed7jMa1/q1vYofnYbR2
+	 w7vAT9lgozslpI5BexqBUqpslmoPutr8lWCDzntE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405988AbfJCQvD (ORCPT
+        id S2405992AbfJCQvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38260 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393016AbfJCQuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:54 -0400
+        id S2405146AbfJCQu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1274620865;
-        Thu,  3 Oct 2019 16:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 939B820865;
+        Thu,  3 Oct 2019 16:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121453;
-        bh=M6VcYHds2t3Z7mJRluXiW0l6s3aloK5gfnKNOcKV3R4=;
+        s=default; t=1570121459;
+        bh=nXQIQUChDQTJepmXhuT4OoVw16fDzfRJkyUABc3APIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nogjFYfSD5hBagKQT72iIEZRrYvpsYxQdVohVrPtnYyZ9il29OrdwXYPuvKwNTyIk
-         wDB+VrKnPQEViMnEOJ9ZfRwTXiPX4w1LtC41PKVA08ZJNQ16VMwXq3+8JPEVEhOu1O
-         CDuYwV2AvzdReNf3OJf0KJBROm5u/DMxSsWaUzj4=
+        b=txNQnknvRXHd2IBjLif/cvIggVGWZN3vEU9DjF0fXDkrOMkpWZv/OTGtEFkCgCMSq
+         m934wYGylGUZCfvaJw8Qu90g39+QdHmI1uapa40GEHpLLsRRWkIT13Rk1J5K5LuxML
+         d+Z5Lfv5dZwM0w0IintsJWeQIpPZ4LUuZvG8bJjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.3 284/344] iommu/arm-smmu-v3: Disable detection of ATS and PRI
-Date:   Thu,  3 Oct 2019 17:54:09 +0200
-Message-Id: <20191003154607.910791690@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.3 286/344] iommu/vt-d: Fix wrong analysis whether devices share the same bus
+Date:   Thu,  3 Oct 2019 17:54:11 +0200
+Message-Id: <20191003154608.066370067@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,45 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Nadav Amit <namit@vmware.com>
 
-commit b5e86196b83fd68e065a7c811ab8925fb0dc3893 upstream.
+commit 2c70010867f164d1b30e787e360e05d10cc40046 upstream.
 
-Detecting the ATS capability of the SMMU at probe time introduces a
-spinlock into the ->unmap() fast path, even when ATS is not actually
-in use. Furthermore, the ATC invalidation that exists is broken, as it
-occurs before invalidation of the main SMMU TLB which leaves a window
-where the ATC can be repopulated with stale entries.
+set_msi_sid_cb() is used to determine whether device aliases share the
+same bus, but it can provide false indications that aliases use the same
+bus when in fact they do not. The reason is that set_msi_sid_cb()
+assumes that pdev is fixed, while actually pci_for_each_dma_alias() can
+call fn() when pdev is set to a subordinate device.
 
-Given that ATS is both a new feature and a specialist sport, disable it
-for now whilst we fix it properly in subsequent patches. Since PRI
-requires ATS, disable that too.
+As a result, running an VM on ESX with VT-d emulation enabled can
+results in the log warning such as:
 
-Cc: <stable@vger.kernel.org>
-Fixes: 9ce27afc0830 ("iommu/arm-smmu-v3: Add support for PCI ATS")
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+  DMAR: [INTR-REMAP] Request device [00:11.0] fault index 3b [fault reason 38] Blocked an interrupt request due to source-id verification failure
+
+This seems to cause additional ata errors such as:
+  ata3.00: qc timeout (cmd 0xa1)
+  ata3.00: failed to IDENTIFY (I/O error, err_mask=0x4)
+
+These timeouts also cause boot to be much longer and other errors.
+
+Fix it by checking comparing the alias with the previous one instead.
+
+Fixes: 3f0c625c6ae71 ("iommu/vt-d: Allow interrupts from the entire bus for aliased devices")
+Cc: stable@vger.kernel.org
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/arm-smmu-v3.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/intel_irq_remapping.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2843,11 +2843,13 @@ static int arm_smmu_device_hw_probe(stru
- 	}
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -376,13 +376,13 @@ static int set_msi_sid_cb(struct pci_dev
+ {
+ 	struct set_msi_sid_data *data = opaque;
  
- 	/* Boolean feature flags */
-+#if 0	/* ATS invalidation is slow and broken */
- 	if (IS_ENABLED(CONFIG_PCI_PRI) && reg & IDR0_PRI)
- 		smmu->features |= ARM_SMMU_FEAT_PRI;
++	if (data->count == 0 || PCI_BUS_NUM(alias) == PCI_BUS_NUM(data->alias))
++		data->busmatch_count++;
++
+ 	data->pdev = pdev;
+ 	data->alias = alias;
+ 	data->count++;
  
- 	if (IS_ENABLED(CONFIG_PCI_ATS) && reg & IDR0_ATS)
- 		smmu->features |= ARM_SMMU_FEAT_ATS;
-+#endif
+-	if (PCI_BUS_NUM(alias) == pdev->bus->number)
+-		data->busmatch_count++;
+-
+ 	return 0;
+ }
  
- 	if (reg & IDR0_SEV)
- 		smmu->features |= ARM_SMMU_FEAT_SEV;
 
 
