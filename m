@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDDC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1490DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A924720865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DEB20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123145;
-	bh=J4T6+B81gkpI9TCDtnorHdYhOeqwjXSYR9zZtDyn2aI=;
+	s=default; t=1570123147;
+	bh=ou04+K90P77FEjz3NVJiDUkWPy03xWDaNgpyoEq38D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QviSHVDr4Q1hXWeZ1hTZl9qyG/tEPWFNe8ZWmQw9RX8UGIyeXD+32KKBD8qeZVVs9
-	 b0VYIX3fYNqda81zU3LrY3N6vBEyeRxaawxbHKhKaj7ggTKrPpWEPCTNcnRShTgHYE
-	 k8DFLKom89LWtR0dKvMsA0TdKwXYYn91QjQjsd0Q=
+	b=roSEiB2B3LjiINkE62DGTR1gmiMKwxsx3yh0AEf/aKw/2rno6S4KFq2svbLajNGjt
+	 atss7ZwKbxEYFwriocNszwflLiQlBpn9kJ56I9tOPqouFQRl3QhIy16QdHvqjPxjhp
+	 qUCewFjG6EQZCJFXwF72vLA5sDgsDi79Z4C7GRWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389905AbfJCRTF (ORCPT
+        id S2390363AbfJCRTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:19:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389850AbfJCQUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:14 -0400
+        id S2387531AbfJCQVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E5F22054F;
-        Thu,  3 Oct 2019 16:20:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E529A20865;
+        Thu,  3 Oct 2019 16:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119613;
-        bh=J4T6+B81gkpI9TCDtnorHdYhOeqwjXSYR9zZtDyn2aI=;
+        s=default; t=1570119690;
+        bh=ou04+K90P77FEjz3NVJiDUkWPy03xWDaNgpyoEq38D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k2C4FMmwsMxPdf5liN/TObcI9X9x3BglL2n0aBWGpG1GGcLyaLTzO+otiskbLKwcN
-         hc2MPjzI/p7NoT81FLtlFAozZyeAigxFyI2LUzyxWtXIJnuJrn4A8buMdQH1jQo74R
-         6rVcyt94pggWvV/XRX8P8OLlpHs4K/YIUTFORIQU=
+        b=hDp6Q36fTgUooBwpG39/M2SguPfiUsvqmVtOeLIAVxaKdfBig18WAvmlwpG2364mF
+         W/hIb3YSkCNBdnHV/KhCxLcXvHG4mSXCk1UIe9tTPtf3HEMbYXrABub54sfzWvS81I
+         dGBLQoAMAhElYWBcBAm6Qd3AY/hYyjdFFT4pK98c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jinyu Qi <jinyuqi@huawei.com>, Joerg Roedel <jroedel@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 130/211] platform/x86: intel_pmc_core: Do not ioremap RAM
-Date:   Thu,  3 Oct 2019 17:53:16 +0200
-Message-Id: <20191003154516.641195729@linuxfoundation.org>
+Subject: [PATCH 4.19 118/211] iommu/iova: Avoid false sharing on fq_timer_on
+Date:   Thu,  3 Oct 2019 17:53:04 +0200
+Message-Id: <20191003154514.237490697@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,61 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: M. Vefa Bicakci <m.v.b@runbox.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
+[ Upstream commit 0d87308cca2c124f9bce02383f1d9632c9be89c4 ]
 
-On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
-intel_pmc_core fails initialization with the following warning message
-from the kernel, indicating that the driver is attempting to ioremap
-RAM:
+In commit 14bd9a607f90 ("iommu/iova: Separate atomic variables
+to improve performance") Jinyu Qi identified that the atomic_cmpxchg()
+in queue_iova() was causing a performance loss and moved critical fields
+so that the false sharing would not impact them.
 
-  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
-  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
-...
-  Call Trace:
-   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
-   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+However, avoiding the false sharing in the first place seems easy.
+We should attempt the atomic_cmpxchg() no more than 100 times
+per second. Adding an atomic_read() will keep the cache
+line mostly shared.
 
-This issue appears to manifest itself because of the following fallback
-mechanism in the driver:
+This false sharing came with commit 9a005a800ae8
+("iommu/iova: Add flush timer").
 
-	if (lpit_read_residency_count_address(&slp_s0_addr))
-		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-
-The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
-verified by the driver, which is what this patch introduces. With this
-patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
-not attempt to ioremap the aforementioned address.
-
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 9a005a800ae8 ('iommu/iova: Add flush timer')
+Cc: Jinyu Qi <jinyuqi@huawei.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 088d1c2047e6b..36bd2545afb62 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -685,10 +685,14 @@ static int __init pmc_core_probe(void)
- 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
- 		pmcdev->map = &cnp_reg_map;
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 9a576ae837dcb..da4516fbf5425 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -580,7 +580,9 @@ void queue_iova(struct iova_domain *iovad,
  
--	if (lpit_read_residency_count_address(&slp_s0_addr))
-+	if (lpit_read_residency_count_address(&slp_s0_addr)) {
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
--	else
-+
-+		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
-+			return -ENODEV;
-+	} else {
- 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
-+	}
+ 	spin_unlock_irqrestore(&fq->lock, flags);
  
- 	pmcdev->regbase = ioremap(pmcdev->base_addr,
- 				  pmcdev->map->regmap_length);
+-	if (atomic_cmpxchg(&iovad->fq_timer_on, 0, 1) == 0)
++	/* Avoid false sharing as much as possible. */
++	if (!atomic_read(&iovad->fq_timer_on) &&
++	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
+ 		mod_timer(&iovad->fq_timer,
+ 			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
+ }
 -- 
 2.20.1
 
