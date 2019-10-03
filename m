@@ -2,96 +2,93 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF873ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085A4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3C320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D2921A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570124528;
+	bh=0RTc05l2gYj4ZmdMElNObqKBp2zeliCT/z+ZyWPo8yc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fn831mGwJrkxPe7FleLWQ6Uwh4e8ZFutH/AOCp1xaZN3SJPy8Gh+Hr//a0ZeoE8fM
+	 kVYY0bprx0snZ+k4ORS1KIDks+8BQCjwb45Fl3U4Sx4uc0fRcA8GQMT9gkgPefc1ef
+	 dTuge4M+tjYN+EgKS+8rgd3ly4Y6A/Jemt2kVkB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390322AbfJCRmC (ORCPT
+        id S1729359AbfJCP5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:42:02 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:39776 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731045AbfJCRl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:41:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Te19PA9_1570124498;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Te19PA9_1570124498)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 04 Oct 2019 01:41:56 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mgorman@techsingularity.net, hannes@cmpxchg.org, mhocko@suse.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: vmscan: remove unused scan_control parameter from pageout()
-Date:   Fri,  4 Oct 2019 01:41:38 +0800
-Message-Id: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 3 Oct 2019 11:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730989AbfJCP5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:57:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 465BA20830;
+        Thu,  3 Oct 2019 15:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118254;
+        bh=0RTc05l2gYj4ZmdMElNObqKBp2zeliCT/z+ZyWPo8yc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uWmTHRW23FgjPtnhTQTBmELizKD5j1ZQlupqGxwCSwo7odzzj9xtBmY+eOH2rpqfw
+         ES1Y7Mnjb6Zwz/Hca2jLm7SSOQ9HnDo6i/vEhAMUIsamuHcYkii+g1Ar4cIJDEJB2u
+         PY/D0jZvsLTC11cfBSarG2/C/IHNfURUWBZApoFw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 07/99] crypto: talitos - fix missing break in switch statement
+Date:   Thu,  3 Oct 2019 17:52:30 +0200
+Message-Id: <20191003154256.015612973@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+References: <20191003154252.297991283@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since lumpy reclaim was removed in v3.5 scan_control is not used by
-may_write_to_{queue|inode} and pageout() anymore, remove the unused
-parameter.
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+commit 5fc194ea6d34dfad9833d3043ce41d6c52aff39a upstream.
+
+Add missing break statement in order to prevent the code from falling
+through to case CRYPTO_ALG_TYPE_AHASH.
+
+Fixes: aeb4c132f33d ("crypto: talitos - Convert to new AEAD interface")
+Cc: stable@vger.kernel.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- mm/vmscan.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/crypto/talitos.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index e5d52d6..17489b8 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -774,7 +774,7 @@ static inline int is_page_cache_freeable(struct page *page)
- 	return page_count(page) - page_has_private(page) == 1 + page_cache_pins;
- }
- 
--static int may_write_to_inode(struct inode *inode, struct scan_control *sc)
-+static int may_write_to_inode(struct inode *inode)
- {
- 	if (current->flags & PF_SWAPWRITE)
- 		return 1;
-@@ -822,8 +822,7 @@ static void handle_write_error(struct address_space *mapping,
-  * pageout is called by shrink_page_list() for each dirty page.
-  * Calls ->writepage().
-  */
--static pageout_t pageout(struct page *page, struct address_space *mapping,
--			 struct scan_control *sc)
-+static pageout_t pageout(struct page *page, struct address_space *mapping)
- {
- 	/*
- 	 * If the page is dirty, only perform writeback if that write
-@@ -859,7 +858,7 @@ static pageout_t pageout(struct page *page, struct address_space *mapping,
- 	}
- 	if (mapping->a_ops->writepage == NULL)
- 		return PAGE_ACTIVATE;
--	if (!may_write_to_inode(mapping->host, sc))
-+	if (!may_write_to_inode(mapping->host))
- 		return PAGE_KEEP;
- 
- 	if (clear_page_dirty_for_io(page)) {
-@@ -1396,7 +1395,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			 * starts and then write it out here.
- 			 */
- 			try_to_unmap_flush_dirty();
--			switch (pageout(page, mapping, sc)) {
-+			switch (pageout(page, mapping)) {
- 			case PAGE_KEEP:
- 				goto keep_locked;
- 			case PAGE_ACTIVATE:
--- 
-1.8.3.1
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -2730,6 +2730,7 @@ static int talitos_remove(struct platfor
+ 			break;
+ 		case CRYPTO_ALG_TYPE_AEAD:
+ 			crypto_unregister_aead(&t_alg->algt.alg.aead);
++			break;
+ 		case CRYPTO_ALG_TYPE_AHASH:
+ 			crypto_unregister_ahash(&t_alg->algt.alg.hash);
+ 			break;
+
 
