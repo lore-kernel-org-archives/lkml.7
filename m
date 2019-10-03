@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13180C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0664AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79D2215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD76221783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119516;
-	bh=audjmHFkn6owmybGafMOtOI0Qdga+AxlxVfZCPjyW74=;
+	s=default; t=1570119524;
+	bh=2RCEg7l97LRwKRzZakcVXzs9bT+W5NfSG1bK1ShynnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNGRd9tfya0abjCseAvRccKD09/bvORwjieULZ2MzCtLBbuv0Osn2eNiwhVEu7wy/
-	 S3AE9gL4d8uaHkiKgPZ2J/nq3QcMYzdo9zYVVPLy5Pu28Af4eLPliwc9/EscucrLEr
-	 0ExQdyy+t5fJqjyEoG8cMPL+3yw8jLzQwKQOeU0U=
+	b=xoJI8Kxsk20m+1xaCYfjz3kzFTkw3UuwmZo+9HfG42x12ZCVPJ6MNq/5jMmrDKumW
+	 jgCwcJu97XaxWf5APKIE74ZNjP86H/hAdUYjRQFZKSk7jxLSC0fnEgOA3M515As52T
+	 XFqWCwyJ8DVzrYeiJ5pJmfC1CB+IGf8VBxF49BrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389369AbfJCQSg (ORCPT
+        id S2389613AbfJCQSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389515AbfJCQSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:18:32 -0400
+        id S2388699AbfJCQSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:18:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3AAA20865;
-        Thu,  3 Oct 2019 16:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94FF121783;
+        Thu,  3 Oct 2019 16:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119512;
-        bh=audjmHFkn6owmybGafMOtOI0Qdga+AxlxVfZCPjyW74=;
+        s=default; t=1570119520;
+        bh=2RCEg7l97LRwKRzZakcVXzs9bT+W5NfSG1bK1ShynnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1VYpndM3kAmpGR/ef7swSeaYwClCsOor5sO/OEitwXVC3i6qn6MHWoFFI0DS91j2X
-         1rGQ7Xp36yGvUlILz5ggopxoAmHsrFjsGDAHWcG3LElkp9RlhBgF9hPcaqR7IEOxPM
-         47CC01yNWcy+St+9dRySdaAqvjP6/x8HD16ej79s=
+        b=b1SH7jgcqdh1GhHsAfZn6W3ioQMYJCeaLjd1OGexssiYgIVpOK98spcGgBADZxKyE
+         /F6+c0lYzKMC0+wMJwFSLNGWeKymA7m7uA3HsMVnIhSFLI1hQjfRCDbat1AWhC9XBW
+         8relT58mU/dB9MwQHpsRnzfALkFfGUsOq7PRMnxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/211] posix-cpu-timers: Sanitize bogus WARNONS
-Date:   Thu,  3 Oct 2019 17:52:38 +0200
-Message-Id: <20191003154508.098114396@linuxfoundation.org>
+Subject: [PATCH 4.19 095/211] EDAC/amd64: Recognize DRAM device type ECC capability
+Date:   Thu,  3 Oct 2019 17:52:41 +0200
+Message-Id: <20191003154508.721172968@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,95 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-[ Upstream commit 692117c1f7a6770ed41dd8f277cd9fed1dfb16f1 ]
+[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
 
-Warning when p == NULL and then proceeding and dereferencing p does not
-make any sense as the kernel will crash with a NULL pointer dereference
-right away.
+AMD Family 17h systems support x4 and x16 DRAM devices. However, the
+device type is not checked when setting mci.edac_ctl_cap.
 
-Bailing out when p == NULL and returning an error code does not cure the
-underlying problem which caused p to be NULL. Though it might allow to
-do proper debugging.
+Set the appropriate capability flag based on the device type.
 
-Same applies to the clock id check in set_process_cpu_timer().
+Default to x8 DRAM device when neither the x4 or x16 bits are set.
 
-Clean them up and make them return without trying to do further damage.
+ [ bp: reverse cpk_en check to save an indentation level. ]
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190819143801.846497772@linutronix.de
+Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/posix-cpu-timers.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/edac/amd64_edac.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index 76801b9b481eb..d62d7ae5201c5 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -375,7 +375,8 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
- 	struct sighand_struct *sighand;
- 	struct task_struct *p = timer->it.cpu.task;
- 
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return -EINVAL;
- 
- 	/*
- 	 * Protect against sighand release/switch in exit/exec and process/
-@@ -580,7 +581,8 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	u64 old_expires, new_expires, old_incr, val;
- 	int ret;
- 
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return -EINVAL;
- 
- 	/*
- 	 * Use the to_ktime conversion because that clamps the maximum
-@@ -716,10 +718,11 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 
- static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index e2addb2bca296..1613df20774f9 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3101,12 +3101,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
+ static inline void
+ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
  {
--	u64 now;
- 	struct task_struct *p = timer->it.cpu.task;
-+	u64 now;
+-	u8 i, ecc_en = 1, cpk_en = 1;
++	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
  
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return;
- 
- 	/*
- 	 * Easy part: convert the reload time.
-@@ -1004,12 +1007,13 @@ static void check_process_timers(struct task_struct *tsk,
-  */
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
- {
-+	struct task_struct *p = timer->it.cpu.task;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
--	struct task_struct *p = timer->it.cpu.task;
- 	u64 now;
- 
--	WARN_ON_ONCE(p == NULL);
-+	if (WARN_ON_ONCE(!p))
-+		return;
- 
- 	/*
- 	 * Fetch the current sample and update the timer's expiry time.
-@@ -1206,7 +1210,9 @@ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
- 	u64 now;
- 	int ret;
- 
--	WARN_ON_ONCE(clock_idx == CPUCLOCK_SCHED);
-+	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
-+		return;
+ 	for (i = 0; i < NUM_UMCS; i++) {
+ 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
+ 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
+ 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
 +
- 	ret = cpu_timer_sample_group(clock_idx, tsk, &now);
++			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
++			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
+ 		}
+ 	}
  
- 	if (oldval && ret != -EINVAL) {
+@@ -3114,8 +3117,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
+ 	if (ecc_en) {
+ 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
+ 
+-		if (cpk_en)
++		if (!cpk_en)
++			return;
++
++		if (dev_x4)
+ 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
++		else if (dev_x16)
++			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
++		else
++			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
+ 	}
+ }
+ 
 -- 
 2.20.1
 
