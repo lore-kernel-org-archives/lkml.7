@@ -2,52 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B0EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF233C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A360F20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F5D20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123936;
-	bh=+sq7UOoftRS0d722fihLEmSMnax7EZbAphnxL6t4f28=;
+	s=default; t=1570123939;
+	bh=Nv9twrohaHZFYlosBKimIU3ZsQQJywuxTEEXDKqmwPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UzCHFGgZdaED8OTJpj9ZGj9k/ni6exsWKOreQ3YVhS99Dd9nbaeridBsPyKsNt4n0
-	 p6K7F2Az34XDHtwhmTApaKn62Fu08JQ7KQI98AlmtYevnxn5SIf7Isslm7/zuzJCxX
-	 hbs9MDrkbu+OaqH5aSufeIDNsJsRPXz0M46vQfFI=
+	b=j96zCPzeExtfJmw4b5jvZmcdaRbBJFB0RxTE9e/DDA9BwjUCcCZHCLnOVu5hR4aij
+	 Qm+XGvwU/6z5lJMkQOkT8EMOM1JH98hWRggNNSlKGdFk4P1BG+SUKZ1mFoZqM2JtmU
+	 djvxxLgdSqYRat1vTBWEv7Q6NbPsAhzRAwoQVE1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731447AbfJCQJF (ORCPT
+        id S1731861AbfJCRcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731034AbfJCQJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:01 -0400
+        id S1729041AbfJCQJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1151A207FF;
-        Thu,  3 Oct 2019 16:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22ACC207FF;
+        Thu,  3 Oct 2019 16:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118940;
-        bh=+sq7UOoftRS0d722fihLEmSMnax7EZbAphnxL6t4f28=;
+        s=default; t=1570118948;
+        bh=Nv9twrohaHZFYlosBKimIU3ZsQQJywuxTEEXDKqmwPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CiPhcb2YlH/iJO1VgknX+chHBsMHlKYCDf2weh3nU23roU7Ks6jLwNMYWoiqBwS4W
-         fOO9huhze4cvSQwRTvuAKIw8UjWq6J5Mn3aM2fdpIm4qS26VnakaaMxkzF5a5VcMB/
-         Y3e3yiW5lJOJkRA8vg1q5fD4bgB9v2HpcPhJpQgo=
+        b=bf7iHA+7Ii77ipkXl71zIhImXJywu1t7/ini5qAlEWzAnr3CZcJ3xkOnrQPK39ihT
+         12YAZZ8XV8kAoeU0f+4xEacwnCuw8aMd3IExs9tps942NXceskXFbCzWOzQwTkcMRl
+         95jOTnLqkFzZY8UjlSrZ0KO1GH28b99xW6M3B4FA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/185] x86/apic: Soft disable APIC before initializing it
-Date:   Thu,  3 Oct 2019 17:52:24 +0200
-Message-Id: <20191003154452.367565793@linuxfoundation.org>
+        stable@vger.kernel.org, Takeshi Misawa <jeliantsurux@gmail.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 042/185] ppp: Fix memory leak in ppp_write
+Date:   Thu,  3 Oct 2019 17:52:00 +0200
+Message-Id: <20191003154447.350820927@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,47 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Takeshi Misawa <jeliantsurux@gmail.com>
 
-[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
+[ Upstream commit 4c247de564f1ff614d11b3bb5313fb70d7b9598b ]
 
-If the APIC was already enabled on entry of setup_local_APIC() then
-disabling it soft via the SPIV register makes a lot of sense.
+When ppp is closing, __ppp_xmit_process() failed to enqueue skb
+and skb allocated in ppp_write() is leaked.
 
-That masks all LVT entries and brings it into a well defined state.
+syzbot reported :
+BUG: memory leak
+unreferenced object 0xffff88812a17bc00 (size 224):
+  comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d110fff9>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
+    [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
+    [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
+    [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
+    [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
+    [<000000000167fc45>] ppp_write+0x48/0x120 drivers/net/ppp/ppp_generic.c:502
+    [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+    [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
+    [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
+    [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
+    [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
+    [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
+    [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+    [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
+    [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Otherwise previously enabled LVTs which are not touched in the setup
-function stay unmasked and might surprise the just booting kernel.
+Fix this by freeing skb, if ppp is closing.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 6d066734e9f0 ("ppp: avoid loop in xmit recursion detection code")
+Reported-and-tested-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
+Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Tested-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/apic/apic.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ppp/ppp_generic.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index f8f9cfded97d3..ea2de324ab021 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1384,6 +1384,14 @@ void setup_local_APIC(void)
- 		return;
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -1433,6 +1433,8 @@ static void __ppp_xmit_process(struct pp
+ 			netif_wake_queue(ppp->dev);
+ 		else
+ 			netif_stop_queue(ppp->dev);
++	} else {
++		kfree_skb(skb);
  	}
- 
-+	/*
-+	 * If this comes from kexec/kcrash the APIC might be enabled in
-+	 * SPIV. Soft disable it before doing further initialization.
-+	 */
-+	value = apic_read(APIC_SPIV);
-+	value &= ~APIC_SPIV_APIC_ENABLED;
-+	apic_write(APIC_SPIV, value);
-+
- #ifdef CONFIG_X86_32
- 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
- 	if (lapic_is_integrated() && apic->disable_esr) {
--- 
-2.20.1
-
+ 	ppp_xmit_unlock(ppp);
+ }
 
 
