@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC04C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C61C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE9020862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2796D20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124103;
-	bh=rBfg1VHZ1ulI3RU63dveim5KDxRhoNFTWRrE5Xe8CFg=;
+	s=default; t=1570124104;
+	bh=WFPSs1XY6ltViKwCO9RVIRh0ygbXm+W+QOBH+Hvw6PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4GRR8ye830u0G3qBwkJzfFAxFh4vKFM+m11ap2qdxoRw+ANSY4tdVsbe3tRrkp1P
-	 GymMqNOkxfzPGmmoM4ORYZ4wWDkgItd4J/R+8f5SKNdhiTjyi9X/gRo6NhsJ0SdEGR
-	 xrhh6CkaRpo0h3FPsEgzQOGgmh10Flyr9WW4fodQ=
+	b=VzHGEW+U0KljR5fCNOyJYIG+Ymf33pWhu0FgUD8OlfgeuZNyg7uyHJZ6t69fj2hAi
+	 Qfkvhrg/BiMtXbd87QzsCKiK/IvEvEmyGgiKE2XdZ2S2wl64YYpGPRPU8NpCvsISyZ
+	 MHVsNmDd+IjG7fhJS3n0ID8546HuU+gVNoRg4bzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732833AbfJCQGs (ORCPT
+        id S1732821AbfJCQGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54198 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:06:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732808AbfJCQGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:06:45 -0400
+        id S1730325AbfJCQGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:06:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20D3207FF;
-        Thu,  3 Oct 2019 16:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623F920865;
+        Thu,  3 Oct 2019 16:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118804;
-        bh=rBfg1VHZ1ulI3RU63dveim5KDxRhoNFTWRrE5Xe8CFg=;
+        s=default; t=1570118801;
+        bh=WFPSs1XY6ltViKwCO9RVIRh0ygbXm+W+QOBH+Hvw6PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMBFkm3XVSQNmyAEGCdh4RM+LLY2+oKUd3ziEZZkuBvz+oqyQS/bk87OGGt5MuUgd
-         CqMTHkFNQTPS6EYYWZ8xjJ68LuwyMA2mt/TBY8iobrQCGswm7O4n7VXn7/9euUnol2
-         pS0K/7Cqo/cZu8TzrVN5qLpPUljBqU5YHt8xTJSU=
+        b=hubPOXQeOOj/3gKdzpAyJOWV+4gIdV/I5nCTB560tTjqxzaB80sDCScLQk6zK/87G
+         JKYXGugc0OlsEoXj3hxzeiVpOYliBOE8TDnzeAZuufR75HrFjgi8dTbexxZHtIV0ko
+         5zxw2VOqGNzSYqGPEVXiMcUss/rOrbB/gh2bg5oI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Dennis Padiernos <depadiernos@gmail.com>
-Subject: [PATCH 4.14 016/185] ALSA: hda - Apply AMD controller workaround for Raven platform
-Date:   Thu,  3 Oct 2019 17:51:34 +0200
-Message-Id: <20191003154441.189849859@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Shih-Yuan Lee (FourDollars)" <fourdollars@debian.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 015/185] ALSA: hda - Add laptop imic fixup for ASUS M9V laptop
+Date:   Thu,  3 Oct 2019 17:51:33 +0200
+Message-Id: <20191003154440.905045441@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,37 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
 
-commit d2c63b7dfd06788a466d5ec8a850491f084c5fc2 upstream.
+commit 7b485d175631be676424aedb8cd2f66d0c93da78 upstream.
 
-It's reported that the garbled sound on HP Envy x360 13z-ag000 (Ryzen
-Laptop) is fixed by the same workaround applied to other AMD chips.
-Update the driver_data entry for Raven (1022:15e3) to use the newly
-introduced preset, AZX_DCAPS_PRESET_AMD_SB.  Since it already contains
-AZX_DCAPS_PM_RUNTIME, we can drop that bit, too.
+The same fixup to enable laptop imic is needed for ASUS M9V with AD1986A
+codec like another HP machine.
 
-Reported-and-tested-by: Dennis Padiernos <depadiernos@gmail.com>
+Signed-off-by: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190920073040.31764-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20190920134052.GA8035@localhost
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/pci/hda/patch_analog.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2586,8 +2586,7 @@ static const struct pci_device_id azx_id
- 			 AZX_DCAPS_PM_RUNTIME },
- 	/* AMD Raven */
- 	{ PCI_DEVICE(0x1022, 0x15e3),
--	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_SB |
--			 AZX_DCAPS_PM_RUNTIME },
-+	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
- 	/* ATI HDMI */
- 	{ PCI_DEVICE(0x1002, 0x0002),
- 	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS },
+--- a/sound/pci/hda/patch_analog.c
++++ b/sound/pci/hda/patch_analog.c
+@@ -370,6 +370,7 @@ static const struct hda_fixup ad1986a_fi
+ 
+ static const struct snd_pci_quirk ad1986a_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x30af, "HP B2800", AD1986A_FIXUP_LAPTOP_IMIC),
++	SND_PCI_QUIRK(0x1043, 0x1153, "ASUS M9V", AD1986A_FIXUP_LAPTOP_IMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1443, "ASUS Z99He", AD1986A_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1043, 0x1447, "ASUS A8JN", AD1986A_FIXUP_EAPD),
+ 	SND_PCI_QUIRK_MASK(0x1043, 0xff00, 0x8100, "ASUS P5", AD1986A_FIXUP_3STACK),
 
 
