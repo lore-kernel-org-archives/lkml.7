@@ -2,117 +2,98 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0FCC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9C3C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A392086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124395;
-	bh=CknWvKtX5BmSgd+yGV+0i6mZncWjE5nHtScPrEPnwYs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjCpuGEcpcpuolrpr2zhwxD7S9siBw+C1BduNOOaEJ84m7Gv96QqMYeEJ61oXCUiC
-	 6IOLOrnC++8N2bG0L011znqKadIO3H+UVChNoZ2Qh7UBjjIeUV6Z9qLCyinYNxokx/
-	 gDzvzpEV3jM3/bMd/ibzMA1OlY31/cWJuWZgnULE=
+	by mail.kernel.org (Postfix) with ESMTP id 199692133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731641AbfJCQAv (ORCPT
+        id S1730699AbfJCQAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:47794 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730115AbfJCQAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00E721D81;
-        Thu,  3 Oct 2019 16:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118446;
-        bh=CknWvKtX5BmSgd+yGV+0i6mZncWjE5nHtScPrEPnwYs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vesGmSXDxf1VoIZHbnm/cZD6SqA6G/4jKgd0JAOOFfRCBM403/lGE6jYvgqs8Y34k
-         mcREor9TkOdyOoSD9b9r57/N9QG8MST6qacVs1eg4RQNIw3H0fYtDVt0FmTK3Tc1Ly
-         lUzoOfTmytSk8yrhS9PHa0KTzRe6vo5vJluobv30=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 015/129] locking/lockdep: Add debug_locks check in __lock_downgrade()
-Date:   Thu,  3 Oct 2019 17:52:18 +0200
-Message-Id: <20191003154325.692683799@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-References: <20191003154318.081116689@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730237AbfJCQAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DDCA337;
+        Thu,  3 Oct 2019 09:00:45 -0700 (PDT)
+Received: from arrakis.emea.arm.com (unknown [10.1.196.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E40B13F739;
+        Thu,  3 Oct 2019 09:00:43 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 17:00:41 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        will@kernel.org, tglx@linutronix.de, luto@kernel.org
+Subject: Re: [PATCH v4 1/6] arm64: vdso32: Fix syncconfig errors.
+Message-ID: <20191003160041.GI21629@arrakis.emea.arm.com>
+References: <20191002144156.2174-1-vincenzo.frascino@arm.com>
+ <20191002144156.2174-2-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002144156.2174-2-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+On Wed, Oct 02, 2019 at 03:41:51PM +0100, Vincenzo Frascino wrote:
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Reported-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Tested-by: Catalin Marinas <catalin.marinas@arm.com>
 
-[ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
+If you changed the patch, please drop my reviewed/tested-by.
 
-Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-warning right after a previous lockdep warning. It is likely that the
-previous warning turned off lock debugging causing the lockdep to have
-inconsistency states leading to the lock downgrade warning.
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 84a3d502c5a5..dfa6a5cb99e4 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -53,20 +53,12 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
+>    endif
+>  endif
+>  
+> +COMPATCC ?= $(CROSS_COMPILE_COMPAT)gcc
+> +export COMPATCC
+> +
+>  ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
+> -  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
+> -
+> -  ifeq ($(CONFIG_CC_IS_CLANG), y)
+> -    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
+> -  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
+> -    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
+> -  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
+> -    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
+> -  else
+> -    export CROSS_COMPILE_COMPAT
+> -    export CONFIG_COMPAT_VDSO := y
+> -    compat_vdso := -DCONFIG_COMPAT_VDSO=1
+> -  endif
+> +  export CONFIG_COMPAT_VDSO := y
+> +  compat_vdso := -DCONFIG_COMPAT_VDSO=1
+>  endif
 
-Fix that by add a check for debug_locks at the beginning of
-__lock_downgrade().
+With this change, if I don't have any CROSS_COMPILE_COMPAT in my
+environment, the kernel fails to build because COMPATCC becomes gcc
+which cannot build the vdso32. What I really want is not to warn me, nor
+fail to build the kernel when I don't care about the compat vDSO (e.g. I
+have a 64-bit only machine).
 
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/locking/lockdep.c | 3 +++
- 1 file changed, 3 insertions(+)
+What saved us before was the COMPATCC_IS_ARM_GCC check and a selection
+of the GENERIC_COMPAT_VDSO dependent on this check. This was now dropped
+from the previous version of the patch. We could add something like
+COMPATCC_CAN_LINK.
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4b27aaffdf352..d7f425698a4a1 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3446,6 +3446,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 	unsigned int depth;
- 	int i;
- 
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
 -- 
-2.20.1
-
-
-
+Catalin
