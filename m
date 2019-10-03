@@ -2,136 +2,177 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1243C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72012086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570126643;
-	bh=2gR1/8+6KNwuus/1iRi4DzDZpIjwjP8+/ENL9EsUrBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZZY4z31OJ/mkFMnfhjIJ0NjS6Vg1KnPxAkRKnCMzrMGHuXF8RQpyWTxRQ9oLR1ygg
-	 zWydLFtXHB1veOsaKKhIF2nVA4XOMbWnMSwV/OtnaAH+DrXQ2nGs7rgK91Akg+NKoL
-	 2H4w0Hdvse4uVdEXosjpq5vzixk6fYDKcu812SI4=
+	by mail.kernel.org (Postfix) with ESMTP id D0ACE20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B1MkE0cI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ceR0uFZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388094AbfJCSRX (ORCPT
+        id S2388149AbfJCSRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387457AbfJCSRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:17:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C42520830;
-        Thu,  3 Oct 2019 18:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570126639;
-        bh=2gR1/8+6KNwuus/1iRi4DzDZpIjwjP8+/ENL9EsUrBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C8skyptaKj2C0GOXHC+F/bb/LQlqvF5p2Gxl/WiAEhiJc+P8mH+HtVU0FS7AfXlDE
-         IyMPk0ZgVtTXuE16o/XX5hLs7AKCUrLVDMWR4Qxs933IssaYahV2YE6xH58E0AtelP
-         TVNcoqT+GXEOeD7GrgilFwPcKzUydmmSwgNAfi4M=
-Date:   Thu, 3 Oct 2019 20:17:17 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac@vger.kernel.org, x86@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.2 078/313] RAS: Fix prototype warnings
-Message-ID: <20191003181717.GB3457141@kroah.com>
-References: <20191003154533.590915454@linuxfoundation.org>
- <20191003154540.526612763@linuxfoundation.org>
- <20191003164527.GB11675@zn.tnic>
+        Thu, 3 Oct 2019 14:17:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55136 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731113AbfJCSRo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:17:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5281E60112; Thu,  3 Oct 2019 18:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570126662;
+        bh=xIqGqW0piKiXUEqR/RPS5JaWIHumHlqdtcjkLnL5uH8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B1MkE0cIx5kNzPL7VzqfuaywF4O4399544rZoFcRj1d+HXWwQiemu6nBSRc81nBgQ
+         42IsRZbwmDM2ZLg98JPtr/lIvaCEvqSRfB/Mw0iSQRJkOxvhODbCjlh5oHY/YnQDVx
+         f2nBRI7gt3ur56gpIAyLpiwtaN0W5keO8PcJ/Hk8=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 0587B60112;
+        Thu,  3 Oct 2019 18:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570126660;
+        bh=xIqGqW0piKiXUEqR/RPS5JaWIHumHlqdtcjkLnL5uH8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ceR0uFZFvg7YiG94VsMZQHuxWzrPrKkG3DHt0nbfPwoFKq4muZCdgi8jhy1adG+r0
+         CilfgCJ6ahfzK5CBuBuY1J1DxIaabRinKaZ405sHJbKUn2RcGaLmcyo8r7Wzq/dBuc
+         X4Y8To2O0+RotsF52BviWWHqkewTzU3HnVEn43jI=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003164527.GB11675@zn.tnic>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 03 Oct 2019 11:17:39 -0700
+From:   mnalajal@codeaurora.org
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     rafael@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
+In-Reply-To: <20191003070502.GB1814133@kroah.com>
+References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
+ <20191003070502.GB1814133@kroah.com>
+Message-ID: <dd126bd256feb2e32f38409b2a7ba5cc@codeaurora.org>
+X-Sender: mnalajal@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 06:45:27PM +0200, Borislav Petkov wrote:
-> On Thu, Oct 03, 2019 at 05:50:56PM +0200, Greg Kroah-Hartman wrote:
-> > From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-> > 
-> > [ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
-> > 
-> > When building with C=2 and/or W=1, legitimate warnings are issued about
-> > missing prototypes:
-> > 
-> >     CHECK   drivers/ras/debugfs.c
-> >   drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
-> >   drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
-> >   drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
-> >   drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
-> >     CC      drivers/ras/debugfs.o
-> >   drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
-> >       8 | int ras_userspace_consumers(void)
-> >         |     ^~~~~~~~~~~~~~~~~~~~~~~
-> >   drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
-> >      38 | int __init ras_add_daemon_trace(void)
-> >         |            ^~~~~~~~~~~~~~~~~~~~
-> >   drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
-> >      54 | void __init ras_debugfs_init(void)
-> >         |             ^~~~~~~~~~~~~~~~
-> > 
-> > Provide the proper includes.
-> > 
-> >  [ bp: Take care of the same warnings for cec.c too. ]
-> > 
-> > Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > Cc: Tony Luck <tony.luck@intel.com>
-> > Cc: linux-edac@vger.kernel.org
-> > Cc: x86@kernel.org
-> > Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/ras/cec.c     | 1 +
-> >  drivers/ras/debugfs.c | 2 ++
-> >  2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-> > index f5795adc5a6e1..8037c490f3ba7 100644
-> > --- a/drivers/ras/cec.c
-> > +++ b/drivers/ras/cec.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include <linux/mm.h>
-> >  #include <linux/gfp.h>
-> > +#include <linux/ras.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/workqueue.h>
-> >  
-> > diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-> > index 9c1b717efad86..0d4f985afbf37 100644
-> > --- a/drivers/ras/debugfs.c
-> > +++ b/drivers/ras/debugfs.c
-> > @@ -1,5 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> >  #include <linux/debugfs.h>
-> > +#include <linux/ras.h>
-> > +#include "debugfs.h"
-> >  
-> >  struct dentry *ras_debugfs_dir;
-> >  
-> > -- 
+On 2019-10-03 00:05, Greg KH wrote:
+> On Wed, Oct 02, 2019 at 05:06:14PM -0700, Murali Nalajala wrote:
+>> Soc framework exposed sysfs entries are not sufficient for some
+>> of the h/w platforms. Currently there is no interface where soc
+>> drivers can expose further information about their SoCs via soc
+>> framework. This change address this limitation where clients can
+>> pass their custom entries as attribute group and soc framework
+>> would expose them as sysfs properties.
+>> 
+>> Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+>> ---
+>>  drivers/base/soc.c      | 26 ++++++++++++++++++--------
+>>  include/linux/sys_soc.h |  1 +
+>>  2 files changed, 19 insertions(+), 8 deletions(-)
 > 
-> Definitely not stable material.
-
-Agreed, I'll go drop it from everywhere, sorry about that.
-
-greg k-h
+> Can you change a soc driver to use this?  I don't think that this patch
+> works because:
+> 
+>> 
+>> diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+>> index 7c0c5ca..ec70a58 100644
+>> --- a/drivers/base/soc.c
+>> +++ b/drivers/base/soc.c
+>> @@ -15,6 +15,8 @@
+>>  #include <linux/err.h>
+>>  #include <linux/glob.h>
+>> 
+>> +#define NUM_ATTR_GROUPS 3
+>> +
+>>  static DEFINE_IDA(soc_ida);
+>> 
+>>  static ssize_t soc_info_get(struct device *dev,
+>> @@ -104,11 +106,6 @@ static ssize_t soc_info_get(struct device *dev,
+>>  	.is_visible = soc_attribute_mode,
+>>  };
+>> 
+>> -static const struct attribute_group *soc_attr_groups[] = {
+>> -	&soc_attr_group,
+>> -	NULL,
+>> -};
+>> -
+>>  static void soc_release(struct device *dev)
+>>  {
+>>  	struct soc_device *soc_dev = container_of(dev, struct soc_device, 
+>> dev);
+>> @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
+>>  struct soc_device *soc_device_register(struct soc_device_attribute 
+>> *soc_dev_attr)
+>>  {
+>>  	struct soc_device *soc_dev;
+>> +	const struct attribute_group **soc_attr_groups = NULL;
+>>  	int ret;
+>> 
+>>  	if (!soc_bus_type.p) {
+>> @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct 
+>> soc_device_attribute *soc_dev_attr
+>>  		goto out1;
+>>  	}
+>> 
+>> +	soc_attr_groups = kzalloc(sizeof(*soc_attr_groups) *
+>> +						NUM_ATTR_GROUPS, GFP_KERNEL);
+>> +	if (!soc_attr_groups) {
+>> +		ret = -ENOMEM;
+>> +		goto out2;
+>> +	}
+>> +	soc_attr_groups[0] = &soc_attr_group;
+>> +	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
+>> +	soc_attr_groups[2] = NULL;
+> 
+> You set this, but never do anything with it that I can see.  What am I
+> missing?
+no, since i am using the "soc_attr_groups" name as it here you do not 
+see the assignment below.
+It is something like this soc_dev->dev.groups = soc_attr_groups;
+> 
+>> +
+>>  	/* Fetch a unique (reclaimable) SOC ID. */
+>>  	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
+>>  	if (ret < 0)
+>> -		goto out2;
+>> +		goto out3;
+>>  	soc_dev->soc_dev_num = ret;
+>> 
+>>  	soc_dev->attr = soc_dev_attr;
+>> @@ -151,14 +159,16 @@ struct soc_device *soc_device_register(struct 
+>> soc_device_attribute *soc_dev_attr
+>> 
+>>  	ret = device_register(&soc_dev->dev);
+>>  	if (ret)
+>> -		goto out3;
+>> +		goto out4;
+>> 
+>>  	return soc_dev;
+>> 
+>> -out3:
+>> +out4:
+>>  	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+>>  	put_device(&soc_dev->dev);
+>>  	soc_dev = NULL;
+>> +out3:
+>> +	kfree(soc_attr_groups);
+>>  out2:
+>>  	kfree(soc_dev);
+>>  out1:
+> 
+> You don't free it when the soc is removed?
+agree, will fix it in my next patch.
+> 
+> thanks,
+> 
+> greg k-h
+These changes are verified at my side on SM8250 with mode static 
+compilation and module.
