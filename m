@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1D0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D80C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C182070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEEB222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121201;
-	bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
+	s=default; t=1570121206;
+	bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTXtGi+okdMoH9R4Qwlk5Js1LdPiJTYXGBkzb4iuvtaLBZ9Ng8mVZg05g+RiX4U9K
-	 RvOv+rSsFRRIKNmOZrLIHxXgAshXViG/7XwYHcMvNDjzokgUmbrwGaSmI2rDiVCtHq
-	 DIXYfR2sKtwuWpOKmJ0p71eePr07gK4/n+mGQbKM=
+	b=QSBs3GmZBBfPO7kbr/yHudeAhiqs84W+xKJV4R7joRBdHN6hu4VYX6BOP33rg2JFq
+	 qq7VTkMKNaGcT9zWSw15S63KplOrMWKHj85OftVuabPaFPsDj2ljXCcK52PIGDYn4e
+	 /H+p3XiLIgQbC8aCf0YLfyKpqC7VbzCk/xZ9zrnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404212AbfJCQql (ORCPT
+        id S2392920AbfJCQqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59906 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392934AbfJCQqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:38 -0400
+        id S2392192AbfJCQqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9802070B;
-        Thu,  3 Oct 2019 16:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8147220865;
+        Thu,  3 Oct 2019 16:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121197;
-        bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
+        s=default; t=1570121200;
+        bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UyGYDJR6c+hy8pByW54y3l/yY+15uZoZkrSPN76b058IC6fR7c+0RqOCt9oyGbDkQ
-         ZJeELNXm05PqtUlnPbsQcvehQPfNtC+AFPJmjzZmAW9eFz5VgYjzXycc+Zb8caSxUs
-         O6S5SbmJ8Jtc1rId6+Z4oajpFGuWcbGCZ8euFTCc=
+        b=aFzIoK0TO1Y1gbf4TRNVpdq+lHECipjwZntQ1REk6ixhgIup/c1lbaSba/IH8k5yx
+         szExreE26NQGW9llRvAA5Xrzhrc/nuZ3Fm+MEGeRErd/NSiM4r0TEmE3WaJ2L0Rpzj
+         1kYpCtK965e1Dow97siFUseHBrf1J4QfmkBbg1j8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 191/344] closures: fix a race on wakeup from closure_sync
-Date:   Thu,  3 Oct 2019 17:52:36 +0200
-Message-Id: <20191003154559.039135993@linuxfoundation.org>
+        stable@vger.kernel.org, Vicki Pfau <vi@endrift.com>,
+        Marcel Bocu <marcel.p.bocu@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 192/344] hwmon: (k10temp) Add support for AMD family 17h, model 70h CPUs
+Date:   Thu,  3 Oct 2019 17:52:37 +0200
+Message-Id: <20191003154559.145027593@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,48 +67,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kent Overstreet <kent.overstreet@gmail.com>
+From: Marcel Bocu <marcel.p.bocu@gmail.com>
 
-[ Upstream commit a22a9602b88fabf10847f238ff81fde5f906fef7 ]
+[ Upstream commit 12163cfbfc0f804cc7d27bc20e8d266ce7459260 ]
 
-The race was when a thread using closure_sync() notices cl->s->done == 1
-before the thread calling closure_put() calls wake_up_process(). Then,
-it's possible for that thread to return and exit just before
-wake_up_process() is called - so we're trying to wake up a process that
-no longer exists.
+It would seem like model 70h is behaving in the same way as model 30h,
+so let's just add the new F3 PCI ID to the list of compatible devices.
 
-rcu_read_lock() is sufficient to protect against this, as there's an rcu
-barrier somewhere in the process teardown path.
+Unlike previous Ryzen/Threadripper, Ryzen gen 3 processors do not need
+temperature offsets anymore. This has been reported in the press and
+verified on my Ryzen 3700X by checking that the idle temperature
+reported by k10temp is matching the temperature reported by the
+firmware.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-Acked-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Vicki Pfau sent an identical patch after I checked that no-one had
+written this patch. I would have been happy about dropping my patch but
+unlike for his patch series, I had already Cc:ed the x86 people and
+they already reviewed the changes. Since Vicki has not answered to
+any email after his initial series, let's assume she is on vacation
+and let's avoid duplication of reviews from the maintainers and merge
+my series. To acknowledge Vicki's anteriority, I added her S-o-b to
+the patch.
+
+v2, suggested by Guenter Roeck and Brian Woods:
+  - rename from 71h to 70h
+
+Signed-off-by: Vicki Pfau <vi@endrift.com>
+Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: "Woods, Brian" <Brian.Woods@amd.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Link: https://lore.kernel.org/r/20190722174653.2391-1-marcel.p.bocu@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/closure.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/hwmon/k10temp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/closure.c b/drivers/md/bcache/closure.c
-index 73f5319295bc9..c12cd809ab193 100644
---- a/drivers/md/bcache/closure.c
-+++ b/drivers/md/bcache/closure.c
-@@ -105,8 +105,14 @@ struct closure_syncer {
- 
- static void closure_sync_fn(struct closure *cl)
- {
--	cl->s->done = 1;
--	wake_up_process(cl->s->task);
-+	struct closure_syncer *s = cl->s;
-+	struct task_struct *p;
-+
-+	rcu_read_lock();
-+	p = READ_ONCE(s->task);
-+	s->done = 1;
-+	wake_up_process(p);
-+	rcu_read_unlock();
- }
- 
- void __sched __closure_sync(struct closure *cl)
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index c77e89239dcd9..5c1dddde193c3 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -349,6 +349,7 @@ static const struct pci_device_id k10temp_id_table[] = {
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
++	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+ 	{ PCI_VDEVICE(HYGON, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{}
+ };
 -- 
 2.20.1
 
