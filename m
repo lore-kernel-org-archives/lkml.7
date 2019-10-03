@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806F3C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CC7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541822086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD512086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120416;
-	bh=/J2pAeecO5+wy94vLp5m0dXczIyTOj8lr+GmEvWqm2E=;
+	s=default; t=1570120421;
+	bh=CIs3hVpxJxZfJikHnbn+izdZZK3W/m9x3TQA28/2hSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFP5TOq2e1P5MsqYP3K3J7MhgUcDwpeR+wIFLTtZmHzmqRnjMsx+1Xx01Ia714hZK
-	 4lKdFriFvctdEiJTZOkhjSqf1EBdwEJypvV0mjlBA95gDafvMsqYB0x5Tueft4GOdO
-	 2xsRBtCvbmDztQfVFQKYd4loLqZhUJT3qPhmqPX8=
+	b=TjEX7FPcklCpAtT1WfshgJdx4RuznHJYciSVheja0KIGa/8DSR1GEqbmApaC5cC6X
+	 PHMF7nqeoQ/wCW/SoB8ETCvaAFRn1MSd4UIFT50YMlvOYfaJvHY99S1isrtPqExqKK
+	 4TTubRZ+lHHTDYEaUrjt57vvPPvARaZ/y7xjfPD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390608AbfJCQdf (ORCPT
+        id S2392031AbfJCQdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392000AbfJCQdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:31 -0400
+        id S2391628AbfJCQdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C63AD2086A;
-        Thu,  3 Oct 2019 16:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 202A820830;
+        Thu,  3 Oct 2019 16:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120411;
-        bh=/J2pAeecO5+wy94vLp5m0dXczIyTOj8lr+GmEvWqm2E=;
+        s=default; t=1570120416;
+        bh=CIs3hVpxJxZfJikHnbn+izdZZK3W/m9x3TQA28/2hSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ShLTMzxfIufZ812gTvFa34gCRRUOgtMdmGDrASzgu5NKlPgyh11qgcNzpzf47B7FZ
-         raiNEFUtw1xF0PVbOWZST30HjZtBgba+FMXZtMRyb31C7Tn8EXqkZGhuFdKmmWGVgu
-         FUK46h0uINjiJPuEYzKGN455kvlgWJaDYZTdqk/Q=
+        b=hjeTz9etJx0X9Zu+FX3kC6aRN1cmWzZ33v311Ej/xZbAyY5Av+ZxvEm8DUYrXlY3k
+         dusBAhTupiv+VC36/GEbsnQrNGhVqEA9V1JJn1tkRrdVZVAgf8S8z+VrHmwwqaBYjx
+         2uX5Pk1KTlt8G9F9p99mrglYWDl9APAw8a1bnXWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.2 213/313] ARM: dts: logicpd-torpedo-baseboard: Fix missing video
-Date:   Thu,  3 Oct 2019 17:53:11 +0200
-Message-Id: <20191003154553.964985089@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 215/313] iwlwifi: fw: dont send GEO_TX_POWER_LIMIT command to FW version 36
+Date:   Thu,  3 Oct 2019 17:53:13 +0200
+Message-Id: <20191003154554.183920527@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,86 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-commit f9f5518a38684e031d913f40482721ff553f5ba2 upstream.
+commit fddbfeece9c7882cc47754c7da460fe427e3e85b upstream.
 
-A previous commit removed the panel-dpi driver, which made the
-Torpedo video stop working because it relied on the dpi driver
-for setting video timings.  Now that the simple-panel driver is
-available in omap2plus, this patch migrates the Torpedo dev kits
-to use a similar panel and remove the manual timing requirements.
+The intention was to have the GEO_TX_POWER_LIMIT command in FW version
+36 as well, but not all 8000 family got this feature enabled.  The
+8000 family is the only one using version 36, so skip this version
+entirely.  If we try to send this command to the firmwares that do not
+support it, we get a BAD_COMMAND response from the firmware.
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=204151.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi |   37 +++--------------------
- 1 file changed, 6 insertions(+), 31 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
-+++ b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
-@@ -108,7 +108,6 @@
- &dss {
- 	status = "ok";
- 	vdds_dsi-supply = <&vpll2>;
--	vdda_video-supply = <&video_reg>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dss_dpi_pins1>;
- 	port {
-@@ -124,44 +123,20 @@
- 		display0 = &lcd0;
- 	};
- 
--	video_reg: video_reg {
--		pinctrl-names = "default";
--		pinctrl-0 = <&panel_pwr_pins>;
--		compatible = "regulator-fixed";
--		regulator-name = "fixed-supply";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		gpio = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd INI */
--	};
--
- 	lcd0: display {
--		compatible = "panel-dpi";
-+		/* This isn't the exact LCD, but the timings meet spec */
-+		/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-+		compatible = "newhaven,nhd-4.3-480272ef-atxl";
- 		label = "15";
--		status = "okay";
--		/* default-on; */
- 		pinctrl-names = "default";
--
-+		pinctrl-0 = <&panel_pwr_pins>;
-+		backlight = <&bl>;
-+		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
- 		port {
- 			lcd_in: endpoint {
- 				remote-endpoint = <&dpi_out>;
- 			};
- 		};
--
--		panel-timing {
--			clock-frequency = <9000000>;
--			hactive = <480>;
--			vactive = <272>;
--			hfront-porch = <3>;
--			hback-porch = <2>;
--			hsync-len = <42>;
--			vback-porch = <3>;
--			vfront-porch = <4>;
--			vsync-len = <11>;
--			hsync-active = <0>;
--			vsync-active = <0>;
--			de-active = <1>;
--			pixelclk-active = <1>;
--		};
- 	};
- 
- 	bl: backlight {
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -882,11 +882,13 @@ static bool iwl_mvm_sar_geo_support(stru
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+ 	 * the first byte of ucode_ver.  This was implemented
+-	 * initially on version 38 and then backported to 36, 29 and
+-	 * 17.
++	 * initially on version 38 and then backported to29 and 17.
++	 * The intention was to have it in 36 as well, but not all
++	 * 8000 family got this feature enabled.  The 8000 family is
++	 * the only one using version 36, so skip this version
++	 * entirely.
+ 	 */
+ 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 36 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
+ }
 
 
