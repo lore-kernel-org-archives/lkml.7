@@ -2,119 +2,90 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757BCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E16EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C9020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:43:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124612;
-	bh=fUAnB/ruuX52fNGvK6A6pX90EFxYq0eSKrdO/R1/YDQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MlyC5Sk3GjZrhcHPwWL/YOfOIvqZ8hRUN+/iEe14dGZqCBlkz5WM8XAH+OTOy9Zwm
-	 G4rxJlTlOg4cUJsSlnzrVnv0vnCiPTW63kCDXtVUdue47pQ5nNLRXdTb6KG4gen4xn
-	 iXW7RKWT9RmQfn7hOmyAncTt17Xapo+DkwaE/hic=
+	by mail.kernel.org (Postfix) with ESMTP id 0DF8820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XUFGIGD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390664AbfJCRnb (ORCPT
+        id S2390667AbfJCRoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbfJCP4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5875222C2;
-        Thu,  3 Oct 2019 15:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118171;
-        bh=fUAnB/ruuX52fNGvK6A6pX90EFxYq0eSKrdO/R1/YDQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2IK22RXoll77RkTOs9fRF+sNqXS45izbAtXR7t+8pKx0iVpq71K6mex5G/DKd13tR
-         Rgbv69mpGgDMsMzfSPN1upfLMv8ztWTg4Y/sqT/neY6+nd/Fy1RHJp1GTy6bpipV3I
-         Sv+gdxf8nbyxLp+S/hze66GO9+8m+N4rIIng12nE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/99] Revert "f2fs: avoid out-of-range memory access"
-Date:   Thu,  3 Oct 2019 17:52:39 +0200
-Message-Id: <20191003154301.630690783@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:44:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44858 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730993AbfJCRoB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:44:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i14so2169225pgt.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=wgtFkL/FFRFrlD7W9UDHQPj6n9N+/Wo8Jj+YzpO0YxI=;
+        b=XUFGIGD09TqEqmkFIqlIZjHwCq9P4g6INXCLyMVZlHNV2VUniAmRCDbm/DbO9MxJ/f
+         Zz/bwzmkRc+zW9SB0447I2PEhwobtbUQljlruZs7iTfvwGn9G0XLOJCQHq9PtHqLjzQV
+         LiYGvocI4OuJKqOmXEJRNnd1SSCB9WRHEG/+RTmytroyvvq0d1PB47xtO+mku1c6NtXs
+         6UxLj3dEpJH74J9al6AcBlchVPJl8vzA6hoLwRR1GNycQWp6rokCBTZz6l0QKpF4W2r0
+         bIQe5SvvpEP2dBxQzb1s/NlLLZ3Tpfe0WZi7YxSzIZ+9QFngdw616BopzSIICdH569jY
+         R1qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=wgtFkL/FFRFrlD7W9UDHQPj6n9N+/Wo8Jj+YzpO0YxI=;
+        b=nJMPggSvi0zSt6OnawDhz/lHPQmKX7TNxnGVZQiv7piWf32r39Kf0bIqMpfHyMudrm
+         XEb4mKqvnGgnNJiLoLdSfOfIgjdIso6yFN+4K8fISq5mUTxRIaujy8+rf/JmQ4yfJJ71
+         G/WJ3zkThk96BmqkswP/LiLMb1RWZd1/beZVL8zskMVf+nCqqhS6g+KLDwyR9el80n7Y
+         Irc6GshiVjBKodRYIGzZ1RiIHLmuRScY5odiw+b6vkhK2Hurs1vkXK/pMbyw+fmrgf9D
+         XJHMsm8V71H+oFTrDx3ACUdj6SvCduvcX5BCc4RCRDn/zeDXtbTJekvuvivunpAOTJJT
+         3ODw==
+X-Gm-Message-State: APjAAAXArkiZcw6I3xmRgsEm4UGaL4Td+43eCOjEouH7CZdrqfkWwwNT
+        SvF2TDcICxRAZNQUkBrSH0xd1L8K9Fo=
+X-Google-Smtp-Source: APXvYqy7J6/8YHbG5klC9QquF261ah07vKhRA9+K09kh9B/5jxv89MEbsHK/KpR4cl3xiNk3tmrOEQ==
+X-Received: by 2002:a17:90a:30e8:: with SMTP id h95mr12035505pjb.44.1570124639543;
+        Thu, 03 Oct 2019 10:43:59 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:a084:116f:9da0:2d6c])
+        by smtp.gmail.com with ESMTPSA id j22sm5289821pgg.16.2019.10.03.10.43.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Oct 2019 10:43:58 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 RESEND-next 0/3] Odroid c2 missing regulator linking
+In-Reply-To: <20191001073901.372-1-linux.amoon@gmail.com>
+References: <20191001073901.372-1-linux.amoon@gmail.com>
+Date:   Thu, 03 Oct 2019 10:43:58 -0700
+Message-ID: <7hv9t5vi5d.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+Anand Moon <linux.amoon@gmail.com> writes:
 
-[ Upstream commit a37d0862d17411edb67677a580a6f505ec2225f6 ]
+> Looks like this changes got lost so resend these changes again.
 
-As Pavel Machek reported:
+Yeah, sorry about that.  Your cover letter subjects were quite similar,
+and several versions of this series and the previoius series arrived
+close together, so some stuff fell through the cracks.  Sorry about
+that.
 
-"We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
-good idea to report it to the syslog and mark filesystem as "needing
-fsck" if filesystem can do that."
+Queued for v5.5 now,
 
-Still we need improve the original patch with:
-- use unlikely keyword
-- add message print
-- return EUCLEAN
+Thanks,
 
-However, after rethink this patch, I don't think we should add such
-condition check here as below reasons:
-- We have already checked the field in f2fs_sanity_check_ckpt(),
-- If there is fs corrupt or security vulnerability, there is nothing
-to guarantee the field is integrated after the check, unless we do
-the check before each of its use, however no filesystem does that.
-- We only have similar check for bitmap, which was added due to there
-is bitmap corruption happened on f2fs' runtime in product.
-- There are so many key fields in SB/CP/NAT did have such check
-after f2fs_sanity_check_{sb,cp,..}.
-
-So I propose to revert this unneeded check.
-
-This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/segment.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 014bee5c0e75e..6802cd754eda0 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1510,11 +1510,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
--		if (blk_off > ENTRIES_IN_SUM) {
--			f2fs_bug_on(sbi, 1);
--			f2fs_put_page(page, 1);
--			return -EFAULT;
--		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
--- 
-2.20.1
-
-
-
+Kevin
