@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B910C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483EEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7BF20659
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F6020865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120255;
-	bh=aRnDWCac5Rp2zw7MueiQHhEBPV+CE2W1Bm3OSFT9eFw=;
+	s=default; t=1570120261;
+	bh=9zoyOyktiRtH8YkllJBaaJyXkixplE8SKeCBP01NexQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oK+Ulr9UaqEwtQm8uNOl6wkw73nkntOwx47BZpomQY/tWJsJWN0JKtazt0ouaCukm
-	 zoFQRpF7ozoWrvZxITu8P9dje0temOfHthpgfLlqDrP+pfK1NCEOzQbLC4baEUydao
-	 2UI82Uq6sx3vCMxy+VPFppqhQ6kqTYyaV+ODv0DY=
+	b=jxit/GxSa1UnNBvyhMy5wpGAgARUddVWL40lR7b3cgJHpPmMIUVdCLH7E1b4FaGKv
+	 DftgdNBY+e9D53xbya+D1Y5P/DZ4CzqEuG/bUZxfN+NzDtMbrQ9HMMs16/nOv+Zpe7
+	 T4Oy/nlFeHJbnI0+dmrwmSIkiYCEY038XoAZlpJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391224AbfJCQay (ORCPT
+        id S2403791AbfJCQbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:30:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388282AbfJCQar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:30:47 -0400
+        id S2391803AbfJCQax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:30:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C912054F;
-        Thu,  3 Oct 2019 16:30:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B092054F;
+        Thu,  3 Oct 2019 16:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120246;
-        bh=aRnDWCac5Rp2zw7MueiQHhEBPV+CE2W1Bm3OSFT9eFw=;
+        s=default; t=1570120252;
+        bh=9zoyOyktiRtH8YkllJBaaJyXkixplE8SKeCBP01NexQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0I2lh1P7DFBtKcrUy/roZqP0zBLFoz06UsqW4XMdlGmUHuwPcnvG24cPD6BteGIaS
-         zbMQDhHl0J3SsHIib1HIzXc8IoTkf6gGqApFN4wUsEjBrwGQqTjEdmbxKNuaQIzagy
-         bphry6iV9qIgYiQDU7/urd84SUMEZjEejTsvJMyg=
+        b=JYCQGvRC7W1pBWEUj+Hcod4EVGMqbbZU7bIkN9S2VRObeLwOOZCm0An+JiyQX1nHP
+         T0WHjxLLrulGdwDxnFoMlrCK5CjelFeiVGYvwHb2fRGhO1F+HWeA/bkZE/OxCiuU6M
+         d2tv+/RGCwyyWKmqh+rzx0OK4X2EyjkUSEYlypaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Al Stone <ahs3@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 150/313] leds: lm3532: Fixes for the driver for stability
-Date:   Thu,  3 Oct 2019 17:52:08 +0200
-Message-Id: <20191003154547.709338957@linuxfoundation.org>
+Subject: [PATCH 5.2 152/313] ACPI / CPPC: do not require the _PSD method
+Date:   Thu,  3 Oct 2019 17:52:10 +0200
+Message-Id: <20191003154547.898754933@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,85 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
+From: Al Stone <ahs3@redhat.com>
 
-[ Upstream commit 6559ac32998248182572e1ccae79dc2eb40ac7c6 ]
+[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
 
-Fixed misspelled words, added error check during probe
-on the init of the registers, and fixed ALS/I2C control
-mode.
+According to the ACPI 6.3 specification, the _PSD method is optional
+when using CPPC.  The underlying assumption is that each CPU can change
+frequency independently from all other CPUs; _PSD is provided to tell
+the OS that some processors can NOT do that.
 
-Fixes: bc1b8492c764 ("leds: lm3532: Introduce the lm3532 LED driver")
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+However, the acpi_get_psd() function returns ENODEV if there is no _PSD
+method present, or an ACPI error status if an error occurs when evaluating
+_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
+of the specification, and only on Linux.
+
+This has forced some firmware writers to provide a dummy _PSD, even though
+it is irrelevant, but only because Linux requires it; other OSPMs follow
+the spec.  We really do not want to have OS specific ACPI tables, though.
+
+So, correct acpi_get_psd() so that it does not return an error if there
+is no _PSD method present, but does return a failure when the method can
+not be executed properly.  This allows _PSD to be optional as it should
+be.
+
+Signed-off-by: Al Stone <ahs3@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm3532.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/acpi/cppc_acpi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index 180895b83b888..e55a64847fe2f 100644
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -40,7 +40,7 @@
- #define LM3532_REG_ZN_3_LO	0x67
- #define LM3532_REG_MAX		0x7e
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index 15f103d7532b0..3b2525908dd8c 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -365,8 +365,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+ 	union acpi_object  *psd = NULL;
+ 	struct acpi_psd_package *pdomain;
  
--/* Contorl Enable */
-+/* Control Enable */
- #define LM3532_CTRL_A_ENABLE	BIT(0)
- #define LM3532_CTRL_B_ENABLE	BIT(1)
- #define LM3532_CTRL_C_ENABLE	BIT(2)
-@@ -302,7 +302,7 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
- 	int ret;
+-	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+-			ACPI_TYPE_PACKAGE);
++	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
++					    &buffer, ACPI_TYPE_PACKAGE);
++	if (status == AE_NOT_FOUND)	/* _PSD is optional */
++		return 0;
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
  
- 	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
--					 ctrl_en_val, ~ctrl_en_val);
-+					 ctrl_en_val, 0);
- 	if (ret) {
- 		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
- 		return ret;
-@@ -321,7 +321,7 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
- 
- 	mutex_lock(&led->priv->lock);
- 
--	if (led->mode == LM3532_BL_MODE_ALS) {
-+	if (led->mode == LM3532_ALS_CTRL) {
- 		if (brt_val > LED_OFF)
- 			ret = lm3532_led_enable(led);
- 		else
-@@ -542,11 +542,14 @@ static int lm3532_parse_node(struct lm3532_data *priv)
- 		}
- 
- 		if (led->mode == LM3532_BL_MODE_ALS) {
-+			led->mode = LM3532_ALS_CTRL;
- 			ret = lm3532_parse_als(priv);
- 			if (ret)
- 				dev_err(&priv->client->dev, "Failed to parse als\n");
- 			else
- 				lm3532_als_configure(priv, led);
-+		} else {
-+			led->mode = LM3532_I2C_CTRL;
- 		}
- 
- 		led->num_leds = fwnode_property_read_u32_array(child,
-@@ -590,7 +593,13 @@ static int lm3532_parse_node(struct lm3532_data *priv)
- 			goto child_out;
- 		}
- 
--		lm3532_init_registers(led);
-+		ret = lm3532_init_registers(led);
-+		if (ret) {
-+			dev_err(&priv->client->dev, "register init err: %d\n",
-+				ret);
-+			fwnode_handle_put(child);
-+			goto child_out;
-+		}
- 
- 		i++;
- 	}
 -- 
 2.20.1
 
