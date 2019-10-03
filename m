@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52F6C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97638C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B2820830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6552020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122580;
-	bh=WfxDNclaPwQMRAUKsE1cmWMDs3Yv+dnYyxNB+8LnBpk=;
+	s=default; t=1570122589;
+	bh=WaXkzYUQZiX+6yr6ucA7h70yZZ/D3f1BdAj3GtAl+L8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCfjq4WYjUvrxPfXGhNfLa+vWBeM2fxaTTPsyXl25RmeLP/82krFnXVnID/QjSvPt
-	 O7Rt/C1WOo8YVUMbJ4wmGmP7t9s5pw0K3NjBOq2q/+wItR7M1pexeh9wgIxYGs68np
-	 Dy52joUG/c3SgnT0HTvU0RiNdv9X86+2lEt0jRos=
+	b=w6AXemx1scurftop6NwApozARjlgfK3PfVgj84Tg3akB2izmiuULnp18FFwOy65fq
+	 5dMNsTG8v8S6I/FP60RpvRsQTMdL1oGhKml9U6DGheHxasbG3Snl1QVVSn6H7rEaM5
+	 8ouQVkFkO2E6q/5O4GUFreSnJ7LufW1gADUKaxVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392383AbfJCRJj (ORCPT
+        id S2404126AbfJCQd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731952AbfJCQeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:04 -0400
+        id S2391473AbfJCQd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12F2C2133F;
-        Thu,  3 Oct 2019 16:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C8B2086A;
+        Thu,  3 Oct 2019 16:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120443;
-        bh=WfxDNclaPwQMRAUKsE1cmWMDs3Yv+dnYyxNB+8LnBpk=;
+        s=default; t=1570120435;
+        bh=WaXkzYUQZiX+6yr6ucA7h70yZZ/D3f1BdAj3GtAl+L8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNFTW0ZbNzTVdaXx9IC30sUcfTqhrAy4QqOG4NNf3zL7DVUUY+QmcXjP0acKtfZUm
-         HH8QPXYtwUmsXFA/ey7nZDYm4DKDbHg/Wh6yy/xbtfUq4zPVHW2tPxmXM8Zb/GX+oU
-         ALfGzejVIhEGWRr4tnz47c2ov5A6X8wjFUtyDpgk=
+        b=i17LURVD6np+kbg4gs+2A5LcfigoIDbbqryLzhjv571dRaYv5Wvdm6W/DnKWRRNWb
+         3QFMhZto06QZqJkoT+pg4dQAHxdOAHGpSiCdCZ9LBsLjg2+A95R6uzU4bhxXHyVF0J
+         E/3o0KcoOGVH5PUoNunZ1UQ10BnmTlfloLnk0wXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Danit Goldberg <danitg@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.2 224/313] RDMA: Fix double-free in srq creation error flow
-Date:   Thu,  3 Oct 2019 17:53:22 +0200
-Message-Id: <20191003154555.095265867@linuxfoundation.org>
+Subject: [PATCH 5.2 221/313] IB/mlx5: Free mpi in mp_slave mode
+Date:   Thu,  3 Oct 2019 17:53:19 +0200
+Message-Id: <20191003154554.800537477@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,43 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Danit Goldberg <danitg@mellanox.com>
 
-commit 3eca7fc2d8d1275d9cf0c709f0937becbfcf6d96 upstream.
+commit 5d44adebbb7e785939df3db36ac360f5e8b73e44 upstream.
 
-The cited commit introduced a double-free of the srq buffer in the error
-flow of procedure __uverbs_create_xsrq().
-
-The problem is that ib_destroy_srq_user() called in the error flow also
-frees the srq buffer.
-
-Thus, if uverbs_response() fails in __uverbs_create_srq(), the srq buffer
-will be freed twice.
+ib_add_slave_port() allocates a multiport struct but never frees it.
+Don't leak memory, free the allocated mpi struct during driver unload.
 
 Cc: <stable@vger.kernel.org>
-Fixes: 68e326dea1db ("RDMA: Handle SRQ allocations by IB/core")
-Link: https://lore.kernel.org/r/20190916071154.20383-5-leon@kernel.org
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes: 32f69e4be269 ("{net, IB}/mlx5: Manage port association for multiport RoCE")
+Link: https://lore.kernel.org/r/20190916064818.19823-3-leon@kernel.org
+Signed-off-by: Danit Goldberg <danitg@mellanox.com>
 Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/uverbs_cmd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -3477,7 +3477,8 @@ static int __uverbs_create_xsrq(struct u
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -6829,6 +6829,7 @@ static void mlx5_ib_remove(struct mlx5_c
+ 			mlx5_ib_unbind_slave_port(mpi->ibdev, mpi);
+ 		list_del(&mpi->list);
+ 		mutex_unlock(&mlx5_ib_multiport_mutex);
++		kfree(mpi);
+ 		return;
+ 	}
  
- err_copy:
- 	ib_destroy_srq_user(srq, uverbs_get_cleared_udata(attrs));
--
-+	/* It was released in ib_destroy_srq_user */
-+	srq = NULL;
- err_free:
- 	kfree(srq);
- err_put:
 
 
