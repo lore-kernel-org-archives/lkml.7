@@ -2,92 +2,228 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA52C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDC7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615872070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LZgmVx8K"
+	by mail.kernel.org (Postfix) with ESMTP id 5FD8721D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbfJCLtI (ORCPT
+        id S1730227AbfJCLtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:49:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58086 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfJCLtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:49:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93Bmwdw145482;
-        Thu, 3 Oct 2019 11:49:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Tv6Whr37flpQTMvhxJZIqkHc+lxYrgsVpf1GQKff1Sw=;
- b=LZgmVx8KaQGtkpBJF9UrrqOYKnhh9kcTdp/dWzAb7kk/Ley2JoPIG4FRas2yYWL0m7oU
- VoRTNQUdYq5XGPpp9TsJXoc0K/Z48Erxq3WVgRsStH6P3FywjY5B0t/o1M/dVSjzGbl3
- /3h5Qfz6bh7jVm3gYVx2VH0LrLUUuMHJ1yi8XV8ETgPfRAMD89ZcP6iRFC2OVTGTlepj
- TdYOwUeW4uTzE7tBbfAMAag8CT+7ywjB1vDSXpMUNV3Q99fHxRBDktfSZgj0caFgb+Mi
- xfMHdgWiT2E2RMAyjoDG1Jw7k8y53Y+4CYdSd5TtoaRMyur97dOW8aOP1v4G675/7Exo mQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2v9xxv3ec6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 11:49:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BmiKJ174495;
-        Thu, 3 Oct 2019 11:49:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vcx72b91s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 11:49:03 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x93Bn1JR026187;
-        Thu, 3 Oct 2019 11:49:01 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Oct 2019 04:49:01 -0700
-Date:   Thu, 3 Oct 2019 14:48:52 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: use bdev_sync function directly where
- needed
-Message-ID: <20191003114852.GR29696@kadam>
-References: <20191002151703.GA6594@SD>
- <9938.1570043055@turing-police>
- <20191003114654.GT22609@kadam>
+        Thu, 3 Oct 2019 07:49:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60198 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726523AbfJCLtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:49:19 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 813761762F85CC584C1A;
+        Thu,  3 Oct 2019 19:49:16 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 3 Oct 2019
+ 19:49:12 +0800
+Date:   Thu, 3 Oct 2019 12:49:02 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v6 2/2] iio: imu: st_lsm6dsx: add i3c basic support for
+ LSM6DSO and LSM6DSR
+Message-ID: <20191003124902.00003547@huawei.com>
+In-Reply-To: <CH2PR12MB421658374F977C89B5A3F1B7AE870@CH2PR12MB4216.namprd12.prod.outlook.com>
+References: <cover.1563542515.git.vitor.soares@synopsys.com>
+        <77c709aca8607f31f141ee7c4dc28bf89266bd23.1563542515.git.vitor.soares@synopsys.com>
+        <20190721181656.236faa63@archlinux>
+        <CH2PR12MB421658374F977C89B5A3F1B7AE870@CH2PR12MB4216.namprd12.prod.outlook.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003114654.GT22609@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=710
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910030111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=792 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910030111
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Or we could apply your other patch which trumps both this patch and the
-patch to the TODO.
+On Wed, 25 Sep 2019 15:35:10 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-regards,
-dan carpenter
+> Hi Jonathan,
+> 
+> From: Jonathan Cameron <jic23@kernel.org>
+> Date: Sun, Jul 21, 2019 at 18:16:56
+> 
+> > On Fri, 19 Jul 2019 15:30:55 +0200
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
+> > > spi and i2c mode.
+> > > 
+> > > The LSM6DSO and LSM6DSR are also i3c capable so let's give i3c support to
+> > > them.
+> > > 
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>  
+> > Great. I'll pick this up once Boris has that immutable branch
+> > available. Give me a poke if I seem to have lost it!
+> > 
+> > Thanks,
+> > 
+> > Jonathan  
+> 
+> I didn't see the i3c support for st_lsm6dsx driver in pull request, could 
+> you please check it?
+Seems to have made it
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c?h=v5.4-rc1
+
+I checked back. Was in the first pull request back on the 12th of August.
+
+Jonathan
+
+> 
+> Best regards,
+> Vitor Soares
+> 
+> > > ---
+> > > Changes in v6:
+> > >   none
+> > > 
+> > > Changes in v5:
+> > >   Move regmap_config declaration inside st_lsm6dsx_i3c_probe()
+> > >   Fix warning [-Wint-to-void-pointer-cast] when compiling in 64-bit arch
+> > > 
+> > > Changes in v4:
+> > >   Remove hw_id variable
+> > > 
+> > > Changes in v3:
+> > >   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
+> > >   Use st_lsm6dsx_probe new form
+> > > 
+> > > Changes in v2:
+> > >   Add support for LSM6DSR
+> > >   Set pm_ops to st_lsm6dsx_pm_ops
+> > > 
+> > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+> > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 57 +++++++++++++++++++++++++++++
+> > >  3 files changed, 65 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > 
+> > > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> > > index 9e59297..6b5a73c 100644
+> > > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> > > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> > > @@ -1,11 +1,12 @@
+> > >  
+> > >  config IIO_ST_LSM6DSX
+> > >  	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
+> > > -	depends on (I2C || SPI)
+> > > +	depends on (I2C || SPI || I3C)
+> > >  	select IIO_BUFFER
+> > >  	select IIO_KFIFO_BUF
+> > >  	select IIO_ST_LSM6DSX_I2C if (I2C)
+> > >  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
+> > > +	select IIO_ST_LSM6DSX_I3C if (I3C)
+> > >  	help
+> > >  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+> > >  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+> > > @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
+> > >  	tristate
+> > >  	depends on IIO_ST_LSM6DSX
+> > >  	select REGMAP_SPI
+> > > +
+> > > +config IIO_ST_LSM6DSX_I3C
+> > > +	tristate
+> > > +	depends on IIO_ST_LSM6DSX
+> > > +	select REGMAP_I3C
+> > > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
+> > > index e5f733c..c676965 100644
+> > > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
+> > > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
+> > > @@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
+> > >  obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
+> > >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
+> > >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
+> > > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
+> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > new file mode 100644
+> > > index 0000000..57e6331
+> > > --- /dev/null
+> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > @@ -0,0 +1,57 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
+> > > + *
+> > > + * Author: Vitor Soares <vitor.soares@synopsys.com>
+> > > + */
+> > > +
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/i3c/device.h>
+> > > +#include <linux/i3c/master.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/regmap.h>
+> > > +
+> > > +#include "st_lsm6dsx.h"
+> > > +
+> > > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
+> > > +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
+> > > +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),
+> > > +	{ /* sentinel */ },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
+> > > +
+> > > +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
+> > > +{
+> > > +	struct regmap_config st_lsm6dsx_i3c_regmap_config = {
+> > > +		.reg_bits = 8,
+> > > +		.val_bits = 8,
+> > > +	};
+> > > +	const struct i3c_device_id *id = i3c_device_match_id(i3cdev,
+> > > +							    st_lsm6dsx_i3c_ids);
+> > > +	struct regmap *regmap;
+> > > +
+> > > +	regmap = devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config);
+> > > +	if (IS_ERR(regmap)) {
+> > > +		dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
+> > > +			(int)PTR_ERR(regmap));
+> > > +		return PTR_ERR(regmap);
+> > > +	}
+> > > +
+> > > +	return st_lsm6dsx_probe(&i3cdev->dev, 0, (uintptr_t)id->data, regmap);
+> > > +}
+> > > +
+> > > +static struct i3c_driver st_lsm6dsx_driver = {
+> > > +	.driver = {
+> > > +		.name = "st_lsm6dsx_i3c",
+> > > +		.pm = &st_lsm6dsx_pm_ops,
+> > > +	},
+> > > +	.probe = st_lsm6dsx_i3c_probe,
+> > > +	.id_table = st_lsm6dsx_i3c_ids,
+> > > +};
+> > > +module_i3c_driver(st_lsm6dsx_driver);
+> > > +
+> > > +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
+> > > +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
+> > > +MODULE_LICENSE("GPL v2");  
+> 
+> 
+
 
