@@ -2,53 +2,59 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A8AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490CA2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D86520867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120943;
-	bh=kJC6Awz8EDg7dPEGltPbxNIzRDp5I4Bk/eB1xSqgAyw=;
+	s=default; t=1570120946;
+	bh=Xyvrre4X+S8jYk7Ug49uysaicfimb21oXHG48XhPxd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LyomVgUKSqaKTYRaCTEVz8xI6jLeTktmRJcJqNM+kyEefUYkYa+O9mbLuPaW7+Bcr
-	 uHqaqmgUw/vVmvDps6dMJlBheCe24QQzHy++uHNTM3bF9+FhboE3k4gQNkqpJjxuCR
-	 X7JFw3p3Xhjm1szbx9YiacAxaZxfUp2knMma6iWw=
+	b=DYjZ4hiaxFPgLZAE8mDKRrUODLQ5cAfKkRXmMj46de0pa9/PKCQ+TFOM1xJikBr2+
+	 2+7i5okVESL25bHGsyJD9Gim7zomc9Rag/5qn/ve/a28sI7gOoqKP9I8ymAPHX4xgk
+	 OYAT3qylM65maUKG/Tg5azGuFF+Ru3QCwSp0HIeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392637AbfJCQmW (ORCPT
+        id S2404417AbfJCQmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53210 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392619AbfJCQmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:17 -0400
+        id S2392630AbfJCQmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63EE021848;
-        Thu,  3 Oct 2019 16:42:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8A7F2245A;
+        Thu,  3 Oct 2019 16:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120936;
-        bh=kJC6Awz8EDg7dPEGltPbxNIzRDp5I4Bk/eB1xSqgAyw=;
+        s=default; t=1570120939;
+        bh=Xyvrre4X+S8jYk7Ug49uysaicfimb21oXHG48XhPxd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dUxWHwyIel9GiuloPs6ohszCW/piWmN9cVdeaTaYiBEg01Mkh9Lnx96gDUj0Wcugg
-         hCRvwxZjE7W3WDgv9DOT/AaSnETSeQcraYi1SnllkeqIooOq8parquL6WUzhBUDnfP
-         jFQydaqy6wjwKDCnqI9xzoItw6hB3xf2s74M6XsI=
+        b=piniOYVvDXvemu50yb0Y429V22xi5/dHpO+JS2hPE6VYNItq6ZCSoM+GCL8TDaFPT
+         UuN7V8JfTQtNDg02oRhMCEmNLYZo1I4j40mQZ3hTO23DF4ZsMYTvCUJjKGFQNuwjaV
+         VhhIkS0z/nj5uE10uSWaqLCEXMllAKPiwVZT11+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keyon Jie <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        claudio@evidence.eu.com, lizefan@huawei.com, longman@redhat.com,
+        luca.abeni@santannapisa.it, mathieu.poirier@linaro.org,
+        rostedt@goodmis.org, tj@kernel.org,
+        tommaso.cucinotta@santannapisa.it, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 093/344] ASoC: hdac_hda: fix page fault issue by removing race
-Date:   Thu,  3 Oct 2019 17:50:58 +0200
-Message-Id: <20191003154549.378403427@linuxfoundation.org>
+Subject: [PATCH 5.3 067/344] rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region
+Date:   Thu,  3 Oct 2019 17:50:32 +0200
+Message-Id: <20191003154546.721434354@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,42 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keyon Jie <yang.jie@linux.intel.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit 804cbf4bb063204ca6c2471baa694548aab02ce3 ]
+[ Upstream commit 1a763fd7c6335e3122c1cc09576ef6c99ada4267 ]
 
-There is a race between hda codec device removing and the
-jack-detecting work, which will lead to a page fault issue as the
-latter work is accessing codec device which could be already removed.
+sched_setscheduler() needs to acquire cpuset_rwsem, but it is currently
+called from an invalid (atomic) context by rcu_spawn_gp_kthread().
 
-Here add the cancellation of jack-detecting work before codecs are actually
-removed to avoid the race and fix the issue.
+Fix that by simply moving sched_setscheduler_nocheck() call outside of
+the atomic region, as it doesn't actually require to be guarded by
+rcu_node lock.
 
-Bug: https://github.com/thesofproject/linux/issues/1067
-Signed-off-by: Keyon Jie <yang.jie@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190807145030.26117-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bristot@redhat.com
+Cc: claudio@evidence.eu.com
+Cc: lizefan@huawei.com
+Cc: longman@redhat.com
+Cc: luca.abeni@santannapisa.it
+Cc: mathieu.poirier@linaro.org
+Cc: rostedt@goodmis.org
+Cc: tj@kernel.org
+Cc: tommaso.cucinotta@santannapisa.it
+Link: https://lkml.kernel.org/r/20190719140000.31694-8-juri.lelli@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hda.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/hdac_hda.c b/sound/soc/codecs/hdac_hda.c
-index 7d49402569149..91242b6f8ea7a 100644
---- a/sound/soc/codecs/hdac_hda.c
-+++ b/sound/soc/codecs/hdac_hda.c
-@@ -495,6 +495,10 @@ static int hdac_hda_dev_probe(struct hdac_device *hdev)
- 
- static int hdac_hda_dev_remove(struct hdac_device *hdev)
- {
-+	struct hdac_hda_priv *hda_pvt;
-+
-+	hda_pvt = dev_get_drvdata(&hdev->dev);
-+	cancel_delayed_work_sync(&hda_pvt->codec.jackpoll_work);
- 	return 0;
- }
- 
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index a14e5fbbea467..eb764c24bc4d4 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3234,13 +3234,13 @@ static int __init rcu_spawn_gp_kthread(void)
+ 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
+ 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
+ 		return 0;
++	if (kthread_prio)
++		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+ 	rnp = rcu_get_root();
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	rcu_state.gp_kthread = t;
+-	if (kthread_prio) {
++	if (kthread_prio)
+ 		sp.sched_priority = kthread_prio;
+-		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+-	}
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	wake_up_process(t);
+ 	rcu_spawn_nocb_kthreads();
 -- 
 2.20.1
 
