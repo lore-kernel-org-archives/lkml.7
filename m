@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE1FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203C9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC5620865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC30920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124221;
-	bh=iw2RiHJuQkS8MmiAI+Oheb6nqhnVOozxDjGK6U5Lmy8=;
+	s=default; t=1570124232;
+	bh=DYPUHkFwE2OHjgLP4ISyNE+opxvpsDK+gYTZDZ7jGSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eT+A6PxYp+4lcXiJfDk68WBu2eQ0n4HJ8u4mQyUSApvW7izAVRDO7ARbaGMgb3aTw
-	 hElDgeWJcLxS1SkvuyGizSeLq6hsXOfpNdbyvvKY76ZFekpL4PMSUISxH8izQhGbga
-	 ykczkuYKaBCsOkVdcneRVU6ZZuR2kMG7MVVPxSQg=
+	b=neUVRL4/JCoNHE0E/Z2eVKB2HrF+zJwdMq2wEKtAjWpn5r4HuzaVKRiSG4JZh7zI0
+	 CUL7rKuPZfo1y06UPkBL8IoLoqEOsUM18/5iD41eEw3txXVxzpeIq3nsi2beM3Ssbd
+	 pfhb1AcarYtLdDDOkMvKl4pKaFX7EzxSF9umMayw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388829AbfJCRhA (ORCPT
+        id S1732497AbfJCRhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49682 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729985AbfJCQEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:01 -0400
+        id S1729865AbfJCQDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 815B2207FF;
-        Thu,  3 Oct 2019 16:03:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3B35215EA;
+        Thu,  3 Oct 2019 16:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118640;
-        bh=iw2RiHJuQkS8MmiAI+Oheb6nqhnVOozxDjGK6U5Lmy8=;
+        s=default; t=1570118628;
+        bh=DYPUHkFwE2OHjgLP4ISyNE+opxvpsDK+gYTZDZ7jGSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhFmFXTRChAt0n0ugtyXDva3bDhHU/nh5Z90VtFvyL5V9GH5HgG40ujRlmfNvVFzo
-         Pzf4Y9eJKdDHuKOB1SwNKRZts67juPlXuBM1Cavw/TmzTkrBmV96ir/8EmpN156rJU
-         9tPGIz2f6SU5GYoWOq3+iChTfafRenmAYGx1g89Y=
+        b=djj8Cw8Ohy/IMmFWf8JlAVSmQoqAZ+rgiLKWZ1LyChD+Trv/fc++LY1RmexQmf6GD
+         x1qZpllOju9hoQig4RDhX54mUmt/34KI+1WiZS0AcYmzUTPwA3knut8V/wop1P5yZ5
+         psvgciXvz4knPl1gOXKIWNYNRWhtpAhjBnAAEn48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 085/129] dmaengine: ti: edma: Do not reset reserved paRAM slots
-Date:   Thu,  3 Oct 2019 17:53:28 +0200
-Message-Id: <20191003154357.581377596@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 073/129] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+Date:   Thu,  3 Oct 2019 17:53:16 +0200
+Message-Id: <20191003154351.585730076@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,48 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 
-[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
+[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
 
-Skip resetting paRAM slots marked as reserved as they might be used by
-other cores.
+saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
+an inverted i2c gate open / closed terminology.
+Let's fix this.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/edma.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index 57962bff75324..72f31e837b1d5 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -2268,9 +2268,6 @@ static int edma_probe(struct platform_device *pdev)
+diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
+index dca0592c5f471..6f93568f56204 100644
+--- a/drivers/media/pci/saa7134/saa7134-i2c.c
++++ b/drivers/media/pci/saa7134/saa7134-i2c.c
+@@ -355,7 +355,11 @@ static struct i2c_client saa7134_client_template = {
  
- 	ecc->default_queue = info->default_queue;
+ /* ----------------------------------------------------------- */
  
--	for (i = 0; i < ecc->num_slots; i++)
--		edma_write_slot(ecc, i, &dummy_paramset);
--
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
- 		rsv_slots = info->rsv->rsv_slots;
-@@ -2283,6 +2280,12 @@ static int edma_probe(struct platform_device *pdev)
- 		}
+-/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
++/*
++ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
++ * demod i2c gate closed due to an address clash between this EEPROM
++ * and the demod one.
++ */
+ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ {
+ 	u8 subaddr = 0x7, dmdregval;
+@@ -372,14 +376,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ 
+ 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
+ 	if ((ret == 2) && (dmdregval & 0x2)) {
+-		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
++		pr_debug("%s: DVB-T demod i2c gate was left open\n",
+ 			 dev->name);
+ 
+ 		data[0] = subaddr;
+ 		data[1] = (dmdregval & ~0x2);
+ 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
+-			pr_err("%s: EEPROM i2c gate open failure\n",
+-			  dev->name);
++			pr_err("%s: EEPROM i2c gate close failure\n",
++			       dev->name);
  	}
+ }
  
-+	for (i = 0; i < ecc->num_slots; i++) {
-+		/* Reset only unused - not reserved - paRAM slots */
-+		if (!test_bit(i, ecc->slot_inuse))
-+			edma_write_slot(ecc, i, &dummy_paramset);
-+	}
-+
- 	/* Clear the xbar mapped channels in unused list */
- 	xbar_chans = info->xbar_chans;
- 	if (xbar_chans) {
 -- 
 2.20.1
 
