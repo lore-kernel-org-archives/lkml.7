@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8527C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F26C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559CA20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124265;
-	bh=ErDtY2kpllQvvj4z6lp/isxmwDgPqnbmLsd+yvJXw78=;
+	s=default; t=1570124270;
+	bh=egiD3HlchjuA3kjYlfvJDgaix+zmh6+yq/vEbpt6MAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=if1L6YfVuzydvYflZc8qHtREH+5AqTiEcXm/24BeHe3wCyGAT3g4ueyZc3m/2tWcB
-	 BKyxONMKzCBXEFimkxrAqv/n02z18PGbhFcFza6gNXOxJ26zMklj1zN5LsLtp1yupE
-	 28g9C7mBYdsIeT3JHswDsCnRFmRqbW9IsfjqwPAc=
+	b=sqInwymBn6fIWKZJIwhlsert0g5Nn/7nUJ88pYpuGImX300aUG2VTLkC/AiEA3gl+
+	 8rRYHZJSt/TjlstvWdWbpSWVweDXbtiJMay+0a7TsJf+ZbTBjAnHwbB1SAKefWM3Uv
+	 UWK8cgQc8p5cVriz2Eozb/vXS/LoCUgO8qbAeKoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388376AbfJCRho (ORCPT
+        id S1732223AbfJCQDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:37:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48484 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732237AbfJCQDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:17 -0400
+        id S1732204AbfJCQDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD00207FF;
-        Thu,  3 Oct 2019 16:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1627E20700;
+        Thu,  3 Oct 2019 16:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118596;
-        bh=ErDtY2kpllQvvj4z6lp/isxmwDgPqnbmLsd+yvJXw78=;
+        s=default; t=1570118585;
+        bh=egiD3HlchjuA3kjYlfvJDgaix+zmh6+yq/vEbpt6MAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WQoKCDaIUDdyo5sy1EwwwD/G6Fe1wXwBeATgsZB6UZM27RfKgReqvuEWm9wQVCOTq
-         wRVsLit5ncglrYrJ3AlJUsHPGAnwu4sZ0DxIeSo40zHVPWQPaBgPnaSU7WS3TV/rVL
-         zosFjhn6PfJEfygBQl9RDWzjlZTFaAfo6vVmL21Q=
+        b=zurVI+qfln6ruCRbc8uXbScPi7Ez4ltjdPUaq30tmOi/Kfx93kbYcApicnqz6Zfd4
+         luDeN6Vs/GMREyExep8ZAtA7EYzk/uAO6EqNPWAMZ/7fIX/VY0HuHh5ZXhRu21Ow+/
+         FfGbQcI3tVqE7KNgOzGZuhaoa6oxtF3V2BSVGuKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 067/129] media: hdpvr: add terminating 0 at end of string
-Date:   Thu,  3 Oct 2019 17:53:10 +0200
-Message-Id: <20191003154349.336979920@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 063/129] media: omap3isp: Dont set streaming state on random subdevs
+Date:   Thu,  3 Oct 2019 17:53:06 +0200
+Message-Id: <20191003154347.645464548@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,38 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
+[ Upstream commit 7ef57be07ac146e70535747797ef4aee0f06e9f9 ]
 
-dev->usbc_buf was passed as argument for %s, but it was not safeguarded
-by a terminating 0.
+The streaming state should be set to the first upstream sub-device only,
+not everywhere, for a sub-device driver itself knows how to best control
+the streaming state of its own upstream sub-devices.
 
-This caused this syzbot issue:
-
-https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
-
-Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/omap3isp/isp.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 7b34108f6587e..99171b912a2d8 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -143,6 +143,7 @@ static int device_authorization(struct hdpvr_device *dev)
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index a21b12c5c0853..ce651d3ca1b82 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -726,6 +726,10 @@ static int isp_pipeline_enable(struct isp_pipeline *pipe,
+ 					s_stream, mode);
+ 			pipe->do_propagation = true;
+ 		}
++
++		/* Stop at the first external sub-device. */
++		if (subdev->dev != isp->dev)
++			break;
+ 	}
  
- 	dev->fw_ver = dev->usbc_buf[1];
+ 	return 0;
+@@ -840,6 +844,10 @@ static int isp_pipeline_disable(struct isp_pipeline *pipe)
+ 						      &subdev->entity);
+ 			failure = -ETIMEDOUT;
+ 		}
++
++		/* Stop at the first external sub-device. */
++		if (subdev->dev != isp->dev)
++			break;
+ 	}
  
-+	dev->usbc_buf[46] = '\0';
- 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
- 			  dev->fw_ver, &dev->usbc_buf[2]);
- 
+ 	return failure;
 -- 
 2.20.1
 
