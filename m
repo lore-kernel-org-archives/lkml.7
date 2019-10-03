@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D688FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A8CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD9120700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DB7215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119187;
-	bh=cJIv5/qNCRfpgoyHBGiQr4dN6PXNAlmJtOYktcQtAUY=;
+	s=default; t=1570119193;
+	bh=Ueaqf8L7aiXnLa7rVeHwr0H9y2qhxDWtM7OnYOJ9vwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXmBYOvxnGhC+gv4zDHcMLRyQQ2LSPQNM9Ngn6YmC2tEFYnGdWbfn6UeuJ80xBTI3
-	 Lqnw0LWklZt2SAKMGo4fJZp9tVMYgwABqv6VAZR7qxHF6vL3/yyKDDTma5r5Csr6O2
-	 d0DwFpMDYrR6ArqcjbdR46f+N9cuxvYiqm2W4XHE=
+	b=bpxE76DhQkgg0CZ4F9+pFPpxRnWlU60VbxLrknWLgVWM3vCG/lJxQXCYapmMmyjLA
+	 XkpBfq8otOZKAfGvrXp6eZ+QxpSnFXMyCJi5pN5dwTngLCc/wvgv0jl/V0R5w+1MAc
+	 u/Kaa0QRrSjTHv7KajGyw2sM8jLAGM7W9rfX0T1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733140AbfJCQNH (ORCPT
+        id S2388369AbfJCQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:13:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388195AbfJCQNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:00 -0400
+        id S1731632AbfJCQNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9781720700;
-        Thu,  3 Oct 2019 16:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAFAE2054F;
+        Thu,  3 Oct 2019 16:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119179;
-        bh=cJIv5/qNCRfpgoyHBGiQr4dN6PXNAlmJtOYktcQtAUY=;
+        s=default; t=1570119185;
+        bh=Ueaqf8L7aiXnLa7rVeHwr0H9y2qhxDWtM7OnYOJ9vwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAO/3TiOWvlDNPXdhetIIyqNslEY71gdEYg6kYmW1A5WUyLoqLlkfrzaNMRLp+/oC
-         4+60bGmZGO6IrKXzTHOODdQGuCsmpf/dhNXZm1PXa39EaCoyjN7mUufp9aUJBNnNwV
-         3rECLUEFBw5zE6zHkMYc8Aopanoxc/JdgekgQgKY=
+        b=kVgFJdiSq3J3txwpyI+OGyJ1KPlAYEgE2yP0NcY4ZfB3YYvO1lTN2vn6dYCFeAgaP
+         L9+5eiE1uJsys2XNWBDi4BGVAyXzkBAX3TW/63bjZfN7cftNe1fWMdklhHYltL4i+4
+         8TRIKPHUE0sMfjcq5YdDsGNRbN7u6dyzMUWR3cSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Richard Kojedzinszky <richard@kojedz.in>
-Subject: [PATCH 4.14 154/185] binfmt_elf: Do not move brk for INTERP-less ET_EXEC
-Date:   Thu,  3 Oct 2019 17:53:52 +0200
-Message-Id: <20191003154514.087761098@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 156/185] ASoC: Intel: Skylake: Use correct function to access iomem space
+Date:   Thu,  3 Oct 2019 17:53:54 +0200
+Message-Id: <20191003154514.574110234@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,38 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
 
-commit 7be3cb019db1cbd5fd5ffe6d64a23fefa4b6f229 upstream.
+commit 17d29ff98fd4b70e9ccdac5e95e18a087e2737ef upstream.
 
-When brk was moved for binaries without an interpreter, it should have
-been limited to ET_DYN only. In other words, the special case was an
-ET_DYN that lacks an INTERP, not just an executable that lacks INTERP.
-The bug manifested for giant static executables, where the brk would end
-up in the middle of the text area on 32-bit architectures.
+For copying from __iomem, we should use __ioread32_copy.
 
-Reported-and-tested-by: Richard Kojedzinszky <richard@kojedz.in>
-Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
+reported by sparse:
+sound/soc/intel/skylake/skl-debug.c:437:34: warning: incorrect type in argument 1 (different address spaces)
+sound/soc/intel/skylake/skl-debug.c:437:34:    expected void [noderef] <asn:2> *to
+sound/soc/intel/skylake/skl-debug.c:437:34:    got unsigned char *
+sound/soc/intel/skylake/skl-debug.c:437:51: warning: incorrect type in argument 2 (different address spaces)
+sound/soc/intel/skylake/skl-debug.c:437:51:    expected void const *from
+sound/soc/intel/skylake/skl-debug.c:437:51:    got void [noderef] <asn:2> *[assigned] fw_reg_addr
+
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+Link: https://lore.kernel.org/r/20190827141712.21015-2-amadeuszx.slawinski@linux.intel.com
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/binfmt_elf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/intel/skylake/skl-debug.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1123,7 +1123,8 @@ static int load_elf_binary(struct linux_
- 		 * (since it grows up, and may collide early with the stack
- 		 * growing down), and into the unused ELF_ET_DYN_BASE region.
- 		 */
--		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
-+		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
-+		    loc->elf_ex.e_type == ET_DYN && !interpreter)
- 			current->mm->brk = current->mm->start_brk =
- 				ELF_ET_DYN_BASE;
+--- a/sound/soc/intel/skylake/skl-debug.c
++++ b/sound/soc/intel/skylake/skl-debug.c
+@@ -196,7 +196,7 @@ static ssize_t fw_softreg_read(struct fi
+ 	memset(d->fw_read_buff, 0, FW_REG_BUF);
  
+ 	if (w0_stat_sz > 0)
+-		__iowrite32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
++		__ioread32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
+ 
+ 	for (offset = 0; offset < FW_REG_SIZE; offset += 16) {
+ 		ret += snprintf(tmp + ret, FW_REG_BUF - ret, "%#.4x: ", offset);
 
 
