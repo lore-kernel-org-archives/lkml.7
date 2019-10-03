@@ -2,165 +2,434 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 639EFC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36C3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C51220873
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863712133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8DGTa7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387642AbfJCTKo (ORCPT
+        id S2387788AbfJCTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:10:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56168 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbfJCTKo (ORCPT
+        Thu, 3 Oct 2019 15:11:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38979 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbfJCTLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:10:44 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <dan.streetman@canonical.com>)
-        id 1iG6Ur-0007Ff-Eg
-        for linux-kernel@vger.kernel.org; Thu, 03 Oct 2019 19:10:41 +0000
-Received: by mail-io1-f69.google.com with SMTP id r5so6902288iop.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:10:41 -0700 (PDT)
+        Thu, 3 Oct 2019 15:11:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r3so3964350wrj.6;
+        Thu, 03 Oct 2019 12:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Uy+F0VpQToARzHY6Pem0ajhcIVMix33cr7TNPDIW5cY=;
+        b=D8DGTa7jvidlWT3vabCm0T+ety3YZ6ooxzHM4hfaAkyvWj86qsibGQqSPwXdkZTsUr
+         hjZlQ7jdF57nMTSgDmDoTYKP8tF9t9Vs/y6gw6OLzVbZLcUFEIXVPZ+2Nol6rySVWSUp
+         zfGyAqo7+lOsjQ1tQ8W7xznhMacHCztQX7LmCJLgSYZQxnvNPimIAmjIZ46/YHptJmtX
+         ijKvL+iKp9WtuRRg0f4i8wE+HryYM57/n7agWRECNOOyBoh99ZQERT1MV5/1aZ427uAK
+         Z62yYBMPacXjjJX0LlOoO4VbYAGc8zHME+lzUpaeLMkJLxT/OC2EuHdrAzYDKRVh4mmU
+         +jZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zN8BjvlVM6Yfmn/ry19EbJlWmoqgSPYEwTG104xKOok=;
-        b=qpn1wmjlqwzYV6tzDxT4RkvC7vcRh/HLJYL5UFAU32pkKCKfzRfJp8AY28ZChOvbC6
-         sastHWXu8Q1GUAfT68AwT6iLPYuO/Y9Q3HqlUXTjbUO39742p5iUVPj+7S5nxfRQ2hXO
-         X6E8/jyzLpsoMbGBlp7JJ+Ek5PQqeMdXWbjz1lLwPkd5DXB/cuwTGPKUcxo1njnH9kWi
-         oenWDgLMDrGOxxn03IpS8UtqGy4M1eZmUVhIT9b13R8KwBWUymp2n7ewsYd76pwvtQPz
-         wgqcaS4LOfNWzeOzh1074f3824b8mWKaV/r1uGIbyiE+RbEQPxVUz6mSsmDyR3NHVQ8P
-         ELTg==
-X-Gm-Message-State: APjAAAVMZrEXnhUBsHUm1JZQX+ba+muZbB1f2l8HP2KqNUFHLJX/BNfj
-        nEUPZiLsj00nfv6Ee0fTz5Oc0C1m7g4f/ynU1W4p/qtm6hnA4aTf6X4lLepymhzBX8DbT0X6P3P
-        C5cNr/ElfMCljEzAGoJ8a2xPu5fnbeyogjuHPBRpwCtFwhMa8XIXdL+HDOg==
-X-Received: by 2002:a5e:990f:: with SMTP id t15mr9541007ioj.270.1570129840425;
-        Thu, 03 Oct 2019 12:10:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy26sjHplQ5R9JDlngxIv5FBinKJp1W9/0TUghKMgjbwSflwXhiPbCTEtAtCFOgD+s1gxXlZTcQYgC4B3bmccg=
-X-Received: by 2002:a5e:990f:: with SMTP id t15mr9540974ioj.270.1570129840027;
- Thu, 03 Oct 2019 12:10:40 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Uy+F0VpQToARzHY6Pem0ajhcIVMix33cr7TNPDIW5cY=;
+        b=OlVQSWhkBQhjrUhvBnqH/7k4hRZcHK6+WerJI7Gpuo3TrCKcdQDKoFcVcFiJSZxePe
+         Gjy1xg/hNhzp1CoSj8dkSMQYNeMGk3KWBejcV2rJm0wS+VHK5dewmy5W53yj1a+9U4V5
+         axjGSLzhMQZOirA18yKFRMONJV5Uz2JRIYnZjQWmPdrdE4J2kCIHjHWbOTNczP6ZcIxi
+         clXqkP4YcfzK83a7ftuPAOle/qj/n/1SsMzGFw5y+i0Pj/gGmcmf61TVnOo3I/sjW46f
+         IZb3BMfYeAI1mBvjR96yqZtHgpIAf520CJWxKCWPTdku1S18oLWdVpPd2opEbLXdSLiC
+         Tw+A==
+X-Gm-Message-State: APjAAAWUbztfRcMTsIniLV6KAuEFByXe77EiEgKgCZv769+8YyZQAuhO
+        ipfEO0yNQ2XA5OafGknVyaG3z7n/v/Jt43LDA7x7wLIh
+X-Google-Smtp-Source: APXvYqztZDpMq9JX6EgIK5YsjEmpybfMFT1ixjKM82kVhe3hmKOzMkMhjnhMqSMEPQgOvgYlrOO6BhRJa5kuPWmZ4k4=
+X-Received: by 2002:adf:cd86:: with SMTP id q6mr8298120wrj.153.1570129862046;
+ Thu, 03 Oct 2019 12:11:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927130402.687-1-ddstreet@canonical.com> <20190927181856.GD1804168@kroah.com>
-In-Reply-To: <20190927181856.GD1804168@kroah.com>
-From:   Dan Streetman <ddstreet@canonical.com>
-Date:   Thu, 3 Oct 2019 15:10:03 -0400
-Message-ID: <CAOZ2QJM+qgiYR+15rydwT6ebuL7UBfPcVp9vXCug6NSWDRS-Cg@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/vio: use simple dummy struct device as bus parent
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Carlos_Eduardo_Cl=C3=ADmaco_Barbosa?= 
+        <climacobarbosacee@gmail.com>
+Date:   Thu, 3 Oct 2019 16:10:50 -0300
+Message-ID: <CACViCuVVe6Jcy=0OnFTFFS6sGyhOx0WnpTR-8nRmvqf2JyiDww@mail.gmail.com>
+Subject: [PATCH 1/2] media: vimc: get pixformat info from v4l2_format_info to
+  avoid code repetition
+To:     Helen Koike <helen.koike@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 2:19 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Sep 27, 2019 at 09:04:02AM -0400, Dan Streetman wrote:
-> > The dummy vio_bus_device creates the /sys/devices/vio directory, which
-> > contains real vio devices under it; since it represents itself as having
-> > a bus = &vio_bus_type, its /sys/devices/vio/uevent does call the bus's
-> > .uevent function, vio_hotplug(), and as that function won't find a real
-> > device for the dummy vio_dev, it will return -ENODEV.
-> >
-> > One of the main users of the uevent node is udevadm, e.g. when it is called
-> > with 'udevadm trigger --devices'.  Up until recently, it would ignore any
-> > errors returned when writing to devices' uevent file, but it was recently
-> > changed to start returning error if it gets an error writing to any uevent
-> > file:
-> > https://github.com/systemd/systemd/commit/97afc0351a96e0daa83964df33937967c75c644f
-> >
-> > since the /sys/devices/vio/uevent file has always returned ENODEV from
-> > any write to it, this now causes the udevadm trigger command to return
-> > an error.  This may be fixed in udevadm to ignore ENODEV errors, but the
-> > vio driver should still be fixed.
-> >
-> > This patch changes the arch/powerpc/platform/pseries/vio.c 'dummy'
-> > parent device into a real dummy device with no .bus, so its uevent
-> > file will stop returning ENODEV and simply do nothing and return 0.
-> >
-> > Signed-off-by: Dan Streetman <ddstreet@canonical.com>
-> > ---
-> >  arch/powerpc/platforms/pseries/vio.c | 11 ++++-------
-> >  1 file changed, 4 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
-> > index 79e2287991db..63bc16631680 100644
-> > --- a/arch/powerpc/platforms/pseries/vio.c
-> > +++ b/arch/powerpc/platforms/pseries/vio.c
-> > @@ -32,11 +32,8 @@
-> >  #include <asm/page.h>
-> >  #include <asm/hvcall.h>
-> >
-> > -static struct vio_dev vio_bus_device  = { /* fake "parent" device */
-> > -     .name = "vio",
-> > -     .type = "",
-> > -     .dev.init_name = "vio",
-> > -     .dev.bus = &vio_bus_type,
-> > +static struct device vio_bus = {
-> > +     .init_name      = "vio",
->
-> Eeek, no!  Why are you creating a static device that will then be
-> reference counted?  Not nice :(
+As the info found in vim_pix_map members are already available in
+v4l2_format_info so those were removed to optimize the code and their
+calls were remapped to matching ones.
+---
+ drivers/media/platform/vimc/vimc-capture.c |  8 +++-
+ drivers/media/platform/vimc/vimc-common.c  | 46 ----------------------
+ drivers/media/platform/vimc/vimc-common.h  |  2 -
+ drivers/media/platform/vimc/vimc-debayer.c |  6 ++-
+ drivers/media/platform/vimc/vimc-scaler.c  | 20 +++++++---
+ drivers/media/platform/vimc/vimc-sensor.c  |  8 +++-
+ 6 files changed, 31 insertions(+), 59 deletions(-)
 
-so, I looked again and it seems quite a few places appear to do
-exactly this, is it something that should be fixed?
+diff --git a/drivers/media/platform/vimc/vimc-capture.c
+b/drivers/media/platform/vimc/vimc-capture.c
+index 1d56b91830ba..49bc8c133980 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -92,6 +92,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file
+*file, void *priv,
+ {
+     struct v4l2_pix_format *format = &f->fmt.pix;
+     const struct vimc_pix_map *vpix;
++    const struct v4l2_format_info *vinfo;
 
-$ git grep 'static struct device [^*{]*{'
-arch/arm/kernel/dma-isa.c:static struct device isa_dma_dev = {
-arch/arm/mach-rpc/dma.c:static struct device isa_dma_dev = {
-arch/arm/mach-s3c24xx/s3c2410.c:static struct device s3c2410_dev = {
-arch/arm/mach-s3c24xx/s3c2412.c:static struct device s3c2412_dev = {
-arch/arm/mach-s3c24xx/s3c2416.c:static struct device s3c2416_dev = {
-arch/arm/mach-s3c24xx/s3c2440.c:static struct device s3c2440_dev = {
-arch/arm/mach-s3c24xx/s3c2442.c:static struct device s3c2442_dev = {
-arch/arm/mach-s3c24xx/s3c2443.c:static struct device s3c2443_dev = {
-arch/arm/mach-s3c64xx/common.c:static struct device s3c64xx_dev = {
-arch/arm/mach-s3c64xx/s3c6400.c:static struct device s3c6400_dev = {
-arch/arm/mach-s3c64xx/s3c6410.c:static struct device s3c6410_dev = {
-arch/mips/sgi-ip22/ip22-gio.c:static struct device gio_bus = {
-arch/parisc/kernel/drivers.c:static struct device root = {
-arch/powerpc/platforms/ps3/system-bus.c:static struct device ps3_system_bus = {
-arch/powerpc/platforms/pseries/ibmebus.c:static struct device
-ibmebus_bus_device = { /* fake "parent" device */
-arch/powerpc/platforms/pseries/vio.c:static struct device vio_bus = {
-arch/um/drivers/virtio_uml.c:static struct device vu_cmdline_parent = {
-drivers/base/isa.c:static struct device isa_bus = {
-drivers/block/rbd.c:static struct device rbd_root_dev = {
-drivers/gpu/drm/ttm/ttm_module.c:static struct device ttm_drm_class_device = {
-drivers/iio/dummy/iio_dummy_evgen.c:static struct device iio_evgen_dev = {
-drivers/iio/trigger/iio-trig-sysfs.c:static struct device iio_sysfs_trig_dev = {
-drivers/misc/sgi-gru/grumain.c:static struct device gru_device = {
-drivers/nubus/bus.c:static struct device nubus_parent = {
-drivers/sh/maple/maple.c:static struct device maple_bus = {
-drivers/sh/superhyway/superhyway.c:static struct device
-superhyway_bus_device = {
-drivers/soc/fsl/qe/qe_ic.c:static struct device device_qe_ic = {
-drivers/virtio/virtio_mmio.c:static struct device vm_cmdline_parent = {
-kernel/time/clockevents.c:static struct device tick_bc_dev = {
-kernel/time/clocksource.c:static struct device device_clocksource = {
+     format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
+                 VIMC_FRAME_MAX_WIDTH) & ~1;
+@@ -104,8 +105,9 @@ static int vimc_cap_try_fmt_vid_cap(struct file
+*file, void *priv,
+         format->pixelformat = fmt_default.pixelformat;
+         vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+     }
++    vinfo = v4l2_format_info(format->pixelformat);
+     /* TODO: Add support for custom bytesperline values */
+-    format->bytesperline = format->width * vpix->bpp;
++    format->bytesperline = format->width * vinfo->bpp[0];
+     format->sizeimage = format->bytesperline * format->height;
 
+     if (format->field == V4L2_FIELD_ANY)
+@@ -397,6 +399,7 @@ static int vimc_cap_comp_bind(struct device *comp,
+struct device *master,
+     struct v4l2_device *v4l2_dev = master_data;
+     struct vimc_platform_data *pdata = comp->platform_data;
+     const struct vimc_pix_map *vpix;
++    const struct v4l2_format_info *vinfo;
+     struct vimc_cap_device *vcap;
+     struct video_device *vdev;
+     struct vb2_queue *q;
+@@ -452,7 +455,8 @@ static int vimc_cap_comp_bind(struct device *comp,
+struct device *master,
+     /* Set default frame format */
+     vcap->format = fmt_default;
+     vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
+-    vcap->format.bytesperline = vcap->format.width * vpix->bpp;
++    vinfo = v4l2_format_info(vpix->pixelformat);
++    vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
+     vcap->format.sizeimage = vcap->format.bytesperline *
+                  vcap->format.height;
 
->
-> What's wrong with a simple call to device_create() for your "fake"
-> device you want to make here?  That's what it is there for :)
->
-> thanks,
->
-> greg k-h
+diff --git a/drivers/media/platform/vimc/vimc-common.c
+b/drivers/media/platform/vimc/vimc-common.c
+index 7e1ae0b12f1e..2d1205f0a600 100644
+--- a/drivers/media/platform/vimc/vimc-common.c
++++ b/drivers/media/platform/vimc/vimc-common.c
+@@ -21,146 +21,100 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+     {
+         .code = MEDIA_BUS_FMT_BGR888_1X24,
+         .pixelformat = V4L2_PIX_FMT_BGR24,
+-        .bpp = 3,
+-        .bayer = false,
+     },
+     {
+         .code = MEDIA_BUS_FMT_RGB888_1X24,
+         .pixelformat = V4L2_PIX_FMT_RGB24,
+-        .bpp = 3,
+-        .bayer = false,
+     },
+     {
+         .code = MEDIA_BUS_FMT_ARGB8888_1X32,
+         .pixelformat = V4L2_PIX_FMT_ARGB32,
+-        .bpp = 4,
+-        .bayer = false,
+     },
+
+     /* Bayer formats */
+     {
+         .code = MEDIA_BUS_FMT_SBGGR8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SBGGR8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGBRG8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SGBRG8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGRBG8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SGRBG8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SRGGB8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SRGGB8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SBGGR10_1X10,
+         .pixelformat = V4L2_PIX_FMT_SBGGR10,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGBRG10_1X10,
+         .pixelformat = V4L2_PIX_FMT_SGBRG10,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGRBG10_1X10,
+         .pixelformat = V4L2_PIX_FMT_SGRBG10,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SRGGB10_1X10,
+         .pixelformat = V4L2_PIX_FMT_SRGGB10,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+
+     /* 10bit raw bayer a-law compressed to 8 bits */
+     {
+         .code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+
+     /* 10bit raw bayer DPCM compressed to 8 bits */
+     {
+         .code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+         .pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
+-        .bpp = 1,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SBGGR12_1X12,
+         .pixelformat = V4L2_PIX_FMT_SBGGR12,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGBRG12_1X12,
+         .pixelformat = V4L2_PIX_FMT_SGBRG12,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SGRBG12_1X12,
+         .pixelformat = V4L2_PIX_FMT_SGRBG12,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+     {
+         .code = MEDIA_BUS_FMT_SRGGB12_1X12,
+         .pixelformat = V4L2_PIX_FMT_SRGGB12,
+-        .bpp = 2,
+-        .bayer = true,
+     },
+ };
+
+diff --git a/drivers/media/platform/vimc/vimc-common.h
+b/drivers/media/platform/vimc/vimc-common.h
+index 9c2e0e216c6b..0a54dcd37410 100644
+--- a/drivers/media/platform/vimc/vimc-common.h
++++ b/drivers/media/platform/vimc/vimc-common.h
+@@ -79,9 +79,7 @@ struct vimc_platform_data {
+  */
+ struct vimc_pix_map {
+     unsigned int code;
+-    unsigned int bpp;
+     u32 pixelformat;
+-    bool bayer;
+ };
+
+ /**
+diff --git a/drivers/media/platform/vimc/vimc-debayer.c
+b/drivers/media/platform/vimc/vimc-debayer.c
+index b72b8385067b..50801f76a448 100644
+--- a/drivers/media/platform/vimc/vimc-debayer.c
++++ b/drivers/media/platform/vimc/vimc-debayer.c
+@@ -314,6 +314,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+     if (enable) {
+         const struct vimc_pix_map *vpix;
++        const struct v4l2_format_info *vinfo;
+         unsigned int frame_size;
+
+         if (vdeb->src_frame)
+@@ -321,12 +322,13 @@ static int vimc_deb_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+         /* Calculate the frame size of the source pad */
+         vpix = vimc_pix_map_by_code(vdeb->src_code);
++        vinfo = v4l2_format_info(vpix->pixelformat);
+         frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
+-                vpix->bpp;
++                vinfo->bpp[0];
+
+         /* Save the bytes per pixel of the sink */
+         vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
+-        vdeb->sink_bpp = vpix->bpp;
++        vdeb->sink_bpp = vinfo->bpp[0];
+
+         /* Get the corresponding pixel map from the table */
+         vdeb->sink_pix_map =
+diff --git a/drivers/media/platform/vimc/vimc-scaler.c
+b/drivers/media/platform/vimc/vimc-scaler.c
+index 49ab8d9dd9c9..599653169b1e 100644
+--- a/drivers/media/platform/vimc/vimc-scaler.c
++++ b/drivers/media/platform/vimc/vimc-scaler.c
+@@ -66,14 +66,22 @@ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
+     return 0;
+ }
+
++static int vimc_is_bayer(const struct vimc_pix_map *vpix)
++{
++    const struct v4l2_format_info *vinfo =
++                v4l2_format_info(vpix->pixelformat);
++    const u8 *bpp = vinfo->bpp;
++
++    return bpp[0] != 1 || bpp[1] || bpp[2] || bpp[3];
++}
++
+ static int vimc_sca_enum_mbus_code(struct v4l2_subdev *sd,
+                    struct v4l2_subdev_pad_config *cfg,
+                    struct v4l2_subdev_mbus_code_enum *code)
+ {
+     const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
+-
+     /* We don't support bayer format */
+-    if (!vpix || vpix->bayer)
++    if (!vpix || vimc_is_bayer(vpix))
+         return -EINVAL;
+
+     code->code = vpix->code;
+@@ -92,7 +100,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+
+     /* Only accept code in the pix map table in non bayer format */
+     vpix = vimc_pix_map_by_code(fse->code);
+-    if (!vpix || vpix->bayer)
++    if (!vpix || vimc_is_bayer(vpix))
+         return -EINVAL;
+
+     fse->min_width = VIMC_FRAME_MIN_WIDTH;
+@@ -135,7 +143,7 @@ static void vimc_sca_adjust_sink_fmt(struct
+v4l2_mbus_framefmt *fmt)
+
+     /* Only accept code in the pix map table in non bayer format */
+     vpix = vimc_pix_map_by_code(fmt->code);
+-    if (!vpix || vpix->bayer)
++    if (!vpix || vimc_is_bayer(vpix))
+         fmt->code = sink_fmt_default.code;
+
+     fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+@@ -210,6 +218,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+     if (enable) {
+         const struct vimc_pix_map *vpix;
++        const struct v4l2_format_info *vinfo;
+         unsigned int frame_size;
+
+         if (vsca->src_frame)
+@@ -217,7 +226,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+         /* Save the bytes per pixel of the sink */
+         vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
+-        vsca->bpp = vpix->bpp;
++        vinfo = v4l2_format_info(vpix->pixelformat);
++        vsca->bpp = vinfo->bpp[0];
+
+         /* Calculate the width in bytes of the src frame */
+         vsca->src_line_size = vsca->sink_fmt.width *
+diff --git a/drivers/media/platform/vimc/vimc-sensor.c
+b/drivers/media/platform/vimc/vimc-sensor.c
+index 6c53b9fc1617..81acd12b0896 100644
+--- a/drivers/media/platform/vimc/vimc-sensor.c
++++ b/drivers/media/platform/vimc/vimc-sensor.c
+@@ -109,10 +109,12 @@ static void vimc_sen_tpg_s_format(struct
+vimc_sen_device *vsen)
+ {
+     const struct vimc_pix_map *vpix =
+                 vimc_pix_map_by_code(vsen->mbus_format.code);
++    const struct v4l2_format_info *vinfo =
++                v4l2_format_info(vpix->pixelformat);
+
+     tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
+              vsen->mbus_format.height, vsen->mbus_format.field);
+-    tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
++    tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vinfo->bpp[0]);
+     tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
+     tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
+     /* TODO: add support for V4L2_FIELD_ALTERNATE */
+@@ -206,6 +208,7 @@ static int vimc_sen_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+     if (enable) {
+         const struct vimc_pix_map *vpix;
++        const struct v4l2_format_info *vinfo;
+         unsigned int frame_size;
+
+         if (vsen->kthread_sen)
+@@ -214,7 +217,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+         /* Calculate the frame size */
+         vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+-        frame_size = vsen->mbus_format.width * vpix->bpp *
++        vinfo = v4l2_format_info(vpix->pixelformat);
++        frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
+                  vsen->mbus_format.height;
+
+         /*
+-- 
+2.23.0
