@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FBEC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D301C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1744820830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054E920830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123712;
-	bh=Y1kShC29f9/xSMhQ3125LErCyuq33vFLzj/paWB00Ms=;
+	s=default; t=1570123719;
+	bh=6b5jTT1uSMagUS3nV3QpOU2+HHivB8utPxBdWmXGx7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qej9W2sgzD+XxoEZuOMCFfWOh5aaifUCrzHjcA7XKMbge28A8WWV69HgBdm8J0P6l
-	 CPBkX4wmW1lAPlgJjZfa3uPFxGzFxdghsTmAupwxGkMaViyerlIi4Bn27X7fgC+g5g
-	 C7rnYvjbOOp98PeWA7RHz/zPL2bTK/AXKwHKBv00=
+	b=kvAgPiFOAkPVkmdqAV0+OijTxnNhQGQ7XVojOyvuKqw3i7Dkwalh2qyjR+k967wOy
+	 5J4ydANj9ioXDn55hmyCidfGegpbw/T0DaAgJxufUi8dBGfLFrDtrY2ABw0NNowBOD
+	 +2iQFbnfPEb6mjQa6Sq49BaBvvxWx/wcbiJSygbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbfJCR2a (ORCPT
+        id S1730161AbfJCR2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:28:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36578 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732984AbfJCQNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:43 -0400
+        id S2388354AbfJCQNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E51C20700;
-        Thu,  3 Oct 2019 16:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 772282054F;
+        Thu,  3 Oct 2019 16:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119222;
-        bh=Y1kShC29f9/xSMhQ3125LErCyuq33vFLzj/paWB00Ms=;
+        s=default; t=1570119212;
+        bh=6b5jTT1uSMagUS3nV3QpOU2+HHivB8utPxBdWmXGx7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vN+U7I0a9o2l/oSZ30bn2iTMLYYiQMIXvhiqeIZbDz6XuV2g1ak5UlBMvez0S7OA7
-         F4iFlAVhcgFmrSTKDL0LQ5ltEcBggVI631G059mx2rENMLQ+cwaaGv/4KbsrfrReJD
-         AIRr5xOz/P28EA2GtKFBXmMx3CQnYAXzYznFcf4Y=
+        b=0d+JYRCXYZ4iy8loQGGfwM+x6Xu+Oqi+gY6rB1lzyrD7ERw0oQvfpgnaWupNo6r98
+         Lv8+MlWjgt9ME2FI8K7L8cnnYK/Q8aUESCz5aee/qsPtskmqFwJ4lfV6Trikx+sLOi
+         s8AChB52Hl6B7loqgZGV5Jec8S3YYDqenrc0A5h0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 122/185] md/raid1: fail run raid1 array when active disk less than one
-Date:   Thu,  3 Oct 2019 17:53:20 +0200
-Message-Id: <20191003154505.495921332@linuxfoundation.org>
+Subject: [PATCH 4.14 128/185] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
+Date:   Thu,  3 Oct 2019 17:53:26 +0200
+Message-Id: <20191003154506.607376909@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,76 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
+[ Upstream commit 36d57efb4af534dd6b442ea0b9a04aa6dfa37abe ]
 
-When run test case:
-  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
-  mdadm -S /dev/md1
-  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+The sdio_irq_pending flag is used to let host drivers indicate that it has
+signaled an IRQ. If that is the case and we only have a single SDIO func
+that have claimed an SDIO IRQ, our assumption is that we can avoid reading
+the SDIO_CCCR_INTx register and just call the SDIO func irq handler
+immediately. This makes sense, but the flag is set/cleared in a somewhat
+messy order, let's fix that up according to below.
 
-  mdadm --zero /dev/sda
-  mdadm /dev/md1 -a /dev/sda
+First, the flag is currently set in sdio_run_irqs(), which is executed as a
+work that was scheduled from sdio_signal_irq(). To make it more implicit
+that the host have signaled an IRQ, let's instead immediately set the flag
+in sdio_signal_irq(). This also makes the behavior consistent with host
+drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
+functional impact, because we don't expect host drivers to call
+sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
+anyways.
 
-  echo offline > /sys/block/sdc/device/state
-  echo offline > /sys/block/sdb/device/state
-  sleep 5
-  mdadm -S /dev/md1
+Second, currently we never clears the flag when using the sdio_run_irqs()
+work, but only when using the sdio_irq_thread(). Let make the behavior
+consistent, by moving the flag to be cleared inside the common
+process_sdio_pending_irqs() function. Additionally, tweak the behavior of
+the flag slightly, by avoiding to clear it unless we processed the SDIO
+IRQ. The purpose with this at this point, is to keep the information about
+whether there have been an SDIO IRQ signaled by the host, so at system
+resume we can decide to process it without reading the SDIO_CCCR_INTx
+register.
 
-  echo running > /sys/block/sdb/device/state
-  echo running > /sys/block/sdc/device/state
-  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
-
-mdadm run fail with kernel message as follow:
-[  172.986064] md: kicking non-fresh sdb from array!
-[  173.004210] md: kicking non-fresh sdc from array!
-[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
-[  173.022406] md1: failed to create bitmap (-5)
-
-In fact, when active disk in raid1 array less than one, we
-need to return fail in raid1_run().
-
-Reviewed-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/mmc/core/sdio_irq.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 762d21c84774a..f46ac9db9edb2 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -3099,6 +3099,13 @@ static int raid1_run(struct mddev *mddev)
- 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
- 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
- 			mddev->degraded++;
-+	/*
-+	 * RAID1 needs at least one disk in active
-+	 */
-+	if (conf->raid_disks - mddev->degraded < 1) {
-+		ret = -EINVAL;
-+		goto abort;
-+	}
+diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
+index 2fdd84c67f191..0656d740b0dd2 100644
+--- a/drivers/mmc/core/sdio_irq.c
++++ b/drivers/mmc/core/sdio_irq.c
+@@ -35,6 +35,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
+ {
+ 	struct mmc_card *card = host->card;
+ 	int i, ret, count;
++	bool sdio_irq_pending = host->sdio_irq_pending;
+ 	unsigned char pending;
+ 	struct sdio_func *func;
  
- 	if (conf->raid_disks - mddev->degraded == 1)
- 		mddev->recovery_cp = MaxSector;
-@@ -3132,8 +3139,12 @@ static int raid1_run(struct mddev *mddev)
- 	ret =  md_integrity_register(mddev);
- 	if (ret) {
- 		md_unregister_thread(&mddev->thread);
--		raid1_free(mddev, conf);
-+		goto abort;
- 	}
-+	return 0;
+@@ -42,13 +43,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
+ 	if (mmc_card_suspended(card))
+ 		return 0;
+ 
++	/* Clear the flag to indicate that we have processed the IRQ. */
++	host->sdio_irq_pending = false;
 +
-+abort:
-+	raid1_free(mddev, conf);
- 	return ret;
- }
+ 	/*
+ 	 * Optimization, if there is only 1 function interrupt registered
+ 	 * and we know an IRQ was signaled then call irq handler directly.
+ 	 * Otherwise do the full probe.
+ 	 */
+ 	func = card->sdio_single_irq;
+-	if (func && host->sdio_irq_pending) {
++	if (func && sdio_irq_pending) {
+ 		func->irq_handler(func);
+ 		return 1;
+ 	}
+@@ -100,7 +104,6 @@ void sdio_run_irqs(struct mmc_host *host)
+ {
+ 	mmc_claim_host(host);
+ 	if (host->sdio_irqs) {
+-		host->sdio_irq_pending = true;
+ 		process_sdio_pending_irqs(host);
+ 		if (host->ops->ack_sdio_irq)
+ 			host->ops->ack_sdio_irq(host);
+@@ -119,6 +122,7 @@ void sdio_irq_work(struct work_struct *work)
  
+ void sdio_signal_irq(struct mmc_host *host)
+ {
++	host->sdio_irq_pending = true;
+ 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
+ }
+ EXPORT_SYMBOL_GPL(sdio_signal_irq);
+@@ -163,7 +167,6 @@ static int sdio_irq_thread(void *_host)
+ 		if (ret)
+ 			break;
+ 		ret = process_sdio_pending_irqs(host);
+-		host->sdio_irq_pending = false;
+ 		mmc_release_host(host);
+ 
+ 		/*
 -- 
 2.20.1
 
