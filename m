@@ -2,127 +2,132 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE8C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB69CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6845721783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFE1206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:05:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rQGq/Gkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfJCJFA (ORCPT
+        id S1728953AbfJCJFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:05:00 -0400
-Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:46922 "EHLO
-        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfJCJFA (ORCPT
+        Thu, 3 Oct 2019 05:05:52 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42916 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfJCJFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:05:00 -0400
-Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
-        by localhost (Postfix) with SMTP id 8A9315615AC;
-        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
-        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id 8503A561596;
-        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
-        by localhost (Postfix) with SMTP id F084A1804EB;
-        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
-Received: from [10.193.71.64] (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.64])
-        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id AFD081804B4;
-        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191001234520.GA96866@google.com>
-From:   CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
-Message-ID: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
-Date:   Thu, 3 Oct 2019 11:04:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191001234520.GA96866@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-PMX-Version: 6.4.7.2805085, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.3.85416, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.3.5650000
-X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
- MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODY_SIZE_3000_3999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, ECARD_WORD 0, FROM_NAME_PHRASE 0, IN_REP_TO 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, MULTIPLE_REAL_RCPTS 0, REFERENCES 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __BOUNCE_CHALLENGE_SUBJ 0, __BOUNCE_NDR_SUBJ_EXEMPT 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __FORWARDED_MSG 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HTTPS_URI 0, __IN_REP_TO 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MOZILLA_USER_AGENT 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __PHISH_SPEAR_SUBJ_PREDICATE 0, __REFERENCES 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_REPLY 0, __TO_MALFORMED_2 0, __TO_NAME 0,
- __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NO_MAILTO 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0, __USER_AGENT 0'
+        Thu, 3 Oct 2019 05:05:52 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w14so2518889qto.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=xWvjAJ+vmNMIpeEImL3eN8FbY3mh5BNsK1umkA/yuKA=;
+        b=rQGq/GkgmPP0jTIUHjSC8C6/MU5ReIqGZzuX/UwCB/QPQrP0NRhll8Im3UdtgnegtL
+         nQCUgQGybFYiMBt339er7ABesjSSw3Aehfcp3Xbud3/76ur/paF9kV3/z3aMv/M7WMhO
+         yb+Uq+HZg8zXNIZJbBPO9ZmOrRFUv/9WtbWa6rf8GS2ubKrfn3lEM6Kp+6kiss9xexPw
+         pK33gME4N3znz2EKdbkfEKDndziRVplRPIfDcJPi0fbGdzCnLLqKooB7jaiF5DC0MSRT
+         bfrW29fGQtLDBCIaewDCpiPWg+FM82o80P2EdaeWdf0KsBKGFpxaFqJKmyeuN1e656F0
+         QAgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=xWvjAJ+vmNMIpeEImL3eN8FbY3mh5BNsK1umkA/yuKA=;
+        b=jTidxPcYpjbP9qKHDIfa7mAVJ1po/mj9LQa0dWt3JNOYTQ/qHrio8BVdiryerQ541K
+         8eqbk3RlBqrgF7bPPzoFprjqwGAjrzzqbShrsljyS9g1Bq7P7JlPhuS3ZHIV12dBhLBL
+         nrEugVn6w6AUU7wz8AT5cuDTrwcst9twjsOJYN3FJX9VxhQw5JWp4HJTq6DIni4TNO05
+         8Jd7gqwBzLv+yIY0KaKPN49/eqLwSQVHjcPMweD60AKnocSzNJuUdGRBnd/uui5Wd8dY
+         3AECcY3erruqGs6VJjj07bBov7iZb7kDncLidgHQkJJ9AxcUmHyFHCaENqaOz/WqeN0F
+         doGg==
+X-Gm-Message-State: APjAAAVqCsP1xK85p8mvmwRm/Wp5OVYFkWjcDusIkBCGYB2jl08+LWdF
+        30YT9DrSGGHbD2nvgKb/eCHDBg==
+X-Google-Smtp-Source: APXvYqx/K/TFKFb3HVfCLhcINgoNzkLVvgCx7hmM1H+WyJUczpaRihtkRlTjXZCGlfeUHw9JREKM0Q==
+X-Received: by 2002:ac8:4304:: with SMTP id z4mr8649614qtm.160.1570093551315;
+        Thu, 03 Oct 2019 02:05:51 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id c20sm829041qkm.11.2019.10.03.02.05.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 02:05:50 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in has_unmovable_pages()
+Date:   Thu, 3 Oct 2019 05:05:50 -0400
+Message-Id: <7FA7CBE1-E0A9-40E2-B3CA-0896F6D491E5@lca.pw>
+References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
+To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
+X-Mailer: iPhone Mail (17A844)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
-> On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
->> I also initially thought that kobject_uevent generated the netlink event
->> but this is not the case. This is generated by the specific driver in use.
->> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
->> i40e_pci_sriov_configure that sends the event.
->> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
->> finally calls the generic pci_enable_sriov function.
-> I don't know anything about netlink.  The script from the bugzilla
-> (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
-> runs
->
->    ip monitor dev enp9s0f2
->
-> What are the actual netlink events you see?  Are they related to a
-> device being removed?
 
-We have netlink events both when num_vfs goes from 0 to N and from N to 0.
-Indeed you have to go to 0 before going to M with M != N.
-On an Intel card, when one goes from 0 to N, the netlink event is sent 
-"early". The
-value of num_vfs is still 0 and you get the impression that the number 
-of VFS has
-not changed. As the meaning of those events is overloaded, you have to 
-wait an
-arbitrary amount of time until it settles (there will be no other event).
-There is no such problem when it goes from N to 0 because of 
-implementation details
-but it may be different for another brand.
 
-> When we change num_VFs, I think we have to disable any existing VFs
-> before enabling the new num_VFs, so if you trigger on a netlink
-> "remove" event, I wouldn't be surprised that reading sriov_numvfs
-> would give a zero until the new VFs are enabled.
-Yes but we are speaking of the event sent when num_vfs is changed from 0 
-to N
-> [...]
-> I thought this was a good idea, but
->
->    - It does break the device_lock() encapsulation a little bit:
->      sriov_numvfs_store() uses device_lock(), which happens to be
->      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
->      rely on that implementation, and
-The use of device_lock was the cheapest solution. It is true that lock 
-and trylock are
-exposed by device.h but not is_locked. To respect the abstraction, we 
-would have to
-lock the device (at least use trylock but it means locking when we can 
-access the
-value, in that case we may just make reading num_vfs blocking ?).
+> On Oct 3, 2019, at 4:10 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> w=
+rote:
+>=20
+> Having unmovable pages on a given pageblock should be reported correctly
+> when required with REPORT_FAILURE flag. But there can be a scenario where a=
 
-The other solution is to record the state of freshness of num_vfs but it 
-means a
-new Boolean in the pci_sriov data-structure.
+> reserved page in the page block will get reported as a generic "unmovable"=
 
->    - The netlink events are being generated via the NIC driver, and I'm
->      a little hesitant about changing the PCI core to deal with timing
->      issues "over there".
+> reason code. Instead this should be changed to a more appropriate reason
+> code like "Reserved page".
 
-NIC drivers send netlink events when their state change, but it is the 
-core that changes
-the value of num_vfs. So I would think it is the core responsibility to 
-make sure the
-exposed value makes sense and it would be better to ignore the details 
-of the driver
-implementation.
-That is why the initial patch moving when the value was updated was 
-finally not
-such a good idea.
+Isn=E2=80=99t this redundant as it dumps the flags in dump_page() anyway?
 
-[...]
+>=20
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> mm/page_alloc.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 15c2050c629b..fbf93ea119d2 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8206,8 +8206,10 @@ bool has_unmovable_pages(struct zone *zone, struct p=
+age *page, int count,
+>=20
+>        page =3D pfn_to_page(check);
+>=20
+> -        if (PageReserved(page))
+> +        if (PageReserved(page)) {
+> +            reason =3D "Reserved page";
+>            goto unmovable;
+> +        }
+>=20
+>        /*
+>         * If the zone is movable and we have ruled out all reserved
+> --=20
+> 2.20.1
+>=20
