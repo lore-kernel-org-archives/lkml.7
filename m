@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F756C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02801C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EF9222CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DF3222CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118675;
-	bh=OZiQOQK6GRMgvpkM/jHIACWmpTyy1Vs+E5l8pYuqDfA=;
+	s=default; t=1570118678;
+	bh=JWoQwYa5H76DAUBqCzDOjjVohTZObjYeydY9EYZpwEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j043TG7Cma6u/Xsd8+KbFGemnM44iB95LVTXWfBjpD6G0322CgBkFt2MXUhjR5nF3
-	 U4LeG9yYut2ylEYAc7t2QrI5+5TLyQZeMJtQ8aWnFutLEPNg1h5KlcqbKrD+jFoQqi
-	 5YfQF1luo5AVdgFan/w0/D0oX5cWVeD+kK+dDEXk=
+	b=n+3E+ZaEveQAk+1k8OcbLtgE6tsKT4Xg5N+kruITXlCkIsAnyWHZ4IQd8nFLmaqBy
+	 7fMU1XDOegnJQlcOlL3UIYGWwT7aqvDKCeBF62WWCOD1KNmJPSSmtrYm5hMLQX97FR
+	 r9nn2h0gahUtqy73BGFTH9sygpvwFuHihnAwCq4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfJCQEf (ORCPT
+        id S1732438AbfJCQEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732417AbfJCQEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:33 -0400
+        id S1732430AbfJCQEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4152B207FF;
-        Thu,  3 Oct 2019 16:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB04C21D81;
+        Thu,  3 Oct 2019 16:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118671;
-        bh=OZiQOQK6GRMgvpkM/jHIACWmpTyy1Vs+E5l8pYuqDfA=;
+        s=default; t=1570118674;
+        bh=JWoQwYa5H76DAUBqCzDOjjVohTZObjYeydY9EYZpwEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UyNspbRxr83O63aaPXp58bvqwUj/BBwUSmXvz7KWmGI+PP5aecQ55eoV7juEnnofa
-         8MCJ3Ldf1vsXqBtFqIJsyLuwb+WUpi48leqyIuTKbevrtQrDR/EZ1WZ6gS4EG9pyFL
-         P3hyd1++PE9dRHIfDYc4vrZVViX4BlECQOJx7S78=
+        b=HBm7msikmSUFnp+cQH4/5mtr2F+ANCBXsPWYAKJzqOAZ2BrRxU3SK1hXSXSFWqkeM
+         /Kmt0pZO7ApCREB0czAIROAjaj+4C+/Zv1/ndLsOuYsSb8yJeH+YqWiaKOAxlQpCOv
+         gxAXz//qd+/1+y3PSkkpRkU7z7q2XvFdIlpweoeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 096/129] media: omap3isp: Set device on omap3isp subdevs
-Date:   Thu,  3 Oct 2019 17:53:39 +0200
-Message-Id: <20191003154403.586416212@linuxfoundation.org>
+Subject: [PATCH 4.9 097/129] PM / devfreq: passive: fix compiler warning
+Date:   Thu,  3 Oct 2019 17:53:40 +0200
+Message-Id: <20191003154403.884103313@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -62,99 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
 
-[ Upstream commit e9eb103f027725053a4b02f93d7f2858b56747ce ]
+[ Upstream commit 0465814831a926ce2f83e8f606d067d86745234e ]
 
-The omap3isp driver registered subdevs without the dev field being set. Do
-that now.
+The recent commit of
+PM / devfreq: passive: Use non-devm notifiers
+had incurred compiler warning, "unused variable 'dev'".
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap3isp/ispccdc.c    | 1 +
- drivers/media/platform/omap3isp/ispccp2.c    | 1 +
- drivers/media/platform/omap3isp/ispcsi2.c    | 1 +
- drivers/media/platform/omap3isp/isppreview.c | 1 +
- drivers/media/platform/omap3isp/ispresizer.c | 1 +
- drivers/media/platform/omap3isp/ispstat.c    | 2 ++
- 6 files changed, 7 insertions(+)
+ drivers/devfreq/governor_passive.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/platform/omap3isp/ispccdc.c b/drivers/media/platform/omap3isp/ispccdc.c
-index 882310eb45ccf..fe16fbd95221f 100644
---- a/drivers/media/platform/omap3isp/ispccdc.c
-+++ b/drivers/media/platform/omap3isp/ispccdc.c
-@@ -2608,6 +2608,7 @@ int omap3isp_ccdc_register_entities(struct isp_ccdc_device *ccdc,
- 	int ret;
- 
- 	/* Register the subdev and video node. */
-+	ccdc->subdev.dev = vdev->mdev->dev;
- 	ret = v4l2_device_register_subdev(vdev, &ccdc->subdev);
- 	if (ret < 0)
- 		goto error;
-diff --git a/drivers/media/platform/omap3isp/ispccp2.c b/drivers/media/platform/omap3isp/ispccp2.c
-index ca095238510d5..b64e218eaea6e 100644
---- a/drivers/media/platform/omap3isp/ispccp2.c
-+++ b/drivers/media/platform/omap3isp/ispccp2.c
-@@ -1030,6 +1030,7 @@ int omap3isp_ccp2_register_entities(struct isp_ccp2_device *ccp2,
- 	int ret;
- 
- 	/* Register the subdev and video nodes. */
-+	ccp2->subdev.dev = vdev->mdev->dev;
- 	ret = v4l2_device_register_subdev(vdev, &ccp2->subdev);
- 	if (ret < 0)
- 		goto error;
-diff --git a/drivers/media/platform/omap3isp/ispcsi2.c b/drivers/media/platform/omap3isp/ispcsi2.c
-index f75a1be29d84a..27a2913363b62 100644
---- a/drivers/media/platform/omap3isp/ispcsi2.c
-+++ b/drivers/media/platform/omap3isp/ispcsi2.c
-@@ -1206,6 +1206,7 @@ int omap3isp_csi2_register_entities(struct isp_csi2_device *csi2,
- 	int ret;
- 
- 	/* Register the subdev and video nodes. */
-+	csi2->subdev.dev = vdev->mdev->dev;
- 	ret = v4l2_device_register_subdev(vdev, &csi2->subdev);
- 	if (ret < 0)
- 		goto error;
-diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
-index ac30a0f837801..e981eb2330f18 100644
---- a/drivers/media/platform/omap3isp/isppreview.c
-+++ b/drivers/media/platform/omap3isp/isppreview.c
-@@ -2228,6 +2228,7 @@ int omap3isp_preview_register_entities(struct isp_prev_device *prev,
- 	int ret;
- 
- 	/* Register the subdev and video nodes. */
-+	prev->subdev.dev = vdev->mdev->dev;
- 	ret = v4l2_device_register_subdev(vdev, &prev->subdev);
- 	if (ret < 0)
- 		goto error;
-diff --git a/drivers/media/platform/omap3isp/ispresizer.c b/drivers/media/platform/omap3isp/ispresizer.c
-index 0b6a87508584f..2035e3c6a9dee 100644
---- a/drivers/media/platform/omap3isp/ispresizer.c
-+++ b/drivers/media/platform/omap3isp/ispresizer.c
-@@ -1684,6 +1684,7 @@ int omap3isp_resizer_register_entities(struct isp_res_device *res,
- 	int ret;
- 
- 	/* Register the subdev and video nodes. */
-+	res->subdev.dev = vdev->mdev->dev;
- 	ret = v4l2_device_register_subdev(vdev, &res->subdev);
- 	if (ret < 0)
- 		goto error;
-diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
-index 1b9217d3b1b6a..4a4ae637655ba 100644
---- a/drivers/media/platform/omap3isp/ispstat.c
-+++ b/drivers/media/platform/omap3isp/ispstat.c
-@@ -1010,6 +1010,8 @@ void omap3isp_stat_unregister_entities(struct ispstat *stat)
- int omap3isp_stat_register_entities(struct ispstat *stat,
- 				    struct v4l2_device *vdev)
+diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+index 8e889fd805b58..62c262fc2178d 100644
+--- a/drivers/devfreq/governor_passive.c
++++ b/drivers/devfreq/governor_passive.c
+@@ -152,7 +152,6 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
+ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+ 				unsigned int event, void *data)
  {
-+	stat->subdev.dev = vdev->mdev->dev;
-+
- 	return v4l2_device_register_subdev(vdev, &stat->subdev);
- }
- 
+-	struct device *dev = devfreq->dev.parent;
+ 	struct devfreq_passive_data *p_data
+ 			= (struct devfreq_passive_data *)devfreq->data;
+ 	struct devfreq *parent = (struct devfreq *)p_data->parent;
 -- 
 2.20.1
 
