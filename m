@@ -2,138 +2,154 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD26C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4080C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5B120862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BA120862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="eD67drbq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tPx7dShK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388340AbfJCURS (ORCPT
+        id S2388496AbfJCUS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:17:18 -0400
-Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:6116
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725957AbfJCURR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:17:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0B6B+fR5JqHTlbrPiQlSXpD8T/P2uABg157YEcVPbQcbwFHh9zvo4uxzQdDgXqgSf7FJ/msz+88U4hs2dqH4ZTqJKGDx5u548KKgHtCuWuczjCwHyYznxQqcalTHsrbLVANLb+nUgunB1BYP2mtJ+Jn6HnfFZF3MzIry89AQE6OCysqj/91YONF+992q7WhyPTKNkj917EQ48yCjldJ+gY5rKuYADp9U8RxM0PJvKkwFKamLE+QRA0lDkw6+HaNeJg+2C4T8CGjg6l/Erk7BYAAA/BJFVpZuvunXsNEEVRUN91ev0tdgbKNGE/Sqzi9stqUdVkyKnLDtYFpqq7Kkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91GpBJ2TmaRHSqR6iDo3i3JkyEp7T3maUXSRcjLWjq0=;
- b=D/4hhY21sn7sSlhNiejC2z1K2L1rwdtmR9OAU7tGCgH3cFV7KkFwPEh8udQFCdCeLyMlQ8A6qPij45lIu+W3OO3OfPKNaOb0I8BwY5knfdGGEu8s9ZWJjE+LjwN1Qet1IzruBhmmOsCe3iCmW2KHpI8UsHZyfMtHA8y9DAqOPVDzBuk8mfOWfRRC55jVPPWVwL23IehBJws/9ruRNwBJ9Aq4qbnHVwz/Mn1HqOUDYVuufC6FBMvGzNgq3y29PsaUTgP1x6XJfxz80Y7G+4YTmLnP1mt857QKsNH3AS3aqregUfZto3aFmPE8DTVMkWFOnq8PqAH1j1EKCfXfpfBybw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91GpBJ2TmaRHSqR6iDo3i3JkyEp7T3maUXSRcjLWjq0=;
- b=eD67drbqWTVAQKHP26IgZJcW43XCefAa8JC0acJrUiD7h/Ge2D1hbaI/a8PkalENY4Jsokak3sgW20EHQZH+yml4EyYbcTfvqg19ylE7VJ4MYCqDY+OxL2RV8ZP+ZSVcYOfxkAAMioR3I4XPt26eO5eavuWVgnkdRLqNSh5Eb8c=
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
- KU1P153MB0167.APCP153.PROD.OUTLOOK.COM (10.170.173.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.6; Thu, 3 Oct 2019 20:17:07 +0000
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::ccb6:acbd:7d4c:7f7c]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::ccb6:acbd:7d4c:7f7c%6]) with mapi id 15.20.2347.011; Thu, 3 Oct 2019
- 20:17:07 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: RE: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
- vsock_create()
-Thread-Topic: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
- vsock_create()
-Thread-Index: AQHVdSatVEha0YvJokiAPbW0TOdB9adJZJkg
-Date:   Thu, 3 Oct 2019 20:17:07 +0000
-Message-ID: <KU1P153MB01663CA0F105C416555A06FFBF9F0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-9-sgarzare@redhat.com>
-In-Reply-To: <20190927112703.17745-9-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T20:17:05.5588798Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ccffdd80-9d38-4480-b37d-9cdc3b475856;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:4930:a527:7f59:8664]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53055dd8-d731-496c-2277-08d7483eaa1a
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: KU1P153MB0167:|KU1P153MB0167:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KU1P153MB0167812C5F15F8A01E503C4BBF9F0@KU1P153MB0167.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(366004)(136003)(346002)(376002)(189003)(199004)(54906003)(66446008)(110136005)(66946007)(66476007)(25786009)(316002)(66556008)(64756008)(8990500004)(52536014)(6116002)(22452003)(7696005)(99286004)(2906002)(86362001)(6246003)(76116006)(4326008)(478600001)(5660300002)(10090500001)(4744005)(14454004)(10290500003)(33656002)(81156014)(2501003)(55016002)(8676002)(81166006)(9686003)(486006)(256004)(14444005)(229853002)(6436002)(8936002)(446003)(11346002)(6506007)(76176011)(476003)(46003)(7416002)(305945005)(186003)(102836004)(7736002)(71200400001)(74316002)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0167;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sdIqOYISXf6AYfcGDo90igjX+FEW55gEwKhbX54BHsNkOZquki0wAgqabXPRyjCKpJ3PMNRLU0JH1GBv65VSxbGrPM1Ip8WkaIlKGYlZ+cOPAmchoTyJHjjPglvbfhrv2YrJVLbWh7p3hu88Qw3d6cm3LkEsVb2JsqL6KcJxij95l5BZXD6w2tyfJOAC/PABX9uOwzLhqpTPlfaF22uR1qc8pzZzJTDNmdW5p3Jf66cmb/OIMusLJ6aR7PYA9B3saZ2LuNZA/LChBmyMvAxHIw/dru9W/dFMwPzISEFzNJMMBPAkSkWcRQg1G9JRvaDZiRVsd5GDnZyI6uh0pvMaRBLJ0Pnbfch2LrkVMivIt5Uch5qt7HjWBM5muIxxMdkKmEGbP5JEStOlEdjAKhykPIo7hr/l/dcCAbXbci991H0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 16:18:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35632 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728503AbfJCUS2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:18:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p30so328273pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+sLqpxQwn5IKAm1aZLON2pNwFcFKrH4kS1PpKV5io00=;
+        b=tPx7dShK1fKz58midm5HFeKBUk9GrBo/Eg96g1VKDwJcr++u7xtVdw1qfs9lgGNkCf
+         Gm3XpKa7FGISJdruBKtKBISHqkeXT9dvzY0uufVpkbUc0glzae6lcQvMVhvJaEvAq5jq
+         fqZFNBCIAyp/Q2SDDs4IphqnH5invfbNJQSBuoZoi5CRS5GKHZAogCn6hV1OCf582/Cw
+         FDY/G2bNiohgOVui/vaT2YycHrm4NNW1fVP/HEsPrScdt964iwQmOCraoDgUd0O+fXSL
+         tvwaUkXXZPVXRI+78KM29C3E8UQ5XU8JozY4itSVuf0iRfs2jUnbanKc5XIB1IR7/ubh
+         lWGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+sLqpxQwn5IKAm1aZLON2pNwFcFKrH4kS1PpKV5io00=;
+        b=fMUqbyB+3U/RIJHgBN+mpJYu7nxjYKLr4Zx98MTDj/QFsA4sPtIPxK+g6uEkenrhIv
+         f9+pp/AwXPDw1Ot7Gr8wTgTQNQm3fD5/gFSCBL1BofbkXWm8ULvEtYSEUZXOI5nt/VAP
+         TxGeyS/RvC6TSYuQqDTFhuF183klxDR5bv2XgpJtQhNm1V9shMRvLCKlfYM9q28Edgfc
+         6Xygc1Q9aYKDPx7hflKlTn6znZydwpKolAYZ895lxx6+26zw79UCPvkZYUS9NHdOVyTW
+         nHZ1NI+XdSOEsvYNZ+/R7Tt2at6qhj2pMeNisoqr8RdH68WjMrfLK6/DnMBFgSQjyzAo
+         dYFA==
+X-Gm-Message-State: APjAAAW0zmKIjs5IuNsutRXL7C1ZoR+lZz/zYOfMgCKDOMmMd6nC9N5A
+        JlRRPONd/EazUJCEBB0N/r8XHdWJa3A4Uj3Ycf0X2w==
+X-Google-Smtp-Source: APXvYqyD6BEnO4ZUoyiVVPkVY2fJjAirNyrjFZR5lstV7VlmlMPIqQuSaIj15lBFzeUrnMAnBoa05ZyW7Q0kii+jR8g=
+X-Received: by 2002:a17:90a:178d:: with SMTP id q13mr12760931pja.134.1570133907317;
+ Thu, 03 Oct 2019 13:18:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53055dd8-d731-496c-2277-08d7483eaa1a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 20:17:07.0329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wQGlk8XzZJhaxrpkVFGfShpL9gH5q+Y+fylgrFulSPSMcaxA+rMkGVRgOCJbWLc2zfPu/fHjpdMzxeMG6go5OA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0167
+References: <20191003174838.8872-1-vincenzo.frascino@arm.com> <20191003174838.8872-3-vincenzo.frascino@arm.com>
+In-Reply-To: <20191003174838.8872-3-vincenzo.frascino@arm.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 3 Oct 2019 13:18:16 -0700
+Message-ID: <CAKwvOdmhyVHREHvyB0wL2GfMsE8GcJ1Ouj_8ifrR4hU8kBYukQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] arm64: vdso32: Detect binutils support for dmb ishld
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Sent: Friday, September 27, 2019 4:27 AM
->=20
-> vsock_insert_unbound() was called only when 'sock' parameter of
-> __vsock_create() was not null. This only happened when
-> __vsock_create() was called by vsock_create().
->=20
-> In order to simplify the multi-transports support, this patch
-> moves vsock_insert_unbound() at the end of vsock_create().
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/af_vsock.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->=20
+On Thu, Oct 3, 2019 at 10:48 AM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
+>
+> Older versions of binutils that do not support certain types of memory
+> barriers can cause build failure of the vdso32 library.
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Do you know specific version numbers of binutils that are affected?
+May be helpful to have in the commit message just for future
+travelers.
+
+>
+> Add a compilation time mechanism that detects if binutils supports those
+> instructions and configure the kernel accordingly.
+>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Reported-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Tested-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>  arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
+> index fb60a88b5ed4..3fd8fd6d8fc2 100644
+> --- a/arch/arm64/include/asm/vdso/compat_barrier.h
+> +++ b/arch/arm64/include/asm/vdso/compat_barrier.h
+> @@ -20,7 +20,7 @@
+>
+>  #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+>
+> -#if __LINUX_ARM_ARCH__ >= 8
+> +#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
+>  #define aarch32_smp_mb()       dmb(ish)
+>  #define aarch32_smp_rmb()      dmb(ishld)
+>  #define aarch32_smp_wmb()      dmb(ishst)
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 19e0d3115ffe..77aa61340374 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
+>         $(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
+>  cc32-ldoption = $(call try-run,\
+>          $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
+> +cc32-as-instr = $(call try-run,\
+> +       printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
+>
+>  # We cannot use the global flags to compile the vDSO files, the main reason
+>  # being that the 32-bit compiler may be older than the main (64-bit) compiler
+> @@ -53,6 +55,7 @@ endif
+>  VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
+>  VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
+>
+> +
+>  # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
+>  # fall back to v7. There is no easy way to check for what architecture the code
+>  # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
+> @@ -89,6 +92,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
+>  VDSO_AFLAGS := $(VDSO_CAFLAGS)
+>  VDSO_AFLAGS += -D__ASSEMBLY__
+>
+> +# Check for binutils support for dmb ishld
+> +dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
+> +
+> +VDSO_CFLAGS += $(dmbinstr)
+> +VDSO_AFLAGS += $(dmbinstr)
+> +
+>  VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
+>  # From arm vDSO Makefile
+>  VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
+> --
+> 2.23.0
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
