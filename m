@@ -2,129 +2,96 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9C2C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC674C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C3B218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFD82070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="of/jQcGf"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="O020jbcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbfJCLuA (ORCPT
+        id S1730292AbfJCLue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:50:00 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:21215 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfJCLuA (ORCPT
+        Thu, 3 Oct 2019 07:50:34 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39792 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfJCLue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:50:00 -0400
+        Thu, 3 Oct 2019 07:50:34 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n7so3105080qtb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1570103398; x=1601639398;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=WY5GNASin+RjuIanTGocjZ1/56DxZcULXNDQo/JU2QI=;
-  b=of/jQcGf9Mwp1q90UDD5NSH3un7TA5Jf0STlAHYdHDP3pqo9wBSYH6gp
-   AvQRghrLOTmNtJaEMlG7bPb5RvM+gu2+kCPNCCyqoymNw/Cd5ZVxGPdkF
-   SRD680myUk55f4Edco+mc4xEvqJKmfV21HkIatXWCdIh715XPT/WmQkVc
-   g=;
-X-IronPort-AV: E=Sophos;i="5.67,251,1566864000"; 
-   d="scan'208";a="789349510"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 03 Oct 2019 11:49:57 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 0A738A2E56;
-        Thu,  3 Oct 2019 11:49:53 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 3 Oct 2019 11:49:53 +0000
-Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.161.223) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 3 Oct 2019 11:49:43 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <talel@amazon.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-Subject: [PATCH v3 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory Controller EDAC
-Date:   Thu, 3 Oct 2019 14:49:22 +0300
-Message-ID: <1570103363-21486-2-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570103363-21486-1-git-send-email-talel@amazon.com>
-References: <1570103363-21486-1-git-send-email-talel@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.223]
-X-ClientProxiedBy: EX13D10UWB003.ant.amazon.com (10.43.161.106) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=4tYmUjoUlo2Xqo/y5um3PxrT1tlXAA1LkGIE6UYEn3o=;
+        b=O020jbcrUFhT7KwwXQCB/2LZrgQ+ScGaUJxYQJ/UuGXHx2SvPAyvqKmcIkaW13VAA7
+         0QKaEXVjzDGCa867Z/x9JT5clpj3l07TR55z5aY6NMqDYXkRP+KsNuCA22pth51J9uRR
+         Q4xOrykegrbfbsZjzuQfdrJEqNqNO6pdllyYbgdDDIO7sajMeLiwLk5dOylA1ZlRVKXk
+         dnWiCVIP5y1KM7T2D8ioH6xpVZqtZddeDeGIg1VnZ7B8aytHmivwXZVq2KXEkGzHlBJ5
+         ZMYd5vnhGsnCRfRF1M7OLCWex4QYZzn6YSnDMRy2A58jnM5SYCgA9dEp/2GX2YvQEup7
+         RwuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=4tYmUjoUlo2Xqo/y5um3PxrT1tlXAA1LkGIE6UYEn3o=;
+        b=uSNCfHZxkHETmgPXqsmCa5al6SFBtGOLtuYovXgk89TTKfnrsE6IWHvgE7vIj8nYdi
+         Y39Uh1/G2AjQwgwB3KUShjDcP6DTXxKwmEV0wQX7X8zLHAzPQDhBrGFLJi9M6+vTcOh8
+         ovykJ5pHeHl1o5mdO3HSLsEcpKgGZBw8mo2shoOIAMghbAgXuMrJz4niFI2Qe47eOWtb
+         0jBNzzPYM1qRODjmAo+/IkczsTjDlkquHeDd9BGh0+wO2mQ0DxJCCNcOUPs4i5BtbrTp
+         5ynLO+IMlKs5e2eVs7C94LC423z7hTdN+6rfXL3FYTVzKV7KhM9ORxiv7meoiow09LMZ
+         5ylQ==
+X-Gm-Message-State: APjAAAWFriCCLWGX5Ylern0HS8MS/b93WYkEWjVIS8EBMtYkrj92mkYu
+        iziQ6d6StLgsgjAQYoGMqPsM0Q==
+X-Google-Smtp-Source: APXvYqwVwqVvYGwiskRdDpkyuODvgkHB5LyrTXwGoZJb7/HmZY3p+AKlv9WZlAn53Q3l7PTr0EWa/A==
+X-Received: by 2002:a0c:8867:: with SMTP id 36mr8044088qvm.177.1570103433376;
+        Thu, 03 Oct 2019 04:50:33 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z12sm1464699qkg.97.2019.10.03.04.50.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 04:50:32 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in has_unmovable_pages()
+Date:   Thu, 3 Oct 2019 07:50:31 -0400
+Message-Id: <983E7EA4-A022-448C-B11D-8C10441A2E07@lca.pw>
+References: <d3a88afd-63c6-1091-cf4c-75cd10b7f547@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <d3a88afd-63c6-1091-cf4c-75cd10b7f547@arm.com>
+To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
+X-Mailer: iPhone Mail (17A844)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- .../bindings/edac/amazon,al-mc-edac.yaml           | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
 
-diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-new file mode 100644
-index 0000000..33da051
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amazon's Annapurna Labs Memory Controller EDAC
-+
-+maintainers:
-+  - Talel Shenhar <talel@amazon.com>
-+  - Talel Shenhar <talelshenhar@gmail.com>
-+
-+description: |
-+  EDAC node is defined to describe on-chip error detection and correction for
-+  Amazon's Annapurna Labs Memory Controller.
-+
-+properties:
-+
-+  compatible:
-+    - const: "amazon,al-mc-edac"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    edac@f0080000 {
-+      compatible = "amazon,al-mc-edac";
-+      reg = <0x0 0xf0080000 0x0 0x00010000>;
-+      interrupt-parent = <&amazon_al_system_fabric>;
-+      interrupt-names = "ue";
-+      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+    };
--- 
-2.7.4
+> On Oct 3, 2019, at 7:31 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> w=
+rote:
+>=20
+> Ohh, never meant that the 'Reserved' bit is anything special here but it
+> is a reason to make a page unmovable unlike many other flags.
 
+But dump_page() is used everywhere, and it is better to reserve =E2=80=9Crea=
+son=E2=80=9D to indicate something more important rather than duplicating th=
+e page flags.
+
+Especially, it is trivial enough right now for developers look in the page f=
+lags dumping from has_unmovable_pages(), and figure out the exact branching i=
+n the code.=
