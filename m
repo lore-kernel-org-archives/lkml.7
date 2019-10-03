@@ -2,51 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C92BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F85C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76CA2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B67120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123564;
-	bh=XgrJTEr1zHVb1qydoT2TySsbUVaRZlc38KN9JrnviyM=;
+	s=default; t=1570123567;
+	bh=BTVu3XXbsk3gJC2IHgYaGgyWzk3k3TJ6+9Fx/meRnv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3Akb/qweNMR6e+l38yY4eGDBTs/ao4XQXEvkYeJrljWIkGiOkakpZo/5rRxxpY3D
-	 MBj89rqPVs+jxs7FhkVTI3NTTTYSGL8xNYZg0Wpoparbj/0fIELjHY2bbAgcwUk0l+
-	 MPs0AO5FeaRyD8kIbwmtITuJP5zeLWhGgkfdlCDU=
+	b=vmdMuGfZmW8I+PWTAJAI1MwyCzgYiiaHNVRdUFO3Ba96nRLK6BXBTq6vY88EEfy50
+	 qxwbD5rdJpKcj7nOPgneiiEkaiD7sF+Wi+JLTSiJ9ARg7woEN+UbgjLjNfGLvnraZD
+	 NZQ9SgQ5yJ5S5lhOSYA8Hr18tCog+AZmL+qunHDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732738AbfJCR0D (ORCPT
+        id S2389003AbfJCQQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389005AbfJCQQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:30 -0400
+        id S2388066AbfJCQQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6998C20700;
-        Thu,  3 Oct 2019 16:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23D8420700;
+        Thu,  3 Oct 2019 16:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119389;
-        bh=XgrJTEr1zHVb1qydoT2TySsbUVaRZlc38KN9JrnviyM=;
+        s=default; t=1570119381;
+        bh=BTVu3XXbsk3gJC2IHgYaGgyWzk3k3TJ6+9Fx/meRnv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ppgt8CQFWccmvvnxQTULzgC9IgUQppOTbfiUtrlrGHQNXATYcyu7zD+Cprr20I/RR
-         vLVIlMFEcQ4HHjru6zcDTHf9TX3ssX6B9hHzzMNUL7Oy5W24pSDaftfqoJ48oZhUW7
-         LQjEiv8ZZ515V6j2/6/IgirAODx3gcmaa4/fbmtY=
+        b=J4/zKM4YYDYZooOPZ4PB5rLeeb1TxJHTjLmMBB2S4cL08Lfj3xLRJlaYex0Rz57XV
+         KtRLETBe5PDbt/+P8E+ZCFViBy7XheFZ/VdqeFG2fNDtsdASnXvyjIL7ZwiRX0F+dA
+         G5zbNhGMLDcIpt9PLASsSDvtJKYAlzKKCPncRF8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/211] dmaengine: bcm2835: Print error in case setting DMA mask fails
-Date:   Thu,  3 Oct 2019 17:51:36 +0200
-Message-Id: <20191003154454.122117407@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 045/211] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
+Date:   Thu,  3 Oct 2019 17:51:51 +0200
+Message-Id: <20191003154458.327220310@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,37 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 72503b25ee363827aafffc3e8d872e6a92a7e422 ]
+[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
 
-During enabling of the RPi 4, we found out that the driver doesn't provide
-a helpful error message in case setting DMA mask fails. So add one.
+In build_adc_controls(), there is an if statement on line 773 to check
+whether ak->adc_info is NULL:
+    if (! ak->adc_info ||
+        ! ak->adc_info[mixer_ch].switch_name)
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Link: https://lore.kernel.org/r/1563297318-4900-1-git-send-email-wahrenst@gmx.net
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+When ak->adc_info is NULL, it is used on line 792:
+    knew.name = ak->adc_info[mixer_ch].selector_name;
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, referring to lines 773 and 774, ak->adc_info
+and ak->adc_info[mixer_ch].selector_name are checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/bcm2835-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/i2c/other/ak4xxx-adda.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 2b11d967acd02..9d782cc95c6a0 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -898,8 +898,10 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
+index 7f2761a2e7c8c..971197c34fcef 100644
+--- a/sound/i2c/other/ak4xxx-adda.c
++++ b/sound/i2c/other/ak4xxx-adda.c
+@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
+ 				return err;
  
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (rc)
-+	if (rc) {
-+		dev_err(&pdev->dev, "Unable to set DMA mask\n");
- 		return rc;
-+	}
+ 			memset(&knew, 0, sizeof(knew));
+-			knew.name = ak->adc_info[mixer_ch].selector_name;
+-			if (!knew.name) {
++			if (!ak->adc_info ||
++				!ak->adc_info[mixer_ch].selector_name) {
+ 				knew.name = "Capture Channel";
+ 				knew.index = mixer_ch + ak->idx_offset * 2;
+-			}
++			} else
++				knew.name = ak->adc_info[mixer_ch].selector_name;
  
- 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
- 	if (!od)
+ 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+ 			knew.info = ak4xxx_capture_source_info;
 -- 
 2.20.1
 
