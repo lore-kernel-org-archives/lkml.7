@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E012C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D337C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CEC20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A05C20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124470;
-	bh=fik+i5HOycM4aEtSccDBSMO6kukqh4PeAR2iNgi49dk=;
+	s=default; t=1570124475;
+	bh=ytBkFfh7tHSh0HVjXEOGv8/Vc2/hjCgJzhHC3emiuGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRkzjVpJzJCXnxX4ueVXs2YihCKs5dhGKjUrny/jYHteMWV7yxOPfidRzTZkzxQTN
-	 7JXUm/kpNsv5F5F0ksgtVxhlffx9BN/CtxKkimrgMMCE8UoJ0L4KJnDupdF7sV1X7U
-	 Ja+dus3k2dZObIIPF3+t299ILMvh/cSSlmUo/bOs=
+	b=Yy5d9LaHS3B/qSCB9QKFVSU/02lxr5rbCd2gddtImES+6aF6NaDCuvimIurExAb/Q
+	 mXv+KcVYAWQjElg9Q5wwNLQ4Oy5bKeWMyY9iARCU+VU80ip5wUtwtmnENqltaj9Riv
+	 v4aTEOzmkAJxKNhIBQQaX0vC3Rav3oHlAAL5zfHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbfJCP7T (ORCPT
+        id S2390146AbfJCRlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbfJCP7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:59:09 -0400
+        id S1731320AbfJCP7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:59:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A06320830;
-        Thu,  3 Oct 2019 15:59:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC1B207FF;
+        Thu,  3 Oct 2019 15:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118348;
-        bh=fik+i5HOycM4aEtSccDBSMO6kukqh4PeAR2iNgi49dk=;
+        s=default; t=1570118353;
+        bh=ytBkFfh7tHSh0HVjXEOGv8/Vc2/hjCgJzhHC3emiuGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdopCgV3LXuEa2LN3iYWJWlLHNQCdpn2sInW3zEVoW9/XWBWo1WP7tW3w2UexfHEe
-         eDnDxzr41l7K/WFAXC60Kg0YU3Y/JMph046xU1l8PLJzDuX1quqDhOwnYUvtdEHgpV
-         eWxDtWk/um4zb+36oq07IXNfXn9A9N4kSjgTMvjM=
+        b=g2Nwk7vYvjYIzCYOb7SS3uiObdpGSv4iXEr9FQOXWnvUzX63a+ZuGVJR5Ipi80mHX
+         NdSd5HzE0ftL668tXWWO0LG87CnnI6uytWmoUCsuYQ4rZq58zAUFggkfs6dUviNthE
+         wEGakZxs8OOUnf8nmsKhNYZNfCagfJ2l0uxijO8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 77/99] ALSA: firewire-tascam: check intermediate state of clock status and retry
-Date:   Thu,  3 Oct 2019 17:53:40 +0200
-Message-Id: <20191003154334.566717289@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.4 79/99] fuse: fix missing unlock_page in fuse_writepage()
+Date:   Thu,  3 Oct 2019 17:53:42 +0200
+Message-Id: <20191003154335.289318583@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,110 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit e1a00b5b253a4f97216b9a33199a863987075162 upstream.
+commit d5880c7a8620290a6c90ced7a0e8bd0ad9419601 upstream.
 
-2 bytes in MSB of register for clock status is zero during intermediate
-state after changing status of sampling clock in models of TASCAM FireWire
-series. The duration of this state differs depending on cases. During the
-state, it's better to retry reading the register for current status of
-the clock.
+unlock_page() was missing in case of an already in-flight write against the
+same page.
 
-In current implementation, the intermediate state is checked only when
-getting current sampling transmission frequency, then retry reading.
-This care is required for the other operations to read the register.
-
-This commit moves the codes of check and retry into helper function
-commonly used for operations to read the register.
-
-Fixes: e453df44f0d6 ("ALSA: firewire-tascam: add PCM functionality")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20190910135152.29800-3-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Fixes: ff17be086477 ("fuse: writepage: skip already in flight")
+Cc: <stable@vger.kernel.org> # v3.13
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/tascam/tascam-stream.c |   42 ++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 14 deletions(-)
+ fs/fuse/file.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/firewire/tascam/tascam-stream.c
-+++ b/sound/firewire/tascam/tascam-stream.c
-@@ -9,20 +9,37 @@
- #include <linux/delay.h>
- #include "tascam.h"
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1706,6 +1706,7 @@ static int fuse_writepage(struct page *p
+ 		WARN_ON(wbc->sync_mode == WB_SYNC_ALL);
  
-+#define CLOCK_STATUS_MASK      0xffff0000
-+#define CLOCK_CONFIG_MASK      0x0000ffff
-+
- #define CALLBACK_TIMEOUT 500
+ 		redirty_page_for_writepage(wbc, page);
++		unlock_page(page);
+ 		return 0;
+ 	}
  
- static int get_clock(struct snd_tscm *tscm, u32 *data)
- {
-+	int trial = 0;
- 	__be32 reg;
- 	int err;
- 
--	err = snd_fw_transaction(tscm->unit, TCODE_READ_QUADLET_REQUEST,
--				 TSCM_ADDR_BASE + TSCM_OFFSET_CLOCK_STATUS,
--				 &reg, sizeof(reg), 0);
--	if (err >= 0)
-+	while (trial++ < 5) {
-+		err = snd_fw_transaction(tscm->unit, TCODE_READ_QUADLET_REQUEST,
-+				TSCM_ADDR_BASE + TSCM_OFFSET_CLOCK_STATUS,
-+				&reg, sizeof(reg), 0);
-+		if (err < 0)
-+			return err;
-+
- 		*data = be32_to_cpu(reg);
-+		if (*data & CLOCK_STATUS_MASK)
-+			break;
-+
-+		// In intermediate state after changing clock status.
-+		msleep(50);
-+	}
- 
--	return err;
-+	// Still in the intermediate state.
-+	if (trial >= 5)
-+		return -EAGAIN;
-+
-+	return 0;
- }
- 
- static int set_clock(struct snd_tscm *tscm, unsigned int rate,
-@@ -35,7 +52,7 @@ static int set_clock(struct snd_tscm *ts
- 	err = get_clock(tscm, &data);
- 	if (err < 0)
- 		return err;
--	data &= 0x0000ffff;
-+	data &= CLOCK_CONFIG_MASK;
- 
- 	if (rate > 0) {
- 		data &= 0x000000ff;
-@@ -80,17 +97,14 @@ static int set_clock(struct snd_tscm *ts
- 
- int snd_tscm_stream_get_rate(struct snd_tscm *tscm, unsigned int *rate)
- {
--	u32 data = 0x0;
--	unsigned int trials = 0;
-+	u32 data;
- 	int err;
- 
--	while (data == 0x0 || trials++ < 5) {
--		err = get_clock(tscm, &data);
--		if (err < 0)
--			return err;
-+	err = get_clock(tscm, &data);
-+	if (err < 0)
-+		return err;
- 
--		data = (data & 0xff000000) >> 24;
--	}
-+	data = (data & 0xff000000) >> 24;
- 
- 	/* Check base rate. */
- 	if ((data & 0x0f) == 0x01)
 
 
