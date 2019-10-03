@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83CBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0337A21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E2321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118519;
-	bh=zhlYxEHaGCVikA60k3MAIF+EJmj7oCxcoIJOOn1L+Js=;
+	s=default; t=1570118521;
+	bh=h7qqrCFgfZ/DEQTk1JCp/CFiLubA0n8oC6DSbz2Bmhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuxGAq4oLK0tzfuxUWQqeKXYhNZJFnB3npU9uNcXiISIEE6SWgaJXd6jwNfWjNEhA
-	 /qV6bwwxLezJFUL66Qd7xFtArJyTY5idc0CXe4ka9Ggo5uEzflGn63hJWkAM5+ieDn
-	 hX6+cX166zob3Xek0vQic02nmhKw++kFmO9YBKU4=
+	b=RLhAEdq7jrzlwJmTNrjt9SrBPaInNuvwQ+8UAJAA5bRfkGDKCTpvR2ePf3DOqFz9b
+	 LqbgRMM+3L38stMba5rNyBatooQcACqwTGU3x6A3duJobF5vNtSbzSowhlRe4Q3sBt
+	 seczEbu/1bj1FWxSWzy79kSbq7tRqcP2QywXoRpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbfJCQB6 (ORCPT
+        id S1731961AbfJCQCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46492 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731928AbfJCQBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:55 -0400
+        id S1731947AbfJCQB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CA021A4C;
-        Thu,  3 Oct 2019 16:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17021207FF;
+        Thu,  3 Oct 2019 16:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118514;
-        bh=zhlYxEHaGCVikA60k3MAIF+EJmj7oCxcoIJOOn1L+Js=;
+        s=default; t=1570118517;
+        bh=h7qqrCFgfZ/DEQTk1JCp/CFiLubA0n8oC6DSbz2Bmhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbuquQDIBT/liCIbJV+9qHwMV7n1OX5gtOMsj4IwZo/vtGOZQNI/5Nn0VaV7aVBsU
-         RiQBM8zk31RwYX9xYV88Xx8yEFhfLoJPoqVFecPadiY6q9VamlJ+5HGmYN5rULhXCx
-         pfC1MNkmA70FM5SUfUcz34XCIbtgoHqMKL1stYDQ=
+        b=0mSx9jpl9Se26RgDeciWpL5VxRRPYqcSxkiccqO/jDmE0FRAqRSYWiMLZ0IM5HBK2
+         rTi+VKo+2IMSkwj9HiSdpZ6XSpHN6WG99w2Y4M9S2EsRS1kB7jdpZDVVlJHa44zu5x
+         w0fcmIRwNgbEHa4k+3qHM8DADtqlim0ZYIkS5bKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.9 008/129] media: tvp5150: fix switch exit in set control handler
-Date:   Thu,  3 Oct 2019 17:52:11 +0200
-Message-Id: <20191003154322.788073384@linuxfoundation.org>
+        stable@vger.kernel.org, Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 009/129] ASoC: fsl: Fix of-node refcount unbalance in fsl_ssi_probe_from_dt()
+Date:   Thu,  3 Oct 2019 17:52:12 +0200
+Message-Id: <20191003154323.127768962@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,39 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 2d29bcc8c237874795175b2930fa9a45a115175a upstream.
+commit 2757970f6d0d0a112247600b23d38c0c728ceeb3 upstream.
 
-The function only consists of a single switch case block without a
-default case. Unsupported control requests are indicated by the -EINVAL
-return code trough the last return statement at the end of the function. So
-exiting just the switch case block returns the -EINVAL error code but the
-hue control is supported and a zero should be returned instead.
+The node obtained from of_find_node_by_path() has to be unreferenced
+after the use, but we forgot it for the root node.
 
-Replace the break by a 'return 0' to fix this behaviour.
-
-Fixes: d183e4efcae8 ("[media] v4l: tvp5150: Add missing break in set
-control handler")
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: f0fba2ad1b6b ("ASoC: multi-component - ASoC Multi-Component Support")
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/tvp5150.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_ssi.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -824,7 +824,7 @@ static int tvp5150_s_ctrl(struct v4l2_ct
- 		return 0;
- 	case V4L2_CID_HUE:
- 		tvp5150_write(sd, TVP5150_HUE_CTL, ctrl->val);
--		break;
-+		return 0;
- 	case V4L2_CID_TEST_PATTERN:
- 		decoder->enable = ctrl->val ? false : true;
- 		tvp5150_selmux(sd);
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -1431,6 +1431,7 @@ static int fsl_ssi_probe(struct platform
+ 	struct fsl_ssi_private *ssi_private;
+ 	int ret = 0;
+ 	struct device_node *np = pdev->dev.of_node;
++	struct device_node *root;
+ 	const struct of_device_id *of_id;
+ 	const char *p, *sprop;
+ 	const uint32_t *iprop;
+@@ -1620,7 +1621,9 @@ static int fsl_ssi_probe(struct platform
+ 	 * device tree.  We also pass the address of the CPU DAI driver
+ 	 * structure.
+ 	 */
+-	sprop = of_get_property(of_find_node_by_path("/"), "compatible", NULL);
++	root = of_find_node_by_path("/");
++	sprop = of_get_property(root, "compatible", NULL);
++	of_node_put(root);
+ 	/* Sometimes the compatible name has a "fsl," prefix, so we strip it. */
+ 	p = strrchr(sprop, ',');
+ 	if (p)
 
 
