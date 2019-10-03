@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F35EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1D0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30D420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C182070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121199;
-	bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
+	s=default; t=1570121201;
+	bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mzo4qgcr5OBhs9H8x6ogBkCN2v+VOafLAral8s4CgyAVd7UrF+7ComSlxd0ztNZh0
-	 +rfipB8hv2N16BUbfoYMjyt8ppKvwkbq74zlwYPK+mSKikRuWrBOEmkLaML0Ba3l1o
-	 rDG8lFIIEValWFZpYyzLIn9MwMRlqQVcdrfo58ps=
+	b=mTXtGi+okdMoH9R4Qwlk5Js1LdPiJTYXGBkzb4iuvtaLBZ9Ng8mVZg05g+RiX4U9K
+	 RvOv+rSsFRRIKNmOZrLIHxXgAshXViG/7XwYHcMvNDjzokgUmbrwGaSmI2rDiVCtHq
+	 DIXYfR2sKtwuWpOKmJ0p71eePr07gK4/n+mGQbKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392938AbfJCQqi (ORCPT
+        id S2404212AbfJCQql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59876 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:46:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392920AbfJCQqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:35 -0400
+        id S2392934AbfJCQqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D8DE20830;
-        Thu,  3 Oct 2019 16:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9802070B;
+        Thu,  3 Oct 2019 16:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121194;
-        bh=WsyQeQ0LKRlhdI1QG341Q+aStMLnCD6mISC3+nH3hEY=;
+        s=default; t=1570121197;
+        bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UBU1QTWXMuiMfoerzaAozStQruHsbg9CI+YDk/HleKmMryOVKPxNf5PGSbSHg/6m
-         /KcJnrbuldM6ZxnjdFkG5aJReyeF6i4ZFnN4x9Bne9RiSlL1iCzUKHAxV1vdgHJw+m
-         Ldx2nD62nULq9nbj8qejBD3AgSHKYi80mnGr7xHA=
+        b=UyGYDJR6c+hy8pByW54y3l/yY+15uZoZkrSPN76b058IC6fR7c+0RqOCt9oyGbDkQ
+         ZJeELNXm05PqtUlnPbsQcvehQPfNtC+AFPJmjzZmAW9eFz5VgYjzXycc+Zb8caSxUs
+         O6S5SbmJ8Jtc1rId6+Z4oajpFGuWcbGCZ8euFTCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 182/344] ASoC: Intel: Haswell: Adjust machine device private context
-Date:   Thu,  3 Oct 2019 17:52:27 +0200
-Message-Id: <20191003154558.167017826@linuxfoundation.org>
+Subject: [PATCH 5.3 191/344] closures: fix a race on wakeup from closure_sync
+Date:   Thu,  3 Oct 2019 17:52:36 +0200
+Message-Id: <20191003154559.039135993@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,52 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cezary Rojewski <cezary.rojewski@intel.com>
+From: Kent Overstreet <kent.overstreet@gmail.com>
 
-[ Upstream commit ca964edf0ddbfec2cb10b3d251d09598e7ca9b13 ]
+[ Upstream commit a22a9602b88fabf10847f238ff81fde5f906fef7 ]
 
-Apart from Haswell machines, all other devices have their private data
-set to snd_soc_acpi_mach instance.
+The race was when a thread using closure_sync() notices cl->s->done == 1
+before the thread calling closure_put() calls wake_up_process(). Then,
+it's possible for that thread to return and exit just before
+wake_up_process() is called - so we're trying to wake up a process that
+no longer exists.
 
-Changes for HSW/ BDW boards introduced with series:
-https://patchwork.kernel.org/cover/10782035/
+rcu_read_lock() is sufficient to protect against this, as there's an rcu
+barrier somewhere in the process teardown path.
 
-added support for dai_link platform_name adjustments within card probe
-routines. These take for granted private_data points to
-snd_soc_acpi_mach whereas for Haswell, it's sst_pdata instead. Change
-private context of platform_device - representing machine board - to
-address this.
-
-Fixes: e87055d732e3 ("ASoC: Intel: haswell: platform name fixup support")
-Fixes: 7e40ddcf974a ("ASoC: Intel: bdw-rt5677: platform name fixup support")
-Fixes: 2d067b2807f9 ("ASoC: Intel: broadwell: platform name fixup support")
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Link: https://lore.kernel.org/r/20190822113616.22702-2-cezary.rojewski@intel.com
-Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+Acked-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/common/sst-acpi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/bcache/closure.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/common/sst-acpi.c b/sound/soc/intel/common/sst-acpi.c
-index 0e8e0a7a11df3..5854868650b9e 100644
---- a/sound/soc/intel/common/sst-acpi.c
-+++ b/sound/soc/intel/common/sst-acpi.c
-@@ -141,11 +141,12 @@ static int sst_acpi_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/md/bcache/closure.c b/drivers/md/bcache/closure.c
+index 73f5319295bc9..c12cd809ab193 100644
+--- a/drivers/md/bcache/closure.c
++++ b/drivers/md/bcache/closure.c
+@@ -105,8 +105,14 @@ struct closure_syncer {
  
- 	platform_set_drvdata(pdev, sst_acpi);
-+	mach->pdata = sst_pdata;
+ static void closure_sync_fn(struct closure *cl)
+ {
+-	cl->s->done = 1;
+-	wake_up_process(cl->s->task);
++	struct closure_syncer *s = cl->s;
++	struct task_struct *p;
++
++	rcu_read_lock();
++	p = READ_ONCE(s->task);
++	s->done = 1;
++	wake_up_process(p);
++	rcu_read_unlock();
+ }
  
- 	/* register machine driver */
- 	sst_acpi->pdev_mach =
- 		platform_device_register_data(dev, mach->drv_name, -1,
--					      sst_pdata, sizeof(*sst_pdata));
-+					      mach, sizeof(*mach));
- 	if (IS_ERR(sst_acpi->pdev_mach))
- 		return PTR_ERR(sst_acpi->pdev_mach);
- 
+ void __sched __closure_sync(struct closure *cl)
 -- 
 2.20.1
 
