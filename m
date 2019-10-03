@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4651C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80E2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A950721783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7549920700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119291;
-	bh=yJTPNF/Co3hgq7+7x8NMQeGLOqXVJ4OSl9f4tPbFaTY=;
+	s=default; t=1570119295;
+	bh=EYAALUMmZ9KHd4VSRCBYO6TuloHm/s5iluJ+FeyOCvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=deeFUwcZN7OIEORI/usADp2y+GOszTOpkviFHiUnvqWZ1bVLCsmXDTIyXpDDuoYQc
-	 jX8vHNRFn56QKpEdyUp3XbLmwJb75Or84T3uvtQeqsEnSqYj8mYp4cqJEuSQXj6gwE
-	 LkRnyUezsrdUVFNtf+1HX5Dkeb91ASs/lO+O6RNg=
+	b=hn6uB67vY3Qxw6EyCAU0Znpk4iH46PSc0YNJM3vUJe0ISnJRbCNkDG1mA1JWNJWu1
+	 77xQEITiBLCkLRxTN08032kaMb5vgtUVbH/uEf26imx0VicM5Igu3bNEupA+9f26St
+	 kIimr7Z6sjWI4yruE+Oumu1KfGtbiNtvZBz7UdDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388718AbfJCQOv (ORCPT
+        id S1729379AbfJCQOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38398 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388704AbfJCQOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:14:48 -0400
+        id S1733287AbfJCQOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7873222C4;
-        Thu,  3 Oct 2019 16:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46DFD21783;
+        Thu,  3 Oct 2019 16:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119287;
-        bh=yJTPNF/Co3hgq7+7x8NMQeGLOqXVJ4OSl9f4tPbFaTY=;
+        s=default; t=1570119292;
+        bh=EYAALUMmZ9KHd4VSRCBYO6TuloHm/s5iluJ+FeyOCvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1QfMmvWsj6ECRdRFc+JE34FMIwab8HVqI4qLyj8mhKb1RWTw0PIfBm0bG4es51dFq
-         mr/3yPAUouEkZ0Mrh2EvYjMN0UMQGxbBGmi7KXnuOksjbvVQ5EIb4JjUNYrTBFVXbY
-         BYvXc/SkWtpL0dZuFNlfHhitrYj8apS9kU/5pNhE=
+        b=zx5sjDSBo7OOAYdwy9RWGdW4Bp/W5gHe4rZ2MK9KTU716DWzdi+LtfTAI2miIApZx
+         bYsGBUt7A23QZqp2GY8xm8+3tLj4vT4m+mWydzgN3gKkIlISbqob/1uQ4y8zeoq+hl
+         VKgkcwIrAw+BR7vfnUHA/wiqWPBB9l1sbSXwSN0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takeshi Misawa <jeliantsurux@gmail.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 010/211] ppp: Fix memory leak in ppp_write
-Date:   Thu,  3 Oct 2019 17:51:16 +0200
-Message-Id: <20191003154449.434454700@linuxfoundation.org>
+        stable@vger.kernel.org, Benoit <benoit.sansoni@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 012/211] skge: fix checksum byte order
+Date:   Thu,  3 Oct 2019 17:51:18 +0200
+Message-Id: <20191003154449.715411742@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,61 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Misawa <jeliantsurux@gmail.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit 4c247de564f1ff614d11b3bb5313fb70d7b9598b ]
+[ Upstream commit 5aafeb74b5bb65b34cc87c7623f9fa163a34fa3b ]
 
-When ppp is closing, __ppp_xmit_process() failed to enqueue skb
-and skb allocated in ppp_write() is leaked.
+Running old skge driver on PowerPC causes checksum errors
+because hardware reported 1's complement checksum is in little-endian
+byte order.
 
-syzbot reported :
-BUG: memory leak
-unreferenced object 0xffff88812a17bc00 (size 224):
-  comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d110fff9>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
-    [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
-    [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-    [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-    [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
-    [<000000000167fc45>] ppp_write+0x48/0x120 drivers/net/ppp/ppp_generic.c:502
-    [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-    [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
-    [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
-    [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
-    [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
-    [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
-    [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-    [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
-    [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fix this by freeing skb, if ppp is closing.
-
-Fixes: 6d066734e9f0 ("ppp: avoid loop in xmit recursion detection code")
-Reported-and-tested-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
-Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Tested-by: Guillaume Nault <gnault@redhat.com>
+Reported-by: Benoit <benoit.sansoni@gmail.com>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ppp/ppp_generic.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/marvell/skge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -1419,6 +1419,8 @@ static void __ppp_xmit_process(struct pp
- 			netif_wake_queue(ppp->dev);
- 		else
- 			netif_stop_queue(ppp->dev);
-+	} else {
-+		kfree_skb(skb);
+--- a/drivers/net/ethernet/marvell/skge.c
++++ b/drivers/net/ethernet/marvell/skge.c
+@@ -3122,7 +3122,7 @@ static struct sk_buff *skge_rx_get(struc
+ 	skb_put(skb, len);
+ 
+ 	if (dev->features & NETIF_F_RXCSUM) {
+-		skb->csum = csum;
++		skb->csum = le16_to_cpu(csum);
+ 		skb->ip_summed = CHECKSUM_COMPLETE;
  	}
- 	ppp_xmit_unlock(ppp);
- }
+ 
 
 
