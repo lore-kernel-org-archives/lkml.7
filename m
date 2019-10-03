@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678BCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A8C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AB92086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99DE2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124213;
-	bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
+	s=default; t=1570124215;
+	bh=8L9hNn9r4okEI5xHx2L3obY/PsgSU7s+LKMaBTxnf/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+raS9z5/HUlyRyY4Ps/jFtZTtkC5V94B3D/Z4Uj1Ac7hrvBf7S7cWnL5bMOOZGrf
-	 UaEqnrhlJ7JuwLmu3BCwyIGRx5f+XET3zK8yQYwlEDfxZZNCYIP96xmrIwKrphgI4m
-	 pO8+PnHAe34NuGfsKfjdkoEuAg6QwJ7HoywY6QvE=
+	b=frwZphYtGmtQGWyil00RRswE5R8zN/38mIjoOf5nVouXLsm30ZH7BcbHnvRwCAIJB
+	 18PvsM8HGWycxawt2JDe70U4Gp8/Da6Ol67icPtDPJTV9hNVVDDZpmiZu2ZqOt+NSy
+	 e2b1nIF17RjyZs3Cnl68xgdZT05ppAO6wReVLW94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388773AbfJCRgw (ORCPT
+        id S1732349AbfJCQEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732345AbfJCQEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732329AbfJCQEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D1C421A4C;
-        Thu,  3 Oct 2019 16:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABE221848;
+        Thu,  3 Oct 2019 16:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118647;
-        bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
+        s=default; t=1570118642;
+        bh=8L9hNn9r4okEI5xHx2L3obY/PsgSU7s+LKMaBTxnf/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAE5haD1mVVI02dqS7srlHuiJcOGNx3SCA+X1dLQcI9oftP1NzNPtLqOUKvlIxRuQ
-         eZHCMxtpgFXmExvxC1W3iINcqxIUtBEQ2mTH4Yb9EKerFnppbW7uAaWlCQhWpwM7Yb
-         opPlaEWCCawTW8Hih9fzowscdAP6dwaVZzFQRduk=
+        b=IUo/17jPVRFZywYZQHojH2tjM/NhXCw6jc3kfzGj9bDg6V4WtbEkaa3Pax27NE3hf
+         +zbVfeRulXtVX1mCiR9gx0DZ1oKhOGm+utKUdISv3Ih9goyHwjZoCv8yxF2qfgh60r
+         Fns8MNEBX5fxfm9cyLSPI1dyO3bpg/7/XcAZ0cqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 088/129] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Thu,  3 Oct 2019 17:53:31 +0200
-Message-Id: <20191003154359.394134963@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 086/129] kprobes: Prohibit probing on BUG() and WARN() address
+Date:   Thu,  3 Oct 2019 17:53:29 +0200
+Message-Id: <20191003154357.947401040@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,44 +67,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
+get the address where the BUG() has occurred, kprobes can not
+do single-step out-of-line that instruction. So prohibit
+probing on such address.
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+Without this fix, if someone put a kprobe on WARN(), the
+kernel will crash with invalid opcode error instead of
+outputing warning message, because kernel can not find
+correct bug address.
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/bug.h | 5 +++++
+ kernel/kprobes.c    | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 6cef3977507ae..67d22b4baeb05 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -312,6 +312,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
+diff --git a/include/linux/bug.h b/include/linux/bug.h
+index 292d6a10b0c26..0faae96302bda 100644
+--- a/include/linux/bug.h
++++ b/include/linux/bug.h
+@@ -114,6 +114,11 @@ int is_valid_bugaddr(unsigned long addr);
  
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
+ #else	/* !CONFIG_GENERIC_BUG */
+ 
++static inline void *find_bug(unsigned long bugaddr)
++{
++	return NULL;
++}
 +
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
+ static inline enum bug_trap_type report_bug(unsigned long bug_addr,
+ 					    struct pt_regs *regs)
+ {
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index e2845dd53b30b..11863e2b01c25 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1454,7 +1454,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 	/* Ensure it is not in reserved area nor out of text */
+ 	if (!kernel_text_address((unsigned long) p->addr) ||
+ 	    within_kprobe_blacklist((unsigned long) p->addr) ||
+-	    jump_label_text_reserved(p->addr, p->addr)) {
++	    jump_label_text_reserved(p->addr, p->addr) ||
++	    find_bug((unsigned long)p->addr)) {
+ 		ret = -EINVAL;
+ 		goto out;
  	}
- 
- 	return 0;
 -- 
 2.20.1
 
