@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7D3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700C6C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D869C207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477E4222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118856;
-	bh=1lKHTcCsWkLc8EvABdysHSBmYWJ2OqaHgt8qCssaoII=;
+	s=default; t=1570118860;
+	bh=baVhcnQMCbx8lsqrw3LcxRVkXg9qpZ+INcg1H4uKdQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8dnzUk8ccxCISs3BRR6TyQ5Z3Li6GBHagCsnpwenCWtQYGCo3H/6Gvg5FuoD/8nd
-	 YKIe5AfDt/l2o22Op2vD/93h3mN1yEY1J2555woT91sCIA4LRUC9k8W8FGq3935VEG
-	 okZNVDg10toRXmfDS0OF+cLAHLTnQu+7Sl9qDsfw=
+	b=rXdOH7aM8uSKyd9vNl1oiD907Ou7W6jdhfKfmHv/0zyBwatduXgPtWbZSIF1+o6bL
+	 Mng0ZsP1wqJhMxt9nCTx6b4NYr1Ac/NajYQSL+yxmmk10y8QpoiFo0v6e/PDUsu+w8
+	 QMVuQpIA74/TixFy1o+bs3NucFGfVbTAOGW2RpBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbfJCQHg (ORCPT
+        id S1731537AbfJCQHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731814AbfJCQHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:33 -0400
+        id S1731177AbfJCQHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2A321783;
-        Thu,  3 Oct 2019 16:07:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79BC721D81;
+        Thu,  3 Oct 2019 16:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118852;
-        bh=1lKHTcCsWkLc8EvABdysHSBmYWJ2OqaHgt8qCssaoII=;
+        s=default; t=1570118850;
+        bh=baVhcnQMCbx8lsqrw3LcxRVkXg9qpZ+INcg1H4uKdQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUSmf4HayOqD7O1ehmBAzvFAtDERLn1wbR4aZUPGKICUeKz53Begi/E1l+1pStiOI
-         +3sivJiwJw5G7yvkV4qbC0UUdbjRliV8uIZQARgryzseEAoWCdWOU2QF4PebGi1QLu
-         RpIEya5m4Cjv8QVhx/qMG9VHtvjt6b3fMk7KnMrc=
+        b=eO0VafOFsFQxB6WpUbZ/geGs4CN7Mem5wiu07BfLQMNGyMzP68LLmi9vr7QX93OG3
+         2Ms/fU8wYIWBrFy3MNg+N0Y8SI1sXBavXi8crgGNh/ZcizpnQ1Lwk/WjH+63tpq55p
+         +LY2MVr9Adj368TZIwKnKf/7RI2ydKzdM7U3s27c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Zorro Lang <zlang@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Bill ODonnell <billodo@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 032/185] Bluetooth: btrtl: Additional Realtek 8822CE Bluetooth devices
-Date:   Thu,  3 Oct 2019 17:51:50 +0200
-Message-Id: <20191003154444.993370236@linuxfoundation.org>
+Subject: [PATCH 4.14 031/185] xfs: dont crash on null attr fork xfs_bmapi_read
+Date:   Thu,  3 Oct 2019 17:51:49 +0200
+Message-Id: <20191003154444.745252083@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,68 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 6d0762b19c5963ff9e178e8af3626532ee04d93d ]
+[ Upstream commit 8612de3f7ba6e900465e340516b8313806d27b2d ]
 
-The ASUS X412FA laptop contains a Realtek RTL8822CE device with an
-associated BT chip using a USB ID of 04ca:4005. This ID is added to the
-driver.
+Zorro Lang reported a crash in generic/475 if we try to inactivate a
+corrupt inode with a NULL attr fork (stack trace shortened somewhat):
 
-The /sys/kernel/debug/usb/devices portion for this device is:
+RIP: 0010:xfs_bmapi_read+0x311/0xb00 [xfs]
+RSP: 0018:ffff888047f9ed68 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff888047f9f038 RCX: 1ffffffff5f99f51
+RDX: 0000000000000002 RSI: 0000000000000008 RDI: 0000000000000012
+RBP: ffff888002a41f00 R08: ffffed10005483f0 R09: ffffed10005483ef
+R10: ffffed10005483ef R11: ffff888002a41f7f R12: 0000000000000004
+R13: ffffe8fff53b5768 R14: 0000000000000005 R15: 0000000000000001
+FS:  00007f11d44b5b80(0000) GS:ffff888114200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000ef6000 CR3: 000000002e176003 CR4: 00000000001606e0
+Call Trace:
+ xfs_dabuf_map.constprop.18+0x696/0xe50 [xfs]
+ xfs_da_read_buf+0xf5/0x2c0 [xfs]
+ xfs_da3_node_read+0x1d/0x230 [xfs]
+ xfs_attr_inactive+0x3cc/0x5e0 [xfs]
+ xfs_inactive+0x4c8/0x5b0 [xfs]
+ xfs_fs_destroy_inode+0x31b/0x8e0 [xfs]
+ destroy_inode+0xbc/0x190
+ xfs_bulkstat_one_int+0xa8c/0x1200 [xfs]
+ xfs_bulkstat_one+0x16/0x20 [xfs]
+ xfs_bulkstat+0x6fa/0xf20 [xfs]
+ xfs_ioc_bulkstat+0x182/0x2b0 [xfs]
+ xfs_file_ioctl+0xee0/0x12a0 [xfs]
+ do_vfs_ioctl+0x193/0x1000
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x6f/0xb0
+ do_syscall_64+0x9f/0x4d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f11d39a3e5b
 
-T:  Bus=01 Lev=01 Prnt=01 Port=09 Cnt=04 Dev#=  4 Spd=12   MxCh= 0
-D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=04ca ProdID=4005 Rev= 0.00
-S:  Manufacturer=Realtek
-S:  Product=Bluetooth Radio
-S:  SerialNumber=00e04c000001
-C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+The "obvious" cause is that the attr ifork is null despite the inode
+claiming an attr fork having at least one extent, but it's not so
+obvious why we ended up with an inode in that state.
 
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204707
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reported-by: Zorro Lang <zlang@redhat.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204031
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/xfs/libxfs/xfs_bmap.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 7b5a06b277464..73561bfd95d43 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -388,6 +388,9 @@ static const struct usb_device_id blacklist_table[] = {
- 	/* Additional Realtek 8822BE Bluetooth devices */
- 	{ USB_DEVICE(0x0b05, 0x185c), .driver_info = BTUSB_REALTEK },
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index a3cc8afed367c..7b25a88569c96 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4006,15 +4006,28 @@ xfs_bmapi_read(
+ 	XFS_STATS_INC(mp, xs_blk_mapr);
  
-+	/* Additional Realtek 8822CE Bluetooth devices */
-+	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
-+
- 	/* Silicon Wave based devices */
- 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
+ 	ifp = XFS_IFORK_PTR(ip, whichfork);
++	if (!ifp) {
++		/* No CoW fork?  Return a hole. */
++		if (whichfork == XFS_COW_FORK) {
++			mval->br_startoff = bno;
++			mval->br_startblock = HOLESTARTBLOCK;
++			mval->br_blockcount = len;
++			mval->br_state = XFS_EXT_NORM;
++			*nmap = 1;
++			return 0;
++		}
  
+-	/* No CoW fork?  Return a hole. */
+-	if (whichfork == XFS_COW_FORK && !ifp) {
+-		mval->br_startoff = bno;
+-		mval->br_startblock = HOLESTARTBLOCK;
+-		mval->br_blockcount = len;
+-		mval->br_state = XFS_EXT_NORM;
+-		*nmap = 1;
+-		return 0;
++		/*
++		 * A missing attr ifork implies that the inode says we're in
++		 * extents or btree format but failed to pass the inode fork
++		 * verifier while trying to load it.  Treat that as a file
++		 * corruption too.
++		 */
++#ifdef DEBUG
++		xfs_alert(mp, "%s: inode %llu missing fork %d",
++				__func__, ip->i_ino, whichfork);
++#endif /* DEBUG */
++		return -EFSCORRUPTED;
+ 	}
+ 
+ 	if (!(ifp->if_flags & XFS_IFEXTENTS)) {
 -- 
 2.20.1
 
