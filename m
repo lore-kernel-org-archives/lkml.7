@@ -2,56 +2,55 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CABC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9549AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA0D20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671D920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124417;
-	bh=qzG6mCQpLxLIoCbBJuTAvVzD7OE70ySI0GNPu4Bq79Y=;
+	s=default; t=1570124430;
+	bh=eKoJtabEfXEZlyaf0EUSO1cvN+kiTSfYrUv9v6XiirQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gezPGR/mebz7tDsKWjDW9b0Pt1KFeg0Rerp7OGI+0TNJ2HBhLbfV/BoS64t/te4kW
-	 NhOrmeLO5w28gLNMAUfiPnkahECcFILnWphBPIxuCsgnRK29wYQZR1gvt7Zo7TMmff
-	 PEOWEqFyxsNNl1q0RE6mkAydaJFSa79+xv9CxsN0=
+	b=ojxK3zvc4pqcSW5Fls6bN5MnuKFALHwBOjwToXh6YXy1JrC627B4b4Ne/mjdyGwE0
+	 2JefUV1oV/CwSx0OKGCXDWX+rCRsafKSDocb82yrs6XxXAn5BNMdHQScLksYAAcUF6
+	 Wmbivk98rAT1mTLqXskFcasFvPfKWArF7CLy5cpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfJCQAl (ORCPT
+        id S1731542AbfJCQAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44490 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729183AbfJCQAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:39 -0400
+        id S1731526AbfJCQAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1837B20700;
-        Thu,  3 Oct 2019 16:00:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE48F20700;
+        Thu,  3 Oct 2019 16:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118438;
-        bh=qzG6mCQpLxLIoCbBJuTAvVzD7OE70ySI0GNPu4Bq79Y=;
+        s=default; t=1570118413;
+        bh=eKoJtabEfXEZlyaf0EUSO1cvN+kiTSfYrUv9v6XiirQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4uAFCYzgQ0hdV7Kb/T1rxQDz7fhy8Keubs+gAdcy8CkFXILhXv4QI9PvqM/17Znr
-         Kkw54l4c1bE2AllZNeLrhJRMjNrUv9j623lOsGNj7d8m1Ag+D3VH5P4O7xz2COidad
-         O4Xg8aOGp2tQ+qNzjK9b/uGJhdBEanm+Z4mJGsxI=
+        b=j1r2iDX1TdzVxive/m8Z609uy37JW/xgzvK7IC5AjcPUK0cra4Zs1OcKEpBPIlc8c
+         uJD16YmbfTUxERF/mvQHpODLA4YWF2xCZMJlXu/ANuFvkk5pYSN1oBUjqA3aFGcTXx
+         ulia2/AeIFRYRQbkJoLqtO7foTgzrZlPlKm/rAAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Arkadiusz=20Mi=C5=9Bkiewicz?= <arekm@maven.pl>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 012/129] mac80211: Print text for disassociation reason
-Date:   Thu,  3 Oct 2019 17:52:15 +0200
-Message-Id: <20191003154323.946752777@linuxfoundation.org>
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.4 87/99] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
+Date:   Thu,  3 Oct 2019 17:53:50 +0200
+Message-Id: <20191003154338.259710635@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-References: <20191003154318.081116689@linuxfoundation.org>
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+References: <20191003154252.297991283@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arkadiusz Miskiewicz <a.miskiewicz@gmail.com>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-[ Upstream commit 68506e9af132a6b5735c1dd4b11240da0cf5eeae ]
+commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
 
-When disassociation happens only numeric reason is printed
-in ieee80211_rx_mgmt_disassoc(). Add text variant, too.
+ENOTSUPP is not supposed to be returned to userspace. This was found on an
+OpenPower machine, where the RTC does not support set_alarm.
 
-Signed-off-by: Arkadiusz Miśkiewicz <arekm@maven.pl>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
+"524 Unknown error 524"
+
+Replace it with EOPNOTSUPP which results in the expected "95 Operation not
+supported" error.
+
+Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/mlme.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/time/alarmtimer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index f462f026fc6aa..090e2aa8630e8 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2869,8 +2869,9 @@ static void ieee80211_rx_mgmt_disassoc(struct ieee80211_sub_if_data *sdata,
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -530,7 +530,7 @@ static int alarm_timer_create(struct k_i
+ 	struct alarm_base *base;
  
- 	reason_code = le16_to_cpu(mgmt->u.disassoc.reason_code);
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
--	sdata_info(sdata, "disassociated from %pM (Reason: %u)\n",
--		   mgmt->sa, reason_code);
-+	sdata_info(sdata, "disassociated from %pM (Reason: %u=%s)\n",
-+		   mgmt->sa, reason_code,
-+		   ieee80211_get_reason_code_string(reason_code));
+ 	if (!capable(CAP_WAKE_ALARM))
+ 		return -EPERM;
+@@ -759,7 +759,7 @@ static int alarm_timer_nsleep(const cloc
+ 	struct restart_block *restart;
  
- 	ieee80211_set_disassoc(sdata, 0, 0, false, NULL);
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
--- 
-2.20.1
-
+ 	if (flags & ~TIMER_ABSTIME)
+ 		return -EINVAL;
 
 
