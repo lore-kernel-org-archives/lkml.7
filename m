@@ -2,96 +2,213 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4795C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7073C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF1620865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EABD20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124445;
-	bh=nv5tyfbfrOt8/5M/vZRl8GRVLkrUHUar+IwteF0cp3Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pWUTZKgyme3ZhcuQ3xWcq0EjpcTqSif+r9rtXAzXI/2OV3tw9xNVCbNB1ube26TTl
-	 1yI/PuYwC9wgSx6UFCpVxSvBfLpLsqUeodWfS/SFJ3oUStboOPIyHi/C2MQLugO+EO
-	 55hA9AB1qBv+aK1h8tK+AJKqFs24oVPyY3Glub4U=
+	s=default; t=1570124448;
+	bh=UYI+i4ZdBUJfq10YbStvW3i66fBJsqe8ARvR8bHxCbY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Nj9Bp3FMBqDQWJphDdcTGN2vnp/+bdc/hgFBA9qQd1IcKNiRBDkX9NYJhQGQx5cd2
+	 IoUMhmrKZ6SEaht7EDJj70ehkikI6NEXveTqeLxibwAVDMyHcRbM2TdLMjTG6Saqp7
+	 zloh1+Ecq/6kOQ487lsY+0FzFNKBfLI01PEsQ4Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389931AbfJCRko (ORCPT
+        id S1731416AbfJCP7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:59:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731423AbfJCP7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:59:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731364AbfJCP7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:59:43 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6497D222CB;
-        Thu,  3 Oct 2019 15:59:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00CCC222C2;
+        Thu,  3 Oct 2019 15:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118388;
-        bh=nv5tyfbfrOt8/5M/vZRl8GRVLkrUHUar+IwteF0cp3Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6+G/mLSFuonIBjZmJay27UjgEAR7FqXXxSWNdKTwaCfYYJTehyTW8PWVgJ37g+Br
-         JMj550TmgCJ980Ug7sBSxLctrQyPGPs0dZCKY1UGBsCeJOYx42VgXkDN31xV5c1L0G
-         7BBQtbYyWrqhO3tryb+LXOfJrxtYKI0/OUF89ywg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.4 94/99] i2c: riic: Clear NACK in tend isr
-Date:   Thu,  3 Oct 2019 17:53:57 +0200
-Message-Id: <20191003154341.692437022@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1570118382;
+        bh=UYI+i4ZdBUJfq10YbStvW3i66fBJsqe8ARvR8bHxCbY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RqbyF7VSy9NGgBFB+HIevDvHLWm+7aEURok3DWHfiN9exDTZhQ0pl2MxYRrX080ic
+         NvimPrOdtKf3nbQIlfd+/crmMgf4KzFT7yuBdmLEm+N4KARx9ff/JsYlUcKUJn+11m
+         v/Eryv8Mp0Q/GqOr9XmwF5yWFxqs8FHEcY16wT1Q=
+Received: by mail-qt1-f178.google.com with SMTP id u22so4246606qtq.13;
+        Thu, 03 Oct 2019 08:59:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAUvA72ISCtY+efvzNh6dqfvQ3Lf6ux9VN7JhsN2AaaBO3tEWT7g
+        EK6o3DrXOWHKyp1GJ2XG1mlKWB7qzSa95wev2A==
+X-Google-Smtp-Source: APXvYqwcwdNJlOIpfQZz2dIR2x5UhCf43ZSWs3Ge+J8BHWO8rEIey1vwAN28tyHAn9j5UNMWeVMspf0z3kY4qPEkVYI=
+X-Received: by 2002:ad4:458d:: with SMTP id x13mr9205417qvu.85.1570118380840;
+ Thu, 03 Oct 2019 08:59:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190920075411.15735-1-marcel@ziswiler.com> <20190920075411.15735-2-marcel@ziswiler.com>
+ <20191001220539.GA16232@bogus> <e6fdfd7f46308dbc8fd33d4a2ff0b242ec39a84c.camel@toradex.com>
+In-Reply-To: <e6fdfd7f46308dbc8fd33d4a2ff0b242ec39a84c.camel@toradex.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 3 Oct 2019 10:59:29 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKmCVP3Fc2sUY=FpM5-HLQ0-=uTf6PEwn0XzyC5BBHBOA@mail.gmail.com>
+Message-ID: <CAL_JsqKmCVP3Fc2sUY=FpM5-HLQ0-=uTf6PEwn0XzyC5BBHBOA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] drm/panel: simple: add display timings for logic
+ technologies displays
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "marcel@ziswiler.com" <marcel@ziswiler.com>,
+        "info@logictechno.com" <info@logictechno.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "j.bauer@endrich.com" <j.bauer@endrich.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Brandt <chris.brandt@renesas.com>
+On Wed, Oct 2, 2019 at 5:27 AM Philippe Schenker
+<philippe.schenker@toradex.com> wrote:
+>
+> On Tue, 2019-10-01 at 17:05 -0500, Rob Herring wrote:
+> > On Fri, Sep 20, 2019 at 09:54:11AM +0200, Marcel Ziswiler wrote:
+> > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > >
+> > > Add display timings for the following 3 display panels manufactured
+> > > by
+> > > Logic Technologies Limited:
+> > >
+> > > - LT161010-2NHC e.g. as found in the Toradex Capacitive Touch
+> > > Display
+> > >   7" Parallel [1]
+> > > - LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display
+> > > 7"
+> > >   Parallel [2]
+> > > - LT170410-2WHC e.g. as found in the Toradex Capacitive Touch
+> > > Display
+> > >   10.1" LVDS [3]
+> > >
+> > > Those panels may also be distributed by Endrich Bauelemente
+> > > Vertriebs
+> > > GmbH [4].
+> > >
+> > > [1]
+> > > https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
+> > > [2]
+> > > https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
+> > > [3]
+> > > https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
+> > > [4]
+> > > https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
+> > >
+> > > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > >
+> > > ---
+> > >
+> > >  drivers/gpu/drm/panel/panel-simple.c | 65
+> > > ++++++++++++++++++++++++++++
+> > >  1 file changed, 65 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c
+> > > b/drivers/gpu/drm/panel/panel-simple.c
+> > > index 28fa6ba7b767..42bd0de25167 100644
+> > > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > > @@ -2034,6 +2034,62 @@ static const struct panel_desc lg_lp129qe = {
+> > >     },
+> > >  };
+> > >
+> > > +static const struct display_timing logictechno_lt161010_2nh_timing
+> > > = {
+> > > +   .pixelclock = { 26400000, 33300000, 46800000 },
+> > > +   .hactive = { 800, 800, 800 },
+> > > +   .hfront_porch = { 16, 210, 354 },
+> > > +   .hback_porch = { 46, 46, 46 },
+> > > +   .hsync_len = { 1, 20, 40 },
+> > > +   .vactive = { 480, 480, 480 },
+> > > +   .vfront_porch = { 7, 22, 147 },
+> > > +   .vback_porch = { 23, 23, 23 },
+> > > +   .vsync_len = { 1, 10, 20 },
+> > > +   .flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
+> > > +            DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
+> > > +            DISPLAY_FLAGS_SYNC_POSEDGE,
+> > > +};
+> > > +
+> > > +static const struct panel_desc logictechno_lt161010_2nh = {
+> > > +   .timings = &logictechno_lt161010_2nh_timing,
+> > > +   .num_timings = 1,
+> > > +   .size = {
+> > > +           .width = 154,
+> > > +           .height = 86,
+> > > +   },
+> > > +   .bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> > > +   .bus_flags = DRM_BUS_FLAG_DE_HIGH |
+> > > +                DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
+> > > +                DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
+> > > +};
+> > > +
+> > > +static const struct display_timing logictechno_lt170410_2whc_timing
+> > > = {
+> > > +   .pixelclock = { 68900000, 71100000, 7340000 },
+> > > +   .hactive = { 1280, 1280, 1280 },
+> > > +   .hfront_porch = { 23, 60, 71 },
+> > > +   .hback_porch = { 23, 60, 71 },
+> > > +   .hsync_len = { 15, 40, 47 },
+> > > +   .vactive = { 800, 800, 800 },
+> > > +   .vfront_porch = { 5, 7, 10 },
+> > > +   .vback_porch = { 5, 7, 10 },
+> > > +   .vsync_len = { 6, 9, 12 },
+> > > +   .flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
+> > > +            DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
+> > > +            DISPLAY_FLAGS_SYNC_POSEDGE,
+> > > +};
+> > > +
+> > > +static const struct panel_desc logictechno_lt170410_2whc = {
+> > > +   .timings = &logictechno_lt170410_2whc_timing,
+> > > +   .num_timings = 1,
+> > > +   .size = {
+> > > +           .width = 217,
+> > > +           .height = 136,
+> > > +   },
+> > > +   .bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> > > +   .bus_flags = DRM_BUS_FLAG_DE_HIGH |
+> > > +                DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
+> > > +                DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
+> > > +};
+> > > +
+> > >  static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+> > >     .clock = 30400,
+> > >     .hdisplay = 800,
+> > > @@ -3264,6 +3320,15 @@ static const struct of_device_id
+> > > platform_of_match[] = {
+> > >     }, {
+> > >             .compatible = "lg,lp129qe",
+> > >             .data = &lg_lp129qe,
+> > > +   }, {
+> > > +           .compatible = "logictechno,lt161010-2nhc",
+> > > +           .data = &logictechno_lt161010_2nh,
+> > > +   }, {
+> > > +           .compatible = "logictechno,lt161010-2nhr",
+> > > +           .data = &logictechno_lt161010_2nh,
+> > > +   }, {
+> > > +           .compatible = "logictechno,lt170410-2whc",
+> > > +           .data = &logictechno_lt170410_2whc,
+> >
+> > The vendor prefix wasn't documented, but the compatible string and
+> > rest
+> > already are?
+>
+> Marcel added the vendor prefix in the first patch of the series [1]
 
-commit a71e2ac1f32097fbb2beab098687a7a95c84543e upstream.
+Right, but where's the panel's binding documentation with the above
+compatible strings documented?
 
-The NACKF flag should be cleared in INTRIICNAKI interrupt processing as
-description in HW manual.
-
-This issue shows up quickly when PREEMPT_RT is applied and a device is
-probed that is not plugged in (like a touchscreen controller). The result
-is endless interrupts that halt system boot.
-
-Fixes: 310c18a41450 ("i2c: riic: add driver")
-Cc: stable@vger.kernel.org
-Reported-by: Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/i2c/busses/i2c-riic.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -212,6 +212,7 @@ static irqreturn_t riic_tend_isr(int irq
- 	if (readb(riic->base + RIIC_ICSR2) & ICSR2_NACKF) {
- 		/* We got a NACKIE */
- 		readb(riic->base + RIIC_ICDRR);	/* dummy read */
-+		riic_clear_set_bit(riic, ICSR2_NACKF, 0, RIIC_ICSR2);
- 		riic->err = -ENXIO;
- 	} else if (riic->bytes_left) {
- 		return IRQ_NONE;
-
-
+Rob
