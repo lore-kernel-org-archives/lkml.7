@@ -2,51 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1957FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B02222C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224B0215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121408;
-	bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
+	s=default; t=1570121410;
+	bh=Pked2uDDLVovjt6dOYD0c9fDApYqn3LgQwFvjn28zlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NVPg5WuoVEKy6pTnZUJcsgOorgl7d/SGs3V+i/gY+DbOmDNH4+O7iGtRgDEyPukmT
-	 Vij00EVzBH4+fB4a56bwFDBA31QHe3f5LZfBHA/0QC+V3QJ6vIpd3zs3lk1wNd9tkV
-	 rwKOjGik4rQwpwDcP9mKCOktFryG/CB40qn4eKtQ=
+	b=nlP3xsD8GvdI+B3OeipYFp9ASe4SdXLMT67XckS7aNcs8oslKg0L/+uj77LbE7IO4
+	 qRoHki+soC5eBucpYmmIECJvyct8e9LxQcTWelpbyegu+GYZ3j3cZyE6pRbK1z36qS
+	 y+me1ToZvk9FRyxs0QKPVS3f7yu96G2vA3NemR/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405888AbfJCQuG (ORCPT
+        id S2404520AbfJCQuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392729AbfJCQuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:03 -0400
+        id S2404439AbfJCQuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31F420865;
-        Thu,  3 Oct 2019 16:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A122086A;
+        Thu,  3 Oct 2019 16:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121402;
-        bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
+        s=default; t=1570121405;
+        bh=Pked2uDDLVovjt6dOYD0c9fDApYqn3LgQwFvjn28zlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xddS2zoU4m0rl0BXbFNaVckdu89g3Qwu1gjsv6j+2kf5VXSK4/6x89cbThO6L4n1W
-         WWBwg0EyGl0WGtp8sItokRtrjwOxGvjv2gKIIfLPUXnE7TMl2Rw/povTzs6e968IB9
-         x+SCEZWaDJNe4ZvcAZ+k1MDl+K+SekbhF8Vrewdk=
+        b=bQgxSNTwszYZqgQ7oRl8IJAPIcthMpKTHf9B5eUruW48gO3uhFp8UYCCZW8HXuLvY
+         JDAcIL/ks14DHSDSqqjIzI5Y4xce8ikZH/krZmRw3Vq6+KUHPIe8e5e2avkxn1Jxok
+         dB0LMntQBJA+aCYXLHIiZO/rHDyYLOHYvtUp5Sog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Espeleta <tomas.espeleta@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 220/344] ALSA: hda - Add a quirk model for fixing Huawei Matebook X right speaker
-Date:   Thu,  3 Oct 2019 17:53:05 +0200
-Message-Id: <20191003154602.066062150@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.3 259/344] fuse: fix beyond-end-of-page access in fuse_parse_cache()
+Date:   Thu,  3 Oct 2019 17:53:44 +0200
+Message-Id: <20191003154606.040928851@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,170 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Espeleta <tomas.espeleta@gmail.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit a2ef03fe617a8365fb7794531b11ba587509a9b9 ]
+commit e5854b1cdf6cb48a20e01e3bdad0476a4c60a077 upstream.
 
-[ This is rather a revival of the patch Tomas sent in months ago, but
-  applying only with the quirk model option -- tiwai ]
+With DEBUG_PAGEALLOC on, the following triggers.
 
-Hard coded coefficients to make Huawuei Matebook X right speaker
-work. The Matebook X has a ALC298, please refer to bug 197801 on
-how these numbers were reverse engineered from the Windows driver
+  BUG: unable to handle page fault for address: ffff88859367c000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 3001067 P4D 3001067 PUD 406d3a8067 PMD 406d30c067 PTE 800ffffa6c983060
+  Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
+  CPU: 38 PID: 3110657 Comm: python2.7
+  RIP: 0010:fuse_readdir+0x88f/0xe7a [fuse]
+  Code: 49 8b 4d 08 49 39 4e 60 0f 84 44 04 00 00 48 8b 43 08 43 8d 1c 3c 4d 01 7e 68 49 89 dc 48 03 5c 24 38 49 89 46 60 8b 44 24 30 <8b> 4b 10 44 29 e0 48 89 ca 48 83 c1 1f 48 83 e1 f8 83 f8 17 49 89
+  RSP: 0018:ffffc90035edbde0 EFLAGS: 00010286
+  RAX: 0000000000001000 RBX: ffff88859367bff0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: ffff88859367bfed RDI: 0000000000920907
+  RBP: ffffc90035edbe90 R08: 000000000000014b R09: 0000000000000004
+  R10: ffff88859367b000 R11: 0000000000000000 R12: 0000000000000ff0
+  R13: ffffc90035edbee0 R14: ffff889fb8546180 R15: 0000000000000020
+  FS:  00007f80b5f4a740(0000) GS:ffff889fffa00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffff88859367c000 CR3: 0000001c170c2001 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   iterate_dir+0x122/0x180
+   __x64_sys_getdents+0xa6/0x140
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The reversed engineered sequence represents a repeating pattern
-of verbs, and the only values that are changing periodically are
-written on indexes 0x23 and 0x25:
+It's in fuse_parse_cache().  %rbx (ffff88859367bff0) is fuse_dirent
+pointer - addr + offset.  FUSE_DIRENT_SIZE() is trying to dereference
+namelen off of it but that derefs into the next page which is disabled
+by pagealloc debug causing a PF.
 
-0x500, 0x23
-0x400, VALUE1
-0x500, 0x25
-0x400, VALUE2
+This is caused by dirent->namelen being accessed before ensuring that
+there's enough bytes in the page for the dirent.  Fix it by pushing
+down reclen calculation.
 
-* skipped reading sequences (0x500 - 0xc00 sequences are ignored)
-* static values from reverse engineering are used
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 5d7bc7e8680c ("fuse: allow using readdir cache")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-NOTE: since a significant risk is still considered, this is provided
-as an experimental fix that isn't applied as default for now.  For
-enabling the fix, you'll have to choose huawei-mbx-stereo via model
-option of snd-hda-intel module.
-
-If we get feedback from users that this works stably, we may apply it
-per default.
-
-[ Some coding style fixes and replacement with AC_VERB_* by tiwai ]
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197801
-Signed-off-by: Tomas Espeleta <tomas.espeleta@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/sound/hd-audio/models.rst |  3 +
- sound/pci/hda/patch_realtek.c           | 74 +++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+ fs/fuse/readdir.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/sound/hd-audio/models.rst b/Documentation/sound/hd-audio/models.rst
-index 7d7c191102a73..11298f0ce44db 100644
---- a/Documentation/sound/hd-audio/models.rst
-+++ b/Documentation/sound/hd-audio/models.rst
-@@ -260,6 +260,9 @@ alc295-hp-x360
-     HP Spectre X360 fixups
- alc-sense-combo
-     Headset button support for Chrome platform
-+huawei-mbx-stereo
-+    Enable initialization verbs for Huawei MBX stereo speakers;
-+    might be risky, try this at your own risk
+--- a/fs/fuse/readdir.c
++++ b/fs/fuse/readdir.c
+@@ -372,11 +372,13 @@ static enum fuse_parse_result fuse_parse
+ 	for (;;) {
+ 		struct fuse_dirent *dirent = addr + offset;
+ 		unsigned int nbytes = size - offset;
+-		size_t reclen = FUSE_DIRENT_SIZE(dirent);
++		size_t reclen;
  
- ALC66x/67x/892
- ==============
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index c1ddfd2fac522..1bec62720374d 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3755,6 +3755,72 @@ static void alc269_x101_hp_automute_hook(struct hda_codec *codec,
- 			    vref);
- }
+ 		if (nbytes < FUSE_NAME_OFFSET || !dirent->namelen)
+ 			break;
  
-+/*
-+ * Magic sequence to make Huawei Matebook X right speaker working (bko#197801)
-+ */
-+struct hda_alc298_mbxinit {
-+	unsigned char value_0x23;
-+	unsigned char value_0x25;
-+};
++		reclen = FUSE_DIRENT_SIZE(dirent); /* derefs ->namelen */
 +
-+static void alc298_huawei_mbx_stereo_seq(struct hda_codec *codec,
-+					 const struct hda_alc298_mbxinit *initval,
-+					 bool first)
-+{
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x0);
-+	alc_write_coef_idx(codec, 0x26, 0xb000);
-+
-+	if (first)
-+		snd_hda_codec_write(codec, 0x21, 0, AC_VERB_GET_PIN_SENSE, 0x0);
-+
-+	snd_hda_codec_write(codec, 0x6, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
-+	alc_write_coef_idx(codec, 0x26, 0xf000);
-+	alc_write_coef_idx(codec, 0x23, initval->value_0x23);
-+
-+	if (initval->value_0x23 != 0x1e)
-+		alc_write_coef_idx(codec, 0x25, initval->value_0x25);
-+
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
-+}
-+
-+static void alc298_fixup_huawei_mbx_stereo(struct hda_codec *codec,
-+					   const struct hda_fixup *fix,
-+					   int action)
-+{
-+	/* Initialization magic */
-+	static const struct hda_alc298_mbxinit dac_init[] = {
-+		{0x0c, 0x00}, {0x0d, 0x00}, {0x0e, 0x00}, {0x0f, 0x00},
-+		{0x10, 0x00}, {0x1a, 0x40}, {0x1b, 0x82}, {0x1c, 0x00},
-+		{0x1d, 0x00}, {0x1e, 0x00}, {0x1f, 0x00},
-+		{0x20, 0xc2}, {0x21, 0xc8}, {0x22, 0x26}, {0x23, 0x24},
-+		{0x27, 0xff}, {0x28, 0xff}, {0x29, 0xff}, {0x2a, 0x8f},
-+		{0x2b, 0x02}, {0x2c, 0x48}, {0x2d, 0x34}, {0x2e, 0x00},
-+		{0x2f, 0x00},
-+		{0x30, 0x00}, {0x31, 0x00}, {0x32, 0x00}, {0x33, 0x00},
-+		{0x34, 0x00}, {0x35, 0x01}, {0x36, 0x93}, {0x37, 0x0c},
-+		{0x38, 0x00}, {0x39, 0x00}, {0x3a, 0xf8}, {0x38, 0x80},
-+		{}
-+	};
-+	const struct hda_alc298_mbxinit *seq;
-+
-+	if (action != HDA_FIXUP_ACT_INIT)
-+		return;
-+
-+	/* Start */
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x00);
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
-+	alc_write_coef_idx(codec, 0x26, 0xf000);
-+	alc_write_coef_idx(codec, 0x22, 0x31);
-+	alc_write_coef_idx(codec, 0x23, 0x0b);
-+	alc_write_coef_idx(codec, 0x25, 0x00);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
-+
-+	for (seq = dac_init; seq->value_0x23; seq++)
-+		alc298_huawei_mbx_stereo_seq(codec, seq, seq == dac_init);
-+}
-+
- static void alc269_fixup_x101_headset_mic(struct hda_codec *codec,
- 				     const struct hda_fixup *fix, int action)
- {
-@@ -5780,6 +5846,7 @@ enum {
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
- 	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
-+	ALC298_FIXUP_HUAWEI_MBX_STEREO,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -6089,6 +6156,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
- 	},
-+	[ALC298_FIXUP_HUAWEI_MBX_STEREO] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc298_fixup_huawei_mbx_stereo,
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
-+	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_x101_headset_mic,
-@@ -7280,6 +7353,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-headset-jack"},
- 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
- 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
-+	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
- 	{}
- };
- #define ALC225_STANDARD_PINS \
--- 
-2.20.1
-
+ 		if (WARN_ON(dirent->namelen > FUSE_NAME_MAX))
+ 			return FOUND_ERR;
+ 		if (WARN_ON(reclen > nbytes))
 
 
