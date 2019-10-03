@@ -2,77 +2,82 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2BFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C56C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8517C207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RYxhot7m"
+	by mail.kernel.org (Postfix) with ESMTP id 2D7D52070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388975AbfJCUcz (ORCPT
+        id S1732900AbfJCUgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:32:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33282 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729311AbfJCUcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:32:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DuwMGQIzbvieUCH04dpyi9AiTx6jv704Pfn5oVeJ17U=; b=RYxhot7mP0JyjcYaAZEScfO1B
-        6EJMyUWXlNdT3UDcTvRnHCNreWLXGGY7iNXJWyn8XMRiBWuyKwXKAiNt97SK5zlHmjecIp1vV4QWf
-        3MMmDQuoXudCRIc3Pntnzk2D+nvYpA8R+DX19eIvAyEP60ti312vCUTZKPIKYOvqoGA7oPhRxWmsb
-        1wYUz+J1z5n5H4HBkA3jKBidq9Notx4vPfLBTylntN2b7ob3ZWf6Kqj8qAvdy6F2hUPeIbiIPuwzR
-        7gp1Xw/1/mREnXHy2ysx3SPtsTRHHROdIH4BPHiovRiPo+t+ICndCH/x22GYqYbq3CHBGXVgVRR/X
-        UqAc4SSkg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG7mM-0006xH-SJ; Thu, 03 Oct 2019 20:32:50 +0000
-Date:   Thu, 3 Oct 2019 13:32:50 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     akpm@linux-foundation.org, walken@google.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH -next 00/11] lib/interval-tree: move to half closed
- intervals
-Message-ID: <20191003203250.GE32665@bombadil.infradead.org>
-References: <20191003201858.11666-1-dave@stgolabs.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003201858.11666-1-dave@stgolabs.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 3 Oct 2019 16:36:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38706 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbfJCUgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:36:16 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3A320898106;
+        Thu,  3 Oct 2019 20:36:16 +0000 (UTC)
+Received: from llong.com (ovpn-122-104.rdu2.redhat.com [10.10.122.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB65719C69;
+        Thu,  3 Oct 2019 20:36:12 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Juri Lelli <jlelli@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] lib/smp_processor_id: Don't use cpumask_equal()
+Date:   Thu,  3 Oct 2019 16:36:08 -0400
+Message-Id: <20191003203608.21881-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 03 Oct 2019 20:36:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 01:18:47PM -0700, Davidlohr Bueso wrote:
-> It has been discussed[1,2] that almost all users of interval trees would better
-> be served if the intervals were actually not [a,b], but instead [a, b). This
+The check_preemption_disabled() function uses cpumask_equal() to see
+if the task is bounded to the current CPU only. cpumask_equal() calls
+memcmp() to do the comparison. As x86 doesn't have __HAVE_ARCH_MEMCMP,
+the slow memcmp() function in lib/string.c is used.
 
-So how does a user represent a range from ULONG_MAX to ULONG_MAX now?
+On a RT kernel that call check_preemption_disabled() very frequently,
+below is the perf-record output of a certain microbenchmark:
 
-I think the problem is that large parts of the kernel just don't consider
-integer overflow.  Because we write in C, it's natural to write:
+  42.75%  2.45%  testpmd [kernel.kallsyms] [k] check_preemption_disabled
+  40.01% 39.97%  testpmd [kernel.kallsyms] [k] memcmp
 
-	for (i = start; i < end; i++)
+We should avoid calling memcmp() in performance critical path. So the
+cpumask_equal() call is now replaced with an equivalent simpler check.
 
-and just assume that we never need to hit ULONG_MAX or UINT_MAX.
-If we're storing addresses, that's generally true -- most architectures
-don't allow addresses in the -PAGE_SIZE to ULONG_MAX range (or they'd
-have trouble with PTR_ERR).  If you're looking at file sizes, that's
-not true on 32-bit machines, and we've definitely seen filesystem bugs
-with files nudging up on 16TB (on 32 bit with 4k page size).  Or block
-driver bugs with similarly sized block devices.
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ lib/smp_processor_id.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So, yeah, easier to use.  But damning corner cases.
+diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
+index 60ba93fc42ce..bd9571653288 100644
+--- a/lib/smp_processor_id.c
++++ b/lib/smp_processor_id.c
+@@ -23,7 +23,7 @@ unsigned int check_preemption_disabled(const char *what1, const char *what2)
+ 	 * Kernel threads bound to a single CPU can safely use
+ 	 * smp_processor_id():
+ 	 */
+-	if (cpumask_equal(current->cpus_ptr, cpumask_of(this_cpu)))
++	if (current->nr_cpus_allowed == 1)
+ 		goto out;
+ 
+ 	/*
+-- 
+2.18.1
+
