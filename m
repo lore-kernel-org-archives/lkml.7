@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4CAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC388C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61282086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8252D2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120960;
-	bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
+	s=default; t=1570120964;
+	bh=Oe369tPZ5whZDrheTC9pmJV5JCCU/mBGbbOVzTKFx4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZMc5ofRwpySCTbtPuPcVyk5Ud0n1RTF6DR9xGYv2BYAEj8yRcW4Ye2KKYPsNPqBo6
-	 mmkRyKPEwUFYVEmUc1X5H3eL0Zn5B23hr/2c/I3qaP0GRbMZRGKMhtMvVWA+u/ndld
-	 Xbdkx+j9XGfjHc+1ejs4Y3Z0afnJV4Ew4z/vD94s=
+	b=dosWCIEI2FyeuuLmQL2hZ1QaEmR+9+mK1ibSz7pPm1wi2kkTXc63vIgNK/p5qom9b
+	 9ZWKKMBgPw+58OZML6UO7f1VFaCxX2vDvFb7BRqzdMvihAmpGv7sWOnjDZRnIvc5NT
+	 QLP+gCbD22Fqmt+54aQ2Kafdx2VoJkV8YiIG3IM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392686AbfJCQmj (ORCPT
+        id S2405083AbfJCQmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53686 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404062AbfJCQmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:36 -0400
+        id S2391394AbfJCQmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 066A92054F;
-        Thu,  3 Oct 2019 16:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A801120867;
+        Thu,  3 Oct 2019 16:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120955;
-        bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
+        s=default; t=1570120958;
+        bh=Oe369tPZ5whZDrheTC9pmJV5JCCU/mBGbbOVzTKFx4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBuHG/FykYr7PhTKBry71DQslStZ69w8+4i0DAUO3kUYrZrpIbU9dDiRY335ymg1X
-         EPgVQYKcbRuINLh6OloU7/6FyvU0PIQV2g47KHqTYoIri5G7N4B+H925vaEhzUMc9z
-         D9TAdw/x9j8dBrCCuD5OlqgNw6mkTtItCdgaDKXw=
+        b=rFH5LEwbyjA9uEqyRAzthyRVUJTBirEkoe2SnJkcjORS4+FR6ial5YBadvcNCwu2/
+         4/mH2Q6DS9YB+ZTACz580tD8h0RZjJywKKN5a6M+FVvs77QSpUzj8gaVJV5CWqshSD
+         8RmqDTKRTAem1YKGD7cj9ru+6TCJz5jtJr1D9A+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 099/344] firmware: arm_scmi: Check if platform has released shmem before using
-Date:   Thu,  3 Oct 2019 17:51:04 +0200
-Message-Id: <20191003154549.966139872@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 100/344] sched/fair: Use rq_lock/unlock in online_fair_sched_group
+Date:   Thu,  3 Oct 2019 17:51:05 +0200
+Message-Id: <20191003154550.056034618@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,52 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Phil Auld <pauld@redhat.com>
 
-[ Upstream commit 9dc34d635c67e57051853855c43249408641a5ab ]
+[ Upstream commit a46d14eca7b75fffe35603aa8b81df654353d80f ]
 
-Sometimes platfom may take too long to respond to the command and OS
-might timeout before platform transfer the ownership of the shared
-memory region to the OS with the response.
+Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
+warning to fire in update_rq_clock. This seems to be caused by onlining
+a new fair sched group not using the rq lock wrappers.
 
-Since the mailbox channel associated with the channel is freed and new
-commands are dispatch on the same channel, OS needs to wait until it
-gets back the ownership. If not, either OS may end up overwriting the
-platform response for the last command(which is fine as OS timed out
-that command) or platform might overwrite the payload for the next
-command with the response for the old.
+  [] rq->clock_update_flags & RQCF_UPDATED
+  [] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
 
-The latter is problematic as platform may end up interpretting the
-response as the payload. In order to avoid such race, let's wait until
-the OS gets back the ownership before we prepare the shared memory with
-the payload for the next command.
+  [] Call Trace:
+  []  online_fair_sched_group+0x53/0x100
+  []  cpu_cgroup_css_online+0x16/0x20
+  []  online_css+0x1c/0x60
+  []  cgroup_apply_control_enable+0x231/0x3b0
+  []  cgroup_mkdir+0x41b/0x530
+  []  kernfs_iop_mkdir+0x61/0xa0
+  []  vfs_mkdir+0x108/0x1a0
+  []  do_mkdirat+0x77/0xe0
+  []  do_syscall_64+0x55/0x1d0
+  []  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Using the wrappers in online_fair_sched_group instead of the raw locking
+removes this warning.
+
+[ tglx: Use rq_*lock_irq() ]
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20190801133749.11033-1-pauld@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/driver.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index b5bc4c7a8fab2..b49c9e6f4bf10 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -271,6 +271,14 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
- 	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
- 	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 105b1aead0c3a..86cfc5d5129ce 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10301,18 +10301,18 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+ void online_fair_sched_group(struct task_group *tg)
+ {
+ 	struct sched_entity *se;
++	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int i;
  
-+	/*
-+	 * Ideally channel must be free by now unless OS timeout last
-+	 * request and platform continued to process the same, wait
-+	 * until it releases the shared memory, otherwise we may endup
-+	 * overwriting its response with new message payload or vice-versa
-+	 */
-+	spin_until_cond(ioread32(&mem->channel_status) &
-+			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
- 	/* Mark channel busy + clear error */
- 	iowrite32(0x0, &mem->channel_status);
- 	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
+ 	for_each_possible_cpu(i) {
+ 		rq = cpu_rq(i);
+ 		se = tg->se[i];
+-
+-		raw_spin_lock_irq(&rq->lock);
++		rq_lock_irq(rq, &rf);
+ 		update_rq_clock(rq);
+ 		attach_entity_cfs_rq(se);
+ 		sync_throttle(tg, i);
+-		raw_spin_unlock_irq(&rq->lock);
++		rq_unlock_irq(rq, &rf);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
