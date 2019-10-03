@@ -2,51 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBD7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC27C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFCC215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276B321848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118619;
-	bh=3D7JlMLXuSw8WycHbvY81UgjIJZwL4MmJMz3WIxlpkI=;
+	s=default; t=1570118625;
+	bh=SLxjNf84mAviyJIDDDeYg9vbSXlaZiy8tJqwyFdeBKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rg2kBT65nfSBDH4j9BrgBOYQUFEEcLayps9x6Y+F1ePcWqU44gqm5Rc3iShKr9/Ko
-	 WuRtpwmIQ9t8T1FX/aYTUsDIv8/yRi+EJNLUx4AfURJp4eLyvqusPg/ChVHhjN5uKt
-	 mx+IJZaXWFYOmlHEVIWStlt2MlmzIoIgMdeCOoLw=
+	b=wJaNqutjQq14zi5YgSU5zVX2mEH6TQnh0dJKJnIwcEV3gizIFGg/kb3zqr2KNeqEb
+	 ZyuURcoZ+Sr7x2JmP80caueRTwodYt0nmwv/wkb3Kv26KMsAhGhYKEZX7/KQN9NixU
+	 kZDsKc9G1yXxxo7FTBDZd3eJ3AjBhHUvC1sYitk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732269AbfJCQDi (ORCPT
+        id S1732283AbfJCQDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729441AbfJCQDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:32 -0400
+        id S1729441AbfJCQDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17C621848;
-        Thu,  3 Oct 2019 16:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2487721848;
+        Thu,  3 Oct 2019 16:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118612;
-        bh=3D7JlMLXuSw8WycHbvY81UgjIJZwL4MmJMz3WIxlpkI=;
+        s=default; t=1570118617;
+        bh=SLxjNf84mAviyJIDDDeYg9vbSXlaZiy8tJqwyFdeBKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2HMdVxIJEe5NqjH4OlzsI+ymdgqQryVXIvxo9+V9WSNyaoKzdaxDrukYM6PYXSb1
-         eBeraSGiUuJqQmogNlN2tmiX1uxJ1ZQRY0sEBWonCkdlXyfhQ6ZhT3enxUyjN9Emyg
-         6qAeOz+AKXHSfAajNCdxRTzljDDPA8PaC7HkYvVs=
+        b=dYLa5GSAK1Ix5PfZ1JJ6mcFzmopo+t6wVAfONJh+47JZOjOJAsBhnXx+49ywsBN5k
+         xwvgwB8v3snuxd9Lq9fQhs0WeJPBvipMVLXGbgoc41LHlYdE13DOKANq73/nIOgxDz
+         0nm5HVdhfDIKDm1eymg9aAppMacE1cAzs2O+Xz1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 038/129] nfc: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:52:41 +0200
-Message-Id: <20191003154335.275063316@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 040/129] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
+Date:   Thu,  3 Oct 2019 17:52:43 +0200
+Message-Id: <20191003154335.861368140@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,38 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 3a359798b176183ef09efb7a3dc59abad1cc7104 ]
+[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
 
-When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked
-first.
+According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
+Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
+Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
+000000: 4 V
+000001: 4.05 V
+000010: 4.1 V
+....................
+011101: 5.45 V
+011110: 5.5 V (Default)
+011111: 5.55 V
+....................
+100111: 5.95 V
+101000: 6 V
+Note: Codes 101001 to 111111 map to 6 V
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
+can match the datasheet.
+
+Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/llcp_sock.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/regulator/lm363x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -1011,10 +1011,13 @@ static int llcp_sock_create(struct net *
- 	    sock->type != SOCK_RAW)
- 		return -ESOCKTNOSUPPORT;
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index f53e63301a205..e71117d7217bc 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -33,7 +33,7 @@
  
--	if (sock->type == SOCK_RAW)
-+	if (sock->type == SOCK_RAW) {
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		sock->ops = &llcp_rawsock_ops;
--	else
-+	} else {
- 		sock->ops = &llcp_sock_ops;
-+	}
+ /* LM3632 */
+ #define LM3632_BOOST_VSEL_MAX		0x26
+-#define LM3632_LDO_VSEL_MAX		0x29
++#define LM3632_LDO_VSEL_MAX		0x28
+ #define LM3632_VBOOST_MIN		4500000
+ #define LM3632_VLDO_MIN			4000000
  
- 	sk = nfc_llcp_sock_alloc(sock, sock->type, GFP_ATOMIC, kern);
- 	if (sk == NULL)
+-- 
+2.20.1
+
 
 
