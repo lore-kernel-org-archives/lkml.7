@@ -2,62 +2,107 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E153C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C283207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E878207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:51:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/XDWKfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732822AbfJCTu2 (ORCPT
+        id S1733019AbfJCTvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:50:28 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57259 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729616AbfJCTu1 (ORCPT
+        Thu, 3 Oct 2019 15:51:49 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46088 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfJCTvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:50:27 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 7119540002;
-        Thu,  3 Oct 2019 19:50:25 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 21:50:25 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     a.zummo@towertech.it, nicolas.ferre@microchip.com,
-        ludovic.desroches@microchip.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] rtc: at91rm9200: use of_device_get_match_data()
-Message-ID: <20191003195025.GJ575@piout.net>
-References: <1569500132-21164-1-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 3 Oct 2019 15:51:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d1so4071702ljl.13;
+        Thu, 03 Oct 2019 12:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9pgSkfRdp0+C6gQGEaXGS6gP5j2Rq8fOoVTyq+Yt++k=;
+        b=t/XDWKfUS+mez5ZWHjWM3/9sAabp0xSKYo/p+tDfckbCxuxK7DXRe0LVGjtjGatLH0
+         NQcqJshl91AUKWnRxrSX/4BR8ckJw4oshWzgx0B6UMzxLmC4MrrVRZdfFVI4Nevu5qeY
+         H1IauHE7iqruHnrGiWA4+0dKmX7cliKfRf/Hc7MiLmqjcXI/TupO+oaWjL5sqho0h4wJ
+         b+HrNZQkTy8ecSXaJSjkWaFO2xnVt1xwMxlwl48KIqjyhfDxC8pZ5yZodKD/t9AjU1m4
+         fZo4XVie7sCQo3vtJjjGwa0KDR/nVhnEbtvznh/WmCUgw15X27vjxjt9H817a2JPWx9x
+         GG8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9pgSkfRdp0+C6gQGEaXGS6gP5j2Rq8fOoVTyq+Yt++k=;
+        b=m0Puz3hg6VaTuCjirvFFy07wnsuIK94iLGFYWvLgYXyQwt8KoHvaNzzChsIGYm2KAw
+         HuRmfsNLfGAhXWFF1ATzt5c59UNWP+SssmlwsNk5r9Vw/TjWXR74iftk56PLOOaV3j8j
+         4CHF/ozPaFUfSI+Tqrmync0KVAMrT9L+qvs4sK7ofrUM5gIU4BCm+4PNypwM1DkAOiAU
+         E2g/pZOokn4Df/rnX35RjY+rB8Ig/uB0U+BAmnpacg8sdrZNllyci84dTkpmk3K2UxHR
+         QLLf1/t50yIO3+bT9GE67WR8O8Pa5D/um78uqsPN6YKttFDjrqjm7fl/Ol6ClcxPM0VS
+         b48w==
+X-Gm-Message-State: APjAAAWJStrvrUCnkRianPt/oqEIM4HcL3UY+kOKmLq2bJ9WynSzotVT
+        HOnV5mA7SacfZFrZBVjG20VVTF5o7uAaYtXK4VY=
+X-Google-Smtp-Source: APXvYqzwrZZA4tXUUKBsAx7C7thA3+8YeHSUaBIu35E5BGCGg0rjZfmCZsiDKt9c8WQzgrPZVODXPSpQles/57KM8q0=
+X-Received: by 2002:a2e:7d0d:: with SMTP id y13mr7214977ljc.170.1570132306661;
+ Thu, 03 Oct 2019 12:51:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569500132-21164-1-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan> <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
+ <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone>
+ <20191003144225.0137bf6c@coco.lan> <20191003183200.GA2631@Limone>
+ <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl> <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
+ <20191003163914.7c384d36@coco.lan> <20191003164426.6da8538f@coco.lan>
+In-Reply-To: <20191003164426.6da8538f@coco.lan>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Thu, 3 Oct 2019 21:51:35 +0200
+Message-ID: <CANL0fFRSNbUhcik7rnhjZ0qUe-tZyzcjY+M1J_iGzUa5jNc9_A@mail.gmail.com>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/09/2019 15:15:32+0300, Claudiu Beznea wrote:
-> Use of_device_get_match_data() since all platforms should now use DT
-> bindings. AVR32 architecture has been removed in
-> commit 26202873bb51 ("avr32: remove support for AVR32 architecture").
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/rtc/Kconfig          |  1 +
->  drivers/rtc/rtc-at91rm9200.c | 19 +------------------
->  2 files changed, 2 insertions(+), 18 deletions(-)
-> 
-Applied, thanks.
+> 1) The firmware file is likely at the Windows driver for this device
+> (probably using a different format). It should be possible to get
+> it from there.
+
+If you tell me how I'm willing to do this. :)
+
+> 2) Another possibility would be to add a way to tell the si2168 driver
+> to not try to load a firmware, using the original one. That would
+> require adding a field at si2168_config to allow signalizing to it
+> that it should not try to load a firmware file, and add a quirk at
+> the af9035 that would set such flag for Logilink VG0022A.
+
+I don't get this. Which firmware, si2168 or si2157?
+
+I'm still for option 3: If there is a bogus chip revision number it's
+likely the VG0022A and we can safely set fw to NULL, in which case
+everything works.
+All already working devices will continue to work as before.
+With a low probability there are other devices that will return 0xffff
+but a) they didn't work until now and b) they receive a clear message
+that they return bogus numbers and this works just for the VG0022A, in
+which case this hardware can be tested.
+At last, *my* VG0022A will work without a custom kernel which I'm a
+big fan of. :))
+
+Are there any counterarguments except that it is not the cleanest
+solution in the universe? ;)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+g
