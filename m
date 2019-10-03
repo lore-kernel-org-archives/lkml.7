@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73A0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4F7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC092070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD03320673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122254;
-	bh=0xn1V+dQaLQrN6Mj+KrT7gR0pmwR/tohH0dFedkmAxU=;
+	s=default; t=1570122264;
+	bh=QpJnKHFPgpxos84+p/mFe97V7DiFatCPgCd4XKYrJVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u7GGuh50jqA1Uiv/XVz1ywqVZkzuP/vT2kTCnkymYM8lgVIpXV123tN1rfDcySawm
-	 kvVyhy6Gbanc2Byabofs2S6vgHVdeEOZiaWNnRzzkuSIau/uHcj9DNsm7rWMOlxhZr
-	 ZwCStNERYSd1i5uyZywWhVaI5BdhQmONLL6Op+5g=
+	b=0cJwE5rUzj4dfmJTSemF/Ve7i0SOoY2j/xPDiKS6L/8NPAV6QG61AW+gP3rLQZVjH
+	 ZoPGeSmZuRF8t4ePEfOtbJWu+Dh+HO6vF/2U3IT05PQqzRtXsxfc+BdxI2nssbBGgU
+	 VkpJYg0170v3SP6jkc3ZiB7oNYsJzrbxHc4oW0Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393321AbfJCREN (ORCPT
+        id S2392819AbfJCREX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405008AbfJCQlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:16 -0400
+        id S2392181AbfJCQlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CBF0206BB;
-        Thu,  3 Oct 2019 16:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 963EC206BB;
+        Thu,  3 Oct 2019 16:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120876;
-        bh=0xn1V+dQaLQrN6Mj+KrT7gR0pmwR/tohH0dFedkmAxU=;
+        s=default; t=1570120868;
+        bh=QpJnKHFPgpxos84+p/mFe97V7DiFatCPgCd4XKYrJVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4JNlVIxy5GyFmvR9o9PKGZb9mtYzuRzlOeaKrU9oa0OI00WsrH+6M+lfD62a7nf0
-         YZbsQRR2AjSeNzkyZLTcuQqjfqfhvEZy7CHQm2P+BOluBDZ3sQXzuLId/xUQCJTY4W
-         8YoqNClnwidGLmc+vQyyzGOHdYBFYiENn5HtYhb0=
+        b=kSlgCgqbdsvHDI66d/TYpHgbimWjLq7t8/YbsbTKnfC2tG+0rPfM/JARZKHIpUVAa
+         R7sIWjr0IsyK/jCVIIiYRJl3ZfIghO6fkBT5iM0ewRU4dY0A+7pLo/624U1wjat2Do
+         cWpTvzHA/rGc9Rpgpw13xwdgxfCNBjMO6X7vL7ec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 035/344] ax25: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:50:00 +0200
-Message-Id: <20191003154543.547209436@linuxfoundation.org>
+        stable@vger.kernel.org, Bodong Wang <bodong@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 032/344] net/mlx5: Add device ID of upcoming BlueField-2
+Date:   Thu,  3 Oct 2019 17:49:57 +0200
+Message-Id: <20191003154543.259907936@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,31 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Bodong Wang <bodong@mellanox.com>
 
-[ Upstream commit 0614e2b73768b502fc32a75349823356d98aae2c ]
+[ Upstream commit d19a79ee38c8fda6d297e4227e80db8bf51c71a6 ]
 
-When creating a raw AF_AX25 socket, CAP_NET_RAW needs to be checked
-first.
+Add the device ID of upcoming BlueField-2 integrated ConnectX-6 Dx
+network controller. Its VFs will be using the generic VF device ID:
+0x101e "ConnectX Family mlx5Gen Virtual Function".
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2e9d3e83ab82 ("net/mlx5: Update the list of the PCI supported devices")
+Signed-off-by: Bodong Wang <bodong@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ax25/af_ax25.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -855,6 +855,8 @@ static int ax25_create(struct net *net,
- 		break;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -1554,6 +1554,7 @@ static const struct pci_device_id mlx5_c
+ 	{ PCI_VDEVICE(MELLANOX, 0x101e), MLX5_PCI_DEV_IS_VF},	/* ConnectX Family mlx5Gen Virtual Function */
+ 	{ PCI_VDEVICE(MELLANOX, 0xa2d2) },			/* BlueField integrated ConnectX-5 network controller */
+ 	{ PCI_VDEVICE(MELLANOX, 0xa2d3), MLX5_PCI_DEV_IS_VF},	/* BlueField integrated ConnectX-5 network controller VF */
++	{ PCI_VDEVICE(MELLANOX, 0xa2d6) },			/* BlueField-2 integrated ConnectX-6 Dx network controller */
+ 	{ 0, }
+ };
  
- 	case SOCK_RAW:
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		break;
- 	default:
- 		return -ESOCKTNOSUPPORT;
 
 
