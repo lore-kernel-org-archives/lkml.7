@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E8EC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5509FC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDFA20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4B720830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123078;
-	bh=OgZwk1+fomveGMksFmW77iGKMMg1GbLiIdE44M4+TrQ=;
+	s=default; t=1570123081;
+	bh=BaDAgkkOFgT+WQJwC5jLKMwjDio2r3/yL/TbFia8kOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbzEaiD167OzGr+ZJOGtc413sUcvp3Fsn5sFyL9Att5+jPMRIKd0wmAQWn1u/laIg
-	 VbBHidh7r6Z7s5XzoIO08qrQ4eP5DX/tl5N5mX+12e0qt3R9lKryBh6IhRVCNsZAsd
-	 JVV1Cob7CZ123rEPsnL7zkakGraEzN1bMPjJHgJo=
+	b=hgMAznaS803Dq2jYMkIK8nqeRRPfOd2PxnRvQ+qKkWYPM50SDZ/bL+xQ6I80pGRCk
+	 dFLp/jeCoks2PjP+TxB2IazcPsiWOpbZk2QBKgNrYbosVJ98tPQLkcrXp923LtZ/sC
+	 JaSoNvGNTfHy8XMw/Wp7eiBKQFycqhkxDzdjSIBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389571AbfJCRR5 (ORCPT
+        id S2388540AbfJCQVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389337AbfJCQVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:41 -0400
+        id S2390125AbfJCQVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B2F321A4C;
-        Thu,  3 Oct 2019 16:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF3E20659;
+        Thu,  3 Oct 2019 16:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119701;
-        bh=OgZwk1+fomveGMksFmW77iGKMMg1GbLiIdE44M4+TrQ=;
+        s=default; t=1570119682;
+        bh=BaDAgkkOFgT+WQJwC5jLKMwjDio2r3/yL/TbFia8kOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kKUKlmaTLQxkzw5n3NRg821krwgGw2wIGYftYUXc7CZ/vXeUwNW8IEegze30dEYQE
-         3XZKnHJJtg6lGnh1olXqEXFXEy8kIHkLX/wlNis3x00yOxT6VY52fPaiEMF0DpQS14
-         3o8BZsoM7s6qs5GjZzHYI8f2fk1hluSs73xn/gdA=
+        b=ne8hlVP20R/AYQ80qldV+Z1tvxT8QFNepXnT4oO2/6d9h3uDsRZFCWjVwAJEuf5/2
+         vsmHTWQdX4DHnlUplrhjMYEaMgmEeJzPlIv8xsfMIzT0OLKBqt0hrUHGSEqp9uiVXp
+         rE74bGvE29KGuqRJaTeAUuVm71sYjJ6yNCHZCDBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Danit Goldberg <danitg@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 154/211] IB/mlx5: Free mpi in mp_slave mode
-Date:   Thu,  3 Oct 2019 17:53:40 +0200
-Message-Id: <20191003154523.179692859@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 152/211] scsi: qla2xxx: Fix Relogin to prevent modifying scan_state flag
+Date:   Thu,  3 Oct 2019 17:53:38 +0200
+Message-Id: <20191003154522.656461639@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,34 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danit Goldberg <danitg@mellanox.com>
+From: Quinn Tran <qutran@marvell.com>
 
-commit 5d44adebbb7e785939df3db36ac360f5e8b73e44 upstream.
+commit 8b5292bcfcacf15182a77a973a98d310e76fd58b upstream.
 
-ib_add_slave_port() allocates a multiport struct but never frees it.
-Don't leak memory, free the allocated mpi struct during driver unload.
+Relogin fails to move forward due to scan_state flag indicating device is
+not there. Before relogin process, Session delete process accidently
+modified the scan_state flag.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 32f69e4be269 ("{net, IB}/mlx5: Manage port association for multiport RoCE")
-Link: https://lore.kernel.org/r/20190916064818.19823-3-leon@kernel.org
-Signed-off-by: Danit Goldberg <danitg@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[mkp: typos plus corrected Fixes: sha as reported by sfr]
+
+Fixes: 2dee5521028c ("scsi: qla2xxx: Fix login state machine freeze")
+Cc: stable@vger.kernel.org
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/main.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_init.c   |   25 ++++++++++++++++++++-----
+ drivers/scsi/qla2xxx/qla_os.c     |    1 +
+ drivers/scsi/qla2xxx/qla_target.c |    1 -
+ 3 files changed, 21 insertions(+), 6 deletions(-)
 
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -6370,6 +6370,7 @@ static void mlx5_ib_remove(struct mlx5_c
- 			mlx5_ib_unbind_slave_port(mpi->ibdev, mpi);
- 		list_del(&mpi->list);
- 		mutex_unlock(&mlx5_ib_multiport_mutex);
-+		kfree(mpi);
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -216,8 +216,13 @@ qla2x00_async_login(struct scsi_qla_host
+ 	struct srb_iocb *lio;
+ 	int rval = QLA_FUNCTION_FAILED;
+ 
+-	if (!vha->flags.online)
+-		goto done;
++	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT) ||
++	    fcport->loop_id == FC_NO_LOOP_ID) {
++		ql_log(ql_log_warn, vha, 0xffff,
++		    "%s: %8phC - not sending command.\n",
++		    __func__, fcport->port_name);
++		return rval;
++	}
+ 
+ 	sp = qla2x00_get_sp(vha, fcport, GFP_KERNEL);
+ 	if (!sp)
+@@ -1123,8 +1128,13 @@ int qla24xx_async_gpdb(struct scsi_qla_h
+ 	struct port_database_24xx *pd;
+ 	struct qla_hw_data *ha = vha->hw;
+ 
+-	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT))
++	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT) ||
++	    fcport->loop_id == FC_NO_LOOP_ID) {
++		ql_log(ql_log_warn, vha, 0xffff,
++		    "%s: %8phC - not sending command.\n",
++		    __func__, fcport->port_name);
+ 		return rval;
++	}
+ 
+ 	fcport->disc_state = DSC_GPDB;
+ 
+@@ -1904,8 +1914,11 @@ qla24xx_handle_plogi_done_event(struct s
  		return;
  	}
+ 
+-	if (fcport->disc_state == DSC_DELETE_PEND)
++	if ((fcport->disc_state == DSC_DELETE_PEND) ||
++	    (fcport->disc_state == DSC_DELETED)) {
++		set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
+ 		return;
++	}
+ 
+ 	if (ea->sp->gen2 != fcport->login_gen) {
+ 		/* target side must have changed it. */
+@@ -6557,8 +6570,10 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_
+ 	}
+ 
+ 	/* Clear all async request states across all VPs. */
+-	list_for_each_entry(fcport, &vha->vp_fcports, list)
++	list_for_each_entry(fcport, &vha->vp_fcports, list) {
+ 		fcport->flags &= ~(FCF_LOGIN_NEEDED | FCF_ASYNC_SENT);
++		fcport->scan_state = 0;
++	}
+ 	spin_lock_irqsave(&ha->vport_slock, flags);
+ 	list_for_each_entry(vp, &ha->vp_list, list) {
+ 		atomic_inc(&vp->vref_count);
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4864,6 +4864,7 @@ void qla24xx_create_new_sess(struct scsi
+ 	if (fcport) {
+ 		fcport->id_changed = 1;
+ 		fcport->scan_state = QLA_FCPORT_FOUND;
++		fcport->chip_reset = vha->hw->base_qpair->chip_reset;
+ 		memcpy(fcport->node_name, e->u.new_sess.node_name, WWN_SIZE);
+ 
+ 		if (pla) {
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1216,7 +1216,6 @@ static void qla24xx_chk_fcp_state(struct
+ 		sess->logout_on_delete = 0;
+ 		sess->logo_ack_needed = 0;
+ 		sess->fw_login_state = DSC_LS_PORT_UNAVAIL;
+-		sess->scan_state = 0;
+ 	}
+ }
  
 
 
