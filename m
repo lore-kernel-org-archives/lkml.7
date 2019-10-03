@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D3FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB92DC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B33D20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975E72086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123043;
-	bh=czvX1wbkCejc6EHOLQVri//U8JXIKpvlnKwm/gt/y24=;
+	s=default; t=1570123046;
+	bh=AMxdu2iAMkSh3XMhlH/qsHZK8WG69YqnxAMbGUcPvu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HeXZ4A8o9rpP5vLOwnfnxyY27lFK82LI1pEfsKGBAmyE5hcjemwhobRTAbkm6htlu
-	 u93r1u5BOiC0tly3IHsXIbid7ZgbOOJKgguxoRSNLjbeuwp7W2z3h/mwOQYOMmeQdE
-	 Q3ttCiUr+gJExmZ5Bd+3OQ5MPAMZK/RxpwcrgNsw=
+	b=2sUyoXRYw/nxW6iCALs1DNWolnoZYNJcVTbhAwFOxgus+XiOQxCU2vA1G4F5k/sdn
+	 5aW2votDhU2HMPcSWXISQXAz3QoLkJqnFr17ymi94H1Rp0p5JLJokXU1IPkAjDbGq1
+	 LwnZo5nrGtXWF3Iehmw0OZ5M6m72yolpyb2RIOGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391383AbfJCRRV (ORCPT
+        id S2389440AbfJCQWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51602 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390373AbfJCQWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:22:47 -0400
+        id S2390311AbfJCQWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:22:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 321E0215EA;
-        Thu,  3 Oct 2019 16:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B54B21783;
+        Thu,  3 Oct 2019 16:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119766;
-        bh=czvX1wbkCejc6EHOLQVri//U8JXIKpvlnKwm/gt/y24=;
+        s=default; t=1570119750;
+        bh=AMxdu2iAMkSh3XMhlH/qsHZK8WG69YqnxAMbGUcPvu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eULCaA7EabYZazFhFsGDK/DfolhGZrIAfnxbANKncX8bFGYFcFSpe2GHh5XxtjR4c
-         MbdSjWhGkrbn+5z36zOnru9mfLYgb6oYB4YocFETf2ZDUHVtIxa1Pso+wCq59uHMGe
-         VmFvdRk1fntHWqmQe8lCXFLrsFw91JY5YOSCOEG0=
+        b=LH4ZfRsDyPjkprbglfwG/qSqmbyNvI9+B/8XhFdatr+YTiK06dSEHqBp92bZyactY
+         LcU6hWXV5DPaHtewPR1w5FaBy0l24xlp4t3R7vfm2YIBDPpviLw5hjBxxeUFnU36/a
+         aWfaHSnaAasSx7P1ApVTE+Q5ycj0fEXo/hFGlMX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: [PATCH 4.19 184/211] memcg, kmem: do not fail __GFP_NOFAIL charges
-Date:   Thu,  3 Oct 2019 17:54:10 +0200
-Message-Id: <20191003154527.764396117@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 179/211] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
+Date:   Thu,  3 Oct 2019 17:54:05 +0200
+Message-Id: <20191003154527.198767687@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -66,87 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-commit e55d9d9bfb69405bd7615c0f8d229d8fafb3e9b8 upstream.
+commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
 
-Thomas has noticed the following NULL ptr dereference when using cgroup
-v1 kmem limit:
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-PGD 0
-P4D 0
-Oops: 0000 [#1] PREEMPT SMP PTI
-CPU: 3 PID: 16923 Comm: gtk-update-icon Not tainted 4.19.51 #42
-Hardware name: Gigabyte Technology Co., Ltd. Z97X-Gaming G1/Z97X-Gaming G1, BIOS F9 07/31/2015
-RIP: 0010:create_empty_buffers+0x24/0x100
-Code: cd 0f 1f 44 00 00 0f 1f 44 00 00 41 54 49 89 d4 ba 01 00 00 00 55 53 48 89 fb e8 97 fe ff ff 48 89 c5 48 89 c2 eb 03 48 89 ca <48> 8b 4a 08 4c 09 22 48 85 c9 75 f1 48 89 6a 08 48 8b 43 18 48 8d
-RSP: 0018:ffff927ac1b37bf8 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: fffff2d4429fd740 RCX: 0000000100097149
-RDX: 0000000000000000 RSI: 0000000000000082 RDI: ffff9075a99fbe00
-RBP: 0000000000000000 R08: fffff2d440949cc8 R09: 00000000000960c0
-R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff907601f18360 R14: 0000000000002000 R15: 0000000000001000
-FS:  00007fb55b288bc0(0000) GS:ffff90761f8c0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000008 CR3: 000000007aebc002 CR4: 00000000001606e0
-Call Trace:
- create_page_buffers+0x4d/0x60
- __block_write_begin_int+0x8e/0x5a0
- ? ext4_inode_attach_jinode.part.82+0xb0/0xb0
- ? jbd2__journal_start+0xd7/0x1f0
- ext4_da_write_begin+0x112/0x3d0
- generic_perform_write+0xf1/0x1b0
- ? file_update_time+0x70/0x140
- __generic_file_write_iter+0x141/0x1a0
- ext4_file_write_iter+0xef/0x3b0
- __vfs_write+0x17e/0x1e0
- vfs_write+0xa5/0x1a0
- ksys_write+0x57/0xd0
- do_syscall_64+0x55/0x160
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ENOTSUPP is not supposed to be returned to userspace. This was found on an
+OpenPower machine, where the RTC does not support set_alarm.
 
-Tetsuo then noticed that this is because the __memcg_kmem_charge_memcg
-fails __GFP_NOFAIL charge when the kmem limit is reached.  This is a wrong
-behavior because nofail allocations are not allowed to fail.  Normal
-charge path simply forces the charge even if that means to cross the
-limit.  Kmem accounting should be doing the same.
+On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
+"524 Unknown error 524"
 
-Link: http://lkml.kernel.org/r/20190906125608.32129-1-mhocko@kernel.org
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Thomas Lindroth <thomas.lindroth@gmail.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Replace it with EOPNOTSUPP which results in the expected "95 Operation not
+supported" error.
+
+Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/time/alarmtimer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2637,6 +2637,16 @@ int memcg_kmem_charge_memcg(struct page
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -676,7 +676,7 @@ static int alarm_timer_create(struct k_i
+ 	enum  alarmtimer_type type;
  
- 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
- 	    !page_counter_try_charge(&memcg->kmem, nr_pages, &counter)) {
-+
-+		/*
-+		 * Enforce __GFP_NOFAIL allocation because callers are not
-+		 * prepared to see failures and likely do not have any failure
-+		 * handling code.
-+		 */
-+		if (gfp & __GFP_NOFAIL) {
-+			page_counter_charge(&memcg->kmem, nr_pages);
-+			return 0;
-+		}
- 		cancel_charge(memcg, nr_pages);
- 		return -ENOMEM;
- 	}
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (!capable(CAP_WAKE_ALARM))
+ 		return -EPERM;
+@@ -794,7 +794,7 @@ static int alarm_timer_nsleep(const cloc
+ 	int ret = 0;
+ 
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (flags & ~TIMER_ABSTIME)
+ 		return -EINVAL;
 
 
