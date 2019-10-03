@@ -2,95 +2,104 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABD7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFE8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC4F222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7E0222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfJCDtt (ORCPT
+        id S1728781AbfJCD72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 23:49:49 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:53530 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728693AbfJCDtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 23:49:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Te-tQQX_1570074582;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Te-tQQX_1570074582)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Oct 2019 11:49:46 +0800
-From:   Ben Luo <luoben@linux.alibaba.com>
-To:     alex.williamson@redhat.com, aarcange@redhat.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] vfio/type1: remove hugepage checks in is_invalid_reserved_pfn()
-Date:   Thu,  3 Oct 2019 11:49:42 +0800
-Message-Id: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 2 Oct 2019 23:59:28 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:42161 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727953AbfJCD72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 23:59:28 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 418CA82E31;
+        Thu,  3 Oct 2019 03:59:24 +0000 (UTC)
+Message-ID: <cf49bbf518b10b0f5b27b0d5e866b60e174fec4a.camel@aosc.io>
+Subject: Re: [PATCH 0/3] drm/sun4i: dsi: misc timing fixes
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Date:   Thu, 03 Oct 2019 11:58:42 +0800
+In-Reply-To: <20191002103642.jlbs44v4kwnxhrge@gilmour>
+References: <20191001080253.6135-1-icenowy@aosc.io>
+         <20191002103642.jlbs44v4kwnxhrge@gilmour>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, no hugepage split code can transfer the reserved bit
-from head to tail during the split, so checking the head can't make
-a difference in a racing condition with hugepage spliting.
+在 2019-10-02三的 12:36 +0200，Maxime Ripard写道：
+> Hi,
+> 
+> On Tue, Oct 01, 2019 at 04:02:50PM +0800, Icenowy Zheng wrote:
+> > This patchset fixes some portion of timing calculation in
+> > sun6i_mipi_dsi
+> > driver according to the BSP driver.
+> > 
+> > Two of the patches are reverting, one is fixing some misread of the
+> > BSP
+> > source code, another is fixing a wrong refactor that actually
+> > breaks the
+> > formula.
+> > 
+> > The other non-reverting patch is fixing a porch error which is
+> > usually
+> > seen in the original driver commit. Most of porch errors are then
+> > fixed,
+> > but this one gets ignored.
+> > 
+> > By applying these patches, several DSI panels are tested to be
+> > driven
+> > properly by the timing provided by the vendor, including the LCD
+> > panel
+> > of PinePhone "Don't Be Evil" DevKit, the final PinePhone panel and
+> > the
+> > panel on PineTab. Without these patches they need dirty timing
+> > hacks to
+> > work.
+> 
+> Thanks for going after that issue. Can you provide references to the
+> BSP on the various patches?
 
-The buddy wouldn't allow a driver to allocate an hugepage if any
-subpage is reserved in the e820 map at boot, if any driver sets the
-reserved bit of head page before mapping the hugepage in userland,
-it needs to set the reserved bit in all subpages to be safe.
+For patch 1: [1] for setting delay 1 in DSI controller, [2] for setting
+real delay in TCON controller.
 
-Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
----
- drivers/vfio/vfio_iommu_type1.c | 26 ++++----------------------
- 1 file changed, 4 insertions(+), 22 deletions(-)
+For patch 2: [3]
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 054391f..e2019ba 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -287,31 +287,13 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
-  * Some mappings aren't backed by a struct page, for example an mmap'd
-  * MMIO range for our own or another device.  These use a different
-  * pfn conversion and shouldn't be tracked as locked pages.
-+ * For compound pages, any driver that sets the reserved bit in head
-+ * page needs to set the reserved bit in all subpages to be safe.
-  */
- static bool is_invalid_reserved_pfn(unsigned long pfn)
- {
--	if (pfn_valid(pfn)) {
--		bool reserved;
--		struct page *tail = pfn_to_page(pfn);
--		struct page *head = compound_head(tail);
--		reserved = !!(PageReserved(head));
--		if (head != tail) {
--			/*
--			 * "head" is not a dangling pointer
--			 * (compound_head takes care of that)
--			 * but the hugepage may have been split
--			 * from under us (and we may not hold a
--			 * reference count on the head page so it can
--			 * be reused before we run PageReferenced), so
--			 * we've to check PageTail before returning
--			 * what we just read.
--			 */
--			smp_rmb();
--			if (PageTail(tail))
--				return reserved;
--		}
--		return PageReserved(tail);
--	}
-+	if (pfn_valid(pfn))
-+		return PageReserved(pfn_to_page(pfn));
- 
- 	return true;
- }
--- 
-1.8.3.1
+Patch 3 is reverting a breaking change, so I didn't check it in the
+BSP. It can be verified by mathmatical calculation.
+
+[1] 
+https://github.com/ayufan-pine64/linux-pine64/blob/my-hacks-1.2-with-drm/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L730
+
+[2] 
+https://github.com/ayufan-pine64/linux-pine64/blob/my-hacks-1.2-with-drm/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_lcd.c#L369
+
+[3] 
+https://github.com/ayufan-pine64/linux-pine64/blob/my-hacks-1.2-with-drm/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L780
+
+> 
+> Ideally, having the panel drivers, and the panel datasheet would
+> help.
+> 
+> Thanks!
+> Maxime
+> 
+> PS: where can we get one of those devices?
 
