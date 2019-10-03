@@ -2,56 +2,57 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668B5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CF8C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A820815
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1E920815
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="UlIYKajk"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mPszV141"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfJCGqC (ORCPT
+        id S1727647AbfJCGqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:46:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33981 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfJCGqC (ORCPT
+        Thu, 3 Oct 2019 02:46:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42184 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfJCGqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:46:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b128so1107507pfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:46:01 -0700 (PDT)
+        Thu, 3 Oct 2019 02:46:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z12so1114442pgp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tmedhzX9C+cN8nQlDlRuERilhLkK7PZoYSIAR3+m8Og=;
-        b=UlIYKajkWrpON8MaHPgN7XHZDHJbOBa85ryXrpg2AQ4pavpCqkCc8RsWPqMMSIBkw/
-         sB0z2HVCWKGIHFCBf2SrufCZhwoSyh5DYyjEFygGztaYKCR3A7mgmFjz87dQ1b1IR6AY
-         rksgIwmeq/xMyCqS60GUxfNLTEpyrjYwTXmVE=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FmdvF2g/THNcnQGDKSqudaTl2v+sgGCz1+BMHyLJ0gY=;
+        b=mPszV141qNr70ZXPQNvwOYKLuIaFS7QQawxY1u08dqIbN+Q7YSqBu6lQG7DNB9mAh3
+         iFgHo8sru1tpjR8oKzSHAp/7Z4LxJp8JgpzyfAeNXI1iyddWmoW1a/zUdRE8RJlPovjL
+         UOt1J4UlfcZo2ejyv9s6qL4zAiHN9TOI/KlsQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tmedhzX9C+cN8nQlDlRuERilhLkK7PZoYSIAR3+m8Og=;
-        b=Bc6hfB5Qw7AiqkWt87e1K9QS7IAUA52ClidiQ7hUU0s/jUTGHkWeg4s4CSwTl2OZCo
-         Pl7yvJ66kMurwUtwh4fKr3FTDcJqbtOqy/LB3mKgfKeamJ8fw4JctjledhF2SictykVN
-         uWswlCcbsNTF1N/zggixSOcVoX5P95AtkgBmfc04OAzAvDu7+aPc/5gnIM/Q+P4z7N+m
-         7F7HdIIGpK5lnUQqqYDXLf3Vf5KVW3e7hozGaOjQ554bt7SPqZX+YqDFkdDQjvGhrbRQ
-         /OTE1QbSOqxVTeYQG9gcbq+9ceVBGXGK66HFNNOU1Z6IT0J+wyO0byzGv4nkmw1TwYnh
-         vKBg==
-X-Gm-Message-State: APjAAAWZTMR6yXOzzD14RhiLWNqyOhGh5RqKbiV4IH60jS82DfIq2uLK
-        Q2/nBRMseYXJdzv1/XQbA5MtLw==
-X-Google-Smtp-Source: APXvYqxQCK4/7MbbkBagZV2vOcHKusaEK4mXaxvR66zcwNTDIsrsGqkeRKcQ4QxTDvq2Kmwy+8UUQw==
-X-Received: by 2002:a63:4762:: with SMTP id w34mr8014842pgk.202.1570085160475;
-        Wed, 02 Oct 2019 23:46:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FmdvF2g/THNcnQGDKSqudaTl2v+sgGCz1+BMHyLJ0gY=;
+        b=elUWHBxgEiD57OBKzMqHWHJYnY9Eft+aE7dsts45AJ9xW2KEF6naxTvQ7PxHzBd5fV
+         4AfDByAtCkCPPKOVlSNy4/Oa9PbL/spBN+6bAgnqyD9Oou/UwPn+rh0Lzf3tEJOUJHQb
+         lJv3o20Kpgjit1h+PcZLeJMLp4Qu7jdWkGheAPuZXgosYASFlWN780ZV/Yd525ndD2d0
+         zF9ATxyQQZQJbFkEmPYR6tVCsBnXKKo4z12ORM4glL09AcQLvxUTNS4YNGnMD5H4yACE
+         5Is/emoW4lHftzGfARGGbE4pPm0gMDbfcnXr79fo+llewNJNdemFB+ylNspqcxZ3zJvi
+         8WhQ==
+X-Gm-Message-State: APjAAAW3/OCR4+ZD4WgVuDg1w/tueLqob5dxvSZtYUNQsowIKVeCd9/n
+        GpuQ/kuroumY2BWhlEsBcTAIyQ==
+X-Google-Smtp-Source: APXvYqxowwGy2lyGUReMroUTWF8qD6YhNPZGdCxinBp+JhKO+UuM/RDM3wzfwdbokqlD+a/irkQsIA==
+X-Received: by 2002:a17:90a:a2b:: with SMTP id o40mr8964792pjo.107.1570085164194;
+        Wed, 02 Oct 2019 23:46:04 -0700 (PDT)
 Received: from localhost.localdomain ([49.206.203.121])
-        by smtp.gmail.com with ESMTPSA id b18sm1423294pfi.157.2019.10.02.23.45.56
+        by smtp.gmail.com with ESMTPSA id b18sm1423294pfi.157.2019.10.02.23.46.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 23:45:59 -0700 (PDT)
+        Wed, 02 Oct 2019 23:46:03 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -61,10 +62,12 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v11 0/7] drm/sun4i: dsi: Fixes/updates (A33 reworked!)
-Date:   Thu,  3 Oct 2019 12:15:20 +0530
-Message-Id: <20191003064527.15128-1-jagan@amarulasolutions.com>
+Subject: [PATCH v11 1/7] drm/sun4i: dsi: Fix TCON DRQ set bits
+Date:   Thu,  3 Oct 2019 12:15:21 +0530
+Message-Id: <20191003064527.15128-2-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20191003064527.15128-1-jagan@amarulasolutions.com>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,92 +75,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is v11 version changes for previous series[1].
+The LCD timing definitions between Linux DRM vs Allwinner are different,
+below diagram shows this clear differences.
 
-This series dropped the tcon->dclk_min_div and tcon->dclk_max_div
-patches, since the discussion on the respective threads[2][3] 
-not finalized or not agree on both the ends.
+           Active                 Front           Sync           Back
+           Region                 Porch                          Porch
+<-----------------------><----------------><--------------><-------------->
+  //////////////////////|
+ ////////////////////// |
+//////////////////////  |..................                ................
+                                           ________________
+<----- [hv]display ----->
+<------------- [hv]sync_start ------------>
+<--------------------- [hv]sync_end ---------------------->
+<-------------------------------- [hv]total ------------------------------>
 
-This series mostly the commit messages changes suggested by Chen-Yu.
+<----- lcd_[xy] -------->		  <- lcd_[hv]spw ->
+					  <---------- lcd_[hv]bp --------->
+<-------------------------------- lcd_[hv]t ------------------------------>
 
-Most of these issues are reproduced while supporting Allwinner A64
-MIPI-DSI [4] but to confirm it with other SoC this series is reworked
-on A33 since the controller tested it A33 as of now.
+The DSI driver misinterpreted the hbp term from the BSP code to refer
+only to the backporch, when in fact it was backporch + sync. Thus the
+driver incorrectly used the horizontal front porch plus sync in its
+calculation of the DRQ set bit value, when it should not have included
+the sync timing.
 
-Since we don't have proper evidence and documentation for dsi controller
-in Allwinner, these changes are more likely to rely on new working BSP
-codes (even the initial driver written as per this rule).
+Including additional sync timings leads to flip_done timed out as:
 
-All these fixes/updates are tested in "bananapi,s070wv20-ct16" panel
-on Allwinner A33, the same panel timings are available in panel-simple
-in mainline tree.
+WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+[CRTC:46:crtc-0] vblank wait timed out
+Modules linked in:
+CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
+Hardware name: Allwinner sun8i Family
+Workqueue: events deferred_probe_work_func
+[<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+[<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+[<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+[<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+[<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+[<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+[<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+[<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+[<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+[<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+[<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+[<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+[<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+[<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+[<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+[<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+[<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+[<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+[<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+[<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+[<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+[<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+[<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+[<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+[<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+[<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+[<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+[<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+[<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+[<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+[<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+[<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+[<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+[<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+[<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+[<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+[<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+[<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xde539fb0 to 0xde539ff8)
+9fa0:                                     00000000 00000000 00000000 00000000
+9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace b57eb1e5c64c6b8b ]---
+random: fast init done
+[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
 
-Changes for v11:
-- Drop DCLK dividers patches
-- Updated the commit message changes suggested by Chen-Yu
-- rebased on linux-next
-Changes for v10:
-- reworked previous "Fixes/updates" patches on A33
-- reworked previous A64 DSI fixes on A33
-- added proper detailed commit messages with logs
-- tested on BPI-M2M board.
-Changes for v9:
-- rebase on drm-misc
-- update commit messages
-- add hsync_porch overflow patch
-Changes for v8:
-- rebase on master
-- rework on commit messages
-- rework video start delay
-- include drq changes from previous version
-Changes for v7:
-- rebase on master
-- collect Merlijn Wajer Tested-by credits.
-Changes for v6:
-- fixed all burst mode patches as per previous version comments
-- rebase on master
-- update proper commit message
-- dropped unneeded comments
-- order the patches that make review easy
-Changes for v5, v4, v3, v2:
-- use existing driver code construct for hblk computation
-- create separate function for vblk computation
-- cleanup commit messages
-- update proper commit messages
-- fixed checkpatch warnings/errors
-- use proper return value for tcon0 probe
-- add logic to get tcon0 divider values
-- simplify timings code to support burst mode
-- fix drq computation return values
-- rebase on master
+With the terms(as described in above diagram) fixed, the panel
+displays correctly without any timeouts.
 
-Any inputs?
-Jagan.
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[1] https://patchwork.freedesktop.org/series/60847/
-[2] https://patchwork.freedesktop.org/patch/305923/?series=60847&rev=1
-[3] https://patchwork.kernel.org/patch/10779937/
-[4] https://patchwork.freedesktop.org/series/57834/
-
-Jagan Teki (7):
-  drm/sun4i: dsi: Fix TCON DRQ set bits
-  drm/sun4i: dsi: Update start value in video start delay
-  drm/sun4i: dsi: Fix video start delay computation
-  dt-bindings: sun6i-dsi: Add VCC-DSI supply property
-  drm/sun4i: sun6i_mipi_dsi: Add VCC-DSI regulator support
-  [DO NOT MERGE] drm/panel: Add Bananapi S070WV20-CT16 ICN6211 MIPI-DSI to RGB bridge
-  [DO NOT MERGE] ARM: dts: sun8i: bananapi-m2m: Enable Bananapi S070WV20-CT16 DSI panel
-
- .../display/allwinner,sun6i-a31-mipi-dsi.yaml |   3 +
- arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  |  40 +++
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../panel/panel-bananapi-s070wv20-icn6211.c   | 293 ++++++++++++++++++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        |  32 +-
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |   2 +
- 7 files changed, 376 insertions(+), 4 deletions(-)
- create mode 100644 drivers/gpu/drm/panel/panel-bananapi-s070wv20-icn6211.c
-
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 1636344ba9ec..f83522717488 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -437,9 +437,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 			     SUN6I_DSI_BURST_LINE_SYNC_POINT(SUN6I_DSI_SYNC_POINT));
+ 
+ 		val = SUN6I_DSI_TCON_DRQ_ENABLE_MODE;
+-	} else if ((mode->hsync_end - mode->hdisplay) > 20) {
++	} else if ((mode->hsync_start - mode->hdisplay) > 20) {
+ 		/* Maaaaaagic */
+-		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
++		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+ 
+ 		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+ 		drq /= 32;
 -- 
 2.18.0.321.gffc6fa0e3
 
