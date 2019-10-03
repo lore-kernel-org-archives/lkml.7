@@ -2,51 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E806C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF8DC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5EB2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A44D20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121654;
-	bh=RfXH2R0qAeSJaNuWcnYsp87QYBShJznj5iJicT3pyXQ=;
+	s=default; t=1570121658;
+	bh=ppvgryPXoAV87FTYKqBMl7LfUlYuP5FSY5V3yCvro1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hv2GTF2MwfZ3awtpuj1ed3fzsAdaG3QVK+U5ie9PBmwNYcYP4m1LxKH4t6g24oNyx
-	 lbfLr5zBBjdO8IM/Ns5sx/EjV6tIRLjcNf0DMV2B2w+p0KD1DzgRtM+iL5OWnkz4dk
-	 l69WfmOYGbuy1Ij5JNhiO6HYm+5roCjysEI1FohI=
+	b=gyeKpNJ4w3bhNBLMQSj9tdlvBVuy0HWXARQQ7ONcqYYEqkQWoIGeM+RXE9+MMNk9C
+	 c9290uknQz1L45Ofi5MkLhTYZ7wiccXpATIhv8/cJ1bRak0vXBa6qI9Iv4qFOkvDMx
+	 Io9e9g9Sr7s9mU60BKpyisD49Tzv0GS5/Jt3ud7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406443AbfJCQyN (ORCPT
+        id S2393221AbfJCQxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393232AbfJCQxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:53:49 -0400
+        id S1732255AbfJCQxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D193A2070B;
-        Thu,  3 Oct 2019 16:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C50620862;
+        Thu,  3 Oct 2019 16:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121628;
-        bh=RfXH2R0qAeSJaNuWcnYsp87QYBShJznj5iJicT3pyXQ=;
+        s=default; t=1570121617;
+        bh=ppvgryPXoAV87FTYKqBMl7LfUlYuP5FSY5V3yCvro1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4fPJOgtr/iQNt0ViePCz5GmKa7v3IPqq6XYxh4X/IfDqISExpA/fYeQBOdlNvJFu
-         SgqtNouLlQkZeNYtWQEHL0tFcsylxyK1n46nnyuNT0cLIfo3Az2sKysnk4NYWLa/9f
-         e5lW/LxFxFYVPce+FQ59NzImj1keHr7sCkJdF8LQ=
+        b=f71YjRlFTpy3K74cONVnCxRD2XOvbRPELlFdIgHtaoN+Q4l7XxJGQAXNv/5iiE9Hk
+         xDURYDrQ72LhJ9dNvyK4sQQCGWsUIhoDdHsXcNkiE8BkeXXAU4Pb/RRcHn4T7G5hPN
+         A4mPc8vlvBmwoQLKstvEO/wsQwF2g6mrUJzOHi3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 342/344] mt76: mt7615: always release sem in mt7615_load_patch
-Date:   Thu,  3 Oct 2019 17:55:07 +0200
-Message-Id: <20191003154612.157543944@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        linux-security-module@vger.kernel.org, kernel-team@android.com,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.3 308/344] ovl: filter of trusted xattr results in audit
+Date:   Thu,  3 Oct 2019 17:54:33 +0200
+Message-Id: <20191003154609.636796606@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,47 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Mark Salyzyn <salyzyn@android.com>
 
-[ Upstream commit 2fc446487c364bf8bbd5f8f5f27e52d914fa1d72 ]
+commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
 
-Release patch semaphore even if request_firmware fails in
-mt7615_load_patch
+When filtering xattr list for reading, presence of trusted xattr
+results in a security audit log.  However, if there is other content
+no errno will be set, and if there isn't, the errno will be -ENODATA
+and not -EPERM as is usually associated with a lack of capability.
+The check does not block the request to list the xattrs present.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Switch to ns_capable_noaudit to reflect a more appropriate check.
+
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-security-module@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org # v3.18+
+Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/overlayfs/inode.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index cdad2c8dc2971..7ef681fea3f8f 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -257,9 +257,9 @@ static int mt7615_driver_own(struct mt7615_dev *dev)
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -383,7 +383,8 @@ static bool ovl_can_list(const char *s)
+ 		return true;
  
- static int mt7615_load_patch(struct mt7615_dev *dev)
- {
--	const struct firmware *fw;
--	const struct mt7615_patch_hdr *hdr;
- 	const char *firmware = MT7615_ROM_PATCH;
-+	const struct mt7615_patch_hdr *hdr;
-+	const struct firmware *fw = NULL;
- 	int len, ret, sem;
+ 	/* Never list trusted.overlay, list other trusted for superuser only */
+-	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
++	return !ovl_is_private_xattr(s) &&
++	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
+ }
  
- 	sem = mt7615_mcu_patch_sem_ctrl(dev, 1);
-@@ -275,7 +275,7 @@ static int mt7615_load_patch(struct mt7615_dev *dev)
- 
- 	ret = request_firmware(&fw, firmware, dev->mt76.dev);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	if (!fw || !fw->data || fw->size < sizeof(*hdr)) {
- 		dev_err(dev->mt76.dev, "Invalid firmware\n");
--- 
-2.20.1
-
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 
