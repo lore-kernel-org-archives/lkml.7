@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E33C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1802133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2921F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120578;
-	bh=RluXyseXMQYFzo+kd6pyD1sdBCaQFakvt+G1DrV2/6Y=;
+	s=default; t=1570120584;
+	bh=7m5SvWbRsWINvHAdfhGmsNmX/GYECeg7xIZ18asPn3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EqAa2AMxF1RD9Nij5O33QWnAT7zHJ9O1GHsO4qOvy4aChTGOIJJgozfUtHyj1ogin
-	 zrougCQok/CvLOv6ZWknJ4PBq+dZU7yVKea21xatxdQcvVWRVusRRt4hcrIyGv8s4e
-	 nYxrwMeU0ZW0gYh2KwQzC+Vp7831JpXpRnl+m6So=
+	b=jVu8tx/HVFmm8gT/AUD6ehzRp3lEUHA3OCYQgtAcpLbpgyZiK+2WoRItJPGPgVIdN
+	 N8kIz5fWfqvmlKWa1k705vN2r876ufoFOrfDl29sBPanUiqt8BcKSztKlnStiqrpJ2
+	 kRyIAOBh3hNQs5Kn8DDSVDpkgTBazQWm2enkU1ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404404AbfJCQgQ (ORCPT
+        id S2392232AbfJCQgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45400 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404384AbfJCQgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:13 -0400
+        id S2392204AbfJCQgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D71520830;
-        Thu,  3 Oct 2019 16:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02AE20830;
+        Thu,  3 Oct 2019 16:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120572;
-        bh=RluXyseXMQYFzo+kd6pyD1sdBCaQFakvt+G1DrV2/6Y=;
+        s=default; t=1570120578;
+        bh=7m5SvWbRsWINvHAdfhGmsNmX/GYECeg7xIZ18asPn3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzuoZkwbJksAuwT7hWrq8dFOFOglZ0kiVWYHykKCjqgV3Gzya0UjadKa6prV8GZsD
-         DtiIPvxpvfhT3kEOo435YUT7sL2hDti50Mzrx6xwGnXfiMBKlCT6vSi8cFHEcmtxH8
-         cy8fkjYxlInImB2eChkSDmq7/DzBQYyE8RpuGJ+A=
+        b=d+RIQWcqerSCCb/kX1x43ZdS86BfvH6jg9fLSvuHHUYsdisOr4nHZoXi4iuTpIuC1
+         22uDybQ39YIiI+i7k25Z3EaeklkmfE8D3nb1kZbxbSOu8FPnGeEZG6SH78+XUP+/+l
+         hIPLGvHC37MX6J+vcQziqIgWmDHZh3K8XJ1c97mY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.2 245/313] media: videobuf-core.c: poll_wait needs a non-NULL buf pointer
-Date:   Thu,  3 Oct 2019 17:53:43 +0200
-Message-Id: <20191003154557.160513583@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 273/313] rtw88: pci: Use DMA sync instead of remapping in RX ISR
+Date:   Thu,  3 Oct 2019 17:54:11 +0200
+Message-Id: <20191003154559.932293810@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,45 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 6f51fdfd8229d5358c2d6e272cf73478866e8ddc upstream.
+commit 29b68a920f6abb7b5ba21ab4b779f62d536bac9b upstream.
 
-poll_wait uses &buf->done, but buf is NULL. Move the poll_wait to later
-in the function once buf is correctly set and only call it if it is
-non-NULL.
+Since each skb in RX ring is reused instead of new allocation, we can
+treat the DMA in a more efficient way by DMA synchronization.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: bb436cbeb918 ("media: videobuf: fix epoll() by calling poll_wait first")
-Cc: <stable@vger.kernel.org>      # for v5.1 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/videobuf-core.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/drivers/media/v4l2-core/videobuf-core.c
-+++ b/drivers/media/v4l2-core/videobuf-core.c
-@@ -1123,7 +1123,6 @@ __poll_t videobuf_poll_stream(struct fil
- 	struct videobuf_buffer *buf = NULL;
- 	__poll_t rc = 0;
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -206,6 +206,23 @@ static int rtw_pci_reset_rx_desc(struct
+ 	return 0;
+ }
  
--	poll_wait(file, &buf->done, wait);
- 	videobuf_queue_lock(q);
- 	if (q->streaming) {
- 		if (!list_empty(&q->stream))
-@@ -1143,7 +1142,9 @@ __poll_t videobuf_poll_stream(struct fil
- 		}
- 		buf = q->read_buf;
- 	}
--	if (!buf)
-+	if (buf)
-+		poll_wait(file, &buf->done, wait);
-+	else
- 		rc = EPOLLERR;
++static void rtw_pci_sync_rx_desc_device(struct rtw_dev *rtwdev, dma_addr_t dma,
++					struct rtw_pci_rx_ring *rx_ring,
++					u32 idx, u32 desc_sz)
++{
++	struct device *dev = rtwdev->dev;
++	struct rtw_pci_rx_buffer_desc *buf_desc;
++	int buf_sz = RTK_PCI_RX_BUF_SIZE;
++
++	dma_sync_single_for_device(dev, dma, buf_sz, DMA_FROM_DEVICE);
++
++	buf_desc = (struct rtw_pci_rx_buffer_desc *)(rx_ring->r.head +
++						     idx * desc_sz);
++	memset(buf_desc, 0, sizeof(*buf_desc));
++	buf_desc->buf_size = cpu_to_le16(RTK_PCI_RX_BUF_SIZE);
++	buf_desc->dma = cpu_to_le32(dma);
++}
++
+ static int rtw_pci_init_rx_ring(struct rtw_dev *rtwdev,
+ 				struct rtw_pci_rx_ring *rx_ring,
+ 				u8 desc_size, u32 len)
+@@ -782,8 +799,8 @@ static void rtw_pci_rx_isr(struct rtw_de
+ 		rtw_pci_dma_check(rtwdev, ring, cur_rp);
+ 		skb = ring->buf[cur_rp];
+ 		dma = *((dma_addr_t *)skb->cb);
+-		pci_unmap_single(rtwpci->pdev, dma, RTK_PCI_RX_BUF_SIZE,
+-				 PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_cpu(rtwdev->dev, dma, RTK_PCI_RX_BUF_SIZE,
++					DMA_FROM_DEVICE);
+ 		rx_desc = skb->data;
+ 		chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_status);
  
- 	if (0 == rc) {
+@@ -818,7 +835,8 @@ static void rtw_pci_rx_isr(struct rtw_de
+ 
+ next_rp:
+ 		/* new skb delivered to mac80211, re-enable original skb DMA */
+-		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
++		rtw_pci_sync_rx_desc_device(rtwdev, dma, ring, cur_rp,
++					    buf_desc_sz);
+ 
+ 		/* host read next element in ring */
+ 		if (++cur_rp >= ring->r.len)
 
 
