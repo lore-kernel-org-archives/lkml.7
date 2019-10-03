@@ -2,153 +2,95 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C53AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2294AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D022086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cmYDd/mD"
+	by mail.kernel.org (Postfix) with ESMTP id F02462133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388437AbfJCUMP (ORCPT
+        id S2388482AbfJCUMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:12:15 -0400
-Received: from mail-eopbgr1310107.outbound.protection.outlook.com ([40.107.131.107]:55712
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729586AbfJCUMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:12:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ibgZ68kD+Q81H79dqcASVr7OBwqC3znRL4jUKp+tWclKd8wopWjXNAMg5OpaGPTtuh0o4GyvDqEOEVks3PHk4f/h7i7dKN/0LMa7+0ioWqrVpkaY3VxlpxcCZbtl80PPlzj3SUiJUIJKdzp3qVpl++R78B/gRiAFvj4uia8O5XlJEZ9dKYMCE8aDOCeZqzKRtSumHXdz4/RWu2S2FTDM9+ros1u85elXEPXPTwWJYmWYdpnfjcPr9kMMe0NSJlxxdHIHSIfArhjR/h6nXgmaXlzeq7+pnL8uhaDnGWg8emohIDqGtdlmzMp9X+rSdmIybCsemQ10y6L3aPZq3X4Ibg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S5Ytw80D6rZUAmyqDOfMkfNNZ3mQeAtpGil9FJRwxIQ=;
- b=WyfickxKYsJNLrXKqSWoOV/FHaZC0snNe9gFFFcYDv+f2NdnVc4XCe0a9VjZ64srNGcWNMu5RFoxG4QTz6YVfCJHZAHAz0Qn2J1LNPEgkHpPJq+s7IYQ+IYqJ8KB6W7LaUVs9p9yMP0DQlbQyGZvN6zX+/E9dmcg5rYdsWFO86RF8MeJLGdRX58NBv8QsXKTMSwuPn4gpl2jBxERcJMhQ2CIiP1UNIyHqjWgev1SiHE3LcKOeeYJuBk02u/rM5UxHDyaGOdppbHrTx0v4UhK5nDY+ki1JXDZmzEvLVSV4PnpT7wr55qUYSrK9E/jgD3zipOp7rKfBFYfk9eHcnE7RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S5Ytw80D6rZUAmyqDOfMkfNNZ3mQeAtpGil9FJRwxIQ=;
- b=cmYDd/mD35Z8Pt6wKqEFalDC8m3jkyx0rbJTUECOV/XF7rhBDAyZdds0p3t1DJJKeDRwEYG10zsrfV1PXPpBaItcWL2ztAN0Ieg0IPvjWyoHtGGd0yS10MrXpYwXxNpJQJdydHWsaut47POphMpnocCbUsLQ52lhMp/zCNvYJvc=
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
- KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.6; Thu, 3 Oct 2019 20:11:19 +0000
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::ccb6:acbd:7d4c:7f7c]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::ccb6:acbd:7d4c:7f7c%6]) with mapi id 15.20.2347.011; Thu, 3 Oct 2019
- 20:11:19 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: RE: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
-Thread-Topic: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
-Thread-Index: AQHVdSassErYYYgXqES9Q6BNsB/gZ6dJYpqg
-Date:   Thu, 3 Oct 2019 20:11:18 +0000
-Message-ID: <KU1P153MB0166C0DEDAC1FAC009B0D257BF9F0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-8-sgarzare@redhat.com>
-In-Reply-To: <20190927112703.17745-8-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T20:11:16.7229005Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=dd135884-07be-4d20-80e3-90c49b8e3e74;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:4930:a527:7f59:8664]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5efeb2ca-4a39-433b-3052-08d7483dda9f
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: KU1P153MB0166:|KU1P153MB0166:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KU1P153MB0166D696EF03F5C6CD65ABCDBF9F0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(199004)(189003)(446003)(229853002)(33656002)(11346002)(52536014)(99286004)(476003)(54906003)(110136005)(4326008)(102836004)(2906002)(10290500003)(86362001)(6506007)(10090500001)(14454004)(53546011)(478600001)(8676002)(81166006)(81156014)(186003)(25786009)(8936002)(76176011)(66446008)(6246003)(66556008)(64756008)(22452003)(7696005)(8990500004)(7416002)(66946007)(74316002)(7736002)(305945005)(66476007)(2501003)(76116006)(55016002)(6116002)(5660300002)(46003)(71200400001)(316002)(486006)(6436002)(256004)(14444005)(9686003)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0166;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rMOHf10btEu4EgO/K6ZPxyZAXXQ0U8BnQJQPxTNGQ1U0VGezDFg736HibahG4MFwAtWx+0ClN6we579FXPy19SEY2Vqa1/SxQmS/sO2p94LR/z/kf5FujdvnSKkiMRvOXuZdNc6BPYz9zwbmGzms1WVJmUMg2FMdGmmwR1scvviEZFokk5RAMKEF+7VOm7wdLJIbXMuyPW5Y6jlP2XynyaqExv/L2gQR9I4/EjJZYIoVJgPX3/TtmvnSRe+AkbyNoyY72qkGKEIHTys2WWUnBtaBYzsh1lshw53zQFSKhqKjdH/LVAhxMbqdkAvx8Yw7kehPTCL3HduByAmaKr2pnlqcMmfnCZGC/YcsDPWhC0klMq00bE+IdWbHC+E5Ec8UrlFBptr8h1Nog89+Wa83LTSf+FrGvrX5uHcmcvstPpA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 16:12:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58654 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387979AbfJCUMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:12:55 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A616A59451
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 20:12:54 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id o188so1581329wmo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:12:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rerzWNDOelGSyyCVe9BrAyvD4JaZG3M8YLw2oByHjPM=;
+        b=RSOhRtxtYWapEcAEslEqYiFD+ruM0WwOHiNoN9atfrywXwR0dXCSKZgac0OV9oso6D
+         Gaw9vIuPXD6vmQ8xMvkbWZ/QvVJ5VosythujmPvYWrXWGq7GYOXzme1cr0l4lk7yWvAJ
+         7pu/v069Hqwyl7caRDrWYKdo0DceLxtzkwetwdXkpj0JnICWB4UnUz0tKqtEAfXsVSx8
+         eLhEpcPcVKO/bNatVX85hUotE8qnH2eF2v/Ah7V4X6Sf+/EUwpHKSet4CB21K89MzdiE
+         RzH9f/BdmCnthszxma3dvsdzbaY4rJYMM7PfE8zDpboMFaUWZrsoc3H8DvCEMhuiiJlo
+         Z4GA==
+X-Gm-Message-State: APjAAAWBMIG7hAqgXOg5hZftrhw+fKzSSKSmeUJd3r4y46/z7DJuVFZS
+        L+aFqf5L6vkF0660eNBAsF3rguL6GHpEXwvkeOEDbB7tT40dmu1R4zr7DsaD9wrTgLHtcLS7TFz
+        F1VEezjgGCNLliGGaTtn7pvjR
+X-Received: by 2002:a7b:caaa:: with SMTP id r10mr8580931wml.100.1570133573282;
+        Thu, 03 Oct 2019 13:12:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxigiOC/2WV/mXvcjmQaOXxgRGDV6OKPxDANRnt+Nj/+WYpfbOYZVrhbaSwqm9sAffAeu5UcA==
+X-Received: by 2002:a7b:caaa:: with SMTP id r10mr8580919wml.100.1570133573021;
+        Thu, 03 Oct 2019 13:12:53 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id h14sm4502733wro.44.2019.10.03.13.12.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 13:12:52 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: x86: omit absent pmu MSRs from MSR list
+To:     Jim Mattson <jmattson@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <1570097418-42233-1-git-send-email-pbonzini@redhat.com>
+ <CALMp9eRFUeSB035VEC61CzAg6PY=aApjyiQoSnRydH788COL4w@mail.gmail.com>
+ <f8e169a5-4cf6-8df7-86bb-f70a480c33ad@redhat.com>
+ <CALMp9eSCB-wyLm-QYS-7gTcSeuWWCvgYL3iDEP0y6BM4cWMFag@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <d879b3a1-c5e8-00ba-4b80-e5da4dcceea7@redhat.com>
+Date:   Thu, 3 Oct 2019 22:12:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5efeb2ca-4a39-433b-3052-08d7483dda9f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 20:11:19.0097
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7yWk9auZt77FA8ZNRfuLwtx0+J2gTZhvbSBT1JKBPO4j52zIfDLHyqbw8t94Wsy4z7op6nJqrQsKYcxmo0qc+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0166
+In-Reply-To: <CALMp9eSCB-wyLm-QYS-7gTcSeuWWCvgYL3iDEP0y6BM4cWMFag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Sent: Friday, September 27, 2019 4:27 AM
-> To: netdev@vger.kernel.org
->=20
-> virtio_transport and vmci_transport handle the buffer_size
-> sockopts in a very similar way.
->=20
-> In order to support multiple transports, this patch moves this
-> handling in the core to allow the user to change the options
-> also if the socket is not yet assigned to any transport.
->=20
-> This patch also adds the '.notify_buffer_size' callback in the
-> 'struct virtio_transport' in order to inform the transport,
-> when the buffer_size is changed by the user. It is also useful
-> to limit the 'buffer_size' requested (e.g. virtio transports).
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  drivers/vhost/vsock.c                   |  7 +-
->  include/linux/virtio_vsock.h            | 15 +----
->  include/net/af_vsock.h                  | 14 ++--
->  net/vmw_vsock/af_vsock.c                | 43 ++++++++++---
->  net/vmw_vsock/hyperv_transport.c        | 36 -----------
->  net/vmw_vsock/virtio_transport.c        |  8 +--
->  net/vmw_vsock/virtio_transport_common.c | 78 ++++------------------
->  net/vmw_vsock/vmci_transport.c          | 86 +++----------------------
->  net/vmw_vsock/vmci_transport.h          |  3 -
->  9 files changed, 64 insertions(+), 226 deletions(-)
->=20
+On 03/10/19 20:23, Jim Mattson wrote:
+> On Thu, Oct 3, 2019 at 10:38 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>> On 03/10/19 19:20, Jim Mattson wrote:
+>>> You've truncated the list I originally provided, so I think this need
+>>> only go to MSR_ARCH_PERFMON_PERFCTR0 + 17. Otherwise, we could lose
+>>> some valuable MSRs.
+>>
+>> This is v2, so it was meant to replace the patch that truncates the
+>> list.  But I can include the other one too, perhaps even ask the x86
+>> maintainers about decreasing INTEL_PMC_MAX_GENERIC to 18.
+> 
+> The list should definitely be truncated, since
+> MSR_ARCH_PERFMON_EVENTSEL0 + 18 is IA32_PERF_STATUS.
 
-The hv_sock part (hyperv_transport.c) looks good to me.
+Ok, thanks.
 
-Acked-by: Dexuan Cui <decui@microsoft.com>
+Paolo
 
