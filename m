@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F85C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F3BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EEA20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123567;
-	bh=BTVu3XXbsk3gJC2IHgYaGgyWzk3k3TJ6+9Fx/meRnv8=;
+	s=default; t=1570123575;
+	bh=REPlmJ3AG9u8ggMbAE/uWkhiDbswCFmGAr0G8TJ0BKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmdMuGfZmW8I+PWTAJAI1MwyCzgYiiaHNVRdUFO3Ba96nRLK6BXBTq6vY88EEfy50
-	 qxwbD5rdJpKcj7nOPgneiiEkaiD7sF+Wi+JLTSiJ9ARg7woEN+UbgjLjNfGLvnraZD
-	 NZQ9SgQ5yJ5S5lhOSYA8Hr18tCog+AZmL+qunHDY=
+	b=S+kYvWCv1NrHhf8vhpDSD32DdcOk9E0pdo8xq0lELX0bl5Mh9E4Pxg7Dy0k5AqKDL
+	 f32V36uUID4J7sm6O+7Hao96LD29Yx5kLr9mWcLgi2VbFm4mKYdgLCSS+WgUg9z0C1
+	 kiUUFlLx13xVs1/yMZdj+orLsYIofESUHwc1G/dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389003AbfJCQQ2 (ORCPT
+        id S1732939AbfJCR0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388066AbfJCQQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:22 -0400
+        id S2388969AbfJCQQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23D8420700;
-        Thu,  3 Oct 2019 16:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E423D20700;
+        Thu,  3 Oct 2019 16:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119381;
-        bh=BTVu3XXbsk3gJC2IHgYaGgyWzk3k3TJ6+9Fx/meRnv8=;
+        s=default; t=1570119384;
+        bh=REPlmJ3AG9u8ggMbAE/uWkhiDbswCFmGAr0G8TJ0BKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4/zKM4YYDYZooOPZ4PB5rLeeb1TxJHTjLmMBB2S4cL08Lfj3xLRJlaYex0Rz57XV
-         KtRLETBe5PDbt/+P8E+ZCFViBy7XheFZ/VdqeFG2fNDtsdASnXvyjIL7ZwiRX0F+dA
-         G5zbNhGMLDcIpt9PLASsSDvtJKYAlzKKCPncRF8o=
+        b=Tgkw+Mjl2Z/PxXOCD1b2BUHiP//FQf+0EaS1C0SUQPXg+GvOtP4c2CwVMv5T4iusU
+         DkRi00GC/P8gMNSX+sQsQe+S4R83YuG6SiIiS9Ormkq2FMhf7M0n+dpLi1ksG6IC1j
+         S0hWnZKHZ00+i5AKbqG5PsPzpkwJWUO5ceKxzgMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/211] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Thu,  3 Oct 2019 17:51:51 +0200
-Message-Id: <20191003154458.327220310@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 046/211] EDAC/mc: Fix grain_bits calculation
+Date:   Thu,  3 Oct 2019 17:51:52 +0200
+Message-Id: <20191003154458.628881944@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,52 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
+[ Upstream commit 3724ace582d9f675134985727fd5e9811f23c059 ]
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
+The grain in EDAC is defined as "minimum granularity for an error
+report, in bytes". The following calculation of the grain_bits in
+edac_mc is wrong:
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
+	grain_bits = fls_long(e->grain) + 1;
 
-Thus, a possible null-pointer dereference may occur.
+Where grain_bits is defined as:
 
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
+	grain = 1 << grain_bits
 
-This bug is found by a static analysis tool STCheck written by us.
+Example:
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	grain = 8	# 64 bit (8 bytes)
+	grain_bits = fls_long(8) + 1
+	grain_bits = 4 + 1 = 5
+
+	grain = 1 << grain_bits
+	grain = 1 << 5 = 32
+
+Replace it with the correct calculation:
+
+	grain_bits = fls_long(e->grain - 1);
+
+The example gives now:
+
+	grain_bits = fls_long(8 - 1)
+	grain_bits = fls_long(7)
+	grain_bits = 3
+
+	grain = 1 << 3 = 8
+
+Also, check if the hardware reports a reasonable grain != 0 and fallback
+with a warning to 1 byte granularity otherwise.
+
+ [ bp: massage a bit. ]
+
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624150758.6695-2-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/edac/edac_mc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index 7f2761a2e7c8c..971197c34fcef 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 7d3edd7139328..f59511bd99261 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1246,9 +1246,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+ 	if (p > e->location)
+ 		*(p - 1) = '\0';
  
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
+-	/* Report the error via the trace interface */
+-	grain_bits = fls_long(e->grain) + 1;
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
++
++	grain_bits = fls_long(e->grain - 1);
  
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
++	/* Report the error via the trace interface */
+ 	if (IS_ENABLED(CONFIG_RAS))
+ 		trace_mc_event(type, e->msg, e->label, e->error_count,
+ 			       mci->mc_idx, e->top_layer, e->mid_layer,
 -- 
 2.20.1
 
