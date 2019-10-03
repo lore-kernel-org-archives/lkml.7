@@ -2,55 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B91C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406B6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF4720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC6C20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124546;
-	bh=5u9Whsc6p/XfD9xIRZ6kTcBX2xjj+4JbTk+wCWZ59AA=;
+	s=default; t=1570124551;
+	bh=3UDV5in8M3RtX+wA9xJxQHeRLPcU7Ft2VvUHYqQ0pFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5+yyt/p7fd024NfePeFfOTn9IxyxpdZxag5AeC+ZY4uhGR9I37wXDwsMMDfqXe9b
-	 zeY5BoKE7qhkhfm3Lw7lIPbV6M/RBbPV7RT9SXF0ajA2o6dhuY+zxxNvvTCZ0EJv93
-	 a58pxAz0BzgUIzLSlsmQWRJksQU+iTqqSFBKqAAI=
+	b=B88RgB/lYbybUIqqrGlsFHlahtBe8onIXH9FJjOdg/mdP49mnKBifMqfJgj3Md33g
+	 hwl9h9CiwunkhXGZYtKTl6zK8ItN8FAhk8aU1+N10e9936v2xNKxXJInbx+Y6/cZol
+	 9RElSAq+mqMDqRj5taXmBXsYowTV53WbRqK0l8NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390463AbfJCRmY (ORCPT
+        id S1730905AbfJCP5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39716 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730924AbfJCP5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:57:22 -0400
+        id S1730881AbfJCP5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:57:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30C5220830;
-        Thu,  3 Oct 2019 15:57:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A52A21D81;
+        Thu,  3 Oct 2019 15:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118241;
-        bh=5u9Whsc6p/XfD9xIRZ6kTcBX2xjj+4JbTk+wCWZ59AA=;
+        s=default; t=1570118230;
+        bh=3UDV5in8M3RtX+wA9xJxQHeRLPcU7Ft2VvUHYqQ0pFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IGqME5eC9/Wb1MRfQfL+v3vLhoSqf0yP5Bc/6GZqbLUzq3Rl3399VF93s1an+KDgC
-         kpaIv7RulDxaC5Puexa70c8mSP+6zi2CnALWLGe8/+EDfx6ymePbga3IyAPOGOWBBt
-         Qk/NdkN1kTjaTfHAxvs008wPeHdMsL8cNb/734Fs=
+        b=q1OAh98GkJ7JddshT5C3TLhBRi9AvG1iGCsXg48F32NXGPhcPlMeMu1zosU5uLFuk
+         23HSeTeWD28fNdAXmT0emNuavTh6o1qHNixbTY3IZqZMbU4jwnaf4e7S00CzAdGA2O
+         lNeSpHbU+AxBunWrZR9zD2AkrVLmzwo8UXYHYKWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 39/99] sched/fair: Fix imbalance due to CPU affinity
-Date:   Thu,  3 Oct 2019 17:53:02 +0200
-Message-Id: <20191003154314.415611606@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 35/99] dmaengine: bcm2835: Print error in case setting DMA mask fails
+Date:   Thu,  3 Oct 2019 17:52:58 +0200
+Message-Id: <20191003154311.986985943@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -63,64 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
+[ Upstream commit 72503b25ee363827aafffc3e8d872e6a92a7e422 ]
 
-The load_balance() has a dedicated mecanism to detect when an imbalance
-is due to CPU affinity and must be handled at parent level. In this case,
-the imbalance field of the parent's sched_group is set.
+During enabling of the RPi 4, we found out that the driver doesn't provide
+a helpful error message in case setting DMA mask fails. So add one.
 
-The description of sg_imbalanced() gives a typical example of two groups
-of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
-group and 3 CPUs of the second group. Something like:
-
-	{ 0 1 2 3 } { 4 5 6 7 }
-	        *     * * *
-
-But the load_balance fails to fix this UC on my octo cores system
-made of 2 clusters of quad cores.
-
-Whereas the load_balance is able to detect that the imbalanced is due to
-CPU affinity, it fails to fix it because the imbalance field is cleared
-before letting parent level a chance to run. In fact, when the imbalance is
-detected, the load_balance reruns without the CPU with pinned tasks. But
-there is no other running tasks in the situation described above and
-everything looks balanced this time so the imbalance field is immediately
-cleared.
-
-The imbalance field should not be cleared if there is no other task to move
-when the imbalance is detected.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Link: https://lore.kernel.org/r/1563297318-4900-1-git-send-email-wahrenst@gmx.net
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/dma/bcm2835-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 19d735ab44db4..cd2fb8384fbe3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7313,9 +7313,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- out_balanced:
- 	/*
- 	 * We reach balance although we may have faced some affinity
--	 * constraints. Clear the imbalance flag if it was set.
-+	 * constraints. Clear the imbalance flag only if other tasks got
-+	 * a chance to move and fix the imbalance.
- 	 */
--	if (sd_parent) {
-+	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
- 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 996c4b00d323e..d6cdc3be03fcc 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -595,8 +595,10 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
  
- 		if (*group_imbalance)
+ 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+-	if (rc)
++	if (rc) {
++		dev_err(&pdev->dev, "Unable to set DMA mask\n");
+ 		return rc;
++	}
+ 
+ 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+ 	if (!od)
 -- 
 2.20.1
 
