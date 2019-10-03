@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F5C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19620C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036C42133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EBC21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120092;
-	bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
+	s=default; t=1570120098;
+	bh=IXyyax35NLJ6YWTbr1HB6lNWXUjGA3if8XZRop/f770=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RAkHeoAGS3coE+mFBS42E4STLfRQMF5WyfgZWuyD9VMxRi9c7+v9O4tHKE3JbHGq
-	 EnXc7tsecwE7wgyVD+UoUHntiTWYmRv9lXoVlD8i27MP1+FDFIHG79Jx+wG1q37PjA
-	 StSQjAIpJN+kPdg21B00BuzYYTOgc8hdkmIP25hQ=
+	b=BMOAqUI7qbdTiJG5x7+jqWmWqpgtTpPf2UVl88K7sULNgKRbtY2CLAqyRFjBThtVO
+	 t9y/5khT/K7PHMSahXmD/2KgwA3SBWc2Z7OxQp9Vv6InenJhsurKEyBxTeMQ0uSwVj
+	 GYZvkPHsohjKfHaOnoVHCuzmiiXIgDHb5pK9InCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391478AbfJCQ2L (ORCPT
+        id S2391398AbfJCQ2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390304AbfJCQ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:08 -0400
+        id S2391482AbfJCQ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:28:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CAA215EA;
-        Thu,  3 Oct 2019 16:28:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C92221783;
+        Thu,  3 Oct 2019 16:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120087;
-        bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
+        s=default; t=1570120092;
+        bh=IXyyax35NLJ6YWTbr1HB6lNWXUjGA3if8XZRop/f770=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1tvSkLgov5VygmJBy0A1zbqQGz8QTF4iUHdKLFu8U+tCUz+6NaGK9aXTxZfa8clC
-         O1CGoSE3ZaJCsO/dFnsyTW46xITf431bAJdJFb2v0Ybt5AB9s1kasXw7zt4euqDyja
-         Zf7SdpzgkepgwDe9FUHc13NzPuyyY550j0qVtHMo=
+        b=Dda2HUq/IwrseVj0cbjoppS+mZjRVsnNQuI2f4r52xQQsDw0tBFV3PkINb3+x9l2h
+         kiHMuKQKCMsvU4gCiSEzopJ23quo4+p2eRDDEsnjDJuxkrwldrnJ/GVSTM3pLJHYO1
+         ryGdSKO8zENSn7B2B5fhXS0rEeK4k2BLElLlIhBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 093/313] media: mtk-mdp: fix reference count on old device tree
-Date:   Thu,  3 Oct 2019 17:51:11 +0200
-Message-Id: <20191003154542.031664368@linuxfoundation.org>
+Subject: [PATCH 5.2 095/313] media: fdp1: Reduce FCP not found message level to debug
+Date:   Thu,  3 Oct 2019 17:51:13 +0200
+Message-Id: <20191003154542.235103460@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,40 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 864919ea0380e62adb2503b89825fe358acb8216 ]
+[ Upstream commit 4fd22938569c14f6092c05880ca387409d78355f ]
 
-of_get_next_child() increments the reference count of the returning
-device_node. Decrement it in the check if we are using the old or the
-new DTB.
+When support for the IPMMU is not enabled, the FDP driver may be
+probe-deferred multiple times, causing several messages to be printed
+like:
 
-Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: Houlong Wei <houlong.wei@mediatek.com>
-[hverkuil-cisco@xs4all.nl: use node instead of parent as temp variable]
+    rcar_fdp1 fe940000.fdp1: FCP not found (-517)
+    rcar_fdp1 fe944000.fdp1: FCP not found (-517)
+
+Fix this by reducing the message level to debug level, as is done in the
+VSP1 driver.
+
+Fixes: 4710b752e029f3f8 ("[media] v4l: Add Renesas R-Car FDP1 Driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/rcar_fdp1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index fc9faec85edb6..5d44f2e92dd50 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -110,7 +110,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 	mutex_init(&mdp->vpulock);
- 
- 	/* Old dts had the components as child nodes */
--	if (of_get_next_child(dev->of_node, NULL)) {
-+	node = of_get_next_child(dev->of_node, NULL);
-+	if (node) {
-+		of_node_put(node);
- 		parent = dev->of_node;
- 		dev_warn(dev, "device tree is out of date\n");
- 	} else {
+diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
+index b8615a288e2b7..6ca2cb15291f1 100644
+--- a/drivers/media/platform/rcar_fdp1.c
++++ b/drivers/media/platform/rcar_fdp1.c
+@@ -2306,7 +2306,7 @@ static int fdp1_probe(struct platform_device *pdev)
+ 		fdp1->fcp = rcar_fcp_get(fcp_node);
+ 		of_node_put(fcp_node);
+ 		if (IS_ERR(fdp1->fcp)) {
+-			dev_err(&pdev->dev, "FCP not found (%ld)\n",
++			dev_dbg(&pdev->dev, "FCP not found (%ld)\n",
+ 				PTR_ERR(fdp1->fcp));
+ 			return PTR_ERR(fdp1->fcp);
+ 		}
 -- 
 2.20.1
 
