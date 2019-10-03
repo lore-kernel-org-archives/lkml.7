@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191ACC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAD6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE1F2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC92B20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120647;
-	bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
+	s=default; t=1570120653;
+	bh=Umm67tTLHVsGqbU/goHND05vgpo5z/Pdzchp+bg6bQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9BQ7HzMJWEZRcLWX+JGIcsZog+8LQB7eNV3y4CVb5NwOW9UEZU9Yu3XCfQdnXM/+
-	 VKAWYvqqe1UuXU3RyCKr/wiQTyEiGI9WQt2dQNo06i88umZm9vHzo4NKery732aqoy
-	 mIFpEhCZuGB+b5Lx7BgM/i5nAjF2ejYhhHnkiax0=
+	b=thXioiz/RCDZtKj+89piZO7OATcKgRlczK/65cZduhr+H7GI+QyOxCeDdXd0MJMwg
+	 4TKkYpEbHLPuxLbHRcc2kBU2ZL8vlcz8Dvjlet/CT8elvEBECKHcMrqfWo49Eboc/H
+	 pyhPbLx6rtJErvQ11EIiwjvsCv/Of/tSJZRMWbqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404579AbfJCQh1 (ORCPT
+        id S2404604AbfJCQhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46690 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404549AbfJCQhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:20 -0400
+        id S2404585AbfJCQh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6A34215EA;
-        Thu,  3 Oct 2019 16:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19ADF2245A;
+        Thu,  3 Oct 2019 16:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120640;
-        bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
+        s=default; t=1570120648;
+        bh=Umm67tTLHVsGqbU/goHND05vgpo5z/Pdzchp+bg6bQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZdjzL/jtDlmWacfTtqVnY75xbOLvuLvZ+7/8IUz/E+9RRUVLIkXtsGtVh1UW0r8d
-         s8uX5ynw1SAMidi7iCkokdKq0yO76Hy1p5Zmpc7vvJb/ev7V5sTsglG+JE3RiFMH8d
-         JeTscCmncwV+0ELLTrAPgrwhfoNeg2CnOafGKqZc=
+        b=QobbPZCk9caLefRDIsVHEi7m/9LoEIcC7kroUYgeXKhx/nGJIV5akBvhbo0mkvjPK
+         vLJeCzpPOZTxjJC/PmBRRHCH/A/FC7Da5JTekdsoti5Sg22jOYZj7KpGKPyJBBT5Vi
+         6i5Sp1UJDrZ87a9hOOz/Y1gSDd69FkrDO222B2ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Boaz Harrosh <boazh@netapp.com>, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 5.2 298/313] mm: Handle MADV_WILLNEED through vfs_fadvise()
-Date:   Thu,  3 Oct 2019 17:54:36 +0200
-Message-Id: <20191003154602.510522173@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.2 301/313] mtd: rawnand: stm32_fmc2: avoid warnings when building with W=1 option
+Date:   Thu,  3 Oct 2019 17:54:39 +0200
+Message-Id: <20191003154602.822957246@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,71 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Christophe Kerello <christophe.kerello@st.com>
 
-commit 692fe62433d4ca47605b39f7c416efd6679ba694 upstream.
+commit b410f4eb01a1950ed73ae40859d0978b1a924380 upstream.
 
-Currently handling of MADV_WILLNEED hint calls directly into readahead
-code. Handle it by calling vfs_fadvise() instead so that filesystem can
-use its ->fadvise() callback to acquire necessary locks or otherwise
-prepare for the request.
+This patch solves warnings detected by setting W=1 when building.
 
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Boaz Harrosh <boazh@netapp.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Warnings type detected:
+drivers/mtd/nand/raw/stm32_fmc2_nand.c: In function ‘stm32_fmc2_calc_timings’:
+drivers/mtd/nand/raw/stm32_fmc2_nand.c:1417:23: warning: comparison is
+always false due to limited range of data type [-Wtype-limits]
+  else if (tims->twait > FMC2_PMEM_PATT_TIMING_MASK)
+
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Cc: stable@vger.kernel.org
+Fixes: 2cd457f328c1 ("mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/madvise.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c |   88 ++++++++++-----------------------
+ 1 file changed, 28 insertions(+), 60 deletions(-)
 
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -14,6 +14,7 @@
- #include <linux/userfaultfd_k.h>
- #include <linux/hugetlb.h>
- #include <linux/falloc.h>
-+#include <linux/fadvise.h>
- #include <linux/sched.h>
- #include <linux/ksm.h>
- #include <linux/fs.h>
-@@ -275,6 +276,7 @@ static long madvise_willneed(struct vm_a
- 			     unsigned long start, unsigned long end)
- {
- 	struct file *file = vma->vm_file;
-+	loff_t offset;
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -1424,21 +1424,16 @@ static void stm32_fmc2_calc_timings(stru
+ 	struct stm32_fmc2_timings *tims = &nand->timings;
+ 	unsigned long hclk = clk_get_rate(fmc2->clk);
+ 	unsigned long hclkp = NSEC_PER_SEC / (hclk / 1000);
+-	int tar, tclr, thiz, twait, tset_mem, tset_att, thold_mem, thold_att;
++	unsigned long timing, tar, tclr, thiz, twait;
++	unsigned long tset_mem, tset_att, thold_mem, thold_att;
  
- 	*prev = vma;
- #ifdef CONFIG_SWAP
-@@ -298,12 +300,20 @@ static long madvise_willneed(struct vm_a
- 		return 0;
- 	}
- 
--	start = ((start - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
--	if (end > vma->vm_end)
--		end = vma->vm_end;
--	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-	tar = hclkp;
+-	if (tar < sdrt->tAR_min)
+-		tar = sdrt->tAR_min;
+-	tims->tar = DIV_ROUND_UP(tar, hclkp) - 1;
+-	if (tims->tar > FMC2_PCR_TIMING_MASK)
+-		tims->tar = FMC2_PCR_TIMING_MASK;
 -
--	force_page_cache_readahead(file->f_mapping, file, start, end - start);
-+	/*
-+	 * Filesystem's fadvise may need to take various locks.  We need to
-+	 * explicitly grab a reference because the vma (and hence the
-+	 * vma's reference to the file) can go away as soon as we drop
-+	 * mmap_sem.
-+	 */
-+	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
-+	get_file(file);
-+	up_read(&current->mm->mmap_sem);
-+	offset = (loff_t)(start - vma->vm_start)
-+			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
-+	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
-+	fput(file);
-+	down_read(&current->mm->mmap_sem);
- 	return 0;
+-	tclr = hclkp;
+-	if (tclr < sdrt->tCLR_min)
+-		tclr = sdrt->tCLR_min;
+-	tims->tclr = DIV_ROUND_UP(tclr, hclkp) - 1;
+-	if (tims->tclr > FMC2_PCR_TIMING_MASK)
+-		tims->tclr = FMC2_PCR_TIMING_MASK;
++	tar = max_t(unsigned long, hclkp, sdrt->tAR_min);
++	timing = DIV_ROUND_UP(tar, hclkp) - 1;
++	tims->tar = min_t(unsigned long, timing, FMC2_PCR_TIMING_MASK);
++
++	tclr = max_t(unsigned long, hclkp, sdrt->tCLR_min);
++	timing = DIV_ROUND_UP(tclr, hclkp) - 1;
++	tims->tclr = min_t(unsigned long, timing, FMC2_PCR_TIMING_MASK);
+ 
+ 	tims->thiz = FMC2_THIZ;
+ 	thiz = (tims->thiz + 1) * hclkp;
+@@ -1448,18 +1443,11 @@ static void stm32_fmc2_calc_timings(stru
+ 	 * tWAIT > tWP
+ 	 * tWAIT > tREA + tIO
+ 	 */
+-	twait = hclkp;
+-	if (twait < sdrt->tRP_min)
+-		twait = sdrt->tRP_min;
+-	if (twait < sdrt->tWP_min)
+-		twait = sdrt->tWP_min;
+-	if (twait < sdrt->tREA_max + FMC2_TIO)
+-		twait = sdrt->tREA_max + FMC2_TIO;
+-	tims->twait = DIV_ROUND_UP(twait, hclkp);
+-	if (tims->twait == 0)
+-		tims->twait = 1;
+-	else if (tims->twait > FMC2_PMEM_PATT_TIMING_MASK)
+-		tims->twait = FMC2_PMEM_PATT_TIMING_MASK;
++	twait = max_t(unsigned long, hclkp, sdrt->tRP_min);
++	twait = max_t(unsigned long, twait, sdrt->tWP_min);
++	twait = max_t(unsigned long, twait, sdrt->tREA_max + FMC2_TIO);
++	timing = DIV_ROUND_UP(twait, hclkp);
++	tims->twait = clamp_val(timing, 1, FMC2_PMEM_PATT_TIMING_MASK);
+ 
+ 	/*
+ 	 * tSETUP_MEM > tCS - tWAIT
+@@ -1474,20 +1462,15 @@ static void stm32_fmc2_calc_timings(stru
+ 	if (twait > thiz && (sdrt->tDS_min > twait - thiz) &&
+ 	    (tset_mem < sdrt->tDS_min - (twait - thiz)))
+ 		tset_mem = sdrt->tDS_min - (twait - thiz);
+-	tims->tset_mem = DIV_ROUND_UP(tset_mem, hclkp);
+-	if (tims->tset_mem == 0)
+-		tims->tset_mem = 1;
+-	else if (tims->tset_mem > FMC2_PMEM_PATT_TIMING_MASK)
+-		tims->tset_mem = FMC2_PMEM_PATT_TIMING_MASK;
++	timing = DIV_ROUND_UP(tset_mem, hclkp);
++	tims->tset_mem = clamp_val(timing, 1, FMC2_PMEM_PATT_TIMING_MASK);
+ 
+ 	/*
+ 	 * tHOLD_MEM > tCH
+ 	 * tHOLD_MEM > tREH - tSETUP_MEM
+ 	 * tHOLD_MEM > max(tRC, tWC) - (tSETUP_MEM + tWAIT)
+ 	 */
+-	thold_mem = hclkp;
+-	if (thold_mem < sdrt->tCH_min)
+-		thold_mem = sdrt->tCH_min;
++	thold_mem = max_t(unsigned long, hclkp, sdrt->tCH_min);
+ 	if (sdrt->tREH_min > tset_mem &&
+ 	    (thold_mem < sdrt->tREH_min - tset_mem))
+ 		thold_mem = sdrt->tREH_min - tset_mem;
+@@ -1497,11 +1480,8 @@ static void stm32_fmc2_calc_timings(stru
+ 	if ((sdrt->tWC_min > tset_mem + twait) &&
+ 	    (thold_mem < sdrt->tWC_min - (tset_mem + twait)))
+ 		thold_mem = sdrt->tWC_min - (tset_mem + twait);
+-	tims->thold_mem = DIV_ROUND_UP(thold_mem, hclkp);
+-	if (tims->thold_mem == 0)
+-		tims->thold_mem = 1;
+-	else if (tims->thold_mem > FMC2_PMEM_PATT_TIMING_MASK)
+-		tims->thold_mem = FMC2_PMEM_PATT_TIMING_MASK;
++	timing = DIV_ROUND_UP(thold_mem, hclkp);
++	tims->thold_mem = clamp_val(timing, 1, FMC2_PMEM_PATT_TIMING_MASK);
+ 
+ 	/*
+ 	 * tSETUP_ATT > tCS - tWAIT
+@@ -1523,11 +1503,8 @@ static void stm32_fmc2_calc_timings(stru
+ 	if (twait > thiz && (sdrt->tDS_min > twait - thiz) &&
+ 	    (tset_att < sdrt->tDS_min - (twait - thiz)))
+ 		tset_att = sdrt->tDS_min - (twait - thiz);
+-	tims->tset_att = DIV_ROUND_UP(tset_att, hclkp);
+-	if (tims->tset_att == 0)
+-		tims->tset_att = 1;
+-	else if (tims->tset_att > FMC2_PMEM_PATT_TIMING_MASK)
+-		tims->tset_att = FMC2_PMEM_PATT_TIMING_MASK;
++	timing = DIV_ROUND_UP(tset_att, hclkp);
++	tims->tset_att = clamp_val(timing, 1, FMC2_PMEM_PATT_TIMING_MASK);
+ 
+ 	/*
+ 	 * tHOLD_ATT > tALH
+@@ -1542,17 +1519,11 @@ static void stm32_fmc2_calc_timings(stru
+ 	 * tHOLD_ATT > tRC - (tSETUP_ATT + tWAIT)
+ 	 * tHOLD_ATT > tWC - (tSETUP_ATT + tWAIT)
+ 	 */
+-	thold_att = hclkp;
+-	if (thold_att < sdrt->tALH_min)
+-		thold_att = sdrt->tALH_min;
+-	if (thold_att < sdrt->tCH_min)
+-		thold_att = sdrt->tCH_min;
+-	if (thold_att < sdrt->tCLH_min)
+-		thold_att = sdrt->tCLH_min;
+-	if (thold_att < sdrt->tCOH_min)
+-		thold_att = sdrt->tCOH_min;
+-	if (thold_att < sdrt->tDH_min)
+-		thold_att = sdrt->tDH_min;
++	thold_att = max_t(unsigned long, hclkp, sdrt->tALH_min);
++	thold_att = max_t(unsigned long, thold_att, sdrt->tCH_min);
++	thold_att = max_t(unsigned long, thold_att, sdrt->tCLH_min);
++	thold_att = max_t(unsigned long, thold_att, sdrt->tCOH_min);
++	thold_att = max_t(unsigned long, thold_att, sdrt->tDH_min);
+ 	if ((sdrt->tWB_max + FMC2_TIO + FMC2_TSYNC > tset_mem) &&
+ 	    (thold_att < sdrt->tWB_max + FMC2_TIO + FMC2_TSYNC - tset_mem))
+ 		thold_att = sdrt->tWB_max + FMC2_TIO + FMC2_TSYNC - tset_mem;
+@@ -1571,11 +1542,8 @@ static void stm32_fmc2_calc_timings(stru
+ 	if ((sdrt->tWC_min > tset_att + twait) &&
+ 	    (thold_att < sdrt->tWC_min - (tset_att + twait)))
+ 		thold_att = sdrt->tWC_min - (tset_att + twait);
+-	tims->thold_att = DIV_ROUND_UP(thold_att, hclkp);
+-	if (tims->thold_att == 0)
+-		tims->thold_att = 1;
+-	else if (tims->thold_att > FMC2_PMEM_PATT_TIMING_MASK)
+-		tims->thold_att = FMC2_PMEM_PATT_TIMING_MASK;
++	timing = DIV_ROUND_UP(thold_att, hclkp);
++	tims->thold_att = clamp_val(timing, 1, FMC2_PMEM_PATT_TIMING_MASK);
  }
  
+ static int stm32_fmc2_setup_interface(struct nand_chip *chip, int chipnr,
 
 
