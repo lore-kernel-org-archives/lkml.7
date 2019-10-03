@@ -2,131 +2,215 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD48ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704D5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE08A20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:20:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R6BpWamP"
+	by mail.kernel.org (Postfix) with ESMTP id 4EA9920862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389006AbfJCUUd (ORCPT
+        id S2388960AbfJCUUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:20:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46175 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388922AbfJCUUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:20:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570134028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lJsPH0CXpGipbA9H0dGeQKpG32OggA79MXCAh0eilHM=;
-        b=R6BpWamPHr78X7aS0QdG6b6w9AkQxDLjf7GIoVYxLgeVb1NK7/MW51tgyLsXk+vjd4jLnI
-        XYMsTYseyRzBnHefOnarfxu1BmDlCu3b+8ON0JPyZNBzzUPCBb3a4fdIj8tYcuiJt3ZWzz
-        Rf/nrehDeqjJYr3tcnlduGa5+58Kgxc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-MbC85PlYPPmkuWBdfuyS6w-1; Thu, 03 Oct 2019 16:20:27 -0400
-Received: by mail-wr1-f72.google.com with SMTP id z17so1623524wru.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:20:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=1mbvMx4ggA/oxOpE1MmlWpjLmFJpu3/zVOWw4njUri0=;
-        b=HTFHtX8sBcMUQu3H+VvIBDw/1p3KWFAPwKXjROPFuDtBRv2kyNf3Xr47Rq1HCx+DfI
-         YBOecrVmI+DqBRLez3Ys1Df7AeWjtEiZ1V89CohHIebDkBXhjdbM2bTv6lp6tMUNw2Au
-         XAqEcMsqoMPX4WihTu5Bjf28D/U3qybPAEGtvJRGbDtJipMxelF103l41byuVDerdJIi
-         JUzsTd74TxaS+F3rGgOMDqfconcgR0YnLRU6u4t/CX+/1yUke5q9fF9EG4vW+nIoRk30
-         uew2hr5TJvb5GTF3hoFWiU+fSLypkSLrf/Essf2VFlH0gkiUqXaD1CsUIstQQPE+pjsV
-         ur4A==
-X-Gm-Message-State: APjAAAXXIkc8A0Ya+bH5z2HtDMf/5K1ey5q9sEPVeL234q9i+ii15Dth
-        iVB1oHmPF3CM2RE/hkpgFNWZCTMaSl3Deo30nZx6/bKq+0veNBqS7QmE9+V0rulTsRgV7j+XYKu
-        Ljw+bdxD6pmtrLhp9JVT9DeQ7
-X-Received: by 2002:a5d:6a09:: with SMTP id m9mr8087612wru.12.1570134025935;
-        Thu, 03 Oct 2019 13:20:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxMmbb0nF2zvJZD5BcMQQB8t9k4v9RmHUA6Wx0p477W+n8i5AnC905fNFlzJHR4Ptxz5d/wZg==
-X-Received: by 2002:a5d:6a09:: with SMTP id m9mr8087595wru.12.1570134025690;
-        Thu, 03 Oct 2019 13:20:25 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id b22sm3533965wmj.36.2019.10.03.13.20.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2019 13:20:25 -0700 (PDT)
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, youling 257 <youling257@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: Problem with "driver core: platform: Add an error message to
- platform_get_irq*()" commit
-Message-ID: <01e3d855-c849-ad7f-a6f8-87c806bb488b@redhat.com>
-Date:   Thu, 3 Oct 2019 22:20:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-Content-Language: en-US
-X-MC-Unique: MbC85PlYPPmkuWBdfuyS6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 16:20:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46656 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388861AbfJCUU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:20:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1AF0FB03B;
+        Thu,  3 Oct 2019 20:20:25 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     akpm@linux-foundation.org
+Cc:     walken@google.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        dave@stgolabs.net, Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH 06/11] IB,usnic: convert usnic_uiom_interval_tree to half closed intervals
+Date:   Thu,  3 Oct 2019 13:18:53 -0700
+Message-Id: <20191003201858.11666-7-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191003201858.11666-1-dave@stgolabs.net>
+References: <20191003201858.11666-1-dave@stgolabs.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+The usnic_uiom interval tree really wants [a, b) intervals,
+not fully closed. As such convert it to use the new
+interval_tree_gen.h, and also rename the 'last' endpoint
+in the node to 'end', which both a more suitable name for
+the half closed interval and also reduces the chances of some
+caller being missed.
 
-I've been debugging a new error printed with 5.4-rc1:
+The conversion can get non-trivial when calling into things like:
 
-[   25.570893] dwc3 dwc3.0.auto: IRQ peripheral not found
+ - find_intervals_intersection_sorted()
+ - usnic_uiom_insert_interval()
 
-This is caused by the "driver core: platform: Add an error message to platf=
-orm_get_irq*()"
-commit.
+which have been converted to no longer subtracting one from the
+interval->end, hoping that the semantics of ad-hoc usage remain
+untouched.
 
-The dwc3 driver first tries to get the IRQ by 2 different names before fall=
-ing
-back to the IRQ at index 0:
+Cc: Christian Benvenuti <benve@cisco.com>
+Cc: Nelson Escobar <neescoba@cisco.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-rdma@vger.kernel.org
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ drivers/infiniband/hw/usnic/usnic_uiom.c           |  8 +++----
+ .../infiniband/hw/usnic/usnic_uiom_interval_tree.c | 26 ++++++++++------------
+ .../infiniband/hw/usnic/usnic_uiom_interval_tree.h |  2 +-
+ 3 files changed, 17 insertions(+), 19 deletions(-)
 
-         irq =3D platform_get_irq_byname(dwc3_pdev, "peripheral");
-         if (irq > 0)
-                 goto out;
-
-         if (irq =3D=3D -EPROBE_DEFER)
-                 goto out;
-
-         irq =3D platform_get_irq_byname(dwc3_pdev, "dwc_usb3");
-         if (irq > 0)
-                 goto out;
-
-         if (irq =3D=3D -EPROBE_DEFER)
-                 goto out;
-
-         irq =3D platform_get_irq(dwc3_pdev, 0);
-
-Together with the mentioned commit, this is causing this new (harmless)
-error message. We also have had a bug report for this:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D205037
-
-Which I will close after this mail since the error is harmless,
-still it is sorta scary looking and we should probable silence it.
-
-The best solution I can come up with is adding a new
-platform_get_irq_byname_optional mirroring platform_get_irq_optional
-and using that in drivers such as the dwc3 driver.
-
-Does anyone have a better suggestion?
-
-Regards,
-
-Hans
+diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
+index 62e6ffa9ad78..14f607c398a8 100644
+--- a/drivers/infiniband/hw/usnic/usnic_uiom.c
++++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
+@@ -200,7 +200,7 @@ static void usnic_uiom_unmap_sorted_intervals(struct list_head *intervals,
+ 
+ 	list_for_each_entry_safe(interval, tmp, intervals, link) {
+ 		va = interval->start << PAGE_SHIFT;
+-		size = ((interval->last - interval->start) + 1) << PAGE_SHIFT;
++		size = (interval->end - interval->start) << PAGE_SHIFT;
+ 		while (size > 0) {
+ 			/* Workaround for RH 970401 */
+ 			usnic_dbg("va 0x%lx size 0x%lx", va, PAGE_SIZE);
+@@ -223,7 +223,7 @@ static void __usnic_uiom_reg_release(struct usnic_uiom_pd *pd,
+ 
+ 	npages = PAGE_ALIGN(uiomr->length + uiomr->offset) >> PAGE_SHIFT;
+ 	vpn_start = (uiomr->va & PAGE_MASK) >> PAGE_SHIFT;
+-	vpn_last = vpn_start + npages - 1;
++	vpn_last = vpn_start + npages;
+ 
+ 	spin_lock(&pd->lock);
+ 	usnic_uiom_remove_interval(&pd->root, vpn_start,
+@@ -293,7 +293,7 @@ static int usnic_uiom_map_sorted_intervals(struct list_head *intervals,
+ 				pa_end = pa;
+ 			}
+ 
+-			if ((va >> PAGE_SHIFT) == interval_node->last) {
++			if ((va >> PAGE_SHIFT) == interval_node->end) {
+ 				/* Last page of the interval */
+ 				size = pa - pa_start + PAGE_SIZE;
+ 				usnic_dbg("va 0x%lx pa %pa size 0x%zx flags 0x%x\n",
+@@ -354,7 +354,7 @@ struct usnic_uiom_reg *usnic_uiom_reg_get(struct usnic_uiom_pd *pd,
+ 	offset = addr & ~PAGE_MASK;
+ 	npages = PAGE_ALIGN(size + offset) >> PAGE_SHIFT;
+ 	vpn_start = (addr & PAGE_MASK) >> PAGE_SHIFT;
+-	vpn_last = vpn_start + npages - 1;
++	vpn_last = vpn_start + npages;
+ 
+ 	uiomr = kmalloc(sizeof(*uiomr), GFP_KERNEL);
+ 	if (!uiomr)
+diff --git a/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c b/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c
+index d399523206c7..12c968447673 100644
+--- a/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c
++++ b/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c
+@@ -36,11 +36,11 @@
+ #include <linux/slab.h>
+ #include <linux/list_sort.h>
+ 
+-#include <linux/interval_tree_generic.h>
++#include <linux/interval_tree_gen.h>
+ #include "usnic_uiom_interval_tree.h"
+ 
+ #define START(node) ((node)->start)
+-#define LAST(node) ((node)->last)
++#define END(node) ((node)->end)
+ 
+ #define MAKE_NODE(node, start, end, ref_cnt, flags, err, err_out)	\
+ 		do {							\
+@@ -76,7 +76,7 @@ usnic_uiom_interval_node_alloc(long int start, long int last, int ref_cnt,
+ 		return NULL;
+ 
+ 	interval->start = start;
+-	interval->last = last;
++	interval->end = last;
+ 	interval->flags = flags;
+ 	interval->ref_cnt = ref_cnt;
+ 
+@@ -133,7 +133,7 @@ int usnic_uiom_get_intervals_diff(unsigned long start, unsigned long last,
+ 
+ 	list_for_each_entry(interval, &intersection_set, link) {
+ 		if (pivot < interval->start) {
+-			MAKE_NODE_AND_APPEND(tmp, pivot, interval->start - 1,
++			MAKE_NODE_AND_APPEND(tmp, pivot, interval->start,
+ 						1, flags, err, err_out,
+ 						diff_set);
+ 			pivot = interval->start;
+@@ -144,12 +144,10 @@ int usnic_uiom_get_intervals_diff(unsigned long start, unsigned long last,
+ 		 * but not in both.
+ 		 */
+ 
+-		if (pivot > interval->last) {
++		if (pivot > interval->end - 1) {
+ 			continue;
+-		} else if (pivot <= interval->last &&
+-				FLAGS_EQUAL(interval->flags, flags,
+-				flag_mask)) {
+-			pivot = interval->last + 1;
++		} else if (FLAGS_EQUAL(interval->flags, flags, flag_mask)) {
++			pivot = interval->end;
+ 		}
+ 	}
+ 
+@@ -195,15 +193,15 @@ int usnic_uiom_insert_interval(struct rb_root_cached *root, unsigned long start,
+ 		 * inserted
+ 		 */
+ 		istart = interval->start;
+-		ilast = interval->last;
++		ilast = interval->end - 1;
+ 		iref_cnt = interval->ref_cnt;
+ 		iflags = interval->flags;
+ 
+ 		if (istart < lpivot) {
+-			MAKE_NODE_AND_APPEND(tmp, istart, lpivot - 1, iref_cnt,
++			MAKE_NODE_AND_APPEND(tmp, istart, lpivot, iref_cnt,
+ 						iflags, err, err_out, &to_add);
+ 		} else if (istart > lpivot) {
+-			MAKE_NODE_AND_APPEND(tmp, lpivot, istart - 1, 1, flags,
++			MAKE_NODE_AND_APPEND(tmp, lpivot, istart, 1, flags,
+ 						err, err_out, &to_add);
+ 			lpivot = istart;
+ 		} else {
+@@ -222,7 +220,7 @@ int usnic_uiom_insert_interval(struct rb_root_cached *root, unsigned long start,
+ 						&to_add);
+ 		}
+ 
+-		lpivot = ilast + 1;
++		lpivot = interval->end;
+ 	}
+ 
+ 	if (lpivot <= last)
+@@ -267,4 +265,4 @@ void usnic_uiom_remove_interval(struct rb_root_cached *root,
+ 
+ INTERVAL_TREE_DEFINE(struct usnic_uiom_interval_node, rb,
+ 			unsigned long, __subtree_last,
+-			START, LAST, , usnic_uiom_interval_tree)
++			START, END, , usnic_uiom_interval_tree)
+diff --git a/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.h b/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.h
+index 1d7fc3226bca..496edc9758c1 100644
+--- a/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.h
++++ b/drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.h
+@@ -40,7 +40,7 @@ struct usnic_uiom_interval_node {
+ 	struct rb_node			rb;
+ 	struct list_head		link;
+ 	unsigned long			start;
+-	unsigned long			last;
++	unsigned long		        end;
+ 	unsigned long			__subtree_last;
+ 	unsigned int			ref_cnt;
+ 	int				flags;
+-- 
+2.16.4
 
