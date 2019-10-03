@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237A5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE8120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8186E20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123101;
-	bh=he2fSWT0lK2X9kFtyxSOoobrU3yzNlikOysYtfV1KiE=;
+	s=default; t=1570123112;
+	bh=CK06L5cSOztvXd/gxaSwC22yL8w2qLJzd1mzjbUfCIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eTB7woH/6HAjc6qLCl8zYbTJ6dL6pTrnYYtmvHD4YRv6OI2e6afLlAmD6edPIKIwD
-	 r0PF5w7pUl3QhEuwbl8gUqitK/pPkHdT3PXTe9sO30SndUbIwaqm+YKKN7hLfq0CfT
-	 EgKcxw60B5gbcpq3Ol9PT6vqS85UreNnndI3Rwjw=
+	b=2NZ1xo5JwhUEnV461+CArrKePmz4mNEVLX1JkQPtiWJMKjuqEhacYVBssSPXsIxaq
+	 ZixrPo9a/wwsDPi9mv2myOdl1I942QTntHTFauje45SpUzljovJazxvXVx4onQ6WEG
+	 deOSX/42UuGUIhMYRcPq9qvt72rfekJuYXSk0sE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393396AbfJCRST (ORCPT
+        id S2388809AbfJCQVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390111AbfJCQVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:17 -0400
+        id S2389149AbfJCQU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFA420659;
-        Thu,  3 Oct 2019 16:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 057442054F;
+        Thu,  3 Oct 2019 16:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119676;
-        bh=he2fSWT0lK2X9kFtyxSOoobrU3yzNlikOysYtfV1KiE=;
+        s=default; t=1570119655;
+        bh=CK06L5cSOztvXd/gxaSwC22yL8w2qLJzd1mzjbUfCIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXyZR3gSIsBQhY4RfwDWbfOtIags9I5mZ+ngNkvBCEwLz3s5x8noSW7fM6dN4lLX9
-         iwU8JVxfbyinG31rpRI6XOpqEoJE78xOeSLNJkFPL7zGIj6FFSTGl1ysDyF32er5JA
-         47GYHIFmLPtGjp7HmrvhT5JTtwlVz9ufPsioxhUE=
+        b=qV+Y/CLzD3I4MOzkavF7pnOgGuw31W5lqJWkSd0kuzDtQDaM6JOjh+QpfQwHrsHqM
+         Z2e3bsWSQn/0Fwge2T2IB1J/ovcr9qBL8TBO7dPpYN2HCtHkIOlf5weZs1mZ1qT3gC
+         vgblltwGM1eOyI6gC9SlbOj23kQYuBWqmkGYmXIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/211] ALSA: firewire-motu: add support for MOTU 4pre
-Date:   Thu,  3 Oct 2019 17:53:01 +0200
-Message-Id: <20191003154513.729144694@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 143/211] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
+Date:   Thu,  3 Oct 2019 17:53:29 +0200
+Message-Id: <20191003154520.002944581@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,91 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 6af86bdb8ad41f4cf1292d3b10857dc322758328 ]
+[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
 
-MOTU 4pre was launched in 2012 by MOTU, Inc. This commit allows userspace
-applications can transmit and receive PCM frames and MIDI messages for
-this model via ALSA PCM interface and RawMidi/Sequencer interfaces.
+Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
+although the driver tries to probe and set up blindly.
+Blacklist these machines for suppressing the beep creation.
 
-The device supports MOTU protocol version 3. Unlike the other devices, the
-device is simply designed. The size of data block is fixed to 10 quadlets
-during available sampling rates (44.1 - 96.0 kHz). Each data block
-includes 1 source packet header, 2 data chunks for messages, 8 data chunks
-for PCM samples and 2 data chunks for padding to quadlet alignment. The
-device has no MIDI, optical, BNC and AES/EBU interfaces.
-
-Like support for the other MOTU devices, the quality of playback sound
-is not enough good with periodical noise yet.
-
-$ python2 crpp < ~/git/am-config-rom/motu/motu-4pre.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  041078cc  bus_info_length 4, crc_length 16, crc 30924
-404  31333934  bus_name "1394"
-408  20ff7000  irmc 0, cmc 0, isc 1, bmc 0, cyc_clk_acc 255, max_rec 7 (256)
-40c  0001f200  company_id 0001f2     |
-410  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
-
-               root directory
-               -----------------------------------------------------------------
-414  0004ef04  directory_length 4, crc 61188
-418  030001f2  vendor
-41c  0c0083c0  node capabilities per IEEE 1394
-420  d1000002  --> unit directory at 428
-424  8d000005  --> eui-64 leaf at 438
-
-               unit directory at 428
-               -----------------------------------------------------------------
-428  0003ceda  directory_length 3, crc 52954
-42c  120001f2  specifier id
-430  13000045  version
-434  17103800  model
-
-               eui-64 leaf at 438
-               -----------------------------------------------------------------
-438  0002d248  leaf_length 2, crc 53832
-43c  0001f200  company_id 0001f2     |
-440  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/motu/motu.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/pci/hda/patch_realtek.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/firewire/motu/motu.c b/sound/firewire/motu/motu.c
-index 743015e87a960..e240fdfcae31d 100644
---- a/sound/firewire/motu/motu.c
-+++ b/sound/firewire/motu/motu.c
-@@ -255,6 +255,17 @@ static const struct snd_motu_spec motu_audio_express = {
- 	.analog_out_ports = 4,
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 7f74ebee8c2d1..e791379439be0 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -1057,6 +1057,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
+ 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
++	/* blacklist -- no beep available */
++	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
++	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
+ 	{}
  };
  
-+static const struct snd_motu_spec motu_4pre = {
-+	.name = "4pre",
-+	.protocol = &snd_motu_protocol_v3,
-+	.flags = SND_MOTU_SPEC_SUPPORT_CLOCK_X2 |
-+		 SND_MOTU_SPEC_TX_MICINST_CHUNK |
-+		 SND_MOTU_SPEC_TX_RETURN_CHUNK |
-+		 SND_MOTU_SPEC_RX_SEPARETED_MAIN,
-+	.analog_in_ports = 2,
-+	.analog_out_ports = 2,
-+};
-+
- #define SND_MOTU_DEV_ENTRY(model, data)			\
- {							\
- 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
-@@ -272,6 +283,7 @@ static const struct ieee1394_device_id motu_id_table[] = {
- 	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
- 	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
- 	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
-+	SND_MOTU_DEV_ENTRY(0x000045, &motu_4pre),
- 	{ }
- };
- MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
 -- 
 2.20.1
 
