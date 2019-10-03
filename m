@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBFEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9D6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4266B215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E1921783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121379;
-	bh=PCK4mgiAMepdmcjkI6hj/qWXpR57RcSqdMCI2dmyfCs=;
+	s=default; t=1570121383;
+	bh=4RZYoUsuUQLZ4s568q0GUzU5T/LBcXRptdcGVSEtYSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znSOZifqhO6Rh97fKUCtf9c2IIgdi54C7Chc/DOSPPG+L35ekGGJfZ1GicpJQwUYR
-	 DOJ7X+0WR4M9RoltFV5OURBwgAycOwAYy0lpQnbcYupPzkHZYvBnd8wp7WU1krdkzZ
-	 QGjFdB5ez6ByVSutez5iumKRRkr7KZMF3prxNBNQ=
+	b=dd0i3Sn2GzpTA/WMbDymO7hlwO/oUVSFXsEtHIE4cL/2sDuIfDeUTcVnH2akr3k2K
+	 hNtjbbIT8bgFptdgZQx6OpOVHuO4mt0QwXTP07CQUFQAnGkiypA02+b8SwA6GvpcBE
+	 x3L5zEOl7450578Kyst4Eu+oPFGCXKDJghP2JSrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393085AbfJCQth (ORCPT
+        id S2404773AbfJCQtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36122 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404026AbfJCQtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:33 -0400
+        id S2393086AbfJCQti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0340620867;
-        Thu,  3 Oct 2019 16:49:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 754892070B;
+        Thu,  3 Oct 2019 16:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121372;
-        bh=PCK4mgiAMepdmcjkI6hj/qWXpR57RcSqdMCI2dmyfCs=;
+        s=default; t=1570121378;
+        bh=4RZYoUsuUQLZ4s568q0GUzU5T/LBcXRptdcGVSEtYSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kx9VIpd+dNY6uf0SkGKKQ+x6DmD1ED70F7ypV0tlq/RjtsRHEIuRVgWalWLX1Mnib
-         Worn+ILTxO9lkJuGnaPq9+gl6etnI60uOVBbhYYiRQlguYQ5eDjSiMJN+iNHFaRKNc
-         +Ige3ah993mI6+MYUM7uWRtdYvKixQYN8HizajA4=
+        b=Sk2xv3Ux/7o26KLdb+sCj17HkxGJNPqMh+JgURb+strcHxH8SaB5aJKJeRb5c5wyP
+         jnhrCIOjUDLbzR0c5DsCK2cLnhQbjJSC/AiBof6UpdH37eBwH5idBKUp58nd1kY3Dg
+         t9mCLAF92XSMxXdXc93i/t09rustW1Wx2zw5tx6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Jan Stancek <jstancek@redhat.com>
-Subject: [PATCH 5.3 253/344] powerpc/imc: Dont create debugfs files for cpu-less nodes
-Date:   Thu,  3 Oct 2019 17:53:38 +0200
-Message-Id: <20191003154605.466474452@linuxfoundation.org>
+        stable@vger.kernel.org, linux-stable@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.3 255/344] tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+Date:   Thu,  3 Oct 2019 17:53:40 +0200
+Message-Id: <20191003154605.647615518@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,107 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-commit 41ba17f20ea835c489e77bd54e2da73184e22060 upstream.
+commit 1ea32c83c699df32689d329b2415796b7bfc2f6e upstream.
 
-Commit <684d984038aa> ('powerpc/powernv: Add debugfs interface for
-imc-mode and imc') added debugfs interface for the nest imc pmu
-devices to support changing of different ucode modes. Primarily adding
-this capability for debug. But when doing so, the code did not
-consider the case of cpu-less nodes. So when reading the _cmd_ or
-_mode_ file of a cpu-less node will create this crash.
+The tpm_tis_core has to set the TPM_CHIP_FLAG_IRQ before probing for
+interrupts since there is no other place in the code that would set
+it.
 
-  Faulting instruction address: 0xc0000000000d0d58
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  ...
-  CPU: 67 PID: 5301 Comm: cat Not tainted 5.2.0-rc6-next-20190627+ #19
-  NIP:  c0000000000d0d58 LR: c00000000049aa18 CTR:c0000000000d0d50
-  REGS: c00020194548f9e0 TRAP: 0300   Not tainted  (5.2.0-rc6-next-20190627+)
-  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:28022822  XER: 00000000
-  CFAR: c00000000049aa14 DAR: 000000000003fc08 DSISR:40000000 IRQMASK: 0
-  ...
-  NIP imc_mem_get+0x8/0x20
-  LR  simple_attr_read+0x118/0x170
-  Call Trace:
-    simple_attr_read+0x70/0x170 (unreliable)
-    debugfs_attr_read+0x6c/0xb0
-    __vfs_read+0x3c/0x70
-     vfs_read+0xbc/0x1a0
-    ksys_read+0x7c/0x140
-    system_call+0x5c/0x70
-
-Patch fixes the issue with a more robust check for vbase to NULL.
-
-Before patch, ls output for the debugfs imc directory
-
-  # ls /sys/kernel/debug/powerpc/imc/
-  imc_cmd_0    imc_cmd_251  imc_cmd_253  imc_cmd_255  imc_mode_0    imc_mode_251  imc_mode_253  imc_mode_255
-  imc_cmd_250  imc_cmd_252  imc_cmd_254  imc_cmd_8    imc_mode_250  imc_mode_252  imc_mode_254  imc_mode_8
-
-After patch, ls output for the debugfs imc directory
-
-  # ls /sys/kernel/debug/powerpc/imc/
-  imc_cmd_0  imc_cmd_8  imc_mode_0  imc_mode_8
-
-Actual bug here is that, we have two loops with potentially different
-loop counts. That is, in imc_get_mem_addr_nest(), loop count is
-obtained from the dt entries. But in case of export_imc_mode_and_cmd(),
-loop was based on for_each_nid() count. Patch fixes the loop count in
-latter based on the struct mem_info. Ideally it would be better to
-have array size in struct imc_pmu.
-
-Fixes: 684d984038aa ('powerpc/powernv: Add debugfs interface for imc-mode and imc')
-Reported-by: Qian Cai <cai@lca.pw>
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190827101635.6942-1-maddy@linux.vnet.ibm.com
-Cc: Jan Stancek <jstancek@redhat.com>
+Cc: linux-stable@vger.kernel.org
+Fixes: 570a36097f30 ("tpm: drop 'irq' from struct tpm_vendor_specific")
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/opal-imc.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/char/tpm/tpm_tis_core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -53,9 +53,9 @@ static void export_imc_mode_and_cmd(stru
- 				    struct imc_pmu *pmu_ptr)
- {
- 	static u64 loc, *imc_mode_addr, *imc_cmd_addr;
--	int chip = 0, nid;
- 	char mode[16], cmd[16];
- 	u32 cb_offset;
-+	struct imc_mem_info *ptr = pmu_ptr->mem_info;
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -981,6 +981,7 @@ int tpm_tis_core_init(struct device *dev
+ 		}
  
- 	imc_debugfs_parent = debugfs_create_dir("imc", powerpc_debugfs_root);
- 
-@@ -69,20 +69,20 @@ static void export_imc_mode_and_cmd(stru
- 	if (of_property_read_u32(node, "cb_offset", &cb_offset))
- 		cb_offset = IMC_CNTL_BLK_OFFSET;
- 
--	for_each_node(nid) {
--		loc = (u64)(pmu_ptr->mem_info[chip].vbase) + cb_offset;
-+	while (ptr->vbase != NULL) {
-+		loc = (u64)(ptr->vbase) + cb_offset;
- 		imc_mode_addr = (u64 *)(loc + IMC_CNTL_BLK_MODE_OFFSET);
--		sprintf(mode, "imc_mode_%d", nid);
-+		sprintf(mode, "imc_mode_%d", (u32)(ptr->id));
- 		if (!imc_debugfs_create_x64(mode, 0600, imc_debugfs_parent,
- 					    imc_mode_addr))
- 			goto err;
- 
- 		imc_cmd_addr = (u64 *)(loc + IMC_CNTL_BLK_CMD_OFFSET);
--		sprintf(cmd, "imc_cmd_%d", nid);
-+		sprintf(cmd, "imc_cmd_%d", (u32)(ptr->id));
- 		if (!imc_debugfs_create_x64(cmd, 0600, imc_debugfs_parent,
- 					    imc_cmd_addr))
- 			goto err;
--		chip++;
-+		ptr++;
- 	}
- 	return;
- 
+ 		tpm_chip_start(chip);
++		chip->flags |= TPM_CHIP_FLAG_IRQ;
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+ 						 irq);
 
 
