@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3491C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995B0207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0240721848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118309;
-	bh=wKhq0VlGv+xSfbaRl9RM2mr581f4Gr7wpu/qX6+fz9s=;
+	s=default; t=1570118312;
+	bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pyQSaVe9Vlj/+oBf5mbammmxuyRKML5hVfsY8rURuWHQGYjCxlZ/+q1Yldi3BQX9R
-	 6qXjWMZpxwS/vncFfO5379Ok0x/cFUgnuvUSL5MlChRx5htgk4H3FDTxKH3Nbk8Jal
-	 LIJiN81dFv1y3KUzuQdYNcIeYBek0joE0NP74POI=
+	b=Cwh2I/J1lkGg5JFHog8m6G8626rYpG9UogOevmwdQuavElgBtuzw6j5oUWd8x0eg6
+	 AUaCL2177Y3ongIlVbBCRVRrq50WxhZ4fSoRzeMY41G9jKyvsA38np2Do/IR5xvnv4
+	 CHSoLhgZQFHzB1ngYZq8YF5+JxpbfxvrgJeH18I0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfJCP62 (ORCPT
+        id S1731238AbfJCP6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41116 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbfJCP6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:24 -0400
+        id S1731163AbfJCP60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CCE321A4C;
-        Thu,  3 Oct 2019 15:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5549A20700;
+        Thu,  3 Oct 2019 15:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118303;
-        bh=wKhq0VlGv+xSfbaRl9RM2mr581f4Gr7wpu/qX6+fz9s=;
+        s=default; t=1570118305;
+        bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/O8snOPOnSwXgWYd/ddGXrx+mjdXkf9B03/ZcfPhQYJjVwVIJoNmOdus/jkMB3yN
-         VWsbQ5QRb4rUvakpWCGnsVB6UxqIfefiEKzAuWq+GjHcFttYcaP6Kl/kXxpDqTCev6
-         iD54hH+ePsgPfPy2S95mpqQP3IaWcR6mCVNulJNQ=
+        b=e+VvzEK/Gp0FRMZKPGQTyhsTr8/J/fk80SX8E5lche1KSC9vEbVJDi31O0zdZqxHe
+         dFgFO/GkLgPl0kDyrKeZBFiHYXjbnq2ebQ+cMi0kt9j/iS8AvKWUJXYFUbZBnYqG7Y
+         //PF8eD9ZIJVoix/MkqoUV9w5QtHv5MsLumINMqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Stone <ahs3@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 62/99] ACPI / CPPC: do not require the _PSD method
-Date:   Thu,  3 Oct 2019 17:53:25 +0200
-Message-Id: <20191003154326.977690200@linuxfoundation.org>
+Subject: [PATCH 4.4 63/99] libtraceevent: Change users plugin directory
+Date:   Thu,  3 Oct 2019 17:53:26 +0200
+Message-Id: <20191003154327.845367313@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -60,53 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Stone <ahs3@redhat.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
-
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
-
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
-
-Signed-off-by: Al Stone <ahs3@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/cppc_acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 0afd1981e350b..43c27c04c40ae 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -137,8 +137,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 7851df1490e0a..cc3315da6dc39 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -54,15 +54,15 @@ set_plugin_dir := 1
  
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
-+	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+					    &buffer, ACPI_TYPE_PACKAGE);
-+	if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+		return 0;
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index a16756ae35267..5fe7889606a23 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -30,7 +30,7 @@
+ #include "event-parse.h"
+ #include "event-utils.h"
  
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
