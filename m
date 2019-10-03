@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B90C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4CAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085202086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61282086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120956;
-	bh=TCzrj21DePjZetssjICk3LSvp+6XekcD+3nP3eSbAjo=;
+	s=default; t=1570120960;
+	bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xnZJEJqvxemp9/RJRVdSLbDtfyQcCnJxbTIaBnrRtXAcgRmqUw2z66iH9Q/onrkWF
-	 bFjeF3fPJ/NK4bOhe74qDQFBodOeICydSt8xNI8wy828EMv7VTaO0HCoioF9HHvpyi
-	 Dwd1/kC6kfgHQ9cSfhTH6s5SAMRdZXDUwZ4Fdt/A=
+	b=ZMc5ofRwpySCTbtPuPcVyk5Ud0n1RTF6DR9xGYv2BYAEj8yRcW4Ye2KKYPsNPqBo6
+	 mmkRyKPEwUFYVEmUc1X5H3eL0Zn5B23hr/2c/I3qaP0GRbMZRGKMhtMvVWA+u/ndld
+	 Xbdkx+j9XGfjHc+1ejs4Y3Z0afnJV4Ew4z/vD94s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391560AbfJCQme (ORCPT
+        id S2392686AbfJCQmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53580 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392663AbfJCQma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:30 -0400
+        id S2404062AbfJCQmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D232054F;
-        Thu,  3 Oct 2019 16:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 066A92054F;
+        Thu,  3 Oct 2019 16:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120950;
-        bh=TCzrj21DePjZetssjICk3LSvp+6XekcD+3nP3eSbAjo=;
+        s=default; t=1570120955;
+        bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yc2WMir4wBbOvAxe6jE/86kEGCsVTdVM3x/V+/wm2fGw+qtD6b7aUzy+iF9/C5LSg
-         eo4GEH5RlGndVKMSYh24AwLymFyP+1TqNaGGxSEpzdI57RwJq0/Ie3j9uQ9V3eZv2I
-         mgttSAjIqnVyQehKB/LifEj8yDTagno/PfBTIcSw=
+        b=RBuHG/FykYr7PhTKBry71DQslStZ69w8+4i0DAUO3kUYrZrpIbU9dDiRY335ymg1X
+         EPgVQYKcbRuINLh6OloU7/6FyvU0PIQV2g47KHqTYoIri5G7N4B+H925vaEhzUMc9z
+         D9TAdw/x9j8dBrCCuD5OlqgNw6mkTtItCdgaDKXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Douthit <stephend@silicom-usa.com>,
-        Tony Luck <tony.luck@intel.com>,
+        stable@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 097/344] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
-Date:   Thu,  3 Oct 2019 17:51:02 +0200
-Message-Id: <20191003154549.774316328@linuxfoundation.org>
+Subject: [PATCH 5.3 099/344] firmware: arm_scmi: Check if platform has released shmem before using
+Date:   Thu,  3 Oct 2019 17:51:04 +0200
+Message-Id: <20191003154549.966139872@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,65 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Douthit <stephend@silicom-usa.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 29a3388bfcce7a6d087051376ea02bf8326a957b ]
+[ Upstream commit 9dc34d635c67e57051853855c43249408641a5ab ]
 
-Depending on how BIOS has marked the reserved region containing the 32KB
-MCHBAR you can get warnings like:
+Sometimes platfom may take too long to respond to the command and OS
+might timeout before platform transfer the ownership of the shared
+memory region to the OS with the response.
 
-resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans more than reserved [mem 0xfed10000-0xfed17fff]
-caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
+Since the mailbox channel associated with the channel is freed and new
+commands are dispatch on the same channel, OS needs to wait until it
+gets back the ownership. If not, either OS may end up overwriting the
+platform response for the last command(which is fine as OS timed out
+that command) or platform might overwrite the payload for the next
+command with the response for the old.
 
-Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
-MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
-size to ioremap() depending on which resource we're reading from.
+The latter is problematic as platform may end up interpretting the
+response as the payload. In order to avoid such race, let's wait until
+the OS gets back the ownership before we prepare the shared memory with
+the payload for the next command.
 
-Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/pnd2_edac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/driver.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index ca25f8fe57ef3..1ad538baaa4a9 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -260,11 +260,14 @@ static u64 get_sideband_reg_base_addr(void)
- 	}
- }
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index b5bc4c7a8fab2..b49c9e6f4bf10 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -271,6 +271,14 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+ 	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+ 	struct scmi_shared_mem __iomem *mem = cinfo->payload;
  
-+#define DNV_MCHBAR_SIZE  0x8000
-+#define DNV_SB_PORT_SIZE 0x10000
- static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *name)
- {
- 	struct pci_dev *pdev;
- 	char *base;
- 	u64 addr;
-+	unsigned long size;
- 
- 	if (op == 4) {
- 		pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
-@@ -279,15 +282,17 @@ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *na
- 			addr = get_mem_ctrl_hub_base_addr();
- 			if (!addr)
- 				return -ENODEV;
-+			size = DNV_MCHBAR_SIZE;
- 		} else {
- 			/* MMIO via sideband register base address */
- 			addr = get_sideband_reg_base_addr();
- 			if (!addr)
- 				return -ENODEV;
- 			addr += (port << 16);
-+			size = DNV_SB_PORT_SIZE;
- 		}
- 
--		base = ioremap((resource_size_t)addr, 0x10000);
-+		base = ioremap((resource_size_t)addr, size);
- 		if (!base)
- 			return -ENODEV;
- 
++	/*
++	 * Ideally channel must be free by now unless OS timeout last
++	 * request and platform continued to process the same, wait
++	 * until it releases the shared memory, otherwise we may endup
++	 * overwriting its response with new message payload or vice-versa
++	 */
++	spin_until_cond(ioread32(&mem->channel_status) &
++			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+ 	/* Mark channel busy + clear error */
+ 	iowrite32(0x0, &mem->channel_status);
+ 	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
 -- 
 2.20.1
 
