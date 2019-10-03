@@ -2,187 +2,197 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312CFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D789C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0EE20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356A22133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570121610;
+	bh=rFg+X+AdtxdlLQ/7XLQJB/cHNvvUWv+S2FvMzXXgqNg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NfBrd6fV5D4debJX+LvlAyayJbiCusSWoJSNQV+rT2BAIQnepD3Hkpk5R5pxD/J6V
+	 m/YFuZyeRjuEMV1jUzNoSlDNjVlBjXw5HGHWOui6bJrfY8aOUvfTsV1uKcSD53mrTG
+	 ivS9v55FE/gZlEoQgb9jDDdVROFug0vqeYkCaVb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405544AbfJCQxZ (ORCPT
+        id S2405638AbfJCQx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:53:25 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:42194 "EHLO mx2.mailbox.org"
+        Thu, 3 Oct 2019 12:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405232AbfJCQxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:53:19 -0400
-Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        id S2406415AbfJCQxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id E55FEA33D1;
-        Thu,  3 Oct 2019 18:53:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id 2oKS5ApijqDi; Thu,  3 Oct 2019 18:53:11 +0200 (CEST)
-Date:   Fri, 4 Oct 2019 02:53:01 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
-        Christian Brauner <christian@brauner.io>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Alessia Mantegazza <amantegazza@vaga.pv.it>,
-        Guillaume Dore <corwin@poussif.eu>, linux-doc@vger.kernel.org,
-        linux-abi@vger.kernel.org, Michael Kerrisk <mtk.manpages@gmail.com>
-Subject: Re: [PATCH] Documentation: update about adding syscalls
-Message-ID: <20191003165301.ihrlrgcldgun7dld@yavin.dot.cyphar.com>
-References: <20191002151437.5367-1-christian.brauner@ubuntu.com>
- <20191003103931.52683cb6@lwn.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 978402070B;
+        Thu,  3 Oct 2019 16:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570121604;
+        bh=rFg+X+AdtxdlLQ/7XLQJB/cHNvvUWv+S2FvMzXXgqNg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QknmR7NaF+QuZNTohDMdftlh7mQACdAUUwNeoqMMkhgzbyghs7L1vH0Qwhgg24GPY
+         Mmn/5a7sFYdXGvmjsrqWC0gUgMHa55DEvSQ/9Yd1jCUseZjt3Vn5ozcyMpamK6MhBH
+         y3wvKQO65+MnYruPEQroaFfqmyXu4PVtNjQAMSNk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>, Bob Liu <bob.liu@oracle.com>,
+        Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 303/344] block: fix null pointer dereference in blk_mq_rq_timed_out()
+Date:   Thu,  3 Oct 2019 17:54:28 +0200
+Message-Id: <20191003154609.287465111@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ecmiy52y44gvxiaw"
-Content-Disposition: inline
-In-Reply-To: <20191003103931.52683cb6@lwn.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yufen Yu <yuyufen@huawei.com>
 
---ecmiy52y44gvxiaw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 8d6996630c03d7ceeabe2611378fea5ca1c3f1b3 upstream.
 
-On 2019-10-03, Jonathan Corbet <corbet@lwn.net> wrote:
-> [Expanding CC a bit; this is the sort of change I'm reluctant to take
-> without being sure it reflects what the community thinks.]
->=20
-> On Wed,  2 Oct 2019 17:14:37 +0200
-> Christian Brauner <christian.brauner@ubuntu.com> wrote:
->=20
-> > Add additional information on how to ensure that syscalls with structure
-> > arguments are extensible and add a section about naming conventions to
-> > follow when adding revised versions of already existing syscalls.
-> >=20
-> > Co-Developed-by: Aleksa Sarai <cyphar@cyphar.com>
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> >  Documentation/process/adding-syscalls.rst | 82 +++++++++++++++++++----
-> >  1 file changed, 70 insertions(+), 12 deletions(-)
-> >=20
-> > diff --git a/Documentation/process/adding-syscalls.rst b/Documentation/=
-process/adding-syscalls.rst
-> > index 1c3a840d06b9..93e0221fbb9a 100644
-> > --- a/Documentation/process/adding-syscalls.rst
-> > +++ b/Documentation/process/adding-syscalls.rst
-> > @@ -79,7 +79,7 @@ flags, and reject the system call (with ``EINVAL``) i=
-f it does::
-> >  For more sophisticated system calls that involve a larger number of ar=
-guments,
-> >  it's preferred to encapsulate the majority of the arguments into a str=
-ucture
-> >  that is passed in by pointer.  Such a structure can cope with future e=
-xtension
-> > -by including a size argument in the structure::
-> > +by either including a size argument in the structure::
-> > =20
-> >      struct xyzzy_params {
-> >          u32 size; /* userspace sets p->size =3D sizeof(struct xyzzy_pa=
-rams) */
-> > @@ -87,20 +87,56 @@ by including a size argument in the structure::
-> >          u64 param_2;
-> >          u64 param_3;
-> >      };
-> > +    int sys_xyzzy(struct xyzzy_params __user *uarg);
-> > +    /* in case of -E2BIG, p->size is set to the in-kernel size and thu=
-s all
-> > +       extensions after that offset are unsupported. */
->=20
-> That comment kind of threw me for a loop - this is the first mention of
-> E2BIG and readers may not just know what's being talked about.  Especially
-> since the comment suggests *not* actually returning an error.
+We got a null pointer deference BUG_ON in blk_mq_rq_timed_out()
+as following:
 
-I probably could've worded this better -- this comment describes what
-userspace sees when they use the API (sched_setattr(2) is an example of
-this style of API).
+[  108.825472] BUG: kernel NULL pointer dereference, address: 0000000000000040
+[  108.827059] PGD 0 P4D 0
+[  108.827313] Oops: 0000 [#1] SMP PTI
+[  108.827657] CPU: 6 PID: 198 Comm: kworker/6:1H Not tainted 5.3.0-rc8+ #431
+[  108.829503] Workqueue: kblockd blk_mq_timeout_work
+[  108.829913] RIP: 0010:blk_mq_check_expired+0x258/0x330
+[  108.838191] Call Trace:
+[  108.838406]  bt_iter+0x74/0x80
+[  108.838665]  blk_mq_queue_tag_busy_iter+0x204/0x450
+[  108.839074]  ? __switch_to_asm+0x34/0x70
+[  108.839405]  ? blk_mq_stop_hw_queue+0x40/0x40
+[  108.839823]  ? blk_mq_stop_hw_queue+0x40/0x40
+[  108.840273]  ? syscall_return_via_sysret+0xf/0x7f
+[  108.840732]  blk_mq_timeout_work+0x74/0x200
+[  108.841151]  process_one_work+0x297/0x680
+[  108.841550]  worker_thread+0x29c/0x6f0
+[  108.841926]  ? rescuer_thread+0x580/0x580
+[  108.842344]  kthread+0x16a/0x1a0
+[  108.842666]  ? kthread_flush_work+0x170/0x170
+[  108.843100]  ret_from_fork+0x35/0x40
 
-In the case where the kernel doesn't support a requested extension
-(usize > ksize, and there are non-zero bytes past ksize) then the kernel
-returns -E2BIG *but also* sets p->size to ksize so that userspace knows
-what extensions the kernel supports.
+The bug is caused by the race between timeout handle and completion for
+flush request.
 
-Maybe I should've replicated more of the details from the kernel-doc for
-copy_struct_from_user().
+When timeout handle function blk_mq_rq_timed_out() try to read
+'req->q->mq_ops', the 'req' have completed and reinitiated by next
+flush request, which would call blk_rq_init() to clear 'req' as 0.
 
-> > -As long as any subsequently added field, say ``param_4``, is designed =
-so that a
-> > -zero value gives the previous behaviour, then this allows both directi=
-ons of
-> > -version mismatch:
-> > +or by including a separate argument that specifies the size::
-> > =20
-> > - - To cope with a later userspace program calling an older kernel, the=
- kernel
-> > -   code should check that any memory beyond the size of the structure =
-that it
-> > -   expects is zero (effectively checking that ``param_4 =3D=3D 0``).
-> > - - To cope with an older userspace program calling a newer kernel, the=
- kernel
-> > -   code can zero-extend a smaller instance of the structure (effective=
-ly
-> > -   setting ``param_4 =3D 0``).
-> > +    struct xyzzy_params {
-> > +        u32 param_1;
-> > +        u64 param_2;
-> > +        u64 param_3;
-> > +    };
-> > +    /* userspace sets @usize =3D sizeof(struct xyzzy_params) */
-> > +    int sys_xyzzy(struct xyzzy_params __user *uarg, size_t usize);
-> > +    /* in case of -E2BIG, userspace has to attempt smaller @usize valu=
-es
-> > +       to figure out which extensions are unsupported. */
->=20
-> Here too.  But what I'm really wondering about now is: you're describing
-> different behavior for what are essentially two cases of the same thing.
-> Why should the kernel simply accept the smaller size if the size is
-> embedded in the structure itself, but return an error and force user space
-> to retry if it's a separate argument?
->=20
-> I guess maybe because in the latter case the kernel can't easily return
-> the size it's actually using?  I think that should be explicit if so.
+After commit 12f5b93145 ("blk-mq: Remove generation seqeunce"),
+normal requests lifetime are protected by refcount. Until 'rq->ref'
+drop to zero, the request can really be free. Thus, these requests
+cannot been reused before timeout handle finish.
 
-As above, the -E2BIG only happens if userspace is trying to use an
-extension that the kernel doesn't support (usize > ksize, non-zero bytes
-after ksize). The main difference between the two API styles is whether
-or not userspace gets told what ksize is explicitly in the case of an
--E2BIG.
+However, flush request has defined .end_io and rq->end_io() is still
+called even if 'rq->ref' doesn't drop to zero. After that, the 'flush_rq'
+can be reused by the next flush request handle, resulting in null
+pointer deference BUG ON.
 
-Maybe it would be less confusing to only mention one of ways of doing
-it, but then we have to pick one (and while the newer syscalls [clone3
-and openat2] use a separate argument, there are more syscalls which
-embed it in the struct).
+We fix this problem by covering flush request with 'rq->ref'.
+If the refcount is not zero, flush_end_io() return and wait the
+last holder recall it. To record the request status, we add a new
+entry 'rq_status', which will be used in flush_end_io().
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: stable@vger.kernel.org # v4.18+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---ecmiy52y44gvxiaw
-Content-Type: application/pgp-signature; name="signature.asc"
+-------
+v2:
+ - move rq_status from struct request to struct blk_flush_queue
+v3:
+ - remove unnecessary '{}' pair.
+v4:
+ - let spinlock to protect 'fq->rq_status'
+v5:
+ - move rq_status after flush_running_idx member of struct blk_flush_queue
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
------BEGIN PGP SIGNATURE-----
+---
+ block/blk-flush.c |   10 ++++++++++
+ block/blk-mq.c    |    5 ++++-
+ block/blk.h       |    7 +++++++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZYnaQAKCRCdlLljIbnQ
-EhlVAQCqbspnt/NT+1gkI4JVdUZFAWs0Fw/uNiDdbdMPIaf3JAEA/PeY3tJKd9bc
-O9UhoWmz9VranrMXxxyR6e0LVw7J3wo=
-=BOSH
------END PGP SIGNATURE-----
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -214,6 +214,16 @@ static void flush_end_io(struct request
+ 
+ 	/* release the tag's ownership to the req cloned from */
+ 	spin_lock_irqsave(&fq->mq_flush_lock, flags);
++
++	if (!refcount_dec_and_test(&flush_rq->ref)) {
++		fq->rq_status = error;
++		spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
++		return;
++	}
++
++	if (fq->rq_status != BLK_STS_OK)
++		error = fq->rq_status;
++
+ 	hctx = flush_rq->mq_hctx;
+ 	if (!q->elevator) {
+ 		blk_mq_tag_set_rq(hctx, flush_rq->tag, fq->orig_rq);
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -904,7 +904,10 @@ static bool blk_mq_check_expired(struct
+ 	 */
+ 	if (blk_mq_req_expired(rq, next))
+ 		blk_mq_rq_timed_out(rq, reserved);
+-	if (refcount_dec_and_test(&rq->ref))
++
++	if (is_flush_rq(rq, hctx))
++		rq->end_io(rq, 0);
++	else if (refcount_dec_and_test(&rq->ref))
+ 		__blk_mq_free_request(rq);
+ 
+ 	return true;
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -19,6 +19,7 @@ struct blk_flush_queue {
+ 	unsigned int		flush_queue_delayed:1;
+ 	unsigned int		flush_pending_idx:1;
+ 	unsigned int		flush_running_idx:1;
++	blk_status_t 		rq_status;
+ 	unsigned long		flush_pending_since;
+ 	struct list_head	flush_queue[2];
+ 	struct list_head	flush_data_in_flight;
+@@ -47,6 +48,12 @@ static inline void __blk_get_queue(struc
+ 	kobject_get(&q->kobj);
+ }
+ 
++static inline bool
++is_flush_rq(struct request *req, struct blk_mq_hw_ctx *hctx)
++{
++	return hctx->fq->flush_rq == req;
++}
++
+ struct blk_flush_queue *blk_alloc_flush_queue(struct request_queue *q,
+ 		int node, int cmd_size, gfp_t flags);
+ void blk_free_flush_queue(struct blk_flush_queue *q);
 
---ecmiy52y44gvxiaw--
+
