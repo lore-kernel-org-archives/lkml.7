@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7708DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351CE207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6927221D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118884;
-	bh=PzDVJIaJusdMjmT/cggQNTFeh15nn52NkL+YCM8KRfM=;
+	s=default; t=1570118888;
+	bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DymBG6exrVQ5wHfmjV0X3E60+NHIqw2t1grw+nKFe3Byo3N8oLTillSElNRzk62pE
-	 DT29aVF99f0GFkNtdcrEHWb1sl9C+bzBXp9zeN1AjUtSrp0U9pc3qCgsEaGv/KSeHX
-	 DbAYIvQ6f4czB5EHRYrA51hVUiYpETS0KlzGz9YI=
+	b=VyPJZQ5nGv4EncfSev1kKvENCN3c729Ods0/Q7c3QrVET3MXyjQJRf50yykBk7KZm
+	 bdoaDSE1hB/eVBLN9Gixv+LTE7ESK191v8ac1MHHJr43klqeYOgBwVEON6gt5Q7ekZ
+	 hYGlZz0LkwZyd6bhV9yHkdQbcW+2GnXP+R+1pn9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfJCQH5 (ORCPT
+        id S1732293AbfJCQIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55678 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732998AbfJCQHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:46 -0400
+        id S1733023AbfJCQHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79C49215EA;
-        Thu,  3 Oct 2019 16:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B12215EA;
+        Thu,  3 Oct 2019 16:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118866;
-        bh=PzDVJIaJusdMjmT/cggQNTFeh15nn52NkL+YCM8KRfM=;
+        s=default; t=1570118874;
+        bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvgkRNZckQ/8FJe9eVAeQKqCzrBWY/ydGT/OcaKR24MyduA/+j4csIzDDLjC4VbLX
-         CN5K9eDSC/86205LAQQuhIK7niKH+IcfuxR4Z57EHnyrFZSqUeYLoaE/EA6qUAYoTg
-         sORjiQmCkn7a75YDiVn6PMdaSNk/yq799kO1XENI=
+        b=NZ7l1xtb029s3uOchxUA53F9IGdl6og0GwZCmacCHf7R9XvZ3kKUnxZMUbBBNcVvV
+         iIl9+MUg8Ytp5EJLfOlLJSoaiVCxDgeGw638QjG1t0DS+oNZyNGIjPRrwB1kJuSoIi
+         8IiwYjr5ULToWNH0X/xZrAbr707PP2aRbZv/asPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Mamonov <pmamonov@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.14 037/185] net/phy: fix DP83865 10 Mbps HDX loopback disable function
-Date:   Thu,  3 Oct 2019 17:51:55 +0200
-Message-Id: <20191003154446.048932258@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>,
+        syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 005/185] HID: prodikeys: Fix general protection fault during probe
+Date:   Thu,  3 Oct 2019 17:51:23 +0200
+Message-Id: <20191003154438.538516442@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,45 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Mamonov <pmamonov@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
+commit 98375b86c79137416e9fd354177b85e768c16e56 upstream.
 
-According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
-disabled in the expanded memory register 0x1C0.1". The driver erroneously
-used bit 0 instead of bit 1.
+The syzbot fuzzer provoked a general protection fault in the
+hid-prodikeys driver:
 
-Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
-Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
+RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
+RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
+RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
+Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc
+48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
+85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
+
+The problem is caused by the fact that pcmidi_get_output_report() will
+return an error if the HID device doesn't provide the right sort of
+output report, but pcmidi_set_operational() doesn't bother to check
+the return code and assumes the function call always succeeds.
+
+This patch adds the missing check and aborts the probe operation if
+necessary.
+
+Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/national.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/phy/national.c
-+++ b/drivers/net/phy/national.c
-@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struc
+---
+ drivers/hid/hid-prodikeys.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- a/drivers/hid/hid-prodikeys.c
++++ b/drivers/hid/hid-prodikeys.c
+@@ -556,10 +556,14 @@ static void pcmidi_setup_extra_keys(
  
- static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ static int pcmidi_set_operational(struct pcmidi_snd *pm)
  {
-+	u16 lb_dis = BIT(1);
++	int rc;
 +
- 	if (disable)
--		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-+		ns_exp_write(phydev, 0x1c0,
-+			     ns_exp_read(phydev, 0x1c0) | lb_dis);
- 	else
- 		ns_exp_write(phydev, 0x1c0,
--			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-+			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+ 	if (pm->ifnum != 1)
+ 		return 0; /* only set up ONCE for interace 1 */
  
- 	pr_debug("10BASE-T HDX loopback %s\n",
--		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
-+		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+-	pcmidi_get_output_report(pm);
++	rc = pcmidi_get_output_report(pm);
++	if (rc < 0)
++		return rc;
+ 	pcmidi_submit_output_report(pm, 0xc1);
+ 	return 0;
  }
+@@ -688,7 +692,11 @@ static int pcmidi_snd_initialise(struct
+ 	spin_lock_init(&pm->rawmidi_in_lock);
  
- static int ns_config_init(struct phy_device *phydev)
+ 	init_sustain_timers(pm);
+-	pcmidi_set_operational(pm);
++	err = pcmidi_set_operational(pm);
++	if (err < 0) {
++		pk_error("failed to find output report\n");
++		goto fail_register;
++	}
+ 
+ 	/* register it */
+ 	err = snd_card_register(card);
 
 
