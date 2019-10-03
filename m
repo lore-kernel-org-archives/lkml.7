@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBCFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08889C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BC320865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C649D21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119400;
-	bh=QxwfXe+/+15AzX8GC/b3QQmGn58a1gt4LpsnXXULnUs=;
+	s=default; t=1570119403;
+	bh=NJLxmO+sPDzSi40Zm+6uwJ9bnxqS9Qk6TiNQiFwfxvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lKLiEdU3tdaRGltoLyrx1RQ4Rlr3jBh+b9MOgXf3Fx1MCcpD1Y5/r6Qym4xnTaNvS
-	 Sq+xBqEFGWFDKZ79J1Oa88qWx7sbqz9ToLmJEMbpxxWIZsoENnyW9NfHVD47D0Q6iZ
-	 MXSDHzEXGl1Yz7oFTwkRpxyRAo2Q92awKmwXBmKE=
+	b=VLriD/htJ/RK68eDOGMMi5apRzGXDzujmlI7XkvzBUWKNjxhvW6h/kxSz9Ejks7us
+	 bUxe3c1Rsj+37+dhBNsCjAT7af9OJejKKF5HK8e+3kIm7fdLSC4fcp2zB/ojVbFZ8W
+	 zbugAeSvJ4ka8C5LWPlf4CRrxmMP91cq5/8h2l8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389048AbfJCQQj (ORCPT
+        id S2389062AbfJCQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41732 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389025AbfJCQQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:36 -0400
+        id S2389045AbfJCQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B39722054F;
-        Thu,  3 Oct 2019 16:16:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F2B20700;
+        Thu,  3 Oct 2019 16:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119395;
-        bh=QxwfXe+/+15AzX8GC/b3QQmGn58a1gt4LpsnXXULnUs=;
+        s=default; t=1570119397;
+        bh=NJLxmO+sPDzSi40Zm+6uwJ9bnxqS9Qk6TiNQiFwfxvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pcp5NaCIHx/gkXk3MGe3Wr/R2g3PjGbGb3Rd6FFYnhvSiWzi/HLUiTk94zi7GOsI/
-         YC0Gqx+qlYyRowoZluAH5GmiojkXp0AGlCSxkcbIs5VLAg0BQjpDqd464AebMrQwLq
-         wfN0+ex8MCQXWZarpVubFrog6TdCurfxI7amOdDQ=
+        b=i7n/SPCWSAoMBtD8anJLDmgDb4bpR4eV+A67QpvaHUxk7pdSpEW4QoDpl79jcfxFQ
+         a3NcvrBR2029ie6Ucfrtp3NeLvJ+QBqlYkRt/anKMd4w+OKB0rC7Tn7tM8CLh3RMnL
+         fTiVCLFowQaWVu9xSCt9EpotO6tjpWLcdi+T9fJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard van Breemen <ard@kwaak.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/211] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
-Date:   Thu,  3 Oct 2019 17:51:55 +0200
-Message-Id: <20191003154459.161036002@linuxfoundation.org>
+        stable@vger.kernel.org, chenzefeng <chenzefeng2@huawei.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/211] ia64:unwind: fix double free for mod->arch.init_unw_table
+Date:   Thu,  3 Oct 2019 17:51:56 +0200
+Message-Id: <20191003154459.545070291@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,37 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard van Breemen <ard@kwaak.net>
+From: chenzefeng <chenzefeng2@huawei.com>
 
-[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
+[ Upstream commit c5e5c48c16422521d363c33cfb0dcf58f88c119b ]
 
-The Linux kernel assumes that get_endpoint(alts,0) and
-get_endpoint(alts,1) are eachothers feedback endpoints.
-To reassure that validity it will test bsynchaddress to comply with that
-assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
-a wrong assumption and return an error.
-Fix: Skip the test if bSynchAddress is 0.
-Note: those with a valid bSynchAddress should have a code quirck added.
+The function free_module in file kernel/module.c as follow:
 
-Signed-off-by: Ard van Breemen <ard@kwaak.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+void free_module(struct module *mod) {
+	......
+	module_arch_cleanup(mod);
+	......
+	module_arch_freeing_init(mod);
+	......
+}
+
+Both module_arch_cleanup and module_arch_freeing_init function
+would free the mod->arch.init_unw_table, which cause double free.
+
+Here, set mod->arch.init_unw_table = NULL after remove the unwind
+table to avoid double free.
+
+Signed-off-by: chenzefeng <chenzefeng2@huawei.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/ia64/kernel/module.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 35c57a4204a8a..13ea63c959d39 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -464,6 +464,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
- 	}
- 	ep = get_endpoint(alts, 1)->bEndpointAddress;
- 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
-+	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
- 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
- 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
- 		dev_err(&dev->dev,
+diff --git a/arch/ia64/kernel/module.c b/arch/ia64/kernel/module.c
+index 326448f9df160..1a42ba885188a 100644
+--- a/arch/ia64/kernel/module.c
++++ b/arch/ia64/kernel/module.c
+@@ -914,10 +914,14 @@ module_finalize (const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mo
+ void
+ module_arch_cleanup (struct module *mod)
+ {
+-	if (mod->arch.init_unw_table)
++	if (mod->arch.init_unw_table) {
+ 		unw_remove_unwind_table(mod->arch.init_unw_table);
+-	if (mod->arch.core_unw_table)
++		mod->arch.init_unw_table = NULL;
++	}
++	if (mod->arch.core_unw_table) {
+ 		unw_remove_unwind_table(mod->arch.core_unw_table);
++		mod->arch.core_unw_table = NULL;
++	}
+ }
+ 
+ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
 -- 
 2.20.1
 
