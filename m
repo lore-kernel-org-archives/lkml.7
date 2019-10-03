@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3B0C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AAF2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC71B20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121554;
-	bh=AVrR9+tsKYdOfYBrPs/yN9cRUzxjuwMAG5sQEM8OOFY=;
+	s=default; t=1570121558;
+	bh=Ty6OmMJeSi36HxlUFpwL5QrdExxs1uOXz5p0/lr+0ZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcwWIxhzAR1MfjhARLNac1jaILaskjoKSsnvuJJ5M3OhkAwBdKkyDakqp0dzuepoF
-	 OEofGUrFuI90iBJxr6s8ilziQYrVl1Wbl5Gek/dtSj8R1r8hz9tlpNwZgqt1e7bkVA
-	 MLPCcrYQ7NV2ZPAyKqxETLuF/H+AKcDFhqdU6SEM=
+	b=z/T0S9w65XfLg7Kv3VlGizwJ95x/Ab7pgKcrJtUFD4Vm39IV4fiteuvlck6oQ++ot
+	 tcgztx41mKtk8yt1N0mbegTgR++suQjbheYIiSjHXWIyhB+k65Xwy65m1Eri52RvoD
+	 ClZDaIKU5FpjjHeUUZEpwvEtHLQphCiPDrevKmwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406205AbfJCQwd (ORCPT
+        id S2406213AbfJCQwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406184AbfJCQw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:28 -0400
+        id S2406203AbfJCQwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB6020867;
-        Thu,  3 Oct 2019 16:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 774C520862;
+        Thu,  3 Oct 2019 16:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121547;
-        bh=AVrR9+tsKYdOfYBrPs/yN9cRUzxjuwMAG5sQEM8OOFY=;
+        s=default; t=1570121553;
+        bh=Ty6OmMJeSi36HxlUFpwL5QrdExxs1uOXz5p0/lr+0ZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDQHhVDHmysfAYUumR9sV/P4w1sVg/e3WvqU3eqPpXSRFa+VzGIOwrVbaXMvmJVOY
-         WW/m9eTHS2mA8Ogh0DDL9VWTPpTIXUg+6dkcreBejKz6SdM3sbM/8pMcYXwA6HLfnL
-         NbzbfB6w/8yk53HOJhnqnO1znYaOgDtuM8daixQE=
+        b=MCXs22U+12p+M6ovxOOZwzdXmtbWuFQM7+YAQVj3Vu0xw52Oed0CDR/g3Q4qpwm+z
+         jC+gjpZqmzDZshaLmD+rAAM6pLhOGzy9tDLhoyLL3l7WpB+HUyH3x5H4M0r18bAEQn
+         KAwpWbDulL8q24c5mnTykT6YiahGxs/FGZiJ+xDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 319/344] ACPI / LPSS: Save/restore LPSS private registers also on Lynxpoint
-Date:   Thu,  3 Oct 2019 17:54:44 +0200
-Message-Id: <20191003154610.524307055@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.3 321/344] md: dont report active array_state until after revalidate_disk() completes.
+Date:   Thu,  3 Oct 2019 17:54:46 +0200
+Message-Id: <20191003154610.681610226@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,64 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: NeilBrown <neilb@suse.com>
 
-commit 57b3006492a4c11b2d4a772b5b2905d544a32037 upstream.
+commit 9d4b45d6af442237560d0bb5502a012baa5234b7 upstream.
 
-My assumption in commit b53548f9d9e4 ("spi: pxa2xx: Remove LPSS private
-register restoring during resume") that Intel Lynxpoint and compatible
-based chipsets may not need LPSS private registers saving and restoring
-over suspend/resume cycle turned out to be false on Intel Broadwell.
+Until revalidate_disk() has completed, the size of a new md array will
+appear to be zero.
+So we shouldn't report, through array_state, that the array is active
+until that time.
+udev rules check array_state to see if the array is ready.  As soon as
+it appear to be zero, fsck can be run.  If it find the size to be
+zero, it will fail.
 
-Curtis Malainey sent a patch bringing above change back and reported the
-LPSS SPI Chip Select control was lost over suspend/resume cycle on
-Broadwell machine.
+So add a new flag to provide an interlock between do_md_run() and
+array_state_show().  This flag is set while do_md_run() is active and
+it prevents array_state_show() from reporting that the array is
+active.
 
-Instead of reverting above commit lets add LPSS private register
-saving/restoring also for all LPSS SPI, I2C and UART controllers on
-Lynxpoint and compatible chipset to make sure context is not lost in
-case nothing else preserves it like firmware or if LPSS is always on.
+Before do_md_run() is called, ->pers will be NULL so array is
+definitely not active.
+After do_md_run() is called, revalidate_disk() will have run and the
+array will be completely ready.
 
-Fixes: b53548f9d9e4 ("spi: pxa2xx: Remove LPSS private register restoring during resume")
-Reported-by: Curtis Malainey <cujomalainey@chromium.org>
-Tested-by: Curtis Malainey <cujomalainey@chromium.org>
-Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+We also move various sysfs_notify*() calls out of md_run() into
+do_md_run() after MD_NOT_READY is cleared.  This ensure the
+information is ready before the notification is sent.
+
+Prior to v4.12, array_state_show() was called with the
+mddev->reconfig_mutex held, which provided exclusion with do_md_run().
+
+Note that MD_NOT_READY cleared twice.  This is deliberate to cover
+both success and error paths with minimal noise.
+
+Fixes: b7b17c9b67e5 ("md: remove mddev_lock() from md_attr_show()")
+Cc: stable@vger.kernel.org (v4.12++)
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_lpss.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/md/md.c |   11 +++++++----
+ drivers/md/md.h |    3 +++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -219,12 +219,13 @@ static void bsw_pwm_setup(struct lpss_pr
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4183,7 +4183,7 @@ array_state_show(struct mddev *mddev, ch
+ {
+ 	enum array_state st = inactive;
+ 
+-	if (mddev->pers)
++	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags))
+ 		switch(mddev->ro) {
+ 		case 1:
+ 			st = readonly;
+@@ -5751,9 +5751,6 @@ int md_run(struct mddev *mddev)
+ 		md_update_sb(mddev, 0);
+ 
+ 	md_new_event(mddev);
+-	sysfs_notify_dirent_safe(mddev->sysfs_state);
+-	sysfs_notify_dirent_safe(mddev->sysfs_action);
+-	sysfs_notify(&mddev->kobj, NULL, "degraded");
+ 	return 0;
+ 
+ bitmap_abort:
+@@ -5774,6 +5771,7 @@ static int do_md_run(struct mddev *mddev
+ {
+ 	int err;
+ 
++	set_bit(MD_NOT_READY, &mddev->flags);
+ 	err = md_run(mddev);
+ 	if (err)
+ 		goto out;
+@@ -5794,9 +5792,14 @@ static int do_md_run(struct mddev *mddev
+ 
+ 	set_capacity(mddev->gendisk, mddev->array_sectors);
+ 	revalidate_disk(mddev->gendisk);
++	clear_bit(MD_NOT_READY, &mddev->flags);
+ 	mddev->changed = 1;
+ 	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
++	sysfs_notify_dirent_safe(mddev->sysfs_state);
++	sysfs_notify_dirent_safe(mddev->sysfs_action);
++	sysfs_notify(&mddev->kobj, NULL, "degraded");
+ out:
++	clear_bit(MD_NOT_READY, &mddev->flags);
+ 	return err;
  }
  
- static const struct lpss_device_desc lpt_dev_desc = {
--	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR,
-+	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR
-+			| LPSS_SAVE_CTX,
- 	.prv_offset = 0x800,
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -248,6 +248,9 @@ enum mddev_flags {
+ 	MD_UPDATING_SB,		/* md_check_recovery is updating the metadata
+ 				 * without explicitly holding reconfig_mutex.
+ 				 */
++	MD_NOT_READY,		/* do_md_run() is active, so 'array_state'
++				 * must not report that array is ready yet
++				 */
  };
  
- static const struct lpss_device_desc lpt_i2c_dev_desc = {
--	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_LTR,
-+	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_LTR | LPSS_SAVE_CTX,
- 	.prv_offset = 0x800,
- };
- 
-@@ -236,7 +237,8 @@ static struct property_entry uart_proper
- };
- 
- static const struct lpss_device_desc lpt_uart_dev_desc = {
--	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR,
-+	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR
-+			| LPSS_SAVE_CTX,
- 	.clk_con_id = "baudclk",
- 	.prv_offset = 0x800,
- 	.setup = lpss_uart_setup,
+ enum mddev_sb_flags {
 
 
