@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3886C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77480C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8519222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD0221783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120519;
-	bh=gfjxtCDC8qvqtkS70sKSq48huJP48vRLnJ9jhAFOzAs=;
+	s=default; t=1570120528;
+	bh=ZsSQ/Q9nhpssLAIx6yD5sSkzGLXOhaVzTnt0SeF9+v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eON0FqqmmFgN03A/qtI8RKLH+H0DVs5s+0VkqtjFRHEYhRbTnfd0cMiVAlCg7+5dq
-	 jh0C3jUcJq5S0vX0+BydfxhJhQEVxMSQcPuxNcB1V3mOeSYNwD8vEQalgY8Qb8vqeb
-	 TB00jXo3jTkQW2HFSUwZiqCzvWT1wTTainUaRjjc=
+	b=nBgwDRlRHfGGKixNy22rG/eKlgLKyBBiSqx+7Jq7WIXEywRoffjJfCoKZdW/+MX3g
+	 iK5l5ou5K1EbUA1q9Rasd4bTshSJmn7yo9A/FCBZvrjfpgJ2b6jwSkAIRsTm9x/1kZ
+	 sHJwLSKjV/ZKNTqN/aFWd+rInX0TSWiN5uCzUAdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404078AbfJCQfS (ORCPT
+        id S2404101AbfJCQf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44186 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404058AbfJCQfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:17 -0400
+        id S2404074AbfJCQfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D879B222C9;
-        Thu,  3 Oct 2019 16:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43D582070B;
+        Thu,  3 Oct 2019 16:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120516;
-        bh=gfjxtCDC8qvqtkS70sKSq48huJP48vRLnJ9jhAFOzAs=;
+        s=default; t=1570120521;
+        bh=ZsSQ/Q9nhpssLAIx6yD5sSkzGLXOhaVzTnt0SeF9+v0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=denW1LXjqEaMznfWyGiLAmndqGn/cMczGjElxfuVYWRxp0c0YzgsIU0ClKKkSocgQ
-         Y1N7twCyDRstUN9481AiE6atjLWUic7xNBhRwJATeQPunUMyg1wLGYqMY3B04JKFdu
-         NibYB78hSIU5Nyxg34U4EukOAVtRlYzD/VsAQIlA=
+        b=DkWCfsnQl6SHN44K/2Sg1DZ2SRNJYmdEh5IbHnNSvqCZsBj7yjDpMYyuhn2t8dDst
+         1hJv0B05pBk6Z7U5LOvMdic9SJm3IHp+hnu4dLOM51j4j29lKBsM4CojxPRMcBmVed
+         OFrYswMqUUvKncPHnhCL7jSLRjP+6+zS7g3Ekigg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.2 252/313] ASoC: Intel: Skylake: Use correct function to access iomem space
-Date:   Thu,  3 Oct 2019 17:53:50 +0200
-Message-Id: <20191003154557.858082634@linuxfoundation.org>
+        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.2 254/313] ARM: samsung: Fix system restart on S3C6410
+Date:   Thu,  3 Oct 2019 17:53:52 +0200
+Message-Id: <20191003154558.054311010@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,41 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+From: Lihua Yao <ylhuajnu@outlook.com>
 
-commit 17d29ff98fd4b70e9ccdac5e95e18a087e2737ef upstream.
+commit 16986074035cc0205472882a00d404ed9d213313 upstream.
 
-For copying from __iomem, we should use __ioread32_copy.
+S3C6410 system restart is triggered by watchdog reset.
 
-reported by sparse:
-sound/soc/intel/skylake/skl-debug.c:437:34: warning: incorrect type in argument 1 (different address spaces)
-sound/soc/intel/skylake/skl-debug.c:437:34:    expected void [noderef] <asn:2> *to
-sound/soc/intel/skylake/skl-debug.c:437:34:    got unsigned char *
-sound/soc/intel/skylake/skl-debug.c:437:51: warning: incorrect type in argument 2 (different address spaces)
-sound/soc/intel/skylake/skl-debug.c:437:51:    expected void const *from
-sound/soc/intel/skylake/skl-debug.c:437:51:    got void [noderef] <asn:2> *[assigned] fw_reg_addr
-
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
-Link: https://lore.kernel.org/r/20190827141712.21015-2-amadeuszx.slawinski@linux.intel.com
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Fixes: 9f55342cc2de ("ARM: dts: s3c64xx: Fix infinite interrupt in soft mode")
+Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/intel/skylake/skl-debug.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/plat-samsung/watchdog-reset.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/intel/skylake/skl-debug.c
-+++ b/sound/soc/intel/skylake/skl-debug.c
-@@ -188,7 +188,7 @@ static ssize_t fw_softreg_read(struct fi
- 	memset(d->fw_read_buff, 0, FW_REG_BUF);
+--- a/arch/arm/plat-samsung/watchdog-reset.c
++++ b/arch/arm/plat-samsung/watchdog-reset.c
+@@ -62,6 +62,7 @@ void samsung_wdt_reset(void)
+ #ifdef CONFIG_OF
+ static const struct of_device_id s3c2410_wdt_match[] = {
+ 	{ .compatible = "samsung,s3c2410-wdt" },
++	{ .compatible = "samsung,s3c6410-wdt" },
+ 	{},
+ };
  
- 	if (w0_stat_sz > 0)
--		__iowrite32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
-+		__ioread32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
- 
- 	for (offset = 0; offset < FW_REG_SIZE; offset += 16) {
- 		ret += snprintf(tmp + ret, FW_REG_BUF - ret, "%#.4x: ", offset);
 
 
