@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2992C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FD5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923FE222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7138E222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118207;
-	bh=1SmhIm/q3DZFSY3NBsG/ttZZzm3nm5HLUQGbyU27eUA=;
+	s=default; t=1570118209;
+	bh=mP4xT7AyFhO2FlSlP+yDZXZQHSpTuhtD7Oi7dRd1moI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyo46PtaCpetIObB6YsBorgaQIgQkjgOwXzd94Jz9qe55rFBlpnkajJqVQWzlU+bR
-	 T6E+qDvwf/4JsSoRIjnCGk8Ow3NpyHaWt73qm8l/LfFf7idZErN+PZDO2fhg8SRAva
-	 m6awQfv7JZiz+enHM1GZshxeu/8GTwOjKpqHnu2I=
+	b=TTqTtBd9hBhchwC9EumKksL8mtGOkvM6bdTNtqQwOB0nxMZnLmHbKkU1yRPjU+W2B
+	 7xvm+s/r4iToPZYhZ25lPeUTuglXF9HCpsRq4LAS/fecnof+EA7GJbj/Ij+pTTUC1W
+	 zuY5sUV04Vmbyf7Xt6wQ23rdH9dmDwFfMbQTeUy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfJCP4q (ORCPT
+        id S1730769AbfJCP4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38812 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:56:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730735AbfJCP4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:43 -0400
+        id S1730735AbfJCP4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C1E920700;
-        Thu,  3 Oct 2019 15:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0E321A4C;
+        Thu,  3 Oct 2019 15:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118202;
-        bh=1SmhIm/q3DZFSY3NBsG/ttZZzm3nm5HLUQGbyU27eUA=;
+        s=default; t=1570118205;
+        bh=mP4xT7AyFhO2FlSlP+yDZXZQHSpTuhtD7Oi7dRd1moI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVPnDRzAeD9RtRK50rbtmDJV8FKKdl0Cu37DnQ+gwUOgavWYQ6vCb8qxQEQdbPfoP
-         9QAvyOFvTzN7iGpEMiaXgjt+jqH2PCBKPBnivaVMFFtFdOPpeR0nrEL46r2QNTQ21a
-         Wtkr+TM06PvpzDiYP8eZAKDsK3Bw/ZiuljLhXHZ8=
+        b=RLsaPvg+Th0vWmtUg0qQWkW13dzn7+2WY8OXnqiarkmt74wgC/qYiyOzQ9wK91EWk
+         8OMwhxprb1lc1FwhciCJ9McN1ffSVEuAKXE+AloJVom3NWo0bxzoQhdO9SS+h2GjGZ
+         IzHIQATebXVNVHuA/R0xc8+Ow29CH9WcqWGKE+zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.4 26/99] usbnet: ignore endpoints with invalid wMaxPacketSize
-Date:   Thu,  3 Oct 2019 17:52:49 +0200
-Message-Id: <20191003154307.150762292@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 27/99] usbnet: sanity checking of packet sizes and device mtu
+Date:   Thu,  3 Oct 2019 17:52:50 +0200
+Message-Id: <20191003154307.806811919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -60,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
+[ Upstream commit 280ceaed79f18db930c0cc8bb21f6493490bf29c ]
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the drivers more robust against invalid and
-meaningless descriptors.
+After a reset packet sizes and device mtu can change and need
+to be reevaluated to calculate queue sizes.
+Malicious devices can set this to zero and we divide by it.
+Introduce sanity checking.
 
-The wMaxPacketSize of these endpoints are used for memory allocations
-and as divisors in many usbnet minidrivers. Avoiding zero is therefore
-critical.
-
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-and-tested-by:  syzbot+6102c120be558c885f04@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/usbnet.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/usb/usbnet.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/drivers/net/usb/usbnet.c
 +++ b/drivers/net/usb/usbnet.c
-@@ -115,6 +115,11 @@ int usbnet_get_endpoints(struct usbnet *
- 			int				intr = 0;
+@@ -352,6 +352,8 @@ void usbnet_update_max_qlen(struct usbne
+ {
+ 	enum usb_device_speed speed = dev->udev->speed;
  
- 			e = alt->endpoint + ep;
-+
-+			/* ignore endpoints which cannot transfer data */
-+			if (!usb_endpoint_maxp(&e->desc))
-+				continue;
-+
- 			switch (e->desc.bmAttributes) {
- 			case USB_ENDPOINT_XFER_INT:
- 				if (!usb_endpoint_dir_in(&e->desc))
++	if (!dev->rx_urb_size || !dev->hard_mtu)
++		goto insanity;
+ 	switch (speed) {
+ 	case USB_SPEED_HIGH:
+ 		dev->rx_qlen = MAX_QUEUE_MEMORY / dev->rx_urb_size;
+@@ -367,6 +369,7 @@ void usbnet_update_max_qlen(struct usbne
+ 		dev->tx_qlen = 5 * MAX_QUEUE_MEMORY / dev->hard_mtu;
+ 		break;
+ 	default:
++insanity:
+ 		dev->rx_qlen = dev->tx_qlen = 4;
+ 	}
+ }
 
 
