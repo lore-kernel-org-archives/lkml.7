@@ -2,239 +2,268 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1547C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238A4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976652133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D001E20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfJCPoC (ORCPT
+        id S1729340AbfJCPqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:44:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3241 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727024AbfJCPoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:44:02 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4B5E0AE5E8CB93ECC611;
-        Thu,  3 Oct 2019 23:43:57 +0800 (CST)
-Received: from localhost (10.227.98.71) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 3 Oct 2019
- 23:43:54 +0800
-Date:   Thu, 3 Oct 2019 23:43:14 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "kbuild test robot" <lkp@intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
+        Thu, 3 Oct 2019 11:46:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43107 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727024AbfJCPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:46:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 08:46:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="191302204"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga008.fm.intel.com with SMTP; 03 Oct 2019 08:46:27 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 03 Oct 2019 18:46:27 +0300
+Date:   Thu, 3 Oct 2019 18:46:27 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH v5 00/10] EFI Specific Purpose Memory Support
-Message-ID: <20191003234314.00005ccf@huawei.com>
-In-Reply-To: <67107eb8-13bc-36ee-0708-7f5ba1d74d9e@intel.com>
-References: <156712993795.1616117.3781864460118989466.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <2329745.bCNtynFxEq@kreacher>
-        <CAPcyv4ggOXjzaYZb4qCMQQL-Xf3fbZqKzqHTUBins_fv3=cEbw@mail.gmail.com>
-        <67107eb8-13bc-36ee-0708-7f5ba1d74d9e@intel.com>
-Organization: Huawei R&D UK Ltd.
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
+Message-ID: <20191003154627.GQ1208@intel.com>
+References: <20190909135205.10277-1-benjamin.gaignard@st.com>
+ <20190909135205.10277-2-benjamin.gaignard@st.com>
+ <20191003142738.GM1208@intel.com>
+ <CA+M3ks4FBAgCRDDHZ=x7kvQ1Y=0dBdj4+KLO2djh__hW+L=3gQ@mail.gmail.com>
+ <20191003150526.GN1208@intel.com>
+ <CA+M3ks7-SNusVJsiHqrmy4AN+_OO5e1X=ZRN16Hj6f-V3GnVow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.227.98.71]
-X-CFilter-Loop: Reflected
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+M3ks7-SNusVJsiHqrmy4AN+_OO5e1X=ZRN16Hj6f-V3GnVow@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Sep 2019 13:37:30 +0200
-"Rafael J. Wysocki" <rafael.j.wysocki@intel.com> wrote:
-
-> On 9/5/2019 1:06 AM, Dan Williams wrote:
-> > On Mon, Sep 2, 2019 at 4:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:  
-> >> On Friday, August 30, 2019 3:52:18 AM CEST Dan Williams wrote:  
-> >>> Changes since v4 [1]:
-> >>> - Rename the facility from "Application Reserved" to "Soft Reserved" to
-> >>>    better reflect how the memory is treated. While the spec talks about
-> >>>    "specific / application purpose" memory the expected kernel behavior is
-> >>>    to make a best effort at reserving the memory from general purpose
-> >>>    allocations.
-> >>>
-> >>> - Add a new efi=nosoftreserve option to disable consideration of the
-> >>>    EFI_MEMORY_SP attribute at boot time. This is also motivated by
-> >>>    Christoph's initial feedback of allowing the kernel to opt-out of the
-> >>>    policy whims of the platform BIOS implementation.
-> >>>
-> >>> - Update the KASLR implementation to exclude soft-reserved memory
-> >>>    including the case where soft-reserved memory is specified via the
-> >>>    efi_fake_mem= attribute-override command-line option.
-> >>>
-> >>> - Move the memregion allocator to its own object file. v4 had it in
-> >>>    kernel/resource.c which caused compile errors on Sparc. I otherwise
-> >>>    could not find an appropriate place to stash it.
-> >>>
-> >>> - Rebase on a merge of tip/master and rafael/linux-next since the series
-> >>>    collides with changes in both those trees.
-> >>>
-> >>> [1]: https://lore.kernel.org/r/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
-> >>>
-> >>> ---
-> >>>
-> >>> Thomas, Rafael,
-> >>>
-> >>> This happens to collide with both your trees. I think the content
-> >>> warrants going through the x86 tree, but would need to publish commit:
-> >>>
-> >>> 5c7ed4385424 HMAT: Skip publishing target info for nodes with no online memory
-> >>>
-> >>> ...in Rafael's tree as a stable id for -tip to pull in, but I'm also
-> >>> open to other options. I've retained Dave's reviewed-by from v4.
-> >>>
-> >>> ---
-> >>>
-> >>> The EFI 2.8 Specification [2] introduces the EFI_MEMORY_SP ("specific
-> >>> purpose") memory attribute. This attribute bit replaces the deprecated
-> >>> ACPI HMAT "reservation hint" that was introduced in ACPI 6.2 and removed
-> >>> in ACPI 6.3.
-> >>>
-> >>> Given the increasing diversity of memory types that might be advertised
-> >>> to the operating system, there is a need for platform firmware to hint
-> >>> which memory ranges are free for the OS to use as general purpose memory
-> >>> and which ranges are intended for application specific usage. For
-> >>> example, an application with prior knowledge of the platform may expect
-> >>> to be able to exclusively allocate a precious / limited pool of high
-> >>> bandwidth memory. Alternatively, for the general purpose case, the
-> >>> operating system may want to make the memory available on a best effort
-> >>> basis as a unique numa-node with performance properties by the new
-> >>> CONFIG_HMEM_REPORTING [3] facility.
-> >>>
-> >>> In support of optionally allowing either application-exclusive and
-> >>> core-kernel-mm managed access to differentiated memory, claim
-> >>> EFI_MEMORY_SP ranges for exposure as "soft reserved" and assigned to a
-> >>> device-dax instance by default. Such instances can be directly owned /
-> >>> mapped by a platform-topology-aware application. Alternatively, with the
-> >>> new kmem facility [4], the administrator has the option to instead
-> >>> designate that those memory ranges be hot-added to the core-kernel-mm as
-> >>> a unique memory numa-node. In short, allow for the decision about what
-> >>> software agent manages soft-reserved memory to be made at runtime.
-> >>>
-> >>> The patches build on the new HMAT+HMEM_REPORTING facilities merged
-> >>> for v5.2-rc1. The implementation is tested with qemu emulation of HMAT
-> >>> [5] plus the efi_fake_mem facility for applying the EFI_MEMORY_SP
-> >>> attribute. Specific details on reproducing the test configuration are in
-> >>> patch 10.
-> >>>
-> >>> [2]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
-> >>> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1cf33aafb84
-> >>> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
-> >>> [5]: http://patchwork.ozlabs.org/cover/1096737/
-> >>>
-> >>> ---
-> >>>
-> >>> Dan Williams (10):
-> >>>        acpi/numa: Establish a new drivers/acpi/numa/ directory
-> >>>        efi: Enumerate EFI_MEMORY_SP
-> >>>        x86, efi: Push EFI_MEMMAP check into leaf routines
-> >>>        x86, efi: Reserve UEFI 2.8 Specific Purpose Memory for dax
-> >>>        x86, efi: Add efi_fake_mem support for EFI_MEMORY_SP
-> >>>        lib: Uplevel the pmem "region" ida to a global allocator
-> >>>        dax: Fix alloc_dax_region() compile warning
-> >>>        device-dax: Add a driver for "hmem" devices
-> >>>        acpi/numa/hmat: Register HMAT at device_initcall level
-> >>>        acpi/numa/hmat: Register "soft reserved" memory as an "hmem" device
-> >>>
-> >>>
-> >>>   Documentation/admin-guide/kernel-parameters.txt |   19 +++
-> >>>   arch/x86/Kconfig                                |   21 ++++
-> >>>   arch/x86/boot/compressed/eboot.c                |    7 +
-> >>>   arch/x86/boot/compressed/kaslr.c                |   50 +++++++-
-> >>>   arch/x86/include/asm/e820/types.h               |    8 +
-> >>>   arch/x86/include/asm/efi-stub.h                 |   11 ++
-> >>>   arch/x86/include/asm/efi.h                      |   17 +++
-> >>>   arch/x86/kernel/e820.c                          |   12 ++
-> >>>   arch/x86/kernel/setup.c                         |   19 ++-
-> >>>   arch/x86/platform/efi/efi.c                     |   56 +++++++++
-> >>>   arch/x86/platform/efi/quirks.c                  |    3 +
-> >>>   drivers/acpi/Kconfig                            |    9 --
-> >>>   drivers/acpi/Makefile                           |    3 -
-> >>>   drivers/acpi/hmat/Makefile                      |    2
-> >>>   drivers/acpi/numa/Kconfig                       |    8 +
-> >>>   drivers/acpi/numa/Makefile                      |    3 +
-> >>>   drivers/acpi/numa/hmat.c                        |  138 +++++++++++++++++++++--
-> >>>   drivers/acpi/numa/srat.c                        |    0
-> >>>   drivers/dax/Kconfig                             |   27 ++++-
-> >>>   drivers/dax/Makefile                            |    2
-> >>>   drivers/dax/bus.c                               |    2
-> >>>   drivers/dax/bus.h                               |    2
-> >>>   drivers/dax/dax-private.h                       |    2
-> >>>   drivers/dax/hmem.c                              |   57 ++++++++++
-> >>>   drivers/firmware/efi/Makefile                   |    5 +
-> >>>   drivers/firmware/efi/efi.c                      |    8 +
-> >>>   drivers/firmware/efi/esrt.c                     |    3 +
-> >>>   drivers/firmware/efi/fake_mem.c                 |   26 ++--
-> >>>   drivers/firmware/efi/fake_mem.h                 |   10 ++
-> >>>   drivers/firmware/efi/libstub/efi-stub-helper.c  |   12 ++
-> >>>   drivers/firmware/efi/x86-fake_mem.c             |   69 ++++++++++++
-> >>>   drivers/nvdimm/Kconfig                          |    1
-> >>>   drivers/nvdimm/core.c                           |    1
-> >>>   drivers/nvdimm/nd-core.h                        |    1
-> >>>   drivers/nvdimm/region_devs.c                    |   13 +-
-> >>>   include/linux/efi.h                             |    4 -
-> >>>   include/linux/ioport.h                          |    1
-> >>>   include/linux/memregion.h                       |   23 ++++
-> >>>   lib/Kconfig                                     |    3 +
-> >>>   lib/Makefile                                    |    1
-> >>>   lib/memregion.c                                 |   18 +++
-> >>>   41 files changed, 584 insertions(+), 93 deletions(-)
-> >>>   create mode 100644 arch/x86/include/asm/efi-stub.h
-> >>>   delete mode 100644 drivers/acpi/hmat/Makefile
-> >>>   rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (70%)
-> >>>   create mode 100644 drivers/acpi/numa/Makefile
-> >>>   rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (85%)
-> >>>   rename drivers/acpi/{numa.c => numa/srat.c} (100%)
-> >>>   create mode 100644 drivers/dax/hmem.c
-> >>>   create mode 100644 drivers/firmware/efi/fake_mem.h
-> >>>   create mode 100644 drivers/firmware/efi/x86-fake_mem.c
-> >>>   create mode 100644 include/linux/memregion.h
-> >>>   create mode 100644 lib/memregion.c
-> >>>  
-> >> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>
-> >> for the ACPI-related changes in this series.  
-> > Thanks Rafael, is commit 5c7ed4385424 on a stable branch that Thomas
-> > could merge, or Thomas, is this all too late for v5.4?  
+On Thu, Oct 03, 2019 at 05:37:15PM +0200, Benjamin Gaignard wrote:
+> Le jeu. 3 oct. 2019 à 17:05, Ville Syrjälä
+> <ville.syrjala@linux.intel.com> a écrit :
+> >
+> > On Thu, Oct 03, 2019 at 04:46:54PM +0200, Benjamin Gaignard wrote:
+> > > Le jeu. 3 oct. 2019 à 16:27, Ville Syrjälä
+> > > <ville.syrjala@linux.intel.com> a écrit :
+> > > >
+> > > > On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote:
+> > > > > Fix warnings with W=1.
+> > > > > Few for_each macro set variables that are never used later.
+> > > > > Prevent warning by marking these variables as __maybe_unused.
+> > > > >
+> > > > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++------------------
+> > > > >  1 file changed, 18 insertions(+), 18 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> > > > > index aa16ea17ff9b..b69d17b0b9bd 100644
+> > > > > --- a/drivers/gpu/drm/drm_atomic_helper.c
+> > > > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> > > > > @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
+> > > > >             struct drm_encoder *encoder)
+> > > > >  {
+> > > > >       struct drm_crtc_state *crtc_state;
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > >
+> > > > Rather ugly. IMO would be nicer if we could hide something inside
+> > > > the iterator macros to suppress the warning.
+> > >
+> > > Ok but how ?
+> > > connector is assigned in the macros but not used later and we can't
+> > > set "__maybe_unused"
+> > > in the macro.
+> > > Does another keyword exist for that ?
+> >
+> > Stick a (void)(connector) into the macro?
 > 
-> Yes, I've just exported the acpi-tables branch containing that commit as 
-> a stable one in the linux-pm.git tree at kernel.org.
+> That could work but it will look strange inside the macro.
 > 
-> Cheers!
+> >
+> > Another (arguably cleaner) idea would be to remove the connector/crtc/plane
+> > argument from the iterators entirely since it's redundant, and instead just
+> > extract it from the appropriate new/old state as needed.
+> >
+> > We could then also add a for_each_connector_in_state()/etc. which omit
+> > s the state arguments and just has the connector argument, for cases where
+> > you don't care about the states when iterating.
 > 
-Hi All,
+> That may lead to get a macro for each possible combination of used variables.
 
-Just wondering when this set might make progress? As Rafael observed,
-the Generic Initiator set needs rebasing on top of it under the
-reasonable assumption that this gets applied first.
+We already have new/old/oldnew, so would "just" add one more.
 
-Thanks,
+> 
+> >
+> > >
+> > > >
+> > > > >       struct drm_connector_state *old_connector_state, *new_connector_state;
+> > > > >       int i;
+> > > > >
+> > > > > @@ -412,7 +412,7 @@ mode_fixup(struct drm_atomic_state *state)
+> > > > >  {
+> > > > >       struct drm_crtc *crtc;
+> > > > >       struct drm_crtc_state *new_crtc_state;
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > >       struct drm_connector_state *new_conn_state;
+> > > > >       int i;
+> > > > >       int ret;
+> > > > > @@ -608,7 +608,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+> > > > >  {
+> > > > >       struct drm_crtc *crtc;
+> > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > >       struct drm_connector_state *old_connector_state, *new_connector_state;
+> > > > >       int i, ret;
+> > > > >       unsigned connectors_mask = 0;
+> > > > > @@ -984,7 +984,7 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
+> > > > >  static void
+> > > > >  disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+> > > > >  {
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > >       struct drm_connector_state *old_conn_state, *new_conn_state;
+> > > > >       struct drm_crtc *crtc;
+> > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> > > > > @@ -1173,7 +1173,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
+> > > > >  {
+> > > > >       struct drm_crtc *crtc;
+> > > > >       struct drm_crtc_state *new_crtc_state;
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > >       struct drm_connector_state *new_conn_state;
+> > > > >       int i;
+> > > > >
+> > > > > @@ -1294,7 +1294,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+> > > > >       struct drm_crtc *crtc;
+> > > > >       struct drm_crtc_state *old_crtc_state;
+> > > > >       struct drm_crtc_state *new_crtc_state;
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > >       struct drm_connector_state *new_conn_state;
+> > > > >       int i;
+> > > > >
+> > > > > @@ -1384,7 +1384,7 @@ int drm_atomic_helper_wait_for_fences(struct drm_device *dev,
+> > > > >                                     struct drm_atomic_state *state,
+> > > > >                                     bool pre_swap)
+> > > > >  {
+> > > > > -     struct drm_plane *plane;
+> > > > > +     struct drm_plane __maybe_unused *plane;
+> > > > >       struct drm_plane_state *new_plane_state;
+> > > > >       int i, ret;
+> > > > >
+> > > > > @@ -1431,7 +1431,7 @@ drm_atomic_helper_wait_for_vblanks(struct drm_device *dev,
+> > > > >               struct drm_atomic_state *old_state)
+> > > > >  {
+> > > > >       struct drm_crtc *crtc;
+> > > > > -     struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> > > > > +     struct drm_crtc_state __maybe_unused *old_crtc_state, *new_crtc_state;
+> > > > >       int i, ret;
+> > > > >       unsigned crtc_mask = 0;
+> > > > >
+> > > > > @@ -1621,7 +1621,7 @@ static void commit_work(struct work_struct *work)
+> > > > >  int drm_atomic_helper_async_check(struct drm_device *dev,
+> > > > >                                  struct drm_atomic_state *state)
+> > > > >  {
+> > > > > -     struct drm_crtc *crtc;
+> > > > > +     struct drm_crtc __maybe_unused *crtc;
+> > > > >       struct drm_crtc_state *crtc_state;
+> > > > >       struct drm_plane *plane = NULL;
+> > > > >       struct drm_plane_state *old_plane_state = NULL;
+> > > > > @@ -1982,9 +1982,9 @@ int drm_atomic_helper_setup_commit(struct drm_atomic_state *state,
+> > > > >  {
+> > > > >       struct drm_crtc *crtc;
+> > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> > > > > -     struct drm_connector *conn;
+> > > > > +     struct drm_connector __maybe_unused *conn;
+> > > > >       struct drm_connector_state *old_conn_state, *new_conn_state;
+> > > > > -     struct drm_plane *plane;
+> > > > > +     struct drm_plane __maybe_unused *plane;
+> > > > >       struct drm_plane_state *old_plane_state, *new_plane_state;
+> > > > >       struct drm_crtc_commit *commit;
+> > > > >       int i, ret;
+> > > > > @@ -2214,7 +2214,7 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
+> > > > >   */
+> > > > >  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
+> > > > >  {
+> > > > > -     struct drm_crtc *crtc;
+> > > > > +     struct drm_crtc __maybe_unused *crtc;
+> > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> > > > >       struct drm_crtc_commit *commit;
+> > > > >       int i;
+> > > > > @@ -2300,7 +2300,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit_cleanup_done);
+> > > > >  int drm_atomic_helper_prepare_planes(struct drm_device *dev,
+> > > > >                                    struct drm_atomic_state *state)
+> > > > >  {
+> > > > > -     struct drm_connector *connector;
+> > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > >       struct drm_connector_state *new_conn_state;
+> > > > >       struct drm_plane *plane;
+> > > > >       struct drm_plane_state *new_plane_state;
+> > > > > @@ -2953,9 +2953,9 @@ int drm_atomic_helper_disable_all(struct drm_device *dev,
+> > > > >  {
+> > > > >       struct drm_atomic_state *state;
+> > > > >       struct drm_connector_state *conn_state;
+> > > > > -     struct drm_connector *conn;
+> > > > > +     struct drm_connector __maybe_unused *conn;
+> > > > >       struct drm_plane_state *plane_state;
+> > > > > -     struct drm_plane *plane;
+> > > > > +     struct drm_plane __maybe_unused *plane;
+> > > > >       struct drm_crtc_state *crtc_state;
+> > > > >       struct drm_crtc *crtc;
+> > > > >       int ret, i;
+> > > > > @@ -3199,11 +3199,11 @@ int drm_atomic_helper_commit_duplicated_state(struct drm_atomic_state *state,
+> > > > >  {
+> > > > >       int i, ret;
+> > > > >       struct drm_plane *plane;
+> > > > > -     struct drm_plane_state *new_plane_state;
+> > > > > +     struct drm_plane_state __maybe_unused *new_plane_state;
+> > > > >       struct drm_connector *connector;
+> > > > > -     struct drm_connector_state *new_conn_state;
+> > > > > +     struct drm_connector_state __maybe_unused *new_conn_state;
+> > > > >       struct drm_crtc *crtc;
+> > > > > -     struct drm_crtc_state *new_crtc_state;
+> > > > > +     struct drm_crtc_state __maybe_unused *new_crtc_state;
+> > > > >
+> > > > >       state->acquire_ctx = ctx;
+> > > > >
+> > > > > --
+> > > > > 2.15.0
+> > > > >
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > >
+> > > > --
+> > > > Ville Syrjälä
+> > > > Intel
+> >
+> > --
+> > Ville Syrjälä
+> > Intel
 
-Jonathan
-
-
+-- 
+Ville Syrjälä
+Intel
