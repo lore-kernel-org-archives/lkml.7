@@ -2,105 +2,169 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C132EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1F6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ACA207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCF22133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziI1PEzA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DVBHxTvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388919AbfJCUhU (ORCPT
+        id S2389030AbfJCUhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:37:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51401 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387407AbfJCUhT (ORCPT
+        Thu, 3 Oct 2019 16:37:46 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42014 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfJCUhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:37:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so3364666wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:37:17 -0700 (PDT)
+        Thu, 3 Oct 2019 16:37:45 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i185so3841811oif.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:37:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=63ds3t73ZrLj3HbV7qUiVgBUuKHqGbWcEjyWgIzskeE=;
-        b=ziI1PEzAwuBD/3nwpmQYYXYslTYque2zlEKkMbUyCSw6dlHNV7kB9VAwWgpRurXKN7
-         mcDYAmcUhP4bsEqTOLOp0AbA///bwWtKdAP/Z4MthfJQ7kRwHGtBp/lb5UwXguNCgPoQ
-         XmUHs1ODk2abTw3MeluecZg+IkWrkJz2mOg6Bqe57LEJevWeEp5tbIi/eMMHn8HSabf2
-         YW0j13DLGMF/JF9q0OleDgrOgI+RugOdwOC8B6IAI1lj+J99cQtrssH0cvuTSLNOtufV
-         TygGCxlOyWqws2dM4Ux9YWbSh8RVGOp0uKQ7MXo2dt9pqR5oK7lRKvzZmCkPE4o9i2d/
-         uo8Q==
+        bh=dDo4o+KAvY5sr/pnubCDYIV+K4Ff/iB9FuRG+d3osIk=;
+        b=DVBHxTvb3jy9Hdh53nbhNksRXqsoBIbMD2MdH6p09K0SQfUK2/aqMMcfxgJvARCAUD
+         hC+KMejJL8CT+692KQPoLGckpxwDnTwnN6xvGfQq7Nl4WRxrs48oPjbHTwYhA8cyXfu3
+         +cPJ2Y6G0bAF5M0jdFaE+lymffS3ukq3tuLQI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=63ds3t73ZrLj3HbV7qUiVgBUuKHqGbWcEjyWgIzskeE=;
-        b=pqBhxzulcfu0n4kjhSJ5+bEsN9DL5Hp++k5VIZMHs08AVwK/J761BYeIQHgVIJG7Y/
-         6T93MtFtITkZBozsXNCWALH2vLl7P+NxSyJ3kgxIh79jCayI56nMOzmMp/ka2ynwig2M
-         IBNPu9K/1uGdsOMFt9lJ4g2ITgy1O47kghG79zVWFLiHGPl6CvzvwywMBs500HrYMKzK
-         O1+l+jHGDVunPRyBcVBnndn1ExDqWwqmeLBkdHA3FGCtntVUxd8qGyBYbY+dEZNCrjj4
-         ozIcjbMAurXOHidSfYyZ+OZLB2ACjczW2GMvu8SmXqQ9Fzo8L5qfu9vZRlHPhybjA9LW
-         AVpw==
-X-Gm-Message-State: APjAAAUXSS+xrlEzIGt31+/pD3BK4jiGdl93xe1cejE6kKjAN0x8Hgfx
-        8sFqyY1qEbV22RtvYTw6OXVmc9WRmJTbd8XxagzMtg==
-X-Google-Smtp-Source: APXvYqzVrVcXrzwTGscDiiPv6l+aU2YRfAhMTVv5NfavOPgIBNOF2oVCTqQSyYHsCIQ6dv7jqQDIQMnq8Lmtfdlg0qI=
-X-Received: by 2002:a1c:9988:: with SMTP id b130mr8527379wme.164.1570135036923;
- Thu, 03 Oct 2019 13:37:16 -0700 (PDT)
+        bh=dDo4o+KAvY5sr/pnubCDYIV+K4Ff/iB9FuRG+d3osIk=;
+        b=Ss1kTQGK09JBTcGmj8ykTGVx1aATCSBhNse0lR6xovQJNmTKKa3ARqT+uUWK0oIkK4
+         /Bguy2IkLeYyfZvHiraBJlej4ZN+0DKc1JwBUej+zc7H6+GfK3ySk+bFeijwwSE6H/sA
+         QjyLGgZR7yRV5InVSsOWDM6EXQzQ2sdROtAmE4mil50qKwgfvofLNpzBxblMqoHxBNGs
+         U5D9+D2mOXDTkkUXLLhOC0DaQk4QmfZ+vkl1XhkRFUQHsTozCGfpvGarh5mR6Lqjzn3L
+         AnnoDBfL0DfdakC/9L/nZVI/oswXmxQsdHQ6/xuFz2V6+L5uy/fPR5ThKDcarYuWyks9
+         TaJw==
+X-Gm-Message-State: APjAAAWws87X1CBOBW/oGeCRDZ9NnrmLhRJLwF4QqQb4knfN1XLiYjzt
+        nHde8hmASeCuyvCRypN7puMj6wjpHCA=
+X-Google-Smtp-Source: APXvYqwYujbMIF+0dJOapSZV1WvPPqDI7KM2L9wL2Ccr7ciQ7MAs4VNvfRTXTm5bX7NfYDcBjpKxZA==
+X-Received: by 2002:aca:b9d4:: with SMTP id j203mr4395735oif.19.1570135064115;
+        Thu, 03 Oct 2019 13:37:44 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id r187sm1125420oie.17.2019.10.03.13.37.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 13:37:43 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id k25so3824119oiw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:37:43 -0700 (PDT)
+X-Received: by 2002:aca:7509:: with SMTP id q9mr4051833oic.111.1570135062854;
+ Thu, 03 Oct 2019 13:37:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
- <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com>
-In-Reply-To: <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 3 Oct 2019 13:37:04 -0700
-Message-ID: <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <20190925203209.79941-1-ncrews@chromium.org> <20191001195342.GH4106@piout.net>
+ <CAE_wzQ8ugGgRsjfQwfncxhmy4EDOxKdoNm8CJ5AF=Mc5N6X7WQ@mail.gmail.com>
+ <20191002103236.GM4106@piout.net> <CAE_wzQ9AodXUEANpDEQM+VYMVuxWmLoF0_1k-m5HdAfx+=01-A@mail.gmail.com>
+In-Reply-To: <CAE_wzQ9AodXUEANpDEQM+VYMVuxWmLoF0_1k-m5HdAfx+=01-A@mail.gmail.com>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Thu, 3 Oct 2019 14:37:31 -0600
+X-Gmail-Original-Message-ID: <CAHX4x84a1HpUvSJ6XeopJQuMZEM-Af_No2nHhi8q62eB+ZXxmA@mail.gmail.com>
+Message-ID: <CAHX4x84a1HpUvSJ6XeopJQuMZEM-Af_No2nHhi8q62eB+ZXxmA@mail.gmail.com>
+Subject: Re: [PATCH v3] rtc: wilco-ec: Handle reading invalid times
+To:     Dmitry Torokhov <dtor@google.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Daniel Kurtz <djkurtz@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 2:25 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 03-10-2019 01:16, John Stultz wrote:
-> > From: Yu Chen <chenyu56@huawei.com>
+On Wed, Oct 2, 2019 at 9:20 AM Dmitry Torokhov <dtor@google.com> wrote:
+>
+> On Wed, Oct 2, 2019 at 3:32 AM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
 > >
-> > This patch adds notifier for drivers want to be informed of the usb role
-> > switch.
+> > On 01/10/2019 13:42:24-0700, Dmitry Torokhov wrote:
+> > > On Tue, Oct 1, 2019 at 12:53 PM Alexandre Belloni
+> > > <alexandre.belloni@bootlin.com> wrote:
+> > > >
+> > > > Hi Nick,
+> > > >
+> > > > On 25/09/2019 14:32:09-0600, Nick Crews wrote:
+> > > > > If the RTC HW returns an invalid time, the rtc_year_days()
+> > > > > call would crash. This patch adds error logging in this
+> > > > > situation, and removes the tm_yday and tm_wday calculations.
+> > > > > These fields should not be relied upon by userspace
+> > > > > according to man rtc, and thus we don't need to calculate
+> > > > > them.
+> > > > >
+> > > > > Signed-off-by: Nick Crews <ncrews@chromium.org>
+> > > > > ---
+> > > > >  drivers/rtc/rtc-wilco-ec.c | 13 +++++++++----
+> > > > >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
+> > > > > index 8ad4c4e6d557..53da355d996a 100644
+> > > > > --- a/drivers/rtc/rtc-wilco-ec.c
+> > > > > +++ b/drivers/rtc/rtc-wilco-ec.c
+> > > > > @@ -110,10 +110,15 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
+> > > > >       tm->tm_mday     = rtc.day;
+> > > > >       tm->tm_mon      = rtc.month - 1;
+> > > > >       tm->tm_year     = rtc.year + (rtc.century * 100) - 1900;
+> > > > > -     tm->tm_yday     = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+> > > > > -
+> > > > > -     /* Don't compute day of week, we don't need it. */
+> > > > > -     tm->tm_wday = -1;
+> > > > > +     /* Ignore other tm fields, man rtc says userspace shouldn't use them. */
+> > > > > +
+> > > > > +     if (rtc_valid_tm(tm)) {
+> > > > > +             dev_err(dev,
+> > > > > +                      "Time from RTC is invalid: second=%u, minute=%u, hour=%u, day=%u, month=%u, year=%u, century=%u",
+> > > > > +                      rtc.second, rtc.minute, rtc.hour, rtc.day, rtc.month,
+> > > > > +                      rtc.year, rtc.century);
+> > > >
+> > > > Do you mind using %ptR? At this point you already filled the tm struct
+> > > > anyway and if you print century separately, you can infer tm_year.
+> > >
+> > > I do not think this is a good idea: we have just established that tm
+> > > does not contain valid data. Does %ptR guarantee that it handles junk
+> > > better than, let's say, rtc_year_days(), and does not crash when
+> > > presented with garbage?
+> > >
+> >
+> > It is safe to use. You can also use %ptRr if you want to ensure no
+> > extra operations are done on the value before printing them out.
 >
-> I do not see any patches in this series actually using this new
-> notifier.
+> OK, I'll keeo this in mind then.
+
+I will resend this using %ptRr, chromium is using 4.19 so I didn't see
+that this was added.
+
 >
-> Maybe it is best to drop this patch until we actually have in-kernel
-> users of this new API show up ?
+> >
+> > I'm still not convinced it is useful to have an error in dmesg when the
+> > time is invalid, as long as userspace knows it is invalid. What is the
+> > course of action for the end user when that happens?
+>
+> Report it, or, in our case, we will see it in the feedback logs.
+> However I do agree that it is not the best option, even if we report
+> error to userspace I am not sure if it will handle it properly. What
+> userspace is supposed to do when presented with -EIO or similar?
 
-Fair point. I'm sort of taking a larger patchset and trying to break
-it up into more easily reviewable chunks, but I guess here I mis-cut.
+Yes, we will be able to see this in feedback logs, which would be valuable.
 
-The user is the hikey960 gpio hub driver here:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?id=b06158a2d3eb00c914f12c76c93695e92d9af00f
+>
+> Nick, do we know the root cause of the EC/RTC reporting invalid time?
 
-I'll resubmit again later with that patch included.
+No, I haven't really looked into it deeply. It's not limited to the RTC
+interface though, it's a problem with the EC or EC communication
+in general, as I've noticed similar occasional errors with the other EC
+drivers.
 
-thanks
--john
+>
+> Thanks,
+> Dmitry
