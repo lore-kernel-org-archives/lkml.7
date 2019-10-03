@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C47DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F84C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1F2215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99A521783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119620;
-	bh=SAeCV379qkmyVZyuHuEgE/SSHwe7+vx+dkjf8h+w48Q=;
+	s=default; t=1570119624;
+	bh=WbFGzKa+WGJChvzA/KCdzaWwqgs1oYs8LIMyu5WgWpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLYLHkBSiHuMu+VQDuidjfgHPtBZPejgr/zSWHsYOMA9bhfhsucVR6F95HRMjvDTu
-	 rzIlmz7Nwo/SgXsp0B4hsFupuOVDdu5kFgpQnrINg/N14H4IGnk/1/JSCExFulx4+5
-	 QRxijE67zlb2zMhqn3hFq9NmpUvu1OjAhF2M/OJA=
+	b=nf4dH4Eu2pr4TNeVoazFw6u4EAfq++fU89k7BYtye4q7klVuBiaoOIcrCULZEUIFH
+	 NY6X1vJP1CPuGplvrt6UvmoXk4jY8BOw8W1Lx4KvMgQLv+6Dy/W04k1W9fScLLzdth
+	 OQ/xECZHkF0ooydM+mS7TqawmahxsECkF473ebEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388651AbfJCQUT (ORCPT
+        id S2389900AbfJCQUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47794 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389858AbfJCQUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:16 -0400
+        id S2389877AbfJCQUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E23F20865;
-        Thu,  3 Oct 2019 16:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D58E6222BE;
+        Thu,  3 Oct 2019 16:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119615;
-        bh=SAeCV379qkmyVZyuHuEgE/SSHwe7+vx+dkjf8h+w48Q=;
+        s=default; t=1570119621;
+        bh=WbFGzKa+WGJChvzA/KCdzaWwqgs1oYs8LIMyu5WgWpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IjAeh5IJdVpacYWTgtg1pQA3xMqUrho7wzE0NrcxfAiR0eaEMyXpA+MGt0z9k1I+R
-         kfx1nqupNEcPO/Yz+U/uI0/OsAZC2mG/zkLo42vWyZDX4J8xGe0y61A7ngf+dlRSbH
-         QczGCgxL6vjYSUGdU94Fa2tZNdZ5P8HRXD4tByCU=
+        b=V4M+u3SevYh3M5c5AfcWugOaH5cqNeVGLOB0l/aItuBaIQwCnxQJUiNNN1sSLxmXT
+         Cd2pDly0N/t9UJFFQ7HPflktCqMYyTCHqU+7aOXt2zb1dfPIuIvcpBHlgdufZK3Dtt
+         pbRP12F/w93oFkRvZeXOlrfdT5iqmoGSTIwULBkE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Wu <tomwu@mellanox.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/211] nvmet: fix data units read and written counters in SMART log
-Date:   Thu,  3 Oct 2019 17:52:59 +0200
-Message-Id: <20191003154513.351749074@linuxfoundation.org>
+Subject: [PATCH 4.19 132/211] raid5: dont set STRIPE_HANDLE to stripe which is in batch list
+Date:   Thu,  3 Oct 2019 17:53:18 +0200
+Message-Id: <20191003154517.031787080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -64,63 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Wu <tomwu@mellanox.com>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
+[ Upstream commit 6ce220dd2f8ea71d6afc29b9a7524c12e39f374a ]
 
-In nvme spec 1.3 there is a definition for data write/read counters
-from SMART log, (See section 5.14.1.2):
-	This value is reported in thousands (i.e., a value of 1
-	corresponds to 1000 units of 512 bytes read) and is rounded up.
+If stripe in batch list is set with STRIPE_HANDLE flag, then the stripe
+could be set with STRIPE_ACTIVE by the handle_stripe function. And if
+error happens to the batch_head at the same time, break_stripe_batch_list
+is called, then below warning could happen (the same report in [1]), it
+means a member of batch list was set with STRIPE_ACTIVE.
 
-However, in nvme target where value is reported with actual units,
-but not thousands of units as the spec requires.
+[7028915.431770] stripe state: 2001
+[7028915.431815] ------------[ cut here ]------------
+[7028915.431828] WARNING: CPU: 18 PID: 29089 at drivers/md/raid5.c:4614 break_stripe_batch_list+0x203/0x240 [raid456]
+[...]
+[7028915.431879] CPU: 18 PID: 29089 Comm: kworker/u82:5 Tainted: G           O    4.14.86-1-storage #4.14.86-1.2~deb9
+[7028915.431881] Hardware name: Supermicro SSG-2028R-ACR24L/X10DRH-iT, BIOS 3.1 06/18/2018
+[7028915.431888] Workqueue: raid5wq raid5_do_work [raid456]
+[7028915.431890] task: ffff9ab0ef36d7c0 task.stack: ffffb72926f84000
+[7028915.431896] RIP: 0010:break_stripe_batch_list+0x203/0x240 [raid456]
+[7028915.431898] RSP: 0018:ffffb72926f87ba8 EFLAGS: 00010286
+[7028915.431900] RAX: 0000000000000012 RBX: ffff9aaa84a98000 RCX: 0000000000000000
+[7028915.431901] RDX: 0000000000000000 RSI: ffff9ab2bfa15458 RDI: ffff9ab2bfa15458
+[7028915.431902] RBP: ffff9aaa8fb4e900 R08: 0000000000000001 R09: 0000000000002eb4
+[7028915.431903] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff9ab1736f1b00
+[7028915.431904] R13: 0000000000000000 R14: ffff9aaa8fb4e900 R15: 0000000000000001
+[7028915.431906] FS:  0000000000000000(0000) GS:ffff9ab2bfa00000(0000) knlGS:0000000000000000
+[7028915.431907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[7028915.431908] CR2: 00007ff953b9f5d8 CR3: 0000000bf4009002 CR4: 00000000003606e0
+[7028915.431909] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[7028915.431910] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[7028915.431910] Call Trace:
+[7028915.431923]  handle_stripe+0x8e7/0x2020 [raid456]
+[7028915.431930]  ? __wake_up_common_lock+0x89/0xc0
+[7028915.431935]  handle_active_stripes.isra.58+0x35f/0x560 [raid456]
+[7028915.431939]  raid5_do_work+0xc6/0x1f0 [raid456]
 
-Signed-off-by: Tom Wu <tomwu@mellanox.com>
-Reviewed-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Also commit 59fc630b8b5f9f ("RAID5: batch adjacent full stripe write")
+said "If a stripe is added to batch list, then only the first stripe
+of the list should be put to handle_list and run handle_stripe."
+
+So don't set STRIPE_HANDLE to stripe which is already in batch list,
+otherwise the stripe could be put to handle_list and run handle_stripe,
+then the above warning could be triggered.
+
+[1]. https://www.spinics.net/lists/raid/msg62552.html
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/admin-cmd.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/md/raid5.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 2008fa62a373b..a8eb8784e151f 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -68,9 +68,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
- 		goto out;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index a147619498dfb..d26e5e9bea427 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -5721,7 +5721,8 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
+ 				do_flush = false;
+ 			}
  
- 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
--	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[READ]), 1000);
- 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[WRITE]), 1000);
- 
- 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
- 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
-@@ -98,11 +100,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
- 		if (!ns->bdev)
- 			continue;
- 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
--		data_units_read +=
--			part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+		data_units_read += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
- 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--		data_units_written +=
--			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+		data_units_written += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
- 
- 	}
- 	rcu_read_unlock();
+-			set_bit(STRIPE_HANDLE, &sh->state);
++			if (!sh->batch_head)
++				set_bit(STRIPE_HANDLE, &sh->state);
+ 			clear_bit(STRIPE_DELAYED, &sh->state);
+ 			if ((!sh->batch_head || sh == sh->batch_head) &&
+ 			    (bi->bi_opf & REQ_SYNC) &&
 -- 
 2.20.1
 
