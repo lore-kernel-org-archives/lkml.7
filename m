@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E39ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79648C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF8820830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBA52070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122376;
-	bh=VtSc1ME8SN1wgVSZQutqFakL7GH/xf7ew/ekejUwB/A=;
+	s=default; t=1570122380;
+	bh=mg/lXnaKl1n2LEuLDz3EK4eUsnnzZrYumsSwGKfrScA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/zNsLbROOKyop6PETzn2xMnGB/msJgvfSJosf942j6fKGSDFybEP70dXZjUnb82v
-	 aSwkR0A/86GPE0tmzqnFyOwo8KVYx9YFwTJvCLCk7diSLgjN2y1kwkd8OusAhq1+/a
-	 Bno2uqwfJSzYB5OLyL6osCZyXtoffAKSGXiaxWkg=
+	b=Kp1Xvu/Gm+I1sV10T4JEr1I0N09z6+l1q/YrGKhUZwq0AY0VpvtTu959pcGjElRAD
+	 QyWDTIHYTG2+d2mNKZbCJy92pQF0pVfse0nW2ybrBbnQwHFwPueKivN7BdFA3CMkde
+	 m63EElSY8IhHqan4b5mHgv6eJd0031uoWGBANkaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392344AbfJCQie (ORCPT
+        id S2392334AbfJCQic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392315AbfJCQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:28 -0400
+        id S2389681AbfJCQia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:38:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 065DC2086A;
-        Thu,  3 Oct 2019 16:38:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D99AD20830;
+        Thu,  3 Oct 2019 16:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120707;
-        bh=VtSc1ME8SN1wgVSZQutqFakL7GH/xf7ew/ekejUwB/A=;
+        s=default; t=1570120710;
+        bh=mg/lXnaKl1n2LEuLDz3EK4eUsnnzZrYumsSwGKfrScA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cXCWVUr51UJj/gTA7E0yz4QksVS+acIo3YsuuA5x30DIdlLaSJrCTAXEr0Oy7AIEh
-         S8SQShMedI4Ps9fdH9AVdCPfMprFIm9k4+zwEl+xEAgo8RVe2cVJ8MSerxzV/2qAy3
-         km3IzyF/Y4FbFv6h8+0NRrBKpZS2qHB6A8bGZI6g=
+        b=N5/w8GFXWJJwFyvL8LM6pfh3gDE1pbwTsNhgjK9om5jYoT2nksWFu5dXTDNK9oBLg
+         ZOt/nG5gljfYQ8/vmnv07VILdQuqciCNmTIXssWNbZD4I1G/ARC4sUyvy93lSMBAzK
+         T0I/WLNKe5/bsr9ejNEMVD3gxDXv0oN4IMzBZiPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 001/344] arcnet: provide a buffer big enough to actually receive packets
-Date:   Thu,  3 Oct 2019 17:49:26 +0200
-Message-Id: <20191003154540.201477719@linuxfoundation.org>
+Subject: [PATCH 5.3 010/344] nfp: flower: fix memory leak in nfp_flower_spawn_vnic_reprs
+Date:   Thu,  3 Oct 2019 17:49:35 +0200
+Message-Id: <20191003154541.106436730@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,101 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 108639aac35eb57f1d0e8333f5fc8c7ff68df938 ]
+[ Upstream commit 8ce39eb5a67aee25d9f05b40b673c95b23502e3e ]
 
-struct archdr is only big enough to hold the header of various types of
-arcnet packets. So to provide enough space to hold the data read from
-hardware provide a buffer large enough to hold a packet with maximal
-size.
+In nfp_flower_spawn_vnic_reprs in the loop if initialization or the
+allocations fail memory is leaked. Appropriate releases are added.
 
-The problem was noticed by the stack protector which makes the kernel
-oops.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Acked-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/arcnet/arcnet.c |   31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/netronome/nfp/flower/main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/arcnet/arcnet.c
-+++ b/drivers/net/arcnet/arcnet.c
-@@ -1063,31 +1063,34 @@ EXPORT_SYMBOL(arcnet_interrupt);
- static void arcnet_rx(struct net_device *dev, int bufnum)
- {
- 	struct arcnet_local *lp = netdev_priv(dev);
--	struct archdr pkt;
-+	union {
-+		struct archdr pkt;
-+		char buf[512];
-+	} rxdata;
- 	struct arc_rfc1201 *soft;
- 	int length, ofs;
- 
--	soft = &pkt.soft.rfc1201;
-+	soft = &rxdata.pkt.soft.rfc1201;
- 
--	lp->hw.copy_from_card(dev, bufnum, 0, &pkt, ARC_HDR_SIZE);
--	if (pkt.hard.offset[0]) {
--		ofs = pkt.hard.offset[0];
-+	lp->hw.copy_from_card(dev, bufnum, 0, &rxdata.pkt, ARC_HDR_SIZE);
-+	if (rxdata.pkt.hard.offset[0]) {
-+		ofs = rxdata.pkt.hard.offset[0];
- 		length = 256 - ofs;
- 	} else {
--		ofs = pkt.hard.offset[1];
-+		ofs = rxdata.pkt.hard.offset[1];
- 		length = 512 - ofs;
- 	}
- 
- 	/* get the full header, if possible */
--	if (sizeof(pkt.soft) <= length) {
--		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(pkt.soft));
-+	if (sizeof(rxdata.pkt.soft) <= length) {
-+		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(rxdata.pkt.soft));
- 	} else {
--		memset(&pkt.soft, 0, sizeof(pkt.soft));
-+		memset(&rxdata.pkt.soft, 0, sizeof(rxdata.pkt.soft));
- 		lp->hw.copy_from_card(dev, bufnum, ofs, soft, length);
- 	}
- 
- 	arc_printk(D_DURING, dev, "Buffer #%d: received packet from %02Xh to %02Xh (%d+4 bytes)\n",
--		   bufnum, pkt.hard.source, pkt.hard.dest, length);
-+		   bufnum, rxdata.pkt.hard.source, rxdata.pkt.hard.dest, length);
- 
- 	dev->stats.rx_packets++;
- 	dev->stats.rx_bytes += length + ARC_HDR_SIZE;
-@@ -1096,13 +1099,13 @@ static void arcnet_rx(struct net_device
- 	if (arc_proto_map[soft->proto]->is_ip) {
- 		if (BUGLVL(D_PROTO)) {
- 			struct ArcProto
--			*oldp = arc_proto_map[lp->default_proto[pkt.hard.source]],
-+			*oldp = arc_proto_map[lp->default_proto[rxdata.pkt.hard.source]],
- 			*newp = arc_proto_map[soft->proto];
- 
- 			if (oldp != newp) {
- 				arc_printk(D_PROTO, dev,
- 					   "got protocol %02Xh; encap for host %02Xh is now '%c' (was '%c')\n",
--					   soft->proto, pkt.hard.source,
-+					   soft->proto, rxdata.pkt.hard.source,
- 					   newp->suffix, oldp->suffix);
- 			}
+--- a/drivers/net/ethernet/netronome/nfp/flower/main.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
+@@ -400,6 +400,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
+ 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
+ 		if (!repr_priv) {
+ 			err = -ENOMEM;
++			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
  		}
-@@ -1111,10 +1114,10 @@ static void arcnet_rx(struct net_device
- 		lp->default_proto[0] = soft->proto;
  
- 		/* in striking contrast, the following isn't a hack. */
--		lp->default_proto[pkt.hard.source] = soft->proto;
-+		lp->default_proto[rxdata.pkt.hard.source] = soft->proto;
- 	}
- 	/* call the protocol-specific receiver. */
--	arc_proto_map[soft->proto]->rx(dev, bufnum, &pkt, length);
-+	arc_proto_map[soft->proto]->rx(dev, bufnum, &rxdata.pkt, length);
- }
- 
- static void null_rx(struct net_device *dev, int bufnum,
+@@ -413,6 +414,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
+ 		port = nfp_port_alloc(app, port_type, repr);
+ 		if (IS_ERR(port)) {
+ 			err = PTR_ERR(port);
++			kfree(repr_priv);
+ 			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
+ 		}
+@@ -433,6 +435,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
+ 		err = nfp_repr_init(app, repr,
+ 				    port_id, port, priv->nn->dp.netdev);
+ 		if (err) {
++			kfree(repr_priv);
+ 			nfp_port_free(port);
+ 			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
 
 
