@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FBFC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B6AC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1452070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C2920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121744;
-	bh=YFcpQ5DlkoOtVD/DRuruBohEHaSxFNyUrtc9wrJsp8g=;
+	s=default; t=1570121748;
+	bh=/kmuV4wuEj92n2i95I0f1iloxkNnae/rPOTXumlWj2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBZ/0kDKwVu4uKlhKqpc8Pdnpgd2hMf+M3BB7oKvgtIIIiPWwkh+/ZoWwwF+Dg0k6
-	 UJPYusewQqQJVj7dudVGVx1QHuaivS14iVPPaVjn2XOlDF3HJN2Hj2kBQ3f37dmDBT
-	 1UHLXRoOteuA7yUSp1Hr5NABq9BB92UdCSf6QmG4=
+	b=Jyh2g0mDqkeoOE8zdc++Vaqp3gHiRXLSxfLZO+9aET8v/J2FX+2M+2kkzS8zNBFag
+	 IcKP0gWKtz8uoDTCJ7KMyLOp8br64xIQl+fkIdHOqGch5k769b/aV9jlPSZv+4RuBm
+	 Sy3LdfPlhYI4dXo/4RSh1HDTeHHuYT+grn+uu8pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405104AbfJCQwA (ORCPT
+        id S2406126AbfJCQvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39428 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406133AbfJCQv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:56 -0400
+        id S2406091AbfJCQvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:51:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2FC62054F;
-        Thu,  3 Oct 2019 16:51:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F5B20862;
+        Thu,  3 Oct 2019 16:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121515;
-        bh=YFcpQ5DlkoOtVD/DRuruBohEHaSxFNyUrtc9wrJsp8g=;
+        s=default; t=1570121510;
+        bh=/kmuV4wuEj92n2i95I0f1iloxkNnae/rPOTXumlWj2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpSJYrnINUllIl4GQ2ZzlzvNqK90TfydbrXnMg3Fte0dXThCGDnrKp8kYNgVx1d1U
-         qoG5kMoBra4oIngWZ5gk3K7csO2OMF07Jqu05dRdkpJzDJugWu/Od4laKCOLrFxRkp
-         owuzWaZCvgw3HgUXlo8Anb81CiqjJbTTZ3oa+9BU=
+        b=sAgxSMksC6rw4YvK3T/ntxXN68+rviO7T0isZCNEhqro9NhsEfmgSA8B4lPfFGBq+
+         JyBpvfiWWrOGJTLTkoSgqNzTUalxa7yUd2wFCmLZQ6i1mn0PRzst/1ScFrZZNrSb8b
+         R41GWjE2ghaMTKM9V7bi2no85xLlFJ5z9CAKn9T8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.3 300/344] ath10k: fix channel info parsing for non tlv target
-Date:   Thu,  3 Oct 2019 17:54:25 +0200
-Message-Id: <20191003154609.079936462@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.3 267/344] KVM: x86/mmu: Use fast invalidate mechanism to zap MMIO sptes
+Date:   Thu,  3 Oct 2019 17:53:52 +0200
+Message-Id: <20191003154606.686576364@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,95 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 6be6c04bcc2e8770b8637632789ff15765124894 upstream.
+commit 92f58b5c0181596d9f1e317b49ada2e728fb76eb upstream.
 
-The tlv targets such as WCN3990 send more data in the chan info event, which is
-not sent by the non tlv targets. There is a minimum size check in the wmi event
-for non-tlv targets and hence we cannot update the common channel info
-structure as it was done in commit 13104929d2ec ("ath10k: fill the channel
-survey results for WCN3990 correctly"). This broke channel survey results on
-10.x firmware versions.
+Use the fast invalidate mechasim to zap MMIO sptes on a MMIO generation
+wrap.  The fast invalidate flow was reintroduced to fix a livelock bug
+in kvm_mmu_zap_all() that can occur if kvm_mmu_zap_all() is invoked when
+the guest has live vCPUs.  I.e. using kvm_mmu_zap_all() to handle the
+MMIO generation wrap is theoretically susceptible to the livelock bug.
 
-If the common channel info structure is updated, the size check for chan info
-event for non-tlv targets will fail and return -EPROTO and we see the below
-error messages
+This effectively reverts commit 4771450c345dc ("Revert "KVM: MMU: drop
+kvm_mmu_zap_mmio_sptes""), i.e. restores the behavior of commit
+a8eca9dcc656a ("KVM: MMU: drop kvm_mmu_zap_mmio_sptes").
 
-   ath10k_pci 0000:01:00.0: failed to parse chan info event: -71
+Note, this actually fixes commit 571c5af06e303 ("KVM: x86/mmu:
+Voluntarily reschedule as needed when zapping MMIO sptes"), but there
+is no need to incrementally revert back to using fast invalidate, e.g.
+doing so doesn't provide any bisection or stability benefits.
 
-Add tlv specific channel info structure and restore the original size of the
-common channel info structure to mitigate this issue.
-
-Tested HW: WCN3990
-	   QCA9887
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-	   10.2.4-1.0-00037
-
-Fixes: 13104929d2ec ("ath10k: fill the channel survey results for WCN3990 correctly")
-Cc: stable@vger.kernel.org # 5.0
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 571c5af06e303 ("KVM: x86/mmu: Voluntarily reschedule as needed when zapping MMIO sptes")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/wmi-tlv.c |    2 +-
- drivers/net/wireless/ath/ath10k/wmi-tlv.h |   16 ++++++++++++++++
- drivers/net/wireless/ath/ath10k/wmi.h     |    8 --------
- 3 files changed, 17 insertions(+), 9 deletions(-)
+ arch/x86/kvm/mmu.c |   17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -841,7 +841,7 @@ static int ath10k_wmi_tlv_op_pull_ch_inf
- 					     struct wmi_ch_info_ev_arg *arg)
- {
- 	const void **tb;
--	const struct wmi_chan_info_event *ev;
-+	const struct wmi_tlv_chan_info_event *ev;
- 	int ret;
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -395,8 +395,6 @@ static void mark_mmio_spte(struct kvm_vc
+ 	mask |= (gpa & shadow_nonpresent_or_rsvd_mask)
+ 		<< shadow_nonpresent_or_rsvd_mask_len;
  
- 	tb = ath10k_wmi_tlv_parse_alloc(ar, skb->data, skb->len, GFP_ATOMIC);
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.h
-@@ -1615,6 +1615,22 @@ struct chan_info_params {
- 
- #define WMI_TLV_FLAG_MGMT_BUNDLE_TX_COMPL	BIT(9)
- 
-+struct wmi_tlv_chan_info_event {
-+	__le32 err_code;
-+	__le32 freq;
-+	__le32 cmd_flags;
-+	__le32 noise_floor;
-+	__le32 rx_clear_count;
-+	__le32 cycle_count;
-+	__le32 chan_tx_pwr_range;
-+	__le32 chan_tx_pwr_tp;
-+	__le32 rx_frame_count;
-+	__le32 my_bss_rx_cycle_count;
-+	__le32 rx_11b_mode_data_duration;
-+	__le32 tx_frame_cnt;
-+	__le32 mac_clk_mhz;
-+} __packed;
-+
- struct wmi_tlv_mgmt_tx_compl_ev {
- 	__le32 desc_id;
- 	__le32 status;
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -6533,14 +6533,6 @@ struct wmi_chan_info_event {
- 	__le32 noise_floor;
- 	__le32 rx_clear_count;
- 	__le32 cycle_count;
--	__le32 chan_tx_pwr_range;
--	__le32 chan_tx_pwr_tp;
--	__le32 rx_frame_count;
--	__le32 my_bss_rx_cycle_count;
--	__le32 rx_11b_mode_data_duration;
--	__le32 tx_frame_cnt;
--	__le32 mac_clk_mhz;
+-	page_header(__pa(sptep))->mmio_cached = true;
 -
- } __packed;
+ 	trace_mark_mmio_spte(sptep, gfn, access, gen);
+ 	mmu_spte_set(sptep, mask);
+ }
+@@ -5956,7 +5954,7 @@ void kvm_mmu_slot_set_dirty(struct kvm *
+ }
+ EXPORT_SYMBOL_GPL(kvm_mmu_slot_set_dirty);
  
- struct wmi_10_4_chan_info_event {
+-static void __kvm_mmu_zap_all(struct kvm *kvm, bool mmio_only)
++void kvm_mmu_zap_all(struct kvm *kvm)
+ {
+ 	struct kvm_mmu_page *sp, *node;
+ 	LIST_HEAD(invalid_list);
+@@ -5965,14 +5963,10 @@ static void __kvm_mmu_zap_all(struct kvm
+ 	spin_lock(&kvm->mmu_lock);
+ restart:
+ 	list_for_each_entry_safe(sp, node, &kvm->arch.active_mmu_pages, link) {
+-		if (mmio_only && !sp->mmio_cached)
+-			continue;
+ 		if (sp->role.invalid && sp->root_count)
+ 			continue;
+-		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list, &ign)) {
+-			WARN_ON_ONCE(mmio_only);
++		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list, &ign))
+ 			goto restart;
+-		}
+ 		if (cond_resched_lock(&kvm->mmu_lock))
+ 			goto restart;
+ 	}
+@@ -5981,11 +5975,6 @@ restart:
+ 	spin_unlock(&kvm->mmu_lock);
+ }
+ 
+-void kvm_mmu_zap_all(struct kvm *kvm)
+-{
+-	return __kvm_mmu_zap_all(kvm, false);
+-}
+-
+ void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
+ {
+ 	WARN_ON(gen & KVM_MEMSLOT_GEN_UPDATE_IN_PROGRESS);
+@@ -6007,7 +5996,7 @@ void kvm_mmu_invalidate_mmio_sptes(struc
+ 	 */
+ 	if (unlikely(gen == 0)) {
+ 		kvm_debug_ratelimited("kvm: zapping shadow pages for mmio generation wraparound\n");
+-		__kvm_mmu_zap_all(kvm, true);
++		kvm_mmu_zap_all_fast(kvm);
+ 	}
+ }
+ 
 
 
