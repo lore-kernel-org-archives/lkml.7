@@ -2,176 +2,237 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F20EC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D34D20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC692086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDzJkQ89"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rl3XhvxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbfJCTVN (ORCPT
+        id S1730806AbfJCT1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:21:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42894 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfJCTVN (ORCPT
+        Thu, 3 Oct 2019 15:27:22 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37067 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfJCT1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:21:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n14so3965029wrw.9;
-        Thu, 03 Oct 2019 12:21:11 -0700 (PDT)
+        Thu, 3 Oct 2019 15:27:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i16so3693043oie.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kgvlV2mcTljWAp7eZcNK1OhOjxWAq+NeHEujH2OXj0E=;
-        b=XDzJkQ89M6Qzjw60aWTvWzA4dp8csNLPOmO9K10AsTyN6/8yKJ/mY3xFdh2YjDSWrZ
-         GVrDIaEL2laR0ti8/r3w9pWRAd+rBHePckK8zfZH79iRayn2QjsVUg8pK97NuMXDMk81
-         slSIPiEgC2iqd8QqVTNQZK8ekfExVsRiFr0LV6auoXgdJ9DJpLmsQ9qwQ6/mo6JeG7BV
-         rO9pYg/gOIJDSMuArz+8y2xOfOUdwPbU9uk4wzirvCzh5thTkfU671B1LSK9klguNiLS
-         xRYp6fNC26hA1eu0MpJeX5nbLPiOihkkztABV9VTL80IUI9gTNXCPpWlcIiNuOgNl9pO
-         xRwg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=52Mg07dQkN/KgqaFhPCi4LxnJtO5hzy5vEl2iOqJhXg=;
+        b=Rl3XhvxBLp1pm9YJv409CIqJTF8gWIZf+7lDHQYRLQILtuvBwdlj+Jgwz/ZV4XPLu/
+         PP8FOQXQqyh8ZABMivhGySR+LiFa7fbMZAZ6Ogx554yttBsAtsKVlIqU9qTYgtZA11A7
+         u0jgRaIgIDJj5akT8MBa23WOmZVnYoghxwNHyyNpuh+b2YDedTCMSapsx4jq4KNwkFtR
+         2tDV+nfaRw+/HoJ3sh9i1bhPDVLn1ZBYsTP1tcvSTLj/DrcfJNiqDC0X77IfdwEic1sM
+         ejop0GWC/y14N8Tec0qEw95UlyPPYOmGKi3Ee9ltkUO2ToA74MORWnnEVSQWG5svQlCF
+         FGJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kgvlV2mcTljWAp7eZcNK1OhOjxWAq+NeHEujH2OXj0E=;
-        b=olE0kOsuSdTBHcRTGqc9iqAu9jlM5S1cIuu+UF/DXuMuJDzw89hvheCeee/GXmucIA
-         5jxGh2ibnaehyzVod3MFaO0/geFNHL+aQwaMVH4uKQWLoYv6I2DU2BTu6whvjrz7rQAN
-         nYVqTl/bKdNYAOeR0s2lZLNVk/yGovdAN8lL4O4F/MjWRiAZ6ZML+INFddxREPMN9q5A
-         OLnVDSGjGgRUUjL81hmlPHzs19eeHMwDbBj1QckyZOibUiOZ6Vle0f1ihgx03ukBVjW9
-         RMB911tMEObwJFJW9iO+hCKqM688JTj/Aih568zSL3QrH2lUiIWifkMQ6hgRJ9BrUIzX
-         vRfw==
-X-Gm-Message-State: APjAAAXOwJqB4ufiZkXC/Pyy3ZtTIS3EdXPud8/xcBDCqXRll8DVl7gB
-        xPwPn4ibToy6HBQTVmqDZ5Q=
-X-Google-Smtp-Source: APXvYqxqtuS84uQp720YiKUzMs5xcqZUqhV++5X5eY+D2lhtrEu+g/ezi2rBJ3ov1WgonS7FNRuBkQ==
-X-Received: by 2002:adf:fcc7:: with SMTP id f7mr8221596wrs.319.1570130470488;
-        Thu, 03 Oct 2019 12:21:10 -0700 (PDT)
-Received: from [192.168.1.19] (civ244.neoplus.adsl.tpnet.pl. [83.31.45.244])
-        by smtp.gmail.com with ESMTPSA id 94sm6406792wrk.92.2019.10.03.12.21.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 12:21:09 -0700 (PDT)
-Subject: Re: [PATCH v8 2/5] leds: Add of_led_get() and led_put()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        lee.jones@linaro.org, daniel.thompson@linaro.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com, dmurphy@ti.com, linux-leds@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>
-References: <20191003082812.28491-1-jjhiblot@ti.com>
- <20191003082812.28491-3-jjhiblot@ti.com>
- <20191003104228.c5nho6eimwzqwxpt@earth.universe>
- <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
- <62591735-9082-1fd7-d791-07929ddaa223@gmail.com>
- <20191003183554.GA37096@sirena.co.uk>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
-Date:   Thu, 3 Oct 2019 21:21:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=52Mg07dQkN/KgqaFhPCi4LxnJtO5hzy5vEl2iOqJhXg=;
+        b=nC2Fhpz3Dc6c3yKJKRx2yUR6jenUbS2e08UU+4rrdrJ+CdvUkKg3nGrWgeNF69fhnH
+         3J2sUNYfxCUF1kNU0MNWZaH5QjpfqIEklUOjSztxfZ8AltBOLrvYOxlaYNyA7iePTr2O
+         ki7Ivfe0pKJnRmWESIxo2/H2Ecn/VVZc64TsNTSdaISnZEg2T154z9YXBPOgTUoU5fIE
+         hNvFZq3yWDVelpWeHITBvg3TrG0Sp7pHxIMA4kHh1fbUi6UOe2fqqoKaF5NTltreFMEw
+         zmbN09c4uRGbhklwaBQfquCIMEput21FgqZijTBbNUeKNCB7PvkE88abK7cudRhAm+gN
+         U1NQ==
+X-Gm-Message-State: APjAAAX7104Jk5DQBXK+IBJ5lbedXyNopfM7tUKfzVnCZnyltZAq1tVg
+        tTb+/32LGeK47aWJ6Hk/zmgWi0vzaTXasXXfIE+2HA==
+X-Google-Smtp-Source: APXvYqyy0InBwqHNwSMOEWa4FEAAbj17Mdxk9E/w7LfNUaDgSHgGHPbCnLM2hUFeffvnvEiWoFHsRWYWOP3f5M7ZaH0=
+X-Received: by 2002:aca:4b85:: with SMTP id y127mr4144838oia.70.1570130839954;
+ Thu, 03 Oct 2019 12:27:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191003183554.GA37096@sirena.co.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
+ <20190920163123.GC55224@lakrids.cambridge.arm.com> <CACT4Y+ZwyBhR8pB7jON8eVObCGbJ54L8Sbz6Wfmy3foHkPb_fA@mail.gmail.com>
+ <CANpmjNM+aEzySwuMDkEvsVaeTooxExuTRAv-nzjhp7npT8a3ag@mail.gmail.com> <20191003161233.GB38140@lakrids.cambridge.arm.com>
+In-Reply-To: <20191003161233.GB38140@lakrids.cambridge.arm.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 3 Oct 2019 21:27:08 +0200
+Message-ID: <CANpmjNMBehv0UUuEko-F-ygegX+YS+Km3ggFB0tnBoCpRRXhSw@mail.gmail.com>
+Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
+        Anatol Pomazau <anatol@google.com>,
+        Will Deacon <willdeacon@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Thu, 3 Oct 2019 at 18:12, Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Fri, Sep 20, 2019 at 07:51:04PM +0200, Marco Elver wrote:
+> > On Fri, 20 Sep 2019 at 18:47, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Fri, Sep 20, 2019 at 6:31 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > >
+> > > > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
+> > > > > We would like to share a new data-race detector for the Linux kernel:
+> > > > > Kernel Concurrency Sanitizer (KCSAN) --
+> > > > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
+> > > > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
+> > > >
+> > > > Nice!
+> > > >
+> > > > BTW kcsan_atomic_next() is missing a stub definition in <linux/kcsan.h>
+> > > > when !CONFIG_KCSAN:
+> > > >
+> > > > https://github.com/google/ktsan/commit/a22a093a0f0d0b582c82cdbac4f133a3f61d207c#diff-19d7c475b4b92aab8ba440415ab786ec
+> > > >
+> > > > ... and I think the kcsan_{begin,end}_atomic() stubs need to be static
+> > > > inline too.
+> >
+> > Thanks for catching, fixed and pushed. Feel free to rebase your arm64 branch.
+>
+> Great; I've just done so!
+>
+> What's the plan for posting a PATCH or RFC series?
 
-On 10/3/19 8:35 PM, Mark Brown wrote:
-> On Thu, Oct 03, 2019 at 07:43:17PM +0200, Jacek Anaszewski wrote:
->> On 10/3/19 2:47 PM, Jean-Jacques Hiblot wrote:
->>> On 03/10/2019 12:42, Sebastian Reichel wrote:
->>>> On Thu, Oct 03, 2019 at 10:28:09AM +0200, Jean-Jacques Hiblot wrote:
-> 
-> This mail has nothing relevant in the subject line and pages of quotes
-> before the question for me, it's kind of lucky I noticed it....
+I'm planning to send some patches, but with the amount of data-races
+being found I need to prioritize what we send first. Currently the
+plan is to let syzbot find data-races, and we'll start by sending a
+few critical reports that syzbot found. Syzbot should be set up fully
+and start finding data-races within next few days.
 
-Isn't it all about creating proper filters?
+> The rest of this email is rabbit-holing on the issue KCSAN spotted;
+> sorry about that!
 
->> I wonder if it wouldn't make sense to add support for fwnode
->> parsing to regulator core. Or maybe it is either somehow supported
->> or not supported on purpose?
-> 
-> Anything attempting to use the regulator DT bindings in ACPI has very
-> serious problems, ACPI has its own power model which isn't compatible
-> with that used in DT.
+Thanks for looking into this! I think you're right, and please do feel
+free to send a proper patch out.
 
-We have a means for checking if fwnode refers to of_node:
+Thanks,
+-- Marco
 
-is_of_node(const struct fwnode_handle *fwnode)
-
-Couldn't it be employed for OF case?
-
--- 
-Best regards,
-Jacek Anaszewski
+> [...]
+>
+> > > > We have some interesting splats at boot time in stop_machine, which
+> > > > don't seem to have been hit/fixed on x86 yet in the kcsan-with-fixes
+> > > > branch, e.g.
+> > > >
+> > > > [    0.237939] ==================================================================
+> > > > [    0.239431] BUG: KCSAN: data-race in multi_cpu_stop+0xa8/0x198 and set_state+0x80/0xb0
+> > > > [    0.241189]
+> > > > [    0.241606] write to 0xffff00001003bd00 of 4 bytes by task 24 on cpu 3:
+> > > > [    0.243435]  set_state+0x80/0xb0
+> > > > [    0.244328]  multi_cpu_stop+0x16c/0x198
+> > > > [    0.245406]  cpu_stopper_thread+0x170/0x298
+> > > > [    0.246565]  smpboot_thread_fn+0x40c/0x560
+> > > > [    0.247696]  kthread+0x1a8/0x1b0
+> > > > [    0.248586]  ret_from_fork+0x10/0x18
+> > > > [    0.249589]
+> > > > [    0.250006] read to 0xffff00001003bd00 of 4 bytes by task 14 on cpu 1:
+> > > > [    0.251804]  multi_cpu_stop+0xa8/0x198
+> > > > [    0.252851]  cpu_stopper_thread+0x170/0x298
+> > > > [    0.254008]  smpboot_thread_fn+0x40c/0x560
+> > > > [    0.255135]  kthread+0x1a8/0x1b0
+> > > > [    0.256027]  ret_from_fork+0x10/0x18
+> > > > [    0.257036]
+> > > > [    0.257449] Reported by Kernel Concurrency Sanitizer on:
+> > > > [    0.258918] CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.3.0-00007-g67ab35a199f4-dirty #3
+> > > > [    0.261241] Hardware name: linux,dummy-virt (DT)
+> > > > [    0.262517] ==================================================================>
+> >
+> > Thanks, the fixes in -with-fixes were ones I only encountered with
+> > Syzkaller, where I disable KCSAN during boot. I've just added a fix
+> > for this race and pushed to kcsan-with-fixes.
+>
+> I think that's:
+>
+>   https://github.com/google/ktsan/commit/c1bc8ab013a66919d8347c2392f320feabb14f92
+>
+> ... but that doesn't look quite right to me, as it leaves us with the shape:
+>
+>         do {
+>                 if (READ_ONCE(msdata->state) != curstate) {
+>                         curstate = msdata->state;
+>                         switch (curstate) {
+>                                 ...
+>                         }
+>                         ack_state(msdata);
+>                 }
+>         } while (curstate != MULTI_STOP_EXIT);
+>
+> I don't believe that we have a guarantee of read-after-read ordering
+> between the READ_ONCE(msdata->state) and the subsequent plain access of
+> msdata->state, as we've been caught out on that in the past, e.g.
+>
+>   https://lore.kernel.org/lkml/1506527369-19535-1-git-send-email-will.deacon@arm.com/
+>
+> ... which I think means we could switch on a stale value of
+> msdata->state. That would mean we might handle the same state twice,
+> calling ack_state() more times than expected and corrupting the count.
+>
+> The compiler could also replace uses of curstate with a reload of
+> msdata->state. If it did so for the while condition, we could skip the
+> expected ack_state() for MULTI_STOP_EXIT, though it looks like that
+> might not matter.
+>
+> I think we need to make sure that we use a consistent snapshot,
+> something like the below. Assuming I'm not barking up the wrong tree, I
+> can spin this as a proper patch.
+>
+> Thanks,
+> Mark.
+>
+> ---->8----
+> diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+> index b4f83f7bdf86..67a0b454b5b5 100644
+> --- a/kernel/stop_machine.c
+> +++ b/kernel/stop_machine.c
+> @@ -167,7 +167,7 @@ static void set_state(struct multi_stop_data *msdata,
+>         /* Reset ack counter. */
+>         atomic_set(&msdata->thread_ack, msdata->num_threads);
+>         smp_wmb();
+> -       msdata->state = newstate;
+> +       WRITE_ONCE(msdata->state, newstate);
+>  }
+>
+>  /* Last one to ack a state moves to the next state. */
+> @@ -186,7 +186,7 @@ void __weak stop_machine_yield(const struct cpumask *cpumask)
+>  static int multi_cpu_stop(void *data)
+>  {
+>         struct multi_stop_data *msdata = data;
+> -       enum multi_stop_state curstate = MULTI_STOP_NONE;
+> +       enum multi_stop_state newstate, curstate = MULTI_STOP_NONE;
+>         int cpu = smp_processor_id(), err = 0;
+>         const struct cpumask *cpumask;
+>         unsigned long flags;
+> @@ -210,8 +210,9 @@ static int multi_cpu_stop(void *data)
+>         do {
+>                 /* Chill out and ensure we re-read multi_stop_state. */
+>                 stop_machine_yield(cpumask);
+> -               if (msdata->state != curstate) {
+> -                       curstate = msdata->state;
+> +               newstate = READ_ONCE(msdata->state);
+> +               if (newstate != curstate) {
+> +                       curstate = newstate;
+>                         switch (curstate) {
+>                         case MULTI_STOP_DISABLE_IRQ:
+>                                 local_irq_disable();
+>
