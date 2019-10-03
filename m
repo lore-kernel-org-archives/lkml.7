@@ -2,257 +2,470 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D273FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4F9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C7A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409C320865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570124186;
+	bh=glujSVm4D3IbVgjgNJ3C3K+loQmkHW7DbSS/kWksBPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=R7gMd43591pp8qbc5HF7iHTKdwvgYbkBUikehHGBtC84pP08SDZ1+X8AUQNLowuim
+	 J5aZiNSUkG+wgmoOWsseV3W8dVvjW8ssEdWF6zqa43ZIQo2bQ2/9uxrUkRXZEp7+VV
+	 GgtH+Rzdatcc23PTLylQZdS3NRTR9Chu3vGaw/m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388643AbfJCRgU (ORCPT
+        id S1731547AbfJCQEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:36:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:13339 "EHLO mga11.intel.com"
+        Thu, 3 Oct 2019 12:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387524AbfJCRgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:36:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 10:36:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="192188491"
-Received: from spandruv-mobl3.jf.intel.com ([10.254.33.3])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Oct 2019 10:36:16 -0700
-Message-ID: <dfb172a0a8003f90fd185b7b154164b8b49bbaa9.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Date:   Thu, 03 Oct 2019 10:36:16 -0700
-In-Reply-To: <20191003121537.GR4536@hirez.programming.kicks-ass.net>
-References: <20191002122926.385-1-ggherdovich@suse.cz>
-         <20191002122926.385-2-ggherdovich@suse.cz> <1906426.HDqaVa71mF@kreacher>
-         <20191003121537.GR4536@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1731470AbfJCQEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02FD21D81;
+        Thu,  3 Oct 2019 16:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118686;
+        bh=glujSVm4D3IbVgjgNJ3C3K+loQmkHW7DbSS/kWksBPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qf0oObjSTZ+14urFO8q+oY+Gznqg1cU5e/IQH1mIP0AOnz4WASeUjsZD+YmBmLuYu
+         U211xh8r/+z7ES5k7SFRfYScQcCAMvxIp0iANsFPAUX7AqZKkBkfxZ3pxYfL0iV6rS
+         HY5waA9ozJQSdvQrEqzcjhsrA4tzUHBCnqno6i54=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 101/129] printk: remove games with previous record flags
+Date:   Thu,  3 Oct 2019 17:53:44 +0200
+Message-Id: <20191003154405.507944331@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
+References: <20191003154318.081116689@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-03 at 14:15 +0200, Peter Zijlstra wrote:
-> On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
-> > On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich
-> > wrote:
-> > > +static bool turbo_disabled(void)
-> > > +{
-> > > +	u64 misc_en;
-> > > +	int err;
-> > > +
-> > > +	err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
-> > > +	if (err)
-> > > +		return false;
-> > > +
-> > > +	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
-> > > +}
-> > 
-> > This setting may be updated by the platform firmware (BIOS) in some
-> > cases
-> > (see kernel.org BZ 200759, for example), so in general checking it
-> > once
-> > at the init time is not enough.
-> 
-> Is there anything sane we can do if the BIOS frobs stuff like that
-> under
-> our feet? Other than yell bloody murder, that is?
-On  this platform which this BZ is talking about, you will get an ACPI
-notification about this change. But the notification will happen for
-only one CPU, but it needs to be accounted for all CPUs.
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Thanks,
-Srinivas
+[ Upstream commit 5aa068ea4082b39eafc356c27c9ecd155b0895f6 ]
 
-> 
-> > > +
-> > > +#include <asm/cpu_device_id.h>
-> > > +#include <asm/intel-family.h>
-> > > +
-> > > +#define ICPU(model) \
-> > > +	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
-> > > +
-> > > +static const struct x86_cpu_id has_knl_turbo_ratio_limits[] = {
-> > > +	ICPU(INTEL_FAM6_XEON_PHI_KNL),
-> > > +	ICPU(INTEL_FAM6_XEON_PHI_KNM),
-> > > +	{}
-> > > +};
-> > > +
-> > > +static const struct x86_cpu_id has_turbo_ratio_group_limits[] =
-> > > {
-> > > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT),
-> > > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_D),
-> > > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
-> > > +	ICPU(INTEL_FAM6_SKYLAKE_X),
-> > > +	{}
-> > > +};
-> > > +
-> > > +static void core_set_cpu_max_freq(void)
-> > > +{
-> > > +	u64 ratio, turbo_ratio;
-> > > +	int err;
-> > > +
-> > > +	if (smp_processor_id() != 0)
-> > > +		return;
-> > > +
-> > > +	if (turbo_disabled() ||
-> > > +		x86_match_cpu(has_knl_turbo_ratio_limits) ||
-> > > +		x86_match_cpu(has_turbo_ratio_group_limits))
-> > > +		return;
-> > > +
-> > 
-> > I would move the checks above directly to intel_set_cpu_max_freq().
-> 
-> The reason it is here, is that..
-> 
-> > > +	err = rdmsrl_safe(MSR_PLATFORM_INFO, &ratio);
-> > > +	if (err)
-> > > +		return;
-> > > +
-> > > +	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &turbo_ratio);
-> > > +	if (err)
-> > > +		return;
-> > > +
-> > > +	ratio = (ratio >> 8) & 0xFF;                /* max P state
-> > > ratio */
-> > > +	turbo_ratio = (turbo_ratio >> 24) & 0xFF;   /* 4C turbo ratio
-> > > */
-> > > +
-> > > +	arch_max_freq = div_u64(turbo_ratio * SCHED_CAPACITY_SCALE,
-> > > ratio);
-> > > +
-> > > +	static_branch_enable(&arch_scale_freq_key);
-> > > +}
-> > > +
-> > > +static void intel_set_cpu_max_freq(void)
-> > > +{
-> > > +	/*
-> > > +	 * TODO: add support for:
-> > > +	 *
-> > > +	 * - Xeon Phi (KNM, KNL)
-> > > +	 * - Xeon Gold/Platinum, Atom Goldmont/Goldmont Plus
-> > > +	 * - Atom Silvermont
-> > > +	 *
-> > > +	 * which all now get by default arch_max_freq =
-> > > SCHED_CAPACITY_SCALE
-> > > +	 */
-> > > +	core_set_cpu_max_freq();
-> 
-> This used to read something like:
-> 
-> 	if (core_set_cpu_max_freq())
-> 		return;
-> 
-> 	if (atom_set_cpu_max_freq())
-> 		return;
-> 
-> 	...
-> 
-> and then those checks make sense, because we're failing the 'core'
-> way,
-> but another way might work.
-> 
-> But in this version the atom version has gone missing -- I've
-> suggested
-> it be put back as an additional patch.
-> 
-> Also, the SKX way still needs to be written..
-> 
-> > > +}
-> > > +
-> > > +static void init_scale_freq(void *arg)
-> > > +{
-> > > +	u64 aperf, mperf;
-> > > +
-> > > +	rdmsrl(MSR_IA32_APERF, aperf);
-> > > +	rdmsrl(MSR_IA32_MPERF, mperf);
-> > > +
-> > > +	this_cpu_write(arch_prev_aperf, aperf);
-> > > +	this_cpu_write(arch_prev_mperf, mperf);
-> > > +}
-> > > +
-> > > +static void set_cpu_max_freq(void)
-> > > +{
-> > > +	if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
-> > > +		return;
-> > > +
-> > > +	switch (boot_cpu_data.x86_vendor) {
-> > > +	case X86_VENDOR_INTEL:
-> > > +		intel_set_cpu_max_freq();
-> > > +		break;
-> > > +	default:
-> > > +		break;
-> > > +	}
-> > 
-> > Why is the switch () needed?
-> > 
-> > It seems that
-> > 
-> > 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
-> > 		intel_set_cpu_max_freq();
-> > 
-> > would do the trick.
-> 
-> I was hoping to grow X86_VENDOR_AMD bits..
-> 
-> > > +
-> > > +	init_scale_freq(NULL);
-> > > +}
-> > > +
-> > > +DEFINE_PER_CPU(unsigned long, arch_cpu_freq);
-> > > +
-> > > +static bool tick_disable;
-> > > +
-> > > +void arch_scale_freq_tick(void)
-> > > +{
-> > > +	u64 freq;
-> > > +	u64 aperf, mperf;
-> > > +	u64 acnt, mcnt;
-> > > +
-> > > +	if (!arch_scale_freq_invariant() || tick_disable)
-> > > +		return;
-> > > +
-> > 
-> > This may be a silly question, but can using tick_disable be
-> > avoided?
-> > 
-> > I guess it is there, because disabling the static branch from
-> > x86_arch_scale_freq_tick_disable() would be unsafe, but I'm not
-> > sure why that would be the case?
-> 
-> There's not enough state -- we can of course fix that.
-> 
-> That is, if you disable it, we don't know if we should enable it
-> again
-> later or if it was disabled because we failed to initialize it
-> earlier.
+The record logging code looks at the previous record flags in various
+ways, and they are all wrong.
+
+You can't use the previous record flags to determine anything about the
+next record, because they may simply not be related.  In particular, the
+reason the previous record was a continuation record may well be exactly
+_because_ the new record was printed by a different process, which is
+why the previous record was flushed.
+
+So all those games are simply wrong, and make the code hard to
+understand (because the code fundamentally cdoes not make sense).
+
+So remove it.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/printk/printk.c | 109 +++++++++--------------------------------
+ 1 file changed, 24 insertions(+), 85 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 27adaaab96ba5..df348d4eeb265 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -356,7 +356,6 @@ DECLARE_WAIT_QUEUE_HEAD(log_wait);
+ /* the next printk record to read by syslog(READ) or /proc/kmsg */
+ static u64 syslog_seq;
+ static u32 syslog_idx;
+-static enum log_flags syslog_prev;
+ static size_t syslog_partial;
+ 
+ /* index and sequence number of the first record stored in the buffer */
+@@ -370,7 +369,6 @@ static u32 log_next_idx;
+ /* the next printk record to write to the console */
+ static u64 console_seq;
+ static u32 console_idx;
+-static enum log_flags console_prev;
+ 
+ /* the next printk record to read after the last 'clear' command */
+ static u64 clear_seq;
+@@ -639,27 +637,15 @@ static void append_char(char **pp, char *e, char c)
+ }
+ 
+ static ssize_t msg_print_ext_header(char *buf, size_t size,
+-				    struct printk_log *msg, u64 seq,
+-				    enum log_flags prev_flags)
++				    struct printk_log *msg, u64 seq)
+ {
+ 	u64 ts_usec = msg->ts_nsec;
+-	char cont = '-';
+ 
+ 	do_div(ts_usec, 1000);
+ 
+-	/*
+-	 * If we couldn't merge continuation line fragments during the print,
+-	 * export the stored flags to allow an optional external merge of the
+-	 * records. Merging the records isn't always neccessarily correct, like
+-	 * when we hit a race during printing. In most cases though, it produces
+-	 * better readable output. 'c' in the record flags mark the first
+-	 * fragment of a line, '+' the following.
+-	 */
+-	if (msg->flags & LOG_CONT)
+-		cont = (prev_flags & LOG_CONT) ? '+' : 'c';
+-
+ 	return scnprintf(buf, size, "%u,%llu,%llu,%c;",
+-		       (msg->facility << 3) | msg->level, seq, ts_usec, cont);
++		       (msg->facility << 3) | msg->level, seq, ts_usec,
++		       msg->flags & LOG_CONT ? 'c' : '-');
+ }
+ 
+ static ssize_t msg_print_ext_body(char *buf, size_t size,
+@@ -714,7 +700,6 @@ static ssize_t msg_print_ext_body(char *buf, size_t size,
+ struct devkmsg_user {
+ 	u64 seq;
+ 	u32 idx;
+-	enum log_flags prev;
+ 	struct ratelimit_state rs;
+ 	struct mutex lock;
+ 	char buf[CONSOLE_EXT_LOG_MAX];
+@@ -824,12 +809,11 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+ 
+ 	msg = log_from_idx(user->idx);
+ 	len = msg_print_ext_header(user->buf, sizeof(user->buf),
+-				   msg, user->seq, user->prev);
++				   msg, user->seq);
+ 	len += msg_print_ext_body(user->buf + len, sizeof(user->buf) - len,
+ 				  log_dict(msg), msg->dict_len,
+ 				  log_text(msg), msg->text_len);
+ 
+-	user->prev = msg->flags;
+ 	user->idx = log_next(user->idx);
+ 	user->seq++;
+ 	raw_spin_unlock_irq(&logbuf_lock);
+@@ -1215,26 +1199,12 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog, char *buf)
+ 	return len;
+ }
+ 
+-static size_t msg_print_text(const struct printk_log *msg, enum log_flags prev,
+-			     bool syslog, char *buf, size_t size)
++static size_t msg_print_text(const struct printk_log *msg, bool syslog, char *buf, size_t size)
+ {
+ 	const char *text = log_text(msg);
+ 	size_t text_size = msg->text_len;
+-	bool prefix = true;
+-	bool newline = true;
+ 	size_t len = 0;
+ 
+-	if ((prev & LOG_CONT) && !(msg->flags & LOG_PREFIX))
+-		prefix = false;
+-
+-	if (msg->flags & LOG_CONT) {
+-		if ((prev & LOG_CONT) && !(prev & LOG_NEWLINE))
+-			prefix = false;
+-
+-		if (!(msg->flags & LOG_NEWLINE))
+-			newline = false;
+-	}
+-
+ 	do {
+ 		const char *next = memchr(text, '\n', text_size);
+ 		size_t text_len;
+@@ -1252,22 +1222,17 @@ static size_t msg_print_text(const struct printk_log *msg, enum log_flags prev,
+ 			    text_len + 1 >= size - len)
+ 				break;
+ 
+-			if (prefix)
+-				len += print_prefix(msg, syslog, buf + len);
++			len += print_prefix(msg, syslog, buf + len);
+ 			memcpy(buf + len, text, text_len);
+ 			len += text_len;
+-			if (next || newline)
+-				buf[len++] = '\n';
++			buf[len++] = '\n';
+ 		} else {
+ 			/* SYSLOG_ACTION_* buffer size only calculation */
+-			if (prefix)
+-				len += print_prefix(msg, syslog, NULL);
++			len += print_prefix(msg, syslog, NULL);
+ 			len += text_len;
+-			if (next || newline)
+-				len++;
++			len++;
+ 		}
+ 
+-		prefix = true;
+ 		text = next;
+ 	} while (text);
+ 
+@@ -1293,7 +1258,6 @@ static int syslog_print(char __user *buf, int size)
+ 			/* messages are gone, move to first one */
+ 			syslog_seq = log_first_seq;
+ 			syslog_idx = log_first_idx;
+-			syslog_prev = 0;
+ 			syslog_partial = 0;
+ 		}
+ 		if (syslog_seq == log_next_seq) {
+@@ -1303,13 +1267,11 @@ static int syslog_print(char __user *buf, int size)
+ 
+ 		skip = syslog_partial;
+ 		msg = log_from_idx(syslog_idx);
+-		n = msg_print_text(msg, syslog_prev, true, text,
+-				   LOG_LINE_MAX + PREFIX_MAX);
++		n = msg_print_text(msg, true, text, LOG_LINE_MAX + PREFIX_MAX);
+ 		if (n - syslog_partial <= size) {
+ 			/* message fits into buffer, move forward */
+ 			syslog_idx = log_next(syslog_idx);
+ 			syslog_seq++;
+-			syslog_prev = msg->flags;
+ 			n -= syslog_partial;
+ 			syslog_partial = 0;
+ 		} else if (!len){
+@@ -1352,7 +1314,6 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 		u64 next_seq;
+ 		u64 seq;
+ 		u32 idx;
+-		enum log_flags prev;
+ 
+ 		/*
+ 		 * Find first record that fits, including all following records,
+@@ -1360,12 +1321,10 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 		 */
+ 		seq = clear_seq;
+ 		idx = clear_idx;
+-		prev = 0;
+ 		while (seq < log_next_seq) {
+ 			struct printk_log *msg = log_from_idx(idx);
+ 
+-			len += msg_print_text(msg, prev, true, NULL, 0);
+-			prev = msg->flags;
++			len += msg_print_text(msg, true, NULL, 0);
+ 			idx = log_next(idx);
+ 			seq++;
+ 		}
+@@ -1373,12 +1332,10 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 		/* move first record forward until length fits into the buffer */
+ 		seq = clear_seq;
+ 		idx = clear_idx;
+-		prev = 0;
+ 		while (len > size && seq < log_next_seq) {
+ 			struct printk_log *msg = log_from_idx(idx);
+ 
+-			len -= msg_print_text(msg, prev, true, NULL, 0);
+-			prev = msg->flags;
++			len -= msg_print_text(msg, true, NULL, 0);
+ 			idx = log_next(idx);
+ 			seq++;
+ 		}
+@@ -1391,7 +1348,7 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 			struct printk_log *msg = log_from_idx(idx);
+ 			int textlen;
+ 
+-			textlen = msg_print_text(msg, prev, true, text,
++			textlen = msg_print_text(msg, true, text,
+ 						 LOG_LINE_MAX + PREFIX_MAX);
+ 			if (textlen < 0) {
+ 				len = textlen;
+@@ -1399,7 +1356,6 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 			}
+ 			idx = log_next(idx);
+ 			seq++;
+-			prev = msg->flags;
+ 
+ 			raw_spin_unlock_irq(&logbuf_lock);
+ 			if (copy_to_user(buf + len, text, textlen))
+@@ -1412,7 +1368,6 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 				/* messages are gone, move to next one */
+ 				seq = log_first_seq;
+ 				idx = log_first_idx;
+-				prev = 0;
+ 			}
+ 		}
+ 	}
+@@ -1513,7 +1468,6 @@ int do_syslog(int type, char __user *buf, int len, int source)
+ 			/* messages are gone, move to first one */
+ 			syslog_seq = log_first_seq;
+ 			syslog_idx = log_first_idx;
+-			syslog_prev = 0;
+ 			syslog_partial = 0;
+ 		}
+ 		if (source == SYSLOG_FROM_PROC) {
+@@ -1526,16 +1480,14 @@ int do_syslog(int type, char __user *buf, int len, int source)
+ 		} else {
+ 			u64 seq = syslog_seq;
+ 			u32 idx = syslog_idx;
+-			enum log_flags prev = syslog_prev;
+ 
+ 			error = 0;
+ 			while (seq < log_next_seq) {
+ 				struct printk_log *msg = log_from_idx(idx);
+ 
+-				error += msg_print_text(msg, prev, true, NULL, 0);
++				error += msg_print_text(msg, true, NULL, 0);
+ 				idx = log_next(idx);
+ 				seq++;
+-				prev = msg->flags;
+ 			}
+ 			error -= syslog_partial;
+ 		}
+@@ -1717,7 +1669,7 @@ static size_t cont_print_text(char *text, size_t size)
+ 	size_t textlen = 0;
+ 	size_t len;
+ 
+-	if (cont.cons == 0 && (console_prev & LOG_NEWLINE)) {
++	if (cont.cons == 0) {
+ 		textlen += print_time(cont.ts_nsec, text);
+ 		size -= textlen;
+ 	}
+@@ -1985,11 +1937,9 @@ static u64 syslog_seq;
+ static u32 syslog_idx;
+ static u64 console_seq;
+ static u32 console_idx;
+-static enum log_flags syslog_prev;
+ static u64 log_first_seq;
+ static u32 log_first_idx;
+ static u64 log_next_seq;
+-static enum log_flags console_prev;
+ static struct cont {
+ 	size_t len;
+ 	size_t cons;
+@@ -2001,15 +1951,15 @@ static char *log_dict(const struct printk_log *msg) { return NULL; }
+ static struct printk_log *log_from_idx(u32 idx) { return NULL; }
+ static u32 log_next(u32 idx) { return 0; }
+ static ssize_t msg_print_ext_header(char *buf, size_t size,
+-				    struct printk_log *msg, u64 seq,
+-				    enum log_flags prev_flags) { return 0; }
++				    struct printk_log *msg,
++				    u64 seq) { return 0; }
+ static ssize_t msg_print_ext_body(char *buf, size_t size,
+ 				  char *dict, size_t dict_len,
+ 				  char *text, size_t text_len) { return 0; }
+ static void call_console_drivers(int level,
+ 				 const char *ext_text, size_t ext_len,
+ 				 const char *text, size_t len) {}
+-static size_t msg_print_text(const struct printk_log *msg, enum log_flags prev,
++static size_t msg_print_text(const struct printk_log *msg,
+ 			     bool syslog, char *buf, size_t size) { return 0; }
+ static size_t cont_print_text(char *text, size_t size) { return 0; }
+ static bool suppress_message_printing(int level) { return false; }
+@@ -2397,7 +2347,6 @@ void console_unlock(void)
+ 			/* messages are gone, move to first one */
+ 			console_seq = log_first_seq;
+ 			console_idx = log_first_idx;
+-			console_prev = 0;
+ 		} else {
+ 			len = 0;
+ 		}
+@@ -2422,16 +2371,14 @@ void console_unlock(void)
+ 			 * will properly dump everything later.
+ 			 */
+ 			msg->flags &= ~LOG_NOCONS;
+-			console_prev = msg->flags;
+ 			goto skip;
+ 		}
+ 
+-		len += msg_print_text(msg, console_prev, false,
+-				      text + len, sizeof(text) - len);
++		len += msg_print_text(msg, false, text + len, sizeof(text) - len);
+ 		if (nr_ext_console_drivers) {
+ 			ext_len = msg_print_ext_header(ext_text,
+ 						sizeof(ext_text),
+-						msg, console_seq, console_prev);
++						msg, console_seq);
+ 			ext_len += msg_print_ext_body(ext_text + ext_len,
+ 						sizeof(ext_text) - ext_len,
+ 						log_dict(msg), msg->dict_len,
+@@ -2439,7 +2386,6 @@ void console_unlock(void)
+ 		}
+ 		console_idx = log_next(console_idx);
+ 		console_seq++;
+-		console_prev = msg->flags;
+ 		raw_spin_unlock(&logbuf_lock);
+ 
+ 		stop_critical_timings();	/* don't trace print latency */
+@@ -2734,7 +2680,6 @@ void register_console(struct console *newcon)
+ 		raw_spin_lock_irqsave(&logbuf_lock, flags);
+ 		console_seq = syslog_seq;
+ 		console_idx = syslog_idx;
+-		console_prev = syslog_prev;
+ 		raw_spin_unlock_irqrestore(&logbuf_lock, flags);
+ 		/*
+ 		 * We're about to replay the log buffer.  Only do this to the
+@@ -3084,7 +3029,7 @@ bool kmsg_dump_get_line_nolock(struct kmsg_dumper *dumper, bool syslog,
+ 		goto out;
+ 
+ 	msg = log_from_idx(dumper->cur_idx);
+-	l = msg_print_text(msg, 0, syslog, line, size);
++	l = msg_print_text(msg, syslog, line, size);
+ 
+ 	dumper->cur_idx = log_next(dumper->cur_idx);
+ 	dumper->cur_seq++;
+@@ -3153,7 +3098,6 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
+ 	u32 idx;
+ 	u64 next_seq;
+ 	u32 next_idx;
+-	enum log_flags prev;
+ 	size_t l = 0;
+ 	bool ret = false;
+ 
+@@ -3176,27 +3120,23 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
+ 	/* calculate length of entire buffer */
+ 	seq = dumper->cur_seq;
+ 	idx = dumper->cur_idx;
+-	prev = 0;
+ 	while (seq < dumper->next_seq) {
+ 		struct printk_log *msg = log_from_idx(idx);
+ 
+-		l += msg_print_text(msg, prev, true, NULL, 0);
++		l += msg_print_text(msg, true, NULL, 0);
+ 		idx = log_next(idx);
+ 		seq++;
+-		prev = msg->flags;
+ 	}
+ 
+ 	/* move first record forward until length fits into the buffer */
+ 	seq = dumper->cur_seq;
+ 	idx = dumper->cur_idx;
+-	prev = 0;
+ 	while (l > size && seq < dumper->next_seq) {
+ 		struct printk_log *msg = log_from_idx(idx);
+ 
+-		l -= msg_print_text(msg, prev, true, NULL, 0);
++		l -= msg_print_text(msg, true, NULL, 0);
+ 		idx = log_next(idx);
+ 		seq++;
+-		prev = msg->flags;
+ 	}
+ 
+ 	/* last message in next interation */
+@@ -3207,10 +3147,9 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
+ 	while (seq < dumper->next_seq) {
+ 		struct printk_log *msg = log_from_idx(idx);
+ 
+-		l += msg_print_text(msg, prev, syslog, buf + l, size - l);
++		l += msg_print_text(msg, syslog, buf + l, size - l);
+ 		idx = log_next(idx);
+ 		seq++;
+-		prev = msg->flags;
+ 	}
+ 
+ 	dumper->next_seq = next_seq;
+-- 
+2.20.1
+
+
 
