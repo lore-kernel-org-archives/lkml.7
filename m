@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFA8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2CBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277B6222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0389F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121537;
-	bh=mdL0Q4Tu0YQ0/7eHxAxBpSVNI6snCFhuwkmBw7iEIB0=;
+	s=default; t=1570121540;
+	bh=aF9CpfdxUg0KgzY0DPJtD5O3gsmdeYqLg5p8jigGk1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ds8MurWfkb7THta82UjqDQo4QG/WY/BH4X5xOPpXf10SMBrqRpqe/escOUbhftd90
-	 z7WmLVy5y8o1izywMNd1JWEqTFsS9i7CDyw8Rl517sz+bxMrRGjEpA8D5aXBWkUKar
-	 B6MlRgciRl1zMAshUiCxNdYxhkiPs838mwYytqiU=
+	b=tCyA+dEDTCO7bW55jWXb5UAH4sxYbI+2BVOObK0QXjBbHs4gin8iGSyRTGm500B6N
+	 yooZqTCxK4QfBZVVSI9NnLyZ4mFzP5VzkjJVqaZiaZp2q2JKvr21ZnYhXWyCd18heA
+	 5Hxf793HhNifS5yUD6CyCulkZnfcu50tHdmWQHKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405664AbfJCQwQ (ORCPT
+        id S2406160AbfJCQwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393171AbfJCQwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:09 -0400
+        id S2405685AbfJCQwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 528E02054F;
-        Thu,  3 Oct 2019 16:52:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64DD220867;
+        Thu,  3 Oct 2019 16:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121528;
-        bh=mdL0Q4Tu0YQ0/7eHxAxBpSVNI6snCFhuwkmBw7iEIB0=;
+        s=default; t=1570121536;
+        bh=aF9CpfdxUg0KgzY0DPJtD5O3gsmdeYqLg5p8jigGk1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRNeIyqEOLiA+I9vnarFdqD0Zd9sIluEsar7nwixnCaFhHHpo5dvDUHyoVe1at7h2
-         3Jv1zpoTsNdEn2EiYZJk8dme2HXWW686KoDtUHAn9FbfHZV6dy53rAsUo7OB3sZLxK
-         DeOKlrULdE4UEhdPynLAk1IziAXe0qXV9S9L20As=
+        b=uNO8mt5xlPahzAQkr+ykEP148sznszzOcvLpyrobc8mTThZVHzSc9pa2Nn3NlH1OA
+         0dwDLYqwFadjXqXKFa9A7fwpkFPHRo42GDaBTV7dCCge+LYQ+N5PaS0N/0bSMAYuxo
+         SUYM4Mnv6xRYAVd7JoPklJaLS7DVSLwRdr+ClfwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        stable@vger.kernel.org, Chris Murphy <lists@colorremedies.com>,
+        Anand Jain <anand.jain@oracle.com>, Qu Wenruo <wqu@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 313/344] btrfs: qgroup: Fix the wrong target io_tree when freeing reserved data space
-Date:   Thu,  3 Oct 2019 17:54:38 +0200
-Message-Id: <20191003154610.019756365@linuxfoundation.org>
+Subject: [PATCH 5.3 316/344] btrfs: Fix a regression which we cant convert to SINGLE profile
+Date:   Thu,  3 Oct 2019 17:54:41 +0200
+Message-Id: <20191003154610.279347902@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,79 +62,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Qu Wenruo <wqu@suse.com>
 
-commit bab32fc069ce8829c416e8737c119f62a57970f9 upstream.
+commit fab273595507a9ec7035df6d5512a955d80a80ba upstream.
 
 [BUG]
-Under the following case with qgroup enabled, if some error happened
-after we have reserved delalloc space, then in error handling path, we
-could cause qgroup data space leakage:
+With v5.3 kernel, we can't convert to SINGLE profile:
 
->From btrfs_truncate_block() in inode.c:
-
-	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
-					   block_start, blocksize);
-	if (ret)
-		goto out;
-
- again:
-	page = find_or_create_page(mapping, index, mask);
-	if (!page) {
-		btrfs_delalloc_release_space(inode, data_reserved,
-					     block_start, blocksize, true);
-		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, true);
-		ret = -ENOMEM;
-		goto out;
-	}
+  # btrfs balance start -f -dconvert=single $mnt
+  ERROR: error during balancing '/mnt/btrfs': Invalid argument
+  # dmesg -t | tail
+  validate_convert_profile: data profile=0x1000000000000 allowed=0x20 is_valid=1 final=0x1000000000000 ret=1
+  BTRFS error (device dm-3): balance: invalid convert data profile single
 
 [CAUSE]
-In the above case, btrfs_delalloc_reserve_space() will call
-btrfs_qgroup_reserve_data() and mark the io_tree range with
-EXTENT_QGROUP_RESERVED flag.
+With the extra debug output added, it shows that the @allowed bit is
+lacking the special in-memory only SINGLE profile bit.
 
-In the error handling path, we have the following call stack:
-btrfs_delalloc_release_space()
-|- btrfs_free_reserved_data_space()
-   |- btrsf_qgroup_free_data()
-      |- __btrfs_qgroup_release_data(reserved=@reserved, free=1)
-         |- qgroup_free_reserved_data(reserved=@reserved)
-            |- clear_record_extent_bits();
-            |- freed += changeset.bytes_changed;
+Thus we fail at that (profile & ~allowed) check.
 
-However due to a completion bug, qgroup_free_reserved_data() will clear
-EXTENT_QGROUP_RESERVED flag in BTRFS_I(inode)->io_failure_tree, other
-than the correct BTRFS_I(inode)->io_tree.
-Since io_failure_tree is never marked with that flag,
-btrfs_qgroup_free_data() will not free any data reserved space at all,
-causing a leakage.
-
-This type of error handling can only be triggered by errors outside of
-qgroup code. So EDQUOT error from qgroup can't trigger it.
+This regression is caused by commit 081db89b13cb ("btrfs: use raid_attr
+to get allowed profiles for balance conversion") and the fact that we
+don't use any bit to indicate SINGLE profile on-disk, but uses special
+in-memory only bit to help distinguish different profiles.
 
 [FIX]
-Fix the wrong target io_tree.
+Add that BTRFS_AVAIL_ALLOC_BIT_SINGLE to @allowed, so the code should be
+the same as it was and fix the regression.
 
-Reported-by: Josef Bacik <josef@toxicpanda.com>
-Fixes: bc42bda22345 ("btrfs: qgroup: Fix qgroup reserved space underflow by only freeing reserved ranges")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reported-by: Chris Murphy <lists@colorremedies.com>
+Fixes: 081db89b13cb ("btrfs: use raid_attr to get allowed profiles for balance conversion")
+CC: stable@vger.kernel.org # 5.3+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
 Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/qgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/volumes.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3469,7 +3469,7 @@ static int qgroup_free_reserved_data(str
- 		 * EXTENT_QGROUP_RESERVED, we won't double free.
- 		 * So not need to rush.
- 		 */
--		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_failure_tree,
-+		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree,
- 				free_start, free_start + free_len - 1,
- 				EXTENT_QGROUP_RESERVED, &changeset);
- 		if (ret < 0)
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4072,7 +4072,13 @@ int btrfs_balance(struct btrfs_fs_info *
+ 	}
+ 
+ 	num_devices = btrfs_num_devices(fs_info);
+-	allowed = 0;
++
++	/*
++	 * SINGLE profile on-disk has no profile bit, but in-memory we have a
++	 * special bit for it, to make it easier to distinguish.  Thus we need
++	 * to set it manually, or balance would refuse the profile.
++	 */
++	allowed = BTRFS_AVAIL_ALLOC_BIT_SINGLE;
+ 	for (i = 0; i < ARRAY_SIZE(btrfs_raid_array); i++)
+ 		if (num_devices >= btrfs_raid_array[i].devs_min)
+ 			allowed |= btrfs_raid_array[i].bg_flag;
 
 
