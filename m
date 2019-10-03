@@ -2,150 +2,178 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9E4ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8DEC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B95F20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7553620867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570140611;
+	bh=F6E2RvV20IDKK+8vbX46hyZ6gzaFZiM6GfmUhN5E1EM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QLKXdLKLQK+EN1s4GdF26zH010cLsv5ILvMXlx98cQbNoj+ygwmgHUI5IpSYu+gH8
+	 OOfatgxmvu8pI28RU0wAYNPgXgGstXDduZKElk6xLfLPUfmNVq2oQn+bTW6OK2KuZh
+	 wG89c+blB2NC5DGPjXqzNZXdrw/1/7xcXbo8ZVfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfJCWIW (ORCPT
+        id S1730146AbfJCWKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:08:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729617AbfJCWIW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:08:22 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93M6slr172853
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 18:08:21 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdgxtgjp2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 18:08:20 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 3 Oct 2019 23:08:18 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 3 Oct 2019 23:08:14 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93M8EWs54919378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 22:08:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8611A4051;
-        Thu,  3 Oct 2019 22:08:13 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64297A4040;
-        Thu,  3 Oct 2019 22:08:12 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Oct 2019 22:08:12 +0000 (GMT)
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     David Safford <david.safford@ge.com>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 03 Oct 2019 18:08:11 -0400
-In-Reply-To: <20191003215743.GB30511@linux.intel.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
-         <1570024819.4999.119.camel@linux.ibm.com>
-         <20191003114119.GF8933@linux.intel.com>
-         <1570107752.4421.183.camel@linux.ibm.com>
-         <20191003175854.GB19679@linux.intel.com>
-         <1570128827.5046.19.camel@linux.ibm.com>
-         <20191003215125.GA30511@linux.intel.com>
-         <20191003215743.GB30511@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Thu, 3 Oct 2019 18:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729490AbfJCWKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:10:10 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE8BF20867;
+        Thu,  3 Oct 2019 22:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570140609;
+        bh=F6E2RvV20IDKK+8vbX46hyZ6gzaFZiM6GfmUhN5E1EM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zu8WGpXZN1sGAbtPCJ1ddNvZhX+JVpBzcXYxUiAsYO4gdcdA2rE8hV1AEdNYGcBS6
+         BadYC0xhyZXUUnxHU20w+IT3uX5RLAdVL7JA5yo1jKaV4LLK+ed5l6bR0zt0BmxC0+
+         xC+crqB4jS7C2Dcq7obhj2TPkMCSEjG11sjcZyv4=
+Date:   Thu, 3 Oct 2019 17:10:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Donald Dutile <ddutile@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191003221007.GA209602@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100322-0016-0000-0000-000002B3CD22
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100322-0017-0000-0000-00003314D99D
-Message-Id: <1570140491.5046.33.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=662 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030179
+In-Reply-To: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-04 at 00:57 +0300, Jarkko Sakkinen wrote:
-> On Fri, Oct 04, 2019 at 12:51:25AM +0300, Jarkko Sakkinen wrote:
-> > On Thu, Oct 03, 2019 at 02:53:47PM -0400, Mimi Zohar wrote:
-> > > [Cc'ing David Safford]
-> > > 
-> > > On Thu, 2019-10-03 at 20:58 +0300, Jarkko Sakkinen wrote:
-> > > > On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
-> > > > > On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
-> > > > > > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
-> > > > > > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
-> > > > > > > > Only the kernel random pool should be used for generating random numbers.
-> > > > > > > > TPM contributes to that pool among the other sources of entropy. In here it
-> > > > > > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
-> > > > > > > > but in order to remove tpm_get_random() we need to first remove all the
-> > > > > > > > call sites.
-> > > > > > > 
-> > > > > > > At what point during boot is the kernel random pool available? Â Does
-> > > > > > > this imply that you're planning on changing trusted keys as well?
-> > > > > > 
-> > > > > > Well trusted keys *must* be changed to use it. It is not a choice
-> > > > > > because using a proprietary random number generator instead of defacto
-> > > > > > one in the kernel can be categorized as a *regression*.
-> > > > > 
-> > > > > I really don't see how using the TPM random number for TPM trusted
-> > > > > keys would be considered a regression. Â That by definition is a
-> > > > > trusted key. Â If anything, changing what is currently being done would
-> > > > > be the regression.Â 
-> > > > 
-> > > > It is really not a TPM trusted key. It trusted key that gets sealed with
-> > > > the TPM. The key itself is used in clear by kernel. The random number
-> > > > generator exists in the kernel to for a reason.
-> > > > 
-> > > > It is without doubt a regression.
-> > > 
-> > > You're misusing the term "regression" here. Â A regression is something
-> > > that previously worked and has stopped working. Â In this case, trusted
-> > > keys has always been based on the TPM random number generator. Â Before
-> > > changing this, there needs to be some guarantees that the kernel
-> > > random number generator has a pool of random numbers early, on all
-> > > systems including embedded devices, not just servers.
+[+cc Don, Alex, Jakub]
+
+On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
+> Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
+> > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+> > > I also initially thought that kobject_uevent generated the netlink event
+> > > but this is not the case. This is generated by the specific driver in use.
+> > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> > > i40e_pci_sriov_configure that sends the event.
+> > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+> > > finally calls the generic pci_enable_sriov function.
+> > I don't know anything about netlink.  The script from the bugzilla
+> > (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
+> > runs
 > > 
-> > I'm not using the term regression incorrectly here. Wrong function
-> > was used to generate random numbers for the payload here. It is an
-> > obvious bug.
+> >    ip monitor dev enp9s0f2
+> > 
+> > What are the actual netlink events you see?  Are they related to a
+> > device being removed?
 > 
-> At the time when trusted keys was introduced I'd say that it was a wrong
-> design decision and badly implemented code. But you are right in that as
-> far that code is considered it would unfair to speak of a regression.
+> We have netlink events both when num_vfs goes from 0 to N and from N to 0.
+> Indeed you have to go to 0 before going to M with M != N.
+
+Right.
+
+> On an Intel card, when one goes from 0 to N, the netlink event is
+> sent "early". The value of num_vfs is still 0 and you get the
+> impression that the number of VFS has not changed. As the meaning of
+> those events is overloaded, you have to wait an arbitrary amount of
+> time until it settles (there will be no other event).  There is no
+> such problem when it goes from N to 0 because of implementation
+> details but it may be different for another brand.
+
+I hadn't looked far enough.  I think the "remove" netlink events are
+probably from the i40e_do_reset_safe() path, which eventually calls
+free_netdev() and put_device().
+
+The pci_enable_sriov() path calls the driver's ->probe method, and I
+suspect the "add" netlink events are emitted there.
+
+> > When we change num_VFs, I think we have to disable any existing VFs
+> > before enabling the new num_VFs, so if you trigger on a netlink
+> > "remove" event, I wouldn't be surprised that reading sriov_numvfs
+> > would give a zero until the new VFs are enabled.
+> Yes but we are speaking of the event sent when num_vfs is changed from 0 to
+> N
+> > [...]
+> > I thought this was a good idea, but
+> > 
+> >    - It does break the device_lock() encapsulation a little bit:
+> >      sriov_numvfs_store() uses device_lock(), which happens to be
+> >      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
+> >      rely on that implementation, and
+
+> The use of device_lock was the cheapest solution. It is true that
+> lock and trylock are exposed by device.h but not is_locked. To
+> respect the abstraction, we would have to lock the device (at least
+> use trylock but it means locking when we can access the value, in
+> that case we may just make reading num_vfs blocking ?).
 > 
-> asym-tpm.c on the other hand this is fresh new code. There has been
-> *countless* of discussions over the years that random numbers should
-> come from multiple sources of entropy. There is no other categorization
-> than a bug for the tpm_get_random() there.
+> The other solution is to record the state of freshness of num_vfs
+> but it means a new Boolean in the pci_sriov data-structure.
 
-This week's LWN article on "5.4 Merge window, part 2" discusses "boot-
-time entropy". Â This article couldn't have been more perfectly timed.
+> 
+> >    - The netlink events are being generated via the NIC driver, and I'm
+> >      a little hesitant about changing the PCI core to deal with timing
+> >      issues "over there".
+> 
+> NIC drivers send netlink events when their state change, but it is
+> the core that changes the value of num_vfs. So I would think it is
+> the core responsibility to make sure the exposed value makes sense
+> and it would be better to ignore the details of the driver
+> implementation.
 
-Mimi
+Yes, I think you're right.  And I like your previous suggestion of
+just locking the device in the reader.  I'm not enough of a sysfs
+expert to know if there's a good reason to avoid a lock there.  Does
+the following look reasonable to you?
 
+
+commit 0940fc95da45
+Author: Pierre Crégut <pierre.cregut@orange.com>
+Date:   Wed Sep 11 09:27:36 2019 +0200
+
+    PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
+    
+    When sriov_numvfs is being updated, drivers may notify about new devices
+    before they are reflected in sriov->num_VFs, so concurrent sysfs reads
+    previously returned stale values.
+    
+    Serialize the sysfs read vs the write so the read returns the correct
+    num_VFs value.
+    
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+    Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
+    Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index b3f972e8cfed..e77562aabbae 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+ 				 char *buf)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
++	u16 num_vfs;
++
++	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
++	device_lock(&pdev->dev);
++	num_vfs = pdev->sriov->num_VFs;
++	device_lock(&pdev->dev);
+ 
+-	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
++	return sprintf(buf, "%u\n", num_vfs);
+ }
+ 
+ /*
