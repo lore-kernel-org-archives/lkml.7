@@ -2,54 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122D7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179C3C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CE0215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0629215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118465;
-	bh=YFa7vuHZRVFBfCUsJQNIUTavCvqGBAJxICHgJ+nGQP8=;
+	s=default; t=1570118468;
+	bh=VjXLo2CSeUqx9PubYQkZdyxnvmfH6vy9KUJzPiPSUOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gk7kyfJZcrksdBjBAFGfLF/5ajjNWAwp/4nqAkx8nIyOfyH7g9l1p9JEXn+APOFYM
-	 twLKbxegt3mCW+fWQsB1Lj3WxaiDf4gTPorT5c5c6whxsgwevb+2HhmVHqyfyr7rUW
-	 hj8P1RD//c5anppBJh6B5TjBl7avgx3+SCRoU9qM=
+	b=Ne/2trrAhsvdUotpQz/HjKM1w/tIuKJr5wMB5myHf6ycaX0TmeU3U1hwqVygpz+2W
+	 RflqoJ1m1JdDLSixLxdCd4YOZxHAAtW07UNO7ML1Pf0oG1/lR5rw6AQUrV+Lo9Y7qo
+	 cJn7SUYpFP4uu7XS/8d2XzM9rZVX5p1AdvcirBqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731699AbfJCQBF (ORCPT
+        id S1731712AbfJCQBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45090 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfJCQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:01 -0400
+        id S1731695AbfJCQBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1AE5215EA;
-        Thu,  3 Oct 2019 16:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F537222BE;
+        Thu,  3 Oct 2019 16:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118461;
-        bh=YFa7vuHZRVFBfCUsJQNIUTavCvqGBAJxICHgJ+nGQP8=;
+        s=default; t=1570118463;
+        bh=VjXLo2CSeUqx9PubYQkZdyxnvmfH6vy9KUJzPiPSUOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQCe+nYEMlAhhX/gYZfaK6TA7rcv8TM7aGBvehih3Ojyn+4Cx4mmhU6j3RGdmFcLy
-         zXH4j/LVu/vR8jqxR/7B0rKCmp0ximsjvmNPZhN+I1aKXiMYYi/uZ/oevKBae03fM1
-         KJg+8R4j8DgA+mq8vfhRCElans1QcnQGmTTOih0k=
+        b=VFeTCz1ihA4t8j/SejFmnKopKqq0yr9I38YlbDEz4YFOl2D7naX1SUDPwPSXnnYwK
+         LHoUnVnqV3AY1HLzxCUI0WjxLm5eRebUx84VXjQqTOSK92/wBHfPBYQ3W7KySDMTPJ
+         iMllGa/nFAKFmhbK4OGJRvVvXNIjXg+Xsllhnpv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.m>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.9 002/129] IB/core: Add an unbound WQ type to the new CQ API
-Date:   Thu,  3 Oct 2019 17:52:05 +0200
-Message-Id: <20191003154319.715869108@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 020/129] drm: Flush output polling on shutdown
+Date:   Thu,  3 Oct 2019 17:52:23 +0200
+Message-Id: <20191003154328.125639053@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -62,167 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit f794809a7259dfaa3d47d90ef5a86007cf48b1ce upstream.
+[ Upstream commit 3b295cb1a411d9c82bbfaa66bc17a8508716ed07 ]
 
-The upstream kernel commit cited below modified the workqueue in the
-new CQ API to be bound to a specific CPU (instead of being unbound).
-This caused ALL users of the new CQ API to use the same bound WQ.
+We need to mark the output polling as disabled to prevent concurrent
+irqs from queuing new work as shutdown the probe -- causing that work to
+execute after we have freed the structs:
 
-Specifically, MAD handling was severely delayed when the CPU bound
-to the WQ was busy handling (higher priority) interrupts.
+<4> [341.846490] DEBUG_LOCKS_WARN_ON(mutex_is_locked(lock))
+<4> [341.846497] WARNING: CPU: 3 PID: 3300 at kernel/locking/mutex-debug.c:103 mutex_destroy+0x49/0x50
+<4> [341.846508] Modules linked in: i915(-) vgem thunderbolt snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic mei_hdcp x86_pkg_temp_thermal coretemp crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_hda_codec snd_hwdep snd_hda_core snd_pcm mcs7830 btusb usbnet btrtl mii btbcm btintel bluetooth ecdh_generic ecc mei_me mei prime_numbers i2c_hid pinctrl_sunrisepoint pinctrl_intel [last unloaded: i915]
+<4> [341.846546] CPU: 3 PID: 3300 Comm: i915_module_loa Tainted: G     U            5.2.0-rc2-CI-CI_DRM_6175+ #1
+<4> [341.846553] Hardware name: Dell Inc. XPS 13 9360/0823VW, BIOS 2.9.0 07/09/2018
+<4> [341.846560] RIP: 0010:mutex_destroy+0x49/0x50
+<4> [341.846565] Code: 00 00 5b c3 e8 a8 9f 3b 00 85 c0 74 ed 8b 05 3e 55 23 01 85 c0 75 e3 48 c7 c6 00 d0 08 82 48 c7 c7 a8 aa 07 82 e8 e7 08 fa ff <0f> 0b eb cc 0f 1f 00 48 b8 11 11 11 11 11 11 11 11 48 89 76 20 48
+<4> [341.846578] RSP: 0018:ffffc900006cfdb0 EFLAGS: 00010286
+<4> [341.846583] RAX: 0000000000000000 RBX: ffff88826759a168 RCX: 0000000000000000
+<4> [341.846589] RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffffffff8112844c
+<4> [341.846595] RBP: ffff8882708fa548 R08: 0000000000000000 R09: 0000000000039600
+<4> [341.846601] R10: 0000000000000000 R11: 0000000000000ce4 R12: ffffffffa07de1e0
+<4> [341.846607] R13: 0000000000000000 R14: 0000000000000000 R15: ffffffffa07de2d0
+<4> [341.846613] FS:  00007f62b5ae0e40(0000) GS:ffff888276380000(0000) knlGS:0000000000000000
+<4> [341.846620] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4> [341.846626] CR2: 000055a4e064f4a0 CR3: 0000000266b16006 CR4: 00000000003606e0
+<4> [341.846632] Call Trace:
+<4> [341.846639]  drm_fb_helper_fini.part.17+0xb3/0x100
+<4> [341.846682]  intel_fbdev_fini+0x20/0x80 [i915]
+<4> [341.846722]  intel_modeset_cleanup+0x9a/0x140 [i915]
+<4> [341.846750]  i915_driver_unload+0xa3/0x100 [i915]
+<4> [341.846778]  i915_pci_remove+0x19/0x30 [i915]
+<4> [341.846784]  pci_device_remove+0x36/0xb0
+<4> [341.846790]  device_release_driver_internal+0xd3/0x1b0
+<4> [341.846795]  driver_detach+0x3f/0x80
+<4> [341.846800]  bus_remove_driver+0x53/0xd0
+<4> [341.846805]  pci_unregister_driver+0x25/0xa0
+<4> [341.846843]  i915_exit+0x16/0x1c [i915]
+<4> [341.846849]  __se_sys_delete_module+0x162/0x210
+<4> [341.846855]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+<4> [341.846859]  ? do_syscall_64+0xd/0x1c0
+<4> [341.846864]  do_syscall_64+0x55/0x1c0
+<4> [341.846869]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+<4> [341.846875] RIP: 0033:0x7f62b51871b7
+<4> [341.846881] Code: 73 01 c3 48 8b 0d d1 8c 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 8c 2c 00 f7 d8 64 89 01 48
+<4> [341.846897] RSP: 002b:00007ffe7a227138 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+<4> [341.846904] RAX: ffffffffffffffda RBX: 00007ffe7a2272b0 RCX: 00007f62b51871b7
+<4> [341.846910] RDX: 0000000000000001 RSI: 0000000000000800 RDI: 0000557cd6b55948
+<4> [341.846916] RBP: 0000557cd6b558e0 R08: 0000557cd6b5594c R09: 00007ffe7a227160
+<4> [341.846922] R10: 00007ffe7a226134 R11: 0000000000000206 R12: 0000000000000000
+<4> [341.846927] R13: 00007ffe7a227820 R14: 0000000000000000 R15: 0000000000000000
+<4> [341.846936] irq event stamp: 3547847
+<4> [341.846940] hardirqs last  enabled at (3547847): [<ffffffff819aad2c>] _raw_spin_unlock_irqrestore+0x4c/0x60
+<4> [341.846949] hardirqs last disabled at (3547846): [<ffffffff819aab9d>] _raw_spin_lock_irqsave+0xd/0x50
+<4> [341.846957] softirqs last  enabled at (3547376): [<ffffffff81c0033a>] __do_softirq+0x33a/0x4b9
+<4> [341.846966] softirqs last disabled at (3547367): [<ffffffff810b6379>] irq_exit+0xa9/0xc0
+<4> [341.846973] WARNING: CPU: 3 PID: 3300 at kernel/locking/mutex-debug.c:103 mutex_destroy+0x49/0x50
+<4> [341.846980] ---[ end trace ba94ca8952ba970e ]---
+<7> [341.866547] [drm:intel_dp_detect [i915]] MST support? port A: no, sink: no, modparam: yes
+<7> [341.890480] [drm:drm_add_display_info] non_desktop set to 0
+<7> [341.890530] [drm:drm_add_edid_modes] ELD: no CEA Extension found
+<7> [341.890537] [drm:drm_add_display_info] non_desktop set to 0
+<7> [341.890578] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:86:eDP-1] probed modes :
+<7> [341.890589] [drm:drm_mode_debug_printmodeline] Modeline "3200x1800": 60 373250 3200 3248 3280 3360 1800 1803 1808 1852 0x48 0xa
+<7> [341.890602] [drm:drm_mode_debug_printmodeline] Modeline "3200x1800": 48 298600 3200 3248 3280 3360 1800 1803 1808 1852 0x40 0xa
+<4> [341.890628] general protection fault: 0000 [#1] PREEMPT SMP PTI
+<4> [341.890636] CPU: 0 PID: 508 Comm: kworker/0:4 Tainted: G     U  W         5.2.0-rc2-CI-CI_DRM_6175+ #1
+<4> [341.890646] Hardware name: Dell Inc. XPS 13 9360/0823VW, BIOS 2.9.0 07/09/2018
+<4> [341.890655] Workqueue: events output_poll_execute
+<4> [341.890663] RIP: 0010:drm_setup_crtcs+0x13e/0xbe0
+<4> [341.890669] Code: 00 41 8b 44 24 58 85 c0 0f 8e f9 01 00 00 44 8b 6c 24 20 44 8b 74 24 28 31 db 31 ed 49 8b 44 24 60 48 63 d5 44 89 ee 83 c5 01 <48> 8b 04 d0 44 89 f2 48 8b 38 48 8b 87 88 01 00 00 48 8b 40 20 e8
+<4> [341.890686] RSP: 0018:ffffc9000033fd40 EFLAGS: 00010202
+<4> [341.890692] RAX: 6b6b6b6b6b6b6b6b RBX: 0000000000000002 RCX: 0000000000000000
+<4> [341.890700] RDX: 0000000000000001 RSI: 0000000000000c80 RDI: 00000000ffffffff
+<4> [341.890707] RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+<4> [341.890715] R10: 0000000000000c80 R11: 0000000000000000 R12: ffff888267599fe8
+<4> [341.890722] R13: 0000000000000c80 R14: 0000000000000708 R15: 0000000000000007
+<4> [341.890730] FS:  0000000000000000(0000) GS:ffff888276200000(0000) knlGS:0000000000000000
+<4> [341.890739] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4> [341.890745] CR2: 000055a4e064f4a0 CR3: 000000026d234003 CR4: 00000000003606f0
+<4> [341.890752] Call Trace:
+<4> [341.890760]  drm_fb_helper_hotplug_event.part.24+0x89/0xb0
+<4> [341.890768]  drm_kms_helper_hotplug_event+0x21/0x30
+<4> [341.890774]  output_poll_execute+0x9d/0x1a0
+<4> [341.890782]  process_one_work+0x245/0x610
+<4> [341.890790]  worker_thread+0x37/0x380
+<4> [341.890796]  ? process_one_work+0x610/0x610
+<4> [341.890802]  kthread+0x119/0x130
+<4> [341.890808]  ? kthread_park+0x80/0x80
+<4> [341.890815]  ret_from_fork+0x3a/0x50
 
-This caused a delay in the MAD "heartbeat" response handling,
-which resulted in ports being incorrectly classified as "down".
-
-To fix this, add a new "unbound" WQ type to the new CQ API, so that users
-have the option to choose either a bound WQ or an unbound WQ.
-
-For MADs, choose the new "unbound" WQ.
-
-Fixes: b7363e67b23e ("IB/device: Convert ib-comp-wq to be CPU-bound")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.m>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109964
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Imre Deak <imre.deak@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190603135910.15979-2-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cq.c     |    8 ++++++--
- drivers/infiniband/core/device.c |   15 ++++++++++++++-
- drivers/infiniband/core/mad.c    |    2 +-
- include/rdma/ib_verbs.h          |    9 ++++++---
- 4 files changed, 27 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_probe_helper.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/cq.c
-+++ b/drivers/infiniband/core/cq.c
-@@ -102,12 +102,12 @@ static void ib_cq_poll_work(struct work_
- 	completed = __ib_process_cq(cq, IB_POLL_BUDGET_WORKQUEUE);
- 	if (completed >= IB_POLL_BUDGET_WORKQUEUE ||
- 	    ib_req_notify_cq(cq, IB_POLL_FLAGS) > 0)
--		queue_work(ib_comp_wq, &cq->work);
-+		queue_work(cq->comp_wq, &cq->work);
- }
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index d7822bef19869..b33d39d9dd14d 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -387,6 +387,9 @@ static void output_poll_execute(struct work_struct *work)
+ 	enum drm_connector_status old_status;
+ 	bool repoll = false, changed;
  
- static void ib_cq_completion_workqueue(struct ib_cq *cq, void *private)
- {
--	queue_work(ib_comp_wq, &cq->work);
-+	queue_work(cq->comp_wq, &cq->work);
- }
- 
- /**
-@@ -159,9 +159,12 @@ struct ib_cq *ib_alloc_cq(struct ib_devi
- 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
- 		break;
- 	case IB_POLL_WORKQUEUE:
-+	case IB_POLL_UNBOUND_WORKQUEUE:
- 		cq->comp_handler = ib_cq_completion_workqueue;
- 		INIT_WORK(&cq->work, ib_cq_poll_work);
- 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
-+		cq->comp_wq = (cq->poll_ctx == IB_POLL_WORKQUEUE) ?
-+				ib_comp_wq : ib_comp_unbound_wq;
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -196,6 +199,7 @@ void ib_free_cq(struct ib_cq *cq)
- 		irq_poll_disable(&cq->iop);
- 		break;
- 	case IB_POLL_WORKQUEUE:
-+	case IB_POLL_UNBOUND_WORKQUEUE:
- 		cancel_work_sync(&cq->work);
- 		break;
- 	default:
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -59,6 +59,7 @@ struct ib_client_data {
- };
- 
- struct workqueue_struct *ib_comp_wq;
-+struct workqueue_struct *ib_comp_unbound_wq;
- struct workqueue_struct *ib_wq;
- EXPORT_SYMBOL_GPL(ib_wq);
- 
-@@ -1005,10 +1006,19 @@ static int __init ib_core_init(void)
- 		goto err;
- 	}
- 
-+	ib_comp_unbound_wq =
-+		alloc_workqueue("ib-comp-unb-wq",
-+				WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM |
-+				WQ_SYSFS, WQ_UNBOUND_MAX_ACTIVE);
-+	if (!ib_comp_unbound_wq) {
-+		ret = -ENOMEM;
-+		goto err_comp;
-+	}
++	if (!dev->mode_config.poll_enabled)
++		return;
 +
- 	ret = class_register(&ib_class);
- 	if (ret) {
- 		pr_warn("Couldn't create InfiniBand device class\n");
--		goto err_comp;
-+		goto err_comp_unbound;
- 	}
+ 	/* Pick up any changes detected by the probe functions. */
+ 	changed = dev->mode_config.delayed_event;
+ 	dev->mode_config.delayed_event = false;
+@@ -550,7 +553,11 @@ EXPORT_SYMBOL(drm_kms_helper_poll_init);
+  */
+ void drm_kms_helper_poll_fini(struct drm_device *dev)
+ {
+-	drm_kms_helper_poll_disable(dev);
++	if (!dev->mode_config.poll_enabled)
++		return;
++
++	dev->mode_config.poll_enabled = false;
++	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
+ }
+ EXPORT_SYMBOL(drm_kms_helper_poll_fini);
  
- 	ret = ibnl_init();
-@@ -1055,6 +1065,8 @@ err_ibnl:
- 	ibnl_cleanup();
- err_sysfs:
- 	class_unregister(&ib_class);
-+err_comp_unbound:
-+	destroy_workqueue(ib_comp_unbound_wq);
- err_comp:
- 	destroy_workqueue(ib_comp_wq);
- err:
-@@ -1071,6 +1083,7 @@ static void __exit ib_core_cleanup(void)
- 	addr_cleanup();
- 	ibnl_cleanup();
- 	class_unregister(&ib_class);
-+	destroy_workqueue(ib_comp_unbound_wq);
- 	destroy_workqueue(ib_comp_wq);
- 	/* Make sure that any pending umem accounting work is done. */
- 	destroy_workqueue(ib_wq);
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -3163,7 +3163,7 @@ static int ib_mad_port_open(struct ib_de
- 	}
- 
- 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
--			IB_POLL_WORKQUEUE);
-+			IB_POLL_UNBOUND_WORKQUEUE);
- 	if (IS_ERR(port_priv->cq)) {
- 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
- 		ret = PTR_ERR(port_priv->cq);
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -63,6 +63,7 @@
- 
- extern struct workqueue_struct *ib_wq;
- extern struct workqueue_struct *ib_comp_wq;
-+extern struct workqueue_struct *ib_comp_unbound_wq;
- 
- union ib_gid {
- 	u8	raw[16];
-@@ -1415,9 +1416,10 @@ struct ib_ah {
- typedef void (*ib_comp_handler)(struct ib_cq *cq, void *cq_context);
- 
- enum ib_poll_context {
--	IB_POLL_DIRECT,		/* caller context, no hw completions */
--	IB_POLL_SOFTIRQ,	/* poll from softirq context */
--	IB_POLL_WORKQUEUE,	/* poll from workqueue */
-+	IB_POLL_DIRECT,		   /* caller context, no hw completions */
-+	IB_POLL_SOFTIRQ,	   /* poll from softirq context */
-+	IB_POLL_WORKQUEUE,	   /* poll from workqueue */
-+	IB_POLL_UNBOUND_WORKQUEUE, /* poll from unbound workqueue */
- };
- 
- struct ib_cq {
-@@ -1434,6 +1436,7 @@ struct ib_cq {
- 		struct irq_poll		iop;
- 		struct work_struct	work;
- 	};
-+	struct workqueue_struct *comp_wq;
- };
- 
- struct ib_srq {
+-- 
+2.20.1
+
 
 
