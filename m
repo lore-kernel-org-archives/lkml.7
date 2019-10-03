@@ -2,53 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81040C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5160A2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550082070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121037;
-	bh=izJSz9zwaSm5xge40Tyl2gKrXmgr/JkniLuCjKggVes=;
+	s=default; t=1570121041;
+	bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2Qm9uc3hNA42Gp97klEnywL4QVlIjtsyDI5VRkK9240nbIb9+QDwpuiUSxAQu1ki
-	 ZkoJUAd4pNveArtni4VGUpb3BrDZ4jX1C6NJaRGMysoyRVAdrmuBeMHUrOTpdJleZ1
-	 GhRVzjl8AZA8QHvYVc5yS/4L13ub8UILWVNP3mG8=
+	b=P7R6NlHNlqP1T89XC1epnMEdKDpJNegVLYdjptHH46JGexxMb9G5j3oT5kNBPWKcO
+	 8CFvz6whpGCxmybGTKcC2dUU3FtmsTQGgKHgY28CVHLLg2D6TB3xNZyhjiZuj6wPAJ
+	 wtLz8AD8VlVe0wNeimA9arhzSONXWgIP+uxscUfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405296AbfJCQn4 (ORCPT
+        id S2405316AbfJCQoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55630 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405286AbfJCQny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:54 -0400
+        id S2391933AbfJCQn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE57B206BB;
-        Thu,  3 Oct 2019 16:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CFB12054F;
+        Thu,  3 Oct 2019 16:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121033;
-        bh=izJSz9zwaSm5xge40Tyl2gKrXmgr/JkniLuCjKggVes=;
+        s=default; t=1570121038;
+        bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzRMHRthY9T93J1Xh05kHcaw3OjgsI5fkMWjjFdt8MtCztBmhsLExkGfUk6iGb87V
-         mRDPfgawo5bJMdtjtizJQZ3/mRkb00+L5bQ8ypPuNHOnhtcGQxbuWtkKrllhla5a65
-         RPVqERWlFHXmfMw2A4OQH52U5hDLy+638i7tclZc=
+        b=ZGtsDniKo/o1Pdv+nBHR2adv4nFZ2uhnCHbODQXwbpGRQ52tPHrtJ9ALa9pIDsit7
+         YFS2X7qLTp1uo2jm8bDhC+q4YP8Q3TI4ViIJeMreq8uiGuLAZu+fuIAtXopApBE9QS
+         fAUGvjNu/XLWFt9Fe4jU+09YrFO6valexMBNw8DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 129/344] ASoC: uniphier: Fix double reset assersion when transitioning to suspend state
-Date:   Thu,  3 Oct 2019 17:51:34 +0200
-Message-Id: <20191003154552.965190602@linuxfoundation.org>
+Subject: [PATCH 5.3 131/344] tools headers: Fixup bitsperlong per arch includes
+Date:   Thu,  3 Oct 2019 17:51:36 +0200
+Message-Id: <20191003154553.151407150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,121 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit c372a35550c8d60f673b20210eea58a06d6d38cb ]
+[ Upstream commit 42fc2e9ef9603a7948aaa4ffd8dfb94b30294ad8 ]
 
-When transitioning to supend state, uniphier_aio_dai_suspend() is called
-and asserts reset lines and disables clocks.
+We were getting the file by luck, from one of the paths in -I, fix it to
+get it from the proper place:
 
-However, if there are two or more DAIs, uniphier_aio_dai_suspend() are
-called multiple times, and double reset assersion will cause.
+  $ cd tools/include/uapi/asm/
+  [acme@quaco asm]$ grep include bitsperlong.h
+  #include "../../arch/x86/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/s390/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/mips/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
+  #include <asm-generic/bitsperlong.h>
+  $ ls -la ../../arch/x86/include/uapi/asm/bitsperlong.h
+  ls: cannot access '../../arch/x86/include/uapi/asm/bitsperlong.h': No such file or directory
+  $ ls -la ../../../arch/*/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 237 ../../../arch/alpha/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 841 ../../../arch/arm64/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 966 ../../../arch/hexagon/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 234 ../../../arch/ia64/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 100 ../../../arch/microblaze/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 244 ../../../arch/mips/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 352 ../../../arch/parisc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 312 ../../../arch/powerpc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 353 ../../../arch/riscv/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 292 ../../../arch/s390/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 323 ../../../arch/sparc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 320 ../../../arch/x86/include/uapi/asm/bitsperlong.h
+  $
 
-This patch defines the counter that has the number of DAIs at first, and
-whenever uniphier_aio_dai_suspend() are called, it decrements the
-counter. And only if the counter is zero, it asserts reset lines and
-disables clocks.
+Found while fixing some other problem, before it was escaping the
+tools/ chroot and using stuff in the kernel sources:
 
-In the same way, uniphier_aio_dai_resume() are called, it increments the
-counter after deasserting reset lines and enabling clocks.
+    CC       /tmp/build/perf/util/find_bit.o
+In file included from /git/linux/tools/include/../../arch/x86/include/uapi/asm/bitsperlong.h:11,
+                 from /git/linux/tools/include/uapi/asm/bitsperlong.h:3,
+                 from /git/linux/tools/include/linux/bits.h:6,
+                 from /git/linux/tools/include/linux/bitops.h:13,
+                 from ../lib/find_bit.c:17:
 
-Fixes: 139a34200233 ("ASoC: uniphier: add support for UniPhier AIO CPU DAI driver")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Link: https://lore.kernel.org/r/1566281764-14059-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  # cd /git/linux/tools/include/../../arch/x86/include/uapi/asm/
+  # pwd
+  /git/linux/arch/x86/include/uapi/asm
+  #
+
+Now it is getting the one we want it to, i.e. the one inside tools/:
+
+    CC       /tmp/build/perf/util/find_bit.o
+  In file included from /git/linux/tools/arch/x86/include/uapi/asm/bitsperlong.h:11,
+                   from /git/linux/tools/include/linux/bits.h:6,
+                   from /git/linux/tools/include/linux/bitops.h:13,
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-8f8cfqywmf6jk8a3ucr0ixhu@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/uniphier/aio-cpu.c | 31 +++++++++++++++++++++----------
- sound/soc/uniphier/aio.h     |  1 +
- 2 files changed, 22 insertions(+), 10 deletions(-)
+ tools/include/uapi/asm/bitsperlong.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/uniphier/aio-cpu.c b/sound/soc/uniphier/aio-cpu.c
-index ee90e6c3937ce..2ae582a99b636 100644
---- a/sound/soc/uniphier/aio-cpu.c
-+++ b/sound/soc/uniphier/aio-cpu.c
-@@ -424,8 +424,11 @@ int uniphier_aio_dai_suspend(struct snd_soc_dai *dai)
- {
- 	struct uniphier_aio *aio = uniphier_priv(dai);
- 
--	reset_control_assert(aio->chip->rst);
--	clk_disable_unprepare(aio->chip->clk);
-+	aio->chip->num_wup_aios--;
-+	if (!aio->chip->num_wup_aios) {
-+		reset_control_assert(aio->chip->rst);
-+		clk_disable_unprepare(aio->chip->clk);
-+	}
- 
- 	return 0;
- }
-@@ -439,13 +442,15 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
- 	if (!aio->chip->active)
- 		return 0;
- 
--	ret = clk_prepare_enable(aio->chip->clk);
--	if (ret)
--		return ret;
-+	if (!aio->chip->num_wup_aios) {
-+		ret = clk_prepare_enable(aio->chip->clk);
-+		if (ret)
-+			return ret;
- 
--	ret = reset_control_deassert(aio->chip->rst);
--	if (ret)
--		goto err_out_clock;
-+		ret = reset_control_deassert(aio->chip->rst);
-+		if (ret)
-+			goto err_out_clock;
-+	}
- 
- 	aio_iecout_set_enable(aio->chip, true);
- 	aio_chip_init(aio->chip);
-@@ -458,7 +463,7 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
- 
- 		ret = aio_init(sub);
- 		if (ret)
--			goto err_out_clock;
-+			goto err_out_reset;
- 
- 		if (!sub->setting)
- 			continue;
-@@ -466,11 +471,16 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
- 		aio_port_reset(sub);
- 		aio_src_reset(sub);
- 	}
-+	aio->chip->num_wup_aios++;
- 
- 	return 0;
- 
-+err_out_reset:
-+	if (!aio->chip->num_wup_aios)
-+		reset_control_assert(aio->chip->rst);
- err_out_clock:
--	clk_disable_unprepare(aio->chip->clk);
-+	if (!aio->chip->num_wup_aios)
-+		clk_disable_unprepare(aio->chip->clk);
- 
- 	return ret;
- }
-@@ -619,6 +629,7 @@ int uniphier_aio_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip->rst);
- 
- 	chip->num_aios = chip->chip_spec->num_dais;
-+	chip->num_wup_aios = chip->num_aios;
- 	chip->aios = devm_kcalloc(dev,
- 				  chip->num_aios, sizeof(struct uniphier_aio),
- 				  GFP_KERNEL);
-diff --git a/sound/soc/uniphier/aio.h b/sound/soc/uniphier/aio.h
-index ca6ccbae0ee8c..a7ff7e556429b 100644
---- a/sound/soc/uniphier/aio.h
-+++ b/sound/soc/uniphier/aio.h
-@@ -285,6 +285,7 @@ struct uniphier_aio_chip {
- 
- 	struct uniphier_aio *aios;
- 	int num_aios;
-+	int num_wup_aios;
- 	struct uniphier_aio_pll *plls;
- 	int num_plls;
- 
+diff --git a/tools/include/uapi/asm/bitsperlong.h b/tools/include/uapi/asm/bitsperlong.h
+index 57aaeaf8e1920..edba4d93e9e6a 100644
+--- a/tools/include/uapi/asm/bitsperlong.h
++++ b/tools/include/uapi/asm/bitsperlong.h
+@@ -1,22 +1,22 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #if defined(__i386__) || defined(__x86_64__)
+-#include "../../arch/x86/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/x86/include/uapi/asm/bitsperlong.h"
+ #elif defined(__aarch64__)
+-#include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/arm64/include/uapi/asm/bitsperlong.h"
+ #elif defined(__powerpc__)
+-#include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/powerpc/include/uapi/asm/bitsperlong.h"
+ #elif defined(__s390__)
+-#include "../../arch/s390/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/s390/include/uapi/asm/bitsperlong.h"
+ #elif defined(__sparc__)
+-#include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/sparc/include/uapi/asm/bitsperlong.h"
+ #elif defined(__mips__)
+-#include "../../arch/mips/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/mips/include/uapi/asm/bitsperlong.h"
+ #elif defined(__ia64__)
+-#include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/ia64/include/uapi/asm/bitsperlong.h"
+ #elif defined(__riscv)
+-#include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/riscv/include/uapi/asm/bitsperlong.h"
+ #elif defined(__alpha__)
+-#include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/alpha/include/uapi/asm/bitsperlong.h"
+ #else
+ #include <asm-generic/bitsperlong.h>
+ #endif
 -- 
 2.20.1
 
