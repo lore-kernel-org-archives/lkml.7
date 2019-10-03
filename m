@@ -2,205 +2,128 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD8DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65091ECE58B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2725E2077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BFC320700
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:00:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJiWydjK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rbs/CGdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbfJDN7G (ORCPT
+        id S2388935AbfJDOAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:59:06 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36129 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388333AbfJDN7F (ORCPT
+        Fri, 4 Oct 2019 10:00:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37942 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388197AbfJDOAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:59:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id b136so13745353iof.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 06:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tEWV9BhBdurpPqvh7FtS6h4jnWtzbMLEuK0kv71xj8c=;
-        b=aJiWydjKnntivyzs2i2J3vj6LJmpwv4UabJT55mvn74jjjR/yXPzbUnTg+M1rbIM7m
-         Ut//ecuCcDZiLZSr141Qhu22YtpFN/0/THkYoffjgnUxUKsQ6a2H0HKnWiddV1wlO/Ga
-         eavLiC9O5RfnvzaBH367+z8FYp5XWsG1xi20xXCJaMYeDTylPW9vGJnQhYNcXjwtASjX
-         jCXTK0gyKIoQpkN0j57KIMdSWJjGTr1yW67an3hYju7XMl+EGY/ADHcI/orgHGs8Llp7
-         cDwIzSMGhHbYRHSU2p/n1FP2dYKFX5FaLgTa5QmHY7s8cgDlqMigbnII4hV8c3sfgSkR
-         CbEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tEWV9BhBdurpPqvh7FtS6h4jnWtzbMLEuK0kv71xj8c=;
-        b=t8FQf+rH4OW9q3AJ9MPLpxSRUjnQiEY2kszzWeEm/yNEz23MGWWQKoAtIrAEmtzRVH
-         kuxKaLG2Ux1Kml/8HvyaM2eI76InIgFmCs004CYDjARJN7+OjcZBsdJx16QAOsM3McwS
-         BxulOW1pvWRwpHecSXc6Og+8VpaI1EMgYJCZTOuoHdQFqNA0D2j3Ncy7hJOnQHeJMe7m
-         7nKszaoCNUsVsoF0Q1zSpzkA0Y77wFhfzl4OugwnXfgoIJpyqZo8a08e0jgczE0PxtrM
-         NGdtJs5ZHpbfgUDOTAmWuVcMA/aZoZYfgdwEZqUSov7jizkVNJaofqh4yrV7kDN/V/Ap
-         Jkiw==
-X-Gm-Message-State: APjAAAXbqhEhSrATgl+rrqvgFriBIG2DbVh/PnEv+rH7MuQuwp9NMLpg
-        OLnzl5w5zw52s6uiODl53jXPPtKyqAtLNOcJcv4=
-X-Google-Smtp-Source: APXvYqzxOYvd5zFEclXdsUmbY63Ktx5ijrpM0Rt5lg+zvqDaDW540phh1l5LkoN7zsDs7OSoPpDYsQMvJzKy8gQbioY=
-X-Received: by 2002:a92:3314:: with SMTP id a20mr15204996ilf.276.1570197544161;
- Fri, 04 Oct 2019 06:59:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190926160433.GD32311@linux.ibm.com> <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
- <20190928073331.GA5269@linux.ibm.com> <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
- <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
- <20191002073605.GA30433@linux.ibm.com> <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
- <20191003053451.GA23397@linux.ibm.com> <20191003084914.GV25745@shell.armlinux.org.uk>
- <20191003113010.GC23397@linux.ibm.com> <20191004092727.GX25745@shell.armlinux.org.uk>
- <bc05540f2aa46cff5d6239faab83446401ba7b5f.camel@pengutronix.de>
-In-Reply-To: <bc05540f2aa46cff5d6239faab83446401ba7b5f.camel@pengutronix.de>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 4 Oct 2019 08:58:52 -0500
-Message-ID: <CAHCN7xKgoMBxzwC03obFsoXS18yYHcikNaKFU40J=hYo_yUVDw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/21] Refine memblock API
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 4 Oct 2019 10:00:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94Ds1h6024269;
+        Fri, 4 Oct 2019 13:58:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=W0qjKQg1B8u+RNi8nWbMKhDrA5TAne7U2vWQ/Wl2O1U=;
+ b=rbs/CGdoD+Zf9ZZ4jL/5e7B5Frua/hPsRtXH1pf2kv3ySrsOXnZe0wkMuCNBI+3vY/2P
+ +TcQhJaeanKqKsecuA1ZtSjgxeqG2U0iR6Atii9nykd1b2d4ymdKKhz5wUOofkovgIJo
+ fVhxE5mv/cg/1f4CYHHLS6xWJJgnk4u5H80VavIDrGUCP8JOiJ119BHx/8aqzvXFkIOH
+ tiAxTJN4rTn0863rasD+zPaqcJSsMHuRJVCodtfP6V9y3VWeo7+iJpvGqZ7zgVL9+KJZ
+ Dn6tEDUaWpRKHT/gQNrPy2bq60LwBIVEfwMYCHJpGQSUjZ8UL5lLj/P4Me6q+6W02dkQ CQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2v9xxvbq8k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Oct 2019 13:58:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94DrNJv009193;
+        Fri, 4 Oct 2019 13:58:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vdn19tpwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Oct 2019 13:58:06 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x94Dvubq011560;
+        Fri, 4 Oct 2019 13:57:59 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 04 Oct 2019 06:57:55 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, peterz@infradead.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v4 0/4] Add a unified parameter "nopvspin"
+Date:   Thu,  3 Oct 2019 22:02:11 +0800
+Message-Id: <1570111335-12731-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910040130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910040130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 8:23 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Am Freitag, den 04.10.2019, 10:27 +0100 schrieb Russell King - ARM
-> Linux admin:
-> > On Thu, Oct 03, 2019 at 02:30:10PM +0300, Mike Rapoport wrote:
-> > > On Thu, Oct 03, 2019 at 09:49:14AM +0100, Russell King - ARM Linux
-> > > admin wrote:
-> > > > On Thu, Oct 03, 2019 at 08:34:52AM +0300, Mike Rapoport wrote:
-> > > > > (trimmed the CC)
-> > > > >
-> > > > > On Wed, Oct 02, 2019 at 06:14:11AM -0500, Adam Ford wrote:
-> > > > > > On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <
-> > > > > > rppt@linux.ibm.com> wrote:
-> > > > > >
-> > > > > > Before the patch:
-> > > > > >
-> > > > > > # cat /sys/kernel/debug/memblock/memory
-> > > > > >    0: 0x10000000..0x8fffffff
-> > > > > > # cat /sys/kernel/debug/memblock/reserved
-> > > > > >    0: 0x10004000..0x10007fff
-> > > > > >   34: 0x2fffff88..0x3fffffff
-> > > > > >
-> > > > > >
-> > > > > > After the patch:
-> > > > > > # cat /sys/kernel/debug/memblock/memory
-> > > > > >    0: 0x10000000..0x8fffffff
-> > > > > > # cat /sys/kernel/debug/memblock/reserved
-> > > > > >    0: 0x10004000..0x10007fff
-> > > > > >   36: 0x80000000..0x8fffffff
-> > > > >
-> > > > > I'm still not convinced that the memblock refactoring didn't
-> > > > > uncovered an
-> > > > > issue in etnaviv driver.
-> > > > >
-> > > > > Why moving the CMA area from 0x80000000 to 0x30000000 makes it
-> > > > > fail?
-> > > >
-> > > > I think you have that the wrong way round.
-> > >
-> > > I'm relying on Adam's reports of working and non-working versions.
-> > > According to that etnaviv works when CMA area is at 0x80000000 and
-> > > does not
-> > > work when it is at 0x30000000.
-> > >
-> > > He also sent logs a few days ago [1], they also confirm that.
-> > >
-> > > [1]
-> > > https://lore.kernel.org/linux-mm/CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com/
-> >
-> > Sorry, yes, you're right.  Still, I've reported this same regression
-> > a while back, and it's never gone away.
-> >
-> > > > > BTW, the code that complained about "command buffer outside
-> > > > > valid memory
-> > > > > window" has been removed by the commit 17e4660ae3d7
-> > > > > ("drm/etnaviv:
-> > > > > implement per-process address spaces on MMUv2").
-> > > > >
-> > > > > Could be that recent changes to MMU management of etnaviv
-> > > > > resolve the
-> > > > > issue?
-> > > >
-> > > > The iMX6 does not have MMUv2 hardware, it has MMUv1.  With MMUv1
-> > > > hardware requires command buffers within the first 2GiB of
-> > > > physical
-> > > > RAM.
-> > >
-> > > I've mentioned that patch because it removed the check for cmdbuf
-> > > address
-> > > for MMUv1:
-> > >
-> > > @@ -785,15 +768,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
-> > >                                   PAGE_SIZE);
-> > >         if (ret) {
-> > >                 dev_err(gpu->dev, "could not create command
-> > > buffer\n");
-> > > -               goto unmap_suballoc;
-> > > -       }
-> > > -
-> > > -       if (!(gpu->identity.minor_features1 &
-> > > chipMinorFeatures1_MMU_VERSION) &&
-> > > -           etnaviv_cmdbuf_get_va(&gpu->buffer, &gpu-
-> > > >cmdbuf_mapping) > 0x80000000) {
-> > > -               ret = -EINVAL;
-> > > -               dev_err(gpu->dev,
-> > > -                       "command buffer outside valid memory
-> > > window\n");
-> > > -               goto free_buffer;
-> > > +               goto fail;
-> > >         }
-> > >
-> > >         /* Setup event management */
-> > >
-> > >
-> > > I really don't know how etnaviv works, so I hoped that people who
-> > > understand it would help.
-> >
-> > From what I can see, removing that check is a completely insane thing
-> > to do, and I note that these changes are _not_ described in the
-> > commit
-> > message.  The problem was known about _before_ (June 22) the patch
-> > was
-> > created (July 5).
-> >
-> > Lucas, please can you explain why removing the above check, which is
-> > well known to correctly trigger on various platforms to prevent
-> > incorrect GPU behaviour, is safe?
->
-> It isn't. It's a pretty big oversight in this commit to remove this
-> check. It can't be done at the same spot in the code anymore, as we
-> don't have a mapping context at this time anymore, but it should have
-> moved into etnaviv_iommu_context_init(). I'll send a patch to fix this
-> up.
+There are cases folks want to disable spinlock optimization for
+debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+and "hv_nopvspin" to support that, but kvm doesn't.
 
-If you CC me, I will test it and report my findings.
+The first patch adds that feature to KVM guest with "nopvspin".
 
-adam
+For compatibility reason original parameters "xen_nopvspin" and
+"hv_nopvspin" are retained and marked obsolete.
 
->
-> Regards,
-> Lucas
->
+
+v4:
+PATCH1: use variable name nopvspin instead of pvspin and
+        defined it as __initdata, changed print message,
+        updated patch description                     [Sean Christopherson]
+PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
+PATCH3: make variable nopvsin and xen_pvspin coexist
+        remove Reviewed-by due to code change         [Sean Christopherson]
+PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
+
+v3:
+PATCH2: Fix indentation
+
+v2:
+PATCH1: pick the print code change into separate PATCH2,
+        updated patch description             [Vitaly Kuznetsov]
+PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+PATCH3: add Reviewed-by                       [Juergen Gross]
+
+Zhenzhong Duan (4):
+  x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+  x86/kvm: Change print code to use pr_*() format
+  xen: Mark "xen_nopvspin" parameter obsolete
+  x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+
+ Documentation/admin-guide/kernel-parameters.txt | 14 ++++++-
+ arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+ arch/x86/include/asm/qspinlock.h                |  1 +
+ arch/x86/kernel/kvm.c                           | 51 +++++++++++++++----------
+ arch/x86/xen/spinlock.c                         |  3 ++
+ kernel/locking/qspinlock.c                      |  7 ++++
+ 6 files changed, 57 insertions(+), 23 deletions(-)
+
+-- 
+1.8.3.1
+
