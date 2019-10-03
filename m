@@ -2,110 +2,107 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF08DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9747CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A050A206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE0A215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570120910;
+	bh=xKTppu/GDfJLMQWpfzwwiblwXnUW9uwticGihbh1hF8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fda8tpE0ZlXR1x7gRJNouW32CRf87SqyxSOGWqxNWG6sHgMRMmseNlozaWRkndqvI
+	 8uy0xGU+ElLTXvwfXmz2Im3ga7yqu7u1feuXh9u6tiPmISK73V4EM3o3Rdoc0h2TfH
+	 QrOx+9LNYmg8Fx5hciW/przb2yuvcQE2qPbShN78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405079AbfJCQlq (ORCPT
+        id S2392274AbfJCQlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:41:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34588 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 12:41:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405064AbfJCQlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:39 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2405067AbfJCQlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 590FE18C4290;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BA342054F;
         Thu,  3 Oct 2019 16:41:39 +0000 (UTC)
-Received: from mail (ovpn-120-134.rdu2.redhat.com [10.10.120.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0481C5C226;
-        Thu,  3 Oct 2019 16:41:33 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 12:41:33 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Ben Luo <luoben@linux.alibaba.com>
-Cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio/type1: remove hugepage checks in
- is_invalid_reserved_pfn()
-Message-ID: <20191003164133.GG13922@redhat.com>
-References: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570120899;
+        bh=xKTppu/GDfJLMQWpfzwwiblwXnUW9uwticGihbh1hF8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IznPtvy7QKs8/ExvVgSJPUTK+rL8LXB6nkEN63YNSlOwS/6mZQrgGn/K3xzb8Z+Qv
+         CFA+N1wGWIsJGMzAM27iY59uF0d5iUqjgTTdilwH7KgSmzkVir/p5lOsvhirfwgzb0
+         jXdDCeNXl0TRC6Dj2JadH3Jd0iYuYgChHPTQOqp4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Vaishali Thakkar <vaishali.thakkar@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 080/344] base: soc: Export soc_device_register/unregister APIs
+Date:   Thu,  3 Oct 2019 17:50:45 +0200
+Message-Id: <20191003154548.029974875@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 03 Oct 2019 16:41:39 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:49:42AM +0800, Ben Luo wrote:
-> Currently, no hugepage split code can transfer the reserved bit
-> from head to tail during the split, so checking the head can't make
-> a difference in a racing condition with hugepage spliting.
-> 
-> The buddy wouldn't allow a driver to allocate an hugepage if any
-> subpage is reserved in the e820 map at boot, if any driver sets the
-> reserved bit of head page before mapping the hugepage in userland,
-> it needs to set the reserved bit in all subpages to be safe.
-> 
-> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+[ Upstream commit f7ccc7a397cf2ef64aebb2f726970b93203858d2 ]
+
+Qcom Socinfo driver can be built as a module, so
+export these two APIs.
+
+Tested-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/base/soc.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+index 10b280f30217b..7e91894a380b5 100644
+--- a/drivers/base/soc.c
++++ b/drivers/base/soc.c
+@@ -157,6 +157,7 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
+ out1:
+ 	return ERR_PTR(ret);
+ }
++EXPORT_SYMBOL_GPL(soc_device_register);
+ 
+ /* Ensure soc_dev->attr is freed prior to calling soc_device_unregister. */
+ void soc_device_unregister(struct soc_device *soc_dev)
+@@ -166,6 +167,7 @@ void soc_device_unregister(struct soc_device *soc_dev)
+ 	device_unregister(&soc_dev->dev);
+ 	early_soc_dev_attr = NULL;
+ }
++EXPORT_SYMBOL_GPL(soc_device_unregister);
+ 
+ static int __init soc_bus_register(void)
+ {
+-- 
+2.20.1
 
 
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 26 ++++----------------------
->  1 file changed, 4 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 054391f..e2019ba 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -287,31 +287,13 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
->   * Some mappings aren't backed by a struct page, for example an mmap'd
->   * MMIO range for our own or another device.  These use a different
->   * pfn conversion and shouldn't be tracked as locked pages.
-> + * For compound pages, any driver that sets the reserved bit in head
-> + * page needs to set the reserved bit in all subpages to be safe.
->   */
->  static bool is_invalid_reserved_pfn(unsigned long pfn)
->  {
-> -	if (pfn_valid(pfn)) {
-> -		bool reserved;
-> -		struct page *tail = pfn_to_page(pfn);
-> -		struct page *head = compound_head(tail);
-> -		reserved = !!(PageReserved(head));
-> -		if (head != tail) {
-> -			/*
-> -			 * "head" is not a dangling pointer
-> -			 * (compound_head takes care of that)
-> -			 * but the hugepage may have been split
-> -			 * from under us (and we may not hold a
-> -			 * reference count on the head page so it can
-> -			 * be reused before we run PageReferenced), so
-> -			 * we've to check PageTail before returning
-> -			 * what we just read.
-> -			 */
-> -			smp_rmb();
-> -			if (PageTail(tail))
-> -				return reserved;
-> -		}
-> -		return PageReserved(tail);
-> -	}
-> +	if (pfn_valid(pfn))
-> +		return PageReserved(pfn_to_page(pfn));
->  
->  	return true;
->  }
-> -- 
-> 1.8.3.1
-> 
+
