@@ -2,132 +2,179 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B29DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA952086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2139A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epPG/mem"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XKSPLhch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfJCKNq (ORCPT
+        id S1728781AbfJCKOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:13:46 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38715 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCKNp (ORCPT
+        Thu, 3 Oct 2019 06:14:14 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9188 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725827AbfJCKOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:13:45 -0400
-Received: by mail-qt1-f194.google.com with SMTP id j31so2770945qta.5;
-        Thu, 03 Oct 2019 03:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zRmRJN8gbGe7JsDiP8BYKFBP5BEQqwbz/PHKZujLW60=;
-        b=epPG/membyZKgagNXMf0uJWB8XjF81/2Dwq/im/BdTqSFTPsQBLQfrNivaoTa9NmOF
-         dsg6R0r4b1+vf8DQZ0n/0ZjUYSkR9aVR1wUIliI3cQ5ggBIzQdJtixMwpMispp0X0+qa
-         tKMN2ehB5fEi1rAf2abpSDiq+0Nbwp6kM03xVFrVOPV86UqoaRNHRM/D8bVcPbHfJBrK
-         0kGnC8k2qTAwpCbsnkkEXz7bTc8OPm9UPqUjsdKaRsTWvDsd7b5t4u6oUiq0ZxSWADf6
-         F6Bis1quh2lth1GiFc5eE12C7aOb2h3foKMok3ldmOKYgToc94REhv43Z7tEbi2J8hfL
-         AndQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zRmRJN8gbGe7JsDiP8BYKFBP5BEQqwbz/PHKZujLW60=;
-        b=hfW3tw9Ap3gBh+Bdg2Nt/W1cu01hP8UksW/9uVSbL64krH7HiNHq6yQiHQirTO2282
-         FOs+69wyj95GSxPx1zAy3Uokm06ssoxxvIp7neZGko5ipML07k35MQrIlaCXct0u0cj4
-         JyjGEn66qRhcN8U2weBzLZ34o6CzSIZtNxeRvg9imEJLgpgqpYmcIFYxpFKn0sm/bQWl
-         lZNd1Taf4H7IG5E7+boLGhg+1MIUDm20Ht7zgH+k6Yt2PsK5SGg36Z9uNlx8E4lcVPHE
-         F9E5O0racxnYvLj3hbDsxzwg1rMwWFXU7Agw5aDU3DCd5wY4T3UsaAsdYHurZvNlLR/C
-         JoYA==
-X-Gm-Message-State: APjAAAUP/SK6/T0TYRlt+60O/d7PebBXWr1Ycfbb9pBXWL86gWtetjWv
-        ZsNKLlRt6ivf/L1CsZkN1irqlfH8ogO58dPsIx+Vg/Mi80A=
-X-Google-Smtp-Source: APXvYqxEDszLeMOiHKaxeg7RngcGH1UbDQJtfPWW0sPv1p/4D6xV6yi5BiqqFYluYKMDrd3Mq1kWhlWK5wXO9jPSljI=
-X-Received: by 2002:ac8:4712:: with SMTP id f18mr4241086qtp.313.1570097624646;
- Thu, 03 Oct 2019 03:13:44 -0700 (PDT)
+        Thu, 3 Oct 2019 06:14:14 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x93A2J55020727;
+        Thu, 3 Oct 2019 12:13:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=8P9lBIH2EjtLoqWh8kEKBgTx+oCkp2//ut7kNrzMBMk=;
+ b=XKSPLhchexVTwVYLQfaQQ7XE/rbyZ+1lGE0yi9GgsbCUhbXrzjgQxC/vNeDxLR9xADiF
+ ZNONUjtVSutevwzTUNA6nBY60SkHPHXirVtWbDI3YkYGqF2+/dYG6aD06fmizCYgJC7D
+ IXKNiPKUpxd8pDMzFhXJGJF+zNeywHyDQIqf2NKk201DZXnGxhOE2oebMX41euUbY3g6
+ yDeUI0ws1BsAXjhfRwb/8hjoudqEzFUQ6DxhQimwgM2aJXe6wS50sjdrsNc2hRlSbuoI
+ 3waLwDfyJJ/CD2qa1fZVenUFQHDekOGzhykjgFBOjQp/E6i2WKZGrxwQ+9Wd8OyuPRXs BQ== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v9vnam10h-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 03 Oct 2019 12:13:55 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3532D23;
+        Thu,  3 Oct 2019 10:13:45 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2155C2B5CB3;
+        Thu,  3 Oct 2019 12:13:45 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 3 Oct
+ 2019 12:13:44 +0200
+Subject: Re: [PATCH 1/5] net: ethernet: stmmac: Add support for syscfg clock
+To:     Christophe Roullier <christophe.roullier@st.com>,
+        <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>
+References: <20190920053817.13754-1-christophe.roullier@st.com>
+ <20190920053817.13754-2-christophe.roullier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <7032bc93-cfb3-4538-1de5-bd901a3fc8c5@st.com>
+Date:   Thu, 3 Oct 2019 12:13:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191001205203.4b1a5fb6@coco.lan> <20191002141359.30166-1-gonsolo@gmail.com>
- <20191002141359.30166-2-gonsolo@gmail.com> <20191002142744.GA3475@gofer.mess.org>
- <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
- <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
-In-Reply-To: <20191002154922.7f1cfc76@coco.lan>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Thu, 3 Oct 2019 12:13:33 +0200
-Message-ID: <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190920053817.13754-2-christophe.roullier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-03_04:2019-10-01,2019-10-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi,
 
-> Could you please test the enclosing patch and see if, with that, you
-> can remove the hacks you added for the tuner probe to work?
+On 9/20/19 7:38 AM, Christophe Roullier wrote:
+> Add optional support for syscfg clock in dwmac-stm32.c
+> Now Syscfg clock is activated automatically when syscfg
+> registers are used
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> ---
+>   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 36 +++++++++++++------
+>   1 file changed, 25 insertions(+), 11 deletions(-)
 
-I tested again on a vanilla media_tree with Mauro's patch attached.
-Doesn't work. Dmesg output:
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-[    0.788387] kernel: usb 1-1: new high-speed USB device number 2
-using ehci-pci
-[    0.792384] kernel: usb 2-1: new high-speed USB device number 2
-using xhci_hcd
-[    0.944937] kernel: usb 2-1: New USB device found, idVendor=1d19,
-idProduct=0100, bcdDevice= 1.00
-[    0.944939] kernel: usb 2-1: New USB device strings: Mfr=1,
-Product=2, SerialNumber=3
-[    0.944940] kernel: usb 2-1: Product: TS Aggregator
-[    0.944941] kernel: usb 2-1: Manufacturer: ITE Tech., Inc.
-[    0.944942] kernel: usb 2-1: SerialNumber: AF0102020700001
-
-I then also used the following (additional) patch:
-
-@@ -2119,6 +2122,8 @@ static const struct usb_device_id af9035_id_table[] = {
-        /* IT930x devices */
-        { DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9303,
-                &it930x_props, "ITE 9303 Generic", NULL) },
-+       { DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
-+               &it930x_props, "Logilink VG0022A", NULL) },
-        { DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TD310,
-                &it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
-        { }
-
-Which gives the following output:
-
-[    5.380989] si2168 1-0067: Silicon Labs Si2168-B40 successfully identified
-[    5.380991] si2168 1-0067: firmware version: B 4.0.2
-[    5.381013] usb 2-1: DVB: registering adapter 0 frontend 0 (Silicon
-Labs Si2168)...
-[    5.381018] dvbdev: dvb_create_media_entity: media entity 'Silicon
-Labs Si2168' registered.
-[    5.390058] checking generic (e0000000 410000) vs hw (e0000000 10000000)
-[    5.390062] fb0: switching to inteldrmfb from EFI VGA
-[    5.390268] Console: switching to colour dummy device 80x25
-[    5.390281] i915 0000:00:02.0: vgaarb: deactivate vga console
-[    5.393438] si2157 2-0063: Silicon Labs Si2147/2148/2157/2158
-successfully attached
-
-But when I try to use VLC I get the following:
-
-[  457.677363] si2168 1-0067: downloading firmware from file
-'dvb-demod-si2168-b40-01.fw'
-[  458.631034] si2168 1-0067: firmware version: B 4.0.11
-[  458.650309] si2157 2-0063: unknown chip version Si21255-\xff\xff\xff
-
-Now I'm trying other timings.
-
-Thanks,
-g
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> index 4ef041bdf6a1..7e6619868cc1 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> @@ -152,23 +152,32 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+>   	int ret = 0;
+>   
+>   	if (prepare) {
+> -		ret = clk_prepare_enable(dwmac->syscfg_clk);
+> -		if (ret)
+> -			return ret;
+> -
+> +		if (dwmac->syscfg_clk) {
+> +			ret = clk_prepare_enable(dwmac->syscfg_clk);
+> +			if (ret)
+> +				return ret;
+> +		}
+>   		if (dwmac->clk_eth_ck) {
+>   			ret = clk_prepare_enable(dwmac->clk_eth_ck);
+>   			if (ret) {
+> -				clk_disable_unprepare(dwmac->syscfg_clk);
+> +				if (dwmac->syscfg_clk)
+> +					goto unprepare_syscfg;
+>   				return ret;
+>   			}
+>   		}
+>   	} else {
+> -		clk_disable_unprepare(dwmac->syscfg_clk);
+> +		if (dwmac->syscfg_clk)
+> +			clk_disable_unprepare(dwmac->syscfg_clk);
+> +
+>   		if (dwmac->clk_eth_ck)
+>   			clk_disable_unprepare(dwmac->clk_eth_ck);
+>   	}
+>   	return ret;
+> +
+> +unprepare_syscfg:
+> +	clk_disable_unprepare(dwmac->syscfg_clk);
+> +
+> +	return ret;
+>   }
+>   
+>   static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+> @@ -296,7 +305,7 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+>   {
+>   	struct platform_device *pdev = to_platform_device(dev);
+>   	struct device_node *np = dev->of_node;
+> -	int err = 0;
+> +	int err;
+>   
+>   	/* Gigabit Ethernet 125MHz clock selection. */
+>   	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
+> @@ -320,13 +329,17 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+>   		return PTR_ERR(dwmac->clk_ethstp);
+>   	}
+>   
+> -	/*  Clock for sysconfig */
+> +	/*  Optional Clock for sysconfig */
+>   	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
+>   	if (IS_ERR(dwmac->syscfg_clk)) {
+> -		dev_err(dev, "No syscfg clock provided...\n");
+> -		return PTR_ERR(dwmac->syscfg_clk);
+> +		err = PTR_ERR(dwmac->syscfg_clk);
+> +		if (err != -ENOENT)
+> +			return err;
+> +		dwmac->syscfg_clk = NULL;
+>   	}
+>   
+> +	err = 0;
+> +
+>   	/* Get IRQ information early to have an ability to ask for deferred
+>   	 * probe if needed before we went too far with resource allocation.
+>   	 */
+> @@ -436,7 +449,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+>   		return ret;
+>   
+>   	clk_disable_unprepare(dwmac->clk_tx);
+> -	clk_disable_unprepare(dwmac->syscfg_clk);
+> +	if (dwmac->syscfg_clk)
+> +		clk_disable_unprepare(dwmac->syscfg_clk);
+>   	if (dwmac->clk_eth_ck)
+>   		clk_disable_unprepare(dwmac->clk_eth_ck);
+>   
+> 
