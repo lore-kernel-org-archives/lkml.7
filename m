@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875F4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116B0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E0B20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E8E20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122828;
-	bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
+	s=default; t=1570122835;
+	bh=TO36sxAHD4Bn+D3eeOaeB/DIge7EXOLy0Ew7V3AN8EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m0QRPUnNTciFd20sLd1vm2YtjUvgpnvHi2T3gLS7HbW3TAnjUPmkgpE8BaSE0QXGg
-	 TpiHezwrVbM+CZevFS3nJ2lfk4tcW3Cnk/2tnA7aFgmKphhY8LxaPfaFkkysq5Bm8e
-	 /kWVYskKva6oyCMl6K41fJODH0bmqAqjpLlsk+5g=
+	b=mYz/0ttyosH2lcHck0RzDVl1BCL3EB9ipsiRBomxLd4OcWkub4KgjMVabpc1GP5yg
+	 Cay5JnH8j3XY2ZMS/FLvYFZQr/lqAgBBdUx/pNI09QyG4SPAoNmRLIVz3c1LIehyUX
+	 fGpVsFKD0W6J3UPXrtnYu8yN9d3b3E0piLDkbm58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391492AbfJCQ2O (ORCPT
+        id S2390700AbfJCQ16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60570 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390643AbfJCQ2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:11 -0400
+        id S2390227AbfJCQ1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CEF32054F;
-        Thu,  3 Oct 2019 16:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB00B2133F;
+        Thu,  3 Oct 2019 16:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120090;
-        bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
+        s=default; t=1570120074;
+        bh=TO36sxAHD4Bn+D3eeOaeB/DIge7EXOLy0Ew7V3AN8EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gi0Ygc5A84wazC8e8ZYGl7tzoqFn5HQTtJtmozCp3OumGN6tD7JJHpbfPOfgfJdTR
-         L185h27jU8ZkB2+OrXrUcMXPO2GTYMWhXx9X8TNCD/JzBoiCYk8xW7BOrgmZJhFjuG
-         xItNJLtzGKIVPrjJwleIIWkFAWCFa3N1vZN44hgs=
+        b=LpmKyVbdAnyzFCjfP21eIpG5hoP7HmNEEcoQvxLRVbW0S7nECmGwxyEKdXXXiqVUc
+         JOgAiGinPwCwoGdWny9/4tXWANIVXzxVFA6wB/G7JI4wr873Eg/rRV9TaEOMH2yD9z
+         rQ2TADj4IK+vSvp7Hzd9z8rjTvBIoL/y9dk18P8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 094/313] media: i2c: tda1997x: prevent potential NULL pointer access
-Date:   Thu,  3 Oct 2019 17:51:12 +0200
-Message-Id: <20191003154542.122641384@linuxfoundation.org>
+Subject: [PATCH 5.2 088/313] idle: Prevent late-arriving interrupts from disrupting offline
+Date:   Thu,  3 Oct 2019 17:51:06 +0200
+Message-Id: <20191003154541.555515160@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,51 +63,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 2f822f1da08ac5c93e351e79d22920f08fa51baf ]
+[ Upstream commit e78a7614f3876ac649b3df608789cb6ef74d0480 ]
 
-i2c_new_dummy() can fail returning a NULL pointer. This is not checked
-and the returned pointer is blindly used. Convert to
-devm_i2c_new_dummy_client() which returns an ERR_PTR and also add a
-validity check. Using devm_* here also fixes a leak because the dummy
-client was not released in the probe error path.
+Scheduling-clock interrupts can arrive late in the CPU-offline process,
+after idle entry and the subsequent call to cpuhp_report_idle_dead().
+Once execution passes the call to rcu_report_dead(), RCU is ignoring
+the CPU, which results in lockdep complaints when the interrupt handler
+uses RCU:
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+------------------------------------------------------------------------
+
+=============================
+WARNING: suspicious RCU usage
+5.2.0-rc1+ #681 Not tainted
+-----------------------------
+kernel/sched/fair.c:9542 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+RCU used illegally from offline CPU!
+rcu_scheduler_active = 2, debug_locks = 1
+no locks held by swapper/5/0.
+
+stack backtrace:
+CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.2.0-rc1+ #681
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
+Call Trace:
+ <IRQ>
+ dump_stack+0x5e/0x8b
+ trigger_load_balance+0xa8/0x390
+ ? tick_sched_do_timer+0x60/0x60
+ update_process_times+0x3b/0x50
+ tick_sched_handle+0x2f/0x40
+ tick_sched_timer+0x32/0x70
+ __hrtimer_run_queues+0xd3/0x3b0
+ hrtimer_interrupt+0x11d/0x270
+ ? sched_clock_local+0xc/0x74
+ smp_apic_timer_interrupt+0x79/0x200
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:delay_tsc+0x22/0x50
+Code: ff 0f 1f 80 00 00 00 00 65 44 8b 05 18 a7 11 48 0f ae e8 0f 31 48 89 d6 48 c1 e6 20 48 09 c6 eb 0e f3 90 65 8b 05 fe a6 11 48 <41> 39 c0 75 18 0f ae e8 0f 31 48 c1 e2 20 48 09 c2 48 89 d0 48 29
+RSP: 0000:ffff8f92c0157ed0 EFLAGS: 00000212 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000005 RBX: ffff8c861f356400 RCX: ffff8f92c0157e64
+RDX: 000000321214c8cc RSI: 00000032120daa7f RDI: 0000000000260f15
+RBP: 0000000000000005 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff8c861ee18000 R15: ffff8c861ee18000
+ cpuhp_report_idle_dead+0x31/0x60
+ do_idle+0x1d5/0x200
+ ? _raw_spin_unlock_irqrestore+0x2d/0x40
+ cpu_startup_entry+0x14/0x20
+ start_secondary+0x151/0x170
+ secondary_startup_64+0xa4/0xb0
+
+------------------------------------------------------------------------
+
+This happens rarely, but can be forced by happen more often by
+placing delays in cpuhp_report_idle_dead() following the call to
+rcu_report_dead().  With this in place, the following rcutorture
+scenario reproduces the problem within a few minutes:
+
+tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TREE04"
+
+This commit uses the crude but effective expedient of moving the disabling
+of interrupts within the idle loop to precede the cpu_is_offline()
+check.  It also invokes tick_nohz_idle_stop_tick() instead of
+tick_nohz_idle_stop_tick_protected() to shut off the scheduling-clock
+interrupt.
+
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+[ paulmck: Revert tick_nohz_idle_stop_tick_protected() removal, new callers. ]
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/tda1997x.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/sched/idle.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/tda1997x.c b/drivers/media/i2c/tda1997x.c
-index a62ede0966361..5e68182001ecc 100644
---- a/drivers/media/i2c/tda1997x.c
-+++ b/drivers/media/i2c/tda1997x.c
-@@ -2691,7 +2691,13 @@ static int tda1997x_probe(struct i2c_client *client,
- 	}
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 80940939b7336..e4bc4aa739b83 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -241,13 +241,14 @@ static void do_idle(void)
+ 		check_pgt_cache();
+ 		rmb();
  
- 	ret = 0x34 + ((io_read(sd, REG_SLAVE_ADDR)>>4) & 0x03);
--	state->client_cec = i2c_new_dummy(client->adapter, ret);
-+	state->client_cec = devm_i2c_new_dummy_device(&client->dev,
-+						      client->adapter, ret);
-+	if (IS_ERR(state->client_cec)) {
-+		ret = PTR_ERR(state->client_cec);
-+		goto err_free_mutex;
-+	}
++		local_irq_disable();
 +
- 	v4l_info(client, "CEC slave address 0x%02x\n", ret);
+ 		if (cpu_is_offline(cpu)) {
+-			tick_nohz_idle_stop_tick_protected();
++			tick_nohz_idle_stop_tick();
+ 			cpuhp_report_idle_dead();
+ 			arch_cpu_idle_dead();
+ 		}
  
- 	ret = tda1997x_core_init(sd);
-@@ -2798,7 +2804,6 @@ static int tda1997x_remove(struct i2c_client *client)
- 	media_entity_cleanup(&sd->entity);
- 	v4l2_ctrl_handler_free(&state->hdl);
- 	regulator_bulk_disable(TDA1997X_NUM_SUPPLIES, state->supplies);
--	i2c_unregister_device(state->client_cec);
- 	cancel_delayed_work(&state->delayed_work_enable_hpd);
- 	mutex_destroy(&state->page_lock);
- 	mutex_destroy(&state->lock);
+-		local_irq_disable();
+ 		arch_cpu_idle_enter();
+ 
+ 		/*
 -- 
 2.20.1
 
