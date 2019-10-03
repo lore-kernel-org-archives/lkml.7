@@ -2,128 +2,183 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A68C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9650C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F52222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76972222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:50:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRM8y58A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfJCEjd (ORCPT
+        id S1727065AbfJCEuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 00:39:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34992 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbfJCEjc (ORCPT
+        Thu, 3 Oct 2019 00:50:25 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39259 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfJCEuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 00:39:32 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iFstf-0000FZ-Ft; Thu, 03 Oct 2019 04:39:24 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     tiwai@suse.com
-Cc:     kailang@realtek.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360
-Date:   Thu,  3 Oct 2019 12:39:19 +0800
-Message-Id: <20191003043919.10960-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Oct 2019 00:50:25 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 4so1068687qki.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 21:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tq3iPoJStHKk7jGP0B/Iex5tl8WiUmfhc1UddDd7V3A=;
+        b=IRM8y58A551V1u8bCAtcbGuu4XEHP/k6MWT5N7HKvgGaWxn7ht/nFviFpA5rtT401c
+         q3wiD5bi+McYxPiDjYJoUqGTFZqwCSBItLwn9yfp1KtWEecRjfdsa6C39VvQaWGGximr
+         6BWpFtc/Z12dvxAEYLnkcXYp51Jz+cAHTHZhc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tq3iPoJStHKk7jGP0B/Iex5tl8WiUmfhc1UddDd7V3A=;
+        b=YmsrBdlbyX6GvRcL0bX8+FbT6SoenAIZZQ/0D8utxRmLWWN2bZVHCRyvmvbJeHLOzm
+         KjpyNbdaOvaLhd8/pCZaA9QGPase1+J35WFb//cOo9uvq957WoygMa+HdzjDGyilzEFj
+         FB5A6lrLtQwhtLUXQ7C58rCe+ACXmJc1nnO9x9eMbI86KMXGWgeG5zsL2hC3h/Lwtxox
+         wekRnATwdDiMEkRzKRF7t71LEeeBJakHNhMReFrE/v1kD2sm17G3L/eViQPwateZH2xK
+         D1vQJtTLdN6S39KXovV2Wnz+zrLhYQktvPFrC6PGFULf9zAL3A/r2ALmubTh3VjSUy5g
+         k10g==
+X-Gm-Message-State: APjAAAUN0k/AYGIB9T2XK2Zr0Jk9eLpi1hrvHLBOTyi7qOUdm75RNA70
+        G9iz/A7LWNrgsBiyk4fnX2RHJT95zLpo+GUPOGswhw==
+X-Google-Smtp-Source: APXvYqw77ybqyKto0A/sQnxehJBP5gwUvR8WRc/5zurF0jnDKfeSzQwHUFFYum9SB381hpEHz2xXTUpe0A88wxwaQFY=
+X-Received: by 2002:a37:9b0e:: with SMTP id d14mr2375280qke.315.1570078223915;
+ Wed, 02 Oct 2019 21:50:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191003024101.57700-1-hsinyi@chromium.org>
+In-Reply-To: <20191003024101.57700-1-hsinyi@chromium.org>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Wed, 2 Oct 2019 21:49:58 -0700
+Message-ID: <CAJMQK-ihDtFr1qKhVy78nGYzH9Jz+PR+hkwLTYGR4=jinFBmmw@mail.gmail.com>
+Subject: Re: [PATCH RFC] reboot: hotplug cpus in migrate_to_reboot_cpu()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Headphone on XPS 9350/9360 produces a background white noise. The The
-noise level somehow correlates with "Headphone Mic Boost", when it sets
-to 1 the noise disappears. However, doing this has a side effect, which
-also decreases the overall headphone volume so I didn't send the patch
-upstream.
+On Wed, Oct 2, 2019 at 7:41 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> Currently system reboots use arch specific codes (eg. smp_send_stop) to
+> offline non reboot cpus. Some arch like arm64, arm, and x86... set offline
+> masks to cpu without really offlining them. Thus it causes some race
+> condition and kernel warning comes out sometimes when system reboots. We
+> can do cpu hotplug in migrate_to_reboot_cpu() to avoid this issue.
+>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> kernel warnings at reboot:
+> [1] https://lore.kernel.org/lkml/20190820100843.3028-1-hsinyi@chromium.org/
+> [2] https://lore.kernel.org/lkml/20190727164450.GA11726@roeck-us.net/
+> ---
+>  kernel/cpu.c    | 35 +++++++++++++++++++++++++++++++++++
+>  kernel/reboot.c | 18 ------------------
+>  2 files changed, 35 insertions(+), 18 deletions(-)
+>
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index fc28e17940e0..2f4d51fe91e3 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/relay.h>
+>  #include <linux/slab.h>
+>  #include <linux/percpu-rwsem.h>
+> +#include <linux/reboot.h>
+>
+>  #include <trace/events/power.h>
+>  #define CREATE_TRACE_POINTS
+> @@ -1366,6 +1367,40 @@ int __boot_cpu_id;
+>
+>  #endif /* CONFIG_SMP */
+>
+> +void migrate_to_reboot_cpu(void)
+> +{
+> +       /* The boot cpu is always logical cpu 0 */
+> +       int cpu = reboot_cpu;
+> +
+> +       /* Make certain the cpu I'm about to reboot on is online */
+> +       if (!cpu_online(cpu))
+> +               cpu = cpumask_first(cpu_online_mask);
+> +
+> +       /* Prevent races with other tasks migrating this task */
+> +       current->flags |= PF_NO_SETAFFINITY;
+> +
+> +       /* Make certain I only run on the appropriate processor */
+> +       set_cpus_allowed_ptr(current, cpumask_of(cpu));
+> +
+> +       /* Hotplug other cpus if possible */
+> +       if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
 
-The noise was bearable back then, but after commit 717f43d81afc ("ALSA:
-hda/realtek - Update headset mode for ALC256") the noise exacerbates to
-a point it starts hurting ears.
-
-So let's use the workaround to set "Headphone Mic Boost" to 1 and lock
-it so it's not touchable by userspace.
-
-Fixes: 717f43d81afc ("ALSA: hda/realtek - Update headset mode for ALC256")
-BugLink: https://bugs.launchpad.net/bugs/1654448
-BugLink: https://bugs.launchpad.net/bugs/1845810
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- sound/pci/hda/patch_realtek.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b000b36ac3c6..b5c225a56b98 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5358,6 +5358,17 @@ static void alc271_hp_gate_mic_jack(struct hda_codec *codec,
- 	}
- }
- 
-+static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
-+						      const struct hda_fixup *fix,
-+						      int action)
-+{
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
-+
-+	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
-+	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
-+}
-+
- static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
- 					     const struct hda_fixup *fix,
- 					     int action)
-@@ -5822,6 +5833,7 @@ enum {
- 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
- 	ALC275_FIXUP_DELL_XPS,
- 	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
-+	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
- 	ALC293_FIXUP_LENOVO_SPK_NOISE,
- 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
- 	ALC255_FIXUP_DELL_SPK_NOISE,
-@@ -6558,6 +6570,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
- 	},
-+	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
-+		.chained = true,
-+		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
-+	},
- 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_disable_aamix,
-@@ -7001,17 +7019,17 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
- 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
- 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
--	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
-+	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
- 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
- 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
--	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
-+	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
- 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
- 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
-+	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
--- 
-2.17.1
-
+Should use #ifdef CONFIG_HOTPLUG_CPU here. Will fix in the next
+version if this patch is reasonable.
+(Reported-by: kbuild test robot <lkp@intel.com>)
+> +               int i, err;
+> +
+> +               cpu_maps_update_begin();
+> +
+> +               for_each_online_cpu(i) {
+> +                       if (i == cpu)
+> +                               continue;
+> +                       err = _cpu_down(i, 0, CPUHP_OFFLINE);
+> +                       if (err)
+> +                               pr_info("Failed to offline cpu %d\n", i);
+> +               }
+> +               cpu_hotplug_disabled++;
+> +
+> +               cpu_maps_update_done();
+> +       }
+> +}
+> +
+>  /* Boot processor state steps */
+>  static struct cpuhp_step cpuhp_hp_states[] = {
+>         [CPUHP_OFFLINE] = {
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index c4d472b7f1b4..f0046be34a60 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -215,24 +215,6 @@ void do_kernel_restart(char *cmd)
+>         atomic_notifier_call_chain(&restart_handler_list, reboot_mode, cmd);
+>  }
+>
+> -void migrate_to_reboot_cpu(void)
+> -{
+> -       /* The boot cpu is always logical cpu 0 */
+> -       int cpu = reboot_cpu;
+> -
+> -       cpu_hotplug_disable();
+> -
+> -       /* Make certain the cpu I'm about to reboot on is online */
+> -       if (!cpu_online(cpu))
+> -               cpu = cpumask_first(cpu_online_mask);
+> -
+> -       /* Prevent races with other tasks migrating this task */
+> -       current->flags |= PF_NO_SETAFFINITY;
+> -
+> -       /* Make certain I only run on the appropriate processor */
+> -       set_cpus_allowed_ptr(current, cpumask_of(cpu));
+> -}
+> -
+>  /**
+>   *     kernel_restart - reboot the system
+>   *     @cmd: pointer to buffer containing command to execute for restart
+> --
+> 2.23.0.444.g18eeb5a265-goog
+>
