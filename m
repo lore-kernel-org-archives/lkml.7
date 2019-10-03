@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52398C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C5AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255FA215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93A9222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120328;
-	bh=mhyuEywetJgC9ZaTH2TV31zRcj0apGSIpKAMxZjdVIo=;
+	s=default; t=1570120336;
+	bh=W4cYAWP0Qa/Qu3TFBSpjTV0C26MYzIiXO1hQPqY2Z/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ch3utUBIqcFtgzPzSvfpgG/WQrgWI6G5QkMLrd6+JuLB4jAJkuqeBLNs43Xt0Q66/
-	 fO8vWbUp7IoneKGmhgjc0u86lDXe/6w6HmKe4806uZ9bGUMiiReq2kGQsmmtr61oa3
-	 WV49aVMb0e/Tn4Y833B2mPnbfLoy4xe44eapDOMY=
+	b=yHCNoNkyObf26/YS0W+huPoSdkhl4LpSLsPlfRre7kbYwS05hwwsqfccl6p2gxVuV
+	 hUnP4K7JpRXmbUChJ7b+sGIrnR9i8AB6KlUxN2Uz7P8agrLrA6cJ6ZttNdxapnyjy3
+	 PAfqffH4wo5yl+2RJTl6Gqlax83ictBW7F73cHSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391852AbfJCQcG (ORCPT
+        id S2391891AbfJCQcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391480AbfJCQbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:55 -0400
+        id S2391878AbfJCQcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D5A2070B;
-        Thu,  3 Oct 2019 16:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF6B215EA;
+        Thu,  3 Oct 2019 16:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120314;
-        bh=mhyuEywetJgC9ZaTH2TV31zRcj0apGSIpKAMxZjdVIo=;
+        s=default; t=1570120333;
+        bh=W4cYAWP0Qa/Qu3TFBSpjTV0C26MYzIiXO1hQPqY2Z/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fw14YkQF4l3wEwHLteZbxiyXVgCWnhjLjuy1pZ7R4UFgJgeLCa+R4MHuAK4X6yMpa
-         yi8k6B+NTx2HdxRxqW9sg0R1DbSn1KFXsAix3lUTvDf3G4yMW8nDBE1VqIoMc8VxSq
-         sxZ1S93bZCjm9mSKXrU9NHptzmAzu00JhmKXpjjs=
+        b=sJWZi18au82bI/7YWmOnmbgMHjnQRIiiAr2PRnnOGj+4Z4PHj0RLPRh1F6ifYWu9q
+         BFxp1SF/Vczlj8XmeziFBjSp9rX3UxnXSGjwZXciV7m/NDYjukYiMCo1W87o0POCeU
+         Rzj+zKrpVqECF3cCK5FZ80Q8/lK587lJCf0jo1Bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 177/313] kprobes: Prohibit probing on BUG() and WARN() address
-Date:   Thu,  3 Oct 2019 17:52:35 +0200
-Message-Id: <20191003154550.414281655@linuxfoundation.org>
+        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 183/313] platform/x86: intel_pmc_core: Do not ioremap RAM
+Date:   Thu,  3 Oct 2019 17:52:41 +0200
+Message-Id: <20191003154551.007317335@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -67,68 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: M. Vefa Bicakci <m.v.b@runbox.com>
 
-[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
+[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
 
-Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
-get the address where the BUG() has occurred, kprobes can not
-do single-step out-of-line that instruction. So prohibit
-probing on such address.
+On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
+intel_pmc_core fails initialization with the following warning message
+from the kernel, indicating that the driver is attempting to ioremap
+RAM:
 
-Without this fix, if someone put a kprobe on WARN(), the
-kernel will crash with invalid opcode error instead of
-outputing warning message, because kernel can not find
-correct bug address.
+  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
+  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
+...
+  Call Trace:
+   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This issue appears to manifest itself because of the following fallback
+mechanism in the driver:
+
+	if (lpit_read_residency_count_address(&slp_s0_addr))
+		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+
+The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
+verified by the driver, which is what this patch introduces. With this
+patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
+not attempt to ioremap the aforementioned address.
+
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bug.h | 5 +++++
- kernel/kprobes.c    | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index fe5916550da8c..f639bd0122f39 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -47,6 +47,11 @@ void generic_bug_clear_once(void);
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index be6cda89dcf5b..01a530e2f8017 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -882,10 +882,14 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
+ 		pmcdev->map = &cnp_reg_map;
  
- #else	/* !CONFIG_GENERIC_BUG */
- 
-+static inline void *find_bug(unsigned long bugaddr)
-+{
-+	return NULL;
-+}
+-	if (lpit_read_residency_count_address(&slp_s0_addr))
++	if (lpit_read_residency_count_address(&slp_s0_addr)) {
+ 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+-	else
 +
- static inline enum bug_trap_type report_bug(unsigned long bug_addr,
- 					    struct pt_regs *regs)
- {
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 2504c269e6583..1010bde1146b5 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1514,7 +1514,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure it is not in reserved area nor out of text */
- 	if (!kernel_text_address((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
--	    jump_label_text_reserved(p->addr, p->addr)) {
-+	    jump_label_text_reserved(p->addr, p->addr) ||
-+	    find_bug((unsigned long)p->addr)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
++		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
++			return -ENODEV;
++	} else {
+ 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
++	}
+ 
+ 	pmcdev->regbase = ioremap(pmcdev->base_addr,
+ 				  pmcdev->map->regmap_length);
 -- 
 2.20.1
 
