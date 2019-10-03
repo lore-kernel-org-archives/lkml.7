@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A35C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B0EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DA420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A360F20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123923;
-	bh=/mKR2Aj0YnNxM7Y42TKtxzacGVHLJvIRIb7cpYpcFKM=;
+	s=default; t=1570123936;
+	bh=+sq7UOoftRS0d722fihLEmSMnax7EZbAphnxL6t4f28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ew++5JJhgw0taU84tR8Hb/cx6sJGH/teMF7gurwIyB2B7AOuWC6uaEUlG4LzhkFja
-	 IpZDkzCfaTdw9XJL9rATL7kagsm1qmJNE1mKoN6kV4bY/yrt16J+4vsvBvCHY3Sz/3
-	 +NsyB1x8I+L65Qzzrep48AQiuZS7b1dT7ovs1kcw=
+	b=UzCHFGgZdaED8OTJpj9ZGj9k/ni6exsWKOreQ3YVhS99Dd9nbaeridBsPyKsNt4n0
+	 p6K7F2Az34XDHtwhmTApaKn62Fu08JQ7KQI98AlmtYevnxn5SIf7Isslm7/zuzJCxX
+	 hbs9MDrkbu+OaqH5aSufeIDNsJsRPXz0M46vQfFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731699AbfJCRcC (ORCPT
+        id S1731447AbfJCQJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58352 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732267AbfJCQJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:30 -0400
+        id S1731034AbfJCQJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ECEC21A4C;
-        Thu,  3 Oct 2019 16:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1151A207FF;
+        Thu,  3 Oct 2019 16:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118969;
-        bh=/mKR2Aj0YnNxM7Y42TKtxzacGVHLJvIRIb7cpYpcFKM=;
+        s=default; t=1570118940;
+        bh=+sq7UOoftRS0d722fihLEmSMnax7EZbAphnxL6t4f28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwQyGrh3xvu/eWzkEocJU1pFkRr+bGw61JqXWlm/vOHF+wlWG7R2GcuOoxvAYGR1O
-         3SRFTy9jFOPTh1LkIaWBnMlEBaxt+M6CpS9flkwPYo7N+71Mdkl7imUTh59VJHkvnC
-         K88GowJDx+GrgdtMfD9iLwuOeYH1CdTp0sGBq4zs=
+        b=CiPhcb2YlH/iJO1VgknX+chHBsMHlKYCDf2weh3nU23roU7Ks6jLwNMYWoiqBwS4W
+         fOO9huhze4cvSQwRTvuAKIw8UjWq6J5Mn3aM2fdpIm4qS26VnakaaMxkzF5a5VcMB/
+         Y3e3yiW5lJOJkRA8vg1q5fD4bgB9v2HpcPhJpQgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 076/185] md/raid1: end bio when the device faulty
-Date:   Thu,  3 Oct 2019 17:52:34 +0200
-Message-Id: <20191003154454.599749140@linuxfoundation.org>
+Subject: [PATCH 4.14 066/185] x86/apic: Soft disable APIC before initializing it
+Date:   Thu,  3 Oct 2019 17:52:24 +0200
+Message-Id: <20191003154452.367565793@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,73 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-When write bio return error, it would be added to conf->retry_list
-and wait for raid1d thread to retry write and acknowledge badblocks.
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-In narrow_write_error(), the error bio will be split in the unit of
-badblock shift (such as one sector) and raid1d thread issues them
-one by one. Until all of the splited bio has finished, raid1d thread
-can go on processing other things, which is time consuming.
+That masks all LVT entries and brings it into a well defined state.
 
-But, there is a scene for error handling that is not necessary.
-When the device has been set faulty, flush_bio_list() may end
-bios in pending_bio_list with error status. Since these bios
-has not been issued to the device actually, error handlding to
-retry write and acknowledge badblocks make no sense.
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
 
-Even without that scene, when the device is faulty, badblocks info
-can not be written out to the device. Thus, we also no need to
-handle the error IO.
-
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 31c4391f6a62b..762d21c84774a 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -435,19 +435,21 @@ static void raid1_end_write_request(struct bio *bio)
- 		    /* We never try FailFast to WriteMostly devices */
- 		    !test_bit(WriteMostly, &rdev->flags)) {
- 			md_error(r1_bio->mddev, rdev);
--			if (!test_bit(Faulty, &rdev->flags))
--				/* This is the only remaining device,
--				 * We need to retry the write without
--				 * FailFast
--				 */
--				set_bit(R1BIO_WriteError, &r1_bio->state);
--			else {
--				/* Finished with this branch */
--				r1_bio->bios[mirror] = NULL;
--				to_put = bio;
--			}
--		} else
-+		}
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index f8f9cfded97d3..ea2de324ab021 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1384,6 +1384,14 @@ void setup_local_APIC(void)
+ 		return;
+ 	}
+ 
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
 +
-+		/*
-+		 * When the device is faulty, it is not necessary to
-+		 * handle write error.
-+		 * For failfast, this is the only remaining device,
-+		 * We need to retry the write without FailFast.
-+		 */
-+		if (!test_bit(Faulty, &rdev->flags))
- 			set_bit(R1BIO_WriteError, &r1_bio->state);
-+		else {
-+			/* Finished with this branch */
-+			r1_bio->bios[mirror] = NULL;
-+			to_put = bio;
-+		}
- 	} else {
- 		/*
- 		 * Set R1BIO_Uptodate in our master bio, so that we
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
