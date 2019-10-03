@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F34C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83902C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF5820865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564B6222CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119631;
-	bh=0GFOoDInj2NDrOs7OhI/W94/e6GgCtYWf1x+GXG+MOA=;
+	s=default; t=1570119633;
+	bh=KJZP5vaTsjAVzDWxjovzOMv5p50y5XYVPNkVMPbUt7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HyeFmndutSQpYLuEkKmXlTNVP9SM9KgSqbZgqsVIqgNgxl5/jyjBn4JGnTt+K51Fi
-	 2RLzLBCqB8fD+2N2zCB9ap5JDyV8XItDj6m/wSdS19Z5GVENETrOmqBjJnW+juWzLG
-	 wihaqhQBjLwriwIv39CINWNIVo3BhBfCLGNOwTe0=
+	b=ZmiZLkTlSCFuz/XDy1t/PC5RC1n8O9nDD3Gdgeqk0E/WQcKHPEzbuxUF/QpZLTSP6
+	 /s8Q5UTFYHVHmRmsr/zcxcZKD1qG9uB9k5Zq7lT/oFYHQ+q6aekm2Z90HH2xqKBeol
+	 S+4Z78of9ULN3onfSu3XAEfe2MgsCj1l5yrKfMJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389915AbfJCQUa (ORCPT
+        id S2389927AbfJCQUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389026AbfJCQU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:26 -0400
+        id S2389905AbfJCQU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92A3D20865;
-        Thu,  3 Oct 2019 16:20:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2353821783;
+        Thu,  3 Oct 2019 16:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119624;
-        bh=0GFOoDInj2NDrOs7OhI/W94/e6GgCtYWf1x+GXG+MOA=;
+        s=default; t=1570119627;
+        bh=KJZP5vaTsjAVzDWxjovzOMv5p50y5XYVPNkVMPbUt7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zYinNjf8H9+yLJvqGkwzZ89e8phSwqEYzQc2iesy4daTxQDtKIjPOIopoJsk6S/ss
-         4fH3iYxJc9L1cvfPlO7YPi9xL1dWiXeNYVgF/D8TXoIWgyYNjt23nsIRCJmD+nquAZ
-         nJ0gUyKp15z1STP19olMn0ZsV6XPpxMI0B4qYfeI=
+        b=wzrgV7TFfWbxYPCyH7hm3Ljm0yoakif8r8UQzbuf0URmqb2ssOW7O/tx/X19fb+rq
+         IVM6FbPknT5qRNdWfTWuxEoVEH6mUN77eGbgMfnLUUFRt+WGGBk+cGQ4k0pom/srpf
+         4umHXHqki1istl1nYrDJPZ4d1TdNjhV4IkiTP+k4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Al Cooper <alcooperx@gmail.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 133/211] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
-Date:   Thu,  3 Oct 2019 17:53:19 +0200
-Message-Id: <20191003154517.209084508@linuxfoundation.org>
+Subject: [PATCH 4.19 134/211] mmc: sdhci: Fix incorrect switch to HS mode
+Date:   Thu,  3 Oct 2019 17:53:20 +0200
+Message-Id: <20191003154517.590826734@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,100 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Al Cooper <alcooperx@gmail.com>
 
-[ Upstream commit 36d57efb4af534dd6b442ea0b9a04aa6dfa37abe ]
+[ Upstream commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37 ]
 
-The sdio_irq_pending flag is used to let host drivers indicate that it has
-signaled an IRQ. If that is the case and we only have a single SDIO func
-that have claimed an SDIO IRQ, our assumption is that we can avoid reading
-the SDIO_CCCR_INTx register and just call the SDIO func irq handler
-immediately. This makes sense, but the flag is set/cleared in a somewhat
-messy order, let's fix that up according to below.
+When switching from any MMC speed mode that requires 1.8v
+(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+ends up configured for SDR12 with a 50MHz clock which is an illegal
+mode.
 
-First, the flag is currently set in sdio_run_irqs(), which is executed as a
-work that was scheduled from sdio_signal_irq(). To make it more implicit
-that the host have signaled an IRQ, let's instead immediately set the flag
-in sdio_signal_irq(). This also makes the behavior consistent with host
-drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
-functional impact, because we don't expect host drivers to call
-sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
-anyways.
+This happens because the SDHCI_CTRL_VDD_180 bit in the
+SDHCI_HOST_CONTROL2 register is left set and when this bit is
+set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+because there is no UHS mode being set.
 
-Second, currently we never clears the flag when using the sdio_run_irqs()
-work, but only when using the sdio_irq_thread(). Let make the behavior
-consistent, by moving the flag to be cleared inside the common
-process_sdio_pending_irqs() function. Additionally, tweak the behavior of
-the flag slightly, by avoiding to clear it unless we processed the SDIO
-IRQ. The purpose with this at this point, is to keep the information about
-whether there have been an SDIO IRQ signaled by the host, so at system
-resume we can decide to process it without reading the SDIO_CCCR_INTx
-register.
+The fix is to change sdhci_set_uhs_signaling() to set the
+SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+any switch to HS mode.
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+This was found on a new eMMC controller that does strict checking
+of the speed mode and the corresponding clock rate. It caused the
+switch to HS400 mode to fail because part of the sequence to switch
+to HS400 requires a switch from HS200 to HS before going to HS400.
+
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sdio_irq.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-index b299a24d33f96..d206f2de80d23 100644
---- a/drivers/mmc/core/sdio_irq.c
-+++ b/drivers/mmc/core/sdio_irq.c
-@@ -35,6 +35,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- {
- 	struct mmc_card *card = host->card;
- 	int i, ret, count;
-+	bool sdio_irq_pending = host->sdio_irq_pending;
- 	unsigned char pending;
- 	struct sdio_func *func;
- 
-@@ -42,13 +43,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- 	if (mmc_card_suspended(card))
- 		return 0;
- 
-+	/* Clear the flag to indicate that we have processed the IRQ. */
-+	host->sdio_irq_pending = false;
-+
- 	/*
- 	 * Optimization, if there is only 1 function interrupt registered
- 	 * and we know an IRQ was signaled then call irq handler directly.
- 	 * Otherwise do the full probe.
- 	 */
- 	func = card->sdio_single_irq;
--	if (func && host->sdio_irq_pending) {
-+	if (func && sdio_irq_pending) {
- 		func->irq_handler(func);
- 		return 1;
- 	}
-@@ -100,7 +104,6 @@ void sdio_run_irqs(struct mmc_host *host)
- {
- 	mmc_claim_host(host);
- 	if (host->sdio_irqs) {
--		host->sdio_irq_pending = true;
- 		process_sdio_pending_irqs(host);
- 		if (host->ops->ack_sdio_irq)
- 			host->ops->ack_sdio_irq(host);
-@@ -119,6 +122,7 @@ void sdio_irq_work(struct work_struct *work)
- 
- void sdio_signal_irq(struct mmc_host *host)
- {
-+	host->sdio_irq_pending = true;
- 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
- }
- EXPORT_SYMBOL_GPL(sdio_signal_irq);
-@@ -164,7 +168,6 @@ static int sdio_irq_thread(void *_host)
- 		if (ret)
- 			break;
- 		ret = process_sdio_pending_irqs(host);
--		host->sdio_irq_pending = false;
- 		mmc_release_host(host);
- 
- 		/*
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index c749d3dc1d36d..eb33b892b484c 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1713,7 +1713,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_SD_HS ||
++		 timing == MMC_TIMING_MMC_HS ||
++		 timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
 -- 
 2.20.1
 
