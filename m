@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF19C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E968FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52EF52054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20FF20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119867;
-	bh=T1/wlLFn9xoVuvdkRmKi3ghTYz7w+W3o6dSeVZdPG98=;
+	s=default; t=1570119870;
+	bh=nIjEKqTzhGXtiP0zr1cGUmjPtln+lhmsADK+748Immc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQRXP5v2dokJJfmD33p+vxh+AVxQ0d5DuCO8SERYHRw2QR46fnQJ0+h3K/7mrczvZ
-	 o+TUUy235RboXE2Cru1XN4ZRMWur+LIlHzrLLE3ca3CKG6n+uVSSwXDsK3D68cMUoq
-	 jXg5rulOli76++7Ko7v5it4s9zJDXuvQhNODNlHk=
+	b=M7ULLX/l3ZBx8BRsrhv2dJvtMo05EvnDqubapbWisS254j/ZejSOphhXvWmtqXW4h
+	 MlJVm1kozXz6VeeAxElWAt6cYtiLYom9P24XDqkvOsnpI68g0sC1GD52CS31EvClWz
+	 lD+rRagYG5xfyhdg3BiKheejGu3fA0bNwFuB93Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390749AbfJCQY0 (ORCPT
+        id S2390760AbfJCQY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53976 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390735AbfJCQYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:24:24 -0400
+        id S2390750AbfJCQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7580E20867;
-        Thu,  3 Oct 2019 16:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18BA1222CB;
+        Thu,  3 Oct 2019 16:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119864;
-        bh=T1/wlLFn9xoVuvdkRmKi3ghTYz7w+W3o6dSeVZdPG98=;
+        s=default; t=1570119866;
+        bh=nIjEKqTzhGXtiP0zr1cGUmjPtln+lhmsADK+748Immc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQxfCCFMFhBRmfuUBX1p+AMvh+ObBsLVwifizdgJpfRYeG1lDvcXM7BBzIEL2pZoY
-         1kOIkfXWWU9OFfdNRk+d2UbOcxOZXGSj0WucV378YUw3BvLRxySJi5T5MxaC4ZBxW9
-         N7y5vRUMi/hUXm7MT+H0/7ceRh6DwCzqd++38HOo=
+        b=J1IT9eeObAxZXXEZv1pbvOvZYyvbXNQss594NwJYqpe2B7CpPktIlbDZ/1ZJ2IRcN
+         9yfzr+75Ak6zYWKXSoNEhZqSnjxyReeNDbTXM0MtyXnNi+UEoQGmzExc5ApvxsLKYn
+         8OWhu9Y+24jcf1gqw9FTDYcq0lK9OA1WRF2WfrSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 010/313] nfp: flower: prevent memory leak in nfp_flower_spawn_phy_reprs
-Date:   Thu,  3 Oct 2019 17:49:48 +0200
-Message-Id: <20191003154534.482564583@linuxfoundation.org>
+Subject: [PATCH 5.2 011/313] openvswitch: change type of UPCALL_PID attribute to NLA_UNSPEC
+Date:   Thu,  3 Oct 2019 17:49:49 +0200
+Message-Id: <20191003154534.568580734@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,54 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 8572cea1461a006bce1d06c0c4b0575869125fa4 ]
+[ Upstream commit ea8564c865299815095bebeb4b25bef474218e4c ]
 
-In nfp_flower_spawn_phy_reprs, in the for loop over eth_tbl if any of
-intermediate allocations or initializations fail memory is leaked.
-requiered releases are added.
+userspace openvswitch patch "(dpif-linux: Implement the API
+functions to allow multiple handler threads read upcall)"
+changes its type from U32 to UNSPEC, but leave the kernel
+unchanged
 
-Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+and after kernel 6e237d099fac "(netlink: Relax attr validation
+for fixed length types)", this bug is exposed by the below
+warning
+
+	[   57.215841] netlink: 'ovs-vswitchd': attribute type 5 has an invalid length.
+
+Fixes: 5cd667b0a456 ("openvswitch: Allow each vport to have an array of 'port_id's")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/main.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/openvswitch/datapath.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
-@@ -518,6 +518,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_ap
- 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
- 		if (!repr_priv) {
- 			err = -ENOMEM;
-+			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
- 
-@@ -528,11 +529,13 @@ nfp_flower_spawn_phy_reprs(struct nfp_ap
- 		port = nfp_port_alloc(app, NFP_PORT_PHYS_PORT, repr);
- 		if (IS_ERR(port)) {
- 			err = PTR_ERR(port);
-+			kfree(repr_priv);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
- 		err = nfp_port_init_phy_port(app->pf, app, port, i);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
-@@ -545,6 +548,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_ap
- 		err = nfp_repr_init(app, repr,
- 				    cmsg_port_id, port, priv->nn->dp.netdev);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -2245,7 +2245,7 @@ static const struct nla_policy vport_pol
+ 	[OVS_VPORT_ATTR_STATS] = { .len = sizeof(struct ovs_vport_stats) },
+ 	[OVS_VPORT_ATTR_PORT_NO] = { .type = NLA_U32 },
+ 	[OVS_VPORT_ATTR_TYPE] = { .type = NLA_U32 },
+-	[OVS_VPORT_ATTR_UPCALL_PID] = { .type = NLA_U32 },
++	[OVS_VPORT_ATTR_UPCALL_PID] = { .type = NLA_UNSPEC },
+ 	[OVS_VPORT_ATTR_OPTIONS] = { .type = NLA_NESTED },
+ 	[OVS_VPORT_ATTR_IFINDEX] = { .type = NLA_U32 },
+ 	[OVS_VPORT_ATTR_NETNSID] = { .type = NLA_S32 },
 
 
