@@ -2,380 +2,126 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A10C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153A8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6D9217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0CD21D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:55:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QQmX9/5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbfJCJx3 (ORCPT
+        id S1729316AbfJCJz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:53:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37300 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729459AbfJCJwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:52:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 76FBAB15F;
-        Thu,  3 Oct 2019 09:52:49 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v7 2/5] MIPS: PCI: use information from 1-wire PROM for IOC3 detection
-Date:   Thu,  3 Oct 2019 11:52:30 +0200
-Message-Id: <20191003095235.5158-3-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191003095235.5158-1-tbogendoerfer@suse.de>
-References: <20191003095235.5158-1-tbogendoerfer@suse.de>
+        Thu, 3 Oct 2019 05:55:29 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44195 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728894AbfJCJz2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:55:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i14so1414457pgt.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=e6qE7XB76qy7vrZGoWaWqzg5fBcTX3zqPmnTO48m2kI=;
+        b=QQmX9/5Phtejcr1s1+XLaQd2GNoMEJRCgCi+qbyPv4OAQyhGeTxqwHOsoWcrQ3h4ls
+         0PBrbMSml429sVGl9iiksabhKvcCNZRCsALpvqhhRxjstI3KJQrwjDS6cZZtK/8uOz4l
+         sw1hkkpnKXuY6qZB/VyLeoze3Qm71B2UWxRvYm9T6dwL3Uo4zzJ4X0sxX7d+fbUbFohi
+         MQHReNnKsu1eC2tK3k5llT2QaaFN0arIMNg3rOYbjbm3HBdJEdaLjyRn62TdLk6zDz+b
+         h4HwvSOHP0ntz9Xs2AyqQLL/P+58M1xgZ+JylLH7VXlj/IqJAX0lv7FPnnILMKpKufPl
+         Zu0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=e6qE7XB76qy7vrZGoWaWqzg5fBcTX3zqPmnTO48m2kI=;
+        b=nM9dXfQYoAZm66qdSyv1V05E2xokkEecnGJKFsL3vnp1/zM4Gbd9lG1l2loQqZpnvN
+         d+xyn08L3noVGyrsf9blMjldc/AerKu3Du8f/pzskh4b1/fADnM7Caiu8LwRhul7tvY4
+         klNuu3Q/mSK4ZTXi6v8pm/8lEofEhfOHxCQV9WFoawUGaxIkNJFOTE1vYNejFnBsLodl
+         ysML5HS7ACxxFdxMfU/mbqZDjYYa4MKdyrd6B22SuGTTu2/YA9Bp/ffS3IeJi2jMY8MC
+         1NCPzEzcnxPEt0aocOfIXUVf2sauo6pMvSVU9r5qIliF62w0Nll+a9BAIovS6uH47B0b
+         P+tA==
+X-Gm-Message-State: APjAAAV6/YUlfDMRlJsco3ihTz7OH8sRoiYW+swaqook7QI2HE6gJz9R
+        l7GL91qdNlkjbTdt00helIua
+X-Google-Smtp-Source: APXvYqzydIQYXMnyCqqO3yg3J8kBycFk+XR5FrVUknBJE3cp5jNvElNBPUavGxIrF2g9kfibWX3bzw==
+X-Received: by 2002:a63:ed10:: with SMTP id d16mr8924685pgi.307.1570096526650;
+        Thu, 03 Oct 2019 02:55:26 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:801:ac5d:fca3:6f38:70fb:67fc])
+        by smtp.gmail.com with ESMTPSA id v3sm2346171pfn.18.2019.10.03.02.55.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 02:55:25 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 0/2] Add IMX290 CMOS image sensor support
+Date:   Thu,  3 Oct 2019 15:25:01 +0530
+Message-Id: <20191003095503.12614-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOC3 chips in SGI system are conntected to a bridge ASIC, which has
-a 1-wire prom attached with part number information. This changeset
-uses this information to create PCI subsystem information, which
-the MFD driver uses for further platform device setup.
+Hello,
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/include/asm/pci/bridge.h |   1 +
- arch/mips/include/asm/sn/ioc3.h    |   9 +++
- arch/mips/pci/pci-xtalk-bridge.c   | 135 ++++++++++++++++++++++++++++++++++++-
- arch/mips/sgi-ip27/ip27-xtalk.c    |  38 +++++++++--
- 4 files changed, 175 insertions(+), 8 deletions(-)
+This patchset adds support for IMX290 CMOS image sensor from Sony.
+Sensor can be programmed through I2C and 4-wire interface but the
+current driver only supports I2C interface. Also, the sensor is
+capable of outputting frames in following 3 interfaces:
 
-diff --git a/arch/mips/include/asm/pci/bridge.h b/arch/mips/include/asm/pci/bridge.h
-index a92cd30b48c9..3bc630ff9ad4 100644
---- a/arch/mips/include/asm/pci/bridge.h
-+++ b/arch/mips/include/asm/pci/bridge.h
-@@ -807,6 +807,7 @@ struct bridge_controller {
- 	unsigned long		intr_addr;
- 	struct irq_domain	*domain;
- 	unsigned int		pci_int[8];
-+	u32			ioc3_sid[8];
- 	nasid_t			nasid;
- };
- 
-diff --git a/arch/mips/include/asm/sn/ioc3.h b/arch/mips/include/asm/sn/ioc3.h
-index a947eed48fee..78ef760ddde4 100644
---- a/arch/mips/include/asm/sn/ioc3.h
-+++ b/arch/mips/include/asm/sn/ioc3.h
-@@ -590,4 +590,13 @@ struct ioc3_etxd {
- 
- #define MIDR_DATA_MASK		0x0000ffff
- 
-+/* subsystem IDs supplied by card detection in pci-xtalk-bridge */
-+#define	IOC3_SUBSYS_IP27_BASEIO6G	0xc300
-+#define	IOC3_SUBSYS_IP27_MIO		0xc301
-+#define	IOC3_SUBSYS_IP27_BASEIO		0xc302
-+#define	IOC3_SUBSYS_IP29_SYSBOARD	0xc303
-+#define	IOC3_SUBSYS_IP30_SYSBOARD	0xc304
-+#define	IOC3_SUBSYS_MENET		0xc305
-+#define	IOC3_SUBSYS_MENET4		0xc306
-+
- #endif /* MIPS_SN_IOC3_H */
-diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
-index 7b4d40354ee7..dcf6117a17c3 100644
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -11,16 +11,22 @@
- #include <linux/dma-direct.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/xtalk-bridge.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/crc16.h>
- 
- #include <asm/pci/bridge.h>
- #include <asm/paccess.h>
- #include <asm/sn/irq_alloc.h>
-+#include <asm/sn/ioc3.h>
-+
-+#define CRC16_INIT	0
-+#define CRC16_VALID	0xb001
- 
- /*
-  * Most of the IOC3 PCI config register aren't present
-  * we emulate what is needed for a normal PCI enumeration
-  */
--static int ioc3_cfg_rd(void *addr, int where, int size, u32 *value)
-+static int ioc3_cfg_rd(void *addr, int where, int size, u32 *value, u32 sid)
- {
- 	u32 cf, shift, mask;
- 
-@@ -30,6 +36,9 @@ static int ioc3_cfg_rd(void *addr, int where, int size, u32 *value)
- 		if (get_dbe(cf, (u32 *)addr))
- 			return PCIBIOS_DEVICE_NOT_FOUND;
- 		break;
-+	case 0x2c:
-+		cf = sid;
-+		break;
- 	case 0x3c:
- 		/* emulate sane interrupt pin value */
- 		cf = 0x00000100;
-@@ -111,7 +120,8 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 	 */
- 	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
- 		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--		return ioc3_cfg_rd(addr, where, size, value);
-+		return ioc3_cfg_rd(addr, where, size, value,
-+				   bc->ioc3_sid[slot]);
- 	}
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[where ^ (4 - size)];
-@@ -149,7 +159,8 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 	 */
- 	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
- 		addr = &bridge->b_type1_cfg.c[(fn << 8) | (where & ~3)];
--		return ioc3_cfg_rd(addr, where, size, value);
-+		return ioc3_cfg_rd(addr, where, size, value,
-+				   bc->ioc3_sid[slot]);
- 	}
- 
- 	addr = &bridge->b_type1_cfg.c[(fn << 8) | (where ^ (4 - size))];
-@@ -426,6 +437,117 @@ static int bridge_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- 	return irq;
- }
- 
-+#define IOC3_SID(sid)	(PCI_VENDOR_ID_SGI << 16 | (sid))
-+
-+static void bridge_setup_ip27_baseio6g(struct bridge_controller *bc)
-+{
-+	bc->ioc3_sid[2] = IOC3_SID(IOC3_SUBSYS_IP27_BASEIO6G);
-+	bc->ioc3_sid[6] = IOC3_SID(IOC3_SUBSYS_IP27_MIO);
-+}
-+
-+static void bridge_setup_ip27_baseio(struct bridge_controller *bc)
-+{
-+	bc->ioc3_sid[2] = IOC3_SID(IOC3_SUBSYS_IP27_BASEIO);
-+}
-+
-+static void bridge_setup_ip29_baseio(struct bridge_controller *bc)
-+{
-+	bc->ioc3_sid[2] = IOC3_SID(IOC3_SUBSYS_IP29_SYSBOARD);
-+}
-+
-+static void bridge_setup_ip30_sysboard(struct bridge_controller *bc)
-+{
-+	bc->ioc3_sid[2] = IOC3_SID(IOC3_SUBSYS_IP30_SYSBOARD);
-+}
-+
-+static void bridge_setup_menet(struct bridge_controller *bc)
-+{
-+	bc->ioc3_sid[0] = IOC3_SID(IOC3_SUBSYS_MENET);
-+	bc->ioc3_sid[1] = IOC3_SID(IOC3_SUBSYS_MENET);
-+	bc->ioc3_sid[2] = IOC3_SID(IOC3_SUBSYS_MENET);
-+	bc->ioc3_sid[3] = IOC3_SID(IOC3_SUBSYS_MENET4);
-+}
-+
-+#define BRIDGE_BOARD_SETUP(_partno, _setup)	\
-+	{ .match = _partno, .setup = _setup }
-+
-+static const struct {
-+	char *match;
-+	void (*setup)(struct bridge_controller *bc);
-+} bridge_ioc3_devid[] = {
-+	BRIDGE_BOARD_SETUP("030-0734-", bridge_setup_ip27_baseio6g),
-+	BRIDGE_BOARD_SETUP("030-0880-", bridge_setup_ip27_baseio6g),
-+	BRIDGE_BOARD_SETUP("030-1023-", bridge_setup_ip27_baseio),
-+	BRIDGE_BOARD_SETUP("030-1124-", bridge_setup_ip27_baseio),
-+	BRIDGE_BOARD_SETUP("030-1025-", bridge_setup_ip29_baseio),
-+	BRIDGE_BOARD_SETUP("030-1244-", bridge_setup_ip29_baseio),
-+	BRIDGE_BOARD_SETUP("030-1389-", bridge_setup_ip29_baseio),
-+	BRIDGE_BOARD_SETUP("030-0887-", bridge_setup_ip30_sysboard),
-+	BRIDGE_BOARD_SETUP("030-1467-", bridge_setup_ip30_sysboard),
-+	BRIDGE_BOARD_SETUP("030-0873-", bridge_setup_menet),
-+};
-+
-+static void bridge_setup_board(struct bridge_controller *bc, char *partnum)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(bridge_ioc3_devid); i++)
-+		if (!strncmp(partnum, bridge_ioc3_devid[i].match,
-+			     strlen(bridge_ioc3_devid[i].match))) {
-+			bridge_ioc3_devid[i].setup(bc);
-+		}
-+}
-+
-+static int bridge_nvmem_match(struct device *dev, const void *data)
-+{
-+	const char *name = dev_name(dev);
-+	const char *prefix = data;
-+
-+	if (strlen(name) < strlen(prefix))
-+		return 0;
-+
-+	return memcmp(prefix, dev_name(dev), strlen(prefix)) == 0;
-+}
-+
-+static int bridge_get_partnum(u64 baddr, char *partnum)
-+{
-+	struct nvmem_device *nvmem;
-+	char prefix[24];
-+	u8 prom[64];
-+	int i, j;
-+	int ret;
-+
-+	snprintf(prefix, sizeof(prefix), "bridge-%012llx-0b-", baddr);
-+
-+	nvmem = nvmem_device_find(prefix, bridge_nvmem_match);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
-+
-+	ret = nvmem_device_read(nvmem, 0, 64, prom);
-+	nvmem_device_put(nvmem);
-+
-+	if (ret != 64)
-+		return ret;
-+
-+	if (crc16(CRC16_INIT, prom, 32) != CRC16_VALID ||
-+	    crc16(CRC16_INIT, prom + 32, 32) != CRC16_VALID)
-+		return -EINVAL;
-+
-+	/* Assemble part number */
-+	j = 0;
-+	for (i = 0; i < 19; i++)
-+		if (prom[i + 11] != ' ')
-+			partnum[j++] = prom[i + 11];
-+
-+	for (i = 0; i < 6; i++)
-+		if (prom[i + 32] != ' ')
-+			partnum[j++] = prom[i + 32];
-+
-+	partnum[j] = 0;
-+
-+	return 0;
-+}
-+
- static int bridge_probe(struct platform_device *pdev)
- {
- 	struct xtalk_bridge_platform_data *bd = dev_get_platdata(&pdev->dev);
-@@ -434,9 +556,14 @@ static int bridge_probe(struct platform_device *pdev)
- 	struct pci_host_bridge *host;
- 	struct irq_domain *domain, *parent;
- 	struct fwnode_handle *fn;
-+	char partnum[26];
- 	int slot;
- 	int err;
- 
-+	/* get part number from one wire prom */
-+	if (bridge_get_partnum(virt_to_phys((void *)bd->bridge_addr), partnum))
-+		return -EPROBE_DEFER; /* not available yet */
-+
- 	parent = irq_get_default_host();
- 	if (!parent)
- 		return -ENODEV;
-@@ -517,6 +644,8 @@ static int bridge_probe(struct platform_device *pdev)
- 	}
- 	bridge_read(bc, b_wid_tflush);	  /* wait until Bridge PIO complete */
- 
-+	bridge_setup_board(bc, partnum);
-+
- 	host->dev.parent = dev;
- 	host->sysdata = bc;
- 	host->busnr = 0;
-diff --git a/arch/mips/sgi-ip27/ip27-xtalk.c b/arch/mips/sgi-ip27/ip27-xtalk.c
-index 4a1f0b0c29e2..9b7524362a11 100644
---- a/arch/mips/sgi-ip27/ip27-xtalk.c
-+++ b/arch/mips/sgi-ip27/ip27-xtalk.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/smp.h>
- #include <linux/platform_device.h>
-+#include <linux/platform_data/sgi-w1.h>
- #include <linux/platform_data/xtalk-bridge.h>
- #include <asm/sn/addrs.h>
- #include <asm/sn/types.h>
-@@ -26,9 +27,35 @@
- static void bridge_platform_create(nasid_t nasid, int widget, int masterwid)
- {
- 	struct xtalk_bridge_platform_data *bd;
-+	struct sgi_w1_platform_data *wd;
- 	struct platform_device *pdev;
-+	struct resource w1_res;
- 	unsigned long offset;
- 
-+	offset = NODE_OFFSET(nasid);
-+
-+	wd = kzalloc(sizeof(*wd), GFP_KERNEL);
-+	if (!wd)
-+		goto no_mem;
-+
-+	snprintf(wd->dev_id, sizeof(wd->dev_id), "bridge-%012lx",
-+		 offset + (widget << SWIN_SIZE_BITS));
-+
-+	memset(&w1_res, 0, sizeof(w1_res));
-+	w1_res.start = offset + (widget << SWIN_SIZE_BITS) +
-+				offsetof(struct bridge_regs, b_nic);
-+	w1_res.end = w1_res.start + 3;
-+	w1_res.flags = IORESOURCE_MEM;
-+
-+	pdev = platform_device_alloc("sgi_w1", PLATFORM_DEVID_AUTO);
-+	if (!pdev) {
-+		kfree(wd);
-+		goto no_mem;
-+	}
-+	platform_device_add_resources(pdev, &w1_res, 1);
-+	platform_device_add_data(pdev, wd, sizeof(*wd));
-+	platform_device_add(pdev);
-+
- 	bd = kzalloc(sizeof(*bd), GFP_KERNEL);
- 	if (!bd)
- 		goto no_mem;
-@@ -38,7 +65,6 @@ static void bridge_platform_create(nasid_t nasid, int widget, int masterwid)
- 		goto no_mem;
- 	}
- 
--	offset = NODE_OFFSET(nasid);
- 
- 	bd->bridge_addr = RAW_NODE_SWIN_BASE(nasid, widget);
- 	bd->intr_addr	= BIT_ULL(47) + 0x01800000 + PI_INT_PEND_MOD;
-@@ -46,14 +72,14 @@ static void bridge_platform_create(nasid_t nasid, int widget, int masterwid)
- 	bd->masterwid	= masterwid;
- 
- 	bd->mem.name	= "Bridge PCI MEM";
--	bd->mem.start	= offset + (widget << SWIN_SIZE_BITS);
--	bd->mem.end	= bd->mem.start + SWIN_SIZE - 1;
-+	bd->mem.start	= offset + (widget << SWIN_SIZE_BITS) + BRIDGE_DEVIO0;
-+	bd->mem.end	= offset + (widget << SWIN_SIZE_BITS) + SWIN_SIZE - 1;
- 	bd->mem.flags	= IORESOURCE_MEM;
- 	bd->mem_offset	= offset;
- 
- 	bd->io.name	= "Bridge PCI IO";
--	bd->io.start	= offset + (widget << SWIN_SIZE_BITS);
--	bd->io.end	= bd->io.start + SWIN_SIZE - 1;
-+	bd->io.start	= offset + (widget << SWIN_SIZE_BITS) + BRIDGE_DEVIO0;
-+	bd->io.end	= offset + (widget << SWIN_SIZE_BITS) + SWIN_SIZE - 1;
- 	bd->io.flags	= IORESOURCE_IO;
- 	bd->io_offset	= offset;
- 
-@@ -81,6 +107,8 @@ static int probe_one_port(nasid_t nasid, int widget, int masterwid)
- 		bridge_platform_create(nasid, widget, masterwid);
- 		break;
- 	default:
-+		pr_info("xtalk:n%d/%d unknown widget (0x%x)\n",
-+			nasid, widget, partnum);
- 		break;
- 	}
- 
+* CMOS logic parallel SDR output
+* Low voltage LVDS serial DDR output
+* CSI-2 serial data output
+
+But the current driver only supports CSI-2 output available from 4 lanes.
+In the case of sensor resolution, driver only supports 1920x1080 and
+1280x720 at mid data rate of 445.5 Mpbs.
+
+The driver has been validated using Framos IMX290 module interfaced to
+96Boards Dragonboard410c.
+
+Thanks,
+Mani
+
+Changes in v4:
+
+As per the review by Sakari:
+
+* Squashed the MAINTAINERS changes with driver patch
+* Some misc changes to the driver
+
+Changes in v3:
+
+As per the review by Sakari:
+
+* Switched to pm runtime
+* Used link-frequency property
+* Removed useless read calls from buffered read function
+* Some other misc changes to the driver and binding
+
+Changes in v2:
+
+* Added Reviewed-by tag from Rob for bindings patch
+
+Manivannan Sadhasivam (2):
+  dt-bindings: media: i2c: Add IMX290 CMOS sensor binding
+  media: i2c: Add IMX290 CMOS image sensor driver
+
+ .../devicetree/bindings/media/i2c/imx290.txt  |  57 ++
+ MAINTAINERS                                   |   8 +
+ drivers/media/i2c/Kconfig                     |  11 +
+ drivers/media/i2c/Makefile                    |   1 +
+ drivers/media/i2c/imx290.c                    | 885 ++++++++++++++++++
+ 5 files changed, 962 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+ create mode 100644 drivers/media/i2c/imx290.c
+
 -- 
-2.16.4
+2.17.1
 
