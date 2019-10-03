@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E554EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F56AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA831222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65864222CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570067262;
-	bh=XdyvM6DTwVT7YnqBoyXQ1xjXhS8PIGQJzupZHFgdfHw=;
+	s=default; t=1570067265;
+	bh=yIBjfYOEPsz/21qdYEvppUqb2W8DmvJA4e/0lsedspA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNPPDU0xjQCDA6tnrKIytIIbR1DixXJlEvxyW257/e/RwOVMVyA5i6ohUckmhMSV5
-	 684XoM5p+gxs9IHN+2zJrW+PMp7EtZvjJyVwTVtoZi4/P1E92I8r8jJSoroiPJMWPP
-	 WyIjA+4P5y5vE6zO/yaftJJJUnKBTZKZ7mM+wxJY=
+	b=QLsuUiPz0CuBECps2xQYy+faHv2TpTuC7b6pHdI6/kvWjU0W0TjZnxRShwvT2uaaZ
+	 GPr81ZQNs4s+0tmYqQ7Gb9LhbkH+SMTG2lpxex4+3TXehYlkCvzZOcmKH2zqUpokcQ
+	 iFR+Q85ejkded+N3pmnKFJ/6l844MXT1deCK65qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfJCBri (ORCPT
+        id S1727656AbfJCBre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbfJCBrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:47:33 -0400
+        id S1726597AbfJCBrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 21:47:32 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50B45222CB;
-        Thu,  3 Oct 2019 01:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F26CC222C9;
+        Thu,  3 Oct 2019 01:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570067252;
-        bh=XdyvM6DTwVT7YnqBoyXQ1xjXhS8PIGQJzupZHFgdfHw=;
+        bh=yIBjfYOEPsz/21qdYEvppUqb2W8DmvJA4e/0lsedspA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MA/VO8FcQ6Y4bgWglxRxt3YCNS51D0evvOR3F4Ib5+AzOgDKmu7NO7VQj2Qs29ac5
-         vEvn5IzZ7BcKi8TAMhuDqDEL89rVKCFC2o0q/Qk4cuVURDilYYvlqj3l8ueCA9ZJYo
-         AfOvBTRmxnxIiWL9q9DesAEbxCHXjt8DPXOvWamw=
+        b=q5hkVVUsIsfMwE7PphqQTi1wL6wV1QLfD829shr/jZpRfezv2LP7oetf4dC6U7pkD
+         RhhLPEJqtbIVEZZAtABIA5EJqz5onrYsHXDZyvwc9znz18Rk2QG5Po9Rd+JrYK1KWt
+         hrrLPdULeqSC7ytEvRkV6XxyUSIS+SPT5anDQ+Ow=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -47,10 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 6/9] rcutorture: Separate warnings for each failure type
-Date:   Wed,  2 Oct 2019 18:47:25 -0700
-Message-Id: <20191003014728.13496-6-paulmck@kernel.org>
+        Ethan Hansen <1ethanhansen@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 5/9] rcu: Remove unused variable rcu_perf_writer_state
+Date:   Wed,  2 Oct 2019 18:47:24 -0700
+Message-Id: <20191003014728.13496-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003014710.GA13323@paulmck-ThinkPad-P72>
 References: <20191003014710.GA13323@paulmck-ThinkPad-P72>
@@ -59,50 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+From: Ethan Hansen <1ethanhansen@gmail.com>
 
-Currently, each of six different types of failure triggers a
-single WARN_ON_ONCE(), and it is then necessary to stare at the
-rcu_torture_stats(), Reader Pipe, and Reader Batch lines looking for
-inappropriately non-zero values.  This can be annoying and error-prone,
-so this commit provides a separate WARN_ON_ONCE() for each of the
-six error conditions and adds short comments to each to ease error
-identification.
+The variable rcu_perf_writer_state is declared and initialized,
+but is never actually referenced. Remove it to clean code.
 
+Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
+[ ethansen: Also removed unused macros assigned to that variable. ]
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- kernel/rcu/rcutorture.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ kernel/rcu/rcuperf.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 7dcb2b8..a9e97c3 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1442,15 +1442,18 @@ rcu_torture_stats_print(void)
- 		n_rcu_torture_barrier_error);
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 5a879d0..5f884d5 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -109,15 +109,6 @@ static unsigned long b_rcu_perf_writer_started;
+ static unsigned long b_rcu_perf_writer_finished;
+ static DEFINE_PER_CPU(atomic_t, n_async_inflight);
  
- 	pr_alert("%s%s ", torture_type, TORTURE_FLAG);
--	if (atomic_read(&n_rcu_torture_mberror) != 0 ||
--	    n_rcu_torture_barrier_error != 0 ||
--	    n_rcu_torture_boost_ktrerror != 0 ||
--	    n_rcu_torture_boost_rterror != 0 ||
--	    n_rcu_torture_boost_failure != 0 ||
-+	if (atomic_read(&n_rcu_torture_mberror) ||
-+	    n_rcu_torture_barrier_error || n_rcu_torture_boost_ktrerror ||
-+	    n_rcu_torture_boost_rterror || n_rcu_torture_boost_failure ||
- 	    i > 1) {
- 		pr_cont("%s", "!!! ");
- 		atomic_inc(&n_rcu_torture_error);
--		WARN_ON_ONCE(1);
-+		WARN_ON_ONCE(atomic_read(&n_rcu_torture_mberror));
-+		WARN_ON_ONCE(n_rcu_torture_barrier_error);  // rcu_barrier()
-+		WARN_ON_ONCE(n_rcu_torture_boost_ktrerror); // no boost kthread
-+		WARN_ON_ONCE(n_rcu_torture_boost_rterror); // can't set RT prio
-+		WARN_ON_ONCE(n_rcu_torture_boost_failure); // RCU boost failed
-+		WARN_ON_ONCE(i > 1); // Too-short grace period
+-static int rcu_perf_writer_state;
+-#define RTWS_INIT		0
+-#define RTWS_ASYNC		1
+-#define RTWS_BARRIER		2
+-#define RTWS_EXP_SYNC		3
+-#define RTWS_SYNC		4
+-#define RTWS_IDLE		5
+-#define RTWS_STOPPING		6
+-
+ #define MAX_MEAS 10000
+ #define MIN_MEAS 100
+ 
+@@ -404,25 +395,20 @@ rcu_perf_writer(void *arg)
+ 			if (!rhp)
+ 				rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
+ 			if (rhp && atomic_read(this_cpu_ptr(&n_async_inflight)) < gp_async_max) {
+-				rcu_perf_writer_state = RTWS_ASYNC;
+ 				atomic_inc(this_cpu_ptr(&n_async_inflight));
+ 				cur_ops->async(rhp, rcu_perf_async_cb);
+ 				rhp = NULL;
+ 			} else if (!kthread_should_stop()) {
+-				rcu_perf_writer_state = RTWS_BARRIER;
+ 				cur_ops->gp_barrier();
+ 				goto retry;
+ 			} else {
+ 				kfree(rhp); /* Because we are stopping. */
+ 			}
+ 		} else if (gp_exp) {
+-			rcu_perf_writer_state = RTWS_EXP_SYNC;
+ 			cur_ops->exp_sync();
+ 		} else {
+-			rcu_perf_writer_state = RTWS_SYNC;
+ 			cur_ops->sync();
+ 		}
+-		rcu_perf_writer_state = RTWS_IDLE;
+ 		t = ktime_get_mono_fast_ns();
+ 		*wdp = t - *wdp;
+ 		i_max = i;
+@@ -463,10 +449,8 @@ rcu_perf_writer(void *arg)
+ 		rcu_perf_wait_shutdown();
+ 	} while (!torture_must_stop());
+ 	if (gp_async) {
+-		rcu_perf_writer_state = RTWS_BARRIER;
+ 		cur_ops->gp_barrier();
  	}
- 	pr_cont("Reader Pipe: ");
- 	for (i = 0; i < RCU_TORTURE_PIPE_LEN + 1; i++)
+-	rcu_perf_writer_state = RTWS_STOPPING;
+ 	writer_n_durations[me] = i_max;
+ 	torture_kthread_stopping("rcu_perf_writer");
+ 	return 0;
 -- 
 2.9.5
 
