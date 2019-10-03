@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E95C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3146BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB94A20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF99820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122965;
-	bh=wzy+qn7G4vChhr+Igs0f97LpsFy/FGBogC3S8Dgnf0M=;
+	s=default; t=1570122968;
+	bh=2NQHd2QxdKNhEULOQ3m6pk/Bq8wN86OiE8oTa6a2Tsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AutVUWrCTyXppYyr0WpAtR4FeeC2ngftIlYdzvmgDGcgBp/sKFn5IKkuq0ZnLU2LR
-	 q52nBrVsMTxzqTPsfNENe7IZlQtoDUZVaAAuM5wxeizRDJyzatslvPrbqugts+uYOr
-	 8GBIUaxo6SMusKvrDVMggHdmax+hoP2pgr281llU=
+	b=e+aGdSCd68870QBGbQHT5TqGzES1ZyJgWevIL9/wFPijTL0xymX7z0//JJXjpOTDq
+	 MofNX9DUVktVHrkKBLGYMBh4+0ZLTVZOFKx/tTpCeB/JqhGAvjWH9vtcST9SViohVK
+	 ffVP6tBtBvqHKk1j/xDDoAGBvAs8Hxmvwy86osmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390855AbfJCQZB (ORCPT
+        id S2390839AbfJCQY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:25:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729193AbfJCQY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:24:59 -0400
+        id S2390019AbfJCQYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B020867;
-        Thu,  3 Oct 2019 16:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D012054F;
+        Thu,  3 Oct 2019 16:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119898;
-        bh=wzy+qn7G4vChhr+Igs0f97LpsFy/FGBogC3S8Dgnf0M=;
+        s=default; t=1570119890;
+        bh=2NQHd2QxdKNhEULOQ3m6pk/Bq8wN86OiE8oTa6a2Tsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/fGyxrRXfSdgvo8BXLL2PWMBaoi6k2O+K9TQvw30rsp3aC8gFWC+Z2piwIKYRDq1
-         IDyTBWMPAnCtFQxGhhw3QwG+JqypIHKSy+YwG0CVnCCjbAG12kElSLNFKHOWpSwH7x
-         MbphbdXg2R/tC8j69Mja/1/p58pOEF7IXB4EekR8=
+        b=u+bDIERZnhgsZoN8eMQ8U7OmCszIvwX/UEqlesyLBUCUjqTQSNtk8kdZTFpZZMXMK
+         +LpKfmnm1DOhOYl0++HCcEajSo/V8D8s1f2fGOboTFawh3/dXQFk6Fq5+nO2P/i5JA
+         ckt7X8wpVDR5sEjxsz+J9NZRkuFNp7XKiblV9lBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org,
+        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.2 022/313] net_sched: add policy validation for action attributes
-Date:   Thu,  3 Oct 2019 17:50:00 +0200
-Message-Id: <20191003154535.559326756@linuxfoundation.org>
+Subject: [PATCH 5.2 002/313] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
+Date:   Thu,  3 Oct 2019 17:49:40 +0200
+Message-Id: <20191003154533.792457976@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,102 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 199ce850ce112315cfc68d42b694bcaa27b097b7 ]
+[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
 
-Similar to commit 8b4c3cdd9dd8
-("net: sched: Add policy validation for tc attributes"), we need
-to add proper policy validation for TC action attributes too.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the driver more robust against invalid and
+meaningless descriptors.
 
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+The wMaxPacketSize of the out pipe is used as divisor. So this change
+fixes a divide-by-zero bug.
+
+Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/act_api.c |   34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -828,6 +828,15 @@ static struct tc_cookie *nla_memdup_cook
- 	return c;
- }
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -681,8 +681,12 @@ cdc_ncm_find_endpoints(struct usbnet *de
+ 	u8 ep;
  
-+static const struct nla_policy tcf_action_policy[TCA_ACT_MAX + 1] = {
-+	[TCA_ACT_KIND]		= { .type = NLA_NUL_STRING,
-+				    .len = IFNAMSIZ - 1 },
-+	[TCA_ACT_INDEX]		= { .type = NLA_U32 },
-+	[TCA_ACT_COOKIE]	= { .type = NLA_BINARY,
-+				    .len = TC_COOKIE_MAX_SIZE },
-+	[TCA_ACT_OPTIONS]	= { .type = NLA_NESTED },
-+};
-+
- struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
- 				    struct nlattr *nla, struct nlattr *est,
- 				    char *name, int ovr, int bind,
-@@ -843,8 +852,8 @@ struct tc_action *tcf_action_init_1(stru
- 	int err;
- 
- 	if (name == NULL) {
--		err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL,
--						  extack);
-+		err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
-+						  tcf_action_policy, extack);
- 		if (err < 0)
- 			goto err_out;
- 		err = -EINVAL;
-@@ -853,18 +862,9 @@ struct tc_action *tcf_action_init_1(stru
- 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
- 			goto err_out;
- 		}
--		if (nla_strlcpy(act_name, kind, IFNAMSIZ) >= IFNAMSIZ) {
--			NL_SET_ERR_MSG(extack, "TC action name too long");
--			goto err_out;
--		}
--		if (tb[TCA_ACT_COOKIE]) {
--			int cklen = nla_len(tb[TCA_ACT_COOKIE]);
+ 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
 -
--			if (cklen > TC_COOKIE_MAX_SIZE) {
--				NL_SET_ERR_MSG(extack, "TC cookie size above the maximum");
--				goto err_out;
--			}
-+		nla_strlcpy(act_name, kind, IFNAMSIZ);
- 
-+		if (tb[TCA_ACT_COOKIE]) {
- 			cookie = nla_memdup_cookie(tb);
- 			if (!cookie) {
- 				NL_SET_ERR_MSG(extack, "No memory to generate TC cookie");
-@@ -1095,7 +1095,8 @@ static struct tc_action *tcf_action_get_
- 	int index;
- 	int err;
- 
--	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL, extack);
-+	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
-+					  tcf_action_policy, extack);
- 	if (err < 0)
- 		goto err_out;
- 
-@@ -1149,7 +1150,8 @@ static int tca_action_flush(struct net *
- 
- 	b = skb_tail_pointer(skb);
- 
--	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL, extack);
-+	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
-+					  tcf_action_policy, extack);
- 	if (err < 0)
- 		goto err_out;
- 
-@@ -1437,7 +1439,7 @@ static struct nlattr *find_dump_kind(str
- 
- 	if (tb[1] == NULL)
- 		return NULL;
--	if (nla_parse_nested_deprecated(tb2, TCA_ACT_MAX, tb[1], NULL, NULL) < 0)
-+	if (nla_parse_nested_deprecated(tb2, TCA_ACT_MAX, tb[1], tcf_action_policy, NULL) < 0)
- 		return NULL;
- 	kind = tb2[TCA_ACT_KIND];
- 
+ 		e = intf->cur_altsetting->endpoint + ep;
++
++		/* ignore endpoints which cannot transfer data */
++		if (!usb_endpoint_maxp(&e->desc))
++			continue;
++
+ 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
+ 		case USB_ENDPOINT_XFER_INT:
+ 			if (usb_endpoint_dir_in(&e->desc)) {
 
 
