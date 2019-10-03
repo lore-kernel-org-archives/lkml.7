@@ -2,226 +2,164 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8895C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE032C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D29D21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570136492;
-	bh=B8+adM7hxMw6G43sPG0uzO+Wnf1dj2aZNxz2yxmNHrM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=w7muosGcCrbS6Qj/FCToQQUtRGKn+mnZqP1gX25mtZ6tVh5d+JLGLie0bYZ4F4oB8
-	 usORNRhXkFvkiJGncGPFbslC7b4fbCBkzKuvLEwUvFxVNPvCmcJQX1AeHpJDpiyxW7
-	 +Jzlmz0DAsuaxYeoYNZuR9MqQPwb6ncxgj219s1o=
+	by mail.kernel.org (Postfix) with ESMTP id 9FCEA20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pBKhH56p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbfJCVBb (ORCPT
+        id S1731066AbfJCVBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:01:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728869AbfJCVBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:01:31 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB3EC20862;
-        Thu,  3 Oct 2019 21:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570136490;
-        bh=B8+adM7hxMw6G43sPG0uzO+Wnf1dj2aZNxz2yxmNHrM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=A7GofkGDKPMFc9KmRt9LHxIN+iTgM+0bbZUL8rII+T7zvKgosbX6oaYrgUXn8XkuL
-         Flg5H02RdJAlwL5DK6LX9sR6Hh8EigB5q0LVefP8rrK1WEvlYjlnuGldK8Ndygp/gI
-         KO1MRfB/crDP6Jbptn0vc1a1MmyEK0CXB6GUikYk=
-Date:   Thu, 3 Oct 2019 16:01:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-Message-ID: <20191003210128.GA200289@google.com>
+        Thu, 3 Oct 2019 17:01:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44975 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728869AbfJCVBk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:01:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id w12so8756307iol.11;
+        Thu, 03 Oct 2019 14:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=E5SAchAqbt5StPb+s2j3ybaKfrX09uCoGQITz/dDUpk=;
+        b=pBKhH56piWOqZZ0XAvUgyFpneZ68ZJgWSbjmYs7zpwuFJcntG55dfrSzXUAw6IecO+
+         ikJqW+BIkiX1v9tG7uHt+Gg1uWoHMu35Xop7k/QqeZPZ4/h2kyeGEXR/naL6KyWBXjZS
+         obQHSjNMXIWpmcDfawPAb+39E2V0ID8zyLEflWc+d+fnetgEG4WXU7Eit0uut0je+Pk9
+         FGznii1X0SB+UsbxwedrsCsJUqiDrBwUygvdIs6Q7brXYadz3xJv5uirNvNZ66aMLHng
+         GhG8/2Pf6qAJePHKnQtDkKklXjZ8tVldoKbFQehBE+YYC6EIwrrP7abeKEXMSKpGrRiX
+         rVpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=E5SAchAqbt5StPb+s2j3ybaKfrX09uCoGQITz/dDUpk=;
+        b=VuodHcbgHz2WXd5wf/gJ99Uv0m6XxBn1xHXt79aqAwQi5gXNusWry3g2RLFgYU6Wc0
+         spoou6bu4yeP+e7MjGw4gkM0PcQMfSYVXTHjd8BSpaBWXOPXpzynRku7+deqHtN2Bbz3
+         +XTIZsrv9xqzS5DOSWB3tCQ/b9y7ab8WElJQR6my+23dmxU3Zb7VOOyWwPaUFkOxPdRO
+         HgJV3DWB8I6hPXvG74NweKoLD5fYYaisX9AyiUv9jQV3cj55RwmUSD0WgJrV11E2AaHm
+         rB0y61o8QpLwINWjj4YMN6NK70BPwS89rN+1Mi3L9Yi6ZIHZDu/p7fnfeA+v81nwb2Cp
+         WM8Q==
+X-Gm-Message-State: APjAAAVGUM95dhkupWEvH/FkGrPZNwF9UT8rXZskn1wu8kcpAuKEgEg3
+        1m6Chig76/q6vEWruElhdT46s4bRd02h
+X-Google-Smtp-Source: APXvYqyaM5jB82UnO5hjpqAJhFAH/8ynrmAa3zb8Mx7Fio1SwT7qqn9KwzK0mD7zpUCM7kRDaTivJQ==
+X-Received: by 2002:a92:3851:: with SMTP id f78mr11603006ila.179.1570136499208;
+        Thu, 03 Oct 2019 14:01:39 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id c17sm1900489ild.31.2019.10.03.14.01.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Oct 2019 14:01:38 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 17:01:36 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] hv: vmbus: add fuzz testing to hv device
+Message-ID: <cover.1570130325.git.brandonbonaby94@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003203726.GA14637@skuppusw-desk.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 01:37:26PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On Thu, Oct 03, 2019 at 02:04:13PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Oct 03, 2019 at 10:20:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > Hi Bjorn,
-> > > 
-> > > Thanks for looking into this patch set.
-> > > 
-> > > On 9/5/19 12:18 PM, Bjorn Helgaas wrote:
-> > > > On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > 
-> > > > > Since pci_prg_resp_pasid_required() function has dependency on both
-> > > > > PASID and PRI, define it only if both CONFIG_PCI_PRI and
-> > > > > CONFIG_PCI_PASID config options are enabled.
-> > > > > 
-> > > > > Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
-> > > > > interface.")
-> > > > [Don't split tags, including "Fixes:" across lines]
-> > > > 
-> > > > This definitely doesn't fix e5567f5f6762.  That commit added
-> > > > pci_prg_resp_pasid_required(), but with no dependency on
-> > > > CONFIG_PCI_PRI or CONFIG_PCI_PASID.
-> > > > 
-> > > > This patch is only required when a subsequent patch is applied.  It
-> > > > should be squashed into the commit that requires it so it's obvious
-> > > > why it's needed.
-> > > > 
-> > > > I've been poking at this series, and I'll post a v8 soon with this and
-> > > > other fixes.
-> > > In your v8 submission you did not merge this patch. You did not use
-> > > pri_cap or pasid_cap cached values. Instead you have re-read the
-> > > value from register. Is this intentional?
-> > > 
-> > > Since this function will be called for every VF device we might loose some
-> > > performance benefit.
-> > 
-> > This particular patch doesn't do any caching.  IIRC it fiddles with
-> > ifdefs to solve a problem that would be introduced by a future patch.
-> > I don't remember the exact details, but I think the series I merged
-> > doesn't have that problem.  If it does, let me know the details and we
-> > can fix it.
-> This patch by itself does not do any caching. But your caching patch
-> missed modifying this function to use cached values. Please check the
-> current implementation of this function. It still reads
-> PCI_EXT_CAP_ID_PRI register instead of using cached value. Please let
-> me know your comments.
-> 
-> int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> {
->     u16 status;
->     int pri;
-> 
->     if (pdev->is_virtfn)
->         pdev = pci_physfn(pdev);
-> 
->     pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->     if (!pri)
->         return 0;
-> 
->     pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
-> 
->     if (status & PCI_PRI_STATUS_PASID)
->         return 1;
-> 
->     return 0;
-> }
-> EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-> 
-> If caching is applied to this function then we need this #ifdef
-> dependency correction patch.
+This patchset introduces a testing framework for Hyper-V drivers.
+This framework allows us to introduce delays in the packet receive
+path on a per-device basis. While the current code only supports
+introducing arbitrary delays in the host/guest communication path,
+we intend to expand this to support error injection in the future.
 
-IIRC this #ifdef patch wasn't connected to the actual *need* for the
-#ifdef, so it was very difficult to review.  I thought this function
-would be infrequently used and it wasn't worth trying to sort out the
-#ifdef muddle to do the caching.  But it does seem sort of pointless
-to chase the capability list again here, so maybe it *is* worth
-optimizing.
+changes in v6:
+  patch 1:
+	changed kernel version in 
+	Documentation/ABI/testing/debugfs-hyperv to 5.5
+	
+	removed less than 0 if statement when dealing with
+	u64 datatype, as suggested by michael.
 
-The PRG Response PASID Required bit is read-only, so I wonder if it
-would be simpler if we just read PCI_PRI_STATUS once and save the bit
-in the struct pci_dev?  We could do that in pci_enable_pri(), or if we
-might need the value before that's called, we could add a
-pci_pri_init() and do it there.
+changes in v5:
+  patch 1:
+        As per Stephen's suggestion, Moved CONFIG_HYPERV_TESTING
+        to lib/Kconfig.debug.
 
-> > I did include the caching patches for both PRI and PASID capabilities,
-> > but they're only performance optimizations so I moved them to the end
-> > so the functional fixes would be smaller and earlier in the series.
-> > 
-> > > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > ---
-> > > > >   drivers/pci/ats.c       | 10 ++++++----
-> > > > >   include/linux/pci-ats.h | 12 +++++++++---
-> > > > >   2 files changed, 15 insertions(+), 7 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> > > > > index e18499243f84..cdd936d10f68 100644
-> > > > > --- a/drivers/pci/ats.c
-> > > > > +++ b/drivers/pci/ats.c
-> > > > > @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
-> > > > >   }
-> > > > >   EXPORT_SYMBOL_GPL(pci_pasid_features);
-> > > > > +#ifdef CONFIG_PCI_PRI
-> > > > > +
-> > > > >   /**
-> > > > >    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
-> > > > >    *				 status.
-> > > > > @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
-> > > > >    *
-> > > > >    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
-> > > > >    *
-> > > > > - * Even though the PRG response PASID status is read from PRI Status
-> > > > > - * Register, since this API will mainly be used by PASID users, this
-> > > > > - * function is defined within #ifdef CONFIG_PCI_PASID instead of
-> > > > > - * CONFIG_PCI_PRI.
-> > > > > + * Since this API has dependency on both PRI and PASID, protect it
-> > > > > + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
-> > > > >    */
-> > > > >   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> > > > >   {
-> > > > > @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> > > > >   }
-> > > > >   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
-> > > > > +#endif
-> > > > > +
-> > > > >   #define PASID_NUMBER_SHIFT	8
-> > > > >   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
-> > > > >   /**
-> > > > > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> > > > > index 1ebb88e7c184..1a0bdaee2f32 100644
-> > > > > --- a/include/linux/pci-ats.h
-> > > > > +++ b/include/linux/pci-ats.h
-> > > > > @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
-> > > > >   void pci_restore_pasid_state(struct pci_dev *pdev);
-> > > > >   int pci_pasid_features(struct pci_dev *pdev);
-> > > > >   int pci_max_pasids(struct pci_dev *pdev);
-> > > > > -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> > > > >   #else  /* CONFIG_PCI_PASID */
-> > > > > @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
-> > > > >   	return -EINVAL;
-> > > > >   }
-> > > > > +#endif /* CONFIG_PCI_PASID */
-> > > > > +
-> > > > > +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
-> > > > > +
-> > > > > +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> > > > > +
-> > > > > +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
-> > > > > +
-> > > > >   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> > > > >   {
-> > > > >   	return 0;
-> > > > >   }
-> > > > > -#endif /* CONFIG_PCI_PASID */
-> > > > > -
-> > > > > +#endif
-> > > > >   #endif /* LINUX_PCI_ATS_H*/
-> > > > > -- 
-> > > > > 2.21.0
-> > > > > 
-> > > -- 
-> > > Sathyanarayanan Kuppuswamy
-> > > Linux kernel developer
-> > > 
-> 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux kernel developer
+        Fixed build issue reported by Kbuild, with Michael's
+        suggestion to make hv_debugfs part of the hv_vmbus
+        module.
+
+changes in v4:
+  patch 1:
+        Combined previous v3 patches 1 and 2, into a single patch
+        which is now patch 1. This was done so that calls to
+        the new debugfs functions are in the same patch as
+        the definitions for these functions.
+
+        Moved debugfs code from "vmbus_drv.c" that was in
+        previous v3 patch 2, into a new file "debugfs.c" in
+        drivers/hv.
+
+        Updated the Makefile to compile "debugfs.c" if
+        CONFIG_HYPERV_TESTING is enabled
+
+        As per Michael's comments, added empty implementations
+        of the new functions, so the compiler will not generate
+        code when CONFIG_HYPERV_TESTING is not enabled.
+
+  patch 2 (was previously v3 patch 3):
+        Based on Harrys comments, made the tool more
+        user friendly and added more error checking.
+
+changes in v3:
+  patch 2: change call to IS_ERR_OR_NULL, to IS_ERR.
+
+  patch 3: Align python tool to match Linux coding style.
+
+Changes in v2:
+  Patch 1: As per Vitaly's suggestion, wrapped the test code under an
+           #ifdef and updated the Kconfig file, so that the test code
+           will only be used when the config option is set to true.
+           (default is false).
+
+           Updated hyperv_vmbus header to contain new #ifdef with new
+           new functions for the test code.
+
+  Patch 2: Moved code from under sysfs to debugfs and wrapped it under
+           the new ifdef.
+
+           Updated MAINTAINERS file with new debugfs-hyperv file under
+           the section for hyperv.
+
+  Patch 3: Updated testing tool with new debugfs location.
+
+Branden Bonaby (2):
+  drivers: hv: vmbus: Introduce latency testing
+  tools: hv: add vmbus testing tool
+
+ Documentation/ABI/testing/debugfs-hyperv |  23 ++
+ MAINTAINERS                              |   1 +
+ drivers/hv/Makefile                      |   1 +
+ drivers/hv/connection.c                  |   1 +
+ drivers/hv/hv_debugfs.c                  | 178 +++++++++++
+ drivers/hv/hyperv_vmbus.h                |  31 ++
+ drivers/hv/ring_buffer.c                 |   2 +
+ drivers/hv/vmbus_drv.c                   |   6 +
+ include/linux/hyperv.h                   |  19 ++
+ lib/Kconfig.debug                        |   7 +
+ tools/hv/vmbus_testing                   | 376 +++++++++++++++++++++++
+ 11 files changed, 645 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+ create mode 100644 drivers/hv/hv_debugfs.c
+ create mode 100755 tools/hv/vmbus_testing
+
+-- 
+2.17.1
+
