@@ -2,53 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5CDC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F72C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810B4222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7118221783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119685;
-	bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
+	s=default; t=1570119690;
+	bh=7n/bnm44tk55aPpC2doMGd/MG4S/j4Yhxz4B8NLgg+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGb7rVYAjxosbdoaHKFIRpylyrUCrpRBM0bS01O0ZsIVahwOxgOq20Yvt6Guoayh/
-	 vyF4rP2cqwi7kLO/lDJYnzimByH+EkXNjdf1vBnToUQrHGVMIAvG/k0QsduJeMJaHA
-	 GoXOGWRFsf9L5AMalVqUouxyA5ycIlSU4x2gyOeg=
+	b=W8ojRJq037kr5CqTXkhYqDOYzP1GL1D2KyjhThgSILF0Ew+7uPtDTykF/+IBkkptz
+	 ukU98PehbRzeVOzOuDjrgMkLag3H+AluV620nFfzul3tuk3bI0RwQVaDcgwc+tMX7B
+	 9Q79RNMvly0VG19011xXwOZExj7TMXUHyszFkDLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390129AbfJCQVY (ORCPT
+        id S1730325AbfJCQV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387531AbfJCQVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:20 -0400
+        id S2387531AbfJCQV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 078BA2054F;
-        Thu,  3 Oct 2019 16:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5FD820865;
+        Thu,  3 Oct 2019 16:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119679;
-        bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
+        s=default; t=1570119685;
+        bh=7n/bnm44tk55aPpC2doMGd/MG4S/j4Yhxz4B8NLgg+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bk7jPfPbQ+/Y6MQlJdcmk406yv2E+7qDhgxcwS2mbjkFf0f1eElpPXyNEF7XmhN6+
-         1PWi3Zw83STdEGvC1Jv3IkS6V2zt7QEwPHns5BifZR+xL/fQr1riOawm4NJ23y9uct
-         BkyVtVwIi5Yq+YVjNIFKbg5UBIOwsjsAP1MB+rPU=
+        b=BjwsizAtam0G33Vy5v63A+BeAleU50uFcZSaa6EiHVq+r/tGSQCoCndkjZF9PgP3l
+         ukYQemPdGEhlOrzXpNbIG7H5daa6P4o+zP187IEsoiQ+ZPCedzM5Jpfg1BHYFAsfx1
+         yqenfJL8IB8xC/DrnYlu2i6h2OAeiiU4M05cnz3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Ales Novak <alnovak@suse.cz>,
-        Shane Seymour <shane.seymour@hpe.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 151/211] scsi: scsi_dh_rdac: zero cdb in send_mode_select()
-Date:   Thu,  3 Oct 2019 17:53:37 +0200
-Message-Id: <20191003154522.384695311@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 116/211] iommu/amd: Silence warnings under memory pressure
+Date:   Thu,  3 Oct 2019 17:53:02 +0200
+Message-Id: <20191003154513.850058278@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,43 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <Martin.Wilck@suse.com>
+From: Qian Cai <cai@lca.pw>
 
-commit 57adf5d4cfd3198aa480e7c94a101fc8c4e6109d upstream.
+[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
 
-cdb in send_mode_select() is not zeroed and is only partially filled in
-rdac_failover_get(), which leads to some random data getting to the
-device. Users have reported storage responding to such commands with
-INVALID FIELD IN CDB. Code before commit 327825574132 was not affected, as
-it called blk_rq_set_block_pc().
+When running heavy memory pressure workloads, the system is throwing
+endless warnings,
 
-Fix this by zeroing out the cdb first.
+smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
+5 reason: -12)
+Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+07/10/2019
+swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
+nodemask=(null),cpuset=/,mems_allowed=0,4
+Call Trace:
+ <IRQ>
+ dump_stack+0x62/0x9a
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ get_zeroed_page+0x16/0x20
+ iommu_map_page+0x477/0x540
+ map_sg+0x1ce/0x2f0
+ scsi_dma_map+0xc6/0x160
+ pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
 
-Identified & fix proposed by HPE.
+because the allocation could fail from iommu_map_page(), and the volume
+of this call could be huge which may generate a lot of serial console
+output and cosumes all CPUs.
 
-Fixes: 327825574132 ("scsi_dh_rdac: switch to scsi_execute_req_flags()")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20190904155205.1666-1-martin.wilck@suse.com
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Ales Novak <alnovak@suse.cz>
-Reviewed-by: Shane Seymour <shane.seymour@hpe.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix it by silencing the warning in this call site, and there is still a
+dev_err() later to notify the failure.
 
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/device_handler/scsi_dh_rdac.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/amd_iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/device_handler/scsi_dh_rdac.c
-+++ b/drivers/scsi/device_handler/scsi_dh_rdac.c
-@@ -546,6 +546,8 @@ static void send_mode_select(struct work
- 	spin_unlock(&ctlr->ms_lock);
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 69c269dc4f1bf..1f2ed44de2438 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2563,7 +2563,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
  
-  retry:
-+	memset(cdb, 0, sizeof(cdb));
-+
- 	data_size = rdac_failover_get(ctlr, &list, cdb);
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
+-			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
++			ret = iommu_map_page(domain, bus_addr, phys_addr,
++					     PAGE_SIZE, prot,
++					     GFP_ATOMIC | __GFP_NOWARN);
+ 			if (ret)
+ 				goto out_unmap;
  
- 	RDAC_LOG(RDAC_LOG_FAILOVER, sdev, "array %s, ctlr %d, "
+-- 
+2.20.1
+
 
 
