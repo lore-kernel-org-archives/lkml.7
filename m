@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F391C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC54C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCCB20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4794920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122124;
-	bh=laBXdjhEBj/+X/JVTuEkEsHnRzQeu89qrZqIqosxvkg=;
+	s=default; t=1570122126;
+	bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyEp4qSDmlf1McYAJDvHXth/V4G7ahmQSvyme5hKE6tyrCdrNSdbDjNHW0zAol0FF
-	 B9Dt1Rgevu4A+TRXYemeMe2QqIl9Rjnq6JoK0qV7HLqzGmCVpezkRh8gHFK705XBTL
-	 FcqEeLUDDS4PcognLiMBL9oqc7r2HHukRT1Yp87U=
+	b=vjFXtnQ03KQZY14sbn/rsr6BPO1rd6OAtnwF1hjoR9yhLuRuOavtvkn/4famM7rr3
+	 rwS3RFse3dH1t9z62mYYVGkA48ozMB07mKaxHHd/I+2tqsWoHml1j4UZZHW1VW9aHI
+	 yYDcCtvTYLjiSHXnLUQ9+KTbyuD/XA9cCykHzlnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405253AbfJCQnr (ORCPT
+        id S2392826AbfJCRCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392151AbfJCQnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:40 -0400
+        id S2391919AbfJCQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BEC92070B;
-        Thu,  3 Oct 2019 16:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12DE32070B;
+        Thu,  3 Oct 2019 16:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121019;
-        bh=laBXdjhEBj/+X/JVTuEkEsHnRzQeu89qrZqIqosxvkg=;
+        s=default; t=1570121022;
+        bh=wKwjfWM+JCA0f7UO0uWQrgxnwNMKaVWWUO0lVQf5ynI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StMOLy3XeTNfDattvj9vO7G6iX2S+8GXSbSQD5SS5IK98DmD0S9/5eesLSX4U/mcP
-         smHpZwC195gY2Z1GS7l0tf58lKAHKyWsUxR0wUWSrV/luYHQDGV1lUREUvlnzZdMO2
-         30FoH2Zl2fIk0uzshgtI0lw4aeXzz5fdCPKbEdwc=
+        b=NdLbQ6eK6yE0f6VHvDogzWszlWIcbyE7R5GKS7P1epJ7APZCETU0j+V9m9LeU8/aO
+         gPfpKlAIMsZu4ZiA54q+FIHp0aX3Jp7wpK1F+EZh17EuWb2gOgbq6OqtxsudvnVMKm
+         tMgRvRc62BL0jhxkehgybZk3KG9BnEmFK8IPoPg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Stefan Agner <stefan.agner@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 124/344] arm64: dts: qcom: qcs404-evb: Mark WCSS clocks protected
-Date:   Thu,  3 Oct 2019 17:51:29 +0200
-Message-Id: <20191003154552.443445773@linuxfoundation.org>
+Subject: [PATCH 5.3 125/344] ARM: dts: imx7-colibri: disable HS400
+Date:   Thu,  3 Oct 2019 17:51:30 +0200
+Message-Id: <20191003154552.535017000@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,46 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Stefan Agner <stefan.agner@toradex.com>
 
-[ Upstream commit 54d895bea43c94f31304d59f82d755b7f4b59e7c ]
+[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
 
-'7d0c76bdf227 ("clk: qcom: Add WCSS gcc clock control for QCS404")'
-introduces two new clocks to gcc. These are not used before
-clk_disable_unused() and as such the clock framework tries to disable
-them.
+Force HS200 by masking bit 63 of the SDHCI capability register.
+The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+that the stack checks bit 63 to descide whether HS400 is available.
+Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+HS200 as operating mode.
 
-But on the EVB these registers are only accessible through TrustZone, so
-these clocks must be marked as "protected" to prevent the clock code
-from touching them.
+This prevents rare communication errors with minimal effect on
+performance:
+	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+		status REF not lock!
 
-Numerical values are used as the constants are not yet available in a
-common tree.
-
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reported-by: Mark Brown <broonie@kernel.org>
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 11c0a7137823d..db6df76e97a1a 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -61,7 +61,9 @@
- 	protected-clocks = <GCC_BIMC_CDSP_CLK>,
- 			   <GCC_CDSP_CFG_AHB_CLK>,
- 			   <GCC_CDSP_BIMC_CLK_SRC>,
--			   <GCC_CDSP_TBU_CLK>;
-+			   <GCC_CDSP_TBU_CLK>,
-+			   <141>, /* GCC_WCSS_Q6_AHB_CLK */
-+			   <142>; /* GCC_WCSS_Q6_AXIM_CLK */
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index 895fbde4d4333..c1ed83131b495 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -323,6 +323,7 @@
+ 	vmmc-supply = <&reg_module_3v3>;
+ 	vqmmc-supply = <&reg_DCDC3>;
+ 	non-removable;
++	sdhci-caps-mask = <0x80000000 0x0>;
  };
  
- &pms405_spmi_regulators {
+ &iomuxc {
 -- 
 2.20.1
 
