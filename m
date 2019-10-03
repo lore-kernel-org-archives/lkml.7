@@ -2,82 +2,95 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B930C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2289C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4392C217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869D620830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VnhzNJxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfJCMTv (ORCPT
+        id S1729670AbfJCMUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:19:51 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15781 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfJCMTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:19:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:19:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="205607733"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Oct 2019 05:19:47 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 03 Oct 2019 15:19:46 +0300
-Date:   Thu, 3 Oct 2019 15:19:46 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v8 0/6] Patch series to support Thunderbolt without any
- BIOS support
-Message-ID: <20191003121946.GS2819@lahna.fi.intel.com>
-References: <SL2P216MB01873757CFAE0E4B02F1BBE080C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+        Thu, 3 Oct 2019 08:20:34 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35374 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfJCMUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:20:34 -0400
+Received: by mail-ed1-f68.google.com with SMTP id v8so2281063eds.2;
+        Thu, 03 Oct 2019 05:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VMN71rteRHeDLeFUmyCrt4iewlOqhW55q/Q1E8ZLlqo=;
+        b=VnhzNJxYGqNYeExwF/BHd7Z6SMdftYmvL+5hDLELvXDXdaK+uhTGtjVfFR72XR8GLV
+         lhiikc/CuyyWjd3titMS82mqFA1PPgyhH0UHzbuWV7HGR0NlDLFLgWeXpYR7GHNCWSsR
+         Wsy5oSX/3z0MZBAN2/TdWnd6rnwwEOaFvesqpa/9kWbmbnoihwdtWzbQhHPRhV0uMxtD
+         Z7Mv+UvuaocoVsRCixweKQCGe6eRiOlfbPAeyjhzXiK5chhDxIKESTCdeI1WaBeLclyp
+         exF5hykucGi/zkinhoaNPE9ZnE7a2KJSidvftNAbx4nhJUlYb7Brc1lkq9Zo4WnzHhN3
+         UJvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VMN71rteRHeDLeFUmyCrt4iewlOqhW55q/Q1E8ZLlqo=;
+        b=jRuPJ9bbhYJLEWK4wjz9p0XrRZMcGl3TQGElWgJDNhyl+6tOStPNAZs+YPEHwEO6pz
+         s/t9toBgJ2eIzMvVOFLESZAqMeFKA7OOPfeSpOdPO/tJyzkslwYn/xl+/9xMl1HpaMW4
+         z/d4WWB/Oo3ekM6nDngxneRKL5sKq0VV/1I/hpZOMCrEMAkINZyA1iU8nJuxVxqkfAX7
+         3Gkaj6j8XhmLrcGAdZdy2jCQZdkPFqUuOayNKVxSZjuz8QiA0wTcgajrs4qXdHKbPAfL
+         vfLN5/kG9yKWKOrDNVYVXO1QD1RF49sk0qf4AuqJaJ5lKUsoxzW65jYnDroHxbqpcp6G
+         idCA==
+X-Gm-Message-State: APjAAAUg13CYsMrIDUgA6YHU+GuVEcssVFXQ0GdwgVZEScq63/G8RT86
+        mlSkmY1Bs9K4Fj+QDLNcxNTF84hUuyQ=
+X-Google-Smtp-Source: APXvYqx01yQwECD9Bae9bZM2VyQVjTCu+aqosCV/g/OygzNEAhYEV7aZSizLcbEQWwYZdUozLtYuOw==
+X-Received: by 2002:aa7:d48f:: with SMTP id b15mr9164825edr.159.1570105232491;
+        Thu, 03 Oct 2019 05:20:32 -0700 (PDT)
+Received: from Limone ([46.114.33.168])
+        by smtp.gmail.com with ESMTPSA id p4sm439372edc.38.2019.10.03.05.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 05:20:31 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 14:20:27 +0200
+From:   Gon Solo <gonsolo@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003122027.GA2674@Limone>
+References: <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+ <20191002150650.GA4227@gofer.mess.org>
+ <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+ <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+ <20191003081742.0933264b@coco.lan>
+ <20191003120143.GA2995@Limone>
+ <20191003091201.7e94c617@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SL2P216MB01873757CFAE0E4B02F1BBE080C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191003091201.7e94c617@coco.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:52:58PM +0000, Nicholas Johnson wrote:
-> Patch series rebased to 5.3-rc1.
-> 
-> If possible, please have a quick read over while I am away (2019-07-27
-> to mid 2019-08-04), so I can fix any mistakes or make simple changes to
-> get problems out of the way for a more thorough examination later.
-> 
-> Thanks!
-> 
-> Kind regards,
-> Nicholas
-> 
-> Nicholas Johnson (6):
->   PCI: Consider alignment of hot-added bridges when distributing
->     available resources
->   PCI: In extend_bridge_window() change available to new_size
->   PCI: Change extend_bridge_window() to set resource size directly
->   PCI: Allow extend_bridge_window() to shrink resource if necessary
->   PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
->   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
->     window
+> well, you could try to increase the timeout - although 100 ms seems a lot
+> of time to me.
 
-Hi Bjorn,
+I tried 5s, still no change.
 
-What's the status of this series? I don't see them in v5.4-rc1.
+Would it be possible to include my patch, possibly with a warning like
+"bogus chip version, trying with no firmware"?
 
-Thanks!
+g
+
