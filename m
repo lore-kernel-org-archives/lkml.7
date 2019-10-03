@@ -2,167 +2,218 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8356DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49380C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547ED20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570112839;
-	bh=0xDScbPy4Mcrc2P9bzOgOFRC9tf6RJLxGCodIbbEIu4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=S+GmuMObzgRi9WYRNWde3cRrtsbiFpALDtWaVRmrWCHQiFHEgLqSjtsPyUJ70KCct
-	 fL1HLA/B2df06mSLAOQc1khFKUiMRRkIG5j0NZffLwRWtOj/zAcy/wY9Y5TCZMyLpO
-	 SAtr3GiwcQGo5SyMt6MDInAtwmQxZXWoCbPej3vk=
+	by mail.kernel.org (Postfix) with ESMTP id 1C94120830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfJCO1S (ORCPT
+        id S1730643AbfJCO1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:27:18 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43126 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfJCO1S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:27:18 -0400
-Received: by mail-qk1-f196.google.com with SMTP id h126so2513239qke.10;
-        Thu, 03 Oct 2019 07:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QoMfXeCBE2+e9NZxnjQG1SWoCD2staT4ZlOGYZkaxM4=;
-        b=V/ZZwApsQXkPKcYVsPp7lYdZdi8cvMG6jQ8XQetrU9Fq9JcaIIT9bRD+QTBBaUDgSu
-         JfWMPYIAYfgAbejz1js+pgC8JGVrFdrWlksiYLLv2YqMArXBKQlLWBDEeF1AuXh+v1yU
-         EeFDcX2TlJ2ZStwoYZecfp4bjbFB7fqXFbbIvBYge6ehthduNDZvyoTcDiBIXg8lHJUh
-         ERYZh++Cwnw7HbRVMFzsmMqQefKCrhd1eIo0QRIl3wrytXGlV+iwMAIEVPmAc9D9Cx+2
-         1csBowm+1F+TlBAqxsylxbqXVz0r1F+YiyzifhOJ0rM//SvS6ydRyT54B+5iIBVGF1lC
-         GfUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=QoMfXeCBE2+e9NZxnjQG1SWoCD2staT4ZlOGYZkaxM4=;
-        b=raQBFbOM2BKhuqopFfPqYgk5n25VlnquBZqXJvG194B4NRkfU3Nx7W3UnbDG+To5wd
-         gIfRufieTfY3UXqNNt6z41L06hRUDb7tIu5MhhWEM/R639YUDuilhsXfmVunqCnkwslh
-         6sAbWUq5Y+CxrmfpQUCazRe5fL52CniZHIrRL0GI9A3kgruF7NPfVKUOhD4HedVu6N90
-         2MLmwrUJHEeHy2uyW9SXHAgGLNRjNrUueqPoR9zutHEHyqAcW8cbhN379pABM8AzHSSk
-         idK/cpa51raEk0zyw7AkrrGgaV4imbqpqJL5s7A2V+4Nr9jjOKbCD5xcQBldJvYSPwnQ
-         zgOQ==
-X-Gm-Message-State: APjAAAUC8hB/BtTIKUwN+zkhY1nBTT2T2zKCPjNzY4WcOCajZ69q1Sbk
-        noyuU5NXfruN1z7lsclCTtI8/u6tJGw=
-X-Google-Smtp-Source: APXvYqwOxKIiaAX2C3B3METaTMp0USKJlj4RW8SRT/uLyS+USZQGJDU/pkgesWJYHyaOCXFekbPhSw==
-X-Received: by 2002:ae9:f50a:: with SMTP id o10mr1978279qkg.372.1570112835413;
-        Thu, 03 Oct 2019 07:27:15 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:9f72])
-        by smtp.gmail.com with ESMTPSA id d23sm1588317qkc.127.2019.10.03.07.27.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 07:27:14 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 07:27:13 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: Avoid getting stuck during cyclic writebacks
-Message-ID: <20191003142713.GA2622251@devbig004.ftw2.facebook.com>
+        Thu, 3 Oct 2019 10:27:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36468 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfJCO1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:27:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 07:27:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="192136409"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 03 Oct 2019 07:27:39 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 03 Oct 2019 17:27:38 +0300
+Date:   Thu, 3 Oct 2019 17:27:38 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     benjamin.gaignard@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
+Message-ID: <20191003142738.GM1208@intel.com>
+References: <20190909135205.10277-1-benjamin.gaignard@st.com>
+ <20190909135205.10277-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190909135205.10277-2-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During a cyclic writeback, extent_write_cache_pages() uses done_index
-to update the writeback_index after the current run is over.  However,
-instead of current index + 1, it gets to to the current index itself.
+On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote:
+> Fix warnings with W=1.
+> Few for_each macro set variables that are never used later.
+> Prevent warning by marking these variables as __maybe_unused.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index aa16ea17ff9b..b69d17b0b9bd 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
+>  	      struct drm_encoder *encoder)
+>  {
+>  	struct drm_crtc_state *crtc_state;
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
 
-Unfortunately, this, combined with returning on EOF instead of looping
-back, can lead to the following pathlogical behavior.
+Rather ugly. IMO would be nicer if we could hide something inside
+the iterator macros to suppress the warning.
 
-1. There is a single file which has accumulated enough dirty pages to
-   trigger balance_dirty_pages() and the writer appending to the file
-   with a series of short writes.
+>  	struct drm_connector_state *old_connector_state, *new_connector_state;
+>  	int i;
+>  
+> @@ -412,7 +412,7 @@ mode_fixup(struct drm_atomic_state *state)
+>  {
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *new_crtc_state;
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
+>  	struct drm_connector_state *new_conn_state;
+>  	int i;
+>  	int ret;
+> @@ -608,7 +608,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+>  {
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
+>  	struct drm_connector_state *old_connector_state, *new_connector_state;
+>  	int i, ret;
+>  	unsigned connectors_mask = 0;
+> @@ -984,7 +984,7 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
+>  static void
+>  disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  {
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
+>  	struct drm_connector_state *old_conn_state, *new_conn_state;
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> @@ -1173,7 +1173,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  {
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *new_crtc_state;
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
+>  	struct drm_connector_state *new_conn_state;
+>  	int i;
+>  
+> @@ -1294,7 +1294,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *old_crtc_state;
+>  	struct drm_crtc_state *new_crtc_state;
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
+>  	struct drm_connector_state *new_conn_state;
+>  	int i;
+>  
+> @@ -1384,7 +1384,7 @@ int drm_atomic_helper_wait_for_fences(struct drm_device *dev,
+>  				      struct drm_atomic_state *state,
+>  				      bool pre_swap)
+>  {
+> -	struct drm_plane *plane;
+> +	struct drm_plane __maybe_unused *plane;
+>  	struct drm_plane_state *new_plane_state;
+>  	int i, ret;
+>  
+> @@ -1431,7 +1431,7 @@ drm_atomic_helper_wait_for_vblanks(struct drm_device *dev,
+>  		struct drm_atomic_state *old_state)
+>  {
+>  	struct drm_crtc *crtc;
+> -	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> +	struct drm_crtc_state __maybe_unused *old_crtc_state, *new_crtc_state;
+>  	int i, ret;
+>  	unsigned crtc_mask = 0;
+>  
+> @@ -1621,7 +1621,7 @@ static void commit_work(struct work_struct *work)
+>  int drm_atomic_helper_async_check(struct drm_device *dev,
+>  				   struct drm_atomic_state *state)
+>  {
+> -	struct drm_crtc *crtc;
+> +	struct drm_crtc __maybe_unused *crtc;
+>  	struct drm_crtc_state *crtc_state;
+>  	struct drm_plane *plane = NULL;
+>  	struct drm_plane_state *old_plane_state = NULL;
+> @@ -1982,9 +1982,9 @@ int drm_atomic_helper_setup_commit(struct drm_atomic_state *state,
+>  {
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> -	struct drm_connector *conn;
+> +	struct drm_connector __maybe_unused *conn;
+>  	struct drm_connector_state *old_conn_state, *new_conn_state;
+> -	struct drm_plane *plane;
+> +	struct drm_plane __maybe_unused *plane;
+>  	struct drm_plane_state *old_plane_state, *new_plane_state;
+>  	struct drm_crtc_commit *commit;
+>  	int i, ret;
+> @@ -2214,7 +2214,7 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
+>   */
+>  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
+>  {
+> -	struct drm_crtc *crtc;
+> +	struct drm_crtc __maybe_unused *crtc;
+>  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+>  	struct drm_crtc_commit *commit;
+>  	int i;
+> @@ -2300,7 +2300,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit_cleanup_done);
+>  int drm_atomic_helper_prepare_planes(struct drm_device *dev,
+>  				     struct drm_atomic_state *state)
+>  {
+> -	struct drm_connector *connector;
+> +	struct drm_connector __maybe_unused *connector;
+>  	struct drm_connector_state *new_conn_state;
+>  	struct drm_plane *plane;
+>  	struct drm_plane_state *new_plane_state;
+> @@ -2953,9 +2953,9 @@ int drm_atomic_helper_disable_all(struct drm_device *dev,
+>  {
+>  	struct drm_atomic_state *state;
+>  	struct drm_connector_state *conn_state;
+> -	struct drm_connector *conn;
+> +	struct drm_connector __maybe_unused *conn;
+>  	struct drm_plane_state *plane_state;
+> -	struct drm_plane *plane;
+> +	struct drm_plane __maybe_unused *plane;
+>  	struct drm_crtc_state *crtc_state;
+>  	struct drm_crtc *crtc;
+>  	int ret, i;
+> @@ -3199,11 +3199,11 @@ int drm_atomic_helper_commit_duplicated_state(struct drm_atomic_state *state,
+>  {
+>  	int i, ret;
+>  	struct drm_plane *plane;
+> -	struct drm_plane_state *new_plane_state;
+> +	struct drm_plane_state __maybe_unused *new_plane_state;
+>  	struct drm_connector *connector;
+> -	struct drm_connector_state *new_conn_state;
+> +	struct drm_connector_state __maybe_unused *new_conn_state;
+>  	struct drm_crtc *crtc;
+> -	struct drm_crtc_state *new_crtc_state;
+> +	struct drm_crtc_state __maybe_unused *new_crtc_state;
+>  
+>  	state->acquire_ctx = ctx;
+>  
+> -- 
+> 2.15.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-2. bdp kicks in, wakes up background writeback and sleeps.
-
-3. Writeback kicks in and the cursor is on the last page of the dirty
-   file.  Writeback is started or skipped if already in progress.  As
-   it's EOF, extent_write_cache_pages() returns and the cursor is set
-   to done_index which is pointing to the last page.
-
-4. Writeback is done.  Nothing happens till bdp finishes, at which
-   point we go back to #1.
-
-This can almost completely stall out writing back of the file and keep
-the system over dirty threshold for a long time which can mess up the
-whole system.  We encountered this issue in production with a package
-handling application which can reliably reproduce the issue when
-running under tight memory limits.
-
-Reading the comment in the error handling section, this seems to be to
-avoid accidentally skipping a page in case the write attempt on the
-page doesn't succeed.  However, this concern seems bogus.
-
-On each page, the code either:
-
-* Skips and moves onto the next page.
-
-* Fails issue and sets done_index to index + 1.
-
-* Successfully issues and continue to the next page if budget allows
-  and not EOF.
-
-IOW, as long as it's not EOF and there's budget, the code never
-retries writing back the same page.  Only when a page happens to be
-the last page of a particular run, we end up retrying the page, which
-can't possibly guarantee anything data integrity related.  Besides,
-cyclic writes are only used for non-syncing writebacks meaning that
-there's no data integrity implication to begin with.
-
-Fix it by always setting done_index past the current page being
-processed.
-
-Note that this problem exists in other writepages too.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org
----
- fs/btrfs/extent_io.c |   12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
-
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index cceaf05aada2..4905f48587df 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4121,7 +4121,7 @@ static int extent_write_cache_pages(struct address_space *mapping,
- 		for (i = 0; i < nr_pages; i++) {
- 			struct page *page = pvec.pages[i];
- 
--			done_index = page->index;
-+			done_index = page->index + 1;
- 			/*
- 			 * At this point we hold neither the i_pages lock nor
- 			 * the page lock: the page may be truncated or
-@@ -4156,16 +4156,6 @@ static int extent_write_cache_pages(struct address_space *mapping,
- 
- 			ret = __extent_writepage(page, wbc, epd);
- 			if (ret < 0) {
--				/*
--				 * done_index is set past this page,
--				 * so media errors will not choke
--				 * background writeout for the entire
--				 * file. This has consequences for
--				 * range_cyclic semantics (ie. it may
--				 * not be suitable for data integrity
--				 * writeout).
--				 */
--				done_index = page->index + 1;
- 				done = 1;
- 				break;
- 			}
+-- 
+Ville Syrjälä
+Intel
