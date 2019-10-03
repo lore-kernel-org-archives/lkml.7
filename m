@@ -2,101 +2,191 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E7CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A05C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE63420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C5220862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124015;
-	bh=1lsTLTacUge/TmK094kPtZgnZ5shmTQX/+pqj5VYXjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nnsoeb74C/DZ7CyX1b4z1IY3MmqUyGEi70q+HXOAVp3F385wYN9PdMfQAcgj8fjZb
-	 2mbvihS7omKANwJ58OkvQNw2AcZl2Og3P31mKu4utK1kkZGzCjiCy1Zgqna4afvhHV
-	 hgar2AxJvJh2VrLiy48wKMaewfjiw5EuF/xajs2s=
+	s=default; t=1570124032;
+	bh=1Wh9Vq/QErdr+DlY0MhgWTuYB+fRty0vgag3uC47IQc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YnT2WA7o1BhWAsgHvfiuZBzYiFgDixRiaokEB6K5CbgYe+yjDHPkaJ593JCYyIQcC
+	 WELDbFkuoeWraE4S7DV9ZPdMNIUkD+GM9TgZqYpUu4swJYz01bG+TEoR7G0OytNU4u
+	 NAPVVDtIRCFthImIDqH4OyBudbQMikZ45FN8KqwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732850AbfJCRdf (ORCPT
+        id S1733006AbfJCRdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:33:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53724 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732705AbfJCRdc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1lsTLTacUge/TmK094kPtZgnZ5shmTQX/+pqj5VYXjE=; b=re036ledOxvJgkwTEi0ql8CqX
-        uqD9VjHxS8mTVjj0ThUKiclF4XhTek9fMKqjW4oXRYJwD5MacDUoqB9/3eTCfjMGbbMiWPrahAVDp
-        TxEvPEaF88oafdaXTj69DBU0VUbUnGN8V6Rau9S+3uF9jDtqnLGk1s8+zeC72R5dZEkEw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iG4ym-0005vr-JL; Thu, 03 Oct 2019 17:33:28 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D07612740210; Thu,  3 Oct 2019 18:33:27 +0100 (BST)
-Date:   Thu, 3 Oct 2019 18:33:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Thu, 3 Oct 2019 13:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732928AbfJCQHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C186321783;
+        Thu,  3 Oct 2019 16:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118839;
+        bh=1Wh9Vq/QErdr+DlY0MhgWTuYB+fRty0vgag3uC47IQc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Og/7fcF23wm3aFW70VJpOziMOUqlxjxPJPWEHtUdPD/PKlriXR6hAQUwPo8PlJVAf
+         cU+FKivWLxainw5seuISN3raim58ZbKec8R02PJJRfGCAaDRuL2TB8HkT2rQJtHBCj
+         bQelPpYPlwIITBvZPtUnlAMRzLcvU50AREqinGYI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.3 204/344] SoC: simple-card-utils: set 0Hz to sysclk
- when shutdown
-Message-ID: <20191003173327.GC6090@sirena.co.uk>
-References: <20191003154540.062170222@linuxfoundation.org>
- <20191003154600.389003319@linuxfoundation.org>
- <20191003172849.GB6090@sirena.co.uk>
+Subject: [PATCH 4.14 028/185] drm: Flush output polling on shutdown
+Date:   Thu,  3 Oct 2019 17:51:46 +0200
+Message-Id: <20191003154443.983820697@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
-Content-Disposition: inline
-In-Reply-To: <20191003172849.GB6090@sirena.co.uk>
-X-Cookie: Reactor error - core dumped!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
---7qSK/uQB79J36Y4o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit 3b295cb1a411d9c82bbfaa66bc17a8508716ed07 ]
 
-On Thu, Oct 03, 2019 at 06:28:49PM +0100, Mark Brown wrote:
-> On Thu, Oct 03, 2019 at 05:52:49PM +0200, Greg Kroah-Hartman wrote:
+We need to mark the output polling as disabled to prevent concurrent
+irqs from queuing new work as shutdown the probe -- causing that work to
+execute after we have freed the structs:
 
-> > Some codecs set rate constraints that derives from sysclk. This
-> > mechanism works correctly if machine drivers give fixed frequency.
+<4> [341.846490] DEBUG_LOCKS_WARN_ON(mutex_is_locked(lock))
+<4> [341.846497] WARNING: CPU: 3 PID: 3300 at kernel/locking/mutex-debug.c:103 mutex_destroy+0x49/0x50
+<4> [341.846508] Modules linked in: i915(-) vgem thunderbolt snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic mei_hdcp x86_pkg_temp_thermal coretemp crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_hda_codec snd_hwdep snd_hda_core snd_pcm mcs7830 btusb usbnet btrtl mii btbcm btintel bluetooth ecdh_generic ecc mei_me mei prime_numbers i2c_hid pinctrl_sunrisepoint pinctrl_intel [last unloaded: i915]
+<4> [341.846546] CPU: 3 PID: 3300 Comm: i915_module_loa Tainted: G     U            5.2.0-rc2-CI-CI_DRM_6175+ #1
+<4> [341.846553] Hardware name: Dell Inc. XPS 13 9360/0823VW, BIOS 2.9.0 07/09/2018
+<4> [341.846560] RIP: 0010:mutex_destroy+0x49/0x50
+<4> [341.846565] Code: 00 00 5b c3 e8 a8 9f 3b 00 85 c0 74 ed 8b 05 3e 55 23 01 85 c0 75 e3 48 c7 c6 00 d0 08 82 48 c7 c7 a8 aa 07 82 e8 e7 08 fa ff <0f> 0b eb cc 0f 1f 00 48 b8 11 11 11 11 11 11 11 11 48 89 76 20 48
+<4> [341.846578] RSP: 0018:ffffc900006cfdb0 EFLAGS: 00010286
+<4> [341.846583] RAX: 0000000000000000 RBX: ffff88826759a168 RCX: 0000000000000000
+<4> [341.846589] RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffffffff8112844c
+<4> [341.846595] RBP: ffff8882708fa548 R08: 0000000000000000 R09: 0000000000039600
+<4> [341.846601] R10: 0000000000000000 R11: 0000000000000ce4 R12: ffffffffa07de1e0
+<4> [341.846607] R13: 0000000000000000 R14: 0000000000000000 R15: ffffffffa07de2d0
+<4> [341.846613] FS:  00007f62b5ae0e40(0000) GS:ffff888276380000(0000) knlGS:0000000000000000
+<4> [341.846620] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4> [341.846626] CR2: 000055a4e064f4a0 CR3: 0000000266b16006 CR4: 00000000003606e0
+<4> [341.846632] Call Trace:
+<4> [341.846639]  drm_fb_helper_fini.part.17+0xb3/0x100
+<4> [341.846682]  intel_fbdev_fini+0x20/0x80 [i915]
+<4> [341.846722]  intel_modeset_cleanup+0x9a/0x140 [i915]
+<4> [341.846750]  i915_driver_unload+0xa3/0x100 [i915]
+<4> [341.846778]  i915_pci_remove+0x19/0x30 [i915]
+<4> [341.846784]  pci_device_remove+0x36/0xb0
+<4> [341.846790]  device_release_driver_internal+0xd3/0x1b0
+<4> [341.846795]  driver_detach+0x3f/0x80
+<4> [341.846800]  bus_remove_driver+0x53/0xd0
+<4> [341.846805]  pci_unregister_driver+0x25/0xa0
+<4> [341.846843]  i915_exit+0x16/0x1c [i915]
+<4> [341.846849]  __se_sys_delete_module+0x162/0x210
+<4> [341.846855]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+<4> [341.846859]  ? do_syscall_64+0xd/0x1c0
+<4> [341.846864]  do_syscall_64+0x55/0x1c0
+<4> [341.846869]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+<4> [341.846875] RIP: 0033:0x7f62b51871b7
+<4> [341.846881] Code: 73 01 c3 48 8b 0d d1 8c 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 8c 2c 00 f7 d8 64 89 01 48
+<4> [341.846897] RSP: 002b:00007ffe7a227138 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+<4> [341.846904] RAX: ffffffffffffffda RBX: 00007ffe7a2272b0 RCX: 00007f62b51871b7
+<4> [341.846910] RDX: 0000000000000001 RSI: 0000000000000800 RDI: 0000557cd6b55948
+<4> [341.846916] RBP: 0000557cd6b558e0 R08: 0000557cd6b5594c R09: 00007ffe7a227160
+<4> [341.846922] R10: 00007ffe7a226134 R11: 0000000000000206 R12: 0000000000000000
+<4> [341.846927] R13: 00007ffe7a227820 R14: 0000000000000000 R15: 0000000000000000
+<4> [341.846936] irq event stamp: 3547847
+<4> [341.846940] hardirqs last  enabled at (3547847): [<ffffffff819aad2c>] _raw_spin_unlock_irqrestore+0x4c/0x60
+<4> [341.846949] hardirqs last disabled at (3547846): [<ffffffff819aab9d>] _raw_spin_lock_irqsave+0xd/0x50
+<4> [341.846957] softirqs last  enabled at (3547376): [<ffffffff81c0033a>] __do_softirq+0x33a/0x4b9
+<4> [341.846966] softirqs last disabled at (3547367): [<ffffffff810b6379>] irq_exit+0xa9/0xc0
+<4> [341.846973] WARNING: CPU: 3 PID: 3300 at kernel/locking/mutex-debug.c:103 mutex_destroy+0x49/0x50
+<4> [341.846980] ---[ end trace ba94ca8952ba970e ]---
+<7> [341.866547] [drm:intel_dp_detect [i915]] MST support? port A: no, sink: no, modparam: yes
+<7> [341.890480] [drm:drm_add_display_info] non_desktop set to 0
+<7> [341.890530] [drm:drm_add_edid_modes] ELD: no CEA Extension found
+<7> [341.890537] [drm:drm_add_display_info] non_desktop set to 0
+<7> [341.890578] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:86:eDP-1] probed modes :
+<7> [341.890589] [drm:drm_mode_debug_printmodeline] Modeline "3200x1800": 60 373250 3200 3248 3280 3360 1800 1803 1808 1852 0x48 0xa
+<7> [341.890602] [drm:drm_mode_debug_printmodeline] Modeline "3200x1800": 48 298600 3200 3248 3280 3360 1800 1803 1808 1852 0x40 0xa
+<4> [341.890628] general protection fault: 0000 [#1] PREEMPT SMP PTI
+<4> [341.890636] CPU: 0 PID: 508 Comm: kworker/0:4 Tainted: G     U  W         5.2.0-rc2-CI-CI_DRM_6175+ #1
+<4> [341.890646] Hardware name: Dell Inc. XPS 13 9360/0823VW, BIOS 2.9.0 07/09/2018
+<4> [341.890655] Workqueue: events output_poll_execute
+<4> [341.890663] RIP: 0010:drm_setup_crtcs+0x13e/0xbe0
+<4> [341.890669] Code: 00 41 8b 44 24 58 85 c0 0f 8e f9 01 00 00 44 8b 6c 24 20 44 8b 74 24 28 31 db 31 ed 49 8b 44 24 60 48 63 d5 44 89 ee 83 c5 01 <48> 8b 04 d0 44 89 f2 48 8b 38 48 8b 87 88 01 00 00 48 8b 40 20 e8
+<4> [341.890686] RSP: 0018:ffffc9000033fd40 EFLAGS: 00010202
+<4> [341.890692] RAX: 6b6b6b6b6b6b6b6b RBX: 0000000000000002 RCX: 0000000000000000
+<4> [341.890700] RDX: 0000000000000001 RSI: 0000000000000c80 RDI: 00000000ffffffff
+<4> [341.890707] RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+<4> [341.890715] R10: 0000000000000c80 R11: 0000000000000000 R12: ffff888267599fe8
+<4> [341.890722] R13: 0000000000000c80 R14: 0000000000000708 R15: 0000000000000007
+<4> [341.890730] FS:  0000000000000000(0000) GS:ffff888276200000(0000) knlGS:0000000000000000
+<4> [341.890739] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4> [341.890745] CR2: 000055a4e064f4a0 CR3: 000000026d234003 CR4: 00000000003606f0
+<4> [341.890752] Call Trace:
+<4> [341.890760]  drm_fb_helper_hotplug_event.part.24+0x89/0xb0
+<4> [341.890768]  drm_kms_helper_hotplug_event+0x21/0x30
+<4> [341.890774]  output_poll_execute+0x9d/0x1a0
+<4> [341.890782]  process_one_work+0x245/0x610
+<4> [341.890790]  worker_thread+0x37/0x380
+<4> [341.890796]  ? process_one_work+0x610/0x610
+<4> [341.890802]  kthread+0x119/0x130
+<4> [341.890808]  ? kthread_park+0x80/0x80
+<4> [341.890815]  ret_from_fork+0x3a/0x50
 
-> This is a new feature which seems out of scope for stable - I thought
-> I'd raised this already?
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109964
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Imre Deak <imre.deak@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190603135910.15979-2-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/drm_probe_helper.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-No, I didn't sorry - that was a similar patch in a device driver that
-I'd flagged (and has been correctly dropped).
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index d29fd8443feda..adbabf16c07b2 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -593,6 +593,9 @@ static void output_poll_execute(struct work_struct *work)
+ 	enum drm_connector_status old_status;
+ 	bool repoll = false, changed;
+ 
++	if (!dev->mode_config.poll_enabled)
++		return;
++
+ 	/* Pick up any changes detected by the probe functions. */
+ 	changed = dev->mode_config.delayed_event;
+ 	dev->mode_config.delayed_event = false;
+@@ -747,7 +750,11 @@ EXPORT_SYMBOL(drm_kms_helper_poll_init);
+  */
+ void drm_kms_helper_poll_fini(struct drm_device *dev)
+ {
+-	drm_kms_helper_poll_disable(dev);
++	if (!dev->mode_config.poll_enabled)
++		return;
++
++	dev->mode_config.poll_enabled = false;
++	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
+ }
+ EXPORT_SYMBOL(drm_kms_helper_poll_fini);
+ 
+-- 
+2.20.1
 
---7qSK/uQB79J36Y4o
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2WMOYACgkQJNaLcl1U
-h9BuXQf7BIZUChyxBFPjAWKEbc9ifRghqSEGtDwFhm+kNuPma03Ue2Azp+uqISuZ
-XDANYfw0mMFJBSPGqXS2xLtpL4KZu3cv3lFRNWWC3mMpHV5bnwWrw+jhN28aT5z8
-7nwxAAGoWXtE4N/ecTEeUqCYBEUp9RwV9QApnBWC9Y9achU741W691H9XXIaUYB3
-hOgpysLCGryH8PVNxIR+MYzWcvwRtBmNoMW0KSX76YUYZYsLnc7717GZcUXx0qEO
-xK1TBJmUeH9QPxj3x7VI9kNXdwHATHqe1HOU1DEQYvN6molKbGF6S/ANpt+k5iVl
-oDgD0Gb/+EFrkQRLkGdb+enxosxdtw==
-=4XgQ
------END PGP SIGNATURE-----
-
---7qSK/uQB79J36Y4o--
