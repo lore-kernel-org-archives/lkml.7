@@ -2,71 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EEDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FDFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6AB21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570094061;
-	bh=AjvL547s2R5yIkHNhXlH94XxA05nAjKAg5dQITv7FQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zaDxF9LnnlcVkFx7fHFOhpCpCthGRtjPC0ylNnCxjk6P9EaSW7nEa5L1YTjyd+frl
-	 +lv9oPm6iETncjWAgVV5Or6Wu+EZbpnvUz5HN3TiJiEEE0EV+WqGB2mutK/i+sP1C5
-	 /Nws4R2PLT7hOiBXiRy1QP7DpF3MXs7x7MB6+g7Q=
+	by mail.kernel.org (Postfix) with ESMTP id AE5E621A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f2YDZuhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbfJCJOU (ORCPT
+        id S1729298AbfJCJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:14:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728767AbfJCJOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:14:20 -0400
-Received: from X250 (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16B4217D7;
-        Thu,  3 Oct 2019 09:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570094059;
-        bh=AjvL547s2R5yIkHNhXlH94XxA05nAjKAg5dQITv7FQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BUWGqSGrL6NfqsYQsqvHzb2riBwD1kzyTwoLkAgsQO1jRi/iIZR41+vjc3C7ue4zT
-         o+4lokbcwcn6bvuSzCrXXojY24Ecbls74CAN5Nmmqt4hQXwvyyU+yT6t0pexmi48pp
-         /HFF8mnqgjkkV9lbfj63tB+6nU9AOyNp7/K2yjVM=
-Date:   Thu, 3 Oct 2019 17:13:59 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk,
-        otavio@ossystems.com.br, leonard.crestez@nxp.com,
-        u.kleine-koenig@pengutronix.de, schnitzeltony@gmail.com,
-        jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V5 4/4] ARM: dts: imx7ulp: Add wdog1 node
-Message-ID: <20191003091356.GA24782@X250>
-References: <1566999303-18795-1-git-send-email-Anson.Huang@nxp.com>
- <1566999303-18795-4-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566999303-18795-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 3 Oct 2019 05:14:45 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37484 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbfJCJOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:14:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y5so1343043pfo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2vKbldndzFc1Ual386BQ7E3WFEYeo8xZQGDApFlT8dI=;
+        b=f2YDZuhud4dK2X9PKXRDWQgtsC8YmWa/pMHZn7PGBMkvcvIh5c0kaqJBzSrD6W48++
+         ulqgy+niqIsVPTGUN1HMRou0c9gxKQMNxJ7BOTESuppvEH+io35C1L5HXrYtHBcZ7nBz
+         aMSmQ34saNLtImo5kikISUDY6J0KXI3u84MOhaACp/b95sW6JHlwgzMzP0Lbz8XL+Rn0
+         +LskHMYAeCDMFrOZ+ajkUmy2KTW3ylMORBzrrvdE9xLD2Dnl+xLrFoR+tZPGkLBg4AVv
+         reKHZVmG9MkgZ56l47Sc01EHOPKqPZYyE7gVpwM8GNfmTKyFwpvxj2hiAp+nOQnsdmee
+         /5sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2vKbldndzFc1Ual386BQ7E3WFEYeo8xZQGDApFlT8dI=;
+        b=pbykZL91Ib9QpvpV7PQizQwLkCGMnpYjz4No1HoJPHG9aR/Uw8t3a+yMHUiFJfzIio
+         2PkxyZen+Ts5KBo/bTQdDuOXZ34vJTE3KqA1VPVBCzgkJbyMwbnNJGgW/fjzrP4xBtlW
+         PiL0V2lm5GAlkBVv44EjkBQ3wJ7L4FyhXJLPwKCmWu5pBXMtQJB8IOfIcO+jIfUIv+xx
+         zsWndm4AZb2AswlRcTUBaMotERFk2cPy9HufDuVRkcQ0w2fKH2oeL7DPmHMucnTrv1Eh
+         DSTO4z3asGgtEL48IpvGMuwTw3kbc3kl1MxgnQuE4z5bnL4lWsMkcrCxTX69KilnAk3Y
+         FFzw==
+X-Gm-Message-State: APjAAAUyGPiJbCZb0UptvzklPkUcsFI8vT0euGlx0hjNDtN3nY2AOxNF
+        RxKBR18SRkAfVHfWMoa0EF+gCA==
+X-Google-Smtp-Source: APXvYqzcQ1k2avDmG3DyS4ozTUbUn772X9S8sGX+mjjQG1JqrLKlw/f6wAjumUBurg6Y5zOWSte2uA==
+X-Received: by 2002:a65:56c8:: with SMTP id w8mr8535370pgs.100.1570094082866;
+        Thu, 03 Oct 2019 02:14:42 -0700 (PDT)
+Received: from localhost.localdomain (111-241-164-136.dynamic-ip.hinet.net. [111.241.164.136])
+        by smtp.gmail.com with ESMTPSA id f128sm3445422pfg.143.2019.10.03.02.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 02:14:42 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+To:     linux-hackers@sifive.com
+Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
+Date:   Thu,  3 Oct 2019 17:09:04 +0800
+Message-Id: <20191003090945.29210-5-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191003090945.29210-1-green.wan@sifive.com>
+References: <20191003090945.29210-1-green.wan@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 09:35:03AM -0400, Anson Huang wrote:
-> Add wdog1 node to support watchdog driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Update MAINTAINERS for SiFive PDMA driver.
 
-Applied, thanks.
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 30a5b4028d2f..6c12da0a324d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14779,6 +14779,12 @@ F:	drivers/media/usb/siano/
+ F:	drivers/media/usb/siano/
+ F:	drivers/media/mmc/siano/
+ 
++SIFIVE PDMA DRIVER
++M:	Green Wan <green.wan@sifive.com>
++S:	Maintained
++F:	drivers/dma/sf-pdma/
++F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
++
+ SIFIVE DRIVERS
+ M:	Palmer Dabbelt <palmer@sifive.com>
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
+-- 
+2.17.1
+
