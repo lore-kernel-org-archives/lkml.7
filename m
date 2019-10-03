@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD25C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA18C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD752222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551E2222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062481;
-	bh=AgAZVt8ojXz25ApW7p0Ly+IAOq2WbPRoCoKBGu7hVRY=;
+	s=default; t=1570062486;
+	bh=IYs0tzMDjFCdBz8ZzedtPcEK/e++vPXg5ifgdRrKJF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXxuUP2+bEwI8A0K6LEwkDWtHOLJrNHp8XAxzXdrq+Agpb+Qc4bhp6tOGxrJFAD0K
-	 YkYVF8GaGVOihuxo4yXBHm9gp7zD1Wzb57LOvejMxcXCh+8vidHnhfac/+rJZqpn2a
-	 FOPittu26ffD43m1Pe0DB9P0x4+CaYz3/2wCff9w=
+	b=nOsX3anS+gnDj3D1C7yL55oEgaKDxRNAwgYrxq2W+KWDDpcs8pdN72hGSdBnHkjKe
+	 fjAscC4ESYN9aGueDTKOrlAt8tYu1HdqkL8Rh/3LmcwOqCNqbXWzfJtLx+eBIQVt3d
+	 58JLIdLuQwlRXNwSW0ZMNY2XcBopfY6Yw0GoZu6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbfJCA2A (ORCPT
+        id S1727664AbfJCA2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbfJCA07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:59 -0400
+        id S1729670AbfJCA06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:58 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88ECF22459;
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C19222CA;
         Thu,  3 Oct 2019 00:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570062418;
-        bh=AgAZVt8ojXz25ApW7p0Ly+IAOq2WbPRoCoKBGu7hVRY=;
+        bh=IYs0tzMDjFCdBz8ZzedtPcEK/e++vPXg5ifgdRrKJF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xaYN3aGdfBfTUJRovA+6kxYhluSbZ9Od/8wTFlL8yliJri2Av/yduVRb98V5TVLvL
-         YekFalBk1ySztBD214okV/JN10u6dzP8LqzXLAeVSFj1vrotFGW5OaMrFrZ4fBsA23
-         ZXLI2+9lK/67NWAemgyuMsNDJJewXBue2CgnC6Zg=
+        b=KETAYtH1jVMf6cW0Tuqpk9vb4j9qx0l1GhsEJgx9RnsYpvd7zjbIq7xalZqbW3elV
+         ssFzJHNU7LSHGYtMMckFbPpuvO+n84ijr2e/mYzKBgzHZw1+NG8htLh38ctm4EfYcY
+         /niGDcwXy5zY1wSnmTwP5srmzmXlrdMimWdUEkp8=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 22/32] tools/memory-model: Add -v flag to jingle7 runs
-Date:   Wed,  2 Oct 2019 17:26:40 -0700
-Message-Id: <20191003002650.11249-22-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 21/32] tools/memory-model: Make runlitmus.sh check for jingle errors
+Date:   Wed,  2 Oct 2019 17:26:39 -0700
+Message-Id: <20191003002650.11249-21-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,34 +59,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-Adding the -v flag to jingle7 invocations gives much useful information
-on why jingle7 didn't like a given litmus test.  This commit therefore
-adds this flag and saves off any such information into a .err file.
+It turns out that the jingle7 tool is currently a bit picky about
+the litmus tests it is willing to process.  This commit therefore
+ensures that jingle7 failures are reported.
 
-Suggested-by: Luc Maranget <luc.maranget@inria.fr>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/runlitmus.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/memory-model/scripts/runlitmus.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
-index 5f2d29b..dfdb1f0 100755
+index afb196d..5f2d29b 100755
 --- a/tools/memory-model/scripts/runlitmus.sh
 +++ b/tools/memory-model/scripts/runlitmus.sh
-@@ -68,10 +68,11 @@ fi
- 
+@@ -69,6 +69,11 @@ fi
  # Generate the assembly code and run herd7 on it.
  gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
--jingle7 -theme $themefile $litmus > $LKMM_DESTDIR/$hwlitmus 2> $T/$hwlitmusfile.jingle7.out
-+jingle7 -v -theme $themefile $litmus > $LKMM_DESTDIR/$hwlitmus 2> $T/$hwlitmusfile.jingle7.out
- if grep -q "Generated 0 tests" $T/$hwlitmusfile.jingle7.out
- then
--	echo ' !!! ' jingle7 failed, no $hwlitmus generated
-+	echo ' !!! ' jingle7 failed, errors in $hwlitmus.err
-+	cp $T/$hwlitmusfile.jingle7.out $LKMM_DESTDIR/$hwlitmus.err
- 	exit 253
- fi
+ jingle7 -theme $themefile $litmus > $LKMM_DESTDIR/$hwlitmus 2> $T/$hwlitmusfile.jingle7.out
++if grep -q "Generated 0 tests" $T/$hwlitmusfile.jingle7.out
++then
++	echo ' !!! ' jingle7 failed, no $hwlitmus generated
++	exit 253
++fi
  /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $LKMM_DESTDIR/$hwlitmus > $LKMM_DESTDIR/$hwlitmus.out 2>&1
+ 
+ exit $?
 -- 
 2.9.5
 
