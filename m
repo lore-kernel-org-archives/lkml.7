@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2709FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A25720673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E892E20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122559;
-	bh=VvGjkM71cReN6WoRHeK5WYV1LuRx+NhLHQO/EKPu3xk=;
+	s=default; t=1570122563;
+	bh=QClqtPxb64q0UWSVUfcPO9zkNVeRgt5dt0wiCLmm0X8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/ix0fGYHkVu614LmGL2N7IfMAwXyKoLhazqXbM0SY65nIlsiC0HzQtb/AklJBLwl
-	 NhmYFY5jUfuJgr7AKwIE6uG58wyxhAPhfFO9Bp1tkuuA0FCNJGtS4bYQ1KGRmM8d6J
-	 pUG0RBkeP3DzkVK2fKiM0PwtbgPk2Y/Co9NdZpps=
+	b=gd2eqRra+896jO9Fov5ciVmBHyMUL1ixN7Y+1i6E/k1RU8qfTYGgN/0QiX9iqP4hc
+	 CBeUaerv1VJHpnSSJ/7SfYQS93w99RbvYdcJ11Vs+LhZXtsACUcN1+mA+0oZSaKMXp
+	 EdMH5uduhsoNaiiXL1pD9WhQbrOqZO5jR5aHSMwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392131AbfJCQeV (ORCPT
+        id S2391513AbfJCQeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42800 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392114AbfJCQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:17 -0400
+        id S2392104AbfJCQeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6714B20830;
-        Thu,  3 Oct 2019 16:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E4321A4C;
+        Thu,  3 Oct 2019 16:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120456;
-        bh=VvGjkM71cReN6WoRHeK5WYV1LuRx+NhLHQO/EKPu3xk=;
+        s=default; t=1570120451;
+        bh=QClqtPxb64q0UWSVUfcPO9zkNVeRgt5dt0wiCLmm0X8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xk6HIYlwR9YgUwZ1l41VgLnRMUW0necqFEJYuXsMcYosDnHU99b+8m27U74Ym0fdW
-         L++bQ/wXgFzrikhKwNl5Y9+fj4wx7a74TtdjGX2chaLDOVRMxYbnob5uCu5zTlGlAO
-         JyzCLW1HbamN7ZktPqrkiCf6fNF6CmDTqzzP1qJg=
+        b=mThRL0GJi3Uqi+/CHQFCppF8iNNJJYzZPUhNsonERIb+XkkcYqYzgCB5dDW19y5cs
+         9+7hNS27Jw3yANRtkMAbcTv0x0qv5p8l/BcpG9/rkaj2wePQiwGtHYo+/OHP+lPmp0
+         T/0Te4KPIiWsMxIQBeFmnSojCcu2A+uH+euNNQqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 229/313] blk-mq: add callback of .cleanup_rq
-Date:   Thu,  3 Oct 2019 17:53:27 +0200
-Message-Id: <20191003154555.556015268@linuxfoundation.org>
+Subject: [PATCH 5.2 227/313] rcu/tree: Fix SCHED_FIFO params
+Date:   Thu,  3 Oct 2019 17:53:25 +0200
+Message-Id: <20191003154555.383362319@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,96 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 226b4fc75c78f9c497c5182d939101b260cfb9f3 ]
+[ Upstream commit 130d9c331bc59a8733b47c58ef197a2b1fa3ed43 ]
 
-SCSI maintains its own driver private data hooked off of each SCSI
-request, and the pridate data won't be freed after scsi_queue_rq()
-returns BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE. An upper layer driver
-(e.g. dm-rq) may need to retry these SCSI requests, before SCSI has
-fully dispatched them, due to a lower level SCSI driver's resource
-limitation identified in scsi_queue_rq(). Currently SCSI's per-request
-private data is leaked when the upper layer driver (dm-rq) frees and
-then retries these requests in response to BLK_STS_RESOURCE or
-BLK_STS_DEV_RESOURCE returns from scsi_queue_rq().
+A rather embarrasing mistake had us call sched_setscheduler() before
+initializing the parameters passed to it.
 
-This usecase is so specialized that it doesn't warrant training an
-existing blk-mq interface (e.g. blk_mq_free_request) to allow SCSI to
-account for freeing its driver private data -- doing so would add an
-extra branch for handling a special case that all other consumers of
-SCSI (and blk-mq) won't ever need to worry about.
-
-So the most pragmatic way forward is to delegate freeing SCSI driver
-private data to the upper layer driver (dm-rq).  Do so by adding
-new .cleanup_rq callback and calling a new blk_mq_cleanup_rq() method
-from dm-rq.  A following commit will implement the .cleanup_rq() hook
-in scsi_mq_ops.
-
-Cc: Ewan D. Milne <emilne@redhat.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: dm-devel@redhat.com
-Cc: <stable@vger.kernel.org>
-Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 1a763fd7c633 ("rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-rq.c     |  1 +
- include/linux/blk-mq.h | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 5f7063f05ae07..b41ecb451c784 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -408,6 +408,7 @@ static int map_request(struct dm_rq_target_io *tio)
- 		ret = dm_dispatch_clone_request(clone, rq);
- 		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
- 			blk_rq_unprep_clone(clone);
-+			blk_mq_cleanup_rq(clone);
- 			tio->ti->type->release_clone_rq(clone, &tio->info);
- 			tio->clone = NULL;
- 			return DM_MAPIO_REQUEUE;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 15d1aa53d96c4..a5a99b43f68e8 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -140,6 +140,7 @@ typedef int (poll_fn)(struct blk_mq_hw_ctx *);
- typedef int (map_queues_fn)(struct blk_mq_tag_set *set);
- typedef bool (busy_fn)(struct request_queue *);
- typedef void (complete_fn)(struct request *);
-+typedef void (cleanup_rq_fn)(struct request *);
- 
- 
- struct blk_mq_ops {
-@@ -200,6 +201,12 @@ struct blk_mq_ops {
- 	/* Called from inside blk_get_request() */
- 	void (*initialize_rq_fn)(struct request *rq);
- 
-+	/*
-+	 * Called before freeing one request which isn't completed yet,
-+	 * and usually for freeing the driver private data
-+	 */
-+	cleanup_rq_fn		*cleanup_rq;
-+
- 	/*
- 	 * If set, returns whether or not this queue currently is busy
- 	 */
-@@ -366,4 +373,10 @@ static inline blk_qc_t request_to_qc_t(struct blk_mq_hw_ctx *hctx,
- 			BLK_QC_T_INTERNAL;
- }
- 
-+static inline void blk_mq_cleanup_rq(struct request *rq)
-+{
-+	if (rq->q->mq_ops->cleanup_rq)
-+		rq->q->mq_ops->cleanup_rq(rq);
-+}
-+
- #endif
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 32ea75acba144..affa7aae758f3 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3123,13 +3123,13 @@ static int __init rcu_spawn_gp_kthread(void)
+ 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
+ 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
+ 		return 0;
+-	if (kthread_prio)
++	if (kthread_prio) {
++		sp.sched_priority = kthread_prio;
+ 		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
++	}
+ 	rnp = rcu_get_root();
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	rcu_state.gp_kthread = t;
+-	if (kthread_prio)
+-		sp.sched_priority = kthread_prio;
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	wake_up_process(t);
+ 	rcu_spawn_nocb_kthreads();
 -- 
 2.20.1
 
