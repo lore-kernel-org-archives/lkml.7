@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9FDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB63C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BB720700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA9B207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118573;
-	bh=ayteBREQZV/hF1aHaNivq1OSei/Y0xGRZWb82f0JZwM=;
+	s=default; t=1570118575;
+	bh=wHqDZJIituYx9y3q6KEtPRBcqok4mbWdkHwToUoZq6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDA7q5Qnkz8cAhrifTvtpawDYrXRnxYwwRYWKx0uPzj9mdoLo7BZKWUwGSPeqZ2BO
-	 /e6VHumsf7Eqe4dSxNlBxQsugKT209AW/aXu3pxRxIx8uHBuI+UMsUJqKF8coUp7Js
-	 R+PyvfwBJfrd4ZClpJHkMdzngiDq4ZkskVoE2KAw=
+	b=gMpkNFDQ2wTW0DWIPO+5r85M8jIfmjWoB0cjL5Ig5sKngMiIhy+xIpeHX+5rQTeCi
+	 OLnLq38tqu+rUZ2UpatY2spf/MDrBmAf7ZTjqy6SGegmHdCFtbHwsHykctN6sITkhR
+	 eC36evx1WcgKFXuNsKS9zjJeHpDMqVBU0P1etxDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732076AbfJCQCv (ORCPT
+        id S1732085AbfJCQCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47698 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbfJCQCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:42 -0400
+        id S1729741AbfJCQCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BE020700;
-        Thu,  3 Oct 2019 16:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3272120700;
+        Thu,  3 Oct 2019 16:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118561;
-        bh=ayteBREQZV/hF1aHaNivq1OSei/Y0xGRZWb82f0JZwM=;
+        s=default; t=1570118566;
+        bh=wHqDZJIituYx9y3q6KEtPRBcqok4mbWdkHwToUoZq6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uU0wQcee68okQn6kWpZ0qTdm5nKk65b8gVQE9claIKk6JTQ9ydO6x9WLBdxWHZgp+
-         e6mteh+sgFnpfNVq6RJvRrBJIOCKhBibXUv03y4QEnSQN/LRbfJg4+BAalm3xSK6n7
-         Rq5mRqs3DS4tjJNQkbzBxDi9zPN266nzzFpTOfQA=
+        b=cMsc8h4Vzd9j1C0UnpLmP6HSEGQhWB5eaQ7hpoCgRCuxxjmwULmJUXsHyDMg785XM
+         Je1DKZaAIokNE7R2HtSKOGPeWTSWYWCYMXrEw01+rN21ZsPOYKJQy3ab8nrfhLV+/7
+         eWsHKS0jY5pxMeX17FO3zJHf5Vk2Irpe4Th8Gh4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard van Breemen <ard@kwaak.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 055/129] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
-Date:   Thu,  3 Oct 2019 17:52:58 +0200
-Message-Id: <20191003154342.358817712@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        James Morse <james.morse@arm.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 057/129] EDAC/altera: Use the proper type for the IRQ status bits
+Date:   Thu,  3 Oct 2019 17:53:00 +0200
+Message-Id: <20191003154344.255520786@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,37 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard van Breemen <ard@kwaak.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
+[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
 
-The Linux kernel assumes that get_endpoint(alts,0) and
-get_endpoint(alts,1) are eachothers feedback endpoints.
-To reassure that validity it will test bsynchaddress to comply with that
-assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
-a wrong assumption and return an error.
-Fix: Skip the test if bSynchAddress is 0.
-Note: those with a valid bSynchAddress should have a code quirck added.
+Smatch complains about the cast of a u32 pointer to unsigned long:
 
-Signed-off-by: Ard van Breemen <ard@kwaak.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
+  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
+
+This code wouldn't work on a 64 bit big endian system because it would
+read past the end of &irq_status.
+
+ [ bp: massage. ]
+
+Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: kernel-janitors@vger.kernel.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/edac/altera_edac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 497bad9f27898..9bc995f9b4e17 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -470,6 +470,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
- 	}
- 	ep = get_endpoint(alts, 1)->bEndpointAddress;
- 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
-+	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
- 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
- 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
- 		dev_err(&dev->dev,
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index b0bd0f64d8f21..6037efa94c9ba 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1651,6 +1651,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	int irq = irq_desc_get_irq(desc);
++	unsigned long bits;
+ 
+ 	dberr = (irq == edac->db_irq) ? 1 : 0;
+ 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
+@@ -1660,7 +1661,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
+ 
+-	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++	bits = irq_status;
++	for_each_set_bit(bit, &bits, 32) {
+ 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
+ 		if (irq)
+ 			generic_handle_irq(irq);
 -- 
 2.20.1
 
