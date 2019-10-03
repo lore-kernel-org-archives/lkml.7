@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C48C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318FBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC4C21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036A120659
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119766;
-	bh=oMEZALGYqpjAmf3M/soEiS5nERz2JiuJz1YaMlXvuv4=;
+	s=default; t=1570119774;
+	bh=j4lh2ZM1tdLQVmtE9VZzdEw/a5n8LU5JpF5XFHMeu1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ylBwwDM1JDSL3Xau1/bS6t6vwUjgP+67LYLY5z/xudJJOb9y3itru7G3nzGRgteND
-	 QBoPIopkRb4Wsq25PKa3q/e8mMCoYfrcNIdwXaLB/V5PPrVpvp/voB7XnAf+MQC9IT
-	 l44Vkwv12g0HI72Ti+04/WWMyGTD0qK2y1YTPJtI=
+	b=AF+LKS/CLRsaYVEUb2cYlkkyMte93ll6tLpeWAFUlf9lpvY1StoFETuCnREXNyo6z
+	 v4jGvS+cSpQfsaf9HAvyNxKEM68vm5L0pSQrs3eb7GrV35WHT9eY6E3akNWjOhkca9
+	 Y53bILcIhrZfxYPpuMSPhQp8n7l1Q/b0lmZ0bIzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390372AbfJCQWo (ORCPT
+        id S2389087AbfJCQWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51432 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390347AbfJCQWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:22:39 -0400
+        id S2390388AbfJCQWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:22:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42FD3222BE;
-        Thu,  3 Oct 2019 16:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDA7220659;
+        Thu,  3 Oct 2019 16:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119758;
-        bh=oMEZALGYqpjAmf3M/soEiS5nERz2JiuJz1YaMlXvuv4=;
+        s=default; t=1570119769;
+        bh=j4lh2ZM1tdLQVmtE9VZzdEw/a5n8LU5JpF5XFHMeu1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQgVZ3Gzo+rV9Ve8cCHNAb0aJNagd9ktDhGMpE+g8IVo1094fzUVs8vlo2fNINwvw
-         9AmQvtLcNXs0aIbe0xbYigNRve4YrSNrhY+bLWEDBv1WSf63QkL34lV0RGHwwQEEQS
-         SuI63+axdroNcNb9jeOW8frczKedOAADasSKBiiU=
+        b=oiZeZpnaMYwLfr7KKLsDARY2aiZZGz9EsZ2v2hiGwJ0drj6hYRm5aS2Jibjni+vW0
+         1SrKKeezCEdMwDZBivu0iTS1J9heTYpGUDxeH2UI3QaBpnukAlabPWnIrVH7WCJrEr
+         42l0jqff2V6WkjnWYp6nEccgfiY4obDCvNsn4WrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 4.19 182/211] gfs2: clear buf_in_tr when ending a transaction in sweep_bh_for_rgrps
-Date:   Thu,  3 Oct 2019 17:54:08 +0200
-Message-Id: <20191003154527.528197361@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Assmann <sassmann@kpanic.de>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.19 185/211] i40e: check __I40E_VF_DISABLE bit in i40e_sync_filters_subtask
+Date:   Thu,  3 Oct 2019 17:54:11 +0200
+Message-Id: <20191003154527.872966831@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,39 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Stefan Assmann <sassmann@kpanic.de>
 
-commit f0b444b349e33ae0d3dd93e25ca365482a5d17d4 upstream.
+commit a7542b87607560d0b89e7ff81d870bd6ff8835cb upstream.
 
-In function sweep_bh_for_rgrps, which is a helper for punch_hole,
-it uses variable buf_in_tr to keep track of when it needs to commit
-pending block frees on a partial delete that overflows the
-transaction created for the delete. The problem is that the
-variable was initialized at the start of function sweep_bh_for_rgrps
-but it was never cleared, even when starting a new transaction.
+While testing VF spawn/destroy the following panic occurred.
 
-This patch reinitializes the variable when the transaction is
-ended, so the next transaction starts out with it cleared.
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000029
+[...]
+Workqueue: i40e i40e_service_task [i40e]
+RIP: 0010:i40e_sync_vsi_filters+0x6fd/0xc60 [i40e]
+[...]
+Call Trace:
+ ? __switch_to_asm+0x35/0x70
+ ? __switch_to_asm+0x41/0x70
+ ? __switch_to_asm+0x35/0x70
+ ? _cond_resched+0x15/0x30
+ i40e_sync_filters_subtask+0x56/0x70 [i40e]
+ i40e_service_task+0x382/0x11b0 [i40e]
+ ? __switch_to_asm+0x41/0x70
+ ? __switch_to_asm+0x41/0x70
+ process_one_work+0x1a7/0x3b0
+ worker_thread+0x30/0x390
+ ? create_worker+0x1a0/0x1a0
+ kthread+0x112/0x130
+ ? kthread_bind+0x30/0x30
+ ret_from_fork+0x35/0x40
 
-Fixes: d552a2b9b33e ("GFS2: Non-recursive delete")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Investigation revealed a race where pf->vf[vsi->vf_id].trusted may get
+accessed by the watchdog via i40e_sync_filters_subtask() although
+i40e_free_vfs() already free'd pf->vf.
+To avoid this the call to i40e_sync_vsi_filters() in
+i40e_sync_filters_subtask() needs to be guarded by __I40E_VF_DISABLE,
+which is also used by i40e_free_vfs().
+
+Note: put the __I40E_VF_DISABLE check after the
+__I40E_MACVLAN_SYNC_PENDING check as the latter is more likely to
+trigger.
+
+CC: stable@vger.kernel.org
+Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/bmap.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/i40e/i40e_main.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -1630,6 +1630,7 @@ out_unlock:
- 			brelse(dibh);
- 			up_write(&ip->i_rw_mutex);
- 			gfs2_trans_end(sdp);
-+			buf_in_tr = false;
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -2566,6 +2566,10 @@ static void i40e_sync_filters_subtask(st
+ 		return;
+ 	if (!test_and_clear_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state))
+ 		return;
++	if (test_and_set_bit(__I40E_VF_DISABLE, pf->state)) {
++		set_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state);
++		return;
++	}
+ 
+ 	for (v = 0; v < pf->num_alloc_vsi; v++) {
+ 		if (pf->vsi[v] &&
+@@ -2580,6 +2584,7 @@ static void i40e_sync_filters_subtask(st
+ 			}
  		}
- 		gfs2_glock_dq_uninit(rd_gh);
- 		cond_resched();
+ 	}
++	clear_bit(__I40E_VF_DISABLE, pf->state);
+ }
+ 
+ /**
 
 
