@@ -2,106 +2,62 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3A6C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED41A2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570132123;
-	bh=7KnGrY3edgCuzPOLxlDb4V9WqO8qVeaOWYXjcMJiAkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vdHAXiR1hLm5FeI/XpRvaqq3FxB/+oJuMWijAcYilUH905ZvDD4YTEIRSZDPsAE4/
-	 TlkgYwZw8gy9Yb7HITgSLkO8zfBfmA/Sbs3FYljVrFesJfYfqIbJjDBjhYPti4gL9r
-	 29OdZCPQQvzwSG7s1EVrA9CwWYa0MlLJ1C8oI6PE=
+	by mail.kernel.org (Postfix) with ESMTP id 7C283207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732361AbfJCTsm (ORCPT
+        id S1732822AbfJCTu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbfJCTsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:48:42 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 027E2207FF;
-        Thu,  3 Oct 2019 19:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570132121;
-        bh=7KnGrY3edgCuzPOLxlDb4V9WqO8qVeaOWYXjcMJiAkU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0yK46MgQnh4dKlaP50jmm/Y5o/s+oHQoFyWWZHKDYjtWAj7Hsh9W6Vs0qACedjEC/
-         gh/am9KHY7de4Y8/vXGEXnbxhAhrfhFbuG9seU80pVGXz26DdykmbtuQpBrvSUtNCi
-         vmK5VGd3j6LkNghAy+rz3Dw3Li70TVmj58oRrwrQ=
-Date:   Thu, 3 Oct 2019 12:48:39 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+af05535bb79520f95431@syzkaller.appspotmail.com,
-        syzbot+d86c4426a01f60feddc7@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 209/211] fuse: fix deadlock with aio poll and
- fuse_iqueue::waitq.lock
-Message-ID: <20191003194838.GA6620@gmail.com>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+af05535bb79520f95431@syzkaller.appspotmail.com,
-        syzbot+d86c4426a01f60feddc7@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20191003154447.010950442@linuxfoundation.org>
- <20191003154530.645657617@linuxfoundation.org>
+        Thu, 3 Oct 2019 15:50:28 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57259 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729616AbfJCTu1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 15:50:27 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 7119540002;
+        Thu,  3 Oct 2019 19:50:25 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 21:50:25 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     a.zummo@towertech.it, nicolas.ferre@microchip.com,
+        ludovic.desroches@microchip.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] rtc: at91rm9200: use of_device_get_match_data()
+Message-ID: <20191003195025.GJ575@piout.net>
+References: <1569500132-21164-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003154530.645657617@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1569500132-21164-1-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:54:35PM +0200, Greg Kroah-Hartman wrote:
->  
->  static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
->  {
-> -	spin_lock(&fiq->waitq.lock);
-> +	spin_lock(&fiq->lock);
->  	if (test_bit(FR_FINISHED, &req->flags)) {
-> -		spin_unlock(&fiq->waitq.lock);
-> +		spin_unlock(&fiq->lock);
->  		return;
->  	}
->  	if (list_empty(&req->intr_entry)) {
->  		list_add_tail(&req->intr_entry, &fiq->interrupts);
->  		wake_up_locked(&fiq->waitq);
->  	}
-> -	spin_unlock(&fiq->waitq.lock);
-> +	spin_unlock(&fiq->lock);
->  	kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
->  }
+On 26/09/2019 15:15:32+0300, Claudiu Beznea wrote:
+> Use of_device_get_match_data() since all platforms should now use DT
+> bindings. AVR32 architecture has been removed in
+> commit 26202873bb51 ("avr32: remove support for AVR32 architecture").
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/rtc/Kconfig          |  1 +
+>  drivers/rtc/rtc-at91rm9200.c | 19 +------------------
+>  2 files changed, 2 insertions(+), 18 deletions(-)
+> 
+Applied, thanks.
 
-This isn't backported correctly.  wake_up_locked() needs to be changed to wake_up().
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index c0d59a86ada2e..6d39143cfa094 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -434,7 +434,7 @@ static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
- 	}
- 	if (list_empty(&req->intr_entry)) {
- 		list_add_tail(&req->intr_entry, &fiq->interrupts);
--		wake_up_locked(&fiq->waitq);
-+		wake_up(&fiq->waitq);
- 	}
- 	spin_unlock(&fiq->lock);
- 	kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
