@@ -2,92 +2,139 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC282C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4149C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE43B222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcp1eFKe"
+	by mail.kernel.org (Postfix) with ESMTP id B4E0B222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfJCMCs (ORCPT
+        id S1729265AbfJCMDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:02:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36843 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfJCMCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:02:47 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so2439657ljj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cTYlnAsOJ2TKlVRx7ETxjCGwXU7Jrh//3eORQWciV1I=;
-        b=lcp1eFKeXAZyScuFc5xoJJSTTqPHQ8Do+3WrNy+47tu+ROcdW6yllR8HE/6xyxFI1C
-         RIQ5vZJOjQSZuylhK/qu0sZ6QXr9SnHoXAHVl6r06m7jOM/BKGeXI4ZxGBKLdruYqNic
-         U9qkExsWct/2LLNZFIbyHSfx+z5fEsvWd6jqyog+uXlaCXMjWHtYPVBFkumuVrAJwIN5
-         MfbnIneby+9xiN7KIdGVjHFKO1LuanOdth7xQvHvCg2fdmk7Xs5lTNa5I/o+3FZZ7VyG
-         ndi/b58SQIf3hMSo5Yw9QKJ3bwdLKcEIKcODFEkcliHkc9jkbPzsp3euz1Vz0kBvzkxe
-         UIDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cTYlnAsOJ2TKlVRx7ETxjCGwXU7Jrh//3eORQWciV1I=;
-        b=N38OS+Vf0/u8gRd7o/1ahSMGmM+6IAhcbYHDby1Y9i1Y8RqnxvcaEkaeM8uc2ZBONk
-         vAsMrkrpShOQPRMbuBjHwvsKmw2qogAIO2o3N+hd729Jwq0lYe/IwKwUmeJt40DpBBYK
-         bX9511bpid/qp6bsa0ZdYw8MXBVObSu8Pt7L3Z6RvCj4EhSt5Dz3BFwvjd2Tvcf7Ur2Q
-         E+7+j2qp9Qzf0vPqVpT1QO4o1WExuVZ8qqmvBVStNLZ1tSGYJG5PUxc2dXeqPHQ5qbod
-         5S6+VIVbGDFGDYRTMNlD25Rc2PXBKhmBHk3bkrHKbMz68vmkWAFh9e/MIfVCcsMcwPiN
-         WHkQ==
-X-Gm-Message-State: APjAAAXa81uA/RFNSCUL8BRCTNhImfLH8Vx1pYh6tVVTeqBJKwSbQOK8
-        QzDoxXDDYDzkQcSxkDTe6ZB3VBY7bQu87//lEzejIg==
-X-Google-Smtp-Source: APXvYqxkigIHVqqJYtKMd8GkRG6qLd8hE5Cemc8HsFF9oQhJc0+1b5nvoxtB7OvKQsMw9/i59oJz1UG7zrLmwnmixDU=
-X-Received: by 2002:a2e:894b:: with SMTP id b11mr5832443ljk.152.1570104165568;
- Thu, 03 Oct 2019 05:02:45 -0700 (PDT)
+        Thu, 3 Oct 2019 08:03:06 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46222 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729190AbfJCMDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:03:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:03:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="367021691"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
+  by orsmga005.jf.intel.com with ESMTP; 03 Oct 2019 05:03:02 -0700
+Date:   Thu, 3 Oct 2019 15:03:02 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     ivan.lazeev@gmail.com
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Message-ID: <20191003120302.GB10038@linux.intel.com>
+References: <20191002201212.32395-1-ivan.lazeev@gmail.com>
 MIME-Version: 1.0
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
-In-Reply-To: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 3 Oct 2019 14:02:33 +0200
-Message-ID: <CACRpkdYO3ioakyrmv_2mTUuWCeBZ5goW28qr+y_M8qFv64FD4Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 05/14] of: irq: document properties for wakeup
- interrupt parent
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        mkshah@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002201212.32395-1-ivan.lazeev@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:59 PM Lina Iyer <ilina@codeaurora.org> wrote:
+On Wed, Oct 02, 2019 at 11:12:12PM +0300, ivan.lazeev@gmail.com wrote:
+> From: Vanya Lazeev <ivan.lazeev@gmail.com>
+> 
+> Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
+> 
+> cmd/rsp buffers are expected to be in the same ACPI region.
+> For Zen+ CPUs BIOS's might report two different regions, some of
+> them also report region sizes inconsistent with values from TPM
+> registers.
+> 
+> Memory configuration on ASRock x470 ITX:
+> 
+> db0a0000-dc59efff : Reserved
+>         dc57e000-dc57efff : MSFT0101:00
+>         dc582000-dc582fff : MSFT0101:00
+> 
+> Work around the issue by storing ACPI regions declared for the
+> device in a fixed array and adding an array for pointers to
+> corresponding possibly allocated resources in crb_map_io function.
+> This data was previously held for a single resource
+> in struct crb_priv (iobase field) and local variable io_res in
+> crb_map_io function. ACPI resources array is used to find index of
+> corresponding region for each buffer and make the buffer size
+> consistent with region's length. Array of pointers to allocated
+> resources is used to map the region at most once.
+> 
+> Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
 
-> Some interrupt controllers in a SoC, are always powered on and have a
-> select interrupts routed to them, so that they can wakeup the SoC from
-> suspend. Add wakeup-parent DT property to refer to these interrupt
-> controllers.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+I'm getting soon Udoo Bolt that I should be able to use to test this
+change.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes in v6:
+> 	- got rid of new structures
+> 	- open coded helper functions
+> 	- removed incorrect FW_BUG
+> 
+>  drivers/char/tpm/tpm_crb.c | 126 +++++++++++++++++++++++++++----------
+>  1 file changed, 93 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> index e59f1f91d7f3..8177406aecd6 100644
+> --- a/drivers/char/tpm/tpm_crb.c
+> +++ b/drivers/char/tpm/tpm_crb.c
+> @@ -22,6 +22,7 @@
+>  #include "tpm.h"
+>  
+>  #define ACPI_SIG_TPM2 "TPM2"
+> +#define TPM_CRB_MAX_RESOURCES 3
+>  
+>  static const guid_t crb_acpi_start_guid =
+>  	GUID_INIT(0x6BBF6CAB, 0x5463, 0x4714,
+> @@ -91,7 +92,6 @@ enum crb_status {
+>  struct crb_priv {
+>  	u32 sm;
+>  	const char *hid;
+> -	void __iomem *iobase;
+>  	struct crb_regs_head __iomem *regs_h;
+>  	struct crb_regs_tail __iomem *regs_t;
+>  	u8 __iomem *cmd;
+> @@ -434,21 +434,27 @@ static const struct tpm_class_ops tpm_crb = {
+>  
+>  static int crb_check_resource(struct acpi_resource *ares, void *data)
+>  {
+> -	struct resource *io_res = data;
+> +	struct resource **iores_range = data;
+>  	struct resource_win win;
+>  	struct resource *res = &(win.res);
+>  
+>  	if (acpi_dev_resource_memory(ares, res) ||
+>  	    acpi_dev_resource_address_space(ares, &win)) {
+> -		*io_res = *res;
+> -		io_res->name = NULL;
+> +		if (iores_range[0] == iores_range[1])
+> +			iores_range[0] = NULL;
+> +
+> +		if (iores_range[0]) {
+> +			*iores_range[0] = *res;
+> +			iores_range[0]->name = NULL;
+> +			iores_range[0] += 1;
+> +		}
 
-Yours,
-Linus Walleij
+You could get away without iores_range by having an extra
+terminator entry in the iores_array.
+
+Overally this starts to look good.
+
+/Jarkko
