@@ -2,113 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADF1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A691C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F4B20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:53:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJDWBKQf"
+	by mail.kernel.org (Postfix) with ESMTP id E136F20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570118153;
+	bh=/mUCgtJyGz4DPng07kBY1gGf11ZttIpDb6KMtMyH+zk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eR3IiP/9ZQIsRFZMybkKHCSEsLLwR8p0S1Au2NsjncWxEUizyEHy/FW+JMzRr5Uaa
+	 WN1Yldh9cd0RykzObLbNv+PoEPqyqZVjf3Iy1J4DtuV7IJyNaqOOWnudEiHim7N9bm
+	 E0TOXGN3SuM/ORl5W8TqHlaxSubyMjFOOHxwQ9zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbfJCPxR (ORCPT
+        id S1730357AbfJCPzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:53:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34397 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfJCPxR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:53:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y35so2058514pgl.1;
-        Thu, 03 Oct 2019 08:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1wqB6OZNdAWXlilaMCSpXU3dW8zf1TakKdGobbh4lqo=;
-        b=tJDWBKQfkYG6j7dTjY7u63ZnzNoDHCHuPQoSGsP9Cwd10QAabJ71wYeSDMbD+2tbML
-         vDUecy1ZRk0qFDimsSJWyQBM8CxqEQTZjwiEFE800kp61Xwhir7kRwS4R0vgp3yYbIER
-         XhbJMaNYYL41LDNzOhsfFVn+eeThyw7X3j4XPlpV/5i08O0T8/jZgITZ9zasEn8Bto2M
-         1jJZj9aG7l1rdbtmwZvfHdE1Wyc8XPRwe0EpgDIzoC6NEI9nX6WNKOM1T2hheyB1XY+N
-         Tm1xe8mIDuZHXT/L85qUYKbPKVjh1kBdVXB8VGRXS516j9RwHq5d2gEwBcjkRCvd65Dm
-         jCOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1wqB6OZNdAWXlilaMCSpXU3dW8zf1TakKdGobbh4lqo=;
-        b=E0aunpWzkDxRx3vJprXOxGQXP1MMNWGvrRmIbxikgim4+rHafLaLLOVRg+Wr+PTv8K
-         1OzHQAQUcNEHIOiaLbFszTyNE+qb/5MieLJFjFHeFlpgBkSRtJQJpofuzfJ3cFvPvRKh
-         Gla3pohIMx7NBZisMK8CZQAAcK1bUxXiZvINdooB8nCPiSSEbkrYTO3KVD4pBCkUF7nP
-         iBL+DDyN1DtsI0EP7xuEYa5WQKG2VB33zy+NrbPZx/lOxnxNOddw41GcxABc3si7BXpn
-         GYeEcC9me/aSZV/J92jtZDNjfSjXNKXkpREOVjUQlcLe7anMtvjP/dUrpKa0bIrlqK8O
-         3q2Q==
-X-Gm-Message-State: APjAAAXeu1aqywvukasqf5xjeI8R1WLJ2Za4Iubvv2hBHPDSB2SMsyo/
-        m/QzmkQ1EqVSbJYLFdbA5oM=
-X-Google-Smtp-Source: APXvYqwTxuuMApyhcjWNrwEKc2wo9IJ44wvLub5GBlE26WCqQKGZg+xTcVBGAiBqFOqiS3iNLC822A==
-X-Received: by 2002:aa7:81d3:: with SMTP id c19mr11732627pfn.85.1570117995085;
-        Thu, 03 Oct 2019 08:53:15 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id a13sm4649830pfg.10.2019.10.03.08.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 08:53:14 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 08:53:11 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 0/2] Add support for software nodes to gpiolib
-Message-ID: <20191003155311.GA22365@dtor-ws>
-References: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
- <CACRpkdYm=qK7x0cLg3HjPmGYhZ076cDN1Kvd774p6g0UEg9C7w@mail.gmail.com>
+        Thu, 3 Oct 2019 11:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727024AbfJCPzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:55:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 870EE20700;
+        Thu,  3 Oct 2019 15:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118151;
+        bh=/mUCgtJyGz4DPng07kBY1gGf11ZttIpDb6KMtMyH+zk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AfJbS2MSwzZeH5r7qGnu7HoSVqSTHONS7pRRSiUT0tMpPy8Wh0Fol7ALHtZMVvy9W
+         OvHxoLKQYyJxLoDa102NSQdCzQCg1b8zt873A3I1ifvS8Gj8HEgLLyffUiSgQOTvrb
+         PqS4tU5KG0+pWWUXx9JlTWyBN/F/lwNOCQV5dwW8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/99] Revert "Bluetooth: validate BLE connection interval updates"
+Date:   Thu,  3 Oct 2019 17:52:24 +0200
+Message-Id: <20191003154253.184041960@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+References: <20191003154252.297991283@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYm=qK7x0cLg3HjPmGYhZ076cDN1Kvd774p6g0UEg9C7w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 12:07:47PM +0200, Linus Walleij wrote:
-> On Fri, Sep 13, 2019 at 5:22 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> 
-> > This is a part of the larger series previously posted at
-> >
-> > https://lore.kernel.org/linux-gpio/20190911075215.78047-1-dmitry.torokhov@gmail.com
-> >
-> > that was rebased on top of linux-gpio devel branch.
-> >
-> > Changes in v2:
-> > - switched export to be EXPORT_SYMBOL_GPL to match the new export
-> >   markings for the rest of GPIO devres functions
-> > - rebased on top of Linus W devel branch
-> > - added Andy's Reviewed-by
-> 
-> I failed to get this into v5.4 because of misc stress, sorry :(
-> 
-> I have queued it on an immutable branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-fwnode-gpiod-get-index
-> then pulled that into my devel branch for v5.5.
-> 
-> So you can ask subsystem maintainers to pull this in to do conversions.
-> 
-> Apologies for the inconvenience.
+From: Marcel Holtmann <marcel@holtmann.org>
 
-Hey, no worries and thank you for making a branch. It does not really
-matter if we land it one release earlier or later.
+[ Upstream commit 68d19d7d995759b96169da5aac313363f92a9075 ]
 
-Hope you are feeling better.
+This reverts commit c49a8682fc5d298d44e8d911f4fa14690ea9485e.
 
+There are devices which require low connection intervals for usable operation
+including keyboards and mice. Forcing a static connection interval for
+these types of devices has an impact in latency and causes a regression.
+
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/bluetooth/hci_event.c  | 5 -----
+ net/bluetooth/l2cap_core.c | 9 +--------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index c4e94f34d0480..37fe2b158c2a7 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5062,11 +5062,6 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_UNKNOWN_CONN_ID);
+ 
+-	if (min < hcon->le_conn_min_interval ||
+-	    max > hcon->le_conn_max_interval)
+-		return send_conn_param_neg_reply(hdev, handle,
+-						 HCI_ERROR_INVALID_LL_PARAMS);
+-
+ 	if (hci_check_conn_params(min, max, latency, timeout))
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_INVALID_LL_PARAMS);
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 8cfba78d26f61..c25f1e4846cde 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -5266,14 +5266,7 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
+ 
+ 	memset(&rsp, 0, sizeof(rsp));
+ 
+-	if (min < hcon->le_conn_min_interval ||
+-	    max > hcon->le_conn_max_interval) {
+-		BT_DBG("requested connection interval exceeds current bounds.");
+-		err = -EINVAL;
+-	} else {
+-		err = hci_check_conn_params(min, max, latency, to_multiplier);
+-	}
+-
++	err = hci_check_conn_params(min, max, latency, to_multiplier);
+ 	if (err)
+ 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
+ 	else
 -- 
-Dmitry
+2.20.1
+
+
+
