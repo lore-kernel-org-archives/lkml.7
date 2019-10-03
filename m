@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDC4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A74C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1910720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9CB2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122972;
-	bh=CLSXQfZvYt6Ci+WA241XbXt3ccOFeOoA5HxVZhc9aFM=;
+	s=default; t=1570122985;
+	bh=68NxIA56E8TqefE0dqfPd3/WVVwwRUsYnUYxrw8mY1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTXiyrZ4oNI/mXRkZmO8e7gRMqr6YHJ3J0gcNBXuVHQRN/T3pH21r+1fMnpFGUbjf
-	 tAo3SnZU1Bo4PH1YrPGB3Kia9M/GLmpmDIVh2ibpK2yKooDWVGfT1p0MX052rOO3Pq
-	 wAodzP7ZkMhFoH06F4uUTCr2gKQJZr/kbqbpaSiw=
+	b=XOxTEjZE60rtzQcN1v5DuRn7zVrRrw7Xc7drw2t+r//SMfwahmVEwAfbRKcPC23tC
+	 cqqkSn9G+1TumB3hkeYOZwHg7Dy7LInvBPWr0OEqgTTenn6C+7xY3EDntBACKbiKeS
+	 Fp+aTFZlEeHbAvVo8iKLjrCFpPtlM9YNsmB67VnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390822AbfJCQYx (ORCPT
+        id S2390730AbfJCQYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730767AbfJCQYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:24:45 -0400
+        id S2390710AbfJCQYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF21F2054F;
-        Thu,  3 Oct 2019 16:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BF4215EA;
+        Thu,  3 Oct 2019 16:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119885;
-        bh=CLSXQfZvYt6Ci+WA241XbXt3ccOFeOoA5HxVZhc9aFM=;
+        s=default; t=1570119858;
+        bh=68NxIA56E8TqefE0dqfPd3/WVVwwRUsYnUYxrw8mY1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AX+c1p+CEco7wVpnFlnSVhjN9RIboikEyryupRpUtLGvlqIBJNlh5nDK0bPWqnRy/
-         VNgWXEgmcPFcSIbsG3xEhcPIg7MfKCCgknhjDvpHvu9I+QVbyhG/+zUfbOWnEg0kSx
-         /QqH8eHgr4rQuAaD5o1wav9Zn3gfL8msOjHGmghs=
+        b=GHqzqrYrURO7QmscjF7dEamc6ELLf2vv5YME1I1b8ZpSfcWjg33kpWvnBVwOfdTFq
+         2y+HuY3dwYYUgPkYPZzScakcREh5DQPDpwiJiVp6Df+evS7OkyCWyGaOj7qrRALgdQ
+         AGo4ifrWHMV9cnG7BbyM1TvcQqN7jiZfIesX/G5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 018/313] usbnet: sanity checking of packet sizes and device mtu
-Date:   Thu,  3 Oct 2019 17:49:56 +0200
-Message-Id: <20191003154535.176631957@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 193/211] btrfs: qgroup: Fix the wrong target io_tree when freeing reserved data space
+Date:   Thu,  3 Oct 2019 17:54:19 +0200
+Message-Id: <20191003154528.856046734@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,41 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 280ceaed79f18db930c0cc8bb21f6493490bf29c ]
+commit bab32fc069ce8829c416e8737c119f62a57970f9 upstream.
 
-After a reset packet sizes and device mtu can change and need
-to be reevaluated to calculate queue sizes.
-Malicious devices can set this to zero and we divide by it.
-Introduce sanity checking.
+[BUG]
+Under the following case with qgroup enabled, if some error happened
+after we have reserved delalloc space, then in error handling path, we
+could cause qgroup data space leakage:
 
-Reported-and-tested-by:  syzbot+6102c120be558c885f04@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+>From btrfs_truncate_block() in inode.c:
+
+	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
+					   block_start, blocksize);
+	if (ret)
+		goto out;
+
+ again:
+	page = find_or_create_page(mapping, index, mask);
+	if (!page) {
+		btrfs_delalloc_release_space(inode, data_reserved,
+					     block_start, blocksize, true);
+		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, true);
+		ret = -ENOMEM;
+		goto out;
+	}
+
+[CAUSE]
+In the above case, btrfs_delalloc_reserve_space() will call
+btrfs_qgroup_reserve_data() and mark the io_tree range with
+EXTENT_QGROUP_RESERVED flag.
+
+In the error handling path, we have the following call stack:
+btrfs_delalloc_release_space()
+|- btrfs_free_reserved_data_space()
+   |- btrsf_qgroup_free_data()
+      |- __btrfs_qgroup_release_data(reserved=@reserved, free=1)
+         |- qgroup_free_reserved_data(reserved=@reserved)
+            |- clear_record_extent_bits();
+            |- freed += changeset.bytes_changed;
+
+However due to a completion bug, qgroup_free_reserved_data() will clear
+EXTENT_QGROUP_RESERVED flag in BTRFS_I(inode)->io_failure_tree, other
+than the correct BTRFS_I(inode)->io_tree.
+Since io_failure_tree is never marked with that flag,
+btrfs_qgroup_free_data() will not free any data reserved space at all,
+causing a leakage.
+
+This type of error handling can only be triggered by errors outside of
+qgroup code. So EDQUOT error from qgroup can't trigger it.
+
+[FIX]
+Fix the wrong target io_tree.
+
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Fixes: bc42bda22345 ("btrfs: qgroup: Fix qgroup reserved space underflow by only freeing reserved ranges")
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/usbnet.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -344,6 +344,8 @@ void usbnet_update_max_qlen(struct usbne
- {
- 	enum usb_device_speed speed = dev->udev->speed;
- 
-+	if (!dev->rx_urb_size || !dev->hard_mtu)
-+		goto insanity;
- 	switch (speed) {
- 	case USB_SPEED_HIGH:
- 		dev->rx_qlen = MAX_QUEUE_MEMORY / dev->rx_urb_size;
-@@ -360,6 +362,7 @@ void usbnet_update_max_qlen(struct usbne
- 		dev->tx_qlen = 5 * MAX_QUEUE_MEMORY / dev->hard_mtu;
- 		break;
- 	default:
-+insanity:
- 		dev->rx_qlen = dev->tx_qlen = 4;
- 	}
- }
+---
+ fs/btrfs/qgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3111,7 +3111,7 @@ static int qgroup_free_reserved_data(str
+ 		 * EXTENT_QGROUP_RESERVED, we won't double free.
+ 		 * So not need to rush.
+ 		 */
+-		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_failure_tree,
++		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree,
+ 				free_start, free_start + free_len - 1,
+ 				EXTENT_QGROUP_RESERVED, &changeset);
+ 		if (ret < 0)
 
 
