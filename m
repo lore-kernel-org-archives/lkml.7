@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85318C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366ADC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5906E21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086E8215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120343;
-	bh=5eDikgOSaSe6iEg5YcefwyC0Wju1DF4Oj1szVWREBus=;
+	s=default; t=1570120348;
+	bh=HlgQtIyPanrqp3NrtSIRncC6kR3bDwrU5TfjDjtS9bI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyNsw04WVSmfA+u2o5g0N/DWPwu2pHl+sh6uxovUMf8MLuIt4dORZQiAzVd4u8Of/
-	 8RB8r/Zm+n/ZtTIIhHHEYUIbQmRQDiQUGu72ivt6+jZIwlSErelQfbU5K1KbHVgecS
-	 nTvunzHdzpXcWV1d8yq7RcxM3Z9leRv1rm6k8/fA=
+	b=D7vBdS1HvIt7Sd6lyX4lDfPQO9uDoOp6NcSPLu1hVh4Uay+/0V/8FtC5O6rEE3VBw
+	 QEoqerkSnMTPs6RM+wU4ij8TkyHuwwDqnwAa26kQyZ08DenzITe/f5ILiaX+KfzSD/
+	 UNjRYMkTcuxaHnU8xrb5pVDxSYqmDXWxNs6vU9dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391911AbfJCQcW (ORCPT
+        id S2391928AbfJCQc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39788 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391510AbfJCQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:19 -0400
+        id S2390436AbfJCQcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E495B215EA;
-        Thu,  3 Oct 2019 16:32:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E8A2070B;
+        Thu,  3 Oct 2019 16:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120338;
-        bh=5eDikgOSaSe6iEg5YcefwyC0Wju1DF4Oj1szVWREBus=;
+        s=default; t=1570120343;
+        bh=HlgQtIyPanrqp3NrtSIRncC6kR3bDwrU5TfjDjtS9bI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcG+Bp2/AcX0FSl/0lHaoqgzL8mPnbtZ+bjKe4P561yHNexuNJtqpIA7wIQbrCKf8
-         Eo4AW+2J5FwmfNq91/dF+gvacRyyYgSPM2OeAdon20rdNUve1YpO7ZC3C5ZTo+3iWq
-         +ers22w2PPMPn5Uae3r2ki04tLkIz/olpimpOJbc=
+        b=hvgttceQuZhTqijSY0H3BY1d8DTRuJVYbAsWzgUiCfjUK1TsjDgzgbNvUrgm1rPBR
+         mHkT8vWBSU98aJULENatAm7qv2KcJiUBPZBmzOtzCN+HgLU6xErWi4QtvIFmm+vSc0
+         bhZyTyT46SOEWNrJC72eWw8nZ4oQvYjySput5d0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 185/313] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Thu,  3 Oct 2019 17:52:43 +0200
-Message-Id: <20191003154551.208360676@linuxfoundation.org>
+Subject: [PATCH 5.2 187/313] block: make rq sector size accessible for block stats
+Date:   Thu,  3 Oct 2019 17:52:45 +0200
+Message-Id: <20191003154551.403130600@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,44 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit 3d24430694077313c75c6b89f618db09943621e4 ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+Currently rq->data_len will be decreased by partial completion or
+zeroed by completion, so when blk_stat_add() is invoked, data_len
+will be zero and there will never be samples in poll_cb because
+blk_mq_poll_stats_bkt() will return -1 if data_len is zero.
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+We could move blk_stat_add() back to __blk_mq_complete_request(),
+but that would make the effort of trying to call ktime_get_ns()
+once in vain. Instead we can reuse throtl_size field, and use
+it for both block stats and block throttle, and adjust the
+logic in blk_mq_poll_stats_bkt() accordingly.
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 4bc6339a583c ("block: move blk_stat_add() to __blk_mq_end_request()")
+Tested-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ block/blk-mq.c         | 11 +++++------
+ block/blk-throttle.c   |  3 ++-
+ include/linux/blkdev.h | 15 ++++++++++++---
+ 3 files changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 748f5f641002e..d93db2c2b5270 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -306,6 +306,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index f934e8afe5b43..af93ca28ce4f0 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -44,12 +44,12 @@ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
  
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
-+
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
+ static int blk_mq_poll_stats_bkt(const struct request *rq)
+ {
+-	int ddir, bytes, bucket;
++	int ddir, sectors, bucket;
+ 
+ 	ddir = rq_data_dir(rq);
+-	bytes = blk_rq_bytes(rq);
++	sectors = blk_rq_stats_sectors(rq);
+ 
+-	bucket = ddir + 2*(ilog2(bytes) - 9);
++	bucket = ddir + 2 * ilog2(sectors);
+ 
+ 	if (bucket < 0)
+ 		return -1;
+@@ -330,6 +330,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
+ 	else
+ 		rq->start_time_ns = 0;
+ 	rq->io_start_time_ns = 0;
++	rq->stats_sectors = 0;
+ 	rq->nr_phys_segments = 0;
+ #if defined(CONFIG_BLK_DEV_INTEGRITY)
+ 	rq->nr_integrity_segments = 0;
+@@ -679,9 +680,7 @@ void blk_mq_start_request(struct request *rq)
+ 
+ 	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
+ 		rq->io_start_time_ns = ktime_get_ns();
+-#ifdef CONFIG_BLK_DEV_THROTTLING_LOW
+-		rq->throtl_size = blk_rq_sectors(rq);
+-#endif
++		rq->stats_sectors = blk_rq_sectors(rq);
+ 		rq->rq_flags |= RQF_STATS;
+ 		rq_qos_issue(q, rq);
  	}
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index 8ab6c81532236..ee74bffe3504d 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -2246,7 +2246,8 @@ void blk_throtl_stat_add(struct request *rq, u64 time_ns)
+ 	struct request_queue *q = rq->q;
+ 	struct throtl_data *td = q->td;
  
- 	return 0;
+-	throtl_track_latency(td, rq->throtl_size, req_op(rq), time_ns >> 10);
++	throtl_track_latency(td, blk_rq_stats_sectors(rq), req_op(rq),
++			     time_ns >> 10);
+ }
+ 
+ void blk_throtl_bio_endio(struct bio *bio)
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 93baef66b9424..4c6754e536725 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -202,9 +202,12 @@ struct request {
+ #ifdef CONFIG_BLK_WBT
+ 	unsigned short wbt_flags;
+ #endif
+-#ifdef CONFIG_BLK_DEV_THROTTLING_LOW
+-	unsigned short throtl_size;
+-#endif
++	/*
++	 * rq sectors used for blk stats. It has the same value
++	 * with blk_rq_sectors(rq), except that it never be zeroed
++	 * by completion.
++	 */
++	unsigned short stats_sectors;
+ 
+ 	/*
+ 	 * Number of scatter-gather DMA addr+len pairs after
+@@ -902,6 +905,7 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+  * blk_rq_err_bytes()		: bytes left till the next error boundary
+  * blk_rq_sectors()		: sectors left in the entire request
+  * blk_rq_cur_sectors()		: sectors left in the current segment
++ * blk_rq_stats_sectors()	: sectors of the entire request used for stats
+  */
+ static inline sector_t blk_rq_pos(const struct request *rq)
+ {
+@@ -930,6 +934,11 @@ static inline unsigned int blk_rq_cur_sectors(const struct request *rq)
+ 	return blk_rq_cur_bytes(rq) >> SECTOR_SHIFT;
+ }
+ 
++static inline unsigned int blk_rq_stats_sectors(const struct request *rq)
++{
++	return rq->stats_sectors;
++}
++
+ #ifdef CONFIG_BLK_DEV_ZONED
+ static inline unsigned int blk_rq_zone_no(struct request *rq)
+ {
 -- 
 2.20.1
 
