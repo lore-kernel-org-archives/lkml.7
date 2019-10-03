@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28586C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54BFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E0120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB4A20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123913;
-	bh=/H6WitFJUI+gMgZD6uHf8ltL8tBdlaYkFbuJZGnmxxI=;
+	s=default; t=1570123916;
+	bh=F5UZtW5wJQuWwJm1UKn0QprMlUWyCj5JSSwknCe4+0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oox5rWwpGZXAQk2kJaeOWkJzf4PBmmFfRFI3FzXxbwUUxVxjBa2TQ/t2tTDsXwYRL
-	 Cf3fYW3bJE7+lPXuyIy/jtnuJd+UFIytnKgPIZAtenKMXRJp2pu7KUV9sIG0aaQoaH
-	 hq2ugdzOwSms/LxGrW94zO/H0PoeHQ/yjNYTHI3w=
+	b=eDMOBqkf96lkHcCSQpMWRW6dSTOsMuvdQ7QNlXqhg7iOO6WboSh2Pl2Us/8nKmAry
+	 QcRkQVTZ6m8V2y895qJZ8vICkmN6GZ9g+8Ed43llXpqXQofiSvoxzFcL6WDC9uAgvb
+	 j315LQC/v1zghhTpzV6sO2E7BAPKctOHgSFT/L3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfJCRbw (ORCPT
+        id S1733207AbfJCQJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58704 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbfJCQJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:43 -0400
+        id S1732594AbfJCQJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA0F222C2;
-        Thu,  3 Oct 2019 16:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE839215EA;
+        Thu,  3 Oct 2019 16:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118983;
-        bh=/H6WitFJUI+gMgZD6uHf8ltL8tBdlaYkFbuJZGnmxxI=;
+        s=default; t=1570118972;
+        bh=F5UZtW5wJQuWwJm1UKn0QprMlUWyCj5JSSwknCe4+0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wsh4boZvksKt6G59WTWxU6z3JGDlcpoLG3rXljuaRuTt8Y1Dq5r0MP6cuc5CnBxmn
-         nYQnVmIl3HgZH9a5ZmMVhxV+SId0PWrjSIcWrgwl2ti9x7ZbmrLON84m8ySiNtLUua
-         cHkmMGIzCFuoYU+pC+yXniZfiDSff8immjUYqhxY=
+        b=CFfPr9ZvocHnU6udJ8MdEYpnmDy8jX+lpn2ZSCU0eHsAUKL/KsnaFl5f/KWVDTwDN
+         ihJnwWmk/8/BEpAUHWz5PLDjO7lnQO6bzFOAIeeq6cxWjjvNHX1RFJMVB18H+z7cjN
+         n/FLGuq2WM4SqUnjGQppoVRIxfkzEd4blvUhOUwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/185] ACPI / processor: dont print errors for processorIDs == 0xff
-Date:   Thu,  3 Oct 2019 17:52:38 +0200
-Message-Id: <20191003154455.612058165@linuxfoundation.org>
+Subject: [PATCH 4.14 077/185] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
+Date:   Thu,  3 Oct 2019 17:52:35 +0200
+Message-Id: <20191003154454.807042835@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,66 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 2c2b005f549544c13ef4cfb0e4842949066889bc ]
+[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
 
-Some platforms define their processors in this manner:
-    Device (SCK0)
-    {
-	Name (_HID, "ACPI0004" /* Module Device */)  // _HID: Hardware ID
-	Name (_UID, "CPUSCK0")  // _UID: Unique ID
-	Processor (CP00, 0x00, 0x00000410, 0x06){}
-	Processor (CP01, 0x02, 0x00000410, 0x06){}
-	Processor (CP02, 0x04, 0x00000410, 0x06){}
-	Processor (CP03, 0x06, 0x00000410, 0x06){}
-	Processor (CP04, 0x01, 0x00000410, 0x06){}
-	Processor (CP05, 0x03, 0x00000410, 0x06){}
-	Processor (CP06, 0x05, 0x00000410, 0x06){}
-	Processor (CP07, 0x07, 0x00000410, 0x06){}
-	Processor (CP08, 0xFF, 0x00000410, 0x06){}
-	Processor (CP09, 0xFF, 0x00000410, 0x06){}
-	Processor (CP0A, 0xFF, 0x00000410, 0x06){}
-	Processor (CP0B, 0xFF, 0x00000410, 0x06){}
-...
+When add one disk to array, the md_reap_sync_thread is responsible
+to activate the spare and set In_sync flag for the new member in
+spare_active().
 
-The processors marked as 0xff are invalid, there are only 8 of them in
-this case.
+But if raid1 has one member disk A, and disk B is added to the array.
+Then we offline A before all the datas are synchronized from A to B,
+obviously B doesn't have the latest data as A, but B is still marked
+with In_sync flag.
 
-So do not print an error on ids == 0xff, just print an info message.
-Actually, we could return ENODEV even on the first CPU with ID 0xff, but
-ACPI spec does not forbid the 0xff value to be a processor ID. Given
-0xff could be a correct one, we would break working systems if we
-returned ENODEV.
+So let's not call spare_active under the condition, otherwise B is
+still showed with 'U' state which is not correct.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_processor.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index ccf07674a2a09..f81c434ce4c59 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -281,9 +281,13 @@ static int acpi_processor_get_info(struct acpi_device *device)
- 	}
- 
- 	if (acpi_duplicate_processor_id(pr->acpi_id)) {
--		dev_err(&device->dev,
--			"Failed to get unique processor _UID (0x%x)\n",
--			pr->acpi_id);
-+		if (pr->acpi_id == 0xff)
-+			dev_info_once(&device->dev,
-+				"Entry not well-defined, consider updating BIOS\n");
-+		else
-+			dev_err(&device->dev,
-+				"Failed to get unique processor _UID (0x%x)\n",
-+				pr->acpi_id);
- 		return -ENODEV;
- 	}
- 
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 764ed9c466294..d185725e100c0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8906,7 +8906,8 @@ void md_reap_sync_thread(struct mddev *mddev)
+ 	/* resync has finished, collect result */
+ 	md_unregister_thread(&mddev->sync_thread);
+ 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+-	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
++	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
++	    mddev->degraded != mddev->raid_disks) {
+ 		/* success...*/
+ 		/* activate any spares */
+ 		if (mddev->pers->spare_active(mddev)) {
 -- 
 2.20.1
 
