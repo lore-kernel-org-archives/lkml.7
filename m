@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFFCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826D8C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8304222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5677B222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119813;
-	bh=LSYGcopW8v0gGTdgoaDYFGwhSVxFFkrFimAdWZwNFWk=;
+	s=default; t=1570119817;
+	bh=PBM67lVr9fxgDjwBm7PGqNRydI67/kFeiYDJNSAFoMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cn1DmfKdUFDk3kp+VvXBCNVW3BdJNluU+ZF5xnJvDTJbc4tL32QMEjt0Bj+f+oFec
-	 64xxCkwfQiDSId7ayW+zL7psJdeAKd3LDGMGXXGR9FBO2/cRn3FDhdxAaNeANmIvCl
-	 bZUjQlVUW0Ly79juTap2Yh32/qgXmqLMZ4+vcsLk=
+	b=2Aq8lZi5hnHEQYxyeR5Gsp02IDlggPCv12e07A9gEdP5xKDfedLOVi57Y71gDByaZ
+	 m/5sMktUKBzfxR38YbrpO3HXUAibHOsqn3xvANJJIGpPyr1PpmEZIzJTwzfZDT33Fg
+	 zACUNwCZez+WlBHanSmz42AcF7iGHgf+jCE8FIvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390586AbfJCQXb (ORCPT
+        id S2390600AbfJCQXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52452 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390569AbfJCQX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:27 -0400
+        id S2388446AbfJCQXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9770215EA;
-        Thu,  3 Oct 2019 16:23:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94CC02054F;
+        Thu,  3 Oct 2019 16:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119807;
-        bh=LSYGcopW8v0gGTdgoaDYFGwhSVxFFkrFimAdWZwNFWk=;
+        s=default; t=1570119810;
+        bh=PBM67lVr9fxgDjwBm7PGqNRydI67/kFeiYDJNSAFoMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uu1fp/rxSxIEzj3nfXzFZkxtodq3PJGwVRg03MPVArlGHQ+cJkhTLDlRiFeFf08mj
-         IpclDyr3siPDpetkx2/xjWlcj2c8YPb+KPAfB5H952WP5/fB7TZqiHcHxnXKZzkHBK
-         dysRO3X2d+tMRWYVYMt23rx0+GTWOLjsGYtS7OLQ=
+        b=LyYc2ysNJv9ma754cfTFw8nnoZqcdX7Fy6noImiYRDwL6UvwWyzFbCWL+ZaTiP+tl
+         6ugWeHJQelXOG0K8XIBgvt5fhzWf8CEAV7ZD+b65yAk0kgq4Vg5V8VWBoqOY3g+oih
+         wdwea3doXc2xBI2jjTAMLXC/ui/aHTNdotBEfbEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 4.19 153/211] printk: Do not lose last line in kmsg buffer dump
-Date:   Thu,  3 Oct 2019 17:53:39 +0200
-Message-Id: <20191003154522.843025564@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 194/211] btrfs: qgroup: Fix reserved data space leak if we have multiple reserve calls
+Date:   Thu,  3 Oct 2019 17:54:20 +0200
+Message-Id: <20191003154528.977887508@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,70 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit c9dccacfccc72c32692eedff4a27a4b0833a2afd upstream.
+commit d4e204948fe3e0dc8e1fbf3f8f3290c9c2823be3 upstream.
 
-kmsg_dump_get_buffer() is supposed to select all the youngest log
-messages which fit into the provided buffer.  It determines the correct
-start index by using msg_print_text() with a NULL buffer to calculate
-the size of each entry.  However, when performing the actual writes,
-msg_print_text() only writes the entry to the buffer if the written len
-is lesser than the size of the buffer.  So if the lengths of the
-selected youngest log messages happen to precisely fill up the provided
-buffer, the last log message is not included.
+[BUG]
+The following script can cause btrfs qgroup data space leak:
 
-We don't want to modify msg_print_text() to fill up the buffer and start
-returning a length which is equal to the size of the buffer, since
-callers of its other users, such as kmsg_dump_get_line(), depend upon
-the current behaviour.
+  mkfs.btrfs -f $dev
+  mount $dev -o nospace_cache $mnt
 
-Instead, fix kmsg_dump_get_buffer() to compensate for this.
+  btrfs subv create $mnt/subv
+  btrfs quota en $mnt
+  btrfs quota rescan -w $mnt
+  btrfs qgroup limit 128m $mnt/subv
 
-For example, with the following two final prints:
+  for (( i = 0; i < 3; i++)); do
+          # Create 3 64M holes for latter fallocate to fail
+          truncate -s 192m $mnt/subv/file
+          xfs_io -c "pwrite 64m 4k" $mnt/subv/file > /dev/null
+          xfs_io -c "pwrite 128m 4k" $mnt/subv/file > /dev/null
+          sync
 
-[    6.427502] AAAAAAAAAAAAA
-[    6.427769] BBBBBBBB12345
+          # it's supposed to fail, and each failure will leak at least 64M
+          # data space
+          xfs_io -f -c "falloc 0 192m" $mnt/subv/file &> /dev/null
+          rm $mnt/subv/file
+          sync
+  done
 
-A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-patch:
+  # Shouldn't fail after we removed the file
+  xfs_io -f -c "falloc 0 64m" $mnt/subv/file
 
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
- 00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[CAUSE]
+Btrfs qgroup data reserve code allow multiple reservations to happen on
+a single extent_changeset:
+E.g:
+	btrfs_qgroup_reserve_data(inode, &data_reserved, 0, SZ_1M);
+	btrfs_qgroup_reserve_data(inode, &data_reserved, SZ_1M, SZ_2M);
+	btrfs_qgroup_reserve_data(inode, &data_reserved, 0, SZ_4M);
 
-After this patch:
+Btrfs qgroup code has its internal tracking to make sure we don't
+double-reserve in above example.
 
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
- 00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+The only pattern utilizing this feature is in the main while loop of
+btrfs_fallocate() function.
 
-Link: http://lkml.kernel.org/r/20190711142937.4083-1-vincent.whitchurch@axis.com
-Fixes: e2ae715d66bf4bec ("kmsg - kmsg_dump() use iterator to receive log buffer content")
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v3.5+
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+However btrfs_qgroup_reserve_data()'s error handling has a bug in that
+on error it clears all ranges in the io_tree with EXTENT_QGROUP_RESERVED
+flag but doesn't free previously reserved bytes.
+
+This bug has a two fold effect:
+- Clearing EXTENT_QGROUP_RESERVED ranges
+  This is the correct behavior, but it prevents
+  btrfs_qgroup_check_reserved_leak() to catch the leakage as the
+  detector is purely EXTENT_QGROUP_RESERVED flag based.
+
+- Leak the previously reserved data bytes.
+
+The bug manifests when N calls to btrfs_qgroup_reserve_data are made and
+the last one fails, leaking space reserved in the previous ones.
+
+[FIX]
+Also free previously reserved data bytes when btrfs_qgroup_reserve_data
+fails.
+
+Fixes: 524725537023 ("btrfs: qgroup: Introduce btrfs_qgroup_reserve_data function")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/printk/printk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/qgroup.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3210,7 +3210,7 @@ bool kmsg_dump_get_buffer(struct kmsg_du
- 	/* move first record forward until length fits into the buffer */
- 	seq = dumper->cur_seq;
- 	idx = dumper->cur_idx;
--	while (l > size && seq < dumper->next_seq) {
-+	while (l >= size && seq < dumper->next_seq) {
- 		struct printk_log *msg = log_from_idx(idx);
- 
- 		l -= msg_print_text(msg, true, NULL, 0);
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3067,6 +3067,9 @@ cleanup:
+ 	while ((unode = ulist_next(&reserved->range_changed, &uiter)))
+ 		clear_extent_bit(&BTRFS_I(inode)->io_tree, unode->val,
+ 				 unode->aux, EXTENT_QGROUP_RESERVED, 0, 0, NULL);
++	/* Also free data bytes of already reserved one */
++	btrfs_qgroup_free_refroot(root->fs_info, root->root_key.objectid,
++				  orig_reserved, BTRFS_QGROUP_RSV_DATA);
+ 	extent_changeset_release(reserved);
+ 	return ret;
+ }
 
 
