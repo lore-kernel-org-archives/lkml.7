@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E971C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095A0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632FE222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA72B207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118955;
-	bh=q7MH5xjL57lYshgLlsRFQ3lgZeENdcd5LR0JjZVkFok=;
+	s=default; t=1570118957;
+	bh=KxMX0AHppmq/QMFSl9xidCMoTWkoL9DltKhFR7xZW48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkGWgqEqb4fy8WXBueJs2z7FWdiY94gL93geLZrfpOhA1oRb9N56HfG6HDnMrguMO
-	 bxl7iwRSKg+yOOTkGlmRYtDF35sEWYzciQnMPbf9apRPbtzj6UBVODtPevwNqV7VSI
-	 H1kU07sqkHscj5YVkHBz2o0H9UhXMssXNjCvYayk=
+	b=VpES+1wHuo1MklnYwXgj9gf7rx/UJbYQqSvH6z5Gs5mJ/pBs0SbZ+Vxrk++UnEgbT
+	 N0SA2PH0iv3aUAMtDi6ZOFOEeZWO5OJ7Iml2CklCY89BeqhjkIymkfJGTv34LLq8LO
+	 BY8G9EywDBwqN78zdR2I0rKhwHuZZlbeldELbzgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732733AbfJCQJN (ORCPT
+        id S1733114AbfJCQJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:09:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733078AbfJCQJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:12 -0400
+        id S1733059AbfJCQJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA052207FF;
-        Thu,  3 Oct 2019 16:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C2821D81;
+        Thu,  3 Oct 2019 16:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118951;
-        bh=q7MH5xjL57lYshgLlsRFQ3lgZeENdcd5LR0JjZVkFok=;
+        s=default; t=1570118953;
+        bh=KxMX0AHppmq/QMFSl9xidCMoTWkoL9DltKhFR7xZW48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eogvt0xLu2N0RzVWDBH3iISmxmo1Oy3cYBIRHQqYRJPBTOgzXZ4ZmEaPI3k/g2dTv
-         RfX4ofd9OODlKbr3Y4X/RVMgvDAgXPhJUSkwsVS87M9z7PL/YE3yVhxM6Voyqon9U/
-         2fSpgoqyis0AF+syOScmyHntv34OjvgzxB2pbig0=
+        b=kU+Q6GvfTTyVNlpBkJmtbOTfaZCKqthdDeGPa0xv4X1ObSPpvDlAivhn42bIb4Rbv
+         ovNKVD9GSvZ+SBPa7tdNI/AeYD+axIJYj1DejCw6oNMwZtHpgtqp7rA2vzw/0wKnBy
+         Fh56ZJ8wV9hKPY+jAdOrUwsMJ07hvN7AxujtbDto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+        stable@vger.kernel.org,
+        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 069/185] EDAC/mc: Fix grain_bits calculation
-Date:   Thu,  3 Oct 2019 17:52:27 +0200
-Message-Id: <20191003154453.150860539@linuxfoundation.org>
+Subject: [PATCH 4.14 070/185] media: iguanair: add sanity checks
+Date:   Thu,  3 Oct 2019 17:52:28 +0200
+Message-Id: <20191003154453.328188685@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -64,78 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 3724ace582d9f675134985727fd5e9811f23c059 ]
+[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
 
-The grain in EDAC is defined as "minimum granularity for an error
-report, in bytes". The following calculation of the grain_bits in
-edac_mc is wrong:
+The driver needs to check the endpoint types, too, as opposed
+to the number of endpoints. This also requires moving the check earlier.
 
-	grain_bits = fls_long(e->grain) + 1;
-
-Where grain_bits is defined as:
-
-	grain = 1 << grain_bits
-
-Example:
-
-	grain = 8	# 64 bit (8 bytes)
-	grain_bits = fls_long(8) + 1
-	grain_bits = 4 + 1 = 5
-
-	grain = 1 << grain_bits
-	grain = 1 << 5 = 32
-
-Replace it with the correct calculation:
-
-	grain_bits = fls_long(e->grain - 1);
-
-The example gives now:
-
-	grain_bits = fls_long(8 - 1)
-	grain_bits = fls_long(7)
-	grain_bits = 3
-
-	grain = 1 << 3 = 8
-
-Also, check if the hardware reports a reasonable grain != 0 and fallback
-with a warning to 1 byte granularity otherwise.
-
- [ bp: massage a bit. ]
-
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190624150758.6695-2-rrichter@marvell.com
+Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/rc/iguanair.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 80801c616395e..f7fa05fee45a1 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1240,9 +1240,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 	if (p > e->location)
- 		*(p - 1) = '\0';
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index 30e24da672268..3c2e248ceca87 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -427,6 +427,10 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
  
--	/* Report the error via the trace interface */
--	grain_bits = fls_long(e->grain) + 1;
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
++	idesc = intf->altsetting;
++	if (idesc->desc.bNumEndpoints < 2)
++		return -ENODEV;
 +
-+	grain_bits = fls_long(e->grain - 1);
+ 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+ 	rc = rc_allocate_device(RC_DRIVER_IR_RAW);
+ 	if (!ir || !rc) {
+@@ -441,18 +445,13 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
+ 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
  
-+	/* Report the error via the trace interface */
- 	if (IS_ENABLED(CONFIG_RAS))
- 		trace_mc_event(type, e->msg, e->label, e->error_count,
- 			       mci->mc_idx, e->top_layer, e->mid_layer,
+-	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
++	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
++	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
++	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	idesc = intf->altsetting;
+-
+-	if (idesc->desc.bNumEndpoints < 2) {
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	ir->rc = rc;
+ 	ir->dev = &intf->dev;
+ 	ir->udev = udev;
 -- 
 2.20.1
 
