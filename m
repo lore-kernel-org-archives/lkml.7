@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32DBC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7AFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88E321A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CE1215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119748;
-	bh=5+gaino9OOA9X8Xne5BCealAkcfuaOmUJ83C6CllR6w=;
+	s=default; t=1570119756;
+	bh=fmlxxnJ480Io5eqOvswOFa+zlg0R9OXICjXhQt1jpOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKSoSzxtIlNVE+SkuCtdk+s0+XpMRD/jUDsvX3jL1pWC3t/m808SLdtII1opLMDuA
-	 rcFg8sVPnTxgnLSsxQVMTgJKl++rg3xpXc0F8mXjiWGC6eMMHtAT9pmDuTY7ybIJFo
-	 RNh2MsjOD7wJyo5pKJLgrfp7qBLsP4z27udeySkM=
+	b=CRDduL8N9QV09RUlOboO3vpccGRNFcLkdoVtN0Kr0IjWzTl1rY0qK90XMrr4FjNxw
+	 eKkRxGw+Tedq3UsFAWayKsUrnERdjDZrRczPDBHB0Hcx45YzhxwASA8E7IRP4A4CNk
+	 wsMVI5L8+0vIQ7YFxLbDNnozaqmc/UzQG5Hs86rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390308AbfJCQW1 (ORCPT
+        id S2390337AbfJCQWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51000 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389604AbfJCQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:22:23 -0400
+        id S2390284AbfJCQWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:22:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 277AE2054F;
-        Thu,  3 Oct 2019 16:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3D4420659;
+        Thu,  3 Oct 2019 16:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119742;
-        bh=5+gaino9OOA9X8Xne5BCealAkcfuaOmUJ83C6CllR6w=;
+        s=default; t=1570119745;
+        bh=fmlxxnJ480Io5eqOvswOFa+zlg0R9OXICjXhQt1jpOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XevJ1U8jX+3MlqmUGVR/vBJamnHsR7BwdYaD4hrNEyKhnsvGNM1xCiEIbq1UmWumH
-         jGvYc4rvRy0d2NjGqWmgCZCJ8jcynb43Zkq+EPoT2sMZV5sDVNH2iaVfUy2kTypxwe
-         aK6XV5/BIWjtgiz7oUg4UVXbZFh+8rtRCR4eaZhg=
+        b=XDECIQtIKNAtnlxr/rEMvfTGYpW70yGu3A+Wouzjdu/LQaJjazSWSC7na8rxCAbVS
+         1XhykSh8G30DboHV+pXY7UBV6GMf2AemLf0cLz7KERTvWoRV6YYYKqwlltBGfKCiHu
+         2Wy7x1NW3+/m8G5tPtENrdUVEXTYEzb5ljnnE2Ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>
-Subject: [PATCH 4.19 176/211] Revert "arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}"
-Date:   Thu,  3 Oct 2019 17:54:02 +0200
-Message-Id: <20191003154526.871065283@linuxfoundation.org>
+Subject: [PATCH 4.19 177/211] arm64: tlb: Ensure we execute an ISB following walk cache invalidation
+Date:   Thu,  3 Oct 2019 17:54:03 +0200
+Message-Id: <20191003154526.982149582@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,93 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Will Deacon <will@kernel.org>
 
-commit d0b7a302d58abe24ed0f32a0672dd4c356bb73db upstream.
+commit 51696d346c49c6cf4f29e9b20d6e15832a2e3408 upstream.
 
-This reverts commit 24fe1b0efad4fcdd32ce46cffeab297f22581707.
+05f2d2f83b5a ("arm64: tlbflush: Introduce __flush_tlb_kernel_pgtable")
+added a new TLB invalidation helper which is used when freeing
+intermediate levels of page table used for kernel mappings, but is
+missing the required ISB instruction after completion of the TLBI
+instruction.
 
-Commit 24fe1b0efad4fcdd ("arm64: Remove unnecessary ISBs from
-set_{pte,pmd,pud}") removed ISB instructions immediately following updates
-to the page table, on the grounds that they are not required by the
-architecture and a DSB alone is sufficient to ensure that subsequent data
-accesses use the new translation:
-
-  DDI0487E_a, B2-128:
-
-  | ... no instruction that appears in program order after the DSB
-  | instruction can alter any state of the system or perform any part of
-  | its functionality until the DSB completes other than:
-  |
-  | * Being fetched from memory and decoded
-  | * Reading the general-purpose, SIMD and floating-point,
-  |   Special-purpose, or System registers that are directly or indirectly
-  |   read without causing side-effects.
-
-However, the same document also states the following:
-
-  DDI0487E_a, B2-125:
-
-  | DMB and DSB instructions affect reads and writes to the memory system
-  | generated by Load/Store instructions and data or unified cache
-  | maintenance instructions being executed by the PE. Instruction fetches
-  | or accesses caused by a hardware translation table access are not
-  | explicit accesses.
-
-which appears to claim that the DSB alone is insufficient.  Unfortunately,
-some CPU designers have followed the second clause above, whereas in Linux
-we've been relying on the first. This means that our mapping sequence:
-
-	MOV	X0, <valid pte>
-	STR	X0, [Xptep]	// Store new PTE to page table
-	DSB	ISHST
-	LDR	X1, [X2]	// Translates using the new PTE
-
-can actually raise a translation fault on the load instruction because the
-translation can be performed speculatively before the page table update and
-then marked as "faulting" by the CPU. For user PTEs, this is ok because we
-can handle the spurious fault, but for kernel PTEs and intermediate table
-entries this results in a panic().
-
-Revert the offending commit to reintroduce the missing barriers.
+Add the missing barrier.
 
 Cc: <stable@vger.kernel.org>
-Fixes: 24fe1b0efad4fcdd ("arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}")
+Fixes: 05f2d2f83b5a ("arm64: tlbflush: Introduce __flush_tlb_kernel_pgtable")
 Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/pgtable.h |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/tlbflush.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -224,8 +224,10 @@ static inline void set_pte(pte_t *ptep,
- 	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
- 	 * or update_mmu_cache() have the necessary barriers.
- 	 */
--	if (pte_valid_not_user(pte))
-+	if (pte_valid_not_user(pte)) {
- 		dsb(ishst);
-+		isb();
-+	}
- }
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -224,6 +224,7 @@ static inline void __flush_tlb_kernel_pg
  
- extern void __sync_icache_dcache(pte_t pteval);
-@@ -432,6 +434,7 @@ static inline void set_pmd(pmd_t *pmdp,
- {
- 	WRITE_ONCE(*pmdp, pmd);
- 	dsb(ishst);
+ 	__tlbi(vaae1is, addr);
+ 	dsb(ish);
 +	isb();
  }
+ #endif
  
- static inline void pmd_clear(pmd_t *pmdp)
-@@ -483,6 +486,7 @@ static inline void set_pud(pud_t *pudp,
- {
- 	WRITE_ONCE(*pudp, pud);
- 	dsb(ishst);
-+	isb();
- }
- 
- static inline void pud_clear(pud_t *pudp)
 
 
