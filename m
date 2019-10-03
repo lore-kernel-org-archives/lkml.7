@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CC5C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D598C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9D120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C8020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122907;
-	bh=VR7Qr2sSZDvvWUGGowSu7a6WGDqx1uqcGdlqRG8+qwM=;
+	s=default; t=1570122917;
+	bh=1gu4rf+5VEszUoONBv6+5oClhIK+BZ/7dqRQHE6quhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GCPSTwMy2dTUq0rbB0g36SmtjuuOQ2PyODBTuPh2gWOYYDtc7Ap9adGa23gtwDAw9
-	 v1a/UZs8/buJBo/y0164Ld58GLxN0n6KWMXepBUbEDzZK4dIZQmTtMx7mEOgiwB+Uz
-	 lh6iDFcSa4Vt0D74Its+FCtdX9Mp5kWp33zkciDo=
+	b=cywNwWuY2el/cjZs17iAUv9QdUXdCVRsGEFxautjIB6IabcfMLDpxZF74YEWyKq3r
+	 Qbw8Vhup1nX3AK0PyV9knb8Afyujm4MxrZ4+DmQFnVni6J7h2KG1tXxya+ppRo0UvR
+	 6qYjZBZSIoi9IDHVTz6RJ+vMwJ7eN2+9YwGtFt5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404206AbfJCRPG (ORCPT
+        id S2404497AbfJCRPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:15:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391063AbfJCQ0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:26:23 -0400
+        id S2391032AbfJCQ0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2D120867;
-        Thu,  3 Oct 2019 16:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA4720700;
+        Thu,  3 Oct 2019 16:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119982;
-        bh=VR7Qr2sSZDvvWUGGowSu7a6WGDqx1uqcGdlqRG8+qwM=;
+        s=default; t=1570119971;
+        bh=1gu4rf+5VEszUoONBv6+5oClhIK+BZ/7dqRQHE6quhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+//bAofW5n3o0eTLRKEah11ljQrVsLxl+VtdIQz9T1sezcxCiM29VBU/2n6GSICN
-         UHT6eGzZR4Zk0p2mj6y7eTKwV63T96QsMqerQu6HvCnRFcPwxC9sJ2IVVgzPnbhsrA
-         QV1n2zsn9OFx5Kk2G1hpxBeJl/tJ9En/nfHhe3sg=
+        b=R4Far0rOJNQMqMpHlfXGOjMAaepn0sYBDtvth+vrg//rvIKt9MGNeJsFmHxpVY3dj
+         DVbI1fE/lhCZdv/jSX0yBAtCbs9zQtRRAlfeR53PiYKhGIsPOdjquEBzVGeSkOKLsd
+         3xB6gO5Ja1mCMZ+gwMxfCYlxkVJcgYDlQy31ctc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 054/313] sched/fair: Fix imbalance due to CPU affinity
-Date:   Thu,  3 Oct 2019 17:50:32 +0200
-Message-Id: <20191003154538.389857532@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 050/313] media: vivid: work around high stack usage with clang
+Date:   Thu,  3 Oct 2019 17:50:28 +0200
+Message-Id: <20191003154538.033733798@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,64 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
+[ Upstream commit 1a03f91c2c2419c3709c4554952c66695575e91c ]
 
-The load_balance() has a dedicated mecanism to detect when an imbalance
-is due to CPU affinity and must be handled at parent level. In this case,
-the imbalance field of the parent's sched_group is set.
+Building a KASAN-enabled kernel with clang ends up in a case where too
+much is inlined into vivid_thread_vid_cap() and the stack usage grows
+a lot, possibly when the register allocation fails to produce efficient
+code and spills a lot of temporaries to the stack. This uses more
+than twice the amount of stack than the sum of the individual functions
+when they are not inlined:
 
-The description of sg_imbalanced() gives a typical example of two groups
-of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
-group and 3 CPUs of the second group. Something like:
+drivers/media/platform/vivid/vivid-kthread-cap.c:766:12: error: stack frame size of 2208 bytes in function 'vivid_thread_vid_cap' [-Werror,-Wframe-larger-than=]
 
-	{ 0 1 2 3 } { 4 5 6 7 }
-	        *     * * *
+Marking two of the key functions in here as 'noinline_for_stack' avoids
+the pathological case in clang without any apparent downside for gcc.
 
-But the load_balance fails to fix this UC on my octo cores system
-made of 2 clusters of quad cores.
-
-Whereas the load_balance is able to detect that the imbalanced is due to
-CPU affinity, it fails to fix it because the imbalance field is cleared
-before letting parent level a chance to run. In fact, when the imbalance is
-detected, the load_balance reruns without the CPU with pinned tasks. But
-there is no other running tasks in the situation described above and
-everything looks balanced this time so the imbalance field is immediately
-cleared.
-
-The imbalance field should not be cleared if there is no other task to move
-when the imbalance is detected.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/vivid/vivid-kthread-cap.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index b07672e793a81..f72bf8122fe4e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9319,9 +9319,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- out_balanced:
- 	/*
- 	 * We reach balance although we may have faced some affinity
--	 * constraints. Clear the imbalance flag if it was set.
-+	 * constraints. Clear the imbalance flag only if other tasks got
-+	 * a chance to move and fix the imbalance.
- 	 */
--	if (sd_parent) {
-+	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
- 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
+diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
+index cf6dfecf879f7..96d85cd8839f3 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-cap.c
++++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
+@@ -232,8 +232,8 @@ static void *plane_vaddr(struct tpg_data *tpg, struct vivid_buffer *buf,
+ 	return vbuf;
+ }
  
- 		if (*group_imbalance)
+-static int vivid_copy_buffer(struct vivid_dev *dev, unsigned p, u8 *vcapbuf,
+-		struct vivid_buffer *vid_cap_buf)
++static noinline_for_stack int vivid_copy_buffer(struct vivid_dev *dev, unsigned p,
++		u8 *vcapbuf, struct vivid_buffer *vid_cap_buf)
+ {
+ 	bool blank = dev->must_blank[vid_cap_buf->vb.vb2_buf.index];
+ 	struct tpg_data *tpg = &dev->tpg;
+@@ -672,7 +672,8 @@ static void vivid_cap_update_frame_period(struct vivid_dev *dev)
+ 	dev->cap_frame_period = f_period;
+ }
+ 
+-static void vivid_thread_vid_cap_tick(struct vivid_dev *dev, int dropped_bufs)
++static noinline_for_stack void vivid_thread_vid_cap_tick(struct vivid_dev *dev,
++							 int dropped_bufs)
+ {
+ 	struct vivid_buffer *vid_cap_buf = NULL;
+ 	struct vivid_buffer *vbi_cap_buf = NULL;
 -- 
 2.20.1
 
