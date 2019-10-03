@@ -2,116 +2,162 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EFBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE77218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7878E21D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfJCJcH (ORCPT
+        id S1729149AbfJCJeD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:32:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:39438 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbfJCJcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:32:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABCC21000;
-        Thu,  3 Oct 2019 02:32:06 -0700 (PDT)
-Received: from [10.162.40.180] (p8cg001049571a15.blr.arm.com [10.162.40.180])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7F433F739;
-        Thu,  3 Oct 2019 02:32:03 -0700 (PDT)
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
- has_unmovable_pages()
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
- <7FA7CBE1-E0A9-40E2-B3CA-0896F6D491E5@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <37b43978-5652-576c-8990-451e751b7c67@arm.com>
-Date:   Thu, 3 Oct 2019 15:02:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 3 Oct 2019 05:34:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33987 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728743AbfJCJeD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:34:03 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFxUa-0003BR-Oa; Thu, 03 Oct 2019 11:33:48 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6AAF01C0740;
+        Thu,  3 Oct 2019 11:33:48 +0200 (CEST)
+Date:   Thu, 03 Oct 2019 09:33:48 -0000
+From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/math-emu: Check __copy_from_user() result
+Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bill Metzenthen <billm@melbpc.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191001142344.1274185-1-arnd@arndb.de>
+References: <20191001142344.1274185-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <7FA7CBE1-E0A9-40E2-B3CA-0896F6D491E5@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <157009522838.9978.6698411788206711401.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/cpu branch of tip:
 
+Commit-ID:     e6b44ce1925a8329a937c57f0d60ba0d9bb5d226
+Gitweb:        https://git.kernel.org/tip/e6b44ce1925a8329a937c57f0d60ba0d9bb5d226
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Tue, 01 Oct 2019 16:23:34 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 03 Oct 2019 10:51:08 +02:00
 
-On 10/03/2019 02:35 PM, Qian Cai wrote:
-> 
-> 
->> On Oct 3, 2019, at 4:10 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>
->> Having unmovable pages on a given pageblock should be reported correctly
->> when required with REPORT_FAILURE flag. But there can be a scenario where a
->> reserved page in the page block will get reported as a generic "unmovable"
->> reason code. Instead this should be changed to a more appropriate reason
->> code like "Reserved page".
-> 
-> Isn’t this redundant as it dumps the flags in dump_page() anyway?
+x86/math-emu: Check __copy_from_user() result
 
-Even though page flags does contain reserved bit information, the problem
-is that we are explicitly printing the reason for this page dump. In this
-case it is caused by the fact that it is a reserved page.
+The new __must_check annotation on __copy_from_user() successfully
+identified some code that has lacked the check since at least
+linux-2.1.73:
 
-page dumped because: <reason>
+  arch/x86/math-emu/reg_ld_str.c:88:2: error: ignoring return value of \
+  function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+          __copy_from_user(sti_ptr, s, 10);
+          ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~
+  arch/x86/math-emu/reg_ld_str.c:1129:2: error: ignoring return value of \
+  function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+          __copy_from_user(register_base + offset, s, other);
+          ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/x86/math-emu/reg_ld_str.c:1131:3: error: ignoring return value of \
+  function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+                  __copy_from_user(register_base, s + other, offset);
+                ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The proposed change makes it explicit that the dump is caused because a
-non movable page with reserved bit set. It also helps in differentiating 
-between reserved bit condition and the last one "if (found > count)".
+In addition, the get_user()/put_user() helpers do not enforce a return
+value check, but actually still require one. These have been missing for
+even longer.
 
-> 
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: Mike Rapoport <rppt@linux.ibm.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> mm/page_alloc.c | 4 +++-
->> 1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 15c2050c629b..fbf93ea119d2 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -8206,8 +8206,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
->>
->>        page = pfn_to_page(check);
->>
->> -        if (PageReserved(page))
->> +        if (PageReserved(page)) {
->> +            reason = "Reserved page";
->>            goto unmovable;
->> +        }
->>
->>        /*
->>         * If the zone is movable and we have ruled out all reserved
->> -- 
->> 2.20.1
->>
-> 
+Change the internal wrappers around get_user()/put_user() to force
+a signal and add a corresponding wrapper around __copy_from_user()
+to check all such cases.
+
+ [ bp: Break long lines. ]
+
+Fixes: 257e458057e5 ("Import 2.1.73")
+Fixes: 9dd819a15162 ("uaccess: add missing __must_check attributes")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Bill Metzenthen <billm@melbpc.org.au>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191001142344.1274185-1-arnd@arndb.de
+---
+ arch/x86/math-emu/fpu_system.h | 6 ++++--
+ arch/x86/math-emu/reg_ld_str.c | 6 +++---
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/math-emu/fpu_system.h b/arch/x86/math-emu/fpu_system.h
+index f98a0c9..9b41391 100644
+--- a/arch/x86/math-emu/fpu_system.h
++++ b/arch/x86/math-emu/fpu_system.h
+@@ -107,6 +107,8 @@ static inline bool seg_writable(struct desc_struct *d)
+ #define FPU_access_ok(y,z)	if ( !access_ok(y,z) ) \
+ 				math_abort(FPU_info,SIGSEGV)
+ #define FPU_abort		math_abort(FPU_info, SIGSEGV)
++#define FPU_copy_from_user(to, from, n)	\
++		do { if (copy_from_user(to, from, n)) FPU_abort; } while (0)
+ 
+ #undef FPU_IGNORE_CODE_SEGV
+ #ifdef FPU_IGNORE_CODE_SEGV
+@@ -122,7 +124,7 @@ static inline bool seg_writable(struct desc_struct *d)
+ #define	FPU_code_access_ok(z) FPU_access_ok((void __user *)FPU_EIP,z)
+ #endif
+ 
+-#define FPU_get_user(x,y)       get_user((x),(y))
+-#define FPU_put_user(x,y)       put_user((x),(y))
++#define FPU_get_user(x,y) do { if (get_user((x),(y))) FPU_abort; } while (0)
++#define FPU_put_user(x,y) do { if (put_user((x),(y))) FPU_abort; } while (0)
+ 
+ #endif
+diff --git a/arch/x86/math-emu/reg_ld_str.c b/arch/x86/math-emu/reg_ld_str.c
+index f377974..fe6246f 100644
+--- a/arch/x86/math-emu/reg_ld_str.c
++++ b/arch/x86/math-emu/reg_ld_str.c
+@@ -85,7 +85,7 @@ int FPU_load_extended(long double __user *s, int stnr)
+ 
+ 	RE_ENTRANT_CHECK_OFF;
+ 	FPU_access_ok(s, 10);
+-	__copy_from_user(sti_ptr, s, 10);
++	FPU_copy_from_user(sti_ptr, s, 10);
+ 	RE_ENTRANT_CHECK_ON;
+ 
+ 	return FPU_tagof(sti_ptr);
+@@ -1126,9 +1126,9 @@ void frstor(fpu_addr_modes addr_modes, u_char __user *data_address)
+ 	/* Copy all registers in stack order. */
+ 	RE_ENTRANT_CHECK_OFF;
+ 	FPU_access_ok(s, 80);
+-	__copy_from_user(register_base + offset, s, other);
++	FPU_copy_from_user(register_base + offset, s, other);
+ 	if (offset)
+-		__copy_from_user(register_base, s + other, offset);
++		FPU_copy_from_user(register_base, s + other, offset);
+ 	RE_ENTRANT_CHECK_ON;
+ 
+ 	for (i = 0; i < 8; i++) {
