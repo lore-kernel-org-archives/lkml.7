@@ -2,173 +2,158 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67814C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DF0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E69C20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13587218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbfJCOPo (ORCPT
+        id S1730454AbfJCOUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:15:44 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53959 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfJCOPo (ORCPT
+        Thu, 3 Oct 2019 10:20:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58345 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbfJCOUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:15:44 -0400
-X-Originating-IP: 132.205.229.212
-Received: from aptenodytes (unknown [132.205.229.212])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9BCCEFF807;
-        Thu,  3 Oct 2019 14:15:39 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 10:15:37 -0400
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get
- operation
-Message-ID: <20191003141537.GE24151@aptenodytes>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
- <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
- <20191003112610.GA28856@aptenodytes>
- <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
+        Thu, 3 Oct 2019 10:20:04 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1iG1xW-0003Vd-IS; Thu, 03 Oct 2019 16:19:58 +0200
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <pza@pengutronix.de>)
+        id 1iG1xT-0006E6-Kf; Thu, 03 Oct 2019 16:19:55 +0200
+Date:   Thu, 3 Oct 2019 16:19:55 +0200
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Message-ID: <20191003141955.zi5wqjqf4wa7lhv7@pengutronix.de>
+References: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
+ <CAFBinCDfM3ssHisMBKXZUFkfoAFw51TaUuKt_aBgtD-mN+9fhg@mail.gmail.com>
+ <657d796d-cb1b-472d-fe67-f7b9bf12fd79@linux.intel.com>
+ <CAFBinCA5sRp1-siqZqJzFL2nuD3BtjrbD65QtpWbnTgtPNXY1A@mail.gmail.com>
+ <cebd8f1d-90ab-87e7-9a34-f5c760688ce5@linux.intel.com>
+ <CAFBinCCXo50OX6=8Fz-=nRKuELU_fMOCX=z6iwAcw0_Tfgn1ug@mail.gmail.com>
+ <da347f1c-864c-7d68-33c8-045e46651f45@linux.intel.com>
+ <CAFBinCDhLYmiORvHdZJAN5cuUjc6eWJK5n9Qg26B0dEhhqUqVQ@mail.gmail.com>
+ <389f360a-a993-b9a8-4b50-ad87bcfec767@linux.intel.com>
+ <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TD8GDToEDw0WLGOL"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:21:55 up 87 days, 19:32, 47 users,  load average: 0.17, 0.20,
+ 0.22
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Martin, Dilip,
 
---TD8GDToEDw0WLGOL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Sep 19, 2019 at 09:51:48PM +0200, Martin Blumenstingl wrote:
+> Hi Dilip,
+> 
+> (sorry for the late reply)
 
-Hi,
+Same, sorry for the delay.
 
-On Thu 03 Oct 19, 16:05, Bartosz Golaszewski wrote:
-> czw., 3 pa=C5=BA 2019 o 13:26 Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+> On Thu, Sep 12, 2019 at 8:38 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+> [...]
+> > The major difference between the vrx200 and lgm is:
+> > 1.) RCU in vrx200 is having multiple register regions wheres RCU in lgm
+> > has one single register region.
+> > 2.) Register offsets and bit offsets are different.
 > >
-> > Hi,
+> > So enhancing the intel-reset-syscon.c to provide compatibility/support
+> > for vrx200.
+> > Please check the below dtsi binding proposal and let me know your view.
 > >
-> > On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
-> > > pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
-> > > <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
-> > > >
-> > > > Some drivers might need a custom get operation to match custom
-> > > > behavior implemented in the set operation.
-> > > >
-> > > > Add plumbing for supporting that.
-> > > >
-> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > ---
-> > > >  drivers/gpio/gpio-syscon.c | 7 ++++---
-> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> > > > index 31f332074d7d..05c537ed73f1 100644
-> > > > --- a/drivers/gpio/gpio-syscon.c
-> > > > +++ b/drivers/gpio/gpio-syscon.c
-> > > > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
-> > > >         unsigned int    bit_count;
-> > > >         unsigned int    dat_bit_offset;
-> > > >         unsigned int    dir_bit_offset;
-> > > > -       void            (*set)(struct gpio_chip *chip,
-> > > > -                              unsigned offset, int value);
-> > > > +       int             (*get)(struct gpio_chip *chip, unsigned off=
-set);
-> > > > +       void            (*set)(struct gpio_chip *chip, unsigned off=
-set,
-> > > > +                              int value);
-> > >
-> > > Why did you change this line? Doesn't seem necessary and pollutes the=
- history.
+> > rcu0:reset-controller@00000000 {
+> >      compatible= "intel,rcu-lgm";
+> >      reg = <0x0000000 0x80000>, <reg_set2 size>, <reg_set3 size>,
+> > <reg_set4 size>;
+> I'm not sure that I understand what are reg_set2/3/4 for
+> the first resource (0x80000 at 0x0) already covers the whole LGM RCU,
+> so what is the purpose of the other register resources
+> 
+> >     intel,global-reset = <0x10 30>;
+> >     #reset-cells = <3>;
+> > };
 > >
-> > This is for consistency since both the "chip" and "offset" arguments ca=
-n fit
-> > in a single line. Since I want the "get" addition to fit in a single li=
-ne,
-> > bringing back "offset" on the previous line of "set" makes things consi=
-stent.
-> > There's probably no particular reason for the split in the first place.
-> >
-> > Do you think it needs a separate cosmetic commit only for that?
-> > I'd rather add a note in the commit message and keep the change as-is.
-> >
->=20
-> The line is still broken - just in a different place. I'd prefer to
-> leave it as it is frankly, there's nothing wrong with it.
+> > "#reset-cells":
+> >    const:3
+> >    description: |
+> >      The 1st cell is the reset register offset.
+> >      The 2nd cell is the reset set bit offset.
+> >      The 3rd cell is the reset status bit offset.
+> I think this will work fine for VRX200 (and even older SoCs)
+> as you have described in your previous emails we can determine the
+> status offset from the reset offset using a simple if/else
+> 
+> for LGM I like your initial suggestion with #reset-cells = <2> because
+> it's easier to read and write.
+>
+> > Reset driver takes care of parsing the register address "reg" as per the
+> > ".data" structure in struct of_device_id.
+> > Reset driver takes care of traversing the status register offset.
+> the differentiation between two and three #reset-cells can also happen
+> based on the struct of_device_id:
+> - the LGM implementation would simply also use the reset bit as status
+> bit (only two cells are needed)
+> - the implementation for earlier SoCs would parse the third cell and
+> use that as status bit
+> 
+> Philipp, can you please share your opinion on how to move forward with
+> the reset-intel driver from this series?
 
-The point is rather that this introduces inconsistency between the two line=
-s.
-It's definitely not a major issue, but I still believe it is a coding style
-issue. It surely doesn't hurt to fix it.
+That all sounds reasonable for VRX200/LGM to me.
 
-Cheers,
+> because the register layout was greatly simplified for the newer SoCs
+> (for which there is reset-intel) compared to the older ones
+> (reset-lantiq).
+> Dilip's suggestion (in my own words) is that you take his new
+> reset-intel driver, then we will work on porting reset-lantiq over to
+> that so in the end we can drop the reset-lantiq driver.
 
-Paul
+Just to be sure, you are suggesting to add support for the current
+lantiq,reset binding to the reset-intel driver at a later point? I
+see no reason not to do that, but I'm also not quite sure what the
+benefit will be over just keeping reset-lantiq as is?
 
-> Bart
->=20
-> > Cheers,
-> >
-> > Paul
-> >
-> > > Bart
-> > >
-> > > >  };
-> > > >
-> > > >  struct syscon_gpio_priv {
-> > > > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_de=
-vice *pdev)
-> > > >         priv->chip.label =3D dev_name(dev);
-> > > >         priv->chip.base =3D -1;
-> > > >         priv->chip.ngpio =3D priv->data->bit_count;
-> > > > -       priv->chip.get =3D syscon_gpio_get;
-> > > > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
-> > > >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
-> > > >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
-> > > >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
-> > > > --
-> > > > 2.23.0
-> > > >
-> >
-> > --
-> > Paul Kocialkowski, Bootlin
-> > Embedded Linux and kernel engineering
-> > https://bootlin.com
+> This approach means more work for me (as I am probably the one who
+> then has to do the work to port reset-lantiq over to reset-intel).
 
---TD8GDToEDw0WLGOL
-Content-Type: application/pgp-signature; name="signature.asc"
+More work than what alternative?
 
------BEGIN PGP SIGNATURE-----
+> I'm happy to do that work if you think that it's worth following this
+> approach.  So I want your opinion on this before I spend any effort on
+> porting reset-lantiq over to reset-intel.
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2WAokACgkQ3cLmz3+f
-v9FNqQgAjU19Rf3TG//SDczLv2Sv0l+hsFLxHpRmO+JvfFeZ72FxUnUAY4VhUfqn
-ThnnBkKBtQYBEGZCagM7DCUGWUr3z6wxIF6IPlUMmHC8tbemBRx3aX95Yer2MVVd
-m2/BpErSNNfdjbYPcRumpCFbOUXQJ0JxTLP7Aw1kDh8OkLI81q+tL4Klhs+19vaw
-wAFbf1CenAEJQlDzlqE2IAN+45h6cuMQSgLRYsZ5ahggs+gE9reX57Dk++xSSK/k
-LMG6ZiNY0Xxqxv+TJ8VQnu0OtJeAVgrrWWc1eFg6dc8aFNy5jFbMvLfz90iR4Lc1
-OqiWTc0Bfpd2Ef2oa20KCEUCVmmqjw==
-=/Q2n
------END PGP SIGNATURE-----
+Reset drivers are typically so simple, I'm not quite sure whether it is
+worth to integrate multiple drivers if it complicates matters too much.
+In this case though I expect it would just be adding support for a
+custom .of_xlate and lantiq specific register property parsing?
 
---TD8GDToEDw0WLGOL--
+regards
+Philipp
