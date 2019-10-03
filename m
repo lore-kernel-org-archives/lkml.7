@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C507C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBEA20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A69420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121011;
-	bh=7p/PpIJVXp3yefC5Tsd+O11UJMhZ4iW3qIEvbURNxrk=;
+	s=default; t=1570121015;
+	bh=ljyOOYLOrVHKPq0GoGX1yqA6Ygi+ssZEBM2nuLc3eP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsre1x5bLNWpbk5npR5pD6560zs047Ak68/mTwstTAbNSG9xzANifhif80+6qc/A8
-	 n6hMey4VdMX/gG1KVz9MxghxmYO/vyQcui8ZyPnu3JopV2ciPE5J+XV4xN/QJlmjRw
-	 ChP43pGcft2nGjYFq7XYHfUY+itusPTQW/O7jR8E=
+	b=o6+nKt56Npea2xdV4I3dKRN/vgN3/xhbAIeweXpyS/ie+MUCjGubfPc5mwP9V31ib
+	 HsYXAKyaBeQDPPqo3rfshZ8NCcS5Fh0OXdiEFdWmfLpCKkVH595HYB+JhJy5Xsp88r
+	 4jRFDHgikGmmcHFJ2DErDg8jywrlefZqrFtDNUxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392705AbfJCQna (ORCPT
+        id S2392717AbfJCQne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54784 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405222AbfJCQnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:21 -0400
+        id S2388237AbfJCQn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 833E520830;
-        Thu,  3 Oct 2019 16:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 933662070B;
+        Thu,  3 Oct 2019 16:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121001;
-        bh=7p/PpIJVXp3yefC5Tsd+O11UJMhZ4iW3qIEvbURNxrk=;
+        s=default; t=1570121009;
+        bh=ljyOOYLOrVHKPq0GoGX1yqA6Ygi+ssZEBM2nuLc3eP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hGlVEqEzVhohUz3pGna4X7Eoxu+5hRWD9yy6WmvWcdkS0QmcHoai7w+JMWCb/LfMf
-         3XJ9N9POgyT4HiIhV8EfXyX7tkfi5Yp9hoXVUR4PqRRxKR7fvKRS2907IcLT7x8FQv
-         hQ1+iQVcel64T4QgEu0lB4JnIi90RIY8QRJRSy/g=
+        b=a6XmUtF0qpBd9YNCWgF9kMTOUAgDDxrLpsXkYm8IOjk92l6oVW5c6f4OpeA8QTbOP
+         v6P6Go0J344rOYzLBdu6aGQ9r1dWDCtWsnpUKbK4/e3YHv3OnbkEd4BmgTSsTvBk57
+         bgAUut5YJa1rKJI4+uKx6dNC+jA5DfqhfpGGTpNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 118/344] media: omap3isp: Dont set streaming state on random subdevs
-Date:   Thu,  3 Oct 2019 17:51:23 +0200
-Message-Id: <20191003154551.835701379@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 121/344] net: lpc-enet: fix printk format strings
+Date:   Thu,  3 Oct 2019 17:51:26 +0200
+Message-Id: <20191003154552.134612304@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,48 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7ef57be07ac146e70535747797ef4aee0f06e9f9 ]
+[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
 
-The streaming state should be set to the first upstream sub-device only,
-not everywhere, for a sub-device driver itself knows how to best control
-the streaming state of its own upstream sub-devices.
+compile-testing this driver on other architectures showed
+multiple warnings:
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
+  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
+
+  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+
+Use format strings that work on all architectures.
+
+Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap3isp/isp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-index 83216fc7156b3..9cdb43859ae09 100644
---- a/drivers/media/platform/omap3isp/isp.c
-+++ b/drivers/media/platform/omap3isp/isp.c
-@@ -719,6 +719,10 @@ static int isp_pipeline_enable(struct isp_pipeline *pipe,
- 					s_stream, mode);
- 			pipe->do_propagation = true;
- 		}
-+
-+		/* Stop at the first external sub-device. */
-+		if (subdev->dev != isp->dev)
-+			break;
- 	}
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index f7e11f1b0426c..b0c8be127bee1 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -1344,13 +1344,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	pldat->dma_buff_base_p = dma_handle;
  
- 	return 0;
-@@ -833,6 +837,10 @@ static int isp_pipeline_disable(struct isp_pipeline *pipe)
- 						      &subdev->entity);
- 			failure = -ETIMEDOUT;
- 		}
-+
-+		/* Stop at the first external sub-device. */
-+		if (subdev->dev != isp->dev)
-+			break;
- 	}
+ 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
+-	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
++	netdev_dbg(ndev, "IO address size      :%zd\n",
++			(size_t)resource_size(res));
+ 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
+ 			pldat->net_base);
+ 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
+-	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
+-	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
+-			pldat->dma_buff_base_p);
++	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
++	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
++			&pldat->dma_buff_base_p);
+ 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
+ 			pldat->dma_buff_base_v);
  
- 	return failure;
+@@ -1397,8 +1398,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_out_unregister_netdev;
+ 
+-	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
+-	       res->start, ndev->irq);
++	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
++	       (unsigned long)res->start, ndev->irq);
+ 
+ 	device_init_wakeup(dev, 1);
+ 	device_set_wakeup_enable(dev, 0);
 -- 
 2.20.1
 
