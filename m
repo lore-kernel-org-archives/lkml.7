@@ -2,113 +2,117 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F070C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F21BC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B0220862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7PPsQ4z"
+	by mail.kernel.org (Postfix) with ESMTP id E982320862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570129072;
+	bh=VUZms35WLEMfQ6ssxS4VLvjvBarYopl2qOJcmQeQmeI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=GruqTRY2p+avMUmuzj7KgoWkf5zbxOO0NJxpb2oYiH6tZRWVy279jukz8W7LpLNCC
+	 u+ynAvJ8LqgvNNAGI+ow0M+ObJo6WTzQ+VPL8H2TdBMEexscpmB7ZiLikTt8MTEGdf
+	 3+wHjp3QUCiejfM/jLc1PgcDmMEVDk2CohVLLXCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731879AbfJCS5n (ORCPT
+        id S1732251AbfJCS5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:57:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35608 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbfJCS5m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:57:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id q10so8101962iop.2;
-        Thu, 03 Oct 2019 11:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aa6r931Rjp1NE7cgnIGCkHLvHKb0A2CYSfJ4m7AK8VA=;
-        b=O7PPsQ4zo2sfTl6NOOpE5XsVzE5RNltNIJ3BWIjoP92YjkqCBcz4qI/eBObiEFXHxG
-         KRCWmXU5E6KeddHOB8UC3E5e2kPXWnfMhDspqFWqDTx4jTXTKFnfflDpMxlSj8QQ1ljS
-         fmuw1vNpa3Srq0SIWXs3Yi8+CZ2o1gSYFOzL3TWpH9CYIiygn++HYMB4hX9sctCfrbeo
-         ATuEaJcaYLvYIjB/e6/PErOcfUZWKWlgQTRbvjxOQIFhwAhCJj5WwHA7nqs0A2i372Ra
-         1nwpkJ3rEVH8ssU/VgHToN77qu95pjftoLb/trkIUAcWvXG3cECeieEVc2QRbCNL+uR/
-         qKgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aa6r931Rjp1NE7cgnIGCkHLvHKb0A2CYSfJ4m7AK8VA=;
-        b=JNBm0G4oj6/+NQ4FoSknnwoZYj3/trQ5BoY91o6CSf22ajjNNv7KN7jRSG+Cj0tVwW
-         A8C4IXl/QAtkMHfLXjAFpbGRw/GgWzpsCr515jsZ0cJ2Sul8KuX6YclYfr7YUy9u9Ln0
-         V3Wwjm2EnNgQN2damUB8Z5I+rMLUM7Rho9CHpqqhRvco8wg9zfrwjcQrlxGweLKTXLcF
-         4bJ0v/00rlBb+JcsqUXYH54hpyu0ggmpNJJusxksSSLxWBp2JvKbIQ//jhmdi0JnZ4WS
-         fnD9S0d3SfvTNQk/5INLOw+sF7QH1djJaGBUUEoT+93lhApQEUe1OYG0qPoLUnDORzA0
-         NYTQ==
-X-Gm-Message-State: APjAAAXZp2PF22JgOfnvlpct3c3eo1Dsm0Qpweq+x6oOg/g6eeSpBbS5
-        RC1tU7mVs2dtwHqbFnN38cquOoQWtTkvQtFomzI=
-X-Google-Smtp-Source: APXvYqw5LZFI0OlAdzJ3Zi5QgTBf3yzfeslOKU0JWKwjHyMto7VKmPhcOSlsE1S3BTxGJi0w5yQ/WHCyiK/fEHdewQE=
-X-Received: by 2002:a92:1657:: with SMTP id r84mr10980876ill.5.1570129060851;
- Thu, 03 Oct 2019 11:57:40 -0700 (PDT)
+        Thu, 3 Oct 2019 14:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729355AbfJCS5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:57:50 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D69D220862;
+        Thu,  3 Oct 2019 18:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570129069;
+        bh=VUZms35WLEMfQ6ssxS4VLvjvBarYopl2qOJcmQeQmeI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=RNwwd/5hECe7dXysVQIqYWlbAQIU8/uvWdCbqRnnEuqFDTHjsQCBbuDXngb64VYuu
+         GoHVAY/hXo9GraY0zIW+LixdiNA7JN6hfEyldB8+QvvQeKwnBKCuGOxqy8lc9jH/9E
+         LAku9d9Z65l0/es2xvtAKnVLeIneWSgbk15M/+Hk=
+Date:   Thu, 3 Oct 2019 13:57:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v7 7/7] PCI: Skip Enhanced Allocation (EA) initialization
+ for VF device
+Message-ID: <20191003185747.GA178031@google.com>
 MIME-Version: 1.0
-References: <20191001073413.GA51148@LGEARND20B15>
-In-Reply-To: <20191001073413.GA51148@LGEARND20B15>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 3 Oct 2019 13:57:29 -0500
-Message-ID: <CAH2r5mtx3OWKv4ZDM=Nob9nRi7ahRW-DK2nY9LP28urQ6NBvFw@mail.gmail.com>
-Subject: Re: [PATCH] fs: cifs: mute -Wunused-const-variable message
-To:     Austin Kim <austindh.kim@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecff2638-7a5a-3d5d-6f30-f9517b139696@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
+On Thu, Oct 03, 2019 at 10:21:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Hi Bjorn,
+> 
+> On 8/28/19 3:14 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > 
+> > As per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced Allocation
+> > Capability. So skip pci_ea_init() for virtual devices.
+> > 
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> This patch was also dropped in your v8. Is this also intentional?
 
-On Tue, Oct 1, 2019 at 2:34 AM Austin Kim <austindh.kim@gmail.com> wrote:
->
-> After 'Initial git repository build' commit,
-> 'mapping_table_ERRHRD' variable has not been used.
->
-> So 'mapping_table_ERRHRD' const variable could be removed
-> to mute below warning message:
->
->    fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
->    static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
->                                            ^
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> ---
->  fs/cifs/netmisc.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
-> index 49c17ee1..9b41436 100644
-> --- a/fs/cifs/netmisc.c
-> +++ b/fs/cifs/netmisc.c
-> @@ -117,10 +117,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
->         {0, 0}
->  };
->
-> -static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
-> -       {0, 0}
-> -};
-> -
->  /*
->   * Convert a string containing text IPv4 or IPv6 address to binary form.
->   *
-> --
-> 2.6.2
->
+Yes, I dropped it because I didn't think there was much motivation for
+it.
 
+If a device is broken, i.e., a VF has an EA capability, this patch
+silently returns.  The existing code would try to use the EA
+capability and something would probably blow up, so in that sense,
+this patch makes the hardware issue less visible.
 
--- 
-Thanks,
+If a device is correct, i.e., a VF does *not* have an EA capability,
+pci_find_capability() will fail anyway, so this patch doesn't change
+the functional behavior.
 
-Steve
+This patch *does* avoid the pci_find_capability() in that case, which
+is a performance optimization.  We could merge it on that basis, but
+we should try to quantify the benefit to see if it's really worthwhile
+and the commit log should use that as the explicit motivation.
+
+> > ---
+> >   drivers/pci/pci.c | 7 +++++++
+> >   1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 1b27b5af3d55..266600a11769 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -3025,6 +3025,13 @@ void pci_ea_init(struct pci_dev *dev)
+> >   	int offset;
+> >   	int i;
+> > +	/*
+> > +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced
+> > +	 * Allocation Capability.
+> > +	 */
+> > +	if (dev->is_virtfn)
+> > +		return;
+> > +
+> >   	/* find PCI EA capability in list */
+> >   	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> >   	if (!ea)
+> 
+> -- 
+> Sathyanarayanan Kuppuswamy
+> Linux kernel developer
+> 
