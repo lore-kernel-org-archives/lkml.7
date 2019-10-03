@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884C3C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D5DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5827320865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F022320865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122341;
-	bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
+	s=default; t=1570122348;
+	bh=5q0PLQdi6AJ6C8Dj+RBxjxqThfLtkDeN6xsz6UwYsPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lVzKphKlXxxL/5EIMIZhpLHfyBFUcvxqwkHTCo/rQUzg/UxRGoTKck9/tN+pvHSFM
-	 x9Lvhxj0nFEkoQKfQphE+iT+EZ6zNgQ9gLEPbACx/ZKboR/fKDOOt5zpdyZGW2Eq2m
-	 NrTxesdfZ3UBv+yc9b5/S1DZWPkXJrEsp8lMuJl8=
+	b=No+7KBr8rftp30Fk4jTKoaaq8Pnp2zKd2pSfN/cfZHK+fTswS6VZ3p/IpAYLJ5agb
+	 qlHnIPcxVgC7zLmtxT5J0Dj7QF8YjBUg+Vh2DSEUQsEvWrG5WxDIX+9f8zhmIKXwbn
+	 XqG9WInUq86xWLCHqqtFTCMhjyWqWuKgb8Baq/E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404339AbfJCQjX (ORCPT
+        id S2404235AbfJCQjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:39:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404041AbfJCQjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:39:19 -0400
+        id S2403971AbfJCQjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59E632070B;
-        Thu,  3 Oct 2019 16:39:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39C48215EA;
+        Thu,  3 Oct 2019 16:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120758;
-        bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
+        s=default; t=1570120742;
+        bh=5q0PLQdi6AJ6C8Dj+RBxjxqThfLtkDeN6xsz6UwYsPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RmMMJCHghdSUKLg45Q0S6DYptr86ICWcmHsfKZ7aRwI47FrAY2/woNIzbHUJdLFpR
-         OahMgOTCNkFv3h3WioksGwToB0ID61JohiNm6S5Ed2b3vdCP6aRZReBq3JEKbVrg4X
-         cpw7DdEsAZHlO7FB2cMX0vawI+yHAOe7yKJ2aMI0=
+        b=T2xHVRxBQiHwg3ZGsPk+AMz64HVTWtViOiIi5SESBDN5ITlBqY7KxxHBfj4x31j0d
+         XYIE27t33gfYmXzvPOLcWsqNXHYwcdvO0UuBCqU6bho4MkYev0qq48EcAhUx0byNcS
+         RxXqOJ8yio4/QWsXQUvfMxDYcFx784Ry0R9Mmz+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 004/344] macsec: drop skb sk before calling gro_cells_receive
-Date:   Thu,  3 Oct 2019 17:49:29 +0200
-Message-Id: <20191003154540.498425829@linuxfoundation.org>
+        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Eli Britstein <elibr@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.3 021/344] net/mlx5e: Fix matching on tunnel addresses type
+Date:   Thu,  3 Oct 2019 17:49:46 +0200
+Message-Id: <20191003154542.166889134@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,61 +62,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Dmytro Linkin <dmitrolin@mellanox.com>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit fe1587a7de94912ed75ba5ddbfabf0741f9f8239 ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+In mlx5 parse_tunnel_attr() function dispatch on encap IP address type
+is performed by directly checking flow_rule_match_key() on
+FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS, and then on
+FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS. However, since those are stored in
+union, first check is always true if any type of encap address is set,
+which leads to IPv6 tunnel encap address being parsed as IPv4 by mlx5.
+Determine correct IP address type by checking control key first and if
+it set, take address type from match.key->addr_type.
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
-
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
-
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
-
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d1bda7eecd88 ("net/mlx5e: Allow matching only enc_key_id/enc_dst_port for decapsulation action")
+Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Eli Britstein <elibr@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macsec.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |   97 ++++++++++++++----------
+ 1 file changed, 57 insertions(+), 40 deletions(-)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1235,6 +1235,7 @@ deliver:
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1369,46 +1369,63 @@ static int parse_tunnel_attr(struct mlx5
+ 		return err;
+ 	}
  
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+-	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS)) {
+-		struct flow_match_ipv4_addrs match;
+-
+-		flow_rule_match_enc_ipv4_addrs(rule, &match);
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_c,
+-			 src_ipv4_src_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.mask->src));
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v,
+-			 src_ipv4_src_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.key->src));
+-
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_c,
+-			 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.mask->dst));
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v,
+-			 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.key->dst));
+-
+-		MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c, ethertype);
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype, ETH_P_IP);
+-	} else if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS)) {
+-		struct flow_match_ipv6_addrs match;
+-
+-		flow_rule_match_enc_ipv6_addrs(rule, &match);
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
+-				    src_ipv4_src_ipv6.ipv6_layout.ipv6),
+-		       &match.mask->src, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
+-				    src_ipv4_src_ipv6.ipv6_layout.ipv6),
+-		       &match.key->src, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
+-
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
+-				    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
+-		       &match.mask->dst, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
+-				    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
+-		       &match.key->dst, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
+-
+-		MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c, ethertype);
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype, ETH_P_IPV6);
++	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_CONTROL)) {
++		struct flow_match_control match;
++		u16 addr_type;
++
++		flow_rule_match_enc_control(rule, &match);
++		addr_type = match.key->addr_type;
++
++		/* For tunnel addr_type used same key id`s as for non-tunnel */
++		if (addr_type == FLOW_DISSECTOR_KEY_IPV4_ADDRS) {
++			struct flow_match_ipv4_addrs match;
++
++			flow_rule_match_enc_ipv4_addrs(rule, &match);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_c,
++				 src_ipv4_src_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.mask->src));
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v,
++				 src_ipv4_src_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.key->src));
++
++			MLX5_SET(fte_match_set_lyr_2_4, headers_c,
++				 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.mask->dst));
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v,
++				 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.key->dst));
++
++			MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c,
++					 ethertype);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype,
++				 ETH_P_IP);
++		} else if (addr_type == FLOW_DISSECTOR_KEY_IPV6_ADDRS) {
++			struct flow_match_ipv6_addrs match;
++
++			flow_rule_match_enc_ipv6_addrs(rule, &match);
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
++					    src_ipv4_src_ipv6.ipv6_layout.ipv6),
++			       &match.mask->src, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								   ipv6));
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
++					    src_ipv4_src_ipv6.ipv6_layout.ipv6),
++			       &match.key->src, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								  ipv6));
++
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
++					    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
++			       &match.mask->dst, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								   ipv6));
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
++					    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
++			       &match.key->dst, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								  ipv6));
++
++			MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c,
++					 ethertype);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype,
++				 ETH_P_IPV6);
++		}
+ 	}
+ 
+ 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IP)) {
 
 
