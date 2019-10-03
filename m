@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79648C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC87C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBA52070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C4E20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122380;
-	bh=mg/lXnaKl1n2LEuLDz3EK4eUsnnzZrYumsSwGKfrScA=;
+	s=default; t=1570122388;
+	bh=tD7IAs/rUecrJB9NGa8Try+goo14BMYdLlRlOp0L1Xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kp1Xvu/Gm+I1sV10T4JEr1I0N09z6+l1q/YrGKhUZwq0AY0VpvtTu959pcGjElRAD
-	 QyWDTIHYTG2+d2mNKZbCJy92pQF0pVfse0nW2ybrBbnQwHFwPueKivN7BdFA3CMkde
-	 m63EElSY8IhHqan4b5mHgv6eJd0031uoWGBANkaA=
+	b=C5Av6Ln7T77wpFrsNZa947bEANHSyI13kthRZLUhAcdTUyWfHZAdb33IIE8mg4OQ1
+	 +JCGXihspKu7ULmu1+HGjV0QfR+uNkfx/CFUYKxXKAQJQ00k23z2DXtUcwULY8oawc
+	 x1Itr3eKo2EUWsFknDkdFTIHM5mm4JHNAHHbVeiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392334AbfJCQic (ORCPT
+        id S2393126AbfJCRG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:06:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389681AbfJCQia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:30 -0400
+        id S2392301AbfJCQiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:38:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99AD20830;
-        Thu,  3 Oct 2019 16:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA54320830;
+        Thu,  3 Oct 2019 16:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120710;
-        bh=mg/lXnaKl1n2LEuLDz3EK4eUsnnzZrYumsSwGKfrScA=;
+        s=default; t=1570120694;
+        bh=tD7IAs/rUecrJB9NGa8Try+goo14BMYdLlRlOp0L1Xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5/w8GFXWJJwFyvL8LM6pfh3gDE1pbwTsNhgjK9om5jYoT2nksWFu5dXTDNK9oBLg
-         ZOt/nG5gljfYQ8/vmnv07VILdQuqciCNmTIXssWNbZD4I1G/ARC4sUyvy93lSMBAzK
-         T0I/WLNKe5/bsr9ejNEMVD3gxDXv0oN4IMzBZiPM=
+        b=S9PbQIJIxd3op7fhtpW4SdD+XmoCluMOk9sXZrCvuuAsYtZZuh7OqnKYHyMwHHTv0
+         Emg+7h7AZ9ZfD0yvk2kfK5ifBdmq+zMKBIDAl2KAsNhmidP31eowV0ggT3FU8e9/g4
+         xXMU1pVogP9/zF12jF33q7H2vYAPyGd9QXTRuQH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 010/344] nfp: flower: fix memory leak in nfp_flower_spawn_vnic_reprs
-Date:   Thu,  3 Oct 2019 17:49:35 +0200
-Message-Id: <20191003154541.106436730@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.2 289/313] SUNRPC: Dequeue the request from the receive queue while were re-encoding
+Date:   Thu,  3 Oct 2019 17:54:27 +0200
+Message-Id: <20191003154601.565296834@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
+In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
+References: <20191003154533.590915454@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,47 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 8ce39eb5a67aee25d9f05b40b673c95b23502e3e ]
+commit cc204d01262a69218b2d0db5cdea371de85871d9 upstream.
 
-In nfp_flower_spawn_vnic_reprs in the loop if initialization or the
-allocations fail memory is leaked. Appropriate releases are added.
+Ensure that we dequeue the request from the transport receive queue
+while we're re-encoding to prevent issues like use-after-free when
+we release the bvec.
 
-Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7536908982047 ("SUNRPC: Ensure the bvecs are reset when we re-encode...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/netronome/nfp/flower/main.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
-@@ -400,6 +400,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
- 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
- 		if (!repr_priv) {
- 			err = -ENOMEM;
-+			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
+---
+ include/linux/sunrpc/xprt.h |    1 
+ net/sunrpc/clnt.c           |    6 ++--
+ net/sunrpc/xprt.c           |   54 +++++++++++++++++++++++++-------------------
+ 3 files changed, 35 insertions(+), 26 deletions(-)
+
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -346,6 +346,7 @@ bool			xprt_prepare_transmit(struct rpc_
+ void			xprt_request_enqueue_transmit(struct rpc_task *task);
+ void			xprt_request_enqueue_receive(struct rpc_task *task);
+ void			xprt_request_wait_receive(struct rpc_task *task);
++void			xprt_request_dequeue_xprt(struct rpc_task *task);
+ bool			xprt_request_need_retransmit(struct rpc_task *task);
+ void			xprt_transmit(struct rpc_task *task);
+ void			xprt_end_transmit(struct rpc_task *task);
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1785,6 +1785,7 @@ rpc_xdr_encode(struct rpc_task *task)
+ 		     req->rq_rbuffer,
+ 		     req->rq_rcvsize);
  
-@@ -413,6 +414,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
- 		port = nfp_port_alloc(app, port_type, repr);
- 		if (IS_ERR(port)) {
- 			err = PTR_ERR(port);
-+			kfree(repr_priv);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
-@@ -433,6 +435,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
- 		err = nfp_repr_init(app, repr,
- 				    port_id, port, priv->nn->dp.netdev);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
++	req->rq_reply_bytes_recvd = 0;
+ 	req->rq_snd_buf.head[0].iov_len = 0;
+ 	xdr_init_encode(&xdr, &req->rq_snd_buf,
+ 			req->rq_snd_buf.head[0].iov_base, req);
+@@ -1804,6 +1805,8 @@ call_encode(struct rpc_task *task)
+ 	if (!rpc_task_need_encode(task))
+ 		goto out;
+ 	dprint_status(task);
++	/* Dequeue task from the receive queue while we're encoding */
++	xprt_request_dequeue_xprt(task);
+ 	/* Encode here so that rpcsec_gss can use correct sequence number. */
+ 	rpc_xdr_encode(task);
+ 	/* Did the encode result in an error condition? */
+@@ -2437,9 +2440,6 @@ call_decode(struct rpc_task *task)
+ 		return;
+ 	case -EAGAIN:
+ 		task->tk_status = 0;
+-		xdr_free_bvec(&req->rq_rcv_buf);
+-		req->rq_reply_bytes_recvd = 0;
+-		req->rq_rcv_buf.len = 0;
+ 		if (task->tk_client->cl_discrtry)
+ 			xprt_conditional_disconnect(req->rq_xprt,
+ 						    req->rq_connect_cookie);
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -1296,6 +1296,36 @@ xprt_request_dequeue_transmit(struct rpc
+ }
+ 
+ /**
++ * xprt_request_dequeue_xprt - remove a task from the transmit+receive queue
++ * @task: pointer to rpc_task
++ *
++ * Remove a task from the transmit and receive queues, and ensure that
++ * it is not pinned by the receive work item.
++ */
++void
++xprt_request_dequeue_xprt(struct rpc_task *task)
++{
++	struct rpc_rqst	*req = task->tk_rqstp;
++	struct rpc_xprt *xprt = req->rq_xprt;
++
++	if (test_bit(RPC_TASK_NEED_XMIT, &task->tk_runstate) ||
++	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
++	    xprt_is_pinned_rqst(req)) {
++		spin_lock(&xprt->queue_lock);
++		xprt_request_dequeue_transmit_locked(task);
++		xprt_request_dequeue_receive_locked(task);
++		while (xprt_is_pinned_rqst(req)) {
++			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
++			spin_unlock(&xprt->queue_lock);
++			xprt_wait_on_pinned_rqst(req);
++			spin_lock(&xprt->queue_lock);
++			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
++		}
++		spin_unlock(&xprt->queue_lock);
++	}
++}
++
++/**
+  * xprt_request_prepare - prepare an encoded request for transport
+  * @req: pointer to rpc_rqst
+  *
+@@ -1719,28 +1749,6 @@ void xprt_retry_reserve(struct rpc_task
+ 	xprt_do_reserve(xprt, task);
+ }
+ 
+-static void
+-xprt_request_dequeue_all(struct rpc_task *task, struct rpc_rqst *req)
+-{
+-	struct rpc_xprt *xprt = req->rq_xprt;
+-
+-	if (test_bit(RPC_TASK_NEED_XMIT, &task->tk_runstate) ||
+-	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
+-	    xprt_is_pinned_rqst(req)) {
+-		spin_lock(&xprt->queue_lock);
+-		xprt_request_dequeue_transmit_locked(task);
+-		xprt_request_dequeue_receive_locked(task);
+-		while (xprt_is_pinned_rqst(req)) {
+-			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
+-			spin_unlock(&xprt->queue_lock);
+-			xprt_wait_on_pinned_rqst(req);
+-			spin_lock(&xprt->queue_lock);
+-			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
+-		}
+-		spin_unlock(&xprt->queue_lock);
+-	}
+-}
+-
+ /**
+  * xprt_release - release an RPC request slot
+  * @task: task which is finished with the slot
+@@ -1764,7 +1772,7 @@ void xprt_release(struct rpc_task *task)
+ 		task->tk_ops->rpc_count_stats(task, task->tk_calldata);
+ 	else if (task->tk_client)
+ 		rpc_count_iostats(task, task->tk_client->cl_metrics);
+-	xprt_request_dequeue_all(task, req);
++	xprt_request_dequeue_xprt(task);
+ 	spin_lock_bh(&xprt->transport_lock);
+ 	xprt->ops->release_xprt(xprt, task);
+ 	if (xprt->ops->release_request)
 
 
