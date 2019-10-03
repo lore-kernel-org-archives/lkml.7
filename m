@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5764CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3740B20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B58721848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119150;
-	bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
+	s=default; t=1570119156;
+	bh=27hEWLNmex1Hc73iYf3HGhF+trAp1xGUMcH7fOBEw2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6wp3juwRNCMXFBIfYyHcio+a1aXAEXF4RXJPKr7AOGJs5lcGigrb4NUSsEEaz97n
-	 dEjcnMHpnsz+1zQb8MlRVadz1GlfRBevZUAVrKYDpTn0a8LpAJiM6vC3PJK+iRZ7Bp
-	 0CeioffoJR/tAn/6vhICSInn6lFKRoGoWATwE3yg=
+	b=GyfChIAnS946DsZ/tcN8bU9T/eXysy+nMjhG8edCoBEwh1Gy7nJAieA3mRtJS4PsF
+	 ZZWJFI0fIVspZyXaZMVYF0gKY2apla24Db3x0Xy4bduNgP9lCCP7eqwdKSscEier7P
+	 n3nOv7VsIOVTinOoYIqr/VH+ceA3pShZAiGgryWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388053AbfJCQM3 (ORCPT
+        id S2388071AbfJCQMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388035AbfJCQMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:25 -0400
+        id S1731068AbfJCQMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07E9520700;
-        Thu,  3 Oct 2019 16:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F4421783;
+        Thu,  3 Oct 2019 16:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119144;
-        bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
+        s=default; t=1570119149;
+        bh=27hEWLNmex1Hc73iYf3HGhF+trAp1xGUMcH7fOBEw2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQfh8jDxCIiswM3HN7mFguwudPeC5/bgpahoLMmEtSnSgIP8pN2Pdi/COqZlnFIIg
-         F/0HDBHIKXOrg9I7bnjwhkomnq2+igyPg0ZJIpzqx5iNSZ/W5SFdBgB0/cGTNU9ugz
-         ET54q96myHf9CTCDv+aWqoEqX+DYNzFXKfi35Bcw=
+        b=B60IYk3asHaHo5Ti/owSJmFQbH0TUYq/ZmFDYhq9kNr9ZCvfwJVgRMy4em/omI9xq
+         ssxOf2JF5qFn8NHX4a9+ZQieYmqD+r3TH+DaexztcFOzNcbYbKEyW095iW3MSOyxJZ
+         cpr56zr6CT1GDdHOny/cABj1Vyanr/DwgFOcaojo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Ales Novak <alnovak@suse.cz>,
-        Shane Seymour <shane.seymour@hpe.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 142/185] scsi: scsi_dh_rdac: zero cdb in send_mode_select()
-Date:   Thu,  3 Oct 2019 17:53:40 +0200
-Message-Id: <20191003154509.969401555@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 144/185] IB/hfi1: Define variables as unsigned long to fix KASAN warning
+Date:   Thu,  3 Oct 2019 17:53:42 +0200
+Message-Id: <20191003154510.915632171@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,43 +63,255 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <Martin.Wilck@suse.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-commit 57adf5d4cfd3198aa480e7c94a101fc8c4e6109d upstream.
+commit f8659d68e2bee5b86a1beaf7be42d942e1fc81f4 upstream.
 
-cdb in send_mode_select() is not zeroed and is only partially filled in
-rdac_failover_get(), which leads to some random data getting to the
-device. Users have reported storage responding to such commands with
-INVALID FIELD IN CDB. Code before commit 327825574132 was not affected, as
-it called blk_rq_set_block_pc().
+Define the working variables to be unsigned long to be compatible with
+for_each_set_bit and change types as needed.
 
-Fix this by zeroing out the cdb first.
+While we are at it remove unused variables from a couple of functions.
 
-Identified & fix proposed by HPE.
+This was found because of the following KASAN warning:
+ ==================================================================
+   BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
+   Read of size 8 at addr ffff888362d778d0 by task kworker/u308:2/1889
 
-Fixes: 327825574132 ("scsi_dh_rdac: switch to scsi_execute_req_flags()")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20190904155205.1666-1-martin.wilck@suse.com
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Ales Novak <alnovak@suse.cz>
-Reviewed-by: Shane Seymour <shane.seymour@hpe.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+   CPU: 21 PID: 1889 Comm: kworker/u308:2 Tainted: G W         5.3.0-rc2-mm1+ #2
+   Hardware name: Intel Corporation W2600CR/W2600CR, BIOS SE5C600.86B.02.04.0003.102320141138 10/23/2014
+   Workqueue: ib-comp-unb-wq ib_cq_poll_work [ib_core]
+   Call Trace:
+    dump_stack+0x9a/0xf0
+    ? find_first_bit+0x19/0x70
+    print_address_description+0x6c/0x332
+    ? find_first_bit+0x19/0x70
+    ? find_first_bit+0x19/0x70
+    __kasan_report.cold.6+0x1a/0x3b
+    ? find_first_bit+0x19/0x70
+    kasan_report+0xe/0x12
+    find_first_bit+0x19/0x70
+    pma_get_opa_portstatus+0x5cc/0xa80 [hfi1]
+    ? ret_from_fork+0x3a/0x50
+    ? pma_get_opa_port_ectrs+0x200/0x200 [hfi1]
+    ? stack_trace_consume_entry+0x80/0x80
+    hfi1_process_mad+0x39b/0x26c0 [hfi1]
+    ? __lock_acquire+0x65e/0x21b0
+    ? clear_linkup_counters+0xb0/0xb0 [hfi1]
+    ? check_chain_key+0x1d7/0x2e0
+    ? lock_downgrade+0x3a0/0x3a0
+    ? match_held_lock+0x2e/0x250
+    ib_mad_recv_done+0x698/0x15e0 [ib_core]
+    ? clear_linkup_counters+0xb0/0xb0 [hfi1]
+    ? ib_mad_send_done+0xc80/0xc80 [ib_core]
+    ? mark_held_locks+0x79/0xa0
+    ? _raw_spin_unlock_irqrestore+0x44/0x60
+    ? rvt_poll_cq+0x1e1/0x340 [rdmavt]
+    __ib_process_cq+0x97/0x100 [ib_core]
+    ib_cq_poll_work+0x31/0xb0 [ib_core]
+    process_one_work+0x4ee/0xa00
+    ? pwq_dec_nr_in_flight+0x110/0x110
+    ? do_raw_spin_lock+0x113/0x1d0
+    worker_thread+0x57/0x5a0
+    ? process_one_work+0xa00/0xa00
+    kthread+0x1bb/0x1e0
+    ? kthread_create_on_node+0xc0/0xc0
+    ret_from_fork+0x3a/0x50
+
+   The buggy address belongs to the page:
+   page:ffffea000d8b5dc0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
+   flags: 0x17ffffc0000000()
+   raw: 0017ffffc0000000 0000000000000000 ffffea000d8b5dc8 0000000000000000
+   raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+   page dumped because: kasan: bad access detected
+
+   addr ffff888362d778d0 is located in stack of task kworker/u308:2/1889 at offset 32 in frame:
+    pma_get_opa_portstatus+0x0/0xa80 [hfi1]
+
+   this frame has 1 object:
+    [32, 36) 'vl_select_mask'
+
+   Memory state around the buggy address:
+    ffff888362d77780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    ffff888362d77800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   >ffff888362d77880: 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2 00 00
+                                                    ^
+    ffff888362d77900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    ffff888362d77980: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2
+
+ ==================================================================
+
+Cc: <stable@vger.kernel.org>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Link: https://lore.kernel.org/r/20190911113053.126040.47327.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/device_handler/scsi_dh_rdac.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/hfi1/mad.c |   45 ++++++++++++++++-----------------------
+ 1 file changed, 19 insertions(+), 26 deletions(-)
 
---- a/drivers/scsi/device_handler/scsi_dh_rdac.c
-+++ b/drivers/scsi/device_handler/scsi_dh_rdac.c
-@@ -546,6 +546,8 @@ static void send_mode_select(struct work
- 	spin_unlock(&ctlr->ms_lock);
+--- a/drivers/infiniband/hw/hfi1/mad.c
++++ b/drivers/infiniband/hw/hfi1/mad.c
+@@ -2311,7 +2311,7 @@ struct opa_port_status_req {
+ 	__be32 vl_select_mask;
+ };
  
-  retry:
-+	memset(cdb, 0, sizeof(cdb));
-+
- 	data_size = rdac_failover_get(ctlr, &list, cdb);
+-#define VL_MASK_ALL		0x000080ff
++#define VL_MASK_ALL		0x00000000000080ffUL
  
- 	RDAC_LOG(RDAC_LOG_FAILOVER, sdev, "array %s, ctlr %d, "
+ struct opa_port_status_rsp {
+ 	__u8 port_num;
+@@ -2610,15 +2610,14 @@ static int pma_get_opa_classportinfo(str
+ }
+ 
+ static void a0_portstatus(struct hfi1_pportdata *ppd,
+-			  struct opa_port_status_rsp *rsp, u32 vl_select_mask)
++			  struct opa_port_status_rsp *rsp)
+ {
+ 	if (!is_bx(ppd->dd)) {
+ 		unsigned long vl;
+ 		u64 sum_vl_xmit_wait = 0;
+-		u32 vl_all_mask = VL_MASK_ALL;
++		unsigned long vl_all_mask = VL_MASK_ALL;
+ 
+-		for_each_set_bit(vl, (unsigned long *)&(vl_all_mask),
+-				 8 * sizeof(vl_all_mask)) {
++		for_each_set_bit(vl, &vl_all_mask, BITS_PER_LONG) {
+ 			u64 tmp = sum_vl_xmit_wait +
+ 				  read_port_cntr(ppd, C_TX_WAIT_VL,
+ 						 idx_from_vl(vl));
+@@ -2642,12 +2641,12 @@ static int pma_get_opa_portstatus(struct
+ 		(struct opa_port_status_req *)pmp->data;
+ 	struct hfi1_devdata *dd = dd_from_ibdev(ibdev);
+ 	struct opa_port_status_rsp *rsp;
+-	u32 vl_select_mask = be32_to_cpu(req->vl_select_mask);
++	unsigned long vl_select_mask = be32_to_cpu(req->vl_select_mask);
+ 	unsigned long vl;
+ 	size_t response_data_size;
+ 	u32 nports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
+ 	u8 port_num = req->port_num;
+-	u8 num_vls = hweight32(vl_select_mask);
++	u8 num_vls = hweight64(vl_select_mask);
+ 	struct _vls_pctrs *vlinfo;
+ 	struct hfi1_ibport *ibp = to_iport(ibdev, port);
+ 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
+@@ -2681,7 +2680,7 @@ static int pma_get_opa_portstatus(struct
+ 
+ 	hfi1_read_link_quality(dd, &rsp->link_quality_indicator);
+ 
+-	rsp->vl_select_mask = cpu_to_be32(vl_select_mask);
++	rsp->vl_select_mask = cpu_to_be32((u32)vl_select_mask);
+ 	rsp->port_xmit_data = cpu_to_be64(read_dev_cntr(dd, C_DC_XMIT_FLITS,
+ 					  CNTR_INVALID_VL));
+ 	rsp->port_rcv_data = cpu_to_be64(read_dev_cntr(dd, C_DC_RCV_FLITS,
+@@ -2744,8 +2743,7 @@ static int pma_get_opa_portstatus(struct
+ 	 * So in the for_each_set_bit() loop below, we don't need
+ 	 * any additional checks for vl.
+ 	 */
+-	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
+-			 8 * sizeof(vl_select_mask)) {
++	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
+ 		memset(vlinfo, 0, sizeof(*vlinfo));
+ 
+ 		tmp = read_dev_cntr(dd, C_DC_RX_FLIT_VL, idx_from_vl(vl));
+@@ -2782,7 +2780,7 @@ static int pma_get_opa_portstatus(struct
+ 		vfi++;
+ 	}
+ 
+-	a0_portstatus(ppd, rsp, vl_select_mask);
++	a0_portstatus(ppd, rsp);
+ 
+ 	if (resp_len)
+ 		*resp_len += response_data_size;
+@@ -2829,16 +2827,14 @@ static u64 get_error_counter_summary(str
+ 	return error_counter_summary;
+ }
+ 
+-static void a0_datacounters(struct hfi1_pportdata *ppd, struct _port_dctrs *rsp,
+-			    u32 vl_select_mask)
++static void a0_datacounters(struct hfi1_pportdata *ppd, struct _port_dctrs *rsp)
+ {
+ 	if (!is_bx(ppd->dd)) {
+ 		unsigned long vl;
+ 		u64 sum_vl_xmit_wait = 0;
+-		u32 vl_all_mask = VL_MASK_ALL;
++		unsigned long vl_all_mask = VL_MASK_ALL;
+ 
+-		for_each_set_bit(vl, (unsigned long *)&(vl_all_mask),
+-				 8 * sizeof(vl_all_mask)) {
++		for_each_set_bit(vl, &vl_all_mask, BITS_PER_LONG) {
+ 			u64 tmp = sum_vl_xmit_wait +
+ 				  read_port_cntr(ppd, C_TX_WAIT_VL,
+ 						 idx_from_vl(vl));
+@@ -2894,7 +2890,7 @@ static int pma_get_opa_datacounters(stru
+ 	u64 port_mask;
+ 	u8 port_num;
+ 	unsigned long vl;
+-	u32 vl_select_mask;
++	unsigned long vl_select_mask;
+ 	int vfi;
+ 
+ 	num_ports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
+@@ -2963,8 +2959,7 @@ static int pma_get_opa_datacounters(stru
+ 	 * So in the for_each_set_bit() loop below, we don't need
+ 	 * any additional checks for vl.
+ 	 */
+-	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
+-			 8 * sizeof(req->vl_select_mask)) {
++	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
+ 		memset(vlinfo, 0, sizeof(*vlinfo));
+ 
+ 		rsp->vls[vfi].port_vl_xmit_data =
+@@ -3007,7 +3002,7 @@ static int pma_get_opa_datacounters(stru
+ 		vfi++;
+ 	}
+ 
+-	a0_datacounters(ppd, rsp, vl_select_mask);
++	a0_datacounters(ppd, rsp);
+ 
+ 	if (resp_len)
+ 		*resp_len += response_data_size;
+@@ -3102,7 +3097,7 @@ static int pma_get_opa_porterrors(struct
+ 	struct _vls_ectrs *vlinfo;
+ 	unsigned long vl;
+ 	u64 port_mask, tmp;
+-	u32 vl_select_mask;
++	unsigned long vl_select_mask;
+ 	int vfi;
+ 
+ 	req = (struct opa_port_error_counters64_msg *)pmp->data;
+@@ -3161,8 +3156,7 @@ static int pma_get_opa_porterrors(struct
+ 	vlinfo = &rsp->vls[0];
+ 	vfi = 0;
+ 	vl_select_mask = be32_to_cpu(req->vl_select_mask);
+-	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
+-			 8 * sizeof(req->vl_select_mask)) {
++	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
+ 		memset(vlinfo, 0, sizeof(*vlinfo));
+ 		rsp->vls[vfi].port_vl_xmit_discards =
+ 			cpu_to_be64(read_port_cntr(ppd, C_SW_XMIT_DSCD_VL,
+@@ -3372,7 +3366,7 @@ static int pma_set_opa_portstatus(struct
+ 	u32 nports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
+ 	u64 portn = be64_to_cpu(req->port_select_mask[3]);
+ 	u32 counter_select = be32_to_cpu(req->counter_select_mask);
+-	u32 vl_select_mask = VL_MASK_ALL; /* clear all per-vl cnts */
++	unsigned long vl_select_mask = VL_MASK_ALL; /* clear all per-vl cnts */
+ 	unsigned long vl;
+ 
+ 	if ((nports != 1) || (portn != 1 << port)) {
+@@ -3464,8 +3458,7 @@ static int pma_set_opa_portstatus(struct
+ 	if (counter_select & CS_UNCORRECTABLE_ERRORS)
+ 		write_dev_cntr(dd, C_DC_UNC_ERR, CNTR_INVALID_VL, 0);
+ 
+-	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
+-			 8 * sizeof(vl_select_mask)) {
++	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
+ 		if (counter_select & CS_PORT_XMIT_DATA)
+ 			write_port_cntr(ppd, C_TX_FLIT_VL, idx_from_vl(vl), 0);
+ 
 
 
