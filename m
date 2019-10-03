@@ -2,54 +2,55 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E63C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF5CC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E3621783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B0C222CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118937;
-	bh=BIohoXAlhVB4rZBWYriKGkkUxUnJUI9fxltSi2I7I1k=;
+	s=default; t=1570118938;
+	bh=lQFsJo/ifnDFbQ6bmQ5/++QOotlYuVYGBuf+IwxkEQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wC63a4MyVrMCDs37BzNRPxIYdq3EZ/HqmjQ/1Uqn/c282Q+Zt45HDkOYab3UtRw3Q
-	 reTFQzh+DY49hcZMVg7nKi2utqRvpbWtIH7IjLWLEY+irAFGmYLFGN3FYEQhqSqmu+
-	 2BiVbLhlJ47p0/NVH2JWkSHmQMiB/l7PlWy2B/As=
+	b=iX55+7XIf1MXWRjq9zrVCC5WLgdzM+61wSCfj0a2sd06vMoh045aiOE3Ehs94h77K
+	 2cwsi6TQIB8wClkvJgNPjaqhGrQ0+uZ5e49ZjDveAnjQJRNZ8fBOG8BInNJsghuDoR
+	 UUbnKcfsqo9nBMIwH8oUz74xdFduLXKHauN7mRQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733062AbfJCQH7 (ORCPT
+        id S1733305AbfJCQI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733013AbfJCQHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:52 -0400
+        id S1733288AbfJCQIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF2E9207FF;
-        Thu,  3 Oct 2019 16:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B781207FF;
+        Thu,  3 Oct 2019 16:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118871;
-        bh=BIohoXAlhVB4rZBWYriKGkkUxUnJUI9fxltSi2I7I1k=;
+        s=default; t=1570118932;
+        bh=lQFsJo/ifnDFbQ6bmQ5/++QOotlYuVYGBuf+IwxkEQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KihU/GQvfkjg5KNMhTuTIEHjj+Fh66SmX8sT51mlHy5GGkSPiXr/6pmJ0NMmkggAC
-         6+ThM7rWfXwwRj38pCl2XGX6iHWFiz0BJmZKAAQNne3YwKg+swzVjQ+H12iZ7H4SZE
-         lnN85LJNxWgN+n2237sVqR3H0oWQU0dumiTSD9c4=
+        b=SThtAwg2p9/wB/zC16wsdM5cys4DdgcRf9/BzCzq47d0pAgRh0OrHmIv2x9CxO3ZE
+         VOq+VbjpFawfDuARFGQmEyInq3zDNNA6QeP3gV3tN90u84M6186NVJ00/jpr9qIzvG
+         Ov2fprcdVKdNMIiE0d++BWCUfDOQ8Zz9LstN/Jhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.m>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 004/185] IB/core: Add an unbound WQ type to the new CQ API
-Date:   Thu,  3 Oct 2019 17:51:22 +0200
-Message-Id: <20191003154438.325611744@linuxfoundation.org>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 063/185] sched/fair: Fix imbalance due to CPU affinity
+Date:   Thu,  3 Oct 2019 17:52:21 +0200
+Message-Id: <20191003154451.628695736@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,167 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit f794809a7259dfaa3d47d90ef5a86007cf48b1ce upstream.
+[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
 
-The upstream kernel commit cited below modified the workqueue in the
-new CQ API to be bound to a specific CPU (instead of being unbound).
-This caused ALL users of the new CQ API to use the same bound WQ.
+The load_balance() has a dedicated mecanism to detect when an imbalance
+is due to CPU affinity and must be handled at parent level. In this case,
+the imbalance field of the parent's sched_group is set.
 
-Specifically, MAD handling was severely delayed when the CPU bound
-to the WQ was busy handling (higher priority) interrupts.
+The description of sg_imbalanced() gives a typical example of two groups
+of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
+group and 3 CPUs of the second group. Something like:
 
-This caused a delay in the MAD "heartbeat" response handling,
-which resulted in ports being incorrectly classified as "down".
+	{ 0 1 2 3 } { 4 5 6 7 }
+	        *     * * *
 
-To fix this, add a new "unbound" WQ type to the new CQ API, so that users
-have the option to choose either a bound WQ or an unbound WQ.
+But the load_balance fails to fix this UC on my octo cores system
+made of 2 clusters of quad cores.
 
-For MADs, choose the new "unbound" WQ.
+Whereas the load_balance is able to detect that the imbalanced is due to
+CPU affinity, it fails to fix it because the imbalance field is cleared
+before letting parent level a chance to run. In fact, when the imbalance is
+detected, the load_balance reruns without the CPU with pinned tasks. But
+there is no other running tasks in the situation described above and
+everything looks balanced this time so the imbalance field is immediately
+cleared.
 
-Fixes: b7363e67b23e ("IB/device: Convert ib-comp-wq to be CPU-bound")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.m>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The imbalance field should not be cleared if there is no other task to move
+when the imbalance is detected.
 
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cq.c     |    8 ++++++--
- drivers/infiniband/core/device.c |   15 ++++++++++++++-
- drivers/infiniband/core/mad.c    |    2 +-
- include/rdma/ib_verbs.h          |    9 ++++++---
- 4 files changed, 27 insertions(+), 7 deletions(-)
+ kernel/sched/fair.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/core/cq.c
-+++ b/drivers/infiniband/core/cq.c
-@@ -112,12 +112,12 @@ static void ib_cq_poll_work(struct work_
- 				    IB_POLL_BATCH);
- 	if (completed >= IB_POLL_BUDGET_WORKQUEUE ||
- 	    ib_req_notify_cq(cq, IB_POLL_FLAGS) > 0)
--		queue_work(ib_comp_wq, &cq->work);
-+		queue_work(cq->comp_wq, &cq->work);
- }
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c298d47888ed8..808db3566ddbc 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8359,9 +8359,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ out_balanced:
+ 	/*
+ 	 * We reach balance although we may have faced some affinity
+-	 * constraints. Clear the imbalance flag if it was set.
++	 * constraints. Clear the imbalance flag only if other tasks got
++	 * a chance to move and fix the imbalance.
+ 	 */
+-	if (sd_parent) {
++	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
+ 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
  
- static void ib_cq_completion_workqueue(struct ib_cq *cq, void *private)
- {
--	queue_work(ib_comp_wq, &cq->work);
-+	queue_work(cq->comp_wq, &cq->work);
- }
- 
- /**
-@@ -169,9 +169,12 @@ struct ib_cq *ib_alloc_cq(struct ib_devi
- 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
- 		break;
- 	case IB_POLL_WORKQUEUE:
-+	case IB_POLL_UNBOUND_WORKQUEUE:
- 		cq->comp_handler = ib_cq_completion_workqueue;
- 		INIT_WORK(&cq->work, ib_cq_poll_work);
- 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
-+		cq->comp_wq = (cq->poll_ctx == IB_POLL_WORKQUEUE) ?
-+				ib_comp_wq : ib_comp_unbound_wq;
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -206,6 +209,7 @@ void ib_free_cq(struct ib_cq *cq)
- 		irq_poll_disable(&cq->iop);
- 		break;
- 	case IB_POLL_WORKQUEUE:
-+	case IB_POLL_UNBOUND_WORKQUEUE:
- 		cancel_work_sync(&cq->work);
- 		break;
- 	default:
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -61,6 +61,7 @@ struct ib_client_data {
- };
- 
- struct workqueue_struct *ib_comp_wq;
-+struct workqueue_struct *ib_comp_unbound_wq;
- struct workqueue_struct *ib_wq;
- EXPORT_SYMBOL_GPL(ib_wq);
- 
-@@ -1202,10 +1203,19 @@ static int __init ib_core_init(void)
- 		goto err;
- 	}
- 
-+	ib_comp_unbound_wq =
-+		alloc_workqueue("ib-comp-unb-wq",
-+				WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM |
-+				WQ_SYSFS, WQ_UNBOUND_MAX_ACTIVE);
-+	if (!ib_comp_unbound_wq) {
-+		ret = -ENOMEM;
-+		goto err_comp;
-+	}
-+
- 	ret = class_register(&ib_class);
- 	if (ret) {
- 		pr_warn("Couldn't create InfiniBand device class\n");
--		goto err_comp;
-+		goto err_comp_unbound;
- 	}
- 
- 	ret = rdma_nl_init();
-@@ -1254,6 +1264,8 @@ err_ibnl:
- 	rdma_nl_exit();
- err_sysfs:
- 	class_unregister(&ib_class);
-+err_comp_unbound:
-+	destroy_workqueue(ib_comp_unbound_wq);
- err_comp:
- 	destroy_workqueue(ib_comp_wq);
- err:
-@@ -1272,6 +1284,7 @@ static void __exit ib_core_cleanup(void)
- 	addr_cleanup();
- 	rdma_nl_exit();
- 	class_unregister(&ib_class);
-+	destroy_workqueue(ib_comp_unbound_wq);
- 	destroy_workqueue(ib_comp_wq);
- 	/* Make sure that any pending umem accounting work is done. */
- 	destroy_workqueue(ib_wq);
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -3178,7 +3178,7 @@ static int ib_mad_port_open(struct ib_de
- 	}
- 
- 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
--			IB_POLL_WORKQUEUE);
-+			IB_POLL_UNBOUND_WORKQUEUE);
- 	if (IS_ERR(port_priv->cq)) {
- 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
- 		ret = PTR_ERR(port_priv->cq);
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -68,6 +68,7 @@
- 
- extern struct workqueue_struct *ib_wq;
- extern struct workqueue_struct *ib_comp_wq;
-+extern struct workqueue_struct *ib_comp_unbound_wq;
- 
- union ib_gid {
- 	u8	raw[16];
-@@ -1544,9 +1545,10 @@ struct ib_ah {
- typedef void (*ib_comp_handler)(struct ib_cq *cq, void *cq_context);
- 
- enum ib_poll_context {
--	IB_POLL_DIRECT,		/* caller context, no hw completions */
--	IB_POLL_SOFTIRQ,	/* poll from softirq context */
--	IB_POLL_WORKQUEUE,	/* poll from workqueue */
-+	IB_POLL_DIRECT,		   /* caller context, no hw completions */
-+	IB_POLL_SOFTIRQ,	   /* poll from softirq context */
-+	IB_POLL_WORKQUEUE,	   /* poll from workqueue */
-+	IB_POLL_UNBOUND_WORKQUEUE, /* poll from unbound workqueue */
- };
- 
- struct ib_cq {
-@@ -1563,6 +1565,7 @@ struct ib_cq {
- 		struct irq_poll		iop;
- 		struct work_struct	work;
- 	};
-+	struct workqueue_struct *comp_wq;
- };
- 
- struct ib_srq {
+ 		if (*group_imbalance)
+-- 
+2.20.1
+
 
 
