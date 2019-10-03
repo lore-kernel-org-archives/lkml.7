@@ -2,161 +2,115 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A75C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDA8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C04E21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758A4217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:48:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ueu7492K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbfJCJrX (ORCPT
+        id S1729230AbfJCJsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:47:23 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61932 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJCJrV (ORCPT
+        Thu, 3 Oct 2019 05:48:13 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36641 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728743AbfJCJsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:47:21 -0400
-Received: from 79.184.253.225.ipv4.supernova.orange.pl (79.184.253.225) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id eb26d2c531e81b51; Thu, 3 Oct 2019 11:47:18 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device states on certain intel bridges
-Date:   Thu, 03 Oct 2019 11:47:17 +0200
-Message-ID: <6813970.88v0tjFSgF@kreacher>
-In-Reply-To: <CACO55ttqP8hnse0f2x0Tat-fCLBWjg9jmZHNb+ayZ5k7gSO7bw@mail.gmail.com>
-References: <20190927214252.GA65801@google.com> <20191001091134.GD2714@lahna.fi.intel.com> <CACO55ttqP8hnse0f2x0Tat-fCLBWjg9jmZHNb+ayZ5k7gSO7bw@mail.gmail.com>
+        Thu, 3 Oct 2019 05:48:13 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x939fd1O020324;
+        Thu, 3 Oct 2019 11:47:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=kN9FmgYjR/+h00iD+FWqgH8LfZypMJPodsHGme7Pa2U=;
+ b=Ueu7492KlMOHrKSycPDSg2LPkrEWdivvPKLY1GOs4xx+yO3t8ExTim5uIUC07QvxoWKG
+ 3LT9SsL5b8qjCc49kEbhNfxAemN7lbkU0+pg4pUoFf7nWTFf+GoAnGIau3e1+Ge+26Vk
+ hu4UlE5aBurWsPHyTrhGpmbjDgmaswU71tdJYWAUMXsgcSlCJdvbg08xf5gvNL/9qE3l
+ BiJjf2O7egamZ3rj080Qm+BuaNoozraPZ1k/ujKLo+pSrybFr2C7QL1kTr+Byd91RW+Z
+ VZJnqY6ObQ+ZbHo6SpStvCI9SaDMI4Da12gaEoovClMT/LnwsTUKRNBOBdn71RxBaG7Z fw== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w9w3u0a-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 03 Oct 2019 11:47:38 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 99F6953;
+        Thu,  3 Oct 2019 09:47:32 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CD812B492E;
+        Thu,  3 Oct 2019 11:47:31 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 3 Oct
+ 2019 11:47:30 +0200
+Subject: Re: [PATCH 0/4] ARM: multi_v7_defconfig: add audio support for
+ stm32mp157a-dk1
+To:     Olivier Moysan <olivier.moysan@st.com>
+CC:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1567440041-19220-1-git-send-email-olivier.moysan@st.com>
+ <CAK8P3a3WvXmMys3mamCZef1-ychtdg+XbV=H-WTs2ZN6Jsrcbg@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <c4c9ed0b-210a-43b0-fc7b-d45a24fe682f@st.com>
+Date:   Thu, 3 Oct 2019 11:47:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAK8P3a3WvXmMys3mamCZef1-ychtdg+XbV=H-WTs2ZN6Jsrcbg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-03_04:2019-10-01,2019-10-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 1, 2019 12:00:50 PM CEST Karol Herbst wrote:
-> On Tue, Oct 1, 2019 at 11:11 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 10:56:39AM +0200, Karol Herbst wrote:
-> > > On Tue, Oct 1, 2019 at 10:47 AM Mika Westerberg
-> > > <mika.westerberg@linux.intel.com> wrote:
-> > > >
-> > > > On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> > > > > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> > > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > >
-> > > > > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > > > > > still happens with your patch applied. The machine simply gets shut down.
-> > > > > > >
-> > > > > > > dmesg can be found here:
-> > > > > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> > > > > >
-> > > > > > Looking your dmesg:
-> > > > > >
-> > > > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > > > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > > > > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> > > > > >
-> > > > > > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > > > > > access from userspace:
-> > > > > >
-> > > > > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> > > > > >
-> > > > > > and for some reason it does not get resumed properly. There are also few
-> > > > > > warnings from ACPI that might be relevant:
-> > > > > >
-> > > > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > > > >
-> > > > >
-> > > > > afaik this is the case for essentially every laptop out there.
-> > > >
-> > > > OK, so they are harmless?
-> > > >
-> > >
-> > > yes
-> > >
-> > > > > > This seems to be Dell XPS 9560 which I think has been around some time
-> > > > > > already so I wonder why we only see issues now. Has it ever worked for
-> > > > > > you or maybe there is a regression that causes it to happen now?
-> > > > >
-> > > > > oh, it's broken since forever, we just tried to get more information
-> > > > > from Nvidia if they know what this is all about, but we got nothing
-> > > > > useful.
-> > > > >
-> > > > > We were also hoping to find a reliable fix or workaround we could have
-> > > > > inside nouveau to fix that as I think nouveau is the only driver
-> > > > > actually hit by this issue, but nothing turned out to be reliable
-> > > > > enough.
-> > > >
-> > > > Can't you just block runtime PM from the nouveau driver until this is
-> > > > understood better? That can be done by calling pm_runtime_forbid() (or
-> > > > not calling pm_runtime_allow() in the driver). Or in case of PCI driver
-> > > > you just don't decrease the reference count when probe() ends.
-> > > >
-> > >
-> > > the thing is, it does work for a lot of laptops. We could only observe
-> > > this on kaby lake and skylake ones. Even on Cannon Lakes it seems to
-> > > work just fine.
-> >
-> > Can't you then limit it to those?
-> >
-> > I've experienced that Kabylake root ports can enter and exit in D3cold
-> > just fine because we do that for Thunderbolt for example. But that
-> > always requires help from ACPI. If the system is using non-standard ACPI
-> > methods for example that may require some tricks in the driver side.
-> >
-> 
-> yeah.. I am not quite sure what's actually the root cause. I was also
-> trying to use the same PCI registers ACPI is using to trigger this
-> issue on a normal desktop, no luck. Using the same registers does
-> trigger the issue (hence the script).
-> 
-> The script is essentially just doing what ACPI does, just skipping a lot.
-> 
-> > > > I think that would be much better than blocking any devices behind
-> > > > Kabylake PCIe root ports from entering D3 (I don't really think the
-> > > > problem is in the root ports itself but there is something we are
-> > > > missing when the NVIDIA GPU is put into D3cold or back from there).
-> > >
-> > > I highly doubt there is anything wrong with the GPU alone as we have
-> > > too many indications which tell us otherwise.
-> > >
-> > > Anyway, at this point I don't know where to look further for what's
-> > > actually wrong. And apparently it works on Windows, but I don't know
-> > > why and I have no idea what Windows does on such systems to make it
-> > > work reliably.
-> >
-> > By works you mean that Windows is able to put it into D3cold and back?
-> > If that's the case it may be that there is some ACPI magic that the
-> > Windows driver does and we of course are missing in Linux.
-> 
-> Afaik that's the case. We were talking with Nvidia about it, but they
-> are not aware of any issues generally. (on Windows, nor the hardware).
-> No idea if we can trust their statements though.
-> 
-> But yeah, it might be that on Windows they still do _DSM calls or
-> something... but until today, Nvidia didn't provide any documentation
-> to us for that.
+Hi Olivier,
 
-So IMO in that case the right approach is to quirk the combinations of
-GPU/root complex that are known problematic.
+On 9/2/19 6:42 PM, Arnd Bergmann wrote:
+> On Mon, Sep 2, 2019 at 6:01 PM Olivier Moysan <olivier.moysan@st.com> wrote:
+>>
+>> This patchset adds audio support for stm32mp157a-dk1 board.
+>>
+>> Olivier Moysan (4):
+>>    ARM: multi_v7_defconfig: enable stm32 sai support
+>>    ARM: multi_v7_defconfig: enable stm32 i2s support
+>>    ARM: multi_v7_defconfig: enable cs42l51 codec support
+>>    ARM: multi_v7_defconfig: enable audio graph card support
+>  > The changes are ok, and I expect Alexandre will pick them up and forward
+> to the soc tree.
+>
 
-Quirking the root complex alone is likely to affect working configurations
-which generally should be avoided.
+Those changes have been applied on stm32-next (squashed in only one commit).
+
+Thanks
+Alex
+
+
+
+> However, I would prefer these to just be a single patch, as there is little
+> use in splitting the intended change up into one line per patch.
+> 
+>         Arnd
+> 
 
 
 
