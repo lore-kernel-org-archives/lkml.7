@@ -2,208 +2,161 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20CBC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0F9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C5121848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9566E215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570113254;
+	bh=RTqX+z8cK5xl0X0+RctzLgiGkQhX4jb6+xWRVlGYfmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oYB0UEGzUB2Babyt9HCAarpMhxya+kz/FG1n3vrjSq8scawYVqABEWMCss0zii0BR
+	 xdeAO4j5tz58vexKTiCA6C+dtWXhmvsmHXaOLk5m9WsThjhkq5n+COVGJr7yDCenAF
+	 xSEE4bzD1ulLlONVSekIry5sU3csQkW2Qe+lCDTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbfJCOcv (ORCPT
+        id S1730101AbfJCOeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:32:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57319 "EHLO mga12.intel.com"
+        Thu, 3 Oct 2019 10:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfJCOcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:32:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 07:32:49 -0700
-X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="196362792"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 07:32:47 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id A83F320F75; Thu,  3 Oct 2019 17:32:44 +0300 (EEST)
-Date:   Thu, 3 Oct 2019 17:32:44 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
-Message-ID: <20191003143244.GC14917@paasikivi.fi.intel.com>
-References: <20191002135134.12273-1-bparrot@ti.com>
- <20191002135134.12273-2-bparrot@ti.com>
- <20191003071714.zyldxfoollm26o4u@uno.localdomain>
- <20191003072251.GA14917@paasikivi.fi.intel.com>
- <20191003120741.h2k5hcqjqxnu6ts6@ti.com>
+        id S1727409AbfJCOeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:34:13 -0400
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF0F20865;
+        Thu,  3 Oct 2019 14:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570113252;
+        bh=RTqX+z8cK5xl0X0+RctzLgiGkQhX4jb6+xWRVlGYfmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QTIWKN7eurciMaxsQofTPkH+gqI2KSwXrfFsPCnyliJ2Z98E8OyfqEzk48loIsQMV
+         q8MTuH8Z67Wjg60lxgpVF7jLRoxNFhHdFpGQXTOQGuWvifQw8+u5CdkKDQHGYGcXqP
+         6WnxMmkN3WbnSf1qUo5xBdNgIzEme2QuVxo9jl50=
+Date:   Thu, 3 Oct 2019 16:34:09 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH tip/core/rcu 06/12] rcu: Make CPU-hotplug removal
+ operations enable tick
+Message-ID: <20191003143408.GB27555@lenoir>
+References: <20191003013834.GA12927@paulmck-ThinkPad-P72>
+ <20191003013903.13079-6-paulmck@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003120741.h2k5hcqjqxnu6ts6@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191003013903.13079-6-paulmck@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
-
-On Thu, Oct 03, 2019 at 07:07:41AM -0500, Benoit Parrot wrote:
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Thu [2019-Oct-03 10:22:51 +0300]:
-> > Hi Jacopo, Benoit,
-> > 
-> > On Thu, Oct 03, 2019 at 09:17:14AM +0200, Jacopo Mondi wrote:
-> > > Hi Benoit,
-> > > 
-> > > On Wed, Oct 02, 2019 at 08:51:32AM -0500, Benoit Parrot wrote:
-> > > > Add v4l2 controls to report the pixel rates of each mode. This is
-> > > > needed by some CSI2 receiver in order to perform proper DPHY
-> > > > configuration.
-> > > >
-> > > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > > > ---
-> > > >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
-> > > >  1 file changed, 25 insertions(+)
-> > > >
-> > > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> > > > index 500d9bbff10b..5198dc887400 100644
-> > > > --- a/drivers/media/i2c/ov5640.c
-> > > > +++ b/drivers/media/i2c/ov5640.c
-> > > > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
-> > > >
-> > > >  struct ov5640_ctrls {
-> > > >  	struct v4l2_ctrl_handler handler;
-> > > > +	struct {
-> > > > +		struct v4l2_ctrl *pixel_rate;
-> > > > +	};
-> > > 
-> > > Do you need to wrap this v4l2_ctrl in it's own unnamed struct? Other
-> > > controls here declared in this way are clustered and, if I'm not
-> > > mistaken, using unnamed struct to wrap them is just a typographically
-> > > nice way to convey that. I think your new control could be declared
-> > > without a wrapping struct { }.
-> > > 
-> > > >  	struct {
-> > > >  		struct v4l2_ctrl *auto_exp;
-> > > >  		struct v4l2_ctrl *exposure;
-> > > > @@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
-> > > >  	return 0;
-> > > >  }
-> > > >
-> > > > +static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-> > > > +{
-> > > > +	u64 rate;
-> > > > +
-> > > > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-> > > > +	rate *= ov5640_framerates[sensor->current_fr];
-> > > > +
-> > > > +	return rate;
-> > > > +}
-> > > > +
-> > > 
-> > > Just to point out this is the -theoretical- pixel rate, and might be
-> > > quite different from the one calculated by the clock tree tuning
-> > > procedure (which should be updated to match Hugues' latest findings).
-> > 
-> > Hmm. Considering the xclk rate may be pretty much anything, I'd suppose
-> > the value above would only be correct for a given xclk rate.
+On Wed, Oct 02, 2019 at 06:38:57PM -0700, paulmck@kernel.org wrote:
+> From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 > 
-> I am not sure about that, different xclk rate might yield slightly
-> different byte clock, but all in all the resolution and framerate pretty
-> much dictate the end result, no?
+> CPU-hotplug removal operations run the multi_cpu_stop() function, which
+> relies on the scheduler to gain control from whatever is running on the
+> various online CPUs, including any nohz_full CPUs running long loops in
+> kernel-mode code.  Lack of the scheduler-clock interrupt on such CPUs
+> can delay multi_cpu_stop() for several minutes and can also result in
+> RCU CPU stall warnings.  This commit therefore causes CPU-hotplug removal
+> operations to enable the scheduler-clock interrupt on all online CPUs.
 
-Interestingly, the driver determines the PLL configuration based on the
-pixels per line and lines per frame (including blanking) and the frames per
-seconds. I guess it's always been like that in this driver.
-
-So I agree the target frame rate can be used for this.
-
-You could change ov5640_set_mode() to use this function as well to avoid
-doing the same calculation twice in different places in the driver. Up to
-you.
+So, like Peter said back then, there must be an issue in the scheduler
+such as a missing or mishandled preemption point.
 
 > 
-> > 
-> > Could this be simply calculated from the clock tree configuration, to get
-> > the right value in all cases?
+> [ paulmck: Apply Joel Fernandes TICK_DEP_MASK_RCU->TICK_DEP_BIT_RCU fix. ]
+> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> ---
+>  kernel/rcu/tree.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> It probably could, and as I said earlier I gave it a try and failed, since
-> the theoretical value worked for me that's what I went with. Those are the
-> same values that Maxime's patch referred to. (dfbfb7aa832cdb media: ov5640:
-> Compute the clock rate at runtime).
-> 
-> Here I am just "publishing it".
-> 
-> Benoit
-> 
-> > 
-> > > 
-> > > >  static int ov5640_set_fmt(struct v4l2_subdev *sd,
-> > > >  			  struct v4l2_subdev_pad_config *cfg,
-> > > >  			  struct v4l2_subdev_format *format)
-> > > > @@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
-> > > >  	if (mbus_fmt->code != sensor->fmt.code)
-> > > >  		sensor->pending_fmt_change = true;
-> > > >
-> > > > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-> > > > +				 ov5640_calc_pixel_rate(sensor));
-> > > >  out:
-> > > >  	mutex_unlock(&sensor->lock);
-> > > >  	return ret;
-> > > > @@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
-> > > >  	/* we can use our own mutex for the ctrl lock */
-> > > >  	hdl->lock = &sensor->lock;
-> > > >
-> > > > +	/* Clock related controls */
-> > > > +	ctrls->pixel_rate =
-> > > > +		v4l2_ctrl_new_std(hdl, ops,
-> > > 
-> > > If you like it better, this could fit in 1 line
-> > > 
-> > > 	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-> > > 					      0, INT_MAX, 1,
-> > > 					      ov5640_calc_pixel_rate(sensor)
-> > > 
-> > > Thanks
-> > >    j
-> > > 
-> > > > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
-> > > > +				  ov5640_calc_pixel_rate(sensor));
-> > > 
-> > > 
-> > > > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> > 
-> > Note that ctrls->pixel_rate is NULL if e.g. memory allocation fails when
-> > creating the control.
-> > 
-> > > > +
-> > > >  	/* Auto/manual white balance */
-> > > >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
-> > > >  					   V4L2_CID_AUTO_WHITE_BALANCE,
-> > > > @@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
-> > > >  		sensor->frame_interval = fi->interval;
-> > > >  		sensor->current_mode = mode;
-> > > >  		sensor->pending_mode_change = true;
-> > > > +
-> > > > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-> > > > +					 ov5640_calc_pixel_rate(sensor));
-> > > >  	}
-> > > >  out:
-> > > >  	mutex_unlock(&sensor->lock);
-> > 
-> > -- 
-> > Regards,
-> > 
-> > Sakari Ailus
-> > sakari.ailus@linux.intel.com
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index f708d54..74bf5c65 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2091,6 +2091,7 @@ static void rcu_cleanup_dead_rnp(struct rcu_node *rnp_leaf)
+>   */
+>  int rcutree_dead_cpu(unsigned int cpu)
+>  {
+> +	int c;
+>  	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+>  	struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
+>  
+> @@ -2101,6 +2102,10 @@ int rcutree_dead_cpu(unsigned int cpu)
+>  	rcu_boost_kthread_setaffinity(rnp, -1);
+>  	/* Do any needed no-CB deferred wakeups from this CPU. */
+>  	do_nocb_deferred_wakeup(per_cpu_ptr(&rcu_data, cpu));
+> +
+> +	// Stop-machine done, so allow nohz_full to disable tick.
+> +	for_each_online_cpu(c)
+> +		tick_dep_clear_cpu(c, TICK_DEP_BIT_RCU);
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Just use tick_dep_clear() without for_each_online_cpu().
+
+>  	return 0;
+>  }
+>  
+> @@ -3074,6 +3079,7 @@ static void rcutree_affinity_setting(unsigned int cpu, int outgoing)
+>   */
+>  int rcutree_online_cpu(unsigned int cpu)
+>  {
+> +	int c;
+>  	unsigned long flags;
+>  	struct rcu_data *rdp;
+>  	struct rcu_node *rnp;
+> @@ -3087,6 +3093,10 @@ int rcutree_online_cpu(unsigned int cpu)
+>  		return 0; /* Too early in boot for scheduler work. */
+>  	sync_sched_exp_online_cleanup(cpu);
+>  	rcutree_affinity_setting(cpu, -1);
+> +
+> +	// Stop-machine done, so allow nohz_full to disable tick.
+> +	for_each_online_cpu(c)
+> +		tick_dep_clear_cpu(c, TICK_DEP_BIT_RCU);
+
+Same here.
+
+>  	return 0;
+>  }
+>  
+> @@ -3096,6 +3106,7 @@ int rcutree_online_cpu(unsigned int cpu)
+>   */
+>  int rcutree_offline_cpu(unsigned int cpu)
+>  {
+> +	int c;
+>  	unsigned long flags;
+>  	struct rcu_data *rdp;
+>  	struct rcu_node *rnp;
+> @@ -3107,6 +3118,10 @@ int rcutree_offline_cpu(unsigned int cpu)
+>  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  
+>  	rcutree_affinity_setting(cpu, cpu);
+> +
+> +	// nohz_full CPUs need the tick for stop-machine to work quickly
+> +	for_each_online_cpu(c)
+> +		tick_dep_set_cpu(c, TICK_DEP_BIT_RCU);
+
+And here you only need tick_dep_set() without for_each_online_cpu().
+
+Thanks.
+
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.9.5
+> 
