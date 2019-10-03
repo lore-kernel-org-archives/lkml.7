@@ -2,197 +2,143 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A268C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC58C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F08C21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F4C217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GuSlTaVF"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bByRo3SH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfJCJJo (ORCPT
+        id S1729109AbfJCJKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:09:44 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:40777 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfJCJJo (ORCPT
+        Thu, 3 Oct 2019 05:10:11 -0400
+Received: from mail-pl1-f181.google.com ([209.85.214.181]:41336 "EHLO
+        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbfJCJKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:09:44 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x9399S8L014758;
-        Thu, 3 Oct 2019 18:09:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x9399S8L014758
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570093769;
-        bh=0n5cPsF5haYRPkr2VgOQDasD7KbvcEkObY/W1AYYxoY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GuSlTaVFdcOm8THyLoUFPJnfg+ogQL59HMlirt/bBWqEw/zNFDYvaQ2ZIEdY64AjF
-         /aDBMeHvuIt/w59QaX2bvM24qqRDs9k86wVvVZ7Aaw9IKAj8QvgzOOjP9Sily3oEfQ
-         7Wuf2/+c/JOIugBUHL+NepI7WG/G9aVlpmSdGsxuo6PorzwoGOLZx6DznQaEDBqkN6
-         0qS5Y1Ktcmt2vu3B1T99VBKlarbs/g2HExixnBjqDYOsHFcEaDUG4euQ15bzvnnijW
-         kJo3hRHSUj6nZfTK1d1vwyeSly2P9aQSZGo5ATW6HfP5p8jVbhG55q3F2eK7w8mCyM
-         gLTkT0WeCNsGg==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id l13so644170uap.8;
-        Thu, 03 Oct 2019 02:09:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAX1pNLQ6SH4g+LeDIjXrOTAGIjxShMFPZ18sSRyqxPeaL6hFTiK
-        doZt8eHVL2OlMwdgWb2BA/dTEU6Z0rl6vDeo7ig=
-X-Google-Smtp-Source: APXvYqzaRxwD3DovY3SLF0jFPnex4EWJSi1FdvFEvcljAurmm9CUYLadWL/Tqls0CAy/5bUcYvaJJeSOLZCyUN3Tq/0=
-X-Received: by 2002:a9f:21f6:: with SMTP id 109mr2062792uac.109.1570093768250;
- Thu, 03 Oct 2019 02:09:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
- <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com> <20190922112555.GB122003@gmail.com>
-In-Reply-To: <20190922112555.GB122003@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 3 Oct 2019 18:08:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASr7e7Hc2_CBanfN06-WP3mFn9qByuTbyzZ+HTrEwUXkA@mail.gmail.com>
-Message-ID: <CAK7LNASr7e7Hc2_CBanfN06-WP3mFn9qByuTbyzZ+HTrEwUXkA@mail.gmail.com>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Oct 2019 05:10:10 -0400
+Received: by mail-pl1-f181.google.com with SMTP id t10so1194584plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=iMtypI6KAEMcJ9rYi5Q4bPpiz/5ORhxuJ1l1aCrdEbI=;
+        b=bByRo3SHUyhiwyJbLrcdfQjTPirjMvPtcf3RppEl/w+VbKdFA+wURYYRn+SB1WOfU/
+         rJLBKRm7f1HTY51dvB7v+Y/HISSu/LTvBi1DfHBOryRw8YQKyEYepfaWNIWhZaG5TdjV
+         mxJlgkgGDEg2gQlcg8mwuaYalNfMlpkEkMJcNENJY18VVOtaLK1H8vj46wCYyj7fecNd
+         X1N5BMAXzLLPDM1/akeRy3dfp2JQJjJa43RMVQxAblSamCTlQ0opAXWffIqBkPDHJsK5
+         bzupQuUdQu0EeZJhXIS/Ch7CiIWM1TXwVneZFQSmT5BKm72MgWVWDRAswjQ9OpLEGcf7
+         vM0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iMtypI6KAEMcJ9rYi5Q4bPpiz/5ORhxuJ1l1aCrdEbI=;
+        b=cmv63ccIYKyqtawOdqVZrYP3vdhHxHMYUvg1ZYdgsB43Ah+St13VpKmBi3OrlF0b29
+         q2YiZpOk2haPo5PRhNIhVuiDMngC2bo3VtV2uc7vZnDOW8mq3eGgr8wzPmWMT8QBgd6b
+         1SFoJE7CGLYEJQpdgtGSdK8H6l/veVlYN6pa9J0bqz48FDaC8zXYdeyn+vhsIZM6yDYg
+         h0L3lPm245zX2QJRfGmIA8USwKucn9YsrhBlblu9FWqkCkk124L94TM/K6uo0BpBME2E
+         h4BhEu5zXVRKTdrTGMPdNpwpkIDsifdAiFqI15v9RKSaoh8ptimhhm6uID91dolBiAgt
+         5F2g==
+X-Gm-Message-State: APjAAAX7GVWa+yoUmCyVNFoMRWq+VyewsFiGMtc6QlCMX3DJ55DpJLG7
+        74o5/6Y/SZE/zQFx1y0e7KDXHQ==
+X-Google-Smtp-Source: APXvYqzyE9oM4lS/SzNWMKW5+lppU+ud83w4p3tCW57BC7S0wD+m/pVotdICLfarV0z6n6L75nCJTA==
+X-Received: by 2002:a17:902:bcc4:: with SMTP id o4mr8164748pls.142.1570093808283;
+        Thu, 03 Oct 2019 02:10:08 -0700 (PDT)
+Received: from localhost.localdomain (111-241-164-136.dynamic-ip.hinet.net. [111.241.164.136])
+        by smtp.gmail.com with ESMTPSA id f128sm3445422pfg.143.2019.10.03.02.10.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 02:10:07 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+To:     linux-hackers@sifive.com
+Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] dmaengine: sf-pdma: Add platform dma driver
+Date:   Thu,  3 Oct 2019 17:09:00 +0800
+Message-Id: <20191003090945.29210-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 8:26 PM Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > Sorry about that. I am surprised that none of the other reviewers
-> > > brought this up.
-> >
-> > I think I'm "special".
-> >
-> > There was some other similar change a few years ago, which I
-> > absolutely hated because of how it broke autocomplete for me. Very few
-> > other people seemed to react to it.
->
-> FWIW, I am obsessively sensitive to autocomplete and overall source code
-> file hieararchy and nomenclature details as well, so it's not just you.
->
-> Beyond the muscle memory aspect, nonsensical naming and inanely flat file
-> hierarchies annoy kernel developers and makes it harder for newbies to
-> understand the kernel source as well.
->
-> The less clutter, the more organization, the better - and there's very
-> few valid technical reasons to add any new files or directories to the
-> top level directory - we should probably *remove* quite a few.
->
-> For example 'firmware/' was recently moved to drivers/firmware/, and in a
-> similar fashion about a third of the remaining 22 directories should
-> probably be moved too:
->
->   drwxr-xr-x    arch
->   drwxr-xr-x    block
->   drwxr-xr-x    certs           # move to build/certs/ dir
->   drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
->   drwxr-xr-x    Documentation
->   drwxr-xr-x    drivers
->   drwxr-xr-x    fs
->   drwxr-xr-x    include
->   drwxr-xr-x    init
->   drwxr-xr-x    ipc             # move to kernel/ipc/
->   drwxr-xr-x    kernel
->   drwxr-xr-x    lib
->   drwxr-xr-x    LICENSES
->   drwxr-xr-x    mm
->   drwxr-xr-x    net
->   drwxr-xr-x    samples         # move to Documentation/samples/
->   drwxr-xr-x    scripts         # move to build/scripts/
->   drwxr-xr-x    security
->   drwxr-xr-x    sound           # move to drivers/sound/
->   drwxr-xr-x    tools
->   drwxr-xr-x    usr             # move to build/usr/
->   drwxr-xr-x    virt            # move to the already existing drivers/virt/
->
->   -rw-r--r--    COPYING
->   -rw-r--r--    CREDITS
->   -rw-r--r--    Kbuild
->   -rw-r--r--    Kconfig
->   -rw-r--r--    MAINTAINERS
->   -rw-r--r--    Makefile
->   -rw-r--r--    README
->
-> There's a few borderline ones:
->
->  - 'block' could in principle move to drivers/block/core/ but it's fine
->    at the top level too I think.
->
->  - 'init' could in principle be moved to kernel/init/ - but it's not
->    wrong at the top level either.
->
-> The remaining top level hierarchy would look pretty sweet and short:
->
->   drwxr-xr-x    arch
->   drwxr-xr-x    block
->   drwxr-xr-x    build             # new
+Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
+DMAengine controller doc[1] to implement and take other DMA drivers as reference.
+Such as
 
-I am opposed to the "build".
+  - drivers/dma/fsl-edma.c
+  - drivers/dma/dw-edma/
+  - drivers/dma/pxa-dma.c
 
-The build tools will go too deep, like build/scripts/kconfig ?
+Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
 
-I often use checkpatch.pl, get_maintainer.pl etc.
+ - 4 physical DMA channels, share same DONE and error interrupt handler. 
+ - Support MEM_TO_MEM
+ - Tested by DMA test client
+ - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
+   patch for easier review and apply to different branch or SoC platform.
+ - retry 1 time if DMA error occurs.
 
-Do I have to type build/scripts/checkpatch.pl ?
+[Reference Doc]
+ [1] ./Documentation/driver-api/dmaengine/provider.rst
+ [2] ./Documentation/driver-api/dmaengine/dmatest.rst
+ [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
 
+[Simple steps to test of DMA Test client]
+ $ echo 1 > /sys/module/dmatest/parameters/iterations
+ $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
+ $ echo 1 > /sys/module/dmatest/parameters/run
 
+[Expected test result]
+[  267.563323] dmatest: dma0chan0-copy0: summary 45629 tests, 0 failures 38769.01 iops 309661 KB/s (0)
+[  267.572427] dmatest: dma0chan1-copy0: summary 45863 tests, 0 failures 40286.85 iops 321643 KB/s (0)
+[  267.581392] dmatest: dma0chan2-copy0: summary 45975 tests, 0 failures 41178.48 iops 328740 KB/s (0)
+[  267.590542] dmatest: dma0chan3-copy0: summary 44768 tests, 0 failures 38560.29 iops 307726 KB/s (0)
 
+Green Wan (4):
+  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
+  MAINTAINERS: Add Green as SiFive PDMA driver maintainer
 
-
-
->   drwxr-xr-x    Documentation
->   drwxr-xr-x    drivers
->   drwxr-xr-x    fs
->   drwxr-xr-x    include
->   drwxr-xr-x    init
->   drwxr-xr-x    kernel
->   drwxr-xr-x    lib
->   drwxr-xr-x    LICENSES
->   drwxr-xr-x    mm
->   drwxr-xr-x    net
->   drwxr-xr-x    security
->   drwxr-xr-x    tools
->
->   -rw-r--r--    COPYING
->   -rw-r--r--    CREDITS
->   -rw-r--r--    Kbuild
->   -rw-r--r--    Kconfig
->   -rw-r--r--    MAINTAINERS
->   -rw-r--r--    Makefile
->   -rw-r--r--    README
->
-> I'm volunteering to do this (in a scripted, repeatable, reviewable,
-> tweakable and "easy to execute in a quiet moment" fashion), although
-> I also expect you to balk at the churn. :-)
->
-> Thanks,
->
->         Ingo
-
-
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  55 ++
+ MAINTAINERS                                   |   6 +
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
+ drivers/dma/Kconfig                           |   2 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/sf-pdma/Kconfig                   |   6 +
+ drivers/dma/sf-pdma/Makefile                  |   1 +
+ drivers/dma/sf-pdma/sf-pdma.c                 | 601 ++++++++++++++++++
+ drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
+ 9 files changed, 803 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+ create mode 100644 drivers/dma/sf-pdma/Kconfig
+ create mode 100644 drivers/dma/sf-pdma/Makefile
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
 
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
