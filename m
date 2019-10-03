@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A9CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8DCC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C54D2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D6E2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121435;
-	bh=DLaN/Hdn1G8Wec4gNiumUQAwHA3S+1L14RNLvVUb3Ow=;
+	s=default; t=1570121440;
+	bh=e+vpEdynfvmz8PwJA4x8O4oVQGYU5GXH/XaFuuhjjPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbVZJXPSoHDu7t6nCzZrzhZlPfOyvBSzO12BbdWRKPrrpONStY7bUlbDaE3TxXUek
-	 AVIhBLhYkeBJ21zc9bSGZVe1ih9pKeDeH8ItWjukKxhtFiIcfdCJUBLv5M7KgGGyGZ
-	 89tGuhak3pnWtBbpxME93x99pap0Bco4DQIQ9QP4=
+	b=CyHgtfXw9bVA5HuWFhvXU0TBs2endgm5FIVykDSOKjLXjMM0UOXofvb3ZOMRFEi+K
+	 wcui2mqRdh1f2WadsHLrcn5ZVlPCLSdsUCbTEkt1OkoMW+zqtrzqNzKsA8OTmIgaAc
+	 beHNmnKviMtO3M3Tpn1mCc9qC8UPABQ0PEVdo+Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404293AbfJCQue (ORCPT
+        id S2405949AbfJCQuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392586AbfJCQu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:27 -0400
+        id S2405936AbfJCQuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165D82070B;
-        Thu,  3 Oct 2019 16:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 289A020867;
+        Thu,  3 Oct 2019 16:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121426;
-        bh=DLaN/Hdn1G8Wec4gNiumUQAwHA3S+1L14RNLvVUb3Ow=;
+        s=default; t=1570121434;
+        bh=e+vpEdynfvmz8PwJA4x8O4oVQGYU5GXH/XaFuuhjjPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATObzNxbdGXlvGuzDdU+M8M+pfzvxwp6YoKdxmIWsd79x08OcdiyGtOh8m9S9B9pH
-         ETQYAclSpa7uIWeE+QQyL81Ps+AP9fEz2AOaHQ2yThUw61IQjt3/yLXU8YqdZnWt2O
-         kmSXaTwWZ0m7CrsRTi36PASqGLZkyy717Nz0MRQw=
+        b=ldwYV+AUj4e+nlGM1iBaSpM8CFhu4vfGPzkrXVBS5EzsDHER8z/ot3RYdKvrGOOZK
+         v/9CFDE3y8sgo4IfaAEAvCJR1pxH9+wfkZ9TXVWsb806r030z5gBIiw5KhwVcktDF1
+         Y+0zOvMKsw463VTxy3zRV36jbbSceQuHZCshdB3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Richard Kojedzinszky <richard@kojedz.in>
-Subject: [PATCH 5.3 275/344] binfmt_elf: Do not move brk for INTERP-less ET_EXEC
-Date:   Thu,  3 Oct 2019 17:54:00 +0200
-Message-Id: <20191003154607.279467431@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        Phil Scarr <phil.scarr@pm.me>
+Subject: [PATCH 5.3 260/344] parisc: Disable HP HSC-PCI Cards to prevent kernel crash
+Date:   Thu,  3 Oct 2019 17:53:45 +0200
+Message-Id: <20191003154606.138766386@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,38 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Helge Deller <deller@gmx.de>
 
-commit 7be3cb019db1cbd5fd5ffe6d64a23fefa4b6f229 upstream.
+commit 5fa1659105fac63e0f3c199b476025c2e04111ce upstream.
 
-When brk was moved for binaries without an interpreter, it should have
-been limited to ET_DYN only. In other words, the special case was an
-ET_DYN that lacks an INTERP, not just an executable that lacks INTERP.
-The bug manifested for giant static executables, where the brk would end
-up in the middle of the text area on 32-bit architectures.
+The HP Dino PCI controller chip can be used in two variants: as on-board
+controller (e.g. in B160L), or on an Add-On card ("Card-Mode") to bridge
+PCI components to systems without a PCI bus, e.g. to a HSC/GSC bus.  One
+such Add-On card is the HP HSC-PCI Card which has one or more DEC Tulip
+PCI NIC chips connected to the on-card Dino PCI controller.
 
-Reported-and-tested-by: Richard Kojedzinszky <richard@kojedz.in>
-Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
+Dino in Card-Mode has a big disadvantage: All PCI memory accesses need
+to go through the DINO_MEM_DATA register, so Linux drivers will not be
+able to use the ioremap() function. Without ioremap() many drivers will
+not work, one example is the tulip driver which then simply crashes the
+kernel if it tries to access the ports on the HP HSC card.
+
+This patch disables the HP HSC card if it finds one, and as such
+fixes the kernel crash on a HP D350/2 machine.
+
+Signed-off-by: Helge Deller <deller@gmx.de>
+Noticed-by: Phil Scarr <phil.scarr@pm.me>
 Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/binfmt_elf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/parisc/dino.c |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1141,7 +1141,8 @@ out_free_interp:
- 		 * (since it grows up, and may collide early with the stack
- 		 * growing down), and into the unused ELF_ET_DYN_BASE region.
- 		 */
--		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
-+		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
-+		    loc->elf_ex.e_type == ET_DYN && !interpreter)
- 			current->mm->brk = current->mm->start_brk =
- 				ELF_ET_DYN_BASE;
+--- a/drivers/parisc/dino.c
++++ b/drivers/parisc/dino.c
+@@ -156,6 +156,15 @@ static inline struct dino_device *DINO_D
+ 	return container_of(hba, struct dino_device, hba);
+ }
  
++/* Check if PCI device is behind a Card-mode Dino. */
++static int pci_dev_is_behind_card_dino(struct pci_dev *dev)
++{
++	struct dino_device *dino_dev;
++
++	dino_dev = DINO_DEV(parisc_walk_tree(dev->bus->bridge));
++	return is_card_dino(&dino_dev->hba.dev->id);
++}
++
+ /*
+  * Dino Configuration Space Accessor Functions
+  */
+@@ -437,6 +446,21 @@ static void quirk_cirrus_cardbus(struct
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_CIRRUS, PCI_DEVICE_ID_CIRRUS_6832, quirk_cirrus_cardbus );
+ 
++#ifdef CONFIG_TULIP
++static void pci_fixup_tulip(struct pci_dev *dev)
++{
++	if (!pci_dev_is_behind_card_dino(dev))
++		return;
++	if (!(pci_resource_flags(dev, 1) & IORESOURCE_MEM))
++		return;
++	pr_warn("%s: HP HSC-PCI Cards with card-mode Dino not yet supported.\n",
++		pci_name(dev));
++	/* Disable this card by zeroing the PCI resources */
++	memset(&dev->resource[0], 0, sizeof(dev->resource[0]));
++	memset(&dev->resource[1], 0, sizeof(dev->resource[1]));
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_DEC, PCI_ANY_ID, pci_fixup_tulip);
++#endif /* CONFIG_TULIP */
+ 
+ static void __init
+ dino_bios_init(void)
 
 
