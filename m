@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE5DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D18FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449EC20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E1220862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123877;
-	bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
+	s=default; t=1570123880;
+	bh=XT86kEpiNU0DwRGGQv65OB+v1DaHSodQuRRLnE4WgMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqcCnPcl0xIV8p/0Oci2q2ksrs8RFNsX87yMI3UA25KI0YA5DknuCezUa0tkIgSXs
-	 qykULd8ftLoGErlyXlS+GQXGeOxK1aVAFrRBXvuO/PyQiZSPN4Cx40gA1lUeDIkH3d
-	 HtCcWdWCO4VLKWlxHC1jjfM1ZKOPE++NCWTPoqus=
+	b=yEYMDIOlye0hgerKa40nxzpTM9meez6YqxpB9d7gmIJz9/kzVxG6PALmkuf+ISstg
+	 IP2enhhpAM00B6GqtTRwP9L6KnXuTUbsnGAk9nXdCypUHtrLVu4bBl3XG9c/UAx6kV
+	 eFLjGsC3/A5ThAEg+mrzAD3kSA6AV+2nUu+nmorY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387607AbfJCQKU (ORCPT
+        id S1731760AbfJCRbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59416 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387585AbfJCQKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:13 -0400
+        id S2387618AbfJCQKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D88207FF;
-        Thu,  3 Oct 2019 16:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915AE215EA;
+        Thu,  3 Oct 2019 16:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119013;
-        bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
+        s=default; t=1570119021;
+        bh=XT86kEpiNU0DwRGGQv65OB+v1DaHSodQuRRLnE4WgMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzvFHoCZrr6Db+GfCUPcWT0hY2OKXqqbLXPbqvt5yFiFWHckn25tWOMZ0mCTZMxuz
-         aR8G5JWmrPs7Sru4l/7oid0Q6uis1JVMau4qY2MqDxYfSMWyWja6EX8KQtv37AeJqs
-         g0vq0Air8MDfoc/XjAYNF2vw0yIZvSXrJ1Ox8JGA=
+        b=IoG8NCiYeKFIa3E/shLh+pMbGk4c6pDnNWXVhBVQdJYisDDV54sZPzEbleFSI8uHy
+         lBru/BvBmgf+uiz8trJ1oucZxyh2Ra3rlhk+KRc+vl1i3JaD8NOMnrHEApEwzJdKv4
+         Ivp4gB068XnO/fOMNAaUeJaDjqCAd4KWHR53MDTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 094/185] net: lpc-enet: fix printk format strings
-Date:   Thu,  3 Oct 2019 17:52:52 +0200
-Message-Id: <20191003154459.576180428@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 097/185] media: hdpvr: add terminating 0 at end of string
+Date:   Thu,  3 Oct 2019 17:52:55 +0200
+Message-Id: <20191003154500.436507794@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,61 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
+[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
 
-compile-testing this driver on other architectures showed
-multiple warnings:
+dev->usbc_buf was passed as argument for %s, but it was not safeguarded
+by a terminating 0.
 
-  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
-  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
+This caused this syzbot issue:
 
-  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
 
-Use format strings that work on all architectures.
+Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
 
-Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index 08381ef8bdb48..41d30f55c946b 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -1371,13 +1371,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	pldat->dma_buff_base_p = dma_handle;
+diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
+index 416092c47ef40..dd82948b1cb05 100644
+--- a/drivers/media/usb/hdpvr/hdpvr-core.c
++++ b/drivers/media/usb/hdpvr/hdpvr-core.c
+@@ -141,6 +141,7 @@ static int device_authorization(struct hdpvr_device *dev)
  
- 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
--	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
-+	netdev_dbg(ndev, "IO address size      :%zd\n",
-+			(size_t)resource_size(res));
- 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
- 			pldat->net_base);
- 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
--	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
--	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
--			pldat->dma_buff_base_p);
-+	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
-+	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
-+			&pldat->dma_buff_base_p);
- 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
- 			pldat->dma_buff_base_v);
+ 	dev->fw_ver = dev->usbc_buf[1];
  
-@@ -1424,8 +1425,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out_unregister_netdev;
- 
--	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
--	       res->start, ndev->irq);
-+	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
-+	       (unsigned long)res->start, ndev->irq);
- 
- 	phydev = ndev->phydev;
++	dev->usbc_buf[46] = '\0';
+ 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
+ 			  dev->fw_ver, &dev->usbc_buf[2]);
  
 -- 
 2.20.1
