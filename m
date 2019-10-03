@@ -2,73 +2,75 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3608EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75C7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFBF222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F5421D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QBspVv8H"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BjlPEm6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfJCIed (ORCPT
+        id S1728328AbfJCIgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:34:33 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36756 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfJCIec (ORCPT
+        Thu, 3 Oct 2019 04:36:43 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35274 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfJCIgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:34:32 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x938YIS3039241;
-        Thu, 3 Oct 2019 03:34:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570091658;
-        bh=wC+n3OENdEJ2IsQgFjMkRTLzwLiPOKYcYONX3Y1jgtU=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=QBspVv8HfOBkUrfWYQCvaNnIy27aioTckz/SMrSDkArh7nK5JMRFhG03E7MF/jiFz
-         2s9WYAkoJdLtwYTZrhWv89A5tJcjgsPXH1YaK7nmuaWixskJZksIsJDfdVRrtnW5kl
-         osvlF7806n9kY2QdMr4TUHuDiYf8szKYNpx2U6Ws=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x938YIkE066573;
-        Thu, 3 Oct 2019 03:34:18 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 03:34:17 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 03:34:17 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x938YEqD014611;
-        Thu, 3 Oct 2019 03:34:14 -0500
-Subject: Re: [PATCH v3 09/14] dmaengine: ti: New driver for K3 UDMA - split#2:
- probe/remove, xlate and filter_fn
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-10-peter.ujfalusi@ti.com>
-Message-ID: <a183aa24-572f-483d-a60c-1e721b981e65@ti.com>
-Date:   Thu, 3 Oct 2019 11:35:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191001061704.2399-10-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 3 Oct 2019 04:36:43 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w2so1547323qkf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 01:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=4CeVWWjChe4JVh4dmU/4+mZJCI7ZUrE7w4sXeS5XAUY=;
+        b=BjlPEm6OXFq1mVyI8rYGVVJDZyQKrmtgEvSfhhUSqsunbJAxuislyFQihRpphfWfg1
+         XibCg+kUjOHR8MdJwAQ4J9cPTmAMalW8zn4ubrWH0iKSHaeewTeK+YvxquFZo8JNYAn0
+         GwJKXg/eVAPyGxIiTroT4kOn3O66qr+IRNMM3N/SX/YhbaZHakZnFKAKCJW5UvhnpHOO
+         Q0mXRy4XEWEkD8XDOvOr1wkNM2GapJbTTUgJ9b3xnTNr4JicOKt4i4dmA/B8TZv/v7PD
+         /OupqfIN924GEkmyN4drm472U7BSfVEMdw6gJHFBUAoOoLE9sUT1amFEy/hC9S6SGyVs
+         2S9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=4CeVWWjChe4JVh4dmU/4+mZJCI7ZUrE7w4sXeS5XAUY=;
+        b=Va26vaG3T3mJz44fpRY1k3xTFMPO4WPpzWuP1fL//DKOsszyI2lQA8Ha+nDxY0nWdV
+         0tVIhCJ8eaxzuRdw2ScfrOuMIOv9F/w5VH+BFPoU2TOUvaxAUTom8OGBnjrQP7Kmoksq
+         nlJ7gOqLPhNUnJE2PMY1aKL1Mx6T/XibYBKdh2i2hx0X3kGdc2wc4YTxyNi9I9tcciva
+         7hLrHDk3rZ0U/B1kVxaO9onkIZ7ROz01UyNWxOnrsp0KRvOKSutDThjbJr6UMf5a1kNn
+         yxngUL1mzZL+Urz3GkdTEFs0pycSKbIfOAE4WVLI/iMQDoV0G7eKF+eSG1iXnbTSZRvf
+         QNew==
+X-Gm-Message-State: APjAAAUVab/m33/u7cVwkK9emBJJEfIIbisjV/hMx88+5GHJCptBlOYG
+        65oIqQOhkHT8iRGP5sQgDWcXJg==
+X-Google-Smtp-Source: APXvYqwU/eHga2r/bmmNvbCeJ0VJW+Mx2EC5xyF/7WKWX7O5pehJ+MfzV+FrlnVMiLgfMwU2flt5Tg==
+X-Received: by 2002:a37:713:: with SMTP id 19mr3254349qkh.490.1570091800694;
+        Thu, 03 Oct 2019 01:36:40 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d16sm861676qkl.7.2019.10.03.01.36.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 01:36:39 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3 1/3] mm: kmemleak: Make the tool tolerant to struct scan_area allocation failures
+Date:   Thu, 3 Oct 2019 04:36:39 -0400
+Message-Id: <934700AE-CD78-43B8-A59B-2E968DA44DBB@lca.pw>
+References: <2ac37341-097e-17a2-fb6b-7912da9fa38e@ozlabs.ru>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+In-Reply-To: <2ac37341-097e-17a2-fb6b-7912da9fa38e@ozlabs.ru>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+X-Mailer: iPhone Mail (17A844)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,172 +78,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 01/10/2019 9.16, Peter Ujfalusi wrote:
-> Split patch for review containing: module probe/remove functions, of_xlate
-> and filter_fn for slave channel requests.
-> 
-> DMA driver for
-> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-> 
-> The UDMA-P is intended to perform similar (but significantly upgraded) functions
-> as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-> supports the transmission and reception of various packet types. The UDMA-P is
-> architected to facilitate the segmentation and reassembly of SoC DMA data
-> structure compliant packets to/from smaller data blocks that are natively
-> compatible with the specific requirements of each connected peripheral. Multiple
-> Tx and Rx channels are provided within the DMA which allow multiple segmentation
-> or reassembly operations to be ongoing. The DMA controller maintains state
-> information for each of the channels which allows packet segmentation and
-> reassembly operations to be time division multiplexed between channels in order
-> to share the underlying DMA hardware. An external DMA scheduler is used to
-> control the ordering and rate at which this multiplexing occurs for Transmit
-> operations. The ordering and rate of Receive operations is indirectly controlled
-> by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-> 
-> The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-> channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-> Third-Party channels on a channel by channel basis.
-> 
-> The initial driver supports:
-> - MEM_TO_MEM (TR mode)
-> - DEV_TO_MEM (Packet / TR mode)
-> - MEM_TO_DEV (Packet / TR mode)
-> - Cyclic (Packet / TR mode)
-> - Metadata for descriptors
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/ti/k3-udma.c | 617 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 617 insertions(+)
-> 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 628120fffa2f..d40fd268b477 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
+> On Oct 3, 2019, at 2:13 AM, Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
+>=20
+> I came across this one while bisecting sudden drop in throughput of a 100G=
+bit Mellanox CX4 ethernet card in a PPC POWER9
+> system, the speed dropped from 100Gbit to about 40Gbit. Bisect pointed at d=
+ba82d943177, this are the relevant config
+> options:
+>=20
+> [fstn1-p1 kernel]$ grep KMEMLEAK ~/pbuild/kernel-le-4g/.config
+> CONFIG_HAVE_DEBUG_KMEMLEAK=3Dy
+> CONFIG_DEBUG_KMEMLEAK=3Dy
+> CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE=3D16000
+> # CONFIG_DEBUG_KMEMLEAK_TEST is not set
+> # CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF is not set
+> CONFIG_DEBUG_KMEMLEAK_AUTO_SCAN=3Dy
+>=20
+> Setting CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE=3D400 or even 4000 (this is wh=
+at KMEMLEAK_EARLY_LOG_SIZE is now in the master)
+> produces soft lockups on the recent upstream (sha1 a3c0e7b1fe1f):
+>=20
+> [c000001fde64fb60] [c000000000c24ed4] _raw_write_unlock_irqrestore+0x54/0x=
+70
+> [c000001fde64fb90] [c0000000004117e4] find_and_remove_object+0xa4/0xd0
+> [c000001fde64fbe0] [c000000000411c74] delete_object_full+0x24/0x50
+> [c000001fde64fc00] [c000000000411d28] __kmemleak_do_cleanup+0x88/0xd0
+> [c000001fde64fc40] [c00000000012a1a4] process_one_work+0x374/0x6a0
+> [c000001fde64fd20] [c00000000012a548] worker_thread+0x78/0x5a0
+> [c000001fde64fdb0] [c000000000135508] kthread+0x198/0x1a0
+> [c000001fde64fe20] [c00000000000b980] ret_from_kernel_thread+0x5c/0x7c
+>=20
+> KMEMLEAK_EARLY_LOG_SIZE=3D8000 works but slow.
+>=20
+> Interestingly KMEMLEAK_EARLY_LOG_SIZE=3D400 on dba82d943177 still worked a=
+nd I saw my 100Gbit. Disabling KMEMLEAK also
+> fixes the speed (apparently).
+>=20
+> Is that something expected? Thanks,
 
-...
-
-> +static int udma_setup_resources(struct udma_dev *ud)
-> +{
-> +	struct device *dev = ud->dev;
-> +	int ch_count, ret, i, j;
-> +	u32 cap2, cap3;
-> +	struct ti_sci_resource_desc *rm_desc;
-> +	struct ti_sci_resource *rm_res, irq_res;
-> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
-> +	static const char * const range_names[] = { "ti,sci-rm-range-tchan",
-> +						    "ti,sci-rm-range-rchan",
-> +						    "ti,sci-rm-range-rflow" };
-> +
-> +	cap2 = udma_read(ud->mmrs[MMR_GCFG], 0x28);
-> +	cap3 = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
-> +
-> +	ud->rflow_cnt = cap3 & 0x3fff;
-> +	ud->tchan_cnt = cap2 & 0x1ff;
-> +	ud->echan_cnt = (cap2 >> 9) & 0x1ff;
-> +	ud->rchan_cnt = (cap2 >> 18) & 0x1ff;
-> +	ch_count  = ud->tchan_cnt + ud->rchan_cnt;
-> +
-> +	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
-> +					   sizeof(unsigned long), GFP_KERNEL);
-> +	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
-> +				  GFP_KERNEL);
-> +	ud->rchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rchan_cnt),
-> +					   sizeof(unsigned long), GFP_KERNEL);
-> +	ud->rchans = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rchans),
-> +				  GFP_KERNEL);
-> +	ud->rflow_gp_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rflow_cnt),
-> +					      sizeof(unsigned long),
-> +					      GFP_KERNEL);
-> +	ud->rflow_gp_map_allocated = devm_kcalloc(dev,
-> +						  BITS_TO_LONGS(ud->rflow_cnt),
-> +						  sizeof(unsigned long),
-> +						  GFP_KERNEL);
-> +	ud->rflow_in_use = devm_kcalloc(dev, BITS_TO_LONGS(ud->rflow_cnt),
-> +					sizeof(unsigned long),
-> +					GFP_KERNEL);
-> +	ud->rflows = devm_kcalloc(dev, ud->rflow_cnt, sizeof(*ud->rflows),
-> +				  GFP_KERNEL);
-> +
-> +	if (!ud->tchan_map || !ud->rchan_map || !ud->rflow_gp_map ||
-> +	    !ud->rflow_gp_map_allocated || !ud->tchans || !ud->rchans ||
-> +	    !ud->rflows || !ud->rflow_in_use)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * RX flows with the same Ids as RX channels are reserved to be used
-> +	 * as default flows if remote HW can't generate flow_ids. Those
-> +	 * RX flows can be requested only explicitly by id.
-> +	 */
-> +	bitmap_set(ud->rflow_gp_map_allocated, 0, ud->rchan_cnt);
-> +
-> +	/* by default no GP rflows are assigned to Linux */
-> +	bitmap_set(ud->rflow_gp_map, 0, ud->rflow_cnt);
-> +
-> +	/* Get resource ranges from tisci */
-> +	for (i = 0; i < RM_RANGE_LAST; i++)
-> +		tisci_rm->rm_ranges[i] =
-> +			devm_ti_sci_get_of_resource(tisci_rm->tisci, dev,
-> +						    tisci_rm->tisci_dev_id,
-> +						    (char *)range_names[i]);
-> +
-> +	/* tchan ranges */
-> +	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
-> +	if (IS_ERR(rm_res)) {
-> +		bitmap_zero(ud->tchan_map, ud->tchan_cnt);
-> +	} else {
-> +		bitmap_fill(ud->tchan_map, ud->tchan_cnt);
-> +		for (i = 0; i < rm_res->sets; i++) {
-> +			rm_desc = &rm_res->desc[i];
-> +			bitmap_clear(ud->tchan_map, rm_desc->start,
-> +				     rm_desc->num);
-> +			dev_dbg(dev, "ti-sci-res: tchan: %d:%d\n",
-> +				rm_desc->start, rm_desc->num);
-> +		}
-> +	}
-> +	irq_res.sets = rm_res->sets;
-> +
-> +	/* rchan and matching default flow ranges */
-> +	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
-> +	if (IS_ERR(rm_res)) {
-> +		bitmap_zero(ud->rchan_map, ud->rchan_cnt);
-> +	} else {
-> +		bitmap_fill(ud->rchan_map, ud->rchan_cnt);
-> +		for (i = 0; i < rm_res->sets; i++) {
-> +			rm_desc = &rm_res->desc[i];
-> +			bitmap_clear(ud->rchan_map, rm_desc->start,
-> +				     rm_desc->num);
-> +			dev_dbg(dev, "ti-sci-res: rchan: %d:%d\n",
-> +				rm_desc->start, rm_desc->num);
-> +		}
-> +	}
-> +
-> +	irq_res.sets += rm_res->sets;
-> +	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
-> +	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
-> +	for (i = 0; i < rm_res->sets; i++) {
-> +		irq_res.desc[i].start = rm_res->desc[i].start;
-> +		irq_res.desc[i].num = rm_res->desc[i].num;
-> +	}
-> +	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
-> +	for (j = 0; j < rm_res->sets; j++, i++) {
-> +		irq_res.desc[i].start = rm_res->desc[j].start + 0x2000;
-
-s/0x2000/ud->match_data->rchan_oes_offset
-
-since the rchan oes offset is also needed to be used when allocating the
-MSI domain.
-
-> +		irq_res.desc[i].num = rm_res->desc[j].num;
-> +	}
-> +	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
-> +	kfree(irq_res.desc);
-> +	if (ret) {
-> +		dev_err(ud->dev, "Failed to allocate MSI interrupts\n");
-> +		return ret;
-> +	}
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+It is expected that a debug option like this will make the system slower.=
