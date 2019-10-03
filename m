@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0933FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2CBC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11C020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C44420865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123226;
-	bh=J2DOie5+rJ5lNglv194L5tZNcZlQOsaZ5mRHla4X5YE=;
+	s=default; t=1570123229;
+	bh=06yTpw5L3yxHHbkzrBL/O9Pyp9ibvAP5y0E2ZisKh+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2c/awHvd6lzN5PR0+j/TnpsK4zIa/jdX3lUcmgZIn7bRmmhIl9cX2UnXJnZ0RWY1s
-	 ULKrFWfN8PFtUF80K7YQtJJBmhiXGQoOpg4JczD1ZE0W/fTEmulX/TMU6LfTCOdn5P
-	 LsZIKXWBLYRC+yf0TFjfJZUmuZXMqfQWX7ob65Ds=
+	b=JhHr1I48C73pS2IcLmqA4tC8fdX5xRO3VpYtdu7B7HpG5YWDo/30LSrG8XdKLxmnh
+	 JPeFl4mDfsEeHUYh+zBUaeBlm0GVWQTUwdz2Dl8rpBN/wsnOJmZ2lVPm26+mNWeNRJ
+	 xlwsELu1nOuL8YYBsH9Qw7P/NJsyAHd8/sx2qhpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389453AbfJCQS1 (ORCPT
+        id S2391031AbfJCRU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388580AbfJCQSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:18:22 -0400
+        id S2387876AbfJCQSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:18:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 050A020865;
-        Thu,  3 Oct 2019 16:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A0720865;
+        Thu,  3 Oct 2019 16:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119501;
-        bh=J2DOie5+rJ5lNglv194L5tZNcZlQOsaZ5mRHla4X5YE=;
+        s=default; t=1570119509;
+        bh=06yTpw5L3yxHHbkzrBL/O9Pyp9ibvAP5y0E2ZisKh+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a2RiLTLU9P0DvkqLmb5l5cF+Z+xafN4XNnTGw3WoGAY2teR2DexkIscuGen/1yTWo
-         0sKsQ6AqfhA8Pyk76YDz2vdO5D/JGiWghze9Itd5+McKx8vPfZb7wq5cr+N+gcoPeW
-         tb7Zlbtw/JA8GYqI4EaewFsjcrsNQ6GLZn3B2dWU=
+        b=MpIbgSPyNxDW2AH17VUYJR9/w4fJs1VkAo/LUikwo1IyHxgc0Yh1kPYBnMfaKZAsb
+         sRGknYMwaHHF/aGTSLtr/Z5M3YWxtIOpR4+eJk6BXuaQJvW+jZGXSyNmephNNj2cCx
+         x7YtHcTwIUZTKorPEPYvS9guZEi5WX2QwQWGuzOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Mike Christie <mchristi@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/211] nbd: add missing config put
-Date:   Thu,  3 Oct 2019 17:52:35 +0200
-Message-Id: <20191003154507.323052521@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 091/211] media: dvb-frontends: use ida for pll number
+Date:   Thu,  3 Oct 2019 17:52:37 +0200
+Message-Id: <20191003154507.805992774@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,46 +62,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit 887e975c4172d0d5670c39ead2f18ba1e4ec8133 ]
+[ Upstream commit c268e7adea52be0093de1164c425f3c8d8927770 ]
 
-Fix bug added with the patch:
+KASAN: global-out-of-bounds Read in dvb_pll_attach
 
-commit 8f3ea35929a0806ad1397db99a89ffee0140822a
-Author: Josef Bacik <josef@toxicpanda.com>
-Date:   Mon Jul 16 12:11:35 2018 -0400
+Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
+accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
+that is more than size of 'id' which is DVB_PLL_MAX(64).
 
-    nbd: handle unexpected replies better
+Rather than increasing dvb_pll_devcount every time, use ida so that
+numbers are allocated correctly. This does mean that no more than
+64 devices can be attached at the same time, but this is more than
+sufficient.
 
-where if the timeout handler runs when the completion path is and we fail
-to grab the mutex in the timeout handler we will leave a config reference
-and cannot free the config later.
+usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+software demuxer
+dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
+usb 1-1: media controller created
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+tc90522 0-0018: Toshiba TC90522 attached.
+usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
+module)...
+dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
+module' registered.
+==================================================================
+BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
+drivers/media/dvb-frontends/dvb-pll.c:798
+Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
+  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
+  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
+  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
+  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
+  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
+  dvb_usbv2_adapter_frontend_init
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
+  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+[inline]
+  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+  dvb_usbv2_probe.cold+0x24dc/0x255d
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the variable:
+  id+0x100/0x120
+
+Memory state around the buggy address:
+  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
+  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+                                                        ^
+  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+==================================================================
+
+Reported-by: syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/dvb-frontends/dvb-pll.c | 40 ++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index fa60f265ee506..b1c7009de1f4d 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -353,8 +353,10 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
- 	}
- 	config = nbd->config;
+diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+index 29836c1a40e98..ee830c76e4b30 100644
+--- a/drivers/media/dvb-frontends/dvb-pll.c
++++ b/drivers/media/dvb-frontends/dvb-pll.c
+@@ -18,6 +18,7 @@
  
--	if (!mutex_trylock(&cmd->lock))
-+	if (!mutex_trylock(&cmd->lock)) {
-+		nbd_config_put(nbd);
- 		return BLK_EH_RESET_TIMER;
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/idr.h>
+ #include <linux/dvb/frontend.h>
+ #include <asm/types.h>
+ 
+@@ -43,8 +44,7 @@ struct dvb_pll_priv {
+ };
+ 
+ #define DVB_PLL_MAX 64
+-
+-static unsigned int dvb_pll_devcount;
++static DEFINE_IDA(pll_ida);
+ 
+ static int debug;
+ module_param(debug, int, 0644);
+@@ -796,6 +796,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	struct dvb_pll_priv *priv = NULL;
+ 	int ret;
+ 	const struct dvb_pll_desc *desc;
++	int nr;
+ 
+ 	b1 = kmalloc(1, GFP_KERNEL);
+ 	if (!b1)
+@@ -804,9 +805,14 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	b1[0] = 0;
+ 	msg.buf = b1;
+ 
+-	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
+-	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
+-		pll_desc_id = id[dvb_pll_devcount];
++	nr = ida_simple_get(&pll_ida, 0, DVB_PLL_MAX, GFP_KERNEL);
++	if (nr < 0) {
++		kfree(b1);
++		return NULL;
 +	}
++
++	if (id[nr] > DVB_PLL_UNDEFINED && id[nr] < ARRAY_SIZE(pll_list))
++		pll_desc_id = id[nr];
  
- 	if (config->num_connections > 1) {
- 		dev_err_ratelimited(nbd_to_dev(nbd),
+ 	BUG_ON(pll_desc_id < 1 || pll_desc_id >= ARRAY_SIZE(pll_list));
+ 
+@@ -817,24 +823,20 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 			fe->ops.i2c_gate_ctrl(fe, 1);
+ 
+ 		ret = i2c_transfer (i2c, &msg, 1);
+-		if (ret != 1) {
+-			kfree(b1);
+-			return NULL;
+-		}
++		if (ret != 1)
++			goto out;
+ 		if (fe->ops.i2c_gate_ctrl)
+ 			     fe->ops.i2c_gate_ctrl(fe, 0);
+ 	}
+ 
+ 	priv = kzalloc(sizeof(struct dvb_pll_priv), GFP_KERNEL);
+-	if (!priv) {
+-		kfree(b1);
+-		return NULL;
+-	}
++	if (!priv)
++		goto out;
+ 
+ 	priv->pll_i2c_address = pll_addr;
+ 	priv->i2c = i2c;
+ 	priv->pll_desc = desc;
+-	priv->nr = dvb_pll_devcount++;
++	priv->nr = nr;
+ 
+ 	memcpy(&fe->ops.tuner_ops, &dvb_pll_tuner_ops,
+ 	       sizeof(struct dvb_tuner_ops));
+@@ -867,6 +869,11 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	kfree(b1);
+ 
+ 	return fe;
++out:
++	kfree(b1);
++	ida_simple_remove(&pll_ida, nr);
++
++	return NULL;
+ }
+ EXPORT_SYMBOL(dvb_pll_attach);
+ 
+@@ -903,9 +910,10 @@ dvb_pll_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ static int dvb_pll_remove(struct i2c_client *client)
+ {
+-	struct dvb_frontend *fe;
++	struct dvb_frontend *fe = i2c_get_clientdata(client);
++	struct dvb_pll_priv *priv = fe->tuner_priv;
+ 
+-	fe = i2c_get_clientdata(client);
++	ida_simple_remove(&pll_ida, priv->nr);
+ 	dvb_pll_release(fe);
+ 	return 0;
+ }
 -- 
 2.20.1
 
