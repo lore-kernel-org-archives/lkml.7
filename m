@@ -2,51 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE72C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF2EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CFE2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2813B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119879;
-	bh=2QH/EUfS4lQgR+I/4gaccFGz2O8T7l5naiON+mxXKuI=;
+	s=default; t=1570119882;
+	bh=+/hLRL/FKcfQH5eYay63/0yU8bvtD4cGH+NkwwKBPQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rygSlwWmZdJQQgKptQMDNSZFG85w+baGzLBTrd39xnaECNLHYiA06b6IbDSfLnD2A
-	 8I7XxlzXXB/z1HmTqXDDmkYlRnTYz0I2g9WhG6YOOSURF4jb23obfaAkt78VbplFjh
-	 Ltg8G6BC6I5yWymBx7yfbexw6SCsHPEJFgm3f054=
+	b=nXwVAiqvCKKXP2NRbdzWOZ4QLTJ5FzJHWttp/0n8ILxovePebKUzGy4R7m/xoMOPo
+	 BjHLRrQ3/V/9J+4swTAWPsuKXocLKM6u7zoT1uhmSurRDk7IZkTm9CbUr5+He6s8ED
+	 2tdqqDrBJye6o7kdLjy06jMmKlOs9hKFNl7TERbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390790AbfJCQYi (ORCPT
+        id S1728219AbfJCQYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388447AbfJCQYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:24:35 -0400
+        id S2390779AbfJCQYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F5720867;
-        Thu,  3 Oct 2019 16:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B612054F;
+        Thu,  3 Oct 2019 16:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119874;
-        bh=2QH/EUfS4lQgR+I/4gaccFGz2O8T7l5naiON+mxXKuI=;
+        s=default; t=1570119877;
+        bh=+/hLRL/FKcfQH5eYay63/0yU8bvtD4cGH+NkwwKBPQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAzxO0u+36i0QHU/VIIwiY7fc+zhbPXJuQDHk+sTBEVyPCgsGcC6RWg4meR6iRRAP
-         I/85wmgNVOIdNOYcFnSHefQ78H3VihuAHhRY4jQO53DIsU7+ue1o8km9zTl4GQCbTS
-         /YOSKzNL9OjmlKLDdNqLi8qeXkEJvOTpVOc0OUnM=
+        b=D4hVEYNTzmyGAhWajSh2lSQyEedz+M52NkC6uwpTl1RLIETUgK4Q5EbzsHN7yNV/w
+         rW/Y1ZHGoLfYrFb37BQgDIvj0WneE8R6VgyeKpchwldqkb/mj3M/s0RTRq8fPVDOWc
+         zKVlV5IPm/iRlmcFy0t3RJHKe+6Rfkca1Quhvg3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.2 014/313] selftests: Update fib_tests to handle missing ping6
-Date:   Thu,  3 Oct 2019 17:49:52 +0200
-Message-Id: <20191003154534.825243660@linuxfoundation.org>
+        stable@vger.kernel.org, Benoit <benoit.sansoni@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 015/313] skge: fix checksum byte order
+Date:   Thu,  3 Oct 2019 17:49:53 +0200
+Message-Id: <20191003154534.912709646@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,40 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit 0360894a05ed52be268e3c4d40b2df9d94975fa6 ]
+[ Upstream commit 5aafeb74b5bb65b34cc87c7623f9fa163a34fa3b ]
 
-Some distributions (e.g., debian buster) do not install ping6. Re-use
-the hook in pmtu.sh to detect this and fallback to ping.
+Running old skge driver on PowerPC causes checksum errors
+because hardware reported 1's complement checksum is in little-endian
+byte order.
 
-Fixes: a0e11da78f48 ("fib_tests: Add tests for metrics on routes")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: Benoit <benoit.sansoni@gmail.com>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/fib_tests.sh |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/skge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/net/fib_tests.sh
-+++ b/tools/testing/selftests/net/fib_tests.sh
-@@ -16,6 +16,8 @@ PAUSE_ON_FAIL=no
- PAUSE=no
- IP="ip -netns ns1"
+--- a/drivers/net/ethernet/marvell/skge.c
++++ b/drivers/net/ethernet/marvell/skge.c
+@@ -3110,7 +3110,7 @@ static struct sk_buff *skge_rx_get(struc
+ 	skb_put(skb, len);
  
-+which ping6 > /dev/null 2>&1 && ping6=$(which ping6) || ping6=$(which ping)
-+
- log_test()
- {
- 	local rc=$1
-@@ -1068,7 +1070,7 @@ ipv6_route_metrics_test()
- 	log_test $rc 0 "Multipath route with mtu metric"
+ 	if (dev->features & NETIF_F_RXCSUM) {
+-		skb->csum = csum;
++		skb->csum = le16_to_cpu(csum);
+ 		skb->ip_summed = CHECKSUM_COMPLETE;
+ 	}
  
- 	$IP -6 ro add 2001:db8:104::/64 via 2001:db8:101::2 mtu 1300
--	run_cmd "ip netns exec ns1 ping6 -w1 -c1 -s 1500 2001:db8:104::1"
-+	run_cmd "ip netns exec ns1 ${ping6} -w1 -c1 -s 1500 2001:db8:104::1"
- 	log_test $? 0 "Using route with mtu metric"
- 
- 	run_cmd "$IP -6 ro add 2001:db8:114::/64 via  2001:db8:101::2  congctl lock foo"
 
 
