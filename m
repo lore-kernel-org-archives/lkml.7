@@ -2,107 +2,132 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF27CC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754CDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AF2222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56397222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfJCFVe convert rfc822-to-8bit (ORCPT
+        id S1727357AbfJCFVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 01:21:34 -0400
-Received: from mailoutvs34.siol.net ([185.57.226.225]:48537 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725763AbfJCFVd (ORCPT
+        Thu, 3 Oct 2019 01:21:45 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:45796 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfJCFVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 01:21:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id B0B825212B8;
-        Thu,  3 Oct 2019 07:21:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id fiKaRxyZbaY9; Thu,  3 Oct 2019 07:21:30 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 57E7852128A;
-        Thu,  3 Oct 2019 07:21:30 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id EA2655212B8;
-        Thu,  3 Oct 2019 07:21:29 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] media: cedrus: improvements
-Date:   Thu, 03 Oct 2019 07:21:29 +0200
-Message-ID: <8173759.PpYHodOKdy@jernej-laptop>
-In-Reply-To: <20191002222307.GD24151@aptenodytes>
-References: <20191002193553.1633467-1-jernej.skrabec@siol.net> <20191002222307.GD24151@aptenodytes>
+        Thu, 3 Oct 2019 01:21:45 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46kLw7068qz1rK4B;
+        Thu,  3 Oct 2019 07:21:42 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46kLw66CYBz1qqkK;
+        Thu,  3 Oct 2019 07:21:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 80Da5VYQF329; Thu,  3 Oct 2019 07:21:41 +0200 (CEST)
+X-Auth-Info: LFxTrFuYi+4nz3f5ZE4LbrlcIC7kNleGhCNFGo/I4KE=
+Received: from [192.168.1.106] (213-197-88-96.pool.digikabel.hu [213.197.88.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu,  3 Oct 2019 07:21:41 +0200 (CEST)
+Reply-To: hs@denx.de
+Subject: Re: [PATCH 1/2] misc: add cc1101 devicetree binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org
+References: <20190922060356.58763-1-hs@denx.de>
+ <20190922060356.58763-2-hs@denx.de>
+ <5d94b1e3.1c69fb81.9d89.1cce@mx.google.com>
+From:   Heiko Schocher <hs@denx.de>
+Message-ID: <2329ed8f-7e34-596a-ae94-c9b5ac263908@denx.de>
+Date:   Thu, 3 Oct 2019 07:21:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5d94b1e3.1c69fb81.9d89.1cce@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 03. oktober 2019 ob 00:23:07 CEST je Paul Kocialkowski 
-napisal(a):
-> Hi,
+Hello Rob,
+
+Am 02.10.2019 um 16:19 schrieb Rob Herring:
+> On Sun, Sep 22, 2019 at 08:03:55AM +0200, Heiko Schocher wrote:
+>> add devicetree binding for cc1101 misc driver.
+>>
+>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>> ---
+>>
+>>   .../devicetree/bindings/misc/cc1101.txt       | 27 +++++++++++++++++++
+>>   1 file changed, 27 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/misc/cc1101.txt
 > 
-> On Wed 02 Oct 19, 21:35, Jernej Skrabec wrote:
-> > This is continuation of https://lkml.org/lkml/2019/5/30/1459 with several
-> > patches removed (2 merged, others needs redesign) and one added.
+> Can you please convert this to DT schema.
+
+Of course, missed this point, sorry, reworked. Is there a HowTo
+for writting a schema?
+(beside Documentation/devicetree/bindings/example-schema.yaml)
+
+>> diff --git a/Documentation/devicetree/bindings/misc/cc1101.txt b/Documentation/devicetree/bindings/misc/cc1101.txt
+>> new file mode 100644
+>> index 0000000000000..afea6acf4a9c5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/cc1101.txt
 > 
-> Thanks for the continued effort on this, these fixes are greatly appreciated
-> (and more generally, all the work you are putting into cedrus)!
-> 
-> Although I've been out of the loop on cedrus, it is very nice to see
-> development happening. Keep up the good work!
+> Normal naming is to use compatible string. So ti,cc1101.yaml for schema.
 
-Thanks! Those fixes are just cleaned up version of patches I'm using in 
-LibreELEC for some time now. I hate maintaining out-of-tree patches over a 
-long period, so pushing them upstream is beneficial for all :)
-
-I'll send more improvements once your HEVC patches are merged.
-
-Best regards,
-Jernej
+renamed.
 
 > 
-> Cheers,
+>> @@ -0,0 +1,27 @@
+>> +driver cc1101 Low-Power Sub-1 GHz RF Transceiver chip from Texas
+>> +Instruments.
+>> +
+>> +Requires node properties:
+>> +- compatible : should be "ti,cc1101";
+>> +- reg        : Chip select address of device, see:
+>> +               Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +- gpios      : list of 2 gpios, first gpio is for GDO0 pin
+>> +               second for GDO2 pin, see more:
 > 
-> Paul
+> Is there a GDO1? Would be hard to add later because you can't change the
+> indices once defined.
+
+Good point. There is a GDO1, so yes, this makes sense, added.
+
 > 
-> > Patch 1 fixes h264 playback issue which happens in rare cases.
-> > 
-> > Patch 2 sets PPS default reference index count in register from PPS
-> > control. Currently it was set to values from slice control.
-> > 
-> > Patch 3 replaces direct accesses to capture queue from m2m contex with
-> > helpers which was designed exactly for that. It's also safer since
-> > helpers do some checks.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> > Jernej Skrabec (3):
-> >   media: cedrus: Fix decoding for some H264 videos
-> >   media: cedrus: Fix H264 default reference index count
-> >   media: cedrus: Use helpers to access capture queue
-> >  
-> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  8 +++-
-> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 46 ++++++++++++++-----
-> >  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  3 ++
-> >  3 files changed, 44 insertions(+), 13 deletions(-)
+>> +               Documentation/devicetree/bindings/gpio/gpio.txt
+>> +
+>> +Recommended properties:
+>> + - spi-max-frequency: Definition as per
+>> +                Documentation/devicetree/bindings/spi/spi-bus.txt
+> 
+> Notice that this file is now just in redirection...
 
+Ok.
 
+> 
+>> + - freq       : used spi frequency for communication with cc1101 chip
+> 
+> What's this? Doesn't spi-max-frequency cover it?
 
+Of course, removed.
 
+Thanks for your time and review.
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
