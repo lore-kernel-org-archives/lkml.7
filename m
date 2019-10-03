@@ -2,128 +2,172 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF19C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A907DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA2E20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB1020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122515;
-	bh=CBJzPvyt1+zrY3RnJCyFAcmCfv/Az6AnUlEgasJMdyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ovx6VdOgzXKMvOzfxH1QrEuwv4o+ZEWT3zmyIBGu7bdvlR7VBrz6Vl60OjwEJaWoh
-	 Y/ZRiR0U0mUq9Mij9TyVIVDs//XsqI/3meLhMBKps8w8fuokztrzTFKPiB27vwYaUR
-	 X+YrPdojGx5TH8RPCC++y2ha0DSM2MBr4q7EyGgU=
+	s=default; t=1570122531;
+	bh=wcMVuAqbMTHTWZ9CBU+HlR2sUqfwj8hv95CeiKNkwOY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tLUVA9ekSW7GaTgMYwItIQb+VCB0agxcIxhJv4zIhrvwd81tXIGc/RLzA2Cgw0V1s
+	 ZMZo9jh1sOypD6fPpPatL5i12UGJijKROlvx647kgLs58dQ39xhVt3Q43ka7REGvJz
+	 eXEuF0Uf0U4RamoerDrAe6hJj6Aw3UU2zMQEOifQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393463AbfJCRIe (ORCPT
+        id S2393432AbfJCRIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:08:34 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33398 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393437AbfJCRIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:08:32 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so3643395ljd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xGPNBFqVYtxez447o7VfzpEEdWGUXuNgcxnMZZtHxhw=;
-        b=JQlxhcyH0jHwarYabbpi6wNpJW+TQGKZ3Q/o2mSONQp+edqEcUDbfc+bZRMV+49X8b
-         6iqsJ6W2xVarc2Qbqm9lYLbIQOaubfS2b2d2RR4HW+NziK3KAuGvVuwqS5GOwXs3hULK
-         jTZNUAkzsyFNJMvYZMy8abMpYXNOFhEkahnBA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xGPNBFqVYtxez447o7VfzpEEdWGUXuNgcxnMZZtHxhw=;
-        b=oYfeS1MOJvU0l7wacN3BzVdxj//AJwgyhCDy1xddHhvbdL9ThV2VFwtyeGKRxMWGBD
-         aCt8ub9Ivuk7/wsBif3iIFS7Vcl66Wctp8vY5ypNesSB8jlfui5nJwWds2TTo5ZUX48Z
-         Gz+vK8l1sY7+neYucPpftln7zGEvPZxbTcYC5yzAaLM1KsvjRUKcLRjwxDHEu62OXoOm
-         Pr5GUW0WHU7eNhVBgPnszhJF9T4YyEHICyCCmHLCZW/8o9zyB7EMUPZ3F5JIb1Ogj0/k
-         xVgq92v342emlgxHnbztP8NzqNxPvKl2Qc+wP8wKon1zC8l4OtaFSAjE8LNyRnyyZSpD
-         jAxQ==
-X-Gm-Message-State: APjAAAW/9v3Z4smIzWYpdmKvy8xRjI0t+GQ1qgK0JnoKWyX+wduItw9J
-        wsbqXVe/Ne9EDO89l9h2tUIged/juKM=
-X-Google-Smtp-Source: APXvYqzqMY8b60y4cEPN1JW3g4aYGF4KZ6oD9pfYiP1GZAnS7Z25Y3BXKMiS030byZ5sAwZWyIdS7Q==
-X-Received: by 2002:a2e:8199:: with SMTP id e25mr3993242ljg.246.1570122509079;
-        Thu, 03 Oct 2019 10:08:29 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id g27sm658951lja.33.2019.10.03.10.08.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2019 10:08:27 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id n14so3579022ljj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:08:26 -0700 (PDT)
-X-Received: by 2002:a2e:86d5:: with SMTP id n21mr6759265ljj.1.1570122505822;
- Thu, 03 Oct 2019 10:08:25 -0700 (PDT)
+        Thu, 3 Oct 2019 13:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391832AbfJCQfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E02A2070B;
+        Thu,  3 Oct 2019 16:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570120502;
+        bh=wcMVuAqbMTHTWZ9CBU+HlR2sUqfwj8hv95CeiKNkwOY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p3wWF95QpUbXLeA5kPOR2PUheEYuFRUN8uPYqJFc0i/2nChuwSY8D2M1AV/NsHL3W
+         54Xha8Z/D/zGeIIL3X4z+WkBItjf1s/ZH13o6ytWY99PSu4FwlTZfKrw2xTD+YdxMh
+         VYGZevXnMVUHxM2wOSY1K/gamHH3n0N8oMEUMaAo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jungyeon Yoon <jungyeon.yoon@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 207/313] btrfs: extent-tree: Make sure we only allocate extents from block groups with the same type
+Date:   Thu,  3 Oct 2019 17:53:05 +0200
+Message-Id: <20191003154553.372022346@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
+References: <20191003154533.590915454@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
- <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
- <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com> <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 3 Oct 2019 10:08:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whkB+g0R0JqLB+Y4piUZf9A8P1ugi5T92LjFLNY+epBeg@mail.gmail.com>
-Message-ID: <CAHk-=whkB+g0R0JqLB+Y4piUZf9A8P1ugi5T92LjFLNY+epBeg@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 10:01 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> If this is purely about the fact that x86 is different from other
-> architectures, then let's remove the "compiler can do stupid things"
-> option on x86 too. It was never clear that it was a huge advantage.
+From: Qu Wenruo <wqu@suse.com>
 
-Side note: what might be an actual advantage would be to have a mode
-where you see when the compiler would choose to not inline things.
+[ Upstream commit 2a28468e525f3924efed7f29f2bc5a2926e7e19a ]
 
-Maybe we have things that are marked "inline" that simply shouldn't
-be. We do tend to have this history of adding small helper functions
-to header files, and then they grow and grow and grow. And now they
-shouldn't be in a header file any more, but they still are.
+[BUG]
+With fuzzed image and MIXED_GROUPS super flag, we can hit the following
+BUG_ON():
 
-So having a "compiler doesn't want to inline this" flag might be
-useful for finding those, but it might also be useful for people
-looking for what triggers bugs.
+  kernel BUG at fs/btrfs/delayed-ref.c:491!
+  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+  CPU: 0 PID: 1849 Comm: sync Tainted: G           O      5.2.0-custom #27
+  RIP: 0010:update_existing_head_ref.cold+0x44/0x46 [btrfs]
+  Call Trace:
+   add_delayed_ref_head+0x20c/0x2d0 [btrfs]
+   btrfs_add_delayed_tree_ref+0x1fc/0x490 [btrfs]
+   btrfs_free_tree_block+0x123/0x380 [btrfs]
+   __btrfs_cow_block+0x435/0x500 [btrfs]
+   btrfs_cow_block+0x110/0x240 [btrfs]
+   btrfs_search_slot+0x230/0xa00 [btrfs]
+   ? __lock_acquire+0x105e/0x1e20
+   btrfs_insert_empty_items+0x67/0xc0 [btrfs]
+   alloc_reserved_file_extent+0x9e/0x340 [btrfs]
+   __btrfs_run_delayed_refs+0x78e/0x1240 [btrfs]
+   ? kvm_clock_read+0x18/0x30
+   ? __sched_clock_gtod_offset+0x21/0x50
+   btrfs_run_delayed_refs.part.0+0x4e/0x180 [btrfs]
+   btrfs_run_delayed_refs+0x23/0x30 [btrfs]
+   btrfs_commit_transaction+0x53/0x9f0 [btrfs]
+   btrfs_sync_fs+0x7c/0x1c0 [btrfs]
+   ? __ia32_sys_fdatasync+0x20/0x20
+   sync_fs_one_sb+0x23/0x30
+   iterate_supers+0x95/0x100
+   ksys_sync+0x62/0xb0
+   __ia32_sys_sync+0xe/0x20
+   do_syscall_64+0x65/0x240
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-But honestly, the last time I saw somebody argue for "I don't want
-inlining", it was the broken "I want to compiler the kernel with no
-optimizations so that it's easier to look at the resulting code". That
-was just a _bad_ bad patch. And if it is concerns like that that are
-driving this "compiler doesn't have to inline", then we should stop it
-immediately.
+[CAUSE]
+This situation is caused by several factors:
+- Fuzzed image
+  The extent tree of this fs missed one backref for extent tree root.
+  So we can allocated space from that slot.
 
-             Linus
+- MIXED_BG feature
+  Super block has MIXED_BG flag.
+
+- No mixed block groups exists
+  All block groups are just regular ones.
+
+This makes data space_info->block_groups[] contains metadata block
+groups.  And when we reserve space for data, we can use space in
+metadata block group.
+
+Then we hit the following file operations:
+
+- fallocate
+  We need to allocate data extents.
+  find_free_extent() choose to use the metadata block to allocate space
+  from, and choose the space of extent tree root, since its backref is
+  missing.
+
+  This generate one delayed ref head with is_data = 1.
+
+- extent tree update
+  We need to update extent tree at run_delayed_ref time.
+
+  This generate one delayed ref head with is_data = 0, for the same
+  bytenr of old extent tree root.
+
+Then we trigger the BUG_ON().
+
+[FIX]
+The quick fix here is to check block_group->flags before using it.
+
+The problem can only happen for MIXED_GROUPS fs. Regular filesystems
+won't have space_info with DATA|METADATA flag, and no way to hit the
+bug.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203255
+Reported-by: Jungyeon Yoon <jungyeon.yoon@gmail.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/extent-tree.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index b8f4720879021..37865929fdc22 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -7875,6 +7875,14 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
+ 			 */
+ 			if ((flags & extra) && !(block_group->flags & extra))
+ 				goto loop;
++
++			/*
++			 * This block group has different flags than we want.
++			 * It's possible that we have MIXED_GROUP flag but no
++			 * block group is mixed.  Just skip such block group.
++			 */
++			btrfs_release_block_group(block_group, delalloc);
++			continue;
+ 		}
+ 
+ have_block_group:
+-- 
+2.20.1
+
+
+
