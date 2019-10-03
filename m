@@ -2,51 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F876C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0434C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFF8215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7624A215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118904;
-	bh=gitncEDTBUhnPPA56dyRUqyNxPoxb89DpDn2W1E+FUE=;
+	s=default; t=1570118909;
+	bh=A555abNMGKAMSAA9vFOnsYgjp6wzl2sHZDVCuaaJFxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lFY/AH1KEFKW61w01GWrBj+zpNUdgeyvG70KNtvu2sl0Ta7VxIMsFq3j13hXRI16q
-	 6OAq1gEdPIKov8PPIH0LgiJpbxX9wfxs65MIaI0KPDzxdCpUogYHItHEBhql0LjO3N
-	 8lx2ruZj0CqDXtW99XMG9G9cEWkB6tbE8z+BODK4=
+	b=F8dN9nucUkwW4RR9d1XhIwwNZaWBnmM1fW0Zwx1roQYcJA+mBvcdIZ9Wagc08U/EA
+	 NK4+SQ564xpEnBn4/q4uTV7ZMjAp7HNil7sR8iQgHV7U5zRiBJcBDe9//S62qLlq7l
+	 6E8YIc3mXfEgdAm24vok/epH74OGwH6duybrpHDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733120AbfJCQIX (ORCPT
+        id S1733156AbfJCQI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56544 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733066AbfJCQIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:08:21 -0400
+        id S1731054AbfJCQIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B47C20865;
-        Thu,  3 Oct 2019 16:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E64EF20865;
+        Thu,  3 Oct 2019 16:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118900;
-        bh=gitncEDTBUhnPPA56dyRUqyNxPoxb89DpDn2W1E+FUE=;
+        s=default; t=1570118903;
+        bh=A555abNMGKAMSAA9vFOnsYgjp6wzl2sHZDVCuaaJFxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCM2vzfYrbPintt5cZC3C8LzIp+ZpwKfzPiLPvGlSwnbhfcuD3Yu8aXC2/UNt8qCL
-         qi62ZDD6vedngUxjU/MUVw2+p4ihsJs4sKmKR1G0An4ZnQZMt++slHU5XBrIU1tNb7
-         Fz34b5uSTbB9Q81+HDVQ+YncHyES3cKGZhsN/z/0=
+        b=ijgosLDJJYybiQgPhTsPWyo7iJUnyi6LpfczHGtB6BbYFHxd1C/t/Gb4T1xoNRYaj
+         oQlg+Xel7rGvwsMkdD1hvCmhAdLa49/2cTSwNkzbch5TYXwOogLjdz0ec/5vGaB1Ax
+         5NfDQ31k3RfWRcj9qujxoulqRCDH9IoZr9md5fPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 052/185] nfc: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:52:10 +0200
-Message-Id: <20191003154449.544737709@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 053/185] ALSA: hda: Flush interrupts on disabling
+Date:   Thu,  3 Oct 2019 17:52:11 +0200
+Message-Id: <20191003154449.679469915@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,38 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 3a359798b176183ef09efb7a3dc59abad1cc7104 ]
+[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
 
-When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked
-first.
+I was looking at
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
+<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
+<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
+<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
+<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
+<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
+<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
+<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
+<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
+<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
+<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
+<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
+<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
+<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
+<4> [241.835436] Call Trace:
+<4> [241.835449]  input_event+0x45/0x70
+<4> [241.835464]  snd_jack_report+0xdc/0x100
+<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
+<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
+<4> [241.835530]  process_one_work+0x245/0x610
+
+which has the hallmarks of a worker queued from interrupt after it was
+supposedly cancelled (note the POISON_FREE), and I could not see where
+the interrupt would be flushed on shutdown so added the likely suspects.
+
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/llcp_sock.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/hda/hdac_controller.c | 2 ++
+ sound/pci/hda/hda_intel.c   | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -1012,10 +1012,13 @@ static int llcp_sock_create(struct net *
- 	    sock->type != SOCK_RAW)
- 		return -ESOCKTNOSUPPORT;
+diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
+index 778b42ba90b80..3377f0bc28280 100644
+--- a/sound/hda/hdac_controller.c
++++ b/sound/hda/hdac_controller.c
+@@ -442,6 +442,8 @@ static void azx_int_disable(struct hdac_bus *bus)
+ 	list_for_each_entry(azx_dev, &bus->stream_list, list)
+ 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
  
--	if (sock->type == SOCK_RAW)
-+	if (sock->type == SOCK_RAW) {
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		sock->ops = &llcp_rawsock_ops;
--	else
-+	} else {
- 		sock->ops = &llcp_sock_ops;
-+	}
++	synchronize_irq(bus->irq);
++
+ 	/* disable SIE for all streams */
+ 	snd_hdac_chip_writeb(bus, INTCTL, 0);
  
- 	sk = nfc_llcp_sock_alloc(sock, sock->type, GFP_ATOMIC, kern);
- 	if (sk == NULL)
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 96e9b3944b925..b42ab80ee6078 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1413,9 +1413,9 @@ static int azx_free(struct azx *chip)
+ 	}
+ 
+ 	if (bus->chip_init) {
++		azx_stop_chip(chip);
+ 		azx_clear_irq_pending(chip);
+ 		azx_stop_all_streams(chip);
+-		azx_stop_chip(chip);
+ 	}
+ 
+ 	if (bus->irq >= 0)
+-- 
+2.20.1
+
 
 
