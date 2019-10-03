@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B8EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09AEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2875220865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826AA20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121335;
-	bh=s1xHu8LphYSTJupvhJsAxrab1Glumm0UXtfw4+RHFfA=;
+	s=default; t=1570121337;
+	bh=A83DuCku9nE5Md5Uj9SRV/Gm/KsY/1rFO/G9q1my2l8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VsDCppgZZMy7t80eS3e9ndYqhzHSHzZBWPtUQacbkFmTiMD7DltDkGIqem4bHJmse
-	 ia+bo63O7GppDrtU3QCLW1TU6BB9d4R7BVojGxARYb5wkDQGd6QKPUSxw/aF+h+56R
-	 vvwkuo7ouE67t3m3j5oekUMoCbviq8JCpLy0f3w0=
+	b=PWpXDZN8Xs5dUJlScnVf7D2Az5hyxsqymk9y7spzAiD2mAqTUZPHK6+tppsl7J69m
+	 F5aNwJ901An3XGJAGPfXjuDP5if7OqQ7L0ZoKnPClVrpY/Eii/88T6fJmBTEGU8kvf
+	 hHiXbjVt7UZy/FuqhBygBLCS4k2JIL5hHFxEqP+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405771AbfJCQsy (ORCPT
+        id S2405589AbfJCQr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34994 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405098AbfJCQsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:48:51 -0400
+        id S2393038AbfJCQr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD4262070B;
-        Thu,  3 Oct 2019 16:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 247F22070B;
+        Thu,  3 Oct 2019 16:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121331;
-        bh=s1xHu8LphYSTJupvhJsAxrab1Glumm0UXtfw4+RHFfA=;
+        s=default; t=1570121275;
+        bh=A83DuCku9nE5Md5Uj9SRV/Gm/KsY/1rFO/G9q1my2l8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPWbKwTLSRFjobgyL75jmbJnXwLBuHTNq+RerqTxT/+MNvD2LbBCcc2e35ampw6Bz
-         XPmPAQfhoRtGTGCxU13Qgysv4V221c7snl4S+OAISjfTNFAtcy7XQ2zwRciTnEH+bU
-         N5zFlGJWOSe6dfjt+CqIgetOOZ/KEDKyMIABfth0=
+        b=Xptx9jCZrh3Ztj8wob/GYCDpolnw+FHAokmScGnQbW3FA/xoyE0f3Rsga+OBc39SY
+         E41vSU4lO5fxz106JCy3MPU4gw2McDuQ7DxNaQfD04KGGQFmWTobxL/+0U4bQ6iY+S
+         mnLa/SBfsE5op65mde1KJUmFGxhN4dAhFYom5ZyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Ahzo <Ahzo@tutanota.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 222/344] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
-Date:   Thu,  3 Oct 2019 17:53:07 +0200
-Message-Id: <20191003154602.270747929@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Easton <kevin@guarana.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 218/344] libertas: Add missing sentinel at end of if_usb.c fw_table
+Date:   Thu,  3 Oct 2019 17:53:03 +0200
+Message-Id: <20191003154601.836884177@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,39 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahzo <Ahzo@tutanota.com>
+From: Kevin Easton <kevin@guarana.org>
 
-[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
+[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
 
-This fixes screen corruption/flickering on 75 Hz displays.
+This sentinel tells the firmware loading process when to stop.
 
-v2: make print statement debug only (Alex)
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Ahzo <Ahzo@tutanota.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Signed-off-by: Kevin Easton <kevin@guarana.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index 487aeee1cf8a5..3c1084de5d59f 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -4068,6 +4068,11 @@ static int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
+diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
+index afac2481909b6..20436a289d5cd 100644
+--- a/drivers/net/wireless/marvell/libertas/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas/if_usb.c
+@@ -50,7 +50,8 @@ static const struct lbs_fw_table fw_table[] = {
+ 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
+ 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
+ 	{ MODEL_8388, "usb8388.bin", NULL },
+-	{ MODEL_8682, "libertas/usb8682.bin", NULL }
++	{ MODEL_8682, "libertas/usb8682.bin", NULL },
++	{ 0, NULL, NULL }
+ };
  
- 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
- 
-+	if (data->frame_time_x2 < 280) {
-+		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
-+		data->frame_time_x2 = 280;
-+	}
-+
- 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
- 
- 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
+ static const struct usb_device_id if_usb_table[] = {
 -- 
 2.20.1
 
