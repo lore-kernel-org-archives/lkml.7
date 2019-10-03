@@ -2,55 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B1BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FEAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA5320867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9BF222CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119956;
-	bh=/aWRxZsB9K/yMyjiaf4ASpJt4T0jT1xNzIVu/vT4QAw=;
+	s=default; t=1570119967;
+	bh=DTKvO66v163p+va+SeGgFiOwP3tsFY04aRiTV0shENc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/4JxyGY7otah1NzikLsE6f+/oEwSp1pDVEJzUPbNhgfyfLqzPKcCz0CsvET5XpQY
-	 I+2YV7SxOwFFQiFUCH8goaYPV4O27FRamK5CYapB/uHMmRZ0lC1hPb8ddqady06JUr
-	 DTuJvFG+rnTQ+WHhM9hbdvujTM0HZdh5ekgL/wXQ=
+	b=tjzms0H20XxerLOR91i1AAj53Q5B6r2QdWwnXXcc0Zrn+lre2Fa74Ue8D1pCo+9LK
+	 iOevTfHAjdzerVttFG8mL/Qr5y9Oxe+OedpzuxLr4WjRVcrmPTIL48LLmjPYg+CI/a
+	 8jI/KBFfV9BQ+esKbNUBsspNfQ/d/XQFhhh1B9Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390984AbfJCQZv (ORCPT
+        id S2391019AbfJCQ0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56298 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390974AbfJCQZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:47 -0400
+        id S1732677AbfJCQZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:25:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDF3620867;
-        Thu,  3 Oct 2019 16:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C0620867;
+        Thu,  3 Oct 2019 16:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119947;
-        bh=/aWRxZsB9K/yMyjiaf4ASpJt4T0jT1xNzIVu/vT4QAw=;
+        s=default; t=1570119958;
+        bh=DTKvO66v163p+va+SeGgFiOwP3tsFY04aRiTV0shENc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvjZ/SaFddkdxEDKKqRHI6GUwYQayMYWQ1szF6S/B0U42US6evrJgomWgM4a8u+8Z
-         P9su5HJgbGfBL03/rfm3U5Od8uqeE96k+yJuEzS3AKQ0n43UQCcM/hS0E6IT2D6CEX
-         /LjmYe632tUWn4B1Iv4rv4Wrw3TpEVY/L1lwptfU=
+        b=096gFiUE4vYb260sj54TyM6i1EIfnwtvZXg+FFviZ+aF6Z2gM9hvj974lMOKVA0v8
+         LG/QPS3FC6mVtOmVkyjaC/47HGtzc27rqwEJkNKmOFCwXOCMsw+HgLJQPOgom9a/vM
+         wgIRLgErCtYryPhpo/M5gItomqQsinKiYnjFi74w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
-Subject: [PATCH 5.2 008/313] net_sched: add max len check for TCA_KIND
-Date:   Thu,  3 Oct 2019 17:49:46 +0200
-Message-Id: <20191003154534.313363580@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 045/313] media: mtk-cir: lower de-glitch counter for rc-mm protocol
+Date:   Thu,  3 Oct 2019 17:50:23 +0200
+Message-Id: <20191003154537.601406539@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,39 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit 62794fc4fbf52f2209dc094ea255eaef760e7d01 ]
+[ Upstream commit 5dd4b89dc098bf22cd13e82a308f42a02c102b2b ]
 
-The TCA_KIND attribute is of NLA_STRING which does not check
-the NUL char. KMSAN reported an uninit-value of TCA_KIND which
-is likely caused by the lack of NUL.
+The rc-mm protocol can't be decoded by the mtk-cir since the de-glitch
+filter removes pulses/spaces shorter than 294 microseconds.
 
-Change it to NLA_NUL_STRING and add a max len too.
+Tested on a BananaPi R2.
 
-Fixes: 8b4c3cdd9dd8 ("net: sched: Add policy validation for tc attributes")
-Reported-and-tested-by: syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Acked-by: Sean Wang <sean.wang@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_api.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/rc/mtk-cir.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1390,7 +1390,8 @@ check_loop_fn(struct Qdisc *q, unsigned
- }
+diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
+index 46101efe017be..da457bf851303 100644
+--- a/drivers/media/rc/mtk-cir.c
++++ b/drivers/media/rc/mtk-cir.c
+@@ -35,6 +35,11 @@
+ /* Fields containing pulse width data */
+ #define MTK_WIDTH_MASK		  (GENMASK(7, 0))
  
- const struct nla_policy rtm_tca_policy[TCA_MAX + 1] = {
--	[TCA_KIND]		= { .type = NLA_STRING },
-+	[TCA_KIND]		= { .type = NLA_NUL_STRING,
-+				    .len = IFNAMSIZ - 1 },
- 	[TCA_RATE]		= { .type = NLA_BINARY,
- 				    .len = sizeof(struct tc_estimator) },
- 	[TCA_STAB]		= { .type = NLA_NESTED },
++/* IR threshold */
++#define MTK_IRTHD		 0x14
++#define MTK_DG_CNT_MASK		 (GENMASK(12, 8))
++#define MTK_DG_CNT(x)		 ((x) << 8)
++
+ /* Bit to enable interrupt */
+ #define MTK_IRINT_EN		  BIT(0)
+ 
+@@ -400,6 +405,9 @@ static int mtk_ir_probe(struct platform_device *pdev)
+ 	mtk_w32_mask(ir, val, ir->data->fields[MTK_HW_PERIOD].mask,
+ 		     ir->data->fields[MTK_HW_PERIOD].reg);
+ 
++	/* Set de-glitch counter */
++	mtk_w32_mask(ir, MTK_DG_CNT(1), MTK_DG_CNT_MASK, MTK_IRTHD);
++
+ 	/* Enable IR and PWM */
+ 	val = mtk_r32(ir, MTK_CONFIG_HIGH_REG);
+ 	val |= MTK_OK_COUNT(ir->data->ok_count) |  MTK_PWM_EN | MTK_IR_EN;
+-- 
+2.20.1
+
 
 
