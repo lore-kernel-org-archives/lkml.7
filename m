@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F0DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF996C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7470B2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8583215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119888;
-	bh=DrvnDd38D+DGa70iX5cHchy71qkt3OaxrJ1beFpUMik=;
+	s=default; t=1570119894;
+	bh=CULuGB7gsyM3Y59RrSUZU5hpkj8xaPh1ImJ1WEo61dA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJTvoOHe5JXG5312sgPMBHReIGtHo1pQ34/O9EM1ULqpnyRAox56opzzwr6k2unyx
-	 h9iiT9fJF13tPLSJOOoT39P+NZRZ2ALKG4XSKhRyqjWxkenEJRKU15Y0WN+iXiMrj2
-	 mqcdIMyPUS7WSPZBLAygrBc7orL0EzodUkma5QCQ=
+	b=C/qb+O1elTBAYb+Zag5/fx8m7uuUhmH+kcSQJQ3+ZNncCsiO+vIdTDaEbo5uAVbpX
+	 J436n6MtGYQHwe7Qiehw6Osjjua2IbU+7kWNoQDV7Mj7ScwaeKolsgShQgzql0PBcy
+	 lTfeLf7GLMiIXR9SNg/7WstnTpx1ojyeEyZZc+N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389438AbfJCQYr (ORCPT
+        id S2390830AbfJCQYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54548 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389145AbfJCQYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:24:43 -0400
+        id S2389145AbfJCQYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FA82215EA;
-        Thu,  3 Oct 2019 16:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D5920867;
+        Thu,  3 Oct 2019 16:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119882;
-        bh=DrvnDd38D+DGa70iX5cHchy71qkt3OaxrJ1beFpUMik=;
+        s=default; t=1570119888;
+        bh=CULuGB7gsyM3Y59RrSUZU5hpkj8xaPh1ImJ1WEo61dA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZV+Fdh19yOAk73F4C8ElG1ddA/ZPZvpFbvXN6fbBYutHvPP1TxiEscYw3PZKyvadP
-         lzeijXktQ1xwIt8hsrQu6W2JP/Oax1maAwFzjBjGtSf99Lhk5pI8BF/fabL/Iu2Zjd
-         47lSPOGML/VTZFfcOcrSDiG9yPfkTl/WhZJi8ZUY=
+        b=QUI8eCrHG46bF9/lpi0dAUa2afo0+p7UMKjbQvIXRoa1BHS4DMM86eLcaqSZxo1J/
+         0HkmBUsppb2fuPecPfx6po4/M3lJcSOxmTKoLzGnYF74Yv8VP8ZaXg0tvC/EGoPGW+
+         KeD81d01mT3SCFle5mcCLJqXIuFZVxeBc3rxnsvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.2 017/313] usbnet: ignore endpoints with invalid wMaxPacketSize
-Date:   Thu,  3 Oct 2019 17:49:55 +0200
-Message-Id: <20191003154535.085053530@linuxfoundation.org>
+        Hans Andersson <hans.andersson@cellavision.se>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 019/313] net: phy: micrel: add Asym Pause workaround for KSZ9021
+Date:   Thu,  3 Oct 2019 17:49:57 +0200
+Message-Id: <20191003154535.259114306@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,39 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Hans Andersson <hans.andersson@cellavision.se>
 
-[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
+[ Upstream commit 407d8098cb1ab338199f4753162799a488d87d23 ]
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the drivers more robust against invalid and
-meaningless descriptors.
+The Micrel KSZ9031 PHY may fail to establish a link when the Asymmetric
+Pause capability is set. This issue is described in a Silicon Errata
+(DS80000691D or DS80000692D), which advises to always disable the
+capability.
 
-The wMaxPacketSize of these endpoints are used for memory allocations
-and as divisors in many usbnet minidrivers. Avoiding zero is therefore
-critical.
+Micrel KSZ9021 has no errata, but has the same issue with Asymmetric Pause.
+This patch apply the same workaround as the one for KSZ9031.
 
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 3aed3e2a143c ("net: phy: micrel: add Asym Pause workaround")
+Signed-off-by: Hans Andersson <hans.andersson@cellavision.se>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/usbnet.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/phy/micrel.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -100,6 +100,11 @@ int usbnet_get_endpoints(struct usbnet *
- 			int				intr = 0;
- 
- 			e = alt->endpoint + ep;
-+
-+			/* ignore endpoints which cannot transfer data */
-+			if (!usb_endpoint_maxp(&e->desc))
-+				continue;
-+
- 			switch (e->desc.bmAttributes) {
- 			case USB_ENDPOINT_XFER_INT:
- 				if (!usb_endpoint_dir_in(&e->desc))
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -763,6 +763,8 @@ static int ksz9031_get_features(struct p
+ 	 * Whenever the device's Asymmetric Pause capability is set to 1,
+ 	 * link-up may fail after a link-up to link-down transition.
+ 	 *
++	 * The Errata Sheet is for ksz9031, but ksz9021 has the same issue
++	 *
+ 	 * Workaround:
+ 	 * Do not enable the Asymmetric Pause capability bit.
+ 	 */
+@@ -1076,6 +1078,7 @@ static struct phy_driver ksphy_driver[]
+ 	/* PHY_GBIT_FEATURES */
+ 	.driver_data	= &ksz9021_type,
+ 	.probe		= kszphy_probe,
++	.get_features	= ksz9031_get_features,
+ 	.config_init	= ksz9021_config_init,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
 
 
