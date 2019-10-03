@@ -2,56 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BFEC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560C8C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFFD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C415222CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120152;
-	bh=VJr7Y3c3/7SQkTk7jHzdjI9G2kexbWM60u3dseRor3A=;
+	s=default; t=1570120156;
+	bh=XqTrBwG3jzWgXqa8Ap4eF4CPHXPDO+58ycrQVeMj+3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZD7VtsPDkGyWZpplLNePbkNYoO+1WM6SdM1Q4VDoPuNpNQBc6NOWZg08OejSgBwm
-	 P86nWB6n9HvP5+jzSib8zToiAHxxKm6WUWUPZEdUCkZyKKLxkftscTtxyGtA+SnxZH
-	 9SuGvITohOOSk10ZbNyEVzomOX0XTAOw843OgJ4w=
+	b=dMSVjWExfcSpLzWrf+Ql/V9YH5T+yJZCNdsL18hJBbqV3SC90g7YBORVaP9h72Xu5
+	 EIcs1x3yNIZuav/Qkx1YaS68dYtpARpmjK/BpAJ8rLqPwrYD1ONRUAhbfAUEH5+5rR
+	 MZzjIoJUGjKjMdWRdSGzrW0OZRbssjjLwg4tPXQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391590AbfJCQ3H (ORCPT
+        id S2391417AbfJCQ3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391415AbfJCQ2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:05 -0400
+        id S2391587AbfJCQ3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:29:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B9E2054F;
-        Thu,  3 Oct 2019 16:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783F52054F;
+        Thu,  3 Oct 2019 16:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120085;
-        bh=VJr7Y3c3/7SQkTk7jHzdjI9G2kexbWM60u3dseRor3A=;
+        s=default; t=1570120147;
+        bh=XqTrBwG3jzWgXqa8Ap4eF4CPHXPDO+58ycrQVeMj+3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1eKmps7DTx7ZY8cEkXnUoOO4rpqmWVJSrmbkKkN721smF5DCdE2wYCITmI34tOmzy
-         ZQ0IohufbCs5sMo9Ce2K+2ABxIT3wKsfrlvPysG19aUdd8kvm3ns2+xHXaR10p4YbU
-         8E5lvAL6SI8c613lwzm+8K1PTXkvr1X5/OW9MDwE=
+        b=Y8VELSuCwuCnsd3H6nETF+cRLK07k1bu006XlQpyj7rHOPQ1jBykMyuAj2663VDqi
+         WxfzDQ4L20pFauRKp85rYXwTVOEhEZpkhPAbhVWCqUYhmavQnSzhTugAu9XvVoxAu8
+         PGI/+fYwaTu+4Oeu48Isiny6ozV/Ch6HhwkcjN+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 092/313] perf test vfs_getname: Disable ~/.perfconfig to get default output
-Date:   Thu,  3 Oct 2019 17:51:10 +0200
-Message-Id: <20191003154541.916396078@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
+Subject: [PATCH 5.2 113/313] media: radio/si470x: kill urb on error
+Date:   Thu,  3 Oct 2019 17:51:31 +0200
+Message-Id: <20191003154543.976663170@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,74 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 4fe94ce1c6ba678b5f12b94bb9996eea4fc99e85 ]
+[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
 
-To get the expected output we have to ignore whatever changes the user
-has in its ~/.perfconfig file, so set PERF_CONFIG to /dev/null to
-achieve that.
+In the probe() function radio->int_in_urb was not killed if an
+error occurred in the probe sequence. It was also missing in
+the disconnect.
 
-Before:
+This caused this syzbot issue:
 
-  # egrep 'trace|show_' ~/.perfconfig
-  [trace]
-  	show_zeros = yes
-  	show_duration = no
-  	show_timestamp = no
-  	show_arg_names = no
-  	show_prefix = yes
-  # echo $PERF_CONFIG
+https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
 
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: FAILED!
-  # export PERF_CONFIG=/dev/null
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: Ok
-  #
+Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
 
-After:
-
-  # egrep 'trace|show_' ~/.perfconfig
-  [trace]
-  	show_zeros = yes
-  	show_duration = no
-  	show_timestamp = no
-  	show_arg_names = no
-  	show_prefix = yes
-  # echo $PERF_CONFIG
-
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: Ok
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: https://lkml.kernel.org/n/tip-3up27pexg5i3exuzqrvt4m8u@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/shell/trace+probe_vfs_getname.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 147efeb6b1959..e97f55ba61c23 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -31,6 +31,10 @@ if [ $err -ne 0 ] ; then
- 	exit $err
- fi
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index 58e622d573733..3dccce398113a 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -734,7 +734,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_all;
++		goto err_buf;
  
-+# Do not use whatever ~/.perfconfig file, it may change the output
-+# via trace.{show_timestamp,show_prefix,etc}
-+export PERF_CONFIG=/dev/null
-+
- trace_open_vfs_getname
- err=$?
- rm -f ${file}
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -749,6 +749,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 
+ 	return 0;
+ err_all:
++	usb_kill_urb(radio->int_in_urb);
++err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+ 	v4l2_ctrl_handler_free(&radio->hdl);
+@@ -822,6 +824,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
++	usb_kill_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
 2.20.1
 
