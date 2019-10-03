@@ -2,123 +2,158 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E33BC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71DCC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D41218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B00218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfJCKZh (ORCPT
+        id S1729213AbfJCK1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:25:37 -0400
-Received: from stargate.chelsio.com ([12.32.117.8]:18102 "EHLO
-        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfJCKZh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:25:37 -0400
-Received: from localhost (mehrangarh.blr.asicdesigners.com [10.193.185.169])
-        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id x93APHcP026009;
-        Thu, 3 Oct 2019 03:25:18 -0700
-Date:   Thu, 3 Oct 2019 15:55:11 +0530
-From:   Potnuri Bharat Teja <bharat@chelsio.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] RDMA: release allocated skb
-Message-ID: <20191003102510.GA10875@chelsio.com>
-References: <20190923050823.GL14368@unreal>
- <20190923155300.20407-1-navid.emamdoost@gmail.com>
- <20191001135430.GA27086@ziepe.ca>
- <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
+        Thu, 3 Oct 2019 06:27:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:2957 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727657AbfJCK1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:27:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 03:27:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="198491751"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 03 Oct 2019 03:27:18 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 03 Oct 2019 13:27:18 +0300
+Date:   Thu, 3 Oct 2019 13:27:18 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Jeykumar Sankaran <jsanka@codeaurora.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] drm: add fb max width/height fields to drm_mode_config
+Message-ID: <20191003102718.GC1208@intel.com>
+References: <1569634131-13875-1-git-send-email-jsanka@codeaurora.org>
+ <1569634131-13875-2-git-send-email-jsanka@codeaurora.org>
+ <20190930103931.GZ1208@intel.com>
+ <f6d3c2b6ad897ce8b2fdcaab44993eed@codeaurora.org>
+ <20191002134535.GU1208@intel.com>
+ <CAF6AEGtETiKLggNEKm+YyH8PMzpXpp119PjV2f6jdbU4UYxiAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGtETiKLggNEKm+YyH8PMzpXpp119PjV2f6jdbU4UYxiAQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, October 10/03/19, 2019 at 03:05:06 +0530, Navid Emamdoost wrote:
-> Hi Jason,
-> 
-> Thanks for the feedback. Yes, you are right if the skb release is
-> moved under err4 label it will cause a double free as
-> c4iw_ref_send_wait will release skb in case of error.
-> So, in order to avoid leaking skb in case of c4iw_bar2_addrs failure,
-> the kfree(skb) could be placed under the error check like the way
-> patch v1 did. Do you see any mistake in version 1?
-> https://lore.kernel.org/patchwork/patch/1128510/
-
-Hi Navid,
-Both the revisions of the patch are invalid. skb is freed in both the cases of 
-failure and success through c4iw_ofld_send().
-case success: in ctrl_xmit()
-case failure: in c4iw_ofld_send()
-
-Thanks,
-Bharat.
-
-
-> 
-> 
-> Thanks,
-> Navid
-> 
-> On Tue, Oct 1, 2019 at 8:54 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On Wed, Oct 02, 2019 at 03:55:10PM -0400, Rob Clark wrote:
+> On Wed, Oct 2, 2019 at 9:45 AM Ville Syrjälä
+> <ville.syrjala@linux.intel.com> wrote:
 > >
-> > On Mon, Sep 23, 2019 at 10:52:59AM -0500, Navid Emamdoost wrote:
-> > > In create_cq, the allocated skb buffer needs to be released on error
-> > > path.
-> > > Moved the kfree_skb(skb) under err4 label.
-> >
-> > This didn't move anything
-> >
-> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > >  drivers/infiniband/hw/cxgb4/cq.c | 1 +
-> > >  1 file changed, 1 insertion(+)
+> > On Tue, Oct 01, 2019 at 02:20:55PM -0700, Jeykumar Sankaran wrote:
+> > > On 2019-09-30 03:39, Ville Syrjälä wrote:
+> > > > On Fri, Sep 27, 2019 at 06:28:51PM -0700, Jeykumar Sankaran wrote:
+> > > >> The mode_config max width/height values determine the maximum
+> > > >> resolution the pixel reader can handle.
+> > > >
+> > > > Not according to the docs I "fixed" a while ago.
+> > > >
+> > > >> But the same values are
+> > > >> used to restrict the size of the framebuffer creation. Hardware's
+> > > >> with scaling blocks can operate on framebuffers larger/smaller than
+> > > >> that of the pixel reader resolutions by scaling them down/up before
+> > > >> rendering.
+> > > >>
+> > > >> This changes adds a separate framebuffer max width/height fields
+> > > >> in drm_mode_config to allow vendors to set if they are different
+> > > >> than that of the default max resolution values.
+> > > >
+> > > > If you're going to change the meaning of the old values you need
+> > > > to fix the drivers too.
+> > > >
+> > > > Personally I don't see too much point in this since you most likely
+> > > > want to validate all the other timings as well, and so likely need
+> > > > some kind of mode_valid implementation anyway. Hence to validate
+> > > > modes there's not much benefit of having global min/max values.
+> > > >
+> > > https://patchwork.kernel.org/patch/10467155/
 > > >
-> > > diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
-> > > index b1bb61c65f4f..1886c1af10bc 100644
-> > > +++ b/drivers/infiniband/hw/cxgb4/cq.c
-> > > @@ -173,6 +173,7 @@ static int create_cq(struct c4iw_rdev *rdev, struct t4_cq *cq,
-> > >  err4:
-> > >       dma_free_coherent(&rdev->lldi.pdev->dev, cq->memsize, cq->queue,
-> > >                         dma_unmap_addr(cq, mapping));
-> > > +     kfree_skb(skb);
-> > >  err3:
-> > >       kfree(cq->sw_queue);
-> > >  err2:
+> > > I believe you are referring to this patch.
+> > >
+> > > I am primarily interested in the scaling scenario mentioned here. MSM
+> > > and a few other hardware have scaling block that are used both ways:
+> > >
+> > > 1) Where FB limits are larger than the display limits. Scalar blocks are
+> > > used to
+> > >     downscale the framebuffers and render within display limits.
+> > >
+> > > In this scenario, with your patch, are you suggesting the drivers
+> > > maintain the
+> > > display limits locally and use those values in fill_modes() /
+> > > mode_valid() to filter
+> > > out invalid modes explicitly instead of mode_config.max_width/height?
+> > >
+> > > 2) Where FB limits are smaller than display limits. Enforced for
+> > > performance reasons on low tier hardware.
+> > > It reduces the fetch bandwidth and uses post blending scalar block to
+> > > scale up the pixel stream
+> > > to match the display resolution.
 > >
-> > This looks wrong to me:
+> > As Daniel mentioned in that discussion your typical userspace
+> > assumes that it can use a single unscaled framebuffer with any
+> > advertised mode. Hence I believe limiting the mode list based
+> > on the max framebuffer size is pretty much required unless
+> > you want to break existing userspace.
 > >
-> > int c4iw_ofld_send(struct c4iw_rdev *rdev, struct sk_buff *skb)
-> > {
-> >         int     error = 0;
+> > In i915 I went a bit further than that recently and now we
+> > filter the mode list based on the maximum plane size [1]
+> > (which can be less than the max fb size and less than the
+> > maximum crtc dimensions). And again that's because userspace
+> > assumes that it can just use a single unscaled fullscreen
+> > plane to cover the entire crtc.
 > >
-> >         if (c4iw_fatal_error(rdev)) {
-> >                 kfree_skb(skb);
-> >                 pr_err("%s - device in error state - dropping\n", __func__);
-> >                 return -EIO;
-> >         }
-> >         error = cxgb4_ofld_send(rdev->lldi.ports[0], skb);
-> >         if (error < 0)
-> >                 kfree_skb(skb);
-> >         return error < 0 ? error : 0;
-> > }
+> > These assumption are also carved into the legacy setcrtc uapi
+> > where you can't even specify multiple framebuffers. In theory
+> > a driver could internally use multiple planes to overcome some
+> > of the limitations, but in i915 at least we don't.
 > >
-> > Jason
+> > [1] https://cgit.freedesktop.org/drm/drm-intel/commit/?id=2d20411e25a3bf3d2914a2219f47ed48dc57aed5
+> >
+> > >
+> > > Any suggestions on how this topology can be handled with a single set of
+> > > max/min values?
+> > >
+> >
+> > I think a safe way to relax these rules would be to either:
+> > a) Add a client cap by which userspace can inform the kernel
+> >    it understands there are more complicated limits at play
+> >    and thus can't assume that everything will just work
+> > b) Maybe we could just tie that in with the atomic cap since
+> >    atomic clients are pretty much required to do the TEST_ONLY
+> >    dance anyway, so one might hope they have a working fallback
+> >    strategy. Though I suspect eg. the modesetting ddx wouldn't
+> >    like this. But we no longer allow atomic with X anyway so
+> >    that partcular argument may not hold much weight anymore.
 > 
-> 
-> 
-> -- 
-> Navid.
+> What was the conclusion of the hack to not expose atomic to
+> modesetting ddx, due to the brokenness of it's atomic use?  I guess
+> that could also make the modesetting case go away..
+
+I thought it went in? Maybe I'm mistaken.
+
+-- 
+Ville Syrjälä
+Intel
