@@ -2,51 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65928C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01512C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FA5222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA516222C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120683;
-	bh=NXMysJ5e2+Am4q6601uqhjNjIcYRPQ+6oZ2nGUXSlxo=;
+	s=default; t=1570120689;
+	bh=mdL0Q4Tu0YQ0/7eHxAxBpSVNI6snCFhuwkmBw7iEIB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NA8tiAYVdaqt7GlWecNVk7cOIRvQZuJNDMlK9R356T6HErh87MRGzXViOtxVduZmU
-	 4oR15BU7r46RuOg0lWoC3NoQpHkPBjiRt1Qmjb2hd5mX9zD2ommSJERcCyOCd+rO7r
-	 PPs3c3ummOVxXs/g91BvIiLiIOkqO1sU+UcPcqtc=
+	b=V+W3psEEFklvFvRLip5yUfkECq7yKVS29wrFSrggg8iAlsGbv69Dx4hUaEPVuihHm
+	 tmJfPd4lMbFumR6RZGmLxH9CrxHwe/fCkal37ifU1MELlEe44NCRoBcArvUOIqzJ/2
+	 X0bQykdIyy2G+M8LcQiLE2KCZ2+wg5lxY/hb/fgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404665AbfJCQiC (ORCPT
+        id S2404692AbfJCQiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47514 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:38:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392295AbfJCQh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:58 -0400
+        id S2391875AbfJCQiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:38:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D164222C8;
-        Thu,  3 Oct 2019 16:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0812C2133F;
+        Thu,  3 Oct 2019 16:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120678;
-        bh=NXMysJ5e2+Am4q6601uqhjNjIcYRPQ+6oZ2nGUXSlxo=;
+        s=default; t=1570120683;
+        bh=mdL0Q4Tu0YQ0/7eHxAxBpSVNI6snCFhuwkmBw7iEIB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liEVrL5z7meD7nm34tEySFyjNrChAAaYsaiMjI463a/ronRYu+3ORIi98ssTvkJ+r
-         tc3d4h707rDCnz6a+7DDq8grbe+A7qSiedU4im+QMEbFpwHhcQq+8HSdx/bnjjHKzE
-         soxVsypwtF9G01MLYA1LABInxow+Nq9bLxIljgUw=
+        b=u8APLonGcBK6V9t8xKAzf2b1s1zcWwudCFlCbS2aag2UiF1SRiegf2OQoRSWm0jvY
+         1a4V7LjVXsT/OYMcImiUmnDl/XqllBynl3HEgTnK4vGktSf1YFBWu9fEufEzMFRiBs
+         dZj7cqoiP/xgxk/B82bF/Ap2SPFSMFiaw8PVUfM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 311/313] mt76: mt7615: always release sem in mt7615_load_patch
-Date:   Thu,  3 Oct 2019 17:54:49 +0200
-Message-Id: <20191003154603.815074337@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.2 286/313] btrfs: qgroup: Fix the wrong target io_tree when freeing reserved data space
+Date:   Thu,  3 Oct 2019 17:54:24 +0200
+Message-Id: <20191003154601.251693714@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,47 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 2fc446487c364bf8bbd5f8f5f27e52d914fa1d72 ]
+commit bab32fc069ce8829c416e8737c119f62a57970f9 upstream.
 
-Release patch semaphore even if request_firmware fails in
-mt7615_load_patch
+[BUG]
+Under the following case with qgroup enabled, if some error happened
+after we have reserved delalloc space, then in error handling path, we
+could cause qgroup data space leakage:
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+>From btrfs_truncate_block() in inode.c:
+
+	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
+					   block_start, blocksize);
+	if (ret)
+		goto out;
+
+ again:
+	page = find_or_create_page(mapping, index, mask);
+	if (!page) {
+		btrfs_delalloc_release_space(inode, data_reserved,
+					     block_start, blocksize, true);
+		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, true);
+		ret = -ENOMEM;
+		goto out;
+	}
+
+[CAUSE]
+In the above case, btrfs_delalloc_reserve_space() will call
+btrfs_qgroup_reserve_data() and mark the io_tree range with
+EXTENT_QGROUP_RESERVED flag.
+
+In the error handling path, we have the following call stack:
+btrfs_delalloc_release_space()
+|- btrfs_free_reserved_data_space()
+   |- btrsf_qgroup_free_data()
+      |- __btrfs_qgroup_release_data(reserved=@reserved, free=1)
+         |- qgroup_free_reserved_data(reserved=@reserved)
+            |- clear_record_extent_bits();
+            |- freed += changeset.bytes_changed;
+
+However due to a completion bug, qgroup_free_reserved_data() will clear
+EXTENT_QGROUP_RESERVED flag in BTRFS_I(inode)->io_failure_tree, other
+than the correct BTRFS_I(inode)->io_tree.
+Since io_failure_tree is never marked with that flag,
+btrfs_qgroup_free_data() will not free any data reserved space at all,
+causing a leakage.
+
+This type of error handling can only be triggered by errors outside of
+qgroup code. So EDQUOT error from qgroup can't trigger it.
+
+[FIX]
+Fix the wrong target io_tree.
+
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Fixes: bc42bda22345 ("btrfs: qgroup: Fix qgroup reserved space underflow by only freeing reserved ranges")
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/qgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index dc1301effa242..e2dd425ac97e0 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -289,9 +289,9 @@ static int mt7615_driver_own(struct mt7615_dev *dev)
- 
- static int mt7615_load_patch(struct mt7615_dev *dev)
- {
--	const struct firmware *fw;
--	const struct mt7615_patch_hdr *hdr;
- 	const char *firmware = MT7615_ROM_PATCH;
-+	const struct mt7615_patch_hdr *hdr;
-+	const struct firmware *fw = NULL;
- 	int len, ret, sem;
- 
- 	sem = mt7615_mcu_patch_sem_ctrl(dev, 1);
-@@ -307,7 +307,7 @@ static int mt7615_load_patch(struct mt7615_dev *dev)
- 
- 	ret = request_firmware(&fw, firmware, dev->mt76.dev);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	if (!fw || !fw->data || fw->size < sizeof(*hdr)) {
- 		dev_err(dev->mt76.dev, "Invalid firmware\n");
--- 
-2.20.1
-
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3469,7 +3469,7 @@ static int qgroup_free_reserved_data(str
+ 		 * EXTENT_QGROUP_RESERVED, we won't double free.
+ 		 * So not need to rush.
+ 		 */
+-		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_failure_tree,
++		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree,
+ 				free_start, free_start + free_len - 1,
+ 				EXTENT_QGROUP_RESERVED, &changeset);
+ 		if (ret < 0)
 
 
