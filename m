@@ -2,101 +2,137 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1409C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4E1C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EF220673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F0C20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLnU6ZGB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H2CF2yCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfJCLWb (ORCPT
+        id S1729989AbfJCLWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:22:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33173 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbfJCLWa (ORCPT
+        Thu, 3 Oct 2019 07:22:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60132 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbfJCLWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:22:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so1592451pfl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=4vvWZOnDaYB306KLyalX1Vu4JeBx1avHtcxqLv3dAQI=;
-        b=XLnU6ZGBqa577KBUFDzfnYkNp6/eIoX6Pq9euUphJF1eaLkGpQyppKve1wUxuESwu5
-         ZJvOyoz7Fjr+XB+RNcksDtCovFTo3ED706fd3n3IH2W4NWqquJz+ijcLNcbGryn4DTjs
-         55VDB8F/RFZ4jOgbmebt8kgKu+sISxrGzicyARLK1gbwIeKiIDA/YnY2oROdTtgXo9Lp
-         OhgwAiEmccjOVtNmAa25PRDCf+fOl4AqZJwpjOekZT6+jrEjcGb3ZiOpJSLV4Nc0LmGG
-         YHPOh5KemQuBPqNnHLJbuZPqFqbs8hwaM6Sz1REmnrszkUwm6Y6AJ+oQvdDFSQPGqO+A
-         IjMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4vvWZOnDaYB306KLyalX1Vu4JeBx1avHtcxqLv3dAQI=;
-        b=ulAvClYFL+ifhp4xPGnKPfNOuY1K3naVQZ8F3ZZlrvsUB4Opq/d77yyvTXuoEM/5ew
-         wsscrLxrVH1IFZy471ACx/oxp7fWSBzfF3E/mjf4wuaUPf1j4cw0ze/dF+BioUBpzChk
-         7nkg/wRydP6ggR6Ok0JS0sHG6JjgLwl00DGmn7MScNkvio4TH+yAEstYF9j8xTI6zy4o
-         2dHc3MTaBM7WOB0ztxeusaBeoGLoSh12DpsR5bRL9+F2gKK0ss3djAxDH9AvctI2Tfy/
-         awIk35l5wiu8pClFTA5KgAnQPf37S+TOGrtn4wLK5kEDDZVs5tSagAYFjJlunGNCV8hc
-         m4CA==
-X-Gm-Message-State: APjAAAXH3n1fB8cE+HREw/ZvPzgJvNtX/Ut0BwfG24GVXudeqaE4cJZy
-        BfDwu6+1PrV5Ev98KLEyJqnCVMdniLacPQ==
-X-Google-Smtp-Source: APXvYqyo/GBuKYMgok2Qu85GyYWcZ/kBG23UO0oZtmNIMkGIJX0uwqdZO5n/Gy1IyWW72l28hy/lCQ==
-X-Received: by 2002:a65:4543:: with SMTP id x3mr8479928pgr.300.1570101748857;
-        Thu, 03 Oct 2019 04:22:28 -0700 (PDT)
-Received: from localhost ([49.248.175.14])
-        by smtp.gmail.com with ESMTPSA id k8sm1998881pgm.14.2019.10.03.04.22.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 03 Oct 2019 04:22:28 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI binding
-Date:   Thu,  3 Oct 2019 16:52:24 +0530
-Message-Id: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Oct 2019 07:22:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKtlW077138;
+        Thu, 3 Oct 2019 11:22:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Djdgiv+tAn1DIDSeZL7stKvfsy/kly/tC4eydmMJNLc=;
+ b=H2CF2yCGybuG1eycM0ssSuGhfjeyhmwxaJKdZRYZQIKHx9u+WvC/djQYxflnIFLe/twm
+ aXc3Qts7JLOWFMOdG51ROT2dI7RJANufU7DDTVgu3tuNRYhfIx7sj/5PZTrk4RhSArXY
+ L+F/OOhp1Jv1PkBpM+AU8IpdgITA4a4Lm1Jb7rbgw52Hz+O+1qMp+1l4Lq0+jzJ0yDSc
+ 9G55+IMVjE3SvlmubBqZ4Ye+obX18P7uL2Sqfuor1QqBI+XIXoGBjaxW8VLJl/EdLVJ7
+ BHGvqPvVVnuFdkrZkNfiHm61UtK4d38isL2qb6s3QWuizEM5c4c5XaTog98FfYoJo+2b FA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v9yfqk6tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:22:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKKIu174569;
+        Thu, 3 Oct 2019 11:22:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vcg63eap9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:22:24 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x93BMMZS032544;
+        Thu, 3 Oct 2019 11:22:22 GMT
+Received: from [10.191.0.240] (/10.191.0.240)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 04:22:22 -0700
+Subject: Re: [PATCH v3 4/4] x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+ and map it to "nopvspin"
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-5-git-send-email-zhenzhong.duan@oracle.com>
+ <20191002171952.GE9615@linux.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <f52083d6-9964-c995-1acf-a11ed1dbf935@oracle.com>
+Date:   Thu, 3 Oct 2019 19:22:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191002171952.GE9615@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910030106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This new binding fails dt_binding_check due to a typo. Fix it up.
 
-linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-make[1]: *** [dt_binding_check] Error 2
+On 2019/10/3 1:19, Sean Christopherson wrote:
+> On Mon, Sep 30, 2019 at 08:44:39PM +0800, Zhenzhong Duan wrote:
+>> Includes asm/hypervisor.h in order to reference x86_hyper_type.
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> Cc: Jonathan Corbet <corbet@lwn.net>
+>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>> Cc: Sasha Levin <sashal@kernel.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> ---
+...snip
+>> @@ -64,7 +63,7 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
+>>   
+>>   void __init hv_init_spinlocks(void)
+>>   {
+>> -	if (!hv_pvspin || !apic ||
+>> +	if (!pvspin || !apic ||
+>>   	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
+>>   	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
+>>   		pr_info("PV spinlocks disabled\n");
+>> @@ -82,7 +81,9 @@ void __init hv_init_spinlocks(void)
+>>   
+>>   static __init int hv_parse_nopvspin(char *arg)
+>>   {
+>> -	hv_pvspin = false;
+>> +	pr_notice("\"hv_nopvspin\" is deprecated, please use \"nopvspin\" instead\n");
+>> +	if (x86_hyper_type == X86_HYPER_MS_HYPERV)
+>> +		pvspin = false;
+> Personal preference would be to keep the hv_pvspin variable and add the
+> extra check in hv_init_spinlocks().
 
-Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK, will do that way. Thanks
 
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-index 27f38eed389e4..5dd1cf490cd9d 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-+$id: http://devicetree.org/schemas/media/allwinner,sun4i-a10-csi.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
--- 
-2.17.1
+Zhenzhong
 
