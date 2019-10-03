@@ -2,168 +2,141 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5650C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAA221D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091AC222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfJCDhL (ORCPT
+        id S1728583AbfJCDjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 23:37:11 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:50401 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725860AbfJCDhL (ORCPT
+        Wed, 2 Oct 2019 23:39:10 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:57060 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbfJCDjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 23:37:11 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x933atx5019088
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 2 Oct 2019 23:36:56 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 523C142088C; Wed,  2 Oct 2019 23:36:55 -0400 (EDT)
-Date:   Wed, 2 Oct 2019 23:36:55 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Kurt Roeckx <kurt@roeckx.be>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Stop breaking the CSRNG
-Message-ID: <20191003033655.GA3226@mit.edu>
-References: <20191002165533.GA18282@roeckx.be>
+        Wed, 2 Oct 2019 23:39:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id a22so2865348ioq.23
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 20:39:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=fNcmM8dDxJueHNsixPYAMzRv/o66qgp37A7jQpDFaDU=;
+        b=H+oy4X0SZWKgUqZhjZ29FuM1Vx1fkshRl2HZ6roUX+nA+JKkTLOt9mChH25rSl5A3q
+         6J9KvKbNUKkZo+HTA7qqleCqIUIRVyIvxcqN0ZnwWGooLNxhSS+47Vpv7bwN6KkeGEgd
+         w/mmtKOOZ48zR0SCm6K9fcOWQAKxhbS5G0fZ3gCbUi/YbeIfOYBXEdrWFSmvMZqTS2kQ
+         6seWkvqUM3HyZ5bmcClixS6sE8urD9ehER37WfMqFX0pwj4W20/FJpKeJpN56UxFoAMe
+         sVtlag211j63K5GTZ9s8Vy/+Z4+IAlv+nk50kiwhX3BUas/cR33EX/JR1ABvVS2fm8VE
+         segw==
+X-Gm-Message-State: APjAAAXKPMRLOTDcERJ1AclHjyRyku6xCmzjizkc71uLovFhr6sEGwUU
+        7Ur7sZATUwk9nGKDm5qgqu3XDuI9JShngQiieeXXaajNiPoA
+X-Google-Smtp-Source: APXvYqwFzhhBhYUtdnc9rPslh+XB3usOsuQcTSKUHt81F5Fwbea+PqEz88pROA3THyedDW94PkexFESBJJCjCpPBDRjU5iD/ggaV
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191002165533.GA18282@roeckx.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:cb10:: with SMTP id s16mr8001468ilo.79.1570073947045;
+ Wed, 02 Oct 2019 20:39:07 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 20:39:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e288f40593f953a9@google.com>
+Subject: KMSAN: uninit-value in sr9800_bind
+From:   syzbot <syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, oneukum@suse.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:55:33PM +0200, Kurt Roeckx wrote:
-> 
-> But it seems people are now thinking about breaking getrandom() too,
-> to let it return data when it's not initialized by default. Please
-> don't.
+Hello,
 
-"It's complicated"
+syzbot found the following crash on:
 
-The problem is that whether a CRNG can be considered secure is a
-property of the entire system, including the hardware, and given the
-large number of hardware configurations which the kernel and OpenSSL
-can be used, in practice, we can't assure that getrandom(2) is
-"secure" without making certain assumptions.  For example, if we
-assume that the CPU is an x86 processor new enough to support RDRAND,
-and that RDRAND is competently implemented (e.g., it won't disappear
-after a suspend/resume) and doesn't have any backdoors implanted in
-it, then it's easy to say that getrandom() will always be secure.
+HEAD commit:    124037e0 kmsan: drop inlines, rename do_kmsan_task_create()
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f7e0cd600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
+dashboard link: https://syzkaller.appspot.com/bug?extid=f1842130bbcfb335bac1
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142acef3600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11811bbd600000
 
-But if you assume that there is no hardware random number generator,
-and everything is driven from a single master oscillator, with no
-exernal input, and the CPU is utterly simple, with speculation or
-anything else that might be non-determinstic, AND if we assume that
-the idiots who make an IOT device use the same random seed across
-millions of devices all cloned off of the same master imagine, there
-is ***absoutely*** nothing the kernel can do to guarantee, with 100%
-certainty, that the CRNG will be initialzied.  (This is especially
-true if the idiots who design the IOT device call OpenSSL to generate
-their long-term private key the moment the device is first plugged in,
-before any networking device is brought on-line.)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
 
-The point with all of this is that both the kernel and OpenSSL, and
-whether or not they can be combined to create a secure overall
-solution is going to be dependent on the hardware choices, and choices
-of the distribution and the application programmers in terms of what
-other software components are used, and when and where those
-components try to request random numbers, especially super-early in
-the boot process.
+CoreChips 2-1:0.159 (unnamed net_device) (uninitialized): Error reading  
+RX_CTL register:ffffffb9
+CoreChips 2-1:0.159 (unnamed net_device) (uninitialized): Failed to enable  
+software MII access
+CoreChips 2-1:0.159 (unnamed net_device) (uninitialized): Failed to enable  
+hardware MII access
+=====================================================
+BUG: KMSAN: uninit-value in usbnet_probe+0x10ae/0x3960  
+drivers/net/usb/usbnet.c:1722
+CPU: 1 PID: 11159 Comm: kworker/1:4 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
+  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+  sr_get_phyid drivers/net/usb/sr9800.c:380 [inline]
+  sr9800_bind+0xd39/0x1b10 drivers/net/usb/sr9800.c:800
+  usbnet_probe+0x10ae/0x3960 drivers/net/usb/usbnet.c:1722
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:882
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:882
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Historically, I've tried to work around this problem by being super
-paranoid about the choices of thresholds before declaring the CRNG to
-be initialized, while *also* making sure that at least on most common
-x86 systems, the CRNG could be considered initialized before the root
-file system was mounted read/write.
+Local variable description: ----res@sr_mdio_read
+Variable was created at:
+  sr_mdio_read+0x78/0x360 drivers/net/usb/sr9800.c:341
+  sr_get_phyid drivers/net/usb/sr9800.c:379 [inline]
+  sr9800_bind+0xce9/0x1b10 drivers/net/usb/sr9800.c:800
+=====================================================
 
-But over time, assumptions of what is common hardware changes.  SSD's
-replace HDD's; NAPI and other polling techniques are more common to
-reduce the number of interrupts; the use of a single master oscillator
-to drive the all of the various clocks on the system, etc.  And
-software changes --- systemd running boot scripts in parallel means
-that boot times are reduced, which is good, but it also means the time
-to when the root is mounted read/write is much shortened.
 
-So in the absence of a hardware RNG, or a hardware random number
-generator which is considered trusted (i.e., should RDRAND
-beconsidered trusted?), there *will* be times when we will simply fail
-to be able to generate secure random numbers (at least by our
-hueristics, which can potentially be overly optimistic on some
-hardware platforms, and overly conservative on others).
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The question is then, what do we do?  Do we hang the boot --- at which
-point users will complain to Linus?  Or do we just hope that things
-are "good enough", and that even if the user has elected to say that
-they don't trust RDRAND, that we'll hope it's competently implement
-and not backdoored?  Or do we assume that using a jitter entropy
-scheme is actually secure, as opposed to security through obscurity
-(and maybe is completely pointless on a simple and completely open
-architecture with no speculation such as RISC-V)?
-
-There really are no good choices here.  The one thing which Linus has
-made very clear is that hanging at boot is Not Acceptable.  Long term,
-the best we can do is to through the kitchen sink at the problem.  So
-we should try to use UEFI's RNG if available; use the TPM's RNG if
-available; use RDRAND if available; try to use a seed file if
-available (and hope it's not cloned to be identical on a million IOT
-devices); and so on.  Hopefully, they won't *all* incompetently
-implemented and/or implanted with a backdoor from the NSA or MSS or
-the KGB.
-
-The only words of hope that I can give you is that it's likely that
-there are so many zero day bugs in the kernel, in userspace
-applications, and crypto libraries (including maybe OpenSSL), that we
-don't have to make the CRNG impossible to attack in order to make a
-difference.  We just have to make it harder than finding and
-exploiting zero day security bugs in *other* parts of the system.
-
-   "When a mountain bear is chasing after you, you don’t have to
-   outrun the bear. You only have to outrun the person running next to
-   you."  :-)
-
-Bottom line, we can do the best we can with each of our various
-components, but without control over the hardware that will be in use,
-or for OpenSSL, what applications are trying to call OpenSSL for, and
-when they might try to generate long-term public keys during the first
-boot, perfection is always going to be impossible to achieve.  The
-only thing we can choose is how do we handle failure.
-
-And Linus has laid down the law that a performance improving commit
-should never cause boot-ups to hang due to the lack of randomness.
-Given that I can't control when some application might try to call
-OpenSSL to generate a long-term public key, and OpenSSL certainly
-can't control if it gets called during early boot, if getrandom(2)
-ever boots, we can't meet Linus's demand.
-
-And given that many users are just installing some kind of userspace
-jitter entropy to square this particular circle, even though I don't
-trust a jitter entropy scheme, even if it is insecure, we're also
-using RDRAND, and ultimately I'll trust RDRAND more than I trust a
-jitter entropy scheme.  And that's where we are right now.  Linus has
-introduced a simple in-kernel jitter entropy system so getrandom(2)
-will never boot.  Is it secure?  Who can say?  I have my doubts on
-RISC-V, but I don't use a RISC-V, and hopefully this will be a spur to
-encourage all RISC-V implementations to include the cryptographic
-extensions which include a RDRAND-like hardware random number
-generator into ISA.  And since all of *my* x86 systems have RDRAND,
-I'm at least personally comfortable enough with where we've landed.
-Your mileage may vary.
-
-Regards,
-
-						- Ted
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
