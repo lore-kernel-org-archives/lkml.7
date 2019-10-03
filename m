@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE5DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7560B20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449EC20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123872;
-	bh=cn6NzZ9VbJI2M0TVHdR5+d1pVaa64iCqsLuPxdNrJMI=;
+	s=default; t=1570123877;
+	bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LdTs1mAoLw4P8QfuKFQgexggC/3p2hLIFMt8ubR4ITCgx8FK67lJcMj6HsnUkjouQ
-	 vUdcP5IyoveVWTqSBlkkmjylYflQtws9b2JgHnHeMt62j4K5+B6x+BCzm8CUzxVf8s
-	 mMtRq5iSpy+Mc7H5ZOhAouNKECLVV3dglvLuBtmk=
+	b=PqcCnPcl0xIV8p/0Oci2q2ksrs8RFNsX87yMI3UA25KI0YA5DknuCezUa0tkIgSXs
+	 qykULd8ftLoGErlyXlS+GQXGeOxK1aVAFrRBXvuO/PyQiZSPN4Cx40gA1lUeDIkH3d
+	 HtCcWdWCO4VLKWlxHC1jjfM1ZKOPE++NCWTPoqus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbfJCQLr (ORCPT
+        id S2387607AbfJCQKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33554 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387877AbfJCQLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:42 -0400
+        id S2387585AbfJCQKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14531207FF;
-        Thu,  3 Oct 2019 16:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89D88207FF;
+        Thu,  3 Oct 2019 16:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119101;
-        bh=cn6NzZ9VbJI2M0TVHdR5+d1pVaa64iCqsLuPxdNrJMI=;
+        s=default; t=1570119013;
+        bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Qix8PXnhhaOTDkiBEVxvXVaSZ7Wlbv9JQ2UgYVTYMHYbPTUVzotM12TO/IECDZq1
-         V/Bw4WhZW3VcXPul2C8MwG74EB4GnickfYVQ6n/rmr9F4IStSqC2sh7JuevfIvgX/r
-         wOyV7KaMaeqZqJNnf/dWAMBR+soxpNr/Bl/kVlOE=
+        b=tzvFHoCZrr6Db+GfCUPcWT0hY2OKXqqbLXPbqvt5yFiFWHckn25tWOMZ0mCTZMxuz
+         aR8G5JWmrPs7Sru4l/7oid0Q6uis1JVMau4qY2MqDxYfSMWyWja6EX8KQtv37AeJqs
+         g0vq0Air8MDfoc/XjAYNF2vw0yIZvSXrJ1Ox8JGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Darius Rad <alpha@area49.net>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/185] media: rc: imon: Allow iMON RC protocol for ffdc 7e device
-Date:   Thu,  3 Oct 2019 17:52:46 +0200
-Message-Id: <20191003154458.180129634@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 094/185] net: lpc-enet: fix printk format strings
+Date:   Thu,  3 Oct 2019 17:52:52 +0200
+Message-Id: <20191003154459.576180428@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,51 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darius Rad <alpha@area49.net>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit b20a6e298bcb8cb8ae18de26baaf462a6418515b ]
+[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
 
-Allow selecting the IR protocol, MCE or iMON, for a device that
-identifies as follows (with config id 0x7e):
+compile-testing this driver on other architectures showed
+multiple warnings:
 
-15c2:ffdc SoundGraph Inc. iMON PAD Remote Controller
+  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
+  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
 
-As the driver is structured to default to iMON when both RC
-protocols are supported, existing users of this device (using MCE
-protocol) will need to manually switch to MCE (RC-6) protocol from
-userspace (with ir-keytable, sysfs).
+  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
 
-Signed-off-by: Darius Rad <alpha@area49.net>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Use format strings that work on all architectures.
+
+Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/imon.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/rc/imon.c b/drivers/media/rc/imon.c
-index 0c46155a8e9da..a7547c88e4c36 100644
---- a/drivers/media/rc/imon.c
-+++ b/drivers/media/rc/imon.c
-@@ -1963,12 +1963,17 @@ static void imon_get_ffdc_type(struct imon_context *ictx)
- 		break;
- 	/* iMON VFD, MCE IR */
- 	case 0x46:
--	case 0x7e:
- 	case 0x9e:
- 		dev_info(ictx->dev, "0xffdc iMON VFD, MCE IR");
- 		detected_display_type = IMON_DISPLAY_TYPE_VFD;
- 		allowed_protos = RC_PROTO_BIT_RC6_MCE;
- 		break;
-+	/* iMON VFD, iMON or MCE IR */
-+	case 0x7e:
-+		dev_info(ictx->dev, "0xffdc iMON VFD, iMON or MCE IR");
-+		detected_display_type = IMON_DISPLAY_TYPE_VFD;
-+		allowed_protos |= RC_PROTO_BIT_RC6_MCE;
-+		break;
- 	/* iMON LCD, MCE IR */
- 	case 0x9f:
- 		dev_info(ictx->dev, "0xffdc iMON LCD, MCE IR");
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 08381ef8bdb48..41d30f55c946b 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -1371,13 +1371,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	pldat->dma_buff_base_p = dma_handle;
+ 
+ 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
+-	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
++	netdev_dbg(ndev, "IO address size      :%zd\n",
++			(size_t)resource_size(res));
+ 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
+ 			pldat->net_base);
+ 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
+-	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
+-	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
+-			pldat->dma_buff_base_p);
++	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
++	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
++			&pldat->dma_buff_base_p);
+ 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
+ 			pldat->dma_buff_base_v);
+ 
+@@ -1424,8 +1425,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_out_unregister_netdev;
+ 
+-	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
+-	       res->start, ndev->irq);
++	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
++	       (unsigned long)res->start, ndev->irq);
+ 
+ 	phydev = ndev->phydev;
+ 
 -- 
 2.20.1
 
