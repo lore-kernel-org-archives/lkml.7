@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC38C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDF5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71317222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAEAA222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062528;
-	bh=O+cZyCAFgCGKKLXpdo/DfJ7oqtdcbhNDwHCF/bYAQmU=;
+	s=default; t=1570062533;
+	bh=s/ZYke5jns5Eo7bH7u9pNXsmfjKWbKjWUUN/3Txz7k0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pb5RIusIIoF9kHuDEQrMbnBwQSMj3+BxmtA+jRnZL2syBFylkiwtEzr/AP0nEMR3F
-	 ct5AUmkRPoaX87uFNmgIXaMorDMlHMJ59Y+EWVAO8XqUQSC0eIMVFrzXwiBeE0avRj
-	 IIun010jTg5AHTdaVuoclBPnA9MY26sdl4nFnql8=
+	b=mZlwdg3Vm8vyNLmYycZlJNowvWbusYP97EnpZneNRyygbY5iwFl2scMLta/+5EV2j
+	 L/6izYvkfhlc5kHRp0tVWesV+B0RJrVuNUqxAJO+cOyt0LFtb5lHPN+UN9dK7NNP/A
+	 ryaYbkC1AGCjJBi7wEFDUJIGLZW5OEEBXy/8jrsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfJCA2o (ORCPT
+        id S1727385AbfJCA2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56246 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729614AbfJCA0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:55 -0400
+        id S1727984AbfJCA0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:54 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C8F8222CD;
-        Thu,  3 Oct 2019 00:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECAA7222C8;
+        Thu,  3 Oct 2019 00:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062415;
-        bh=O+cZyCAFgCGKKLXpdo/DfJ7oqtdcbhNDwHCF/bYAQmU=;
+        s=default; t=1570062413;
+        bh=s/ZYke5jns5Eo7bH7u9pNXsmfjKWbKjWUUN/3Txz7k0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJkjOZjBHT01IIEIEE33EygNEpSEkQXhzWToGR9b9JwEKWgIANv59YbX+hh1DfqnL
-         DCGUqsbAuOG4awocngBZ6X8o4D1S+8fhlFbyISfuT2eV9y69YUkzdKplVkYI+DO89u
-         CfZgqC5SgXmNJesZ/g9ugXqdFYGqA1xECntgvPb8=
+        b=w9Y+jPau66A6HvmgSvpy/24FsX4WGd8ugmpDtihd+j0R4E86UXvmek5b7RGiirYFE
+         jpGEb2G6Z78gVs7JTL7LljHuUm3mo1Fuk26gVizLMGe60Jrbmwi9jXLoGvfS/kk5Pk
+         zCw2tGglXlFaqxprJ8HmDML66DTM8IvfFje7XTDY=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
 Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 10/32] tools/memory-model: Update parseargs.sh for hardware verification
-Date:   Wed,  2 Oct 2019 17:26:28 -0700
-Message-Id: <20191003002650.11249-10-paulmck@kernel.org>
+        akiyks@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 03/32] tools/memory-model/Documentation: Put redefinition of rcu-fence into explanation.txt
+Date:   Wed,  2 Oct 2019 17:26:21 -0700
+Message-Id: <20191003002650.11249-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -57,57 +57,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-This commit adds a --hw argument to parseargs.sh to specify the CPU
-family for a hardware verification.  For example, "--hw AArch64" will
-specify that a C-language litmus test is to be translated to ARMv8 and
-the result verified.  This will set the LKMM_HW_MAP_FILE environment
-variable accordingly.  If there is no --hw argument, this environment
-variable will be set to the empty string.
+This patch updates the Linux Kernel Memory Model's explanation.txt
+file to incorporate the introduction of the rcu-order relation and
+the redefinition of rcu-fence made by commit 15aa25cbf0cc
+("tools/memory-model: Change definition of rcu-fence").
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/memory-model/scripts/parseargs.sh | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/memory-model/Documentation/explanation.txt | 53 ++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 17 deletions(-)
 
-diff --git a/tools/memory-model/scripts/parseargs.sh b/tools/memory-model/scripts/parseargs.sh
-index afe7bd2..5f016fc 100755
---- a/tools/memory-model/scripts/parseargs.sh
-+++ b/tools/memory-model/scripts/parseargs.sh
-@@ -27,6 +27,7 @@ initparam () {
+diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+index 1b52645..ecf6ccc 100644
+--- a/tools/memory-model/Documentation/explanation.txt
++++ b/tools/memory-model/Documentation/explanation.txt
+@@ -27,7 +27,7 @@ Explanation of the Linux-Kernel Memory Consistency Model
+   19. AND THEN THERE WAS ALPHA
+   20. THE HAPPENS-BEFORE RELATION: hb
+   21. THE PROPAGATES-BEFORE RELATION: pb
+-  22. RCU RELATIONS: rcu-link, rcu-gp, rcu-rscsi, rcu-fence, and rb
++  22. RCU RELATIONS: rcu-link, rcu-gp, rcu-rscsi, rcu-order, rcu-fence, and rb
+   23. LOCKING
+   24. ODDS AND ENDS
  
- initparam LKMM_DESTDIR "."
- initparam LKMM_HERD_OPTIONS "-conf linux-kernel.cfg"
-+initparam LKMM_HW_MAP_FILE ""
- initparam LKMM_JOBS `getconf _NPROCESSORS_ONLN`
- initparam LKMM_PROCS "3"
- initparam LKMM_TIMEOUT "1m"
-@@ -37,10 +38,11 @@ usagehelp () {
- 	echo "Usage $scriptname [ arguments ]"
- 	echo "      --destdir path (place for .litmus.out, default by .litmus)"
- 	echo "      --herdopts -conf linux-kernel.cfg ..."
-+	echo "      --hw AArch64"
- 	echo "      --jobs N (number of jobs, default one per CPU)"
- 	echo "      --procs N (litmus tests with at most this many processes)"
- 	echo "      --timeout N (herd7 timeout (e.g., 10s, 1m, 2hr, 1d, '')"
--	echo "Defaults: --destdir '$LKMM_DESTDIR_DEF' --herdopts '$LKMM_HERD_OPTIONS_DEF' --jobs '$LKMM_JOBS_DEF' --procs '$LKMM_PROCS_DEF' --timeout '$LKMM_TIMEOUT_DEF'"
-+	echo "Defaults: --destdir '$LKMM_DESTDIR_DEF' --herdopts '$LKMM_HERD_OPTIONS_DEF' --hw '$LKMM_HW_MAP_FILE' --jobs '$LKMM_JOBS_DEF' --procs '$LKMM_PROCS_DEF' --timeout '$LKMM_TIMEOUT_DEF'"
- 	exit 1
- }
+@@ -1425,8 +1425,8 @@ they execute means that it cannot have cycles.  This requirement is
+ the content of the LKMM's "propagation" axiom.
  
-@@ -95,6 +97,11 @@ do
- 		LKMM_HERD_OPTIONS="$2"
- 		shift
- 		;;
-+	--hw)
-+		checkarg --hw "(.map file architecture name)" "$#" "$2" '^[A-Za-z0-9_-]\+' '^--'
-+		LKMM_HW_MAP_FILE="$2"
-+		shift
-+		;;
- 	-j[1-9]*)
- 		njobs="`echo $1 | sed -e 's/^-j//'`"
- 		trailchars="`echo $njobs | sed -e 's/[0-9]\+\(.*\)$/\1/'`"
+ 
+-RCU RELATIONS: rcu-link, rcu-gp, rcu-rscsi, rcu-fence, and rb
+--------------------------------------------------------------
++RCU RELATIONS: rcu-link, rcu-gp, rcu-rscsi, rcu-order, rcu-fence, and rb
++------------------------------------------------------------------------
+ 
+ RCU (Read-Copy-Update) is a powerful synchronization mechanism.  It
+ rests on two concepts: grace periods and read-side critical sections.
+@@ -1536,29 +1536,29 @@ Z's CPU before Z begins but doesn't propagate to some other CPU until
+ after X ends.)  Similarly, X ->rcu-rscsi Y ->rcu-link Z says that X is
+ the end of a critical section which starts before Z begins.
+ 
+-The LKMM goes on to define the rcu-fence relation as a sequence of
++The LKMM goes on to define the rcu-order relation as a sequence of
+ rcu-gp and rcu-rscsi links separated by rcu-link links, in which the
+ number of rcu-gp links is >= the number of rcu-rscsi links.  For
+ example:
+ 
+ 	X ->rcu-gp Y ->rcu-link Z ->rcu-rscsi T ->rcu-link U ->rcu-gp V
+ 
+-would imply that X ->rcu-fence V, because this sequence contains two
++would imply that X ->rcu-order V, because this sequence contains two
+ rcu-gp links and one rcu-rscsi link.  (It also implies that
+-X ->rcu-fence T and Z ->rcu-fence V.)  On the other hand:
++X ->rcu-order T and Z ->rcu-order V.)  On the other hand:
+ 
+ 	X ->rcu-rscsi Y ->rcu-link Z ->rcu-rscsi T ->rcu-link U ->rcu-gp V
+ 
+-does not imply X ->rcu-fence V, because the sequence contains only
++does not imply X ->rcu-order V, because the sequence contains only
+ one rcu-gp link but two rcu-rscsi links.
+ 
+-The rcu-fence relation is important because the Grace Period Guarantee
+-means that rcu-fence acts kind of like a strong fence.  In particular,
+-E ->rcu-fence F implies not only that E begins before F ends, but also
+-that any write po-before E will propagate to every CPU before any
+-instruction po-after F can execute.  (However, it does not imply that
+-E must execute before F; in fact, each synchronize_rcu() fence event
+-is linked to itself by rcu-fence as a degenerate case.)
++The rcu-order relation is important because the Grace Period Guarantee
++means that rcu-order links act kind of like strong fences.  In
++particular, E ->rcu-order F implies not only that E begins before F
++ends, but also that any write po-before E will propagate to every CPU
++before any instruction po-after F can execute.  (However, it does not
++imply that E must execute before F; in fact, each synchronize_rcu()
++fence event is linked to itself by rcu-order as a degenerate case.)
+ 
+ To prove this in full generality requires some intellectual effort.
+ We'll consider just a very simple case:
+@@ -1585,7 +1585,26 @@ G's CPU before G starts must propagate to every CPU before C starts.
+ In particular, the write propagates to every CPU before F finishes
+ executing and hence before any instruction po-after F can execute.
+ This sort of reasoning can be extended to handle all the situations
+-covered by rcu-fence.
++covered by rcu-order.
++
++The rcu-fence relation is a simple extension of rcu-order.  While
++rcu-order only links certain fence events (calls to synchronize_rcu(),
++rcu_read_lock(), or rcu_read_unlock()), rcu-fence links any events
++that are separated by an rcu-order link.  This is analogous to the way
++the strong-fence relation links events that are separated by an
++smp_mb() fence event (as mentioned above, rcu-order links act kind of
++like strong fences).  Written symbolically, X ->rcu-fence Y means
++there are fence events E and F such that:
++
++	X ->po E ->rcu-order F ->po Y.
++
++From the discussion above, we see this implies not only that X
++executes before Y, but also (if X is a store) that X propagates to
++every CPU before Y executes.  Thus rcu-fence is sort of a
++"super-strong" fence: Unlike the original strong fences (smp_mb() and
++synchronize_rcu()), rcu-fence is able to link events on different
++CPUs.  (Perhaps this fact should lead us to say that rcu-fence isn't
++really a fence at all!)
+ 
+ Finally, the LKMM defines the RCU-before (rb) relation in terms of
+ rcu-fence.  This is done in essentially the same way as the pb
+@@ -1596,7 +1615,7 @@ before F, just as E ->pb F does (and for much the same reasons).
+ Putting this all together, the LKMM expresses the Grace Period
+ Guarantee by requiring that the rb relation does not contain a cycle.
+ Equivalently, this "rcu" axiom requires that there are no events E
+-and F with E ->rcu-link F ->rcu-fence E.  Or to put it a third way,
++and F with E ->rcu-link F ->rcu-order E.  Or to put it a third way,
+ the axiom requires that there are no cycles consisting of rcu-gp and
+ rcu-rscsi alternating with rcu-link, where the number of rcu-gp links
+ is >= the number of rcu-rscsi links.
+@@ -1750,7 +1769,7 @@ addition to normal RCU.  The ideas involved are much the same as
+ above, with new relations srcu-gp and srcu-rscsi added to represent
+ SRCU grace periods and read-side critical sections.  There is a
+ restriction on the srcu-gp and srcu-rscsi links that can appear in an
+-rcu-fence sequence (the srcu-rscsi links must be paired with srcu-gp
++rcu-order sequence (the srcu-rscsi links must be paired with srcu-gp
+ links having the same SRCU domain with proper nesting); the details
+ are relatively unimportant.
+ 
 -- 
 2.9.5
 
