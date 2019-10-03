@@ -2,52 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B33C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E818C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07C92054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5269C20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121638;
-	bh=L0SmYGtaGcxI3+BLpfscRZ+R1XBFygt6MAgF3wzw8/g=;
+	s=default; t=1570121641;
+	bh=wUWc9RLD1V6Lhh3kGLLd9MEEK7g7Idjqgx2h8Gpux1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tUpKBFqO1BNQ53NArd04Z0c9l2BLNODmT5Z74YG6MTDJS92lI29rIedtl+kv1K3wA
-	 xeqHuGqyTNlB3pPK9qRK0+JUGhG5DLvyQ/f+GMHozXI4Sooj+tCvBO2AJ33tOCuhQl
-	 FDVGNxdfAZ5jxhfbpekCPJ7xzulC6N8QRXKU9wBg=
+	b=axnCA21ethglAKvcxkqTxL7ECB/2chci91+b0QK0ZFKKC3KUZaDBCyNQboTzkoqBS
+	 bf+dZOOfMS6ypg9BVihf2AZxZlZYnC6vACYU2PjP8O4rgrF2+zjidSiFQse+AlQnkr
+	 W6mBtMvvCSanimzeKwhBwm9nyGhSLXw6bByWoQb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393238AbfJCQx5 (ORCPT
+        id S2406452AbfJCQyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42140 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405895AbfJCQxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:53:54 -0400
+        id S2406443AbfJCQx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306382070B;
-        Thu,  3 Oct 2019 16:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD0BC2054F;
+        Thu,  3 Oct 2019 16:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121633;
-        bh=L0SmYGtaGcxI3+BLpfscRZ+R1XBFygt6MAgF3wzw8/g=;
+        s=default; t=1570121636;
+        bh=wUWc9RLD1V6Lhh3kGLLd9MEEK7g7Idjqgx2h8Gpux1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+5KixEuVb/V9dSuG3t6qa6ZCR+yMYwvlf5IMi4JVRw183CiTyFjCCbS7POkY5SvM
-         EmodsJE6o8XsDbqYhqlwaaUQzv1u4KNfFFAmdvKWyO4iFg5RkUeHCiMT06JYiu1Zc7
-         ctfYaAUFCr+6UDsNUjW9ucwKhCsJD5tYDvONMDBA=
+        b=JePEnEOJB4gi2Zf9bK8QxAqp1BiA8O0eAT2TdNtJj5K8pxXYykXCeqiZ+i3vUB7c+
+         W3P9SrsfWjV9Ahdk+7Cc8ESlpBBDda6orjmp0L0WioXfVTIw8QvhxtTdgKf77bbu4c
+         XVjGCDjpU309OhUvl5pegmuFTXC1Ru5zhaEUm4Io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 344/344] platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed
-Date:   Thu,  3 Oct 2019 17:55:09 +0200
-Message-Id: <20191003154612.302053827@linuxfoundation.org>
+        stable@vger.kernel.org, Zhan Liu <zhan.liu@amd.com>,
+        Roman Li <Roman.Li@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 339/344] drm/amd/display: Add missing HBM support and raise Vega20s uclk.
+Date:   Thu,  3 Oct 2019 17:55:04 +0200
+Message-Id: <20191003154611.953015208@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,125 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Zhan Liu <zhan.liu@amd.com>
 
-[ Upstream commit 71cddb7097e2b0feb855d7fd7d59afd12cbee4bb ]
+commit c02d6a161395dfc0c2fdabb9e976a229017288d8 upstream.
 
-Since the rpmsg_endpoint is created before probe is called, it's
-possible that a host event is received during cros_ec_register, and
-there would be some pending work in the host_event_work workqueue while
-cros_ec_register is called.
+[Why]
+When more than 2 displays are connected to the graphics card,
+only the minimum memory clock is needed. However, when more
+displays are connected, the minimum memory clock is not
+sufficient enough to support the overwhelming bandwidth.
+System will hang under this circumstance.
 
-If cros_ec_register fails, when the leftover work in host_event_work
-run, the ec_dev from the drvdata of the rpdev could be already set to
-NULL, causing kernel crash when trying to run cros_ec_get_next_event.
+Also, the old code didn't address HBM cards, which has 2
+pseudo channels. We need to add the HBM part here.
 
-Fix this by creating the rpmsg_endpoint by ourself, and when
-cros_ec_register fails (or on remove), destroy the endpoint first (to
-make sure there's no more new calls to cros_ec_rpmsg_callback), and then
-cancel all works in the host_event_work workqueue.
+[How]
+When graphics card connects to 2 or more displays,
+switch to high memory clock. Also, choose memory
+multiplier based on whether its regular DRAM or HBM.
 
-Cc: stable@vger.kernel.org
-Fixes: 2de89fd98958 ("platform/chrome: cros_ec: Add EC host command support using rpmsg")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Zhan Liu <zhan.liu@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c | 32 +++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dce110/dce110_clk_mgr.c |   18 ++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index 5d3fb2abad1d6..bec19d4814aba 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -41,6 +41,7 @@ struct cros_ec_rpmsg {
- 	struct rpmsg_device *rpdev;
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
-+	struct rpmsg_endpoint *ept;
- };
- 
- /**
-@@ -72,7 +73,6 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
- 				  struct cros_ec_command *ec_msg)
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dce110/dce110_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dce110/dce110_clk_mgr.c
+@@ -174,6 +174,10 @@ void dce11_pplib_apply_display_requireme
+ 	struct dc_state *context)
  {
- 	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
--	struct rpmsg_device *rpdev = ec_rpmsg->rpdev;
- 	struct ec_host_response *response;
- 	unsigned long timeout;
- 	int len;
-@@ -85,7 +85,7 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
- 	dev_dbg(ec_dev->dev, "prepared, len=%d\n", len);
- 
- 	reinit_completion(&ec_rpmsg->xfer_ack);
--	ret = rpmsg_send(rpdev->ept, ec_dev->dout, len);
-+	ret = rpmsg_send(ec_rpmsg->ept, ec_dev->dout, len);
- 	if (ret) {
- 		dev_err(ec_dev->dev, "rpmsg send failed\n");
- 		return ret;
-@@ -196,11 +196,24 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 	return 0;
- }
- 
-+static struct rpmsg_endpoint *
-+cros_ec_rpmsg_create_ept(struct rpmsg_device *rpdev)
-+{
-+	struct rpmsg_channel_info chinfo = {};
+ 	struct dm_pp_display_configuration *pp_display_cfg = &context->pp_display_cfg;
++	int memory_type_multiplier = MEMORY_TYPE_MULTIPLIER_CZ;
 +
-+	strscpy(chinfo.name, rpdev->id.name, RPMSG_NAME_SIZE);
-+	chinfo.src = rpdev->src;
-+	chinfo.dst = RPMSG_ADDR_ANY;
-+
-+	return rpmsg_create_ept(rpdev, cros_ec_rpmsg_callback, NULL, chinfo);
-+}
-+
- static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- {
- 	struct device *dev = &rpdev->dev;
- 	struct cros_ec_rpmsg *ec_rpmsg;
- 	struct cros_ec_device *ec_dev;
-+	int ret;
++	if (dc->bw_vbios && dc->bw_vbios->memory_type == bw_def_hbm)
++		memory_type_multiplier = MEMORY_TYPE_HBM;
  
- 	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
- 	if (!ec_dev)
-@@ -225,7 +238,18 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- 	INIT_WORK(&ec_rpmsg->host_event_work,
- 		  cros_ec_rpmsg_host_event_function);
+ 	pp_display_cfg->all_displays_in_sync =
+ 		context->bw_ctx.bw.dce.all_displays_in_sync;
+@@ -186,8 +190,18 @@ void dce11_pplib_apply_display_requireme
+ 	pp_display_cfg->cpu_pstate_separation_time =
+ 			context->bw_ctx.bw.dce.blackout_recovery_time_us;
  
--	return cros_ec_register(ec_dev);
-+	ec_rpmsg->ept = cros_ec_rpmsg_create_ept(rpdev);
-+	if (!ec_rpmsg->ept)
-+		return -ENOMEM;
-+
-+	ret = cros_ec_register(ec_dev);
-+	if (ret < 0) {
-+		rpmsg_destroy_ept(ec_rpmsg->ept);
-+		cancel_work_sync(&ec_rpmsg->host_event_work);
-+		return ret;
+-	pp_display_cfg->min_memory_clock_khz = context->bw_ctx.bw.dce.yclk_khz
+-		/ MEMORY_TYPE_MULTIPLIER_CZ;
++	/*
++	 * TODO: determine whether the bandwidth has reached memory's limitation
++	 * , then change minimum memory clock based on real-time bandwidth
++	 * limitation.
++	 */
++	if (ASICREV_IS_VEGA20_P(dc->ctx->asic_id.hw_internal_rev) && (context->stream_count >= 2)) {
++		pp_display_cfg->min_memory_clock_khz = max(pp_display_cfg->min_memory_clock_khz,
++			(uint32_t) (dc->bw_vbios->high_yclk.value / memory_type_multiplier / 10000));
++	} else {
++		pp_display_cfg->min_memory_clock_khz = context->bw_ctx.bw.dce.yclk_khz
++			/ memory_type_multiplier;
 +	}
-+
-+	return 0;
- }
  
- static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
-@@ -233,6 +257,7 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
- 	struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
- 	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
- 
-+	rpmsg_destroy_ept(ec_rpmsg->ept);
- 	cancel_work_sync(&ec_rpmsg->host_event_work);
- }
- 
-@@ -249,7 +274,6 @@ static struct rpmsg_driver cros_ec_driver_rpmsg = {
- 	},
- 	.probe		= cros_ec_rpmsg_probe,
- 	.remove		= cros_ec_rpmsg_remove,
--	.callback	= cros_ec_rpmsg_callback,
- };
- 
- module_rpmsg_driver(cros_ec_driver_rpmsg);
--- 
-2.20.1
-
+ 	pp_display_cfg->min_engine_clock_khz = determine_sclk_from_bounding_box(
+ 			dc,
 
 
