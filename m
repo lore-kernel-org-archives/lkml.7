@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C2AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FE6C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B497520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14222086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123826;
-	bh=aurkG+qHpUTJ4ILOYxbbHtwEfOXzpl3vsIt2uUSsD34=;
+	s=default; t=1570123830;
+	bh=LsYsdVGs4V7IkchSF2wWNLWdAyxE/UN89uLgORJq4c4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OHCBQ20GJ3jzlgcaL7Bc1KbtcrTYQYOoamXpYYx4TLTYFNT4RhXRbfuJfmj8TlHNM
-	 cqfDi1tiqf/Zl6YKTUvxkulnVE9VDKs/XqlNX7EPj+CRkz6U+M6eonPC+oGzae3GiN
-	 y80zO+UNHH/Ge6wbARTb+W4k9hUD7iGA+jzTKsSU=
+	b=w4e/LrwuaTGndPPnITvIM8TE/DEOZ9PPwNqqo4YFeB8SubgoAeV1UU0YjuT5OOdBE
+	 PoNIl7yoLWSI+GDmcxZMQbriuK6l7czxzdMEcO81Q4REGrDtflXND6N7Cjl81n6Mn+
+	 Y/uPcr7KcXWVAzm6GshGlUKlK04boFzY+p3x57As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbfJCRaZ (ORCPT
+        id S2387831AbfJCQLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33384 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731716AbfJCQLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:34 -0400
+        id S2387817AbfJCQLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0939C20865;
-        Thu,  3 Oct 2019 16:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 528F920700;
+        Thu,  3 Oct 2019 16:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119093;
-        bh=aurkG+qHpUTJ4ILOYxbbHtwEfOXzpl3vsIt2uUSsD34=;
+        s=default; t=1570119079;
+        bh=LsYsdVGs4V7IkchSF2wWNLWdAyxE/UN89uLgORJq4c4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBBVrJHaNQGd5YPMOAY5ehJofz1uwADth+DlUXS79ssm3JRKyoQohhx1pwqm/yKKv
-         UequupKNk7lp8dpzZxLoEW6v2ccamklnZgoiW+JmQM36d33txCIx0YZBMdRZqqS332
-         edquB6eGj6VcwT/DtN9B7Zy4YK3XebfhbSe/3y8M=
+        b=hGWeEUCH7mnh/AmoSiKOtsrenhMYaU1uoqT0Y5Vi1P/PnkjjBcxgQ/gsQnnIb7M8Y
+         Pi0sORCPBy33NGme9fMGHrUct03WhxNaSijIjSGduu4kUNMarv4VH886ytCl5jUWBw
+         SmRw2Qc84PXDw4A89OTtApN7YuscauKK4felGXD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Shenran <shenran268@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 121/185] hwmon: (acpi_power_meter) Change log level for unsafe software power cap
-Date:   Thu,  3 Oct 2019 17:53:19 +0200
-Message-Id: <20191003154505.278346952@linuxfoundation.org>
+Subject: [PATCH 4.14 117/185] libtraceevent: Change users plugin directory
+Date:   Thu,  3 Oct 2019 17:53:15 +0200
+Message-Id: <20191003154504.677497152@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,48 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Shenran <shenran268@gmail.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-[ Upstream commit 6e4d91aa071810deac2cd052161aefb376ecf04e ]
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-At boot time, the acpi_power_meter driver logs the following error level
-message: "Ignoring unsafe software power cap". Having read about it from
-a few sources, it seems that the error message can be quite misleading.
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-While the message can imply that Linux is ignoring the fact that the
-system is operating in potentially dangerous conditions, the truth is
-the driver found an ACPI_PMC object that supports software power
-capping. The driver simply decides not to use it, perhaps because it
-doesn't support the object.
-
-The best solution is probably changing the log level from error to warning.
-All sources I have found, regarding the error, have downplayed its
-significance. There is not much of a reason for it to be on error level,
-while causing potential confusions or misinterpretations.
-
-Signed-off-by: Wang Shenran <shenran268@gmail.com>
-Link: https://lore.kernel.org/r/20190724080110.6952-1-shenran268@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/acpi_power_meter.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index 14a94d90c028a..ba3af4505d8fb 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -693,8 +693,8 @@ static int setup_attrs(struct acpi_power_meter_resource *resource)
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 46cd5f871ad76..a26c44cf31aa4 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -55,15 +55,15 @@ set_plugin_dir := 1
  
- 	if (resource->caps.flags & POWER_METER_CAN_CAP) {
- 		if (!can_cap_in_hardware()) {
--			dev_err(&resource->acpi_dev->dev,
--				"Ignoring unsafe software power cap!\n");
-+			dev_warn(&resource->acpi_dev->dev,
-+				 "Ignoring unsafe software power cap!\n");
- 			goto skip_unsafe_cap;
- 		}
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index a16756ae35267..5fe7889606a23 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -30,7 +30,7 @@
+ #include "event-parse.h"
+ #include "event-utils.h"
  
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
