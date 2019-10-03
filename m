@@ -2,113 +2,114 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4673C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25156C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9909520830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E560820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124558;
-	bh=PSuiUYtGYmjkB2GsFj+bal0UGKrztqlXPZVEpmoHnMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2h9PdFvzsQJRRlQdh3AjKCveUFYqRJyjustWAc9y+D4H3pqf8HNm06BiDhLX35sYO
-	 s0ocaIHf+WOHkMpFTk6QqWNu/Ln6LiQkYTFZtTRGCIp1JDH1j5kmkI9xEuhrs+U6kT
-	 kPEPG6LxyseCpoxIUbVg1+Niq4Sb6TCkndpC6abQ=
+	s=default; t=1570124564;
+	bh=GAE2HLg/01cvzJ5pm27QrzJnQpSuN3EpD3z2D6FX7jQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q1OKXbY1kcKYchjSSApOB5AZbg0HyVaXhotnY8P0yanKuMosZZs6YZWxZxzs7hXqP
+	 Yu5jxMC8WbSUAXMUsCT2lKGITPdw6HylaFiIpmK0ajChSg5ukFhQVN33eVvsZYas10
+	 kb6wH3duiezON0zzNivHEhOh3ryJtQOhUWR7Y/FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390501AbfJCRmh (ORCPT
+        id S1730817AbfJCP44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:42:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52354 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730924AbfJCRmd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:42:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nf/a9nA4bn0QDOAEh3Gtmr3XveoV2qcS349ATkCN8DY=; b=b7R1gJJMOHY2rx1890LyO+KeD
-        j8fuNvwP0oW4Sm1dpQwB5Jbu8zLmqoOpj/XL51LiBqaWJXYW22+URM5FLmzDn1hH1f2Slpt1N7xtR
-        iFYGLSKGIzENlbQnNXFS5jgC/OB5SoH6RFoB6hliL2b+i92/+DAcUS/40J1DjaxEoKqLud5dcGwcj
-        +L9Si9h5LNxUaQACOWqs/z0NhVKqTSt6Rdxgk2zHFwRiV7DmTcAzX3IuuGTT49qE58Rl31kwBtx0V
-        gCScwHvoBTeHJajYcAAWKXlbrZSWqHUMB8ggNscNG8FIvxtpunyCxRBrIYKxqt4Ajrwq4j8d6DLL/
-        BYEkFJsCg==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG57W-0005Nu-Ch; Thu, 03 Oct 2019 17:42:30 +0000
-Date:   Thu, 3 Oct 2019 14:42:25 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Gon Solo <gonsolo@gmail.com>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003144225.0137bf6c@coco.lan>
-In-Reply-To: <20191003162326.GA2727@Limone>
-References: <20191002150650.GA4227@gofer.mess.org>
-        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
-        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
-        <20191002154922.7f1cfc76@coco.lan>
-        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-        <20191003080539.2b13c03b@coco.lan>
-        <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
-        <20191003120238.75811da6@coco.lan>
-        <20191003160336.GA5125@Limone>
-        <20191003130909.01d29b77@coco.lan>
-        <20191003162326.GA2727@Limone>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 3 Oct 2019 11:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730794AbfJCP4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54EDD20700;
+        Thu,  3 Oct 2019 15:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118213;
+        bh=GAE2HLg/01cvzJ5pm27QrzJnQpSuN3EpD3z2D6FX7jQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CSL/catwEb/9i06BxL9fM6vqT3VjsSrh5oFVI5Tkz7LSD1333ImTzXyM5s+4fGrfl
+         Xu42yudFpCUMbYgm9Ab00WVnJ5qpKDzcJH106TM3yfNbMjVCxrHZZhg6f08UWepTFT
+         T9qjB/DkmFseR1uaYVM/FOQv329Ex0egPOKrV3fw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.4 03/99] HID: lg: make transfer buffers DMA capable
+Date:   Thu,  3 Oct 2019 17:52:26 +0200
+Message-Id: <20191003154253.721135607@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+References: <20191003154252.297991283@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 3 Oct 2019 18:23:26 +0200
-Gon Solo <gonsolo@gmail.com> escreveu:
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-> > No, I mean with the first patch you sent to the ML, with the powerup
-> > hack.  
-> 
-> Boot time:
-> 
-> [    4.653257] si2168 1-0067: Silicon Labs Si2168-B40 successfully identified
-> [    4.653259] si2168 1-0067: firmware version: B 4.0.2
-> [    4.653279] usb 2-1: DVB: registering adapter 0 frontend 0 (Silicon Labs Si2168)...
-> [    4.653284] dvbdev: dvb_create_media_entity: media entity 'Silicon Labs Si2168' registered.
-> ...
-> [    4.694785] si2157 2-0063: found a 'Silicon Labs Si2147-A30'
-> [    4.694787] si2157 2-0063: Silicon Labs Si2147/2148/2157/2158 successfully attached
-> [    4.717814] usb 2-1: dvb_usb_v2: 'Logilink VG0022A' successfully initialized and connected
-> [    4.717880] usbcore: registered new interface driver dvb_usb_af9035
-> 
-> VLC time:
-> 
-> [  175.490609] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
-> [  176.746585] si2168 1-0067: firmware version: B 4.0.25
-> [  176.781570] si2157 2-0063: firmware version: \xff.\xff.255
+commit 061232f0d47fa10103f3efa3e890f002a930d902 upstream.
 
-Weird... it sounds that, after si2168 has its firmware updated, it
-starts interfering at si2157. Perhaps there's a bug at si2168 I2C
-gate mux logic. Are you using a new Kernel like 5.2?
+Kernel v4.9 strictly enforces DMA capable buffers, so we need to remove
+buffers allocated on the stack.
 
-I guess the best is to enable the debug logs in order to see what's
-happening on both cases.
+[jkosina@suse.cz: fix up second usage of hid_hw_raw_request(), spotted by
+ 0day build bot]
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-You can enable all debug messages (after loading the modules) with:
+---
+ drivers/hid/hid-lg.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-	# for i in $(cat /sys/kernel/debug/dynamic_debug/control |grep -E '(si21|af9035)' |cut -d' ' -f 1); do echo "file $i +p" >>/sys/kernel/debug/dynamic_debug/control; done
+--- a/drivers/hid/hid-lg.c
++++ b/drivers/hid/hid-lg.c
+@@ -701,11 +701,16 @@ static int lg_probe(struct hid_device *h
+ 
+ 	/* Setup wireless link with Logitech Wii wheel */
+ 	if (hdev->product == USB_DEVICE_ID_LOGITECH_WII_WHEEL) {
+-		unsigned char buf[] = { 0x00, 0xAF,  0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
++		const unsigned char cbuf[] = { 0x00, 0xAF,  0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
++		u8 *buf = kmemdup(cbuf, sizeof(cbuf), GFP_KERNEL);
+ 
+-		ret = hid_hw_raw_request(hdev, buf[0], buf, sizeof(buf),
+-					HID_FEATURE_REPORT, HID_REQ_SET_REPORT);
++		if (!buf) {
++			ret = -ENOMEM;
++			goto err_free;
++		}
+ 
++		ret = hid_hw_raw_request(hdev, buf[0], buf, sizeof(cbuf),
++					HID_FEATURE_REPORT, HID_REQ_SET_REPORT);
+ 		if (ret >= 0) {
+ 			/* insert a little delay of 10 jiffies ~ 40ms */
+ 			wait_queue_head_t wait;
+@@ -717,9 +722,10 @@ static int lg_probe(struct hid_device *h
+ 			buf[1] = 0xB2;
+ 			get_random_bytes(&buf[2], 2);
+ 
+-			ret = hid_hw_raw_request(hdev, buf[0], buf, sizeof(buf),
++			ret = hid_hw_raw_request(hdev, buf[0], buf, sizeof(cbuf),
+ 					HID_FEATURE_REPORT, HID_REQ_SET_REPORT);
+ 		}
++		kfree(buf);
+ 	}
+ 
+ 	if (drv_data->quirks & LG_FF)
 
-You could also try to disable the firmware upload at si2168 and see
-if the si2157 reads will succeed.
 
-
-Thanks,
-Mauro
