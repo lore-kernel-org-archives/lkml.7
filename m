@@ -2,78 +2,173 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85983C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05031C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD7C222CF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A02222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119480;
-	bh=FERkCSeCrTfeA7B2Qv/31CeQdyCYPtev+CqxmGRT/hQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qcTQAoA+1H+yeEFt3d+do7zaABSEjzAkLsIYXY2j8QLVUUd+cnxHYZAU2tuh6Irfy
-	 kdkMTDUapEdQbYJk7dlgeeURddMWtJLXFvY+hZBz0I8vh/2vEWCP4KmGny2CT/pky7
-	 zBMdUVBIBM0pSiqbAjBVyWDrfQbInqW0/ziQFF/I=
+	s=default; t=1570119486;
+	bh=wDpL378kGVf4pMIXAYaTkF7wCXDt9A51ysKZ6bNNgTc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VRGN713bPfN03lL66bqEhx7YJRhvVrUcCKTz6AyH6nmIr7oRnXSH1DUlotSJYAIIn
+	 Go95Gx2tX160jvV09eUgunRhQ+fdvzUPedmqiU/yo6X2WQXpjcUK8bf7nTg8qUvGVF
+	 XXsqIPvnVmkz2FB3yysiA0AMZMx7K+fx6IQ8Qfdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732978AbfJCQR7 (ORCPT
+        id S2389450AbfJCQSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44040 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389349AbfJCQRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:17:54 -0400
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2388566AbfJCQR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:17:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C6A215EA;
-        Thu,  3 Oct 2019 16:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 532D920700;
+        Thu,  3 Oct 2019 16:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119473;
-        bh=FERkCSeCrTfeA7B2Qv/31CeQdyCYPtev+CqxmGRT/hQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=l/z3fhRPTCw2Y7dHHmkDZx8PVF2MLMwofuA1vBfi5IjMaa+vFG+JtkBCCAL8f6If8
-         eayCiWI4iyKiyr85gyQ3RKeATIZJ8RutysJUziJGRfuqAwdouYnB6ZByk0xPhd/C4+
-         frbm2d4k57p/VfRX4JvUg/0+ZqgagDUuDzLNwE/k=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Rik van Riel <riel@redhat.com>
-Subject: [PATCH 0/2] vtime: Remove pair of seqcount on context switch
-Date:   Thu,  3 Oct 2019 18:17:43 +0200
-Message-Id: <20191003161745.28464-1-frederic@kernel.org>
+        s=default; t=1570119477;
+        bh=wDpL378kGVf4pMIXAYaTkF7wCXDt9A51ysKZ6bNNgTc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NxNbdun9Dk57uz48XTBaFuhCamkAKKaHXhrO0d/HPINc88LlhzVZN5qjWdzARNdZP
+         hYukMt49qwXw9YgaJy6HCcSjgkarCnUpOx7PaBi9Qq+S2vm0+rcr7YK5pV4bDHsbxc
+         h8mevgN0qLdckb5z+DHs+KU1Xoa8PYMzf7y2FK/s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 080/211] m68k: Prevent some compiler warnings in Coldfire builds
+Date:   Thu,  3 Oct 2019 17:52:26 +0200
+Message-Id: <20191003154505.566967672@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extracted from a larger queue that fixes kcpustat on nohz_full, these
-two patches have value on their own as they remove two write barriers
-on nohz_full context switch.
+From: Finn Thain <fthain@telegraphics.com.au>
 
-Frederic Weisbecker (2):
-  vtime: Rename vtime_account_system() to vtime_account_kernel()
-  vtime: Spare a seqcount lock/unlock cycle on context switch
+[ Upstream commit 94c04390225bcd8283103fd0c04be20cc30cc979 ]
 
- arch/ia64/kernel/time.c          |  4 +--
- arch/powerpc/kernel/time.c       |  6 ++--
- arch/s390/kernel/vtime.c         |  4 +--
- include/linux/context_tracking.h |  4 +--
- include/linux/vtime.h            | 38 ++++++++++++------------
- kernel/sched/cputime.c           | 50 ++++++++++++++++++--------------
- 6 files changed, 57 insertions(+), 49 deletions(-)
+Since commit d3b41b6bb49e ("m68k: Dispatch nvram_ops calls to Atari or
+Mac functions"), Coldfire builds generate compiler warnings due to the
+unconditional inclusion of asm/atarihw.h and asm/macintosh.h.
 
+The inclusion of asm/atarihw.h causes warnings like this:
+
+In file included from ./arch/m68k/include/asm/atarihw.h:25:0,
+                 from arch/m68k/kernel/setup_mm.c:41,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/raw_io.h:39:0: warning: "__raw_readb" redefined
+ #define __raw_readb in_8
+
+In file included from ./arch/m68k/include/asm/io.h:6:0,
+                 from arch/m68k/kernel/setup_mm.c:36,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/io_no.h:16:0: note: this is the location of the previous definition
+ #define __raw_readb(addr) \
+...
+
+This issue is resolved by dropping the asm/raw_io.h include. It turns out
+that asm/io_mm.h already includes that header file.
+
+Moving the relevant macro definitions helps to clarify this dependency
+and make it safe to include asm/atarihw.h.
+
+The other warnings look like this:
+
+In file included from arch/m68k/kernel/setup_mm.c:48:0,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/macintosh.h:19:35: warning: 'struct irq_data' declared inside parameter list will not be visible outside of this definition or declaration
+ extern void mac_irq_enable(struct irq_data *data);
+                                   ^~~~~~~~
+...
+
+This issue is resolved by adding the missing linux/irq.h include.
+
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/m68k/include/asm/atarihw.h   | 9 ---------
+ arch/m68k/include/asm/io_mm.h     | 6 +++++-
+ arch/m68k/include/asm/macintosh.h | 1 +
+ 3 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/arch/m68k/include/asm/atarihw.h b/arch/m68k/include/asm/atarihw.h
+index 9000b249d225e..407a617fa3a2b 100644
+--- a/arch/m68k/include/asm/atarihw.h
++++ b/arch/m68k/include/asm/atarihw.h
+@@ -22,7 +22,6 @@
+ 
+ #include <linux/types.h>
+ #include <asm/bootinfo-atari.h>
+-#include <asm/raw_io.h>
+ #include <asm/kmap.h>
+ 
+ extern u_long atari_mch_cookie;
+@@ -126,14 +125,6 @@ extern struct atari_hw_present atari_hw_present;
+  */
+ 
+ 
+-#define atari_readb   raw_inb
+-#define atari_writeb  raw_outb
+-
+-#define atari_inb_p   raw_inb
+-#define atari_outb_p  raw_outb
+-
+-
+-
+ #include <linux/mm.h>
+ #include <asm/cacheflush.h>
+ 
+diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
+index 782b78f8a0489..e056feabbaf0b 100644
+--- a/arch/m68k/include/asm/io_mm.h
++++ b/arch/m68k/include/asm/io_mm.h
+@@ -29,7 +29,11 @@
+ #include <asm-generic/iomap.h>
+ 
+ #ifdef CONFIG_ATARI
+-#include <asm/atarihw.h>
++#define atari_readb   raw_inb
++#define atari_writeb  raw_outb
++
++#define atari_inb_p   raw_inb
++#define atari_outb_p  raw_outb
+ #endif
+ 
+ 
+diff --git a/arch/m68k/include/asm/macintosh.h b/arch/m68k/include/asm/macintosh.h
+index 08cee11180e69..e441517785fda 100644
+--- a/arch/m68k/include/asm/macintosh.h
++++ b/arch/m68k/include/asm/macintosh.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/seq_file.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ 
+ #include <asm/bootinfo-mac.h>
+ 
 -- 
-2.23.0
+2.20.1
+
+
 
