@@ -2,54 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C24EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4B621848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2665321848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120300;
-	bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
+	s=default; t=1570120304;
+	bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNQUjvLFA7K4zKAdeYShsWMKmaJCMXOyoqeS38DZPDjQ0d5i/RDYwJcPev8Tf2/M2
-	 y8zpBWj0kO1ecbonvi+f0NoryL0/QTuaCmeixHiVi3Dt3hNrSrVsIEsRCu6PIXT0B/
-	 w3AOOTpa74wiFpJ4/C/YAEe8m6fDuAgQZmbxiTfg=
+	b=tXu96B15ge13TUDQALEg+b4UF4tpAKhnzdn0GJtfXSFNVyD2b7GdsifH0H6UATG/K
+	 A7C8D05OW62Mtvm+3Ba1visu3rCRWcQOnTEAzYJBgzpHzEKoN6WJUUvU3yRCpjDDZj
+	 h78AsENnIpd+W8XgpgFKr0fgKfi/q7PSfB3Rm+Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403867AbfJCQbe (ORCPT
+        id S2403903AbfJCQbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391842AbfJCQb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:28 -0400
+        id S2403888AbfJCQbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:31:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE60D2054F;
-        Thu,  3 Oct 2019 16:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28489222C9;
+        Thu,  3 Oct 2019 16:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120287;
-        bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
+        s=default; t=1570120300;
+        bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNalYUp0ib3OCnZNJUzYx/66iWmaq5KcAIuvyvyzXB/e/F1eJn3scr3DB5JB7TbWT
-         IduebLkJ1nvMV8dYZ4XEFSCVsaunHSb0ycyTlPVW2fejnAK00BITZhrHAAOe02ecGn
-         Sk8T56bCQQZJmS9BK1rQsYZMC+AGfa/+mvRJAoLo=
+        b=g5QHhx4FOhoRfsWrOWGCO+vHLmMolKL4xBZ74xQ9dZFGiIOldLDd+W7v8E/hC6Ffl
+         21G4olMh7bqr62FQrm5Sa34+QxXOOONHw6s0mdGk6toiNfrNJKQ07/QSLuuT+9ckE1
+         mQvpR5+qA3dbKICghuZPVihUmZ72gMtPHmDuNPAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 117/313] tools headers: Fixup bitsperlong per arch includes
-Date:   Thu,  3 Oct 2019 17:51:35 +0200
-Message-Id: <20191003154544.387002003@linuxfoundation.org>
+Subject: [PATCH 5.2 172/313] closures: fix a race on wakeup from closure_sync
+Date:   Thu,  3 Oct 2019 17:52:30 +0200
+Message-Id: <20191003154549.936951000@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,110 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Kent Overstreet <kent.overstreet@gmail.com>
 
-[ Upstream commit 42fc2e9ef9603a7948aaa4ffd8dfb94b30294ad8 ]
+[ Upstream commit a22a9602b88fabf10847f238ff81fde5f906fef7 ]
 
-We were getting the file by luck, from one of the paths in -I, fix it to
-get it from the proper place:
+The race was when a thread using closure_sync() notices cl->s->done == 1
+before the thread calling closure_put() calls wake_up_process(). Then,
+it's possible for that thread to return and exit just before
+wake_up_process() is called - so we're trying to wake up a process that
+no longer exists.
 
-  $ cd tools/include/uapi/asm/
-  [acme@quaco asm]$ grep include bitsperlong.h
-  #include "../../arch/x86/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/s390/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/mips/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
-  #include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
-  #include <asm-generic/bitsperlong.h>
-  $ ls -la ../../arch/x86/include/uapi/asm/bitsperlong.h
-  ls: cannot access '../../arch/x86/include/uapi/asm/bitsperlong.h': No such file or directory
-  $ ls -la ../../../arch/*/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 237 ../../../arch/alpha/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 841 ../../../arch/arm64/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 966 ../../../arch/hexagon/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 234 ../../../arch/ia64/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 100 ../../../arch/microblaze/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 244 ../../../arch/mips/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 352 ../../../arch/parisc/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 312 ../../../arch/powerpc/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 353 ../../../arch/riscv/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 292 ../../../arch/s390/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 323 ../../../arch/sparc/include/uapi/asm/bitsperlong.h
-  -rw-rw-r--. 1 320 ../../../arch/x86/include/uapi/asm/bitsperlong.h
-  $
+rcu_read_lock() is sufficient to protect against this, as there's an rcu
+barrier somewhere in the process teardown path.
 
-Found while fixing some other problem, before it was escaping the
-tools/ chroot and using stuff in the kernel sources:
-
-    CC       /tmp/build/perf/util/find_bit.o
-In file included from /git/linux/tools/include/../../arch/x86/include/uapi/asm/bitsperlong.h:11,
-                 from /git/linux/tools/include/uapi/asm/bitsperlong.h:3,
-                 from /git/linux/tools/include/linux/bits.h:6,
-                 from /git/linux/tools/include/linux/bitops.h:13,
-                 from ../lib/find_bit.c:17:
-
-  # cd /git/linux/tools/include/../../arch/x86/include/uapi/asm/
-  # pwd
-  /git/linux/arch/x86/include/uapi/asm
-  #
-
-Now it is getting the one we want it to, i.e. the one inside tools/:
-
-    CC       /tmp/build/perf/util/find_bit.o
-  In file included from /git/linux/tools/arch/x86/include/uapi/asm/bitsperlong.h:11,
-                   from /git/linux/tools/include/linux/bits.h:6,
-                   from /git/linux/tools/include/linux/bitops.h:13,
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-8f8cfqywmf6jk8a3ucr0ixhu@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+Acked-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/uapi/asm/bitsperlong.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/md/bcache/closure.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/asm/bitsperlong.h b/tools/include/uapi/asm/bitsperlong.h
-index 57aaeaf8e1920..edba4d93e9e6a 100644
---- a/tools/include/uapi/asm/bitsperlong.h
-+++ b/tools/include/uapi/asm/bitsperlong.h
-@@ -1,22 +1,22 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #if defined(__i386__) || defined(__x86_64__)
--#include "../../arch/x86/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/x86/include/uapi/asm/bitsperlong.h"
- #elif defined(__aarch64__)
--#include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/arm64/include/uapi/asm/bitsperlong.h"
- #elif defined(__powerpc__)
--#include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/powerpc/include/uapi/asm/bitsperlong.h"
- #elif defined(__s390__)
--#include "../../arch/s390/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/s390/include/uapi/asm/bitsperlong.h"
- #elif defined(__sparc__)
--#include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/sparc/include/uapi/asm/bitsperlong.h"
- #elif defined(__mips__)
--#include "../../arch/mips/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/mips/include/uapi/asm/bitsperlong.h"
- #elif defined(__ia64__)
--#include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/ia64/include/uapi/asm/bitsperlong.h"
- #elif defined(__riscv)
--#include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/riscv/include/uapi/asm/bitsperlong.h"
- #elif defined(__alpha__)
--#include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
-+#include "../../../arch/alpha/include/uapi/asm/bitsperlong.h"
- #else
- #include <asm-generic/bitsperlong.h>
- #endif
+diff --git a/drivers/md/bcache/closure.c b/drivers/md/bcache/closure.c
+index 73f5319295bc9..c12cd809ab193 100644
+--- a/drivers/md/bcache/closure.c
++++ b/drivers/md/bcache/closure.c
+@@ -105,8 +105,14 @@ struct closure_syncer {
+ 
+ static void closure_sync_fn(struct closure *cl)
+ {
+-	cl->s->done = 1;
+-	wake_up_process(cl->s->task);
++	struct closure_syncer *s = cl->s;
++	struct task_struct *p;
++
++	rcu_read_lock();
++	p = READ_ONCE(s->task);
++	s->done = 1;
++	wake_up_process(p);
++	rcu_read_unlock();
+ }
+ 
+ void __sched __closure_sync(struct closure *cl)
 -- 
 2.20.1
 
