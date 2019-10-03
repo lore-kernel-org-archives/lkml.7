@@ -2,100 +2,106 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC01FC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FDBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28B520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570114259;
-	bh=wRqbdcrf0rnfiN6mrTwsskpm9lQvm61M7oJkAHs3Jqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fF/1dLJrd2W8NtQrcVwjUIYXmfOg1ZIes2LhQwiQxoXltnbu/i4Ah50n4tLzwmTEh
-	 7S+tYQD6KhKYMBtYta6JGhh/WQanh6KOM0Cq2O37ije9OxrHE2bp4OFPsB4TIwouBT
-	 g2XQQ7OFD1t/7F63LxK889kws7pHUzGzXvnOekIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2913621A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbfJCOu7 (ORCPT
+        id S1729960AbfJCOvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:50:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfJCOu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:50:58 -0400
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F0420700;
-        Thu,  3 Oct 2019 14:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570114257;
-        bh=wRqbdcrf0rnfiN6mrTwsskpm9lQvm61M7oJkAHs3Jqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zvZkjw0px41D/3NTC7ETAemJGv+eQex3aapC+SdEXgEMwZqJYPJpy1BNNA6py40xp
-         g21fRvN87l+nqPMIdhddXy0kZ2ZFunloZaZOVlUfDGGcteZb2fK8EnTUv3wUvU+6Ae
-         dAUxQZWQOqevKwkknB9BI33g7ETUEPKnvEgB3sZs=
-Date:   Thu, 3 Oct 2019 16:50:55 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH tip/core/rcu 08/12] rcu: Force tick on for nohz_full CPUs
- not reaching quiescent states
-Message-ID: <20191003145054.GC27555@lenoir>
-References: <20191003013834.GA12927@paulmck-ThinkPad-P72>
- <20191003013903.13079-8-paulmck@kernel.org>
+        Thu, 3 Oct 2019 10:51:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42266 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729373AbfJCOvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:51:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EFCF6B186;
+        Thu,  3 Oct 2019 14:51:09 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 16:51:06 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     hannes@cmpxchg.org, clm@fb.com, dennisz@fb.com,
+        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
+        newella@fb.com, lizefan@huawei.com, axboe@kernel.dk,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Rik van Riel <riel@surriel.com>, josef@toxicpanda.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20191003145106.GC6678@blackbody.suse.cz>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190828220600.2527417-9-tj@kernel.org>
+ <20190910125513.GA6399@blackbody.suse.cz>
+ <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
 Content-Disposition: inline
-In-Reply-To: <20191003013903.13079-8-paulmck@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:38:59PM -0700, paulmck@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> 
-> CPUs running for long time periods in the kernel in nohz_full mode
-> might leave the scheduling-clock interrupt disabled for then full
-> duration of their in-kernel execution.  This can (among other things)
-> delay grace periods.  This commit therefore forces the tick back on
-> for any nohz_full CPU that is failing to pass through a quiescent state
-> upon return from interrupt, which the resched_cpu() will induce.
-> 
-> Reported-by: Joel Fernandes <joel@joelfernandes.org>
-> [ paulmck: Clear ->rcu_forced_tick as reported by Joel Fernandes testing. ]
-> [ paulmck: Apply Joel Fernandes TICK_DEP_MASK_RCU->TICK_DEP_BIT_RCU fix. ]
-> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> ---
->  kernel/rcu/tree.c | 38 +++++++++++++++++++++++++++++++-------
->  kernel/rcu/tree.h |  1 +
->  2 files changed, 32 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 74bf5c65..621cc06 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -650,6 +650,12 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
->  	 */
->  	if (rdp->dynticks_nmi_nesting != 1) {
->  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
-> +		if (tick_nohz_full_cpu(rdp->cpu) &&
-> +		    rdp->dynticks_nmi_nesting == 2 &&
-> +		    rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> +			rdp->rcu_forced_tick = true;
-> +			tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
 
-I understand rdp->cpu is always smp_processor_id() here, right? Because calling
-tick_dep_set_cpu() to a remote CPU while in NMI wouldn't be safe. It would warn anyway.
+--RIYY1s2vRbPFwWeW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi (and apology for relatively late reply).
+
+On Tue, Sep 10, 2019 at 09:08:55AM -0700, Tejun Heo <tj@kernel.org> wrote:
+> I can implement the switching if so.
+I see the "conflict" is solved by the switching.
+
+> Initially, I put them under block device sysfs but it was too clumsy
+> with different config file formats and all.
+Do you have any more details on that? In the end, it all boils down to a
+daemon/setup utility writing into the control files and it can use
+whatever config files it decides, can't it?
+
+> I think it's better to have global controller configs at the root
+> cgroup.
+I agree with the "global controller" configs, however, does it also hold
+for "global controller per-device" configs? They seem closer to the
+device than the controller. Potentially, the parameters could be used by
+some other consumers in the future. (I'm not opposing the current form,
+I just want to explore the space before an API is fixed.)
+
+
+> Not at all.  These are system-wide configs.  cgroup namespaces
+> shouldn't have anything which aren't in non-root cgroups.
+Thanks, I understand the cgroup namespaces are not meant to be
+transparent to their members.
+
+Michal
+
+--RIYY1s2vRbPFwWeW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl2WCtEACgkQia1+riC5
+qSjb7A/+Iu+DwJIFVlA9ZTOkLBRLqBGA/Pca0wmt9zzvp+FOD10oV0eIcqC1rAt6
+RkQuosEn/7JRJ9Kk0XD/Add4ztMKQsYQMrvVTQwefwpbCudSzQ5Fc170yyo86qed
+6h40X+Y3l0NWQP5KKCNVtmboVaj7uiesPAOOzCyAgMfjvswg46vP1VxESys5DIhG
+r0WNGE6jUBrgbpYghS/lcP4DpLNVCpOqYYRiSEht+l17linh8CF/eTpeTE6idO7S
+3Aox0WMDSZ0ckuCmzFBJdR1WFh6mhd6Ij5eavtHasYsuJ/bjeDactxOua1mdpCGn
+fIpN8gAny7BFNYVmPKKtFxKaImbc4tpFu0FB+JdZeWNEKSwhY19URZk/JdTEN6c9
+u9jodAZXbCJ3jnj0M/2gAYMqR2hoW6bHYSQMj1mUy7TlWjxtKWzVdyZlNRejCp+9
+hUes/fZy2di3u93OF9czgtKEKBbgb6Q/xdHHr7mcSE+OzxKZiKKFpzM8ZYTZ70T3
+uYDo10yEJYFarwvW6JTHJYftMP5x7NQpJpFrMHEQWfOp+Vb2DwCcNtVEt9HL4OMQ
+uDCG2p6LA6MUAW1NB7n8OkI9VXk88gSG7C0r/LSinq5NXaQ0ztw+sz9wk3XOFCjq
+W4rQqKvckE/ME0N8IJCZbJUebVjhvGxFpgMgs123gDBVulQzl6U=
+=cftV
+-----END PGP SIGNATURE-----
+
+--RIYY1s2vRbPFwWeW--
