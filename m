@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1B0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C2CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259C3215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF78420700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119321;
-	bh=2NQHd2QxdKNhEULOQ3m6pk/Bq8wN86OiE8oTa6a2Tsg=;
+	s=default; t=1570119323;
+	bh=5E7e2HVF4nFAfnMAASpJMM+BCKfYI87ZtTiS03Yvpd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXOPtI+RqbI1tF9rPGS+R4FWZUpxbCAxI9DvpPY9weAO547ZA/oPZsHxDW67fcIIF
-	 Df6BzVrmPAwD5dx1decGY6MivDU/vo2Wz4mDRyxuDCvlmaFIbWIOAU6azhw1AnPBcM
-	 fRwrQFEmw4rlPkVp1+H7fwtIcWwMez3eWWQyByZw=
+	b=uuvJAJBsJJNr6D5ZfBgmitwlWApNM3zhM4BtvQvxb6klWcTkam0uz5KGgkAWlV/64
+	 pmuUf/30ERZe7B5dFtBvTQ4NzJmJY3HPUFwSr0kxEyU/fL0Smmy5fqRhCkevZQhVZc
+	 jhrK3lpO1PRM1wmzEDC99qbmBney0FeQmNRYtxg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbfJCQPT (ORCPT
+        id S1733141AbfJCQPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39238 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388848AbfJCQPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:15:15 -0400
+        id S1732149AbfJCQPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:15:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3D8C20865;
-        Thu,  3 Oct 2019 16:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5158A20700;
+        Thu,  3 Oct 2019 16:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119314;
-        bh=2NQHd2QxdKNhEULOQ3m6pk/Bq8wN86OiE8oTa6a2Tsg=;
+        s=default; t=1570119319;
+        bh=5E7e2HVF4nFAfnMAASpJMM+BCKfYI87ZtTiS03Yvpd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h1p+bt3tPe71/F3cyZHi+sNNRJIBrJJ1zt+TByJTYPNHENm5o2N9Qy9VfDkC/Ory9
-         jZamKRJJstF1hY0t3124GmdcgpyONiBCUkdk45scNwREwoknql/u7dLWpTLCEhSWKK
-         lq03jLYSO/fu3Tb5AAYg4NAf7EewGcFidCmJdHfI=
+        b=Zca8ZirMMJFoo9nRskSmMVmHJWocErZW0Tqe9+6H84zWXhsSyh6Unh7Kb77kR8Q3l
+         Aui5FcBUfa1eXfpz2iMraVaKqvIT+dcq0IcDZt+P0UUbuxNP69hu5Wz7EuE63vgczq
+         p0duKpZGF/V32nKZIepy2UAShO7HU1SgsH7uCnJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.19 002/211] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
-Date:   Thu,  3 Oct 2019 17:51:08 +0200
-Message-Id: <20191003154447.588223033@linuxfoundation.org>
+        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 021/211] ieee802154: enforce CAP_NET_RAW for raw sockets
+Date:   Thu,  3 Oct 2019 17:51:27 +0200
+Message-Id: <20191003154452.025649940@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,41 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Ori Nimron <orinimron123@gmail.com>
 
-[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
+[ Upstream commit e69dbd4619e7674c1679cba49afd9dd9ac347eef ]
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the driver more robust against invalid and
-meaningless descriptors.
+When creating a raw AF_IEEE802154 socket, CAP_NET_RAW needs to be
+checked first.
 
-The wMaxPacketSize of the out pipe is used as divisor. So this change
-fixes a divide-by-zero bug.
-
-Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Ori Nimron <orinimron123@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cdc_ncm.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/ieee802154/socket.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/usb/cdc_ncm.c
-+++ b/drivers/net/usb/cdc_ncm.c
-@@ -681,8 +681,12 @@ cdc_ncm_find_endpoints(struct usbnet *de
- 	u8 ep;
+--- a/net/ieee802154/socket.c
++++ b/net/ieee802154/socket.c
+@@ -1018,6 +1018,9 @@ static int ieee802154_create(struct net
  
- 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
--
- 		e = intf->cur_altsetting->endpoint + ep;
-+
-+		/* ignore endpoints which cannot transfer data */
-+		if (!usb_endpoint_maxp(&e->desc))
-+			continue;
-+
- 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
- 		case USB_ENDPOINT_XFER_INT:
- 			if (usb_endpoint_dir_in(&e->desc)) {
+ 	switch (sock->type) {
+ 	case SOCK_RAW:
++		rc = -EPERM;
++		if (!capable(CAP_NET_RAW))
++			goto out;
+ 		proto = &ieee802154_raw_prot;
+ 		ops = &ieee802154_raw_ops;
+ 		break;
 
 
