@@ -2,146 +2,175 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F002C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C135C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D3620830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123848;
-	bh=C6bM2lkrmxaRi+8ngCo47RBCDNww5tM1dx0eSaBFFeg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ky+V4RcJaI4He7MdDUp1I9As3j02qqDrdY4Wn7GmgfHJ9pmvpTpGrUM9S+MKRyRfd
-	 MypPU9R3SoHExE9JMQFahb05lSuUdNgu2BI7tHiPz/6K3nD0x0Pznxb3U6MF1qDDoV
-	 PlNBz7OHvz0fh4O89vSyqOK3cIt1/dTow/I3+0pw=
+	by mail.kernel.org (Postfix) with ESMTP id 348F220830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ata+h7vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfJCRar (ORCPT
+        id S1731260AbfJCRav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbfJCQK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF9620700;
-        Thu,  3 Oct 2019 16:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119055;
-        bh=C6bM2lkrmxaRi+8ngCo47RBCDNww5tM1dx0eSaBFFeg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/v+V3dsyDI5cCLgdRfetAtmhxWF4Z9nKWFMAE1Erc/g1CyZBCcDicbpCo8v75pfG
-         mb/zdWTvvmfawxKR4XjujpZKm0xAAtUaBECL5Gf3IAnhI3bwZnXJlIJMUtuwSo/E5D
-         1JM+QYCvbcyMgkMs7SkhEq8/J7Pz/uG7EMozaCKA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Peterson <benjamin@python.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/185] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
-Date:   Thu,  3 Oct 2019 17:53:07 +0200
-Message-Id: <20191003154503.502796592@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:30:51 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36674 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730028AbfJCRaq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:30:46 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x93HNef8050113;
+        Thu, 3 Oct 2019 12:23:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570123420;
+        bh=iWtSBJKe76nynGhnxiOJ2Lg3nCj737L2QbGyJus8OHE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ata+h7vnlts4aIRPksMFgleVPIt3OELkhLgzkSJT8AwEhjMkDFV3VLBW5frWbZhz8
+         9lLeYzkW7QmilsFkhY2SrY9ih7FUzt6UJwlSPQwIuu5o2od2B5BS6t6GR5Xpu8irGT
+         65j/0TSJeoEC6x49nwjVjNyMTvWFbp0UCFhaznEM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x93HNdRh005634
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Oct 2019 12:23:39 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
+ 2019 12:23:39 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 3 Oct 2019 12:23:28 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x93HNbUm045560;
+        Thu, 3 Oct 2019 12:23:37 -0500
+Subject: Re: [PATCH v8 5/5] backlight: add led-backlight driver
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>,
+        <dmurphy@ti.com>, <linux-leds@vger.kernel.org>
+References: <20191003082812.28491-1-jjhiblot@ti.com>
+ <20191003082812.28491-6-jjhiblot@ti.com>
+ <20191003114735.byayntpe35qqrjeu@earth.universe>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <074963ce-d28f-413a-f35c-d503589a4604@ti.com>
+Date:   Thu, 3 Oct 2019 19:23:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003114735.byayntpe35qqrjeu@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Peterson <benjamin@python.org>
+Sebastian,
 
-[ Upstream commit b92675f4a9c02dd78052645597dac9e270679ddf ]
+On 03/10/2019 13:47, Sebastian Reichel wrote:
+> Hi,
+>
+> On Thu, Oct 03, 2019 at 10:28:12AM +0200, Jean-Jacques Hiblot wrote:
+>> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>>
+>> This patch adds a led-backlight driver (led_bl), which is similar to
+>> pwm_bl except the driver uses a LED class driver to adjust the
+>> brightness in the HW. Multiple LEDs can be used for a single backlight.
+>>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+>> ---
+> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>
+> (with some suggestions below)
 
-While tracing a program that calls isatty(3), I noticed that strace
-reported TCGETS for the request argument of the underlying ioctl(2)
-syscall while perf trace reported TCSETS. strace is corrrect. The bug in
-perf was due to the tty ioctl beauty table starting at 0x5400 rather
-than 0x5401.
-
-Committer testing:
-
-  Using augmented_raw_syscalls.o and settings to make 'perf trace'
-  use strace formatting, i.e. with this in ~/.perfconfig
-
-  # cat ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
-	show_zeros = yes
-	show_duration = no
-	no_inherit = yes
-	show_timestamp = no
-	show_arg_names = no
-	args_alignment = 40
-	show_prefix = yes
-
-  # strace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
-  +++ exited with 0 +++
-  #
-
-Before:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
-  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-After:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
-  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-Signed-off-by: Benjamin Peterson <benjamin@python.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
-Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/trace/beauty/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 1be3b4cf08270..82346ca06f171 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -22,7 +22,7 @@
- static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
- {
- 	static const char *ioctl_tty_cmd[] = {
--	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-+	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
- 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
- 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
- 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
--- 
-2.20.1
+[...]
 
 
+> I suggest to restructure:
+>
+> 1. call led_sysfs_disable
+>
+> 2. use devm_add_action_or_reset() to register the
+>     led_sysfs_enable loop
+>
+> 3. use devm_backlight_device_register() to register BL
+>
+> 4. drop the remove function
+>
+>> +
+>> +	backlight_update_status(priv->bl_dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int led_bl_remove(struct platform_device *pdev)
+>> +{
+>> +	struct led_bl_data *priv = platform_get_drvdata(pdev);
+>> +	struct backlight_device *bl = priv->bl_dev;
+>> +	int i;
+>> +
+>> +	backlight_device_unregister(bl);
+>> +
+>> +	led_bl_power_off(priv);
+>> +	for (i = 0; i < priv->nb_leds; i++)
+>> +		led_sysfs_enable(priv->leds[i]);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id led_bl_of_match[] = {
+>> +	{ .compatible = "led-backlight" },
+>> +	{ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, led_bl_of_match);
+>> +
+>> +static struct platform_driver led_bl_driver = {
+>> +	.driver		= {
+>> +		.name		= "led-backlight",
+>> +		.of_match_table	= of_match_ptr(led_bl_of_match),
+> You should drop of_match_ptr(). Since the driver depends on OF,
+> it will always simply return led_bl_of_match.
+>
+> (Also after removing the OF dependency from the driver it would
+> either require led_bl_of_match to be marked __maybe_unused or
+> moving it into a #if CONFIG_OF area to avoid warnings.)
 
+Thanks for the suggestions. I think I'll work on them as a separate 
+thing and post them after this is merged if there are no others changes 
+required.
+
+JJ
+
+>
+> -- Sebastian
+>
+>> +	},
+>> +	.probe		= led_bl_probe,
+>> +	.remove		= led_bl_remove,
+>> +};
+>> +
+>> +module_platform_driver(led_bl_driver);
+>> +
+>> +MODULE_DESCRIPTION("LED based Backlight Driver");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_ALIAS("platform:led-backlight");
+>> -- 
+>> 2.17.1
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
