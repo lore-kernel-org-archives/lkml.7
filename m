@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B141C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E676AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C18D20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C4A20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124483;
-	bh=ajS824LenRlv1kgE8cKvjNmdtuc51nUxbHZHmDxrsXo=;
+	s=default; t=1570124487;
+	bh=n5gj2Hdae2Hdoc1sUt7oWb1wv6BAKbPyC4gdc9lKEK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPVX1IRJ9j2NUPRA040WeKK3eTKu5AqB8Mh1CRqc5hNOhGtBxoA/w9qQce+9n+9UN
-	 WNGdnjdFQQMdUxRnoASgh8M2ne8StcCHcar//YfRjo8tJthSWVgw0xP1Zxmx/AHI+U
-	 vQPMims8J4zHfSzcJSu+LuAZopo+Bou4UEKJ+fvI=
+	b=vARBNhASDjtL86gpDjoNyVy/IVNRQ1fCnlK7/nrz56ZyZF79IJFAAgRAjkcuqAVDd
+	 UDFMWNE0C9puXZVI+Z9Jjo26qvjAPdcRPqWGpLTdDUfnnKyEFBCAW6kMNZPOjiGiYt
+	 vTjFOLbY0pqfF6qSz6+t1RcnHpoU4fpwbARzIWK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbfJCP6q (ORCPT
+        id S1731268AbfJCP6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731279AbfJCP6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:43 -0400
+        id S1731257AbfJCP6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0893120700;
-        Thu,  3 Oct 2019 15:58:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5957921848;
+        Thu,  3 Oct 2019 15:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118322;
-        bh=ajS824LenRlv1kgE8cKvjNmdtuc51nUxbHZHmDxrsXo=;
+        s=default; t=1570118316;
+        bh=n5gj2Hdae2Hdoc1sUt7oWb1wv6BAKbPyC4gdc9lKEK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fchApmjodAlmit9FMs4Wz3KVIFC0ZqnV48lC4MrzKEIwEt8xa2+WJTyjJc0epVsPU
-         Ts/FPYjVEzFDcjKjLf1Med/bGJEndSqk3sznqeKxdQ5asU/GZZ8Vsw6hedGmC4elvR
-         OqmR4rE72+mhwwQtlwFWgOKJ/myHHtndKT4cghZ8=
+        b=LkhO4FLpxieoJdjSjHtNKawcQR4Lq6Z3M7hyibrrLsYkU2zN8F2X8azxoPDDcEIyY
+         kCjL6Y7+VmJazF46QV/uNSdUMnHARhSeCLWUXgGfFIWKzNm6LvgqGM4vizfk630QjV
+         lHSN9xh3Iq2iSulDifbQDFj4ZyesL98H0WW2p2ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 69/99] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Thu,  3 Oct 2019 17:53:32 +0200
-Message-Id: <20191003154330.805351034@linuxfoundation.org>
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 67/99] dmaengine: ti: edma: Do not reset reserved paRAM slots
+Date:   Thu,  3 Oct 2019 17:53:30 +0200
+Message-Id: <20191003154329.805952678@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -63,42 +61,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
-
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
-
-For example IGT is using this to find the HDMI PCM for testing audio on it.
+Skip resetting paRAM slots marked as reserved as they might be used by
+other cores.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/edma.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 6fd1906af3873..fe65754c2e504 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -301,6 +301,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
+diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+index 85674a8d04368..e508c8c5f3fde 100644
+--- a/drivers/dma/edma.c
++++ b/drivers/dma/edma.c
+@@ -2218,9 +2218,6 @@ static int edma_probe(struct platform_device *pdev)
  
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
-+
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
+ 	ecc->default_queue = info->default_queue;
+ 
+-	for (i = 0; i < ecc->num_slots; i++)
+-		edma_write_slot(ecc, i, &dummy_paramset);
+-
+ 	if (info->rsv) {
+ 		/* Set the reserved slots in inuse list */
+ 		rsv_slots = info->rsv->rsv_slots;
+@@ -2233,6 +2230,12 @@ static int edma_probe(struct platform_device *pdev)
+ 		}
  	}
  
- 	return 0;
++	for (i = 0; i < ecc->num_slots; i++) {
++		/* Reset only unused - not reserved - paRAM slots */
++		if (!test_bit(i, ecc->slot_inuse))
++			edma_write_slot(ecc, i, &dummy_paramset);
++	}
++
+ 	/* Clear the xbar mapped channels in unused list */
+ 	xbar_chans = info->xbar_chans;
+ 	if (xbar_chans) {
 -- 
 2.20.1
 
