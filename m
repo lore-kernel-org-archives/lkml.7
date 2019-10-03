@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1467CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C540EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D383720867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC3321783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119776;
-	bh=z0Dw7UJEjKkF9qw7/K7UEE7NM0AqBub6wivHOHrpKPI=;
+	s=default; t=1570119790;
+	bh=YT2f8Hida0YD9QbunYG7OVjkii+QZ4EmAyZrubRi0/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZBf7czG3dtZxJwi9GEiB+lL1rbHMzrLIJ7SJAU/3SmuxylXQFn82g9WWpbygIE1I
-	 m9gy66MhODBf3nnxRMjIzhuMgB8wZblzK/MNAt7WCNBw3NVkyul3gnrBdnJMDiDwMj
-	 R65GNSciXOSK9Er97uT7AHcpb7UPC77lOopqXJ4U=
+	b=UCzSoSVOxWJ6zGvjr3rj4o6nhJ1W8vSBVTJiLEOXSyApp8FrUDffKUXBKaNZdWwb7
+	 cyNrLUJD+Cg3542Cp+ei/a0cekFFrUV+F6wH4iW+pEXYxN/grm9DPRnIPNRyZaLYqg
+	 G67HVBQnTONtEEoxkTi69C5lD/P7NZnPndAMjd1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390415AbfJCQW4 (ORCPT
+        id S2390551AbfJCQXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51708 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390402AbfJCQWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:22:53 -0400
+        id S1730956AbfJCQXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D23D6222C4;
-        Thu,  3 Oct 2019 16:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7918520867;
+        Thu,  3 Oct 2019 16:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119772;
-        bh=z0Dw7UJEjKkF9qw7/K7UEE7NM0AqBub6wivHOHrpKPI=;
+        s=default; t=1570119786;
+        bh=YT2f8Hida0YD9QbunYG7OVjkii+QZ4EmAyZrubRi0/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdI8KwJrzluwgIVXvdJmO701sBRFuCgrRllrpUUgp9TTqhhXaYIlPPENqHi0t+zNL
-         dNkiEbQXyStoillRzR/rg4Jka5bwwfjGF9rJ9hllU+vuN2sjriz3wi4alkxH3V8VYp
-         td3b0dQCmqehplVW5jrTNLB+ueVm5pwjkwYX1liU=
+        b=sdC7SQMdCsAtiIHMR75r3PWwvgEqUliVZN8BrK19BdgTbiQm7Zo3CV0v5SMlIJHSd
+         1hnLMs1ZuRTKBDHvLeamNnUQTl5wOc9Kvr/YDnBArakhSi9IDSpEBsM7fmoNnVgkmB
+         XBmAFfOZlanrAvcO4g4od69tR2cDoIOjU1s6iSu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Bob Liu <bob.liu@oracle.com>,
-        Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 186/211] block: fix null pointer dereference in blk_mq_rq_timed_out()
-Date:   Thu,  3 Oct 2019 17:54:12 +0200
-Message-Id: <20191003154527.990189469@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 191/211] Btrfs: fix use-after-free when using the tree modification log
+Date:   Thu,  3 Oct 2019 17:54:17 +0200
+Message-Id: <20191003154528.608823011@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -62,137 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 8d6996630c03d7ceeabe2611378fea5ca1c3f1b3 upstream.
+commit efad8a853ad2057f96664328a0d327a05ce39c76 upstream.
 
-We got a null pointer deference BUG_ON in blk_mq_rq_timed_out()
-as following:
+At ctree.c:get_old_root(), we are accessing a root's header owner field
+after we have freed the respective extent buffer. This results in an
+use-after-free that can lead to crashes, and when CONFIG_DEBUG_PAGEALLOC
+is set, results in a stack trace like the following:
 
-[  108.825472] BUG: kernel NULL pointer dereference, address: 0000000000000040
-[  108.827059] PGD 0 P4D 0
-[  108.827313] Oops: 0000 [#1] SMP PTI
-[  108.827657] CPU: 6 PID: 198 Comm: kworker/6:1H Not tainted 5.3.0-rc8+ #431
-[  108.829503] Workqueue: kblockd blk_mq_timeout_work
-[  108.829913] RIP: 0010:blk_mq_check_expired+0x258/0x330
-[  108.838191] Call Trace:
-[  108.838406]  bt_iter+0x74/0x80
-[  108.838665]  blk_mq_queue_tag_busy_iter+0x204/0x450
-[  108.839074]  ? __switch_to_asm+0x34/0x70
-[  108.839405]  ? blk_mq_stop_hw_queue+0x40/0x40
-[  108.839823]  ? blk_mq_stop_hw_queue+0x40/0x40
-[  108.840273]  ? syscall_return_via_sysret+0xf/0x7f
-[  108.840732]  blk_mq_timeout_work+0x74/0x200
-[  108.841151]  process_one_work+0x297/0x680
-[  108.841550]  worker_thread+0x29c/0x6f0
-[  108.841926]  ? rescuer_thread+0x580/0x580
-[  108.842344]  kthread+0x16a/0x1a0
-[  108.842666]  ? kthread_flush_work+0x170/0x170
-[  108.843100]  ret_from_fork+0x35/0x40
+  [ 3876.799331] stack segment: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+  [ 3876.799363] CPU: 0 PID: 15436 Comm: pool Not tainted 5.3.0-rc3-btrfs-next-54 #1
+  [ 3876.799385] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  [ 3876.799433] RIP: 0010:btrfs_search_old_slot+0x652/0xd80 [btrfs]
+  (...)
+  [ 3876.799502] RSP: 0018:ffff9f08c1a2f9f0 EFLAGS: 00010286
+  [ 3876.799518] RAX: ffff8dd300000000 RBX: ffff8dd85a7a9348 RCX: 000000038da26000
+  [ 3876.799538] RDX: 0000000000000000 RSI: ffffe522ce368980 RDI: 0000000000000246
+  [ 3876.799559] RBP: dae1922adadad000 R08: 0000000008020000 R09: ffffe522c0000000
+  [ 3876.799579] R10: ffff8dd57fd788c8 R11: 000000007511b030 R12: ffff8dd781ddc000
+  [ 3876.799599] R13: ffff8dd9e6240578 R14: ffff8dd6896f7a88 R15: ffff8dd688cf90b8
+  [ 3876.799620] FS:  00007f23ddd97700(0000) GS:ffff8dda20200000(0000) knlGS:0000000000000000
+  [ 3876.799643] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [ 3876.799660] CR2: 00007f23d4024000 CR3: 0000000710bb0005 CR4: 00000000003606f0
+  [ 3876.799682] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [ 3876.799703] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [ 3876.799723] Call Trace:
+  [ 3876.799735]  ? do_raw_spin_unlock+0x49/0xc0
+  [ 3876.799749]  ? _raw_spin_unlock+0x24/0x30
+  [ 3876.799779]  resolve_indirect_refs+0x1eb/0xc80 [btrfs]
+  [ 3876.799810]  find_parent_nodes+0x38d/0x1180 [btrfs]
+  [ 3876.799841]  btrfs_check_shared+0x11a/0x1d0 [btrfs]
+  [ 3876.799870]  ? extent_fiemap+0x598/0x6e0 [btrfs]
+  [ 3876.799895]  extent_fiemap+0x598/0x6e0 [btrfs]
+  [ 3876.799913]  do_vfs_ioctl+0x45a/0x700
+  [ 3876.799926]  ksys_ioctl+0x70/0x80
+  [ 3876.799938]  ? trace_hardirqs_off_thunk+0x1a/0x20
+  [ 3876.799953]  __x64_sys_ioctl+0x16/0x20
+  [ 3876.799965]  do_syscall_64+0x62/0x220
+  [ 3876.799977]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [ 3876.799993] RIP: 0033:0x7f23e0013dd7
+  (...)
+  [ 3876.800056] RSP: 002b:00007f23ddd96ca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  [ 3876.800078] RAX: ffffffffffffffda RBX: 00007f23d80210f8 RCX: 00007f23e0013dd7
+  [ 3876.800099] RDX: 00007f23d80210f8 RSI: 00000000c020660b RDI: 0000000000000003
+  [ 3876.800626] RBP: 000055fa2a2a2440 R08: 0000000000000000 R09: 00007f23ddd96d7c
+  [ 3876.801143] R10: 00007f23d8022000 R11: 0000000000000246 R12: 00007f23ddd96d80
+  [ 3876.801662] R13: 00007f23ddd96d78 R14: 00007f23d80210f0 R15: 00007f23ddd96d80
+  (...)
+  [ 3876.805107] ---[ end trace e53161e179ef04f9 ]---
 
-The bug is caused by the race between timeout handle and completion for
-flush request.
+Fix that by saving the root's header owner field into a local variable
+before freeing the root's extent buffer, and then use that local variable
+when needed.
 
-When timeout handle function blk_mq_rq_timed_out() try to read
-'req->q->mq_ops', the 'req' have completed and reinitiated by next
-flush request, which would call blk_rq_init() to clear 'req' as 0.
-
-After commit 12f5b93145 ("blk-mq: Remove generation seqeunce"),
-normal requests lifetime are protected by refcount. Until 'rq->ref'
-drop to zero, the request can really be free. Thus, these requests
-cannot been reused before timeout handle finish.
-
-However, flush request has defined .end_io and rq->end_io() is still
-called even if 'rq->ref' doesn't drop to zero. After that, the 'flush_rq'
-can be reused by the next flush request handle, resulting in null
-pointer deference BUG ON.
-
-We fix this problem by covering flush request with 'rq->ref'.
-If the refcount is not zero, flush_end_io() return and wait the
-last holder recall it. To record the request status, we add a new
-entry 'rq_status', which will be used in flush_end_io().
-
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: stable@vger.kernel.org # v4.18+
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Fixes: 30b0463a9394d9 ("Btrfs: fix accessing the root pointer in tree mod log functions")
+CC: stable@vger.kernel.org # 3.10+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--------
-v2:
- - move rq_status from struct request to struct blk_flush_queue
-v3:
- - remove unnecessary '{}' pair.
-v4:
- - let spinlock to protect 'fq->rq_status'
-v5:
- - move rq_status after flush_running_idx member of struct blk_flush_queue
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
 ---
- block/blk-flush.c |   10 ++++++++++
- block/blk-mq.c    |    5 ++++-
- block/blk.h       |    7 +++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ fs/btrfs/ctree.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -232,6 +232,16 @@ static void flush_end_io(struct request
- 
- 		/* release the tag's ownership to the req cloned from */
- 		spin_lock_irqsave(&fq->mq_flush_lock, flags);
-+
-+		if (!refcount_dec_and_test(&flush_rq->ref)) {
-+			fq->rq_status = error;
-+			spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
-+			return;
-+		}
-+
-+		if (fq->rq_status != BLK_STS_OK)
-+			error = fq->rq_status;
-+
- 		hctx = blk_mq_map_queue(q, flush_rq->mq_ctx->cpu);
- 		if (!q->elevator) {
- 			blk_mq_tag_set_rq(hctx, flush_rq->tag, fq->orig_rq);
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -844,7 +844,10 @@ static void blk_mq_check_expired(struct
- 	 */
- 	if (blk_mq_req_expired(rq, next))
- 		blk_mq_rq_timed_out(rq, reserved);
--	if (refcount_dec_and_test(&rq->ref))
-+
-+	if (is_flush_rq(rq, hctx))
-+		rq->end_io(rq, 0);
-+	else if (refcount_dec_and_test(&rq->ref))
- 		__blk_mq_free_request(rq);
- }
- 
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -23,6 +23,7 @@ struct blk_flush_queue {
- 	unsigned int		flush_queue_delayed:1;
- 	unsigned int		flush_pending_idx:1;
- 	unsigned int		flush_running_idx:1;
-+	blk_status_t 		rq_status;
- 	unsigned long		flush_pending_since;
- 	struct list_head	flush_queue[2];
- 	struct list_head	flush_data_in_flight;
-@@ -123,6 +124,12 @@ static inline void __blk_get_queue(struc
- 	kobject_get(&q->kobj);
- }
- 
-+static inline bool
-+is_flush_rq(struct request *req, struct blk_mq_hw_ctx *hctx)
-+{
-+	return hctx->fq->flush_rq == req;
-+}
-+
- struct blk_flush_queue *blk_alloc_flush_queue(struct request_queue *q,
- 		int node, int cmd_size, gfp_t flags);
- void blk_free_flush_queue(struct blk_flush_queue *q);
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -1374,6 +1374,7 @@ get_old_root(struct btrfs_root *root, u6
+ 	struct tree_mod_elem *tm;
+ 	struct extent_buffer *eb = NULL;
+ 	struct extent_buffer *eb_root;
++	u64 eb_root_owner = 0;
+ 	struct extent_buffer *old;
+ 	struct tree_mod_root *old_root = NULL;
+ 	u64 old_generation = 0;
+@@ -1411,6 +1412,7 @@ get_old_root(struct btrfs_root *root, u6
+ 			free_extent_buffer(old);
+ 		}
+ 	} else if (old_root) {
++		eb_root_owner = btrfs_header_owner(eb_root);
+ 		btrfs_tree_read_unlock(eb_root);
+ 		free_extent_buffer(eb_root);
+ 		eb = alloc_dummy_extent_buffer(fs_info, logical);
+@@ -1428,7 +1430,7 @@ get_old_root(struct btrfs_root *root, u6
+ 	if (old_root) {
+ 		btrfs_set_header_bytenr(eb, eb->start);
+ 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
+-		btrfs_set_header_owner(eb, btrfs_header_owner(eb_root));
++		btrfs_set_header_owner(eb, eb_root_owner);
+ 		btrfs_set_header_level(eb, old_root->level);
+ 		btrfs_set_header_generation(eb, old_generation);
+ 	}
 
 
