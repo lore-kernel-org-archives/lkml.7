@@ -2,75 +2,127 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11467C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380DEC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF14207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08759207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HPp/6lAl"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xdetv9K9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389317AbfJCUlL (ORCPT
+        id S2389364AbfJCUlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:41:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33490 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728944AbfJCUlK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:41:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IF1FolxTqmDTd/x1Q52V8Xh4wjuT53fQ+vxzesNKzJ0=; b=HPp/6lAlpE0Jvcw0rdXMwN6UV
-        Qej28WAocyfIo02LqH1bwMfgUDN7ybvuwl0+oGgQuBeWy0LITlxanB/pj45j45ZRBLdIhq5Pg3136
-        Dgcb3313rfrD27i14BwWBF7m0E2O5Iz56LPUEKGa7IS5Ao3+SY6iYysrPd1aML6yWGke+g7yVFR7W
-        8lldEDb8wqcvmJstIdsdQIExY2L07IfV2Vkub3RjT+ig/PJeXyMklxJ26Oz80qEbvlXL/yv4eWlx7
-        i3zflHLA2zpZsBxy0V6NmrvFwk/5ymQToL5kmZ3jaq66pyYFINebi9urL29q1pHAjUhHvunoGCHbf
-        tD2/xhL+w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG7uO-0001rj-Lm; Thu, 03 Oct 2019 20:41:08 +0000
-Date:   Thu, 3 Oct 2019 13:41:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     akpm@linux-foundation.org, walken@google.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 08/11] mm: convert vma_interval_tree to half closed
- intervals
-Message-ID: <20191003204108.GF32665@bombadil.infradead.org>
-References: <20191003201858.11666-1-dave@stgolabs.net>
- <20191003201858.11666-9-dave@stgolabs.net>
+        Thu, 3 Oct 2019 16:41:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37961 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbfJCUlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:41:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46klKN03hHz9sCJ;
+        Fri,  4 Oct 2019 06:41:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570135288;
+        bh=6h50s+8T6FadF0QKkVxMnA2Sp2h21Or+M2VbdN2pvlM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Xdetv9K9brxjEmde6/bxg5czoNm67NzeP2BkxTBLPgII9vdWF3DaqdA7phfr+dETD
+         v4Y5eAmQg1I8jCMMPiuX5hgu+4DLofzDZHCAyrN9ANI5zhzW38prm/fM2xQLb1iL1n
+         oGDXO6Js1BZwaVIIX7OsDXNQYJeG1AAxCWDka80djxwQnEkwpDwJU/RlmJ1ZHiqZXe
+         NIAttjd+8hz9UzC6kkXjCNEYk0s2hwSm6Okjr+tQBOw2MH5AerqT9cpCiNs80gXk7N
+         Nt9DDkiJijW3Iu64sZhwEeMv3plP2mj5pvDg+X92hkZbGDSdAg/7H3WF3z9gsHjCDo
+         3JkIiEM2Q2EpQ==
+Date:   Fri, 4 Oct 2019 06:41:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Carlo Caione <carlo@caione.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: linux-next: Fixes tags need some work in the amlogic tree
+Message-ID: <20191004064120.6262d85a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003201858.11666-9-dave@stgolabs.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="Sig_/0m_My+wqo=2AS7Rd+XOThTc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 01:18:55PM -0700, Davidlohr Bueso wrote:
-> +++ b/mm/nommu.c
-> @@ -1793,7 +1793,7 @@ int nommu_shrink_inode_mappings(struct inode *inode, size_t size,
->  	size_t r_size, r_top;
->  
->  	low = newsize >> PAGE_SHIFT;
-> -	high = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
-> +	high = (size + PAGE_SIZE) >> PAGE_SHIFT;
+--Sig_/0m_My+wqo=2AS7Rd+XOThTc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Uhh ... are you sure about this?  size is in bytes here, and we're rounding
-up to the next page size.  So if size is [1-4096], then we add on 4095 and get
-the answer 1.  With your patch, if size is [0-4095], we get the answer 1.
-I think you meant:
+Hi all,
 
-	high = ((size + PAGE_SIZE - 1) >> PAGE_SHIFT) + 1;
+In commit
 
+  cb8411a2b051 ("arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth no=
+de")
+
+Fixes tag
+
+  Fixes: 33344e2111a ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth sup=
+port")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  495637be0e28 ("arm64: dts: meson-gxl-s905x-khadas-vim: fix uart_A bluetoo=
+th node")
+
+Fixes tag
+
+  Fixes: dd5297cc8b8 ("arm64: dts: meson-gxl-s905x-khadas-vim enable Blueto=
+oth")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+In commit
+
+  880913b3ccaa ("arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-poll=
+ed node")
+
+Fixes tag
+
+  Fixes: e15d2774b8c ("ARM64: dts: meson-gxl: add support for the Khadas VI=
+M board")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+
+These can be fixed by setting core.abbrev to 12 (or more) or (for git
+v2.11 or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0m_My+wqo=2AS7Rd+XOThTc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2WXPEACgkQAVBC80lX
+0GzaQggAoYYG67DCMn/Ggi7EVRRwGKNMlHTJp1P5vDw2TyFeSpIUjnGtZ9ESKESn
+YhZnVZdOFSyTVBtdc4RXDe7Psf7ZJ4p3w0wsBzvro41sxQvioqn19LaFDu0ik+Jh
+9+cvvgIF2srLZQrwyDDPJR8nAeUluR/N6evMsKjPa6RWoh7IDdJQM0xyXQiwlvgi
+wA4GJGI/z4ydmvD2SxxRwzy22132rTZnLRJm4K5ZnRYLDJQejyANdLgzTWTMg2aj
+gHYkU+WdBnNE/Y6c5Shm0jsD82R8QKUVvW/npngY1YW5vyvmAs4sgWco+hreMIJd
+mAo6T8+ukFEiACURRiB3AhDxg8rPNg==
+=1ofM
+-----END PGP SIGNATURE-----
+
+--Sig_/0m_My+wqo=2AS7Rd+XOThTc--
