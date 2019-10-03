@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F17C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5905C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A06E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF5F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120703;
-	bh=AVrR9+tsKYdOfYBrPs/yN9cRUzxjuwMAG5sQEM8OOFY=;
+	s=default; t=1570120706;
+	bh=apEfD4q9zyhxqB3xsHAa2NQ+UoWoYJIDYz+hdQ4OCN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bD3qPNI9ahHXLK/1Djsu78byid7i/4HQlS0UFmlIWNHkQuiQZJL8V2DpxcdOmeHKl
-	 2yQXPRW/C9/YLrHXg70uClDf3QP1MU1BjRCTEclOA53BpXoPylbskbedj6kHIYaR5A
-	 l39IAlo4eT/BzGH8hqbtrNwM8qqgPrJ+FozG9fxk=
+	b=FUlfM5BL0FY7tndFkvFS5YljoMnmKbwn90++PAaBQDgZxZ2DR9/d9nWd67/WqVtnT
+	 SsWD3qBiLDyELXXjGxokLQ99jXSL0q23KsN1RwEX8PR/SVsP03QUiBv/USIlJ3a18E
+	 mn3eHjFQLHPd84lOP+cw8pm/u1YFskTLN0/luk/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392304AbfJCQiW (ORCPT
+        id S2392314AbfJCQiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48012 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733111AbfJCQiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:20 -0400
+        id S2392144AbfJCQiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:38:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3782221783;
-        Thu,  3 Oct 2019 16:38:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3ACC20830;
+        Thu,  3 Oct 2019 16:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120699;
-        bh=AVrR9+tsKYdOfYBrPs/yN9cRUzxjuwMAG5sQEM8OOFY=;
+        s=default; t=1570120702;
+        bh=apEfD4q9zyhxqB3xsHAa2NQ+UoWoYJIDYz+hdQ4OCN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fhz1XJ/9MNv4CoE6k3DwV7ZPmCi0FYU9T0EU9oiYBdICUbiKJGePCYpOzoxJMLDvp
-         0/O3nvUgBgsfUiUJYASXK0kVP6pk0d0+mCbaGT938FeZWMW44ZwX0PSpweqMoZeNH/
-         bXCIGE4ujJQDYFPk13GUW55gj8RE4ZLBsKcBV1uo=
+        b=dj3ZYgT4JvZBA69e3qoZv+2DV15m5ZWNui8pG1Ap3563UvmotZscqQxyfTKbKyPEc
+         Fdb7U3fj5TiE6xOJBTq36beRLSSmEvkPFbrXm5vfB8RWVdthKtyHY+ZcxbuJdvewte
+         gSEH6GySlVVUPtQ2vU4DvGokHoTCNJifTZ6//2Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.2 291/313] ACPI / LPSS: Save/restore LPSS private registers also on Lynxpoint
-Date:   Thu,  3 Oct 2019 17:54:29 +0200
-Message-Id: <20191003154601.784501883@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.2 292/313] md/raid6: Set R5_ReadError when there is read failure on parity disk
+Date:   Thu,  3 Oct 2019 17:54:30 +0200
+Message-Id: <20191003154601.901780807@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,64 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Xiao Ni <xni@redhat.com>
 
-commit 57b3006492a4c11b2d4a772b5b2905d544a32037 upstream.
+commit 143f6e733b73051cd22dcb80951c6c929da413ce upstream.
 
-My assumption in commit b53548f9d9e4 ("spi: pxa2xx: Remove LPSS private
-register restoring during resume") that Intel Lynxpoint and compatible
-based chipsets may not need LPSS private registers saving and restoring
-over suspend/resume cycle turned out to be false on Intel Broadwell.
+7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in
+RAID6.") avoids rereading P when it can be computed from other members.
+However, this misses the chance to re-write the right data to P. This
+patch sets R5_ReadError if the re-read fails.
 
-Curtis Malainey sent a patch bringing above change back and reported the
-LPSS SPI Chip Select control was lost over suspend/resume cycle on
-Broadwell machine.
+Also, when re-read is skipped, we also missed the chance to reset
+rdev->read_errors to 0. It can fail the disk when there are many read
+errors on P member disk (other disks don't have read error)
 
-Instead of reverting above commit lets add LPSS private register
-saving/restoring also for all LPSS SPI, I2C and UART controllers on
-Lynxpoint and compatible chipset to make sure context is not lost in
-case nothing else preserves it like firmware or if LPSS is always on.
+V2: upper layer read request don't read parity/Q data. So there is no
+need to consider such situation.
 
-Fixes: b53548f9d9e4 ("spi: pxa2xx: Remove LPSS private register restoring during resume")
-Reported-by: Curtis Malainey <cujomalainey@chromium.org>
-Tested-by: Curtis Malainey <cujomalainey@chromium.org>
-Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This is Reported-by: kbuild test robot <lkp@intel.com>
+
+Fixes: 7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in RAID6.")
+Cc: <stable@vger.kernel.org> #4.4+
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_lpss.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/md/raid5.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -219,12 +219,13 @@ static void bsw_pwm_setup(struct lpss_pr
- }
- 
- static const struct lpss_device_desc lpt_dev_desc = {
--	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR,
-+	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR
-+			| LPSS_SAVE_CTX,
- 	.prv_offset = 0x800,
- };
- 
- static const struct lpss_device_desc lpt_i2c_dev_desc = {
--	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_LTR,
-+	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_LTR | LPSS_SAVE_CTX,
- 	.prv_offset = 0x800,
- };
- 
-@@ -236,7 +237,8 @@ static struct property_entry uart_proper
- };
- 
- static const struct lpss_device_desc lpt_uart_dev_desc = {
--	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR,
-+	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR
-+			| LPSS_SAVE_CTX,
- 	.clk_con_id = "baudclk",
- 	.prv_offset = 0x800,
- 	.setup = lpss_uart_setup,
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -2559,7 +2559,9 @@ static void raid5_end_read_request(struc
+ 		    && !test_bit(R5_ReadNoMerge, &sh->dev[i].flags))
+ 			retry = 1;
+ 		if (retry)
+-			if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
++			if (sh->qd_idx >= 0 && sh->pd_idx == i)
++				set_bit(R5_ReadError, &sh->dev[i].flags);
++			else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
+ 				set_bit(R5_ReadError, &sh->dev[i].flags);
+ 				clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
+ 			} else
 
 
