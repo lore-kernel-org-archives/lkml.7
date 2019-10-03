@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFACBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF07C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8804220865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B68520659
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119718;
-	bh=WV12Xj5vShY0vJCSafmIAez9hmQ3Eiy6jMF6YEac2p4=;
+	s=default; t=1570119722;
+	bh=ZYCCv+T4GyOSEM7sSveA086+4vtEk0XaVhStkGR/kfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qWjS4wDmZaMuFBezGkVu9B9fl1jgvqXGXRUTfqvFYIrKAjs7jgubmpnMWDXZ/n1D0
-	 qF0djxjxKqsACFiniIwQdyOAQtcvcViRVQcvtI4XdMZbeuL2UGnneMmYk6B9Rwaqb9
-	 08oVbMlnfFX9r2HCeqpKEBuYSoJ1xcdpfkWArNa4=
+	b=zLWvuGfwoP5kzKAujlr3WdVeJSE5Vyi4AZYq3yNQJiphg9RDny2Q3XB77kEs947EA
+	 y+NQB+Le84CKji4TyjWFX9Cq4mr3VtUWSFtmIL8EA5N0UNr+W4nQ4BDQroqz92d7iH
+	 YaDbtSch4nP6dNkgnCgDQUd/RBcJ5d9oPO0ef1pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbfJCQV5 (ORCPT
+        id S2390231AbfJCQWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390208AbfJCQVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:52 -0400
+        id S2390208AbfJCQV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5268E20865;
-        Thu,  3 Oct 2019 16:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC2A2054F;
+        Thu,  3 Oct 2019 16:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119711;
-        bh=WV12Xj5vShY0vJCSafmIAez9hmQ3Eiy6jMF6YEac2p4=;
+        s=default; t=1570119717;
+        bh=ZYCCv+T4GyOSEM7sSveA086+4vtEk0XaVhStkGR/kfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwBet8gJb7XDq5OINUPTTQca5AccOAoiluT7LtODbTBFITaZTCPS3S263+Q0kB6ia
-         JWKITYywtosnHO1Q2I+sjlpejv7j0s+LHNyYij2vw6iR+Ah49MnxolvgD1IZuTbaN6
-         FWce+G6+AvEA07RPkLGRLXM5CazYplgIG+I8ankk=
+        b=YWgYrk8VElaSq/wrTS7e1XfLMsPmI7UmpQsiZrLTLsyIllPulogUctNBJCI8iaJZQ
+         Upl7zda1PAd0AXdgVM+p8I7ykZb8zO0gknK8Vr5oRtSMfsctD9FyCGgR0WS1qkFRZU
+         IiY6kBif4Z5kxXfqHm0urRe462koUrZbf5ArtCbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 166/211] KVM: x86: set ctxt->have_exception in x86_decode_insn()
-Date:   Thu,  3 Oct 2019 17:53:52 +0200
-Message-Id: <20191003154525.759012107@linuxfoundation.org>
+        stable@vger.kernel.org, Rui Salvaterra <rsalvaterra@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 168/211] media: sn9c20x: Add MSI MS-1039 laptop to flip_dmi_table
+Date:   Thu,  3 Oct 2019 17:53:54 +0200
+Message-Id: <20191003154525.987598969@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -62,53 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit c8848cee74ff05638e913582a476bde879c968ad upstream.
+commit 7e0bb5828311f811309bed5749528ca04992af2f upstream.
 
-x86_emulate_instruction() takes into account ctxt->have_exception flag
-during instruction decoding, but in practice this flag is never set in
-x86_decode_insn().
+Like a bunch of other MSI laptops the MS-1039 uses a 0c45:627b
+SN9C201 + OV7660 webcam which is mounted upside down.
 
-Fixes: 6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
+Add it to the sn9c20x flip_dmi_table to deal with this.
+
 Cc: stable@vger.kernel.org
-Cc: Denis Lunev <den@virtuozzo.com>
-Cc: Roman Kagan <rkagan@virtuozzo.com>
-Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
-Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/emulate.c |    2 ++
- arch/x86/kvm/x86.c     |    6 ++++++
- 2 files changed, 8 insertions(+)
+ drivers/media/usb/gspca/sn9c20x.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5368,6 +5368,8 @@ done_prefixes:
- 					ctxt->memopp->addr.mem.ea + ctxt->_eip);
- 
- done:
-+	if (rc == X86EMUL_PROPAGATE_FAULT)
-+		ctxt->have_exception = true;
- 	return (rc != X86EMUL_CONTINUE) ? EMULATION_FAILED : EMULATION_OK;
- }
- 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6245,6 +6245,12 @@ int x86_emulate_instruction(struct kvm_v
- 						emulation_type))
- 				return EMULATE_DONE;
- 			if (ctxt->have_exception) {
-+				/*
-+				 * #UD should result in just EMULATION_FAILED, and trap-like
-+				 * exception should not be encountered during decode.
-+				 */
-+				WARN_ON_ONCE(ctxt->exception.vector == UD_VECTOR ||
-+					     exception_type(ctxt->exception.vector) == EXCPT_TRAP);
- 				inject_emulated_exception(vcpu);
- 				return EMULATE_DONE;
- 			}
+--- a/drivers/media/usb/gspca/sn9c20x.c
++++ b/drivers/media/usb/gspca/sn9c20x.c
+@@ -133,6 +133,13 @@ static const struct dmi_system_id flip_d
+ 		}
+ 	},
+ 	{
++		.ident = "MSI MS-1039",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1039"),
++		}
++	},
++	{
+ 		.ident = "MSI MS-1632",
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
 
 
