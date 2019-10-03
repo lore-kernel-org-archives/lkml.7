@@ -2,164 +2,92 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A494DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF082C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FFE21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570086375;
-	bh=Z52YU1Rb8AyRAWvQJRdXCtaUHZIoCZ2oPG25QZxyvHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r1SMw3sM5RhLsYVf/DQZUgqSPTMexSpufN/K2T9srQvcRNahriE7N9E0EdLWRJcsg
-	 z1f5YdF4HmgjTYVbuqLB9u1j3emaQbjF5F5c7wMcyD4sKuMI4nt5fZXKseC0fQvqKg
-	 KKUwfoQTdrPvR6gVmcgo0hDcPDcHExt+K6lVOwb8=
+	by mail.kernel.org (Postfix) with ESMTP id 9DBD421848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:08:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="nACueev+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfJCHGO (ORCPT
+        id S1727995AbfJCHI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbfJCHGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:06:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 917DB21848;
-        Thu,  3 Oct 2019 07:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570086373;
-        bh=Z52YU1Rb8AyRAWvQJRdXCtaUHZIoCZ2oPG25QZxyvHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JMkyYz3pcLeMRCJ9cd0+Vo/tTrkE7SOXQBKCNZfeBPfsXHjKacGPD2/C8gE5ORVJ2
-         dYqiVpKQK/9zOLcvoOcbkS8BsQRPPoHw7KnSX45A/gVUsEc6vv433DzI+s2BiSPdaR
-         bWzJwmYx+rBNs/AJyXP3SUHeCL/LiDcUnl/ivzYo=
-Date:   Thu, 3 Oct 2019 09:06:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Murali Nalajala <mnalajal@codeaurora.org>
-Cc:     rafael@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
-Message-ID: <20191003070610.GC1814133@kroah.com>
-References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
+        Thu, 3 Oct 2019 03:08:56 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40700 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfJCHIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 03:08:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id h144so3104533iof.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 00:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MJcg8zs78d3rXBpOETE+0j+ZuAl6FfPdDEzxoa0/CIM=;
+        b=nACueev+gvO9mg6+kv1iNYsTn/JE4CpNo2ZDPqlFFMewbPYZuyhqh+JsqDzfu+L5Q0
+         G+AcFl0zPkVgkkKTRCM+7KwBBBHh02sUORkOzzEY79ofQJI2HdySEGQOecxJIFanfVRk
+         L6f6wnSuchiE7pN6azWsIbtOZgr+hYD6XZ1jg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MJcg8zs78d3rXBpOETE+0j+ZuAl6FfPdDEzxoa0/CIM=;
+        b=CZszxZjOY+oEgUqhFGdGM21jG/TbPuWJnBarain8PS9i2vRZmtZ6NyakbKPyodMxat
+         4boucWCc0PUNV8Qn+z/h1UJqFW1KZWYsUgqjle1EAO7I3ISYPSUH9pbU6KYgq9uQTIIs
+         hFboVehIaEt4xFMhLY0HS0DBNtcU/zSZWongBp7fHTFXwKF3I9VJocQdtn8LB4wKJfcy
+         GGVKPE0yXLzGvO3FgDDPPRPkKZ99Bkh02i72mcIwC57YqxCynIaxSYeUJFe+FYlDkxA6
+         KYMmoJ1SgUkEn8kWHnQdpNlJgcKLrszf78lL6+rbj41g2f+7s9NeNiyws+QoLLjq745T
+         UJJA==
+X-Gm-Message-State: APjAAAVLGOqk/pbqPnlyPhNeYfh+3i4Xw9ZBZY5abTL3/ifca4g9jHOx
+        a2t8s5uNcTyIfaotF+zvEYb1pTBDpTclD8VDWaGtOQ==
+X-Google-Smtp-Source: APXvYqyiHoQKtNpYFtcrgyC7ulZRFo5mIyezyvwwYkMn+/z8HGvh/7OVxThakVCi9reOehN1EsA8FIXbO7De8LVxF2E=
+X-Received: by 2002:a02:ce5c:: with SMTP id y28mr8189675jar.79.1570086534678;
+ Thu, 03 Oct 2019 00:08:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191001080253.6135-1-icenowy@aosc.io> <20191001080253.6135-2-icenowy@aosc.io>
+In-Reply-To: <20191001080253.6135-2-icenowy@aosc.io>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 3 Oct 2019 12:38:43 +0530
+Message-ID: <CAMty3ZCjrM4MajJLyLwt-31mNnfVWghwatogtwVOvCt4gY0LZA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/3] Revert "drm/sun4i: dsi: Change the
+ start delay calculation"
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 05:06:14PM -0700, Murali Nalajala wrote:
-> Soc framework exposed sysfs entries are not sufficient for some
-> of the h/w platforms. Currently there is no interface where soc
-> drivers can expose further information about their SoCs via soc
-> framework. This change address this limitation where clients can
-> pass their custom entries as attribute group and soc framework
-> would expose them as sysfs properties.
-> 
-> Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
-> ---
->  drivers/base/soc.c      | 26 ++++++++++++++++++--------
->  include/linux/sys_soc.h |  1 +
->  2 files changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> index 7c0c5ca..ec70a58 100644
-> --- a/drivers/base/soc.c
-> +++ b/drivers/base/soc.c
-> @@ -15,6 +15,8 @@
->  #include <linux/err.h>
->  #include <linux/glob.h>
->  
-> +#define NUM_ATTR_GROUPS 3
-> +
->  static DEFINE_IDA(soc_ida);
->  
->  static ssize_t soc_info_get(struct device *dev,
-> @@ -104,11 +106,6 @@ static ssize_t soc_info_get(struct device *dev,
->  	.is_visible = soc_attribute_mode,
->  };
->  
-> -static const struct attribute_group *soc_attr_groups[] = {
-> -	&soc_attr_group,
-> -	NULL,
-> -};
-> -
->  static void soc_release(struct device *dev)
->  {
->  	struct soc_device *soc_dev = container_of(dev, struct soc_device, dev);
-> @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
->  struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr)
->  {
->  	struct soc_device *soc_dev;
-> +	const struct attribute_group **soc_attr_groups = NULL;
->  	int ret;
->  
->  	if (!soc_bus_type.p) {
-> @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
->  		goto out1;
->  	}
->  
-> +	soc_attr_groups = kzalloc(sizeof(*soc_attr_groups) *
-> +						NUM_ATTR_GROUPS, GFP_KERNEL);
-> +	if (!soc_attr_groups) {
-> +		ret = -ENOMEM;
-> +		goto out2;
-> +	}
-> +	soc_attr_groups[0] = &soc_attr_group;
-> +	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
-> +	soc_attr_groups[2] = NULL;
-> +
->  	/* Fetch a unique (reclaimable) SOC ID. */
->  	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
->  	if (ret < 0)
-> -		goto out2;
-> +		goto out3;
->  	soc_dev->soc_dev_num = ret;
->  
->  	soc_dev->attr = soc_dev_attr;
-> @@ -151,14 +159,16 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
->  
->  	ret = device_register(&soc_dev->dev);
->  	if (ret)
-> -		goto out3;
-> +		goto out4;
->  
->  	return soc_dev;
->  
-> -out3:
-> +out4:
->  	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
->  	put_device(&soc_dev->dev);
->  	soc_dev = NULL;
-> +out3:
-> +	kfree(soc_attr_groups);
->  out2:
->  	kfree(soc_dev);
->  out1:
-> diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
-> index 48ceea8..d9b3cf0 100644
-> --- a/include/linux/sys_soc.h
-> +++ b/include/linux/sys_soc.h
-> @@ -15,6 +15,7 @@ struct soc_device_attribute {
->  	const char *serial_number;
->  	const char *soc_id;
->  	const void *data;
-> +	const struct attribute_group *custom_attr_group;
+On Tue, Oct 1, 2019 at 1:33 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+> This reverts commit da676c6aa6413d59ab0a80c97bbc273025e640b2.
+>
+> The original commit adds a start parameter to the calculation of the
+> start delay according to some old BSP versions from Allwinner. However,
+> there're two ways to add this delay -- add it in DSI controller or add
+> it in the TCON. Add it in both controllers won't work.
+>
+> The code before this commit is picked from new versions of BSP kernel,
+> which has a comment for the 1 that says "put start_delay to tcon". By
+> checking the sun4i_tcon0_mode_set_cpu() in sun4i_tcon driver, it has
+> already added this delay, so we shouldn't repeat to add the delay in DSI
+> controller, otherwise the timing won't match.
 
-Shouldn't you make this:
-	const struct attribute_group **soc_groups;
+Thanks for this change. look like this is proper reason for adding +
+1. also adding bsp code links here might help for future reference.
 
-to match up with the rest of the way the driver core works?
+Otherwise,
 
-thanks,
-
-greg k-h
+Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
