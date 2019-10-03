@@ -2,134 +2,101 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E40C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B3BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033702086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124244;
-	bh=PadI4hNMBQz1BBj05eX8H/07KfBXPx1HULQqD62W7BE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5aCJeozPi0zdqLXpGQ8mjmzmE+gv/ka8WektBaCSk8prpQehQbEMmLokycoQ5Zte
-	 8CFwPhvDOCpQ7ESjrExaJTqtXrqhMrABGXbbMNG+ob+/Hs49DfIRQhwyI1F6im8fOt
-	 A4ZJL0mka7LhzP1KUE6QDV3n59BLWZSlXyjyNsBA=
+	by mail.kernel.org (Postfix) with ESMTP id 56D262086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxTR1lav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389043AbfJCRhX (ORCPT
+        id S2389194AbfJCRh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732259AbfJCQDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:37:26 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41255 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730903AbfJCQDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:03:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64BB0215EA;
-        Thu,  3 Oct 2019 16:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118614;
-        bh=PadI4hNMBQz1BBj05eX8H/07KfBXPx1HULQqD62W7BE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZrSWvoNcjwR6OiHzlr1HbQInEl6PVBYHB3ePYjnCS/kovhsYWuGweAZ778RS6mu9
-         G/Q4jptizbWZGwy3I2QsBlWFGtBD8m66chuAMO1qII9wgoajNYuoGbc/8TmQNY/iH0
-         IYhkcxnQbIMf+kojWKHou5S85wZmfJBsESib95BE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 039/129] ALSA: hda: Flush interrupts on disabling
-Date:   Thu,  3 Oct 2019 17:52:42 +0200
-Message-Id: <20191003154335.740186284@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-References: <20191003154318.081116689@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-wr1-f66.google.com with SMTP id q9so3354385wrm.8;
+        Thu, 03 Oct 2019 09:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=td4245u+5WMfMu8EFRyzo+huDJgbvQAU/NaQvzgX56E=;
+        b=WxTR1lavzcTXkB3F0JCQGlSMx9R7RG8Mo5tOrXKixIEnLLJPwyCdLtdpu4i9VUYir1
+         jDutWwSI3RsBgERF1i2kAliFxxZdTUDb8kG0y5RdNUzILH1807zN+iRmEvu2aTZ88E98
+         YleB3ZcC2OzmDsc7M9KrtgFSsIVvZLdPMJxpwh4Lrrlh4rYa7AikgH6sgmgjvynEa/xy
+         UrCB7vpuegDNRMVKAlJ/Ug9h97eAFfb/GhVeBlyHCUXoV/a07Vf9qi1EXhxHzZQa1UgA
+         +253fQBAqNM4LSXDYHo4Agd4EspVIO4EB1rBauvMFTkG6+WDj1M+t664j5qg8Wey6hHx
+         GLDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=td4245u+5WMfMu8EFRyzo+huDJgbvQAU/NaQvzgX56E=;
+        b=OQIxiUDSQqJZ7Z9ExLMOUdFyTbOVcsRmWaTscjw9Vp0vlUaLhf23GnL3l0hA73+hfQ
+         SQf2xGLsCc39fpSTNNogxUvEEDVRfG5GqdQoGOsSihg+SQUST/73mclX6LJW9UhosCVR
+         sPvU7n0vqJErID1jPkvFqqoMGSsg6sA98taWwCXA2z31xnS9zJVJrzOQ1wmLoN+9sfKA
+         a7pE4w4wqK1qNdLidQHpoJ7ZNsQjIr97PmE0g2Q4hdSGGqqGWnEM+zyBhYob3jpNlarQ
+         5511PGtIeVt/UQYG6EH2NuI/uJqpKLyvuDVQKZgdu8utjvdYz3Axrcq86XHyCHMl+dxd
+         eNSg==
+X-Gm-Message-State: APjAAAWr/qqrqBfBBBKlkdtkdda0Bsy4hLysm2XRyizH3q+VCAdfKtdo
+        pubHfkIurihsXiAvCj6Ad+l9EB7zGtUNytMA
+X-Google-Smtp-Source: APXvYqxdGdyWERq67KP37ldw2C5SCEmftU5/nMj5EKEH3J3jjKK221iaaCdmU5w8/PTUv0fIvewEZA==
+X-Received: by 2002:adf:db0f:: with SMTP id s15mr7869305wri.120.1570118612657;
+        Thu, 03 Oct 2019 09:03:32 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:414b:bdc7:a2f9:15b6])
+        by smtp.gmail.com with ESMTPSA id s12sm4990484wra.82.2019.10.03.09.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 09:03:32 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 18:03:26 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        x86@kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
+Message-ID: <20191003160326.GA22098@andrea.guest.corp.microsoft.com>
+References: <20191003155200.22022-1-parri.andrea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003155200.22022-1-parri.andrea@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
+On Thu, Oct 03, 2019 at 05:52:00PM +0200, Andrea Parri wrote:
+> If the hardware supports TSC scaling, Hyper-V will set bit 15 of the
+> HV_PARTITION_PRIVILEGE_MASK in guest VMs with a compatible Hyper-V
+> configuration version.  Bit 15 corresponds to the
+> AccessTscInvariantControls privilege.  If this privilege bit is set,
+> guests can access the HvSyntheticInvariantTscControl MSR: guests can
+> set bit 0 of this synthetic MSR to enable the InvariantTSC feature.
+> After setting the synthetic MSR, CPUID will enumerate support for
+> InvariantTSC.
+> 
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
 
-I was looking at
+Subject should have been "[PATCH] ...", i.e., there is no 2/2 planned
+(not for this patchset at least).  Please let me know if I should re-
+submit with the subject fixed.
 
-<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
-<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
-<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
-<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
-<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
-<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
-<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
-<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
-<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
-<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
-<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
-<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
-<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
-<4> [241.835436] Call Trace:
-<4> [241.835449]  input_event+0x45/0x70
-<4> [241.835464]  snd_jack_report+0xdc/0x100
-<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
-<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
-<4> [241.835530]  process_one_work+0x245/0x610
-
-which has the hallmarks of a worker queued from interrupt after it was
-supposedly cancelled (note the POISON_FREE), and I could not see where
-the interrupt would be flushed on shutdown so added the likely suspects.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/hda/hdac_controller.c | 2 ++
- sound/pci/hda/hda_intel.c   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 00c6af2ae1c29..433f3280f7098 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -441,6 +441,8 @@ static void azx_int_disable(struct hdac_bus *bus)
- 	list_for_each_entry(azx_dev, &bus->stream_list, list)
- 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
- 
-+	synchronize_irq(bus->irq);
-+
- 	/* disable SIE for all streams */
- 	snd_hdac_chip_writeb(bus, INTCTL, 0);
- 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index f2f1d9fd848c8..3d4ea5fd75bf5 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1239,9 +1239,9 @@ static int azx_free(struct azx *chip)
- 	}
- 
- 	if (bus->chip_init) {
-+		azx_stop_chip(chip);
- 		azx_clear_irq_pending(chip);
- 		azx_stop_all_streams(chip);
--		azx_stop_chip(chip);
- 	}
- 
- 	if (bus->irq >= 0)
--- 
-2.20.1
-
-
-
+Thanks,
+  Andrea
