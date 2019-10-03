@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F27EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BEEC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1F4222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FAC3215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119551;
-	bh=/HJvbzJRlJJiGsRssqDI4IrbcQ6A6pHz/L9DnUT+I6U=;
+	s=default; t=1570119554;
+	bh=aBfrh3L5PZ4K35YPTLRGipJ41jGGSUx0n61xmPkmCZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pe/Oc3SmZXpw3a3flfbCuebA/ae6iNnsS8yAswmUqNr+313MnXMYq8jm/OcYUZFeR
-	 KucX4Hcra/nZaxbVUycC4N1f1nZH1FcpIYdPRGazIGk8v79o6fKF+u6MKcCAE/EQoo
-	 bHhaS943yY9U2wAooe4PJ46WpRvmE4vPMjGSZqqQ=
+	b=NtC7RfazNbMFXjxiE+TjQtUgaSt/hERTiZcsbX6PT9Xc7xNr6KYAPYaOoj8FvH953
+	 mWJuxav1DTNzO7R/jAWmU/h34Vo2keu6zFQSeMdX0bWr8oCZG7wNNqBUuQcuAEJMjG
+	 vrP4SY+hZtntiX43e8lCgU6E75cVYK+GLPzJonws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389697AbfJCQTK (ORCPT
+        id S2389710AbfJCQTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:19:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389672AbfJCQTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:19:02 -0400
+        id S2389672AbfJCQTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:19:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A9DA20865;
-        Thu,  3 Oct 2019 16:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 450F620865;
+        Thu,  3 Oct 2019 16:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119541;
-        bh=/HJvbzJRlJJiGsRssqDI4IrbcQ6A6pHz/L9DnUT+I6U=;
+        s=default; t=1570119550;
+        bh=aBfrh3L5PZ4K35YPTLRGipJ41jGGSUx0n61xmPkmCZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTPjmjIXXR77H6LfBJnqyGoixD+j5qQuKrowUdbIubyXrSnBO17rLQfzpgX7VMraQ
-         KY+JWeZLdHiMZ/z7FgDomF3RkLis4MfybTWqUx9D5UHCAeeOk3+aiRGfynVM5EgGmD
-         3dXQJ1n9YRzfmhak2SUrwZvi52TOu2sfQQJW3WfM=
+        b=Nx9PVkgIB/bcm2rVlZrEnMoxSweOqhdkRRHQg3WcomfTIxpwLJ8yht0BbshoMrR6f
+         AKgbmzno1X29nmBZxoyc02GjbHHYRxg5jQ1Q290TtpcNvXFf8+ha8ooDtsefMhTMSu
+         Sh1zLtrSCK2uZ43BVBeIY2+XiBxcdaJkmc6/R6pE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Daniel Drake <drake@endlessm.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/211] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
-Date:   Thu,  3 Oct 2019 17:52:48 +0200
-Message-Id: <20191003154510.065803224@linuxfoundation.org>
+Subject: [PATCH 4.19 105/211] ASoC: es8316: fix headphone mixer volume table
+Date:   Thu,  3 Oct 2019 17:52:51 +0200
+Message-Id: <20191003154510.837975969@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -62,58 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
+[ Upstream commit f972d02fee2496024cfd6f59021c9d89d54922a6 ]
 
-saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
-an inverted i2c gate open / closed terminology.
-Let's fix this.
+This patch fix setting table of Headphone mixer volume.
+Current code uses 4 ... 7 values but these values are prohibited.
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Correct settings are the following:
+  0000 -12dB
+  0001 -10.5dB
+  0010 -9dB
+  0011 -7.5dB
+  0100 -6dB
+  1000 -4.5dB
+  1001 -3dB
+  1010 -1.5dB
+  1011 0dB
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20190826153900.25969-1-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ sound/soc/codecs/es8316.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
-index cf1e526de56ac..8a1128c60680b 100644
---- a/drivers/media/pci/saa7134/saa7134-i2c.c
-+++ b/drivers/media/pci/saa7134/saa7134-i2c.c
-@@ -351,7 +351,11 @@ static const struct i2c_client saa7134_client_template = {
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index e97d12d578b00..9ebe77c3784a8 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -46,7 +46,10 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(adc_vol_tlv, -9600, 50, 1);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_max_gain_tlv, -650, 150, 0);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_min_gain_tlv, -1200, 150, 0);
+ static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(alc_target_tlv, -1650, 150, 0);
+-static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(hpmixer_gain_tlv, -1200, 150, 0);
++static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(hpmixer_gain_tlv,
++	0, 4, TLV_DB_SCALE_ITEM(-1200, 150, 0),
++	8, 11, TLV_DB_SCALE_ITEM(-450, 150, 0),
++);
  
- /* ----------------------------------------------------------- */
+ static const SNDRV_CTL_TLVD_DECLARE_DB_RANGE(adc_pga_gain_tlv,
+ 	0, 0, TLV_DB_SCALE_ITEM(-350, 0, 0),
+@@ -84,7 +87,7 @@ static const struct snd_kcontrol_new es8316_snd_controls[] = {
+ 	SOC_DOUBLE_TLV("Headphone Playback Volume", ES8316_CPHP_ICAL_VOL,
+ 		       4, 0, 3, 1, hpout_vol_tlv),
+ 	SOC_DOUBLE_TLV("Headphone Mixer Volume", ES8316_HPMIX_VOL,
+-		       0, 4, 7, 0, hpmixer_gain_tlv),
++		       0, 4, 11, 0, hpmixer_gain_tlv),
  
--/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
-+/*
-+ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
-+ * demod i2c gate closed due to an address clash between this EEPROM
-+ * and the demod one.
-+ */
- static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- {
- 	u8 subaddr = 0x7, dmdregval;
-@@ -368,14 +372,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- 
- 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
- 	if ((ret == 2) && (dmdregval & 0x2)) {
--		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
-+		pr_debug("%s: DVB-T demod i2c gate was left open\n",
- 			 dev->name);
- 
- 		data[0] = subaddr;
- 		data[1] = (dmdregval & ~0x2);
- 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
--			pr_err("%s: EEPROM i2c gate open failure\n",
--			  dev->name);
-+			pr_err("%s: EEPROM i2c gate close failure\n",
-+			       dev->name);
- 	}
- }
- 
+ 	SOC_ENUM("Playback Polarity", dacpol),
+ 	SOC_DOUBLE_R_TLV("DAC Playback Volume", ES8316_DAC_VOLL,
 -- 
 2.20.1
 
