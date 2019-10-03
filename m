@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A08C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE5C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC772133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0337A21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120071;
-	bh=iPazQ00aOuuilt+GzDQbr9bRbIVeHkRFhHoRkii1JTQ=;
+	s=default; t=1570120074;
+	bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njc50aaz5WSIrGQmfAAu6oEXCadIL/yBm73QJZV0tl85vq6tBB3YjVHagGFptysIJ
-	 Vh9/tDJaZs8yzVToPeolfM0Y//e1qlRk29n2iq6ht8ttL/Akk9S9w4D5iGtTCrifWG
-	 C2uWoCEmcisyzCqaGMnjlnZx0KwdLgpbBR5dpCIA=
+	b=Cgm87yGECt6m2WgAbxP9FFhrcDtlmcy6e0A8GtmJgAUXiucJdbtq8LuGJdt3yoxdM
+	 +WjakfVLPSlV27tz82eVTqzu4NXpfYuPnclxxnpds2BWZ0lUy3QWzGYPy8SgBokyuf
+	 u/Sn/leenbiHeoyMyzh7f8FgvuGLYEKFwZcOK8Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391334AbfJCQ1t (ORCPT
+        id S2389234AbfJCQ1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59898 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391321AbfJCQ1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:46 -0400
+        id S2391330AbfJCQ1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A3E21783;
-        Thu,  3 Oct 2019 16:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EABB2133F;
+        Thu,  3 Oct 2019 16:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120066;
-        bh=iPazQ00aOuuilt+GzDQbr9bRbIVeHkRFhHoRkii1JTQ=;
+        s=default; t=1570120068;
+        bh=iupxWFpcY6/cgaLlrAWuYCcnrImMYlOV5CQiGwgF2WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBM8rQuzSVkXUKFjULwrQMdXupW1Ev190+jz9k85MUMMqMoQyvfsG6UkJIKYAabaf
-         SJXDpawyxM6y4R3oAbOyrZLRMJTRigHXPmKjQrM3KwBvSstX5vxU9eJl58WyVOHTg5
-         UituwxUnlN8Ah/H46ylL4gzpf6rUFmdTOlrZJdRs=
+        b=hfCilLsZ3e9kIJWIdt7dSii85vVbXL0JqMPIwg4Hdano3+lxQ3hslhIz/dE1SBeQZ
+         Z1k3elXOM6Z4F+1SRKIaTbMcFE8dL+IUMHqkLF9Lj6B6Id1CQ8f0Ug/MVLXX1CxSWt
+         IHSm3YjuMN7LdxQtzPmuNKFXpUnsYZmeWa9u5Pqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 077/313] media: media/platform: fsl-viu.c: fix build for MICROBLAZE
-Date:   Thu,  3 Oct 2019 17:50:55 +0200
-Message-Id: <20191003154540.433851084@linuxfoundation.org>
+Subject: [PATCH 5.2 086/313] firmware: arm_scmi: Check if platform has released shmem before using
+Date:   Thu,  3 Oct 2019 17:51:04 +0200
+Message-Id: <20191003154541.351570368@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,42 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 6898dd580a045341f844862ceb775144156ec1af ]
+[ Upstream commit 9dc34d635c67e57051853855c43249408641a5ab ]
 
-arch/microblaze/ defines out_be32() and in_be32(), so don't do that
-again in the driver source.
+Sometimes platfom may take too long to respond to the command and OS
+might timeout before platform transfer the ownership of the shared
+memory region to the OS with the response.
 
-Fixes these build warnings:
+Since the mailbox channel associated with the channel is freed and new
+commands are dispatch on the same channel, OS needs to wait until it
+gets back the ownership. If not, either OS may end up overwriting the
+platform response for the last command(which is fine as OS timed out
+that command) or platform might overwrite the payload for the next
+command with the response for the old.
 
-../drivers/media/platform/fsl-viu.c:36: warning: "out_be32" redefined
-../arch/microblaze/include/asm/io.h:50: note: this is the location of the previous definition
-../drivers/media/platform/fsl-viu.c:37: warning: "in_be32" redefined
-../arch/microblaze/include/asm/io.h:53: note: this is the location of the previous definition
+The latter is problematic as platform may end up interpretting the
+response as the payload. In order to avoid such race, let's wait until
+the OS gets back the ownership before we prepare the shared memory with
+the payload for the next command.
 
-Fixes: 29d750686331 ("media: fsl-viu: allow building it with COMPILE_TEST")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/fsl-viu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/driver.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/platform/fsl-viu.c b/drivers/media/platform/fsl-viu.c
-index 691be788e38b3..b74e4f50d7d9f 100644
---- a/drivers/media/platform/fsl-viu.c
-+++ b/drivers/media/platform/fsl-viu.c
-@@ -32,7 +32,7 @@
- #define VIU_VERSION		"0.5.1"
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index b5bc4c7a8fab2..b49c9e6f4bf10 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -271,6 +271,14 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+ 	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+ 	struct scmi_shared_mem __iomem *mem = cinfo->payload;
  
- /* Allow building this driver with COMPILE_TEST */
--#ifndef CONFIG_PPC
-+#if !defined(CONFIG_PPC) && !defined(CONFIG_MICROBLAZE)
- #define out_be32(v, a)	iowrite32be(a, (void __iomem *)v)
- #define in_be32(a)	ioread32be((void __iomem *)a)
- #endif
++	/*
++	 * Ideally channel must be free by now unless OS timeout last
++	 * request and platform continued to process the same, wait
++	 * until it releases the shared memory, otherwise we may endup
++	 * overwriting its response with new message payload or vice-versa
++	 */
++	spin_until_cond(ioread32(&mem->channel_status) &
++			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+ 	/* Mark channel busy + clear error */
+ 	iowrite32(0x0, &mem->channel_status);
+ 	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
 -- 
 2.20.1
 
