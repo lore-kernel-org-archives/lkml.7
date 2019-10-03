@@ -2,131 +2,99 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313CCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36B3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA2A21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B270222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2rZqgAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfJCMBp (ORCPT
+        id S1728683AbfJCMBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:01:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:43092 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfJCMBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:01:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12729337;
-        Thu,  3 Oct 2019 05:01:44 -0700 (PDT)
-Received: from [10.162.40.180] (p8cg001049571a15.blr.arm.com [10.162.40.180])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C6203F534;
-        Thu,  3 Oct 2019 05:01:40 -0700 (PDT)
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
- has_unmovable_pages()
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-References: <d3a88afd-63c6-1091-cf4c-75cd10b7f547@arm.com>
- <983E7EA4-A022-448C-B11D-8C10441A2E07@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <49fa7dea-00ac-155f-e7b7-eeca206556b5@arm.com>
-Date:   Thu, 3 Oct 2019 17:32:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 3 Oct 2019 08:01:50 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41441 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfJCMBt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:01:49 -0400
+Received: by mail-ed1-f65.google.com with SMTP id f20so2187627edv.8;
+        Thu, 03 Oct 2019 05:01:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AXifsrp2gpoG24MuC50GddBRUKeSGJwt91RWIwBKCAs=;
+        b=S2rZqgAlPzpAw+pzAANtluXROoLHIWkIEJhmpfUbdHnhjW13ZLNDkvA+EzATygwmbs
+         Z+1x5NcfmHnU5iISNhfCDsJaTv5b44UDQqNBse6I47urkOeIguWzTBOUVR5Lpw4CXG01
+         FV0lzkdJjL3TKf93417tb/8H03zKndwoRfxrwx+qZEt4F4nPeas5/WGcQGeMli2w1fzh
+         4UD7gCqM3Eo/Fe5DtiOtCxZAMu7e3qZIM4P0VLX2rl7AoCfFcEgW9ISDg+JBkhAQRhzJ
+         ywE+wjpWDh3nGC1zDhkBOGtGXO1XdvbOn5/DZUaHyKKFZp812bbsiQySlnwFPBNO5amM
+         VkWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AXifsrp2gpoG24MuC50GddBRUKeSGJwt91RWIwBKCAs=;
+        b=aoKfoZZx8Znfy3cWkKaSrBcH3AJmqiaR+v1DuVp4+olCQLxecFVVFr/MFIT6/V8POb
+         LDiHm57UT1HhmR16CVC42sypL/uTCuyYlr2TJfn6lXs7Jk97Y9genwfgZLVYrjeZGcns
+         hS5FdCqBgQIRSllxKuR2oUL+3LWYgBmH6cOoL9Udh90XB7KxrAoOBvnKfcezznmFBPcS
+         SopjZtmNvZBKJYTsQqkwJIoMLn8Tmw+ONkW3GZx9Yddz4dr5293qqpITegIc+q3dDkBh
+         ppOC5ei6r6AQS8aMlHRR0GXTifATtAfADOM/fLjO0ECnIkiRuTPW3vN9vzI5ANln0bTf
+         VAvw==
+X-Gm-Message-State: APjAAAV8pao4rIQJ1i05t0A+OglKFOjPiYLohhMj8Arzqw9nILtuHzIS
+        hrQh4D0tC1oT3L2CkNZAxak=
+X-Google-Smtp-Source: APXvYqxB15IXq8E380WB93OPH5x1mtdrbzb6M5RNxSckdywkUjuAb+9QHOrwXSJgPtSKWX8KcqEQ7A==
+X-Received: by 2002:a05:6402:74c:: with SMTP id p12mr8943251edy.135.1570104107247;
+        Thu, 03 Oct 2019 05:01:47 -0700 (PDT)
+Received: from Limone ([46.114.33.168])
+        by smtp.gmail.com with ESMTPSA id r18sm435087edl.6.2019.10.03.05.01.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 05:01:46 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 14:01:43 +0200
+From:   Gon Solo <gonsolo@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003120143.GA2995@Limone>
+References: <20191002141359.30166-2-gonsolo@gmail.com>
+ <20191002142744.GA3475@gofer.mess.org>
+ <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+ <20191002150650.GA4227@gofer.mess.org>
+ <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+ <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+ <20191003081742.0933264b@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <983E7EA4-A022-448C-B11D-8C10441A2E07@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003081742.0933264b@coco.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi!
 
+ 
+> Btw, could you please try the enclosed hack and post the results?
+ 
+[  210.178948] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
+[  212.404011] si2168 1-0067: firmware version: B 4.0.25
+[  212.656467] si2157 2-0063: Needed to wait 100 ms to get chip version
+[  212.656470] si2157 2-0063: Unable to retrieve chip version
 
-On 10/03/2019 05:20 PM, Qian Cai wrote:
-> 
-> 
->> On Oct 3, 2019, at 7:31 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>
->> Ohh, never meant that the 'Reserved' bit is anything special here but it
->> is a reason to make a page unmovable unlike many other flags.
-> 
-> But dump_page() is used everywhere, and it is better to reserve “reason” to indicate something more important rather than duplicating the page flags.
-> 
-> Especially, it is trivial enough right now for developers look in the page flags dumping from has_unmovable_pages(), and figure out the exact branching in the code.
-> 
+:(
 
-Will something like this be better ? hugepage_migration_supported() has got
-uncertainty depending on platform and huge page size.
+g
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 15c2050c629b..8dbc86696515 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8175,7 +8175,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
-        unsigned long found;
-        unsigned long iter = 0;
-        unsigned long pfn = page_to_pfn(page);
--       const char *reason = "unmovable page";
-+       const char *reason;
-
-        /*
-         * TODO we could make this much more efficient by not checking every
-@@ -8194,7 +8194,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
-                if (is_migrate_cma(migratetype))
-                        return false;
-
--               reason = "CMA page";
-+               reason = "Unmovable CMA page";
-                goto unmovable;
-        }
-
-@@ -8206,8 +8206,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
-
-                page = pfn_to_page(check);
-
--               if (PageReserved(page))
-+               if (PageReserved(page)) {
-+                       reason = "Unmovable reserved page";
-                        goto unmovable;
-+               }
-
-                /*
-                 * If the zone is movable and we have ruled out all reserved
-@@ -8226,8 +8228,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
-                        struct page *head = compound_head(page);
-                        unsigned int skip_pages;
-
--                       if (!hugepage_migration_supported(page_hstate(head)))
-+                       if (!hugepage_migration_supported(page_hstate(head))) {
-+                               reason = "Unmovable HugeTLB page";
-                                goto unmovable;
-+                       }
-
-                        skip_pages = compound_nr(head) - (page - head);
-                        iter += skip_pages - 1;
-@@ -8271,8 +8275,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
-                 * is set to both of a memory hole page and a _used_ kernel
-                 * page at boot.
-                 */
--               if (found > count)
-+               if (found > count) {
-+                       reason = "Unmovable non-LRU page";
-                        goto unmovable;
-+               }
-        }
-        return false;
- unmovable:
