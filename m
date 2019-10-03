@@ -2,97 +2,97 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DFFC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53442C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B192086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262D32086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121447;
-	bh=SwBHs2P/sQEPz3FNVjP6NcwaasxHCTtfynt6s3Vyo2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D2DAuWh9KP7kXhvsz3yjrLgYzbQ3U54fZsWsL5TDhY+4dSp4xs0JVCg54pQb427oU
-	 seMXlYBYVOlGdEywQiKBLmp5po+FwwHoQLQPexIek5mSQeDYm4KoowpiXBdz52HOik
-	 P72z2/ObW6dztlMuFPF2RjBaGOXIQ+/9fpiTdd60=
+	s=default; t=1570121451;
+	bh=ajBjYAZiKmXhY3kJWE4D+XSVieiVoPua4IlPs8TFonc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Cf7iBvuVsX59QoYB+/f4MPtPNVIMS6KD1CgkuHfpZkR/EeQEzgFF564GXFCX47fSM
+	 4QTAi4L1hoOkWdSbcGs0Ytxs2qIYKcFnUp5+NOh5oNRmE4D666z9vZLSW/vjpvQpRt
+	 fenPzmoU62Myi7dC3puAGUPmtaHXRV+gRzJqjcuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405969AbfJCQuq (ORCPT
+        id S2392586AbfJCQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:46 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]:34985 "EHLO
-        mail-qk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404434AbfJCQug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:36 -0400
-Received: by mail-qk1-f174.google.com with SMTP id w2so3060128qkf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ugrakjKATdtEjJWn4tk6YlL3Okyto1CddfouAPmaV54=;
-        b=oO2VLgtqJ29OYQYQU1McnBMDLGkBdFgfD437kzpMWJzqazZ8fTH23PwceQ9Ho6hsd1
-         DVPKYd0YZBG2ATvRVNLH0nOYeUDMKDyDC17p91XWV4YmNCvXK3Rp4DcHvs8sRr1yLbhq
-         HjJB0tmSD0r3AvOcvE/MVY8gFEocsV44G2But+/65voOg0m0CWg9qMg9MlpCQYzHs3zJ
-         TRAz0GznLjDF2VuAGZyLZH4KTNp4Ckr1wr0vyaKniCT5lpe6HVbyRneyvnHgAKFh0XLh
-         HSzuiRjXhqof6YHqVmxYgYuIhLWhou0DTVSczwgeeTLBlde247fvdqjZ2BnAEetj3Skh
-         XAjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ugrakjKATdtEjJWn4tk6YlL3Okyto1CddfouAPmaV54=;
-        b=UVvF4n/Vo8inVG5kZN+rsuWljEpyUOHrcD7i6z07G++0RbtWVST4vKcgGY6uyp2P0i
-         99NSCxWRq4FCJWZ6Pz79SauzfZnOWykgJXQsx6aMsgGtZkkpEgtri9gs9vcDj4vgmsXN
-         FD8HuYVkNvecoeHJWlrTNWHIKpnUlbGkOc6muFfIcKDTtQWie0MWNCHU0DCKOd0RI9j0
-         w8pyj2LhtOi/sq5Vokz4sFtqZouogF+i9U+VUv4sN3F+qf2ud4Cazo+PXQ8D2cOhqdl+
-         x6BmfDuBnGeNfiv6nVypya4Shx4ylAerWHzdix5E7jWrz6TvJgDJP8Ebkuo0pf4F4oJo
-         SwGw==
-X-Gm-Message-State: APjAAAXLIQjbvdfabBDJME30mYKRX6YYJqfIYv6wnpMJLgRQzBMMEcQY
-        1vAaRbnrBpuUyi4l0huJGQA=
-X-Google-Smtp-Source: APXvYqy3IUsNtIUDdRBNYMhYcL0tTzAp9RWFjebbkNcHItrzLdaQkF80DRHAMGLXzteuta2rw+jJ4Q==
-X-Received: by 2002:a37:4cc7:: with SMTP id z190mr5273064qka.458.1570121435276;
-        Thu, 03 Oct 2019 09:50:35 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:9f72])
-        by smtp.gmail.com with ESMTPSA id 207sm1891576qkh.33.2019.10.03.09.50.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 09:50:34 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 09:50:33 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: System hangs if NVMe/SSD is removed during suspend
-Message-ID: <20191003165033.GC3247445@devbig004.ftw2.facebook.com>
-References: <20191002122136.GD2819@lahna.fi.intel.com>
+        Thu, 3 Oct 2019 12:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405938AbfJCQuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCED520865;
+        Thu,  3 Oct 2019 16:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570121437;
+        bh=ajBjYAZiKmXhY3kJWE4D+XSVieiVoPua4IlPs8TFonc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=go0wWAoeEi4l9m0DcXBSeX4/KEjeG9E5bXyD0W2RrQTxs7heCkktxbSv6e3ZoHkhE
+         Ns2+BPYFboHLSEbETEZqb3KyZ5KQxg8r5SarYtKP2nk7718+2KtC0BDm3U7256WXl2
+         P5hECkFvZCe47z+WhsMWOJpQpMe/ibJ6kFi2N0C4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.3 278/344] ASoC: Intel: Fix use of potentially uninitialized variable
+Date:   Thu,  3 Oct 2019 17:54:03 +0200
+Message-Id: <20191003154607.487361958@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002122136.GD2819@lahna.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Mika.
+From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
 
-On Wed, Oct 02, 2019 at 03:21:36PM +0300, Mika Westerberg wrote:
-> but from that discussion I don't see more generic solution to be
-> implemented.
-> 
-> Any ideas we should fix this properly?
+commit 810f3b860850148788fc1ed8a6f5f807199fed65 upstream.
 
-Yeah, the only fix I can think of is not using freezable wq.  It's
-just not a good idea and not all that difficult to avoid using.
+If ipc->ops.reply_msg_match is NULL, we may end up using uninitialized
+mask value.
 
-Thanks.
+reported by smatch:
+sound/soc/intel/common/sst-ipc.c:266 sst_ipc_reply_find_msg() error: uninitialized symbol 'mask'.
 
--- 
-tejun
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+Link: https://lore.kernel.org/r/20190827141712.21015-3-amadeuszx.slawinski@linux.intel.com
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/soc/intel/common/sst-ipc.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/sound/soc/intel/common/sst-ipc.c
++++ b/sound/soc/intel/common/sst-ipc.c
+@@ -222,6 +222,8 @@ struct ipc_message *sst_ipc_reply_find_m
+ 
+ 	if (ipc->ops.reply_msg_match != NULL)
+ 		header = ipc->ops.reply_msg_match(header, &mask);
++	else
++		mask = (u64)-1;
+ 
+ 	if (list_empty(&ipc->rx_list)) {
+ 		dev_err(ipc->dev, "error: rx list empty but received 0x%llx\n",
+
+
