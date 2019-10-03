@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26170C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237A5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EA421D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE8120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123097;
-	bh=8MmppN0wk6iJ6HlwRzJl5OGpV+msx+sgDG0ZWr1rF/o=;
+	s=default; t=1570123101;
+	bh=he2fSWT0lK2X9kFtyxSOoobrU3yzNlikOysYtfV1KiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYDOy8YPUubxs0ajN3jBVybgsVUFf/L7mmBKZ+WGvtnwypWrrf5ywNCMYSGjKLJwy
-	 FpJgFn5rC9nAQFC24pAmfFBOKU3oaXhxy+fziTtobxuqo3VFZjhv/auz0ANuQHpt2Z
-	 qB+ZQTdsjvXV6DEHbofYaftzYp/LWNj3tH7nWH3k=
+	b=eTB7woH/6HAjc6qLCl8zYbTJ6dL6pTrnYYtmvHD4YRv6OI2e6afLlAmD6edPIKIwD
+	 r0PF5w7pUl3QhEuwbl8gUqitK/pPkHdT3PXTe9sO30SndUbIwaqm+YKKN7hLfq0CfT
+	 EgKcxw60B5gbcpq3Ol9PT6vqS85UreNnndI3Rwjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391733AbfJCRSP (ORCPT
+        id S2393396AbfJCRST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390156AbfJCQVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:34 -0400
+        id S2390111AbfJCQVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BC3520659;
-        Thu,  3 Oct 2019 16:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EFA420659;
+        Thu,  3 Oct 2019 16:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119693;
-        bh=8MmppN0wk6iJ6HlwRzJl5OGpV+msx+sgDG0ZWr1rF/o=;
+        s=default; t=1570119676;
+        bh=he2fSWT0lK2X9kFtyxSOoobrU3yzNlikOysYtfV1KiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9/F+duVd4sxMBCwIrCZjp3CyOBoW5b2cP+pB0mc0D6fCOpKmH1MPDlAsxJtnOjD9
-         K/5BZytGttEXhJWSrEWk6Q4rt1oNZWtrF+MevNy06AqHOmN9/Sy0QMr3GCKE35bbG4
-         bT/+xAK5usuWV16iAjeGevvFqXAAmLUKKyPN3jLg=
+        b=KXyZR3gSIsBQhY4RfwDWbfOtIags9I5mZ+ngNkvBCEwLz3s5x8noSW7fM6dN4lLX9
+         iwU8JVxfbyinG31rpRI6XOpqEoJE78xOeSLNJkFPL7zGIj6FFSTGl1ysDyF32er5JA
+         47GYHIFmLPtGjp7HmrvhT5JTtwlVz9ufPsioxhUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 119/211] libtraceevent: Change users plugin directory
-Date:   Thu,  3 Oct 2019 17:53:05 +0200
-Message-Id: <20191003154514.403362132@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 115/211] ALSA: firewire-motu: add support for MOTU 4pre
+Date:   Thu,  3 Oct 2019 17:53:01 +0200
+Message-Id: <20191003154513.729144694@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -66,68 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
+[ Upstream commit 6af86bdb8ad41f4cf1292d3b10857dc322758328 ]
 
-To be compliant with XDG user directory layout, the user's plugin
-directory is changed from ~/.traceevent/plugins to
-~/.local/lib/traceevent/plugins/
+MOTU 4pre was launched in 2012 by MOTU, Inc. This commit allows userspace
+applications can transmit and receive PCM frames and MIDI messages for
+this model via ALSA PCM interface and RawMidi/Sequencer interfaces.
 
-Suggested-by: Patrick McLean <chutzpah@gentoo.org>
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Patrick McLean <chutzpah@gentoo.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
-Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The device supports MOTU protocol version 3. Unlike the other devices, the
+device is simply designed. The size of data block is fixed to 10 quadlets
+during available sampling rates (44.1 - 96.0 kHz). Each data block
+includes 1 source packet header, 2 data chunks for messages, 8 data chunks
+for PCM samples and 2 data chunks for padding to quadlet alignment. The
+device has no MIDI, optical, BNC and AES/EBU interfaces.
+
+Like support for the other MOTU devices, the quality of playback sound
+is not enough good with periodical noise yet.
+
+$ python2 crpp < ~/git/am-config-rom/motu/motu-4pre.img
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  041078cc  bus_info_length 4, crc_length 16, crc 30924
+404  31333934  bus_name "1394"
+408  20ff7000  irmc 0, cmc 0, isc 1, bmc 0, cyc_clk_acc 255, max_rec 7 (256)
+40c  0001f200  company_id 0001f2     |
+410  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
+
+               root directory
+               -----------------------------------------------------------------
+414  0004ef04  directory_length 4, crc 61188
+418  030001f2  vendor
+41c  0c0083c0  node capabilities per IEEE 1394
+420  d1000002  --> unit directory at 428
+424  8d000005  --> eui-64 leaf at 438
+
+               unit directory at 428
+               -----------------------------------------------------------------
+428  0003ceda  directory_length 3, crc 52954
+42c  120001f2  specifier id
+430  13000045  version
+434  17103800  model
+
+               eui-64 leaf at 438
+               -----------------------------------------------------------------
+438  0002d248  leaf_length 2, crc 53832
+43c  0001f200  company_id 0001f2     |
+440  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile       | 6 +++---
- tools/lib/traceevent/event-plugin.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ sound/firewire/motu/motu.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 0b4e833088a4d..95a43ccb6dd09 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -55,15 +55,15 @@ set_plugin_dir := 1
+diff --git a/sound/firewire/motu/motu.c b/sound/firewire/motu/motu.c
+index 743015e87a960..e240fdfcae31d 100644
+--- a/sound/firewire/motu/motu.c
++++ b/sound/firewire/motu/motu.c
+@@ -255,6 +255,17 @@ static const struct snd_motu_spec motu_audio_express = {
+ 	.analog_out_ports = 4,
+ };
  
- # Set plugin_dir to preffered global plugin location
- # If we install under $HOME directory we go under
--# $(HOME)/.traceevent/plugins
-+# $(HOME)/.local/lib/traceevent/plugins
- #
- # We dont set PLUGIN_DIR in case we install under $HOME
- # directory, because by default the code looks under:
--# $(HOME)/.traceevent/plugins by default.
-+# $(HOME)/.local/lib/traceevent/plugins by default.
- #
- ifeq ($(plugin_dir),)
- ifeq ($(prefix),$(HOME))
--override plugin_dir = $(HOME)/.traceevent/plugins
-+override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
- set_plugin_dir := 0
- else
- override plugin_dir = $(libdir)/traceevent/plugins
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index f17e25097e1e2..52874eb94acef 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -16,7 +16,7 @@
- #include "event-parse.h"
- #include "event-utils.h"
- 
--#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
-+#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
- 
- static struct registered_plugin_options {
- 	struct registered_plugin_options	*next;
++static const struct snd_motu_spec motu_4pre = {
++	.name = "4pre",
++	.protocol = &snd_motu_protocol_v3,
++	.flags = SND_MOTU_SPEC_SUPPORT_CLOCK_X2 |
++		 SND_MOTU_SPEC_TX_MICINST_CHUNK |
++		 SND_MOTU_SPEC_TX_RETURN_CHUNK |
++		 SND_MOTU_SPEC_RX_SEPARETED_MAIN,
++	.analog_in_ports = 2,
++	.analog_out_ports = 2,
++};
++
+ #define SND_MOTU_DEV_ENTRY(model, data)			\
+ {							\
+ 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
+@@ -272,6 +283,7 @@ static const struct ieee1394_device_id motu_id_table[] = {
+ 	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
+ 	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
+ 	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
++	SND_MOTU_DEV_ENTRY(0x000045, &motu_4pre),
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
 -- 
 2.20.1
 
