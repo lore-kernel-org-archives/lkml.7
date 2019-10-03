@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA10ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76090C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F7C2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430CC2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124153;
-	bh=RjgmkSOMi2xT5X4blqGQ8ZeCdi9HMfHkXvSSXsfQvR0=;
+	s=default; t=1570124164;
+	bh=8LVBhwOe9iKmTrHRY8JxBQfug0KuqOv9YxaYUxIzXu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Tlg1h/r2AlTuBTCKnmGZBjTE5XJuj9fWQoHJ2sQxrb603Fz6WewVA/2/b8q1luh3
-	 1+DBPw9J7jWvD6JmVmt/SP5PBQhXOb5d2LOHylE0jEL9TdZa25SF1hYQKtCdSaK50k
-	 TqLj4MsCcvaRy+4fQd6C2Y8MNlkgTSYVFBnWIUco=
+	b=fO1HT7KIs7thc7FtBDQHraBZ30EKJVpIIAxnWk2cYAjPH84F6ekpOngUeJE50ln6G
+	 9douWjoG5Tupnt6VDl+WEoE+YBZFFqK46O/65msq0FTtBjK3Q08RSX9NEuHhW+lOJv
+	 QNBz6cHfd+aC0c1301hsj3VnLUvkPHLNX9ri/bjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbfJCQFg (ORCPT
+        id S2388555AbfJCRgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731703AbfJCQFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:05:32 -0400
+        id S1732198AbfJCQFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:05:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79BD321A4C;
-        Thu,  3 Oct 2019 16:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A99215EA;
+        Thu,  3 Oct 2019 16:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118731;
-        bh=RjgmkSOMi2xT5X4blqGQ8ZeCdi9HMfHkXvSSXsfQvR0=;
+        s=default; t=1570118718;
+        bh=8LVBhwOe9iKmTrHRY8JxBQfug0KuqOv9YxaYUxIzXu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2LOf0sEeq7zDg2yv6eBGHUGuCtR5J8PViJSTLD1dRxmtZAJHsT8pVYVaWqdcbZhu
-         1PEcXQaG8Gm4vf1pu6u6T0Cu5rNuS5jqDjovQxw0DTxdXIh6mxwN/qAfp5lvifEyxt
-         s+5SsTlRX30orQJZLaxOFaT4SaQV/bAfER8FWqRA=
+        b=x/HkxdFkFQ34TC4G88d40M2JcCAqesgXL4QxvstQUYqc6VDf2+FrixZ6Y0c5N8Ak2
+         Fa1VSPI6AynLy308Qc6MA7Iyb3OfFb3MjV+lWxAxsaFh1dXkrPFg8ynizSVtz16kBy
+         3LO2M1eSaXX0VzRLd6W7ovabxzAY8/9BQ9QmMvRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 080/129] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
-Date:   Thu,  3 Oct 2019 17:53:23 +0200
-Message-Id: <20191003154355.384873192@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 076/129] arm64: kpti: ensure patched kernel text is fetched from PoU
+Date:   Thu,  3 Oct 2019 17:53:19 +0200
+Message-Id: <20191003154353.011305485@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,58 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
+[ Upstream commit f32c7a8e45105bd0af76872bf6eef0438ff12fb2 ]
 
-Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
-for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
-but it turned out that it supplies also some other critical parts and
-board freezes/crashes when it is turned off.
+While the MMUs is disabled, I-cache speculation can result in
+instructions being fetched from the PoC. During boot we may patch
+instructions (e.g. for alternatives and jump labels), and these may be
+dirty at the PoU (and stale at the PoC).
 
-The mentioned commit made Exynos TMU a consumer of that regulator and in
-typical case Exynos TMU driver keeps it enabled from early boot. However
-there are such configurations (example is multi_v7_defconfig), in which
-some of the regulators are compiled as modules and are not available
-from early boot. In such case it may happen that LDO10 is turned off by
-regulator core, because it has no consumers yet (in this case consumer
-drivers cannot get it, because the supply regulators for it are not yet
-available). This in turn causes the board to crash. This patch restores
-'always-on' property for the LDO10 regulator.
+Thus, while the MMU is disabled in the KPTI pagetable fixup code we may
+load stale instructions into the I-cache, potentially leading to
+subsequent crashes when executing regions of code which have been
+modified at runtime.
 
-Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Similarly to commit:
+
+  8ec41987436d566f ("arm64: mm: ensure patched kernel text is fetched from PoU")
+
+... we can invalidate the I-cache after enabling the MMU to prevent such
+issues.
+
+The KPTI pagetable fixup code itself should be clean to the PoC per the
+boot protocol, so no maintenance is required for this code.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm64/mm/proc.S | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index ec4a00f1ce01e..8b754ae8c8f7d 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -427,6 +427,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 01f466816fea7..1f90df2d7ecd8 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -427,6 +427,7 @@
- 				regulator-name = "vdd_ldo10";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 3ceec224d3d24..3b95e3126eebb 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -263,6 +263,15 @@ skip_pgd:
+ 	msr	sctlr_el1, x18
+ 	isb
+ 
++	/*
++	 * Invalidate the local I-cache so that any instructions fetched
++	 * speculatively from the PoC are discarded, since they may have
++	 * been dynamically patched at the PoU.
++	 */
++	ic	iallu
++	dsb	nsh
++	isb
++
+ 	/* Set the flag to zero to indicate that we're all done */
+ 	str	wzr, [flag_ptr]
+ 	ret
 -- 
 2.20.1
 
