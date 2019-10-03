@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5509FC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2796C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4B720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7096120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123081;
-	bh=BaDAgkkOFgT+WQJwC5jLKMwjDio2r3/yL/TbFia8kOo=;
+	s=default; t=1570123091;
+	bh=Qrmdlh54a97G3v74uvBNhghLzDukho25jehHop0KfnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hgMAznaS803Dq2jYMkIK8nqeRRPfOd2PxnRvQ+qKkWYPM50SDZ/bL+xQ6I80pGRCk
-	 dFLp/jeCoks2PjP+TxB2IazcPsiWOpbZk2QBKgNrYbosVJ98tPQLkcrXp923LtZ/sC
-	 JaSoNvGNTfHy8XMw/Wp7eiBKQFycqhkxDzdjSIBQ=
+	b=KnwtqElCOrzidIUVqbXgkQ5z+NJWCLRldrJ//H9mf/kuy5qEkD3CFGanG5c23ohkC
+	 +kayem26WOydOFFyEemyWrO7n3fIfV7RiPIstVatG8zlzypXEaLJNlmFcCnGQMJnzs
+	 PwnQTSig+Mw8KZTiUhMrpGpWpEqOx5NnFEPnY0ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388540AbfJCQVi (ORCPT
+        id S2390114AbfJCQVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390125AbfJCQVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:23 -0400
+        id S2388845AbfJCQVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF3E20659;
-        Thu,  3 Oct 2019 16:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5932054F;
+        Thu,  3 Oct 2019 16:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119682;
-        bh=BaDAgkkOFgT+WQJwC5jLKMwjDio2r3/yL/TbFia8kOo=;
+        s=default; t=1570119671;
+        bh=Qrmdlh54a97G3v74uvBNhghLzDukho25jehHop0KfnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ne8hlVP20R/AYQ80qldV+Z1tvxT8QFNepXnT4oO2/6d9h3uDsRZFCWjVwAJEuf5/2
-         vsmHTWQdX4DHnlUplrhjMYEaMgmEeJzPlIv8xsfMIzT0OLKBqt0hrUHGSEqp9uiVXp
-         rE74bGvE29KGuqRJaTeAUuVm71sYjJ6yNCHZCDBk=
+        b=uztMQIAczotyWoBUw+AvWJUbXiBPj0cseGQaAGvdlkvytXoTNB/TEQzGmL7cnZxje
+         gBPJOd01TCW5Mz/8lUgteCx1hwI0vyt8R2F+oDNLKEgKhvrur4VNW7eg9WCudmGo1s
+         v/1FwBdaG97SbhQILqJ7GDR7jbjWaJTViQyRZKJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 152/211] scsi: qla2xxx: Fix Relogin to prevent modifying scan_state flag
-Date:   Thu,  3 Oct 2019 17:53:38 +0200
-Message-Id: <20191003154522.656461639@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 149/211] ALSA: firewire-tascam: handle error code when getting current source of clock
+Date:   Thu,  3 Oct 2019 17:53:35 +0200
+Message-Id: <20191003154521.989888006@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,106 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 8b5292bcfcacf15182a77a973a98d310e76fd58b upstream.
+commit 2617120f4de6d0423384e0e86b14c78b9de84d5a upstream.
 
-Relogin fails to move forward due to scan_state flag indicating device is
-not there. Before relogin process, Session delete process accidently
-modified the scan_state flag.
+The return value of snd_tscm_stream_get_clock() is ignored. This commit
+checks the value and handle error.
 
-[mkp: typos plus corrected Fixes: sha as reported by sfr]
-
-Fixes: 2dee5521028c ("scsi: qla2xxx: Fix login state machine freeze")
-Cc: stable@vger.kernel.org
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: e453df44f0d6 ("ALSA: firewire-tascam: add PCM functionality")
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20190910135152.29800-2-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_init.c   |   25 ++++++++++++++++++++-----
- drivers/scsi/qla2xxx/qla_os.c     |    1 +
- drivers/scsi/qla2xxx/qla_target.c |    1 -
- 3 files changed, 21 insertions(+), 6 deletions(-)
+ sound/firewire/tascam/tascam-pcm.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -216,8 +216,13 @@ qla2x00_async_login(struct scsi_qla_host
- 	struct srb_iocb *lio;
- 	int rval = QLA_FUNCTION_FAILED;
+--- a/sound/firewire/tascam/tascam-pcm.c
++++ b/sound/firewire/tascam/tascam-pcm.c
+@@ -57,6 +57,9 @@ static int pcm_open(struct snd_pcm_subst
+ 		goto err_locked;
  
--	if (!vha->flags.online)
--		goto done;
-+	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT) ||
-+	    fcport->loop_id == FC_NO_LOOP_ID) {
-+		ql_log(ql_log_warn, vha, 0xffff,
-+		    "%s: %8phC - not sending command.\n",
-+		    __func__, fcport->port_name);
-+		return rval;
-+	}
- 
- 	sp = qla2x00_get_sp(vha, fcport, GFP_KERNEL);
- 	if (!sp)
-@@ -1123,8 +1128,13 @@ int qla24xx_async_gpdb(struct scsi_qla_h
- 	struct port_database_24xx *pd;
- 	struct qla_hw_data *ha = vha->hw;
- 
--	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT))
-+	if (!vha->flags.online || (fcport->flags & FCF_ASYNC_SENT) ||
-+	    fcport->loop_id == FC_NO_LOOP_ID) {
-+		ql_log(ql_log_warn, vha, 0xffff,
-+		    "%s: %8phC - not sending command.\n",
-+		    __func__, fcport->port_name);
- 		return rval;
-+	}
- 
- 	fcport->disc_state = DSC_GPDB;
- 
-@@ -1904,8 +1914,11 @@ qla24xx_handle_plogi_done_event(struct s
- 		return;
- 	}
- 
--	if (fcport->disc_state == DSC_DELETE_PEND)
-+	if ((fcport->disc_state == DSC_DELETE_PEND) ||
-+	    (fcport->disc_state == DSC_DELETED)) {
-+		set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
- 		return;
-+	}
- 
- 	if (ea->sp->gen2 != fcport->login_gen) {
- 		/* target side must have changed it. */
-@@ -6557,8 +6570,10 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_
- 	}
- 
- 	/* Clear all async request states across all VPs. */
--	list_for_each_entry(fcport, &vha->vp_fcports, list)
-+	list_for_each_entry(fcport, &vha->vp_fcports, list) {
- 		fcport->flags &= ~(FCF_LOGIN_NEEDED | FCF_ASYNC_SENT);
-+		fcport->scan_state = 0;
-+	}
- 	spin_lock_irqsave(&ha->vport_slock, flags);
- 	list_for_each_entry(vp, &ha->vp_list, list) {
- 		atomic_inc(&vp->vref_count);
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -4864,6 +4864,7 @@ void qla24xx_create_new_sess(struct scsi
- 	if (fcport) {
- 		fcport->id_changed = 1;
- 		fcport->scan_state = QLA_FCPORT_FOUND;
-+		fcport->chip_reset = vha->hw->base_qpair->chip_reset;
- 		memcpy(fcport->node_name, e->u.new_sess.node_name, WWN_SIZE);
- 
- 		if (pla) {
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1216,7 +1216,6 @@ static void qla24xx_chk_fcp_state(struct
- 		sess->logout_on_delete = 0;
- 		sess->logo_ack_needed = 0;
- 		sess->fw_login_state = DSC_LS_PORT_UNAVAIL;
--		sess->scan_state = 0;
- 	}
- }
- 
+ 	err = snd_tscm_stream_get_clock(tscm, &clock);
++	if (err < 0)
++		goto err_locked;
++
+ 	if (clock != SND_TSCM_CLOCK_INTERNAL ||
+ 	    amdtp_stream_pcm_running(&tscm->rx_stream) ||
+ 	    amdtp_stream_pcm_running(&tscm->tx_stream)) {
 
 
