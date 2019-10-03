@@ -2,117 +2,90 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AD2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641E8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCF520700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0A020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118201;
-	bh=i4Gdla/qLYCwUY8TXC0PxpCn/O4eLhZk3Oh4yJNbqjQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zInew2YK1cFog0YAbCman5KS5Do7hV8wSqzlKB7M+JEFw5qBZua/bmVKyl96zw4hq
-	 dfy+OdHpkGwGvoJTTsVqXNWsQo5UTrfiZRj+x15Oi2Ta4sNk28148KZwsJf6lgf82c
-	 qC76hhQM41f3uo4x/qibrt/BWdW0SfFaWIqK3R/4=
+	s=default; t=1570118204;
+	bh=kkSBR+c0g8g/8nWU/VkMes6KGJAkUReibvt3+FKxTc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NK0MfRn5b9PoEbuz+aCOaQyDmXdI4E48iE4vs1o5loNFJB2TE/yjFGQA0uSzXqW/b
+	 3pSgA/QmduBbRhInchxRLSeO5NNgLBKjLXz+tdSCN9Xzwp0hg6LUEUWnIrrVU8oDQp
+	 /W6Lbvl+rEu18fNE/03T1Id+n0ZLU8O2pD/VdQnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbfJCP4k (ORCPT
+        id S1730741AbfJCP4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfJCP4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:32 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730720AbfJCP4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B18C222C8;
-        Thu,  3 Oct 2019 15:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A51222C4;
+        Thu,  3 Oct 2019 15:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118191;
-        bh=i4Gdla/qLYCwUY8TXC0PxpCn/O4eLhZk3Oh4yJNbqjQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=y+LYdsAyYVPU+ogedopimwB/UhsnGsp2oUl5tLvk654eTHDmIeoSWG2nCGII7q6zW
-         8/Axawckxy8TxeX/6wm6AHbtuWHbXt5CjRRIqm68o9nzigMg4+pQjLefid3sH8WUKU
-         BEnk+1qMQXkvQCMtJdagzQSxknxFVWIvIJHvHP7U=
-Received: by mail-qt1-f170.google.com with SMTP id n7so4287238qtb.6;
-        Thu, 03 Oct 2019 08:56:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAXmlS7+fJ+TCZeTTUwZUbiSyFC4mD20SWVSlrHlcalh1isF0IVD
-        19fiWqBYLdnmAq2IrNU5s82NfCD3LZqHh0OP7w==
-X-Google-Smtp-Source: APXvYqx6BBDgfwU9lYgWoBXJNLC1ki+lOywVLMS4eE76V10EcL1hEp0zvvi4cS5atfEMr32Ls+zx4zC9aO+o+md64fo=
-X-Received: by 2002:ac8:31b3:: with SMTP id h48mr11022378qte.300.1570118190216;
- Thu, 03 Oct 2019 08:56:30 -0700 (PDT)
+        s=default; t=1570118200;
+        bh=kkSBR+c0g8g/8nWU/VkMes6KGJAkUReibvt3+FKxTc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oAWzhXDhseUrmtNA887VVxG9tem1Qjl4No0R5tqF4hn2pYcIARq07jQdctTadeAPX
+         BsSRnqSrSdvLMGOUqps6nY4e/gDIUKeMPveRUwYEgviOost5t7ysTPmV2RhzaFizxt
+         p8MgxF/zyXXTCW8O8aTqD1Za/vM58Q9MEsT5Lbuc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Benoit <benoit.sansoni@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 25/99] skge: fix checksum byte order
+Date:   Thu,  3 Oct 2019 17:52:48 +0200
+Message-Id: <20191003154306.145674869@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+References: <20191003154252.297991283@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
- <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com> <20191003145546.GA19695@renesas.com>
-In-Reply-To: <20191003145546.GA19695@renesas.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 3 Oct 2019 10:56:19 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK12p48gqZdwNfYGNsBafmjMY=5U=QcHPHZy5sD-nGntA@mail.gmail.com>
-Message-ID: <CAL_JsqK12p48gqZdwNfYGNsBafmjMY=5U=QcHPHZy5sD-nGntA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT ClockMatrix
- based PTP clock
-To:     Vincent Cheng <vincent.cheng.xh@renesas.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 10:12 AM Vincent Cheng
-<vincent.cheng.xh@renesas.com> wrote:
->
-> On Tue, Oct 01, 2019 at 06:09:06PM EDT, Rob Herring wrote:
-> >On Wed, Sep 18, 2019 at 04:06:37PM -0400, vincent.cheng.xh@renesas.com wrote:
-> >> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
->
-> Hi Rob,
->
-> Welcome back.  Thank-you for providing feedback.
->
-> >>
-> >> Add device tree binding doc for the IDT ClockMatrix PTP clock driver.
-> >
-> >Bindings are for h/w, not drivers...
->
-> Yes, will remove 'driver'.
->
-> >>  Documentation/devicetree/bindings/ptp/ptp-idtcm.txt | 15 +++++++++++++++
-> >>  1 file changed, 15 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
-> >
-> >Please make this a DT schema.
->
-> Sure, will give it a try.
->
-> >> +  - compatible  Should be "idt,8a3400x-ptp" for System Synchronizer
-> >> +                Should be "idt,8a3401x-ptp" for Port Synchronizer
-> >> +                Should be "idt,8a3404x-ptp" for Universal Frequency Translator (UFT)
-> >
-> >If PTP is the only function of the chip, you don't need to append
-> >'-ptp'.
->
-> Okay, will remove '-ptp'.  Thanks.
->
->
-> >What's the 'x' for? We generally don't use wildcards in compatible
-> >strings.
->
-> We were hoping to use 'x' to represent a single driver to match the various
-> part numbers 8A34001, 8A34002, 8A34003, 8A34004, 8A34011, 8A34012, etc.
->
-> What should be used instead of 'x'?
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-Enumerate all the part numbers. Are the differences discoverable in
-some other way? If so, then 'x' is fine, but just add a note how
-models are distinguished.
+[ Upstream commit 5aafeb74b5bb65b34cc87c7623f9fa163a34fa3b ]
 
-Rob
+Running old skge driver on PowerPC causes checksum errors
+because hardware reported 1's complement checksum is in little-endian
+byte order.
+
+Reported-by: Benoit <benoit.sansoni@gmail.com>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/marvell/skge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/marvell/skge.c
++++ b/drivers/net/ethernet/marvell/skge.c
+@@ -3114,7 +3114,7 @@ static struct sk_buff *skge_rx_get(struc
+ 	skb_put(skb, len);
+ 
+ 	if (dev->features & NETIF_F_RXCSUM) {
+-		skb->csum = csum;
++		skb->csum = le16_to_cpu(csum);
+ 		skb->ip_summed = CHECKSUM_COMPLETE;
+ 	}
+ 
+
+
