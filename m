@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AA1C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51C8C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A1A20842
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C47420862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbfJCMcY (ORCPT
+        id S1729987AbfJCMc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:32:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:17621 "EHLO mga02.intel.com"
+        Thu, 3 Oct 2019 08:32:29 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50422 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfJCMcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:32:22 -0400
+        id S1729398AbfJCMc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:32:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:21 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:26 -0700
 X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="182369126"
+   d="scan'208";a="343651726"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:19 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:23 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 060DE20F97;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 2D29C20FFB;
         Thu,  3 Oct 2019 15:32:17 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1iG0HL-0002wH-Mw; Thu, 03 Oct 2019 15:32:19 +0300
+        id 1iG0HL-0002wW-ST; Thu, 03 Oct 2019 15:32:19 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
@@ -41,9 +41,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Joe Perches <joe@perches.com>
-Subject: [PATCH v9 03/12] device property: Move fwnode_get_parent() up
-Date:   Thu,  3 Oct 2019 15:32:10 +0300
-Message-Id: <20191003123219.11237-4-sakari.ailus@linux.intel.com>
+Subject: [PATCH v9 08/12] lib/vsprintf: Add a note on re-using %pf or %pF
+Date:   Thu,  3 Oct 2019 15:32:15 +0300
+Message-Id: <20191003123219.11237-9-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
 References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
@@ -54,59 +54,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move fwnode_get_parent() above fwnode_get_next_parent(), making the order
-the same as in the header file.
+Add a note warning of re-use of obsolete %pf or %pF extensions.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/base/property.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ lib/vsprintf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 81bd01ed40427..3d9dffbe96378 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -556,6 +556,19 @@ int device_add_properties(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(device_add_properties);
- 
-+/**
-+ * fwnode_get_parent - Return parent firwmare node
-+ * @fwnode: Firmware whose parent is retrieved
-+ *
-+ * Return parent firmware node of the given node if possible or %NULL if no
-+ * parent was available.
-+ */
-+struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_parent);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_parent);
-+
- /**
-  * fwnode_get_next_parent - Iterate to the node's parent
-  * @fwnode: Firmware whose parent is retrieved
-@@ -577,19 +590,6 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
- 
--/**
-- * fwnode_get_parent - Return parent firwmare node
-- * @fwnode: Firmware whose parent is retrieved
-- *
-- * Return parent firmware node of the given node if possible or %NULL if no
-- * parent was available.
-- */
--struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
--{
--	return fwnode_call_ptr_op(fwnode, get_parent);
--}
--EXPORT_SYMBOL_GPL(fwnode_get_parent);
--
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-  * @fwnode: Firmware node to find the next child node for.
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index a58329c8fa750..cf48769fe330c 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+  * - 'S' For symbolic direct pointers (or function descriptors) with offset
+  * - 's' For symbolic direct pointers (or function descriptors) without offset
+  * - '[Ss]R' as above with __builtin_extract_return_addr() translation
++ * - '[Ff]' %pf and %pF were obsoleted and later removed in favor of
++ *	    %ps and %pS. Be careful when re-using these specifiers.
+  * - 'B' For backtraced symbolic direct pointers with offset
+  * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
+  * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
 -- 
 2.20.1
 
