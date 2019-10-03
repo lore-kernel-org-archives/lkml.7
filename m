@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A679C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C3C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E40B20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDD520865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122633;
-	bh=Skgvnuz/LExgBBhhSVAUih1t+PvrDiosBgrzzb3/5hg=;
+	s=default; t=1570122639;
+	bh=dWZQeEXELj4oPCyvPKatzqbyZkyD3e/BEQa+Mm6YXN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjnSmAyl63pMoB2wyrAUuHEp567CjhN7RgxnGD63OJmeTVxxxd+59xpGn5dvJYs/F
-	 m6haZ9iK4P/fv1G9WGzyoUTmdux+Pogay6zJzA49cpIV4Epv/xbKzyaD2NyjYKTIz2
-	 SSt74N5eIY7mQ3KGTOy7zroqlINBM6tYW3lko7ig=
+	b=AL879RSOPEe7qTOVYIfmx1x+oW9JDmH2sYEFilgTI3HsjiNTp+qoBkuYRBkgD850W
+	 emkQdedOsbyacZk9UIZkv1CgcGSOUbY6xA6Rt8XEUQphGZweSwNodJR47Xo+WrPl3b
+	 PNKtdPWXMwNYYA3GboNv9PSH0E0b4A4Uu1Vz8xpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393326AbfJCRKc (ORCPT
+        id S2403986AbfJCQcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404006AbfJCQc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:59 -0400
+        id S2391132AbfJCQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531E92070B;
-        Thu,  3 Oct 2019 16:32:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A662133F;
+        Thu,  3 Oct 2019 16:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120378;
-        bh=Skgvnuz/LExgBBhhSVAUih1t+PvrDiosBgrzzb3/5hg=;
+        s=default; t=1570120368;
+        bh=dWZQeEXELj4oPCyvPKatzqbyZkyD3e/BEQa+Mm6YXN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F8bKanS3fzuh/01hAvF8D9QaWckih70/cRPK/UP000SQ34FILkozCOOS645nzMAxT
-         zmrMbEP4TAB7xm21evFO+NrQNRckUKvhaqZXNTIUi56LPbScF50tcPaPs5PJJXjCt4
-         zgRFAXRrh4LvsMUHGny6D/9DbgFPeSlFLCdShfI8=
+        b=eUA/a6j3qT3l/QoSqU5tPdI//iQhN6/YLBRaUA4qzpM+ZHBUWHecjJGMHJzZkJu+F
+         CqGgKip6LiXmjPP8sHEGQZik8r++W/spBWrK6IodxuAxorXEOHgl+lfafat0D1DK0n
+         JrUDDnAAKNfGx3mvBu9SJGj0j3yfH8UlHvIqIWK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 163/313] iommu/amd: Silence warnings under memory pressure
-Date:   Thu,  3 Oct 2019 17:52:21 +0200
-Message-Id: <20191003154549.003547109@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 195/313] mmc: mtk-sd: Re-store SDIO IRQs mask at system resume
+Date:   Thu,  3 Oct 2019 17:52:53 +0200
+Message-Id: <20191003154552.181623706@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,62 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
+[ Upstream commit 1c81d69d4c98aab56c5a7d5a810f84aefdb37e9b ]
 
-When running heavy memory pressure workloads, the system is throwing
-endless warnings,
+In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
+the driver. However, this still means msdc_runtime_suspend|resume() gets
+called during system suspend/resume, via pm_runtime_force_suspend|resume().
 
-smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
-5 reason: -12)
-Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
-07/10/2019
-swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
-nodemask=(null),cpuset=/,mems_allowed=0,4
-Call Trace:
- <IRQ>
- dump_stack+0x62/0x9a
- warn_alloc.cold.43+0x8a/0x148
- __alloc_pages_nodemask+0x1a5c/0x1bb0
- get_zeroed_page+0x16/0x20
- iommu_map_page+0x477/0x540
- map_sg+0x1ce/0x2f0
- scsi_dma_map+0xc6/0x160
- pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
- do_IRQ+0x81/0x170
- common_interrupt+0xf/0xf
- </IRQ>
+This means during system suspend/resume, the register context of the mtk-sd
+device most likely loses its register context, even in cases when SDIO IRQs
+have been enabled.
 
-because the allocation could fail from iommu_map_page(), and the volume
-of this call could be huge which may generate a lot of serial console
-output and cosumes all CPUs.
+To re-enable the SDIO IRQs during system resume, the mtk-sd driver
+currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
+the SDIO card, but this isn't the recommended solution. Instead, it's
+better to deal with this locally in the mtk-sd driver, so let's do that.
 
-Fix it by silencing the warning in this call site, and there is still a
-dev_err() later to notify the failure.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mmc/host/mtk-sd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 3e687f18b203a..a0b64c43257a6 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2570,7 +2570,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 33f4b6387ef71..978c8ccce7e31 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -2421,6 +2421,9 @@ static void msdc_restore_reg(struct msdc_host *host)
+ 	} else {
+ 		writel(host->save_para.pad_tune, host->base + tune_reg);
+ 	}
++
++	if (sdio_irq_claimed(host->mmc))
++		__msdc_enable_sdio_irq(host, 1);
+ }
  
- 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
- 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
--			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
-+			ret = iommu_map_page(domain, bus_addr, phys_addr,
-+					     PAGE_SIZE, prot,
-+					     GFP_ATOMIC | __GFP_NOWARN);
- 			if (ret)
- 				goto out_unmap;
- 
+ static int msdc_runtime_suspend(struct device *dev)
 -- 
 2.20.1
 
