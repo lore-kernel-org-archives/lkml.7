@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707BBC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00880C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A2521D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CF5207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118662;
-	bh=9xj/IygZkiSrQY5ZhHFgDvpKtojt7eZBxnzxtv4bORo=;
+	s=default; t=1570118665;
+	bh=cdpXAyC0QgX4B0pAmhmXYPJ+N0Wzzx+vtMzo2FD9JFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tbMOXU8eMUdjjLeoo4AR3M7Z02dtwGwm5zatFaZEgu9hw7bNicDHAV6BRgZga2WaI
-	 0D3C4I/rIG3pDZCDcqSMucHec7Vf/CBiwmfdTZ4NqR1sTYxFC/4nwqCWBK+gP61oWQ
-	 VONcRq1Aplc6EpHUuvPucjb6fYEz1CyAF/Ksju3U=
+	b=r2sVN3jARxS+IPHwImjJeDi/7mijjdGSfir2laAN/p76eItlI0Oh2nA9PUunWltEf
+	 jP0DmHr4ivytQKponH2Ox7/9d8g0xLQxSd2P7xIk4z2zjt3wFbhdNSESPxxvl/AS4+
+	 /ieCpF3/r4/GDZO47uQWm6nuFlk3TYv1+cOf/0hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732385AbfJCQEV (ORCPT
+        id S1732396AbfJCQEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732361AbfJCQET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:19 -0400
+        id S1732381AbfJCQEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3AD321A4C;
-        Thu,  3 Oct 2019 16:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF54A207FF;
+        Thu,  3 Oct 2019 16:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118658;
-        bh=9xj/IygZkiSrQY5ZhHFgDvpKtojt7eZBxnzxtv4bORo=;
+        s=default; t=1570118661;
+        bh=cdpXAyC0QgX4B0pAmhmXYPJ+N0Wzzx+vtMzo2FD9JFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcFehfyszGvWufx6nL6VI59M25VDQhQhP1Tbcv6ua3zlTVIsHV8QuGtTdqplpn1NL
-         dnBdgjrAzvm4xRqT1k61R+zReTWFipDJkeeTtWEeieYeBlREVZRE5UoDfX3Xgfb5d8
-         7Wz5ALO0gYVbO2c6m67C4vOjulVRJt9P2GUemYns=
+        b=KIVNPqmgcqqaEUGZ06YWlm7DOwmnjA7uo6vBXq7Nucw+TH4mehEhXlP0r4o6SYUBS
+         GnefHFbxo0VnS84WDuLZTngYyZd2RiqpEjYETc3jClZFrPOV97Yml2DJpQEkmDzb45
+         8lXQMpe/EaeobuXzw1d3Dpd6pqEsJjN5KJS3lreI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Ahzo <Ahzo@tutanota.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 074/129] media: ov9650: add a sanity check
-Date:   Thu,  3 Oct 2019 17:53:17 +0200
-Message-Id: <20191003154351.988178811@linuxfoundation.org>
+Subject: [PATCH 4.9 092/129] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
+Date:   Thu,  3 Oct 2019 17:53:35 +0200
+Message-Id: <20191003154401.313155933@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,47 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+From: Ahzo <Ahzo@tutanota.com>
 
-[ Upstream commit 093347abc7a4e0490e3c962ecbde2dc272a8f708 ]
+[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
 
-As pointed by cppcheck:
+This fixes screen corruption/flickering on 75 Hz displays.
 
-	[drivers/media/i2c/ov9650.c:706]: (error) Shifting by a negative value is undefined behaviour
-	[drivers/media/i2c/ov9650.c:707]: (error) Shifting by a negative value is undefined behaviour
-	[drivers/media/i2c/ov9650.c:721]: (error) Shifting by a negative value is undefined behaviour
+v2: make print statement debug only (Alex)
 
-Prevent mangling with gains with invalid values.
-
-As pointed by Sylvester, this should never happen in practice,
-as min value of V4L2_CID_GAIN control is 16 (gain is always >= 16
-and m is always >= 0), but it is too hard for a static analyzer
-to get this, as the logic with validates control min/max is
-elsewhere inside V4L2 core.
-
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Ahzo <Ahzo@tutanota.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov9650.c | 5 +++++
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-index 502c72238a4a5..db962e2108adf 100644
---- a/drivers/media/i2c/ov9650.c
-+++ b/drivers/media/i2c/ov9650.c
-@@ -708,6 +708,11 @@ static int ov965x_set_gain(struct ov965x *ov965x, int auto_gain)
- 		for (m = 6; m >= 0; m--)
- 			if (gain >= (1 << m) * 16)
- 				break;
-+
-+		/* Sanity check: don't adjust the gain with a negative value */
-+		if (m < 0)
-+			return -EINVAL;
-+
- 		rgain = (gain - ((1 << m) * 16)) / (1 << m);
- 		rgain |= (((1 << m) - 1) << 4);
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+index 3907439417e76..c0db3b57dfe58 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+@@ -3739,6 +3739,11 @@ int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
  
+ 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
+ 
++	if (data->frame_time_x2 < 280) {
++		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
++		data->frame_time_x2 = 280;
++	}
++
+ 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
+ 
+ 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
 -- 
 2.20.1
 
