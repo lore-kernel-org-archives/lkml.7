@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959D4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F25C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D48215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2E0215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119043;
-	bh=XpVpdp/hI5V10tSkwUW6L0AHqMB25ym0M3a6XlbYRqo=;
+	s=default; t=1570119048;
+	bh=+kaR1zmgN9/ZjOajslj+EK8Owr5UV0N8gNh6ajQirMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O1/aW//pNCW5IyStr4b63UXGJe4wn5YMHtqNg9E8Gz2HiO4ZnfuZcJxT4CceF9aS8
-	 ZU/e/ffTDPyesz0A2kUo+Aku0n1goQzos8XDaJtvVYJW8R5PCe3f6zf111maIUABvQ
-	 xDiicV9QRMNVQvOFp4oA/+JASbDk9sU2r7jbOOUQ=
+	b=vxb5XLGAXM06sF/Lp0ljMJulEJ4essWL7Od4QaOK2HqhLHS5XisYjUTIsDvCgR1pc
+	 Y+AJ6obPrywqcLkNu8ZL0vqOsEurW4dH7NIHl2Uu5lIt1FH4n2JJXLMXutvDpTbsOg
+	 OuvNOhhb9DGQuE+iS7BzBdCmu+LeKrbWgBBQ0V/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387705AbfJCQKm (ORCPT
+        id S1732153AbfJCQKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60182 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387689AbfJCQKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:40 -0400
+        id S2387711AbfJCQKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D4F7215EA;
-        Thu,  3 Oct 2019 16:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8617D215EA;
+        Thu,  3 Oct 2019 16:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119039;
-        bh=XpVpdp/hI5V10tSkwUW6L0AHqMB25ym0M3a6XlbYRqo=;
+        s=default; t=1570119045;
+        bh=+kaR1zmgN9/ZjOajslj+EK8Owr5UV0N8gNh6ajQirMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jz3CmLHy/dvPdCeW7rA0wjpJsVRpCI3/TNaB1/qWu+gwhgSrHEzOEMjuzqUJ1dwWO
-         CYlCtFhhSWu17HRBdImscx1X5WWdjIExUCT5dNnL1PUTDqZuYDvzL99Ph/Oc1rIhG0
-         ySHD3yZe2dpjLA55f+ElzAXgMxYQwGbXCeTSgvIs=
+        b=mZ1+9WPUwzCNTX3wU3hMC/s7oIfzkA8zvvkBNs3d6IONzNffHuIAavK6s3q/ePPPp
+         KVGgDno9Ufy+eMfh+JzLcPXtwaQUUwv90zutt9wQeffAV8h/gWXRyrsF1y/DmcyHFn
+         TNOdplM7ziGGCZre/TF2FsdXtwueNyt1FfSplwVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/185] PM / devfreq: passive: Use non-devm notifiers
-Date:   Thu,  3 Oct 2019 17:53:01 +0200
-Message-Id: <20191003154502.005623347@linuxfoundation.org>
+Subject: [PATCH 4.14 105/185] media: cec-notifier: clear cec_adap in cec_notifier_unregister
+Date:   Thu,  3 Oct 2019 17:53:03 +0200
+Message-Id: <20191003154502.646253169@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,67 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
+[ Upstream commit 14d5511691e5290103bc480998bc322e68f139d4 ]
 
-The devfreq passive governor registers and unregisters devfreq
-transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
+If cec_notifier_cec_adap_unregister() is called before
+cec_unregister_adapter() then everything is OK (and this is the
+case today). But if it is the other way around, then
+cec_notifier_unregister() is called first, and that doesn't
+set n->cec_adap to NULL.
 
-If devfreq itself is registered with devm then a warning is triggered on
-rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
+So if e.g. cec_notifier_set_phys_addr() is called after
+cec_notifier_unregister() but before cec_unregister_adapter()
+then n->cec_adap points to an unregistered and likely deleted
+cec adapter. So just set n->cec_adap->notifier and n->cec_adap
+to NULL for rubustness.
 
-	devm_devfreq_unregister_notifier+0x30/0x40
-	devfreq_passive_event_handler+0x4c/0x88
-	devfreq_remove_device.part.8+0x6c/0x9c
-	devm_devfreq_dev_release+0x18/0x20
-	release_nodes+0x1b0/0x220
-	devres_release_all+0x78/0x84
-	device_release_driver_internal+0x100/0x1c0
-	driver_detach+0x4c/0x90
-	bus_remove_driver+0x7c/0xd0
-	driver_unregister+0x2c/0x58
-	platform_driver_unregister+0x10/0x18
-	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
+Eventually cec_notifier_unregister will disappear and this will
+be simplified substantially.
 
-This happens because devres_release_all will first remove all the nodes
-into a separate todo list so the nested devres_release from
-devm_devfreq_unregister_notifier won't find anything.
-
-Fix the warning by calling the non-devm APIS for frequency notification.
-Using devm wrappers is not actually useful for a governor anyway: it
-relies on the devfreq core to correctly match the GOV_START/GOV_STOP
-notifications.
-
-Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/cec/cec-notifier.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 673ad8cc9a1d0..4222d3c1efb98 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -168,12 +168,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 			p_data->this = devfreq;
- 
- 		nb->notifier_call = devfreq_passive_notifier_call;
--		ret = devm_devfreq_register_notifier(dev, parent, nb,
-+		ret = devfreq_register_notifier(parent, nb,
- 					DEVFREQ_TRANSITION_NOTIFIER);
- 		break;
- 	case DEVFREQ_GOV_STOP:
--		devm_devfreq_unregister_notifier(dev, parent, nb,
--					DEVFREQ_TRANSITION_NOTIFIER);
-+		WARN_ON(devfreq_unregister_notifier(parent, nb,
-+					DEVFREQ_TRANSITION_NOTIFIER));
- 		break;
- 	default:
- 		break;
+diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
+index 08b619d0ea1ef..cd04499df4892 100644
+--- a/drivers/media/cec/cec-notifier.c
++++ b/drivers/media/cec/cec-notifier.c
+@@ -130,6 +130,8 @@ void cec_notifier_unregister(struct cec_notifier *n)
+ {
+ 	mutex_lock(&n->lock);
+ 	n->callback = NULL;
++	n->cec_adap->notifier = NULL;
++	n->cec_adap = NULL;
+ 	mutex_unlock(&n->lock);
+ 	cec_notifier_put(n);
+ }
 -- 
 2.20.1
 
