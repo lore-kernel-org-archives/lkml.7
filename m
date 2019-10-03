@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB629C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5B8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3EB2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230022070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121719;
-	bh=apEfD4q9zyhxqB3xsHAa2NQ+UoWoYJIDYz+hdQ4OCN4=;
+	s=default; t=1570121726;
+	bh=RgbKOuX3h2QbdzinijI7/wH56GttneKB9fd77dI5Lzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YaUPTuY9lKSbRUgWoT9R1mkx3KE25j+wcVt/lUWGj8rhHrKcZNu1FpLLoZ/SRfKiT
-	 2s7sRt+xcdF5+DnMjWEhMoXzO38wDJi1nWKJR4oiSjPOiul9Io0VY6k3eGeOq02qf6
-	 kHyhEScLPcVL0CLfcMoJ5YFNPxCxKZKMMX6dKi9Y=
+	b=bZ1iH+Mtg/Jh6WEOE/7C4Esp6CaqITtC5ywo0o2kqNWE5XfTI+3nHZ4d9cGr2fckN
+	 BqmlwP6PZwpab2skPFVzDYfazJ7bYVxtiBYKQnYe1+Svwel2a5UF9QndvH558Ky6G4
+	 eK3q0qHk0x8vgLiXpncaWNDYgal8EOGPgbqbFJBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391437AbfJCQzS (ORCPT
+        id S2392964AbfJCQzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40218 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405726AbfJCQwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:30 -0400
+        id S2406166AbfJCQwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14562070B;
-        Thu,  3 Oct 2019 16:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1BD20867;
+        Thu,  3 Oct 2019 16:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121550;
-        bh=apEfD4q9zyhxqB3xsHAa2NQ+UoWoYJIDYz+hdQ4OCN4=;
+        s=default; t=1570121542;
+        bh=RgbKOuX3h2QbdzinijI7/wH56GttneKB9fd77dI5Lzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QICHaWrEgNBa2ev5gmMicvrzGHqQ3CmzQaegkeXvF7B5J/0QxvtkEICXcevRWFAhT
-         ZF4jEQtDqEgeBNrpnLNJ8BfEEzWM6zeoC39sNAWxp4F7LmR/waaOuUcW7lk3LiRBWt
-         lnOqNnrZI4/gCBDDA4ItJcg8kgVG3Lp4A4tdUJV4=
+        b=TVA+l9s4RSH8n657SnpWgp5roOZC1YyFZPdlhtBqDL4rKlwqxcdTDjXbcbGudcA0j
+         S8SGUnJi5Gj11A+E+y0hpPz9WbnNWVi5Yw2l1ZIayisnrGwedo158tUpqnHemhFlv9
+         ykZSDEGqPIwbttFnh5EmNEqHQ6FJ6jInM/U+fEXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.3 320/344] md/raid6: Set R5_ReadError when there is read failure on parity disk
-Date:   Thu,  3 Oct 2019 17:54:45 +0200
-Message-Id: <20191003154610.601867235@linuxfoundation.org>
+        stable@vger.kernel.org, Benjamin Coddington <bcodding@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.3 318/344] SUNRPC: Fix buffer handling of GSS MIC without slack
+Date:   Thu,  3 Oct 2019 17:54:43 +0200
+Message-Id: <20191003154610.440553935@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,46 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Ni <xni@redhat.com>
+From: Benjamin Coddington <bcodding@redhat.com>
 
-commit 143f6e733b73051cd22dcb80951c6c929da413ce upstream.
+commit 5f1bc39979d868a0358c683864bec3fc8395440b upstream.
 
-7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in
-RAID6.") avoids rereading P when it can be computed from other members.
-However, this misses the chance to re-write the right data to P. This
-patch sets R5_ReadError if the re-read fails.
+The GSS Message Integrity Check data for krb5i may lie partially in the XDR
+reply buffer's pages and tail.  If so, we try to copy the entire MIC into
+free space in the tail.  But as the estimations of the slack space required
+for authentication and verification have improved there may be less free
+space in the tail to complete this copy -- see commit 2c94b8eca1a2
+("SUNRPC: Use au_rslack when computing reply buffer size").  In fact, there
+may only be room in the tail for a single copy of the MIC, and not part of
+the MIC and then another complete copy.
 
-Also, when re-read is skipped, we also missed the chance to reset
-rdev->read_errors to 0. It can fail the disk when there are many read
-errors on P member disk (other disks don't have read error)
+The real world failure reported is that `ls` of a directory on NFS may
+sometimes return -EIO, which can be traced back to xdr_buf_read_netobj()
+failing to find available free space in the tail to copy the MIC.
 
-V2: upper layer read request don't read parity/Q data. So there is no
-need to consider such situation.
+Fix this by checking for the case of the MIC crossing the boundaries of
+head, pages, and tail. If so, shift the buffer until the MIC is contained
+completely within the pages or tail.  This allows the remainder of the
+function to create a sub buffer that directly address the complete MIC.
 
-This is Reported-by: kbuild test robot <lkp@intel.com>
-
-Fixes: 7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in RAID6.")
-Cc: <stable@vger.kernel.org> #4.4+
-Signed-off-by: Xiao Ni <xni@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Cc: stable@vger.kernel.org # v5.1
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/sunrpc/xdr.c |   27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2559,7 +2559,9 @@ static void raid5_end_read_request(struc
- 		    && !test_bit(R5_ReadNoMerge, &sh->dev[i].flags))
- 			retry = 1;
- 		if (retry)
--			if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
-+			if (sh->qd_idx >= 0 && sh->pd_idx == i)
-+				set_bit(R5_ReadError, &sh->dev[i].flags);
-+			else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
- 				set_bit(R5_ReadError, &sh->dev[i].flags);
- 				clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
- 			} else
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1237,16 +1237,29 @@ xdr_encode_word(struct xdr_buf *buf, uns
+ EXPORT_SYMBOL_GPL(xdr_encode_word);
+ 
+ /* If the netobj starting offset bytes from the start of xdr_buf is contained
+- * entirely in the head or the tail, set object to point to it; otherwise
+- * try to find space for it at the end of the tail, copy it there, and
+- * set obj to point to it. */
++ * entirely in the head, pages, or tail, set object to point to it; otherwise
++ * shift the buffer until it is contained entirely within the pages or tail.
++ */
+ int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, unsigned int offset)
+ {
+ 	struct xdr_buf subbuf;
++	unsigned int boundary;
+ 
+ 	if (xdr_decode_word(buf, offset, &obj->len))
+ 		return -EFAULT;
+-	if (xdr_buf_subsegment(buf, &subbuf, offset + 4, obj->len))
++	offset += 4;
++
++	/* Is the obj partially in the head? */
++	boundary = buf->head[0].iov_len;
++	if (offset < boundary && (offset + obj->len) > boundary)
++		xdr_shift_buf(buf, boundary - offset);
++
++	/* Is the obj partially in the pages? */
++	boundary += buf->page_len;
++	if (offset < boundary && (offset + obj->len) > boundary)
++		xdr_shrink_pagelen(buf, boundary - offset);
++
++	if (xdr_buf_subsegment(buf, &subbuf, offset, obj->len))
+ 		return -EFAULT;
+ 
+ 	/* Is the obj contained entirely in the head? */
+@@ -1258,11 +1271,7 @@ int xdr_buf_read_netobj(struct xdr_buf *
+ 	if (subbuf.tail[0].iov_len == obj->len)
+ 		return 0;
+ 
+-	/* use end of tail as storage for obj:
+-	 * (We don't copy to the beginning because then we'd have
+-	 * to worry about doing a potentially overlapping copy.
+-	 * This assumes the object is at most half the length of the
+-	 * tail.) */
++	/* Find a contiguous area in @buf to hold all of @obj */
+ 	if (obj->len > buf->buflen - buf->len)
+ 		return -ENOMEM;
+ 	if (buf->tail[0].iov_len != 0)
 
 
