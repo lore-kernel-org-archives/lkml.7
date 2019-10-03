@@ -2,51 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119D3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8398C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D322820865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E2920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119216;
-	bh=yCZVOt1J1tDZ3vFmgpz5V6belzV7vZO46xYbyaVkHRA=;
+	s=default; t=1570119219;
+	bh=V+EsCjQI6pwEz0xG635aQChwJvmLDUEbk1VmxR03NkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwOZoxENKkMH0jAxU+QmEUz/vuimS7ARIqocwmQIV4CYEI6FWuh1WMnxvvtoQonKz
-	 Dx8pRZqwhP7SF19gAqWpgJcIw8ug2wb4kW/5//AWH44vQ4ScJViWAliZpm2R+J/tQE
-	 MKin8fi1QNd+ywpyuyHavLJ8wE9yNdoQ+A4NRuFw=
+	b=dvL9MpMeTqCbMD2YSKL8ObMIQyEWHRz0t+6wxlf3v9WRwrCLiLVAvG0HOK9LsZz7/
+	 FNtwAVTsuMYhj9pQjBrWyKXucek7Jdfy8EXF1UOQ1q8efawlNIM3dOu3h5twmKNg+U
+	 M+fqpu5gezbHCBRIf+1FqWJe3fOUxZ9Aj4uHEJmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387517AbfJCQNf (ORCPT
+        id S2388404AbfJCQNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387482AbfJCQN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:27 -0400
+        id S1732654AbfJCQNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1851A21783;
-        Thu,  3 Oct 2019 16:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A20E20865;
+        Thu,  3 Oct 2019 16:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119206;
-        bh=yCZVOt1J1tDZ3vFmgpz5V6belzV7vZO46xYbyaVkHRA=;
+        s=default; t=1570119214;
+        bh=V+EsCjQI6pwEz0xG635aQChwJvmLDUEbk1VmxR03NkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iPGskqGMEqjioIK/Hwmjz2bbgejVQ6oowC/QAMp04iEOGU4CESPWRObYE8s9JDM5W
-         RZPRe6dioShQyOLMnlEBY/pRWj/AbebIqUv4pdEK8FJzDjZZnImzabDkWVQOz/wiLW
-         YIRk9yYyaSwBlNYwTe4i7MvzkqpF1w4lTHWJOkkg=
+        b=czupJUYwRLBam9IrxvAz+Mju5mbIj/t5NHwsj137ixeCT5e9rvDg3jj/4jBZxgIh8
+         qe+3viqUM15mNGz0TdX+1LH33l7zHYW8sYlS9p5x31UbSw6ZBZMEppkfJeJmWUQxHU
+         b7yiKVkePTV7l0plNnM6UN213UE5NAG8Ium0RtuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 4.14 163/185] gfs2: clear buf_in_tr when ending a transaction in sweep_bh_for_rgrps
-Date:   Thu,  3 Oct 2019 17:54:01 +0200
-Message-Id: <20191003154515.859562740@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 129/185] mmc: sdhci: Fix incorrect switch to HS mode
+Date:   Thu,  3 Oct 2019 17:53:27 +0200
+Message-Id: <20191003154506.861318477@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,39 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Al Cooper <alcooperx@gmail.com>
 
-commit f0b444b349e33ae0d3dd93e25ca365482a5d17d4 upstream.
+[ Upstream commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37 ]
 
-In function sweep_bh_for_rgrps, which is a helper for punch_hole,
-it uses variable buf_in_tr to keep track of when it needs to commit
-pending block frees on a partial delete that overflows the
-transaction created for the delete. The problem is that the
-variable was initialized at the start of function sweep_bh_for_rgrps
-but it was never cleared, even when starting a new transaction.
+When switching from any MMC speed mode that requires 1.8v
+(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+ends up configured for SDR12 with a 50MHz clock which is an illegal
+mode.
 
-This patch reinitializes the variable when the transaction is
-ended, so the next transaction starts out with it cleared.
+This happens because the SDHCI_CTRL_VDD_180 bit in the
+SDHCI_HOST_CONTROL2 register is left set and when this bit is
+set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+because there is no UHS mode being set.
 
-Fixes: d552a2b9b33e ("GFS2: Non-recursive delete")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The fix is to change sdhci_set_uhs_signaling() to set the
+SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+any switch to HS mode.
 
+This was found on a new eMMC controller that does strict checking
+of the speed mode and the corresponding clock rate. It caused the
+switch to HS400 mode to fail because part of the sequence to switch
+to HS400 requires a switch from HS200 to HS before going to HS400.
+
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -1078,6 +1078,7 @@ out_unlock:
- 			gfs2_dinode_out(ip, dibh->b_data);
- 			up_write(&ip->i_rw_mutex);
- 			gfs2_trans_end(sdp);
-+			buf_in_tr = false;
- 		}
- 		gfs2_glock_dq_uninit(rd_gh);
- 		cond_resched();
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 9540fda7fc6ba..3741d4c846e5e 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1635,7 +1635,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_SD_HS ||
++		 timing == MMC_TIMING_MMC_HS ||
++		 timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+-- 
+2.20.1
+
 
 
