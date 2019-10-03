@@ -2,205 +2,89 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055E5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0708CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E3F207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF41215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570137771;
+	bh=JJ9FS++eBppqhbZT1HGxDRL+nn8NI+K9G9rSpyfnuFI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dl4w/5XoKXZCkooJVeAOm3sHck1QvMQ0RabvQg5ic/qMYt8k9rgS1IHGceteOTNBS
+	 0ObSQq5qSphgjqFTvafyr3zS4RpnDgnj9svGg+1duZHsWr6OuAB6yeAzJB0sYynE6b
+	 UQHNTfviu5MexmfhMsbp5QPW2mNyU8yzIyscQocM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733199AbfJCVUD convert rfc822-to-8bit (ORCPT
+        id S1732325AbfJCVWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:20:03 -0400
-Received: from mailoutvs57.siol.net ([185.57.226.248]:38936 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727789AbfJCVUD (ORCPT
+        Thu, 3 Oct 2019 17:22:51 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39081 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfJCVWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:20:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 3580F524692;
-        Thu,  3 Oct 2019 23:19:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id V4LW_LeUUw9g; Thu,  3 Oct 2019 23:19:58 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 9C5E452469A;
-        Thu,  3 Oct 2019 23:19:58 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id CB941524698;
-        Thu,  3 Oct 2019 23:19:57 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] media: cedrus: Fix H264 default reference index count
-Date:   Thu, 03 Oct 2019 23:19:57 +0200
-Message-ID: <1700094.IKIOnZr010@jernej-laptop>
-In-Reply-To: <20191003205857.GA3927@aptenodytes>
-References: <20191002193553.1633467-1-jernej.skrabec@siol.net> <3413755.LxPTGpI9pz@jernej-laptop> <20191003205857.GA3927@aptenodytes>
+        Thu, 3 Oct 2019 17:22:50 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y3so4333526ljj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mMXUawk779Rg0n7VhPYVUvheDt/wHtDxTM0M49SF5fA=;
+        b=aZ7lBYY4rKVPH8dxmUG7mt7rDQdVdok66Rw4NZYoRg3NtYbxPIacz5XYEdobLqtBuO
+         8VbzJjwcH/DnujSAq6CeR6sCPivqUr6/V+s/zHZCF9D41Mo2p3OxjjrfIrWW1csW/Zp4
+         z2jSBIEgN8eAvUq7rq+racF2NZwVxV228QsXo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mMXUawk779Rg0n7VhPYVUvheDt/wHtDxTM0M49SF5fA=;
+        b=VUdQCN27AmPpX0cgsE8nlCKofmiWXARohm+Ca0ALczxYsUjw9+Vs5tNbszmhUisoYB
+         5oqroZocnLF4j9/Ko2P3zFuXXdQZYWOYVV/eNLbEKf0wRfuCP+aIgCRH7TkoN7Y2y/JH
+         leoZ9tScTCkkMUfbYlvGzmuJXrmjZUs239+ZRxDM+YDe0BbptezGz5HR2ZRwhbYdKv/m
+         5O9UbFay41YLUaEPEGhhSz2G7AjqbNMQbtiU455gximOs2JUgzD807qQLJ6FkXotaD+2
+         +MYn7HtJla2VB505eoUaYXFqP66WutbRM2nc6Z+ncFgv4Cmwmnf/fffJyVyvWIGIYtiP
+         pNCQ==
+X-Gm-Message-State: APjAAAWXGolkUNfPeQoqNsTya0PJehqXqXvDKz0BycifsgYY3/PGS5kF
+        5yxA8dopA6vlSNDPzxCan+PhT8/qKfY=
+X-Google-Smtp-Source: APXvYqzIPqdIWPMGyQ8SNzzW94OLHAWhVgnaOLhm8bMconK2SuQcw6u7HGBfpKRkQ1+tciMuoXYt3w==
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr7249659lje.193.1570137768604;
+        Thu, 03 Oct 2019 14:22:48 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id l15sm38013ljj.34.2019.10.03.14.22.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 14:22:47 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id u3so2903998lfl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:22:47 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr6965481lfp.134.1570137766481;
+ Thu, 03 Oct 2019 14:22:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+References: <6a26185f-f188-0049-b153-1541d7a514b0@redhat.com>
+In-Reply-To: <6a26185f-f188-0049-b153-1541d7a514b0@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Oct 2019 14:22:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whf=vVVrmKb1rjfp1Y_57CRJjERsbYZ7+hnAWggF99zNw@mail.gmail.com>
+Message-ID: <CAHk-=whf=vVVrmKb1rjfp1Y_57CRJjERsbYZ7+hnAWggF99zNw@mail.gmail.com>
+Subject: Re: [PATCH] vfs: Fix EOVERFLOW testing in put_compat_statfs64
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 03. oktober 2019 ob 22:58:57 CEST je Paul Kocialkowski 
-napisal(a):
-> Hi,
-> 
-> On Thu 03 Oct 19, 22:44, Jernej Škrabec wrote:
-> > Dne četrtek, 03. oktober 2019 ob 22:28:46 CEST je Paul Kocialkowski
-> > 
-> > napisal(a):
-> > > Hi,
-> > > 
-> > > On Thu 03 Oct 19, 07:16, Jernej Škrabec wrote:
-> > > > Dne četrtek, 03. oktober 2019 ob 00:06:50 CEST je Paul Kocialkowski
-> > > > 
-> > > > napisal(a):
-> > > > > Hi,
-> > > > > 
-> > > > > On Wed 02 Oct 19, 21:35, Jernej Skrabec wrote:
-> > > > > > Reference index count in VE_H264_PPS should come from PPS control.
-> > > > > > However, this is not really important, because reference index
-> > > > > > count
-> > > > > > is
-> > > > > > in our case always overridden by that from slice header.
-> > > > > 
-> > > > > Thanks for the fixup!
-> > > > > 
-> > > > > Our libva userspace and v4l2-request testing tool currently don't
-> > > > > provide
-> > > > > this, but I have a pending merge request adding it for the hantro so
-> > > > > it's
-> > > > > good to go.
-> > > > 
-> > > > Actually, I think this is just cosmetic and it would work even if it
-> > > > would
-> > > > be always 0. We always override this number in SHS2 register with
-> > > > VE_H264_SHS2_NUM_REF_IDX_ACTIVE_OVRD flag and recently there was a
-> > > > patch
-> > > > merged to clarify that value in slice parameters should be the one
-> > > > that's
-> > > > set on default value if override flag is not set in bitstream:
-> > > > https://git.linuxtv.org/media_tree.git/commit/?
-> > > > id=187ef7c5c78153acdce8c8714e5918b1018c710b
-> > > > 
-> > > > Well, we could always compare default and value in slice parameters,
-> > > > but I
-> > > > really don't see the benefit of doing that extra work.
-> > > 
-> > > Thanks for the detailed explanation! So I just realized that for HEVC, I
-> > > didn't even include the default value in PPS and only went for the
-> > > per-slice value. The HEVC hardware block apparently only needs the
-> > > fields
-> > > once at slice level, and by looking at the spec, only one of the two set
-> > > of
-> > > fields will be used.
-> > > 
-> > > So perhaps we could do the same for H.264 and only have the set of
-> > > fields
-> > > once in the slice params, so that both codecs are consistent. Userspace
-> > > can
-> > > just check the flag to know whether it should put the PPS default or
-> > > slice-specific value in the slice-specific control.
-> > > 
-> > > What do you think?
-> > 
-> > I think that there would be less confusion if only value in slice params
-> > would exists. But since Philipp rather made clarification in
-> > documentation, maybe he sees benefit having both values?
-> 
-> Actually I just caught up with the discussion from thread:
-> media: uapi: h264: Add num_ref_idx_active_override_flag
-> 
-> which explains that we need to pass the default fields for hardware that
-> parses the slice header itself and we need the non-default fields and flag
-> for other cases.
-> 
-> To cover the case of hardware that does slice header parsing, I guess it
-> would also work to use the slice-specific values in place of the pps
-> default values in the hardware register for that. But it feels quite
-> confusing and a lot less straightforward than having all the fields and the
-> override flag exposed.
+On Wed, Oct 2, 2019 at 2:17 PM Eric Sandeen <sandeen@redhat.com> wrote:
+>
+> As a result, 32-bit userspace gets -EOVERFLOW for i.e. large file
+> counts even with -D_FILE_OFFSET_BITS=64 set.
 
-I wasn't aware of that patch and related discussion. Ok, so it make sense to 
-have both values. However, does it make sense to use default values in Cedrus?
+Applied.
 
-> 
-> So I think I should fix HEVC support accordingly, just in case the same
-> situation arises for HEVC.
-
-Seems reasonable. Does that mean there will be another revision of HEVC 
-patches?  If so, I think slice_segment_addr should also be included in slice 
-params, so multi-slice frames can be supported at later time.
-
-Best regards,
-Jernej 
-
-> 
-> Cheers,
-> 
-> Paul
-> 
-> > Best regards,
-> > Jernej
-> > 
-> > > Cheers,
-> > > 
-> > > Paul
-> > > 
-> > > > Best regards,
-> > > > Jernej
-> > > > 
-> > > > > Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > > 
-> > > > > Cheers,
-> > > > > 
-> > > > > Paul
-> > > > > 
-> > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > ---
-> > > > > > 
-> > > > > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 8 ++------
-> > > > > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
-> > > > > > bd848146eada..4a0e69855c7f 100644
-> > > > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > > @@ -364,12 +364,8 @@ static void cedrus_set_params(struct
-> > > > > > cedrus_ctx
-> > > > > > *ctx,
-> > > > > > 
-> > > > > >  	// picture parameters
-> > > > > >  	reg = 0;
-> > > > > > 
-> > > > > > -	/*
-> > > > > > -	 * FIXME: the kernel headers are allowing the default value to
-> > > > > > -	 * be passed, but the libva doesn't give us that.
-> > > > > > -	 */
-> > > > > > -	reg |= (slice->num_ref_idx_l0_active_minus1 & 0x1f) << 10;
-> > > > > > -	reg |= (slice->num_ref_idx_l1_active_minus1 & 0x1f) << 5;
-> > > > > > +	reg |= (pps->num_ref_idx_l0_default_active_minus1 & 0x1f) << 10;
-> > > > > > +	reg |= (pps->num_ref_idx_l1_default_active_minus1 & 0x1f) << 5;
-> > > > > > 
-> > > > > >  	reg |= (pps->weighted_bipred_idc & 0x3) << 2;
-> > > > > >  	if (pps->flags & V4L2_H264_PPS_FLAG_ENTROPY_CODING_MODE)
-> > > > > >  	
-> > > > > >  		reg |= VE_H264_PPS_ENTROPY_CODING_MODE;
-
-
-
-
+           Linus
