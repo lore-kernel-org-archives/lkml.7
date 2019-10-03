@@ -2,144 +2,170 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE52C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1524ECE58B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FB020865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EA720830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570123704;
+	bh=tX/U8aujwjTxyRxka83R53J89nL+5YHZAjZBtNZPeIA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pqTcoEwMpTxoDPuPfm5EkAPfhD/kYXEtI04NLMqZJxPHCYDfPHjewdAaLxgmDH49N
+	 3IHNBpslaHD1rjseYH6wteLfHvk8RadvYA+p0EPcDB7qhcQBOGTABPNJy/neFyzLF5
+	 YjMWs4y1cTyrvltBYV6CAFwF5YoRgsQcF2hWPQL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfJCR2U (ORCPT
+        id S2388455AbfJCQNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:28:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:51898 "EHLO foss.arm.com"
+        Thu, 3 Oct 2019 12:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbfJCR2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:28:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9425F1000;
-        Thu,  3 Oct 2019 10:21:59 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 180473F739;
-        Thu,  3 Oct 2019 10:21:57 -0700 (PDT)
-Subject: Re: [PATCH RFC 0/4] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "baicar@os.amperecomputing.com" <baicar@os.amperecomputing.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>
-References: <Shiju Jose> <20190812101149.26036-1-shiju.jose@huawei.com>
- <72f44e4d-a20b-df1c-ddfe-55219e0ed429@arm.com>
- <86258A5CC0A3704780874CF6004BA8A6584C6BA0@lhreml523-mbx.china.huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <baa9760b-248e-e90f-68ed-1f94e128ef29@arm.com>
-Date:   Thu, 3 Oct 2019 18:21:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1732701AbfJCQNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0FA420865;
+        Thu,  3 Oct 2019 16:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119228;
+        bh=tX/U8aujwjTxyRxka83R53J89nL+5YHZAjZBtNZPeIA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gIiuUvFwYP5FysDvbFus3RlqccsmidMdKnypAV3P215QjfimtZGcVbYPnQVBqhGyp
+         nIBRe7lXAu7Lh7XUt5MBiexhN3+T+u64RP0ndQKjMWu2oyyWQjfBDCkaHmaQDEYTAI
+         q23KezIlG2sBK1j4dUNJARD4TzZLiJg0lwpd9A0I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: [PATCH 4.14 174/185] /dev/mem: Bail out upon SIGKILL.
+Date:   Thu,  3 Oct 2019 17:54:12 +0200
+Message-Id: <20191003154520.113837237@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <86258A5CC0A3704780874CF6004BA8A6584C6BA0@lhreml523-mbx.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shiju,
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-On 22/08/2019 17:56, Shiju Jose wrote:
-> James Morse wrote:
->> On 12/08/2019 11:11, Shiju Jose wrote:
->>> Presently kernel does not support reporting the vendor specific HW
->>> errors, in the non-standard format, to the vendor drivers for the recovery.
->>
->> 'non standard' here is probably a little jarring to the casual reader. You're
->> referring to the UEFI spec's "N.2.3 Non-standard Section Body", which refers to
->> any section type published somewhere other than the UEFI spec.
+commit 8619e5bdeee8b2c685d686281f2d2a6017c4bc15 upstream.
 
->>> This patch set add this support and also move the existing handler
->>> functions for the standard errors to the new callback method.
->>
->> Could you give an example of where this would be useful? You're adding an API
->> with no caller to justify its existence.
+syzbot found that a thread can stall for minutes inside read_mem() or
+write_mem() after that thread was killed by SIGKILL [1]. Reading from
+iomem areas of /dev/mem can be slow, depending on the hardware.
+While reading 2GB at one read() is legal, delaying termination of killed
+thread for minutes is bad. Thus, allow reading/writing /dev/mem and
+/dev/kmem to be preemptible and killable.
 
-> One such example is handling the local errors occurred in a device controller, such as PCIe.
+  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
 
-Could we have the example in the form of patches? (sorry, I wasn't clear)
+Theoretically, reading/writing /dev/mem and /dev/kmem can become
+"interruptible". But this patch chose "killable". Future patch will make
+them "interruptible" so that we can revert to "killable" if some program
+regressed.
 
-I don't think its realistic that a PCIe device driver would want to know about errors on
-other devices in the system. (SAS-HBA meet the GPU).
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
-PCIe's has AER for handling errors that (may have) occurred on a PCIe link, and this has
-its own CPER records.
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Link: https://lore.kernel.org/r/1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+---
+ drivers/char/mem.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
->> GUIDs should only belong to one driver.
-
-> UEFI spec's N.2.3 Non-standard Section Body mentioned,  "The type (e.g. format) of a
-> non-standard section is identified by the GUID populated in the Section Descriptor's
-> Section Type field." 
-> There is a possibility to define common non-standard error section format
-
-I agree the GUID describes the format of the error record,
-
-
-> which will
-> be used for more than one driver if the error data to be reported is in the same format.
-> Then can the same GUID belong to multiple drivers?
-
-... but here we disagree.
-
-CPER has a component/block-diagram view of the system. It describes a Memory error or an
-error with a PCIe endpoint. An error record affects one component.
-
-If you wanted to describe an error caused by a failed transaction between a PCIe device
-and memory, you would need two of these records, and its guesswork as to what happened
-between them.
-
-But the PCIe device has no business poking around in the memory error. Even if it did APEI
-would be the wrong place to do this as its not the only caller of memory_failure().
-
-
->>> Also the CCIX RAS patches could be move to the proposed callback method.
->>
->> Presumably for any vendor-specific stuff?
-
-> This information was related to the proposal to replace the  number of if(guid_equal(...)) else
-> if(guid_equal(...)) checks in the ghes_do_proc() for the existing UEFI spec defined error 
-> sections(such as PCIe,  Memory, ARM HW error)
-
-'the standard ones'
-
-> by registering the corresponding handler functions to the proposed notification method.
-
-I really don't like this. Registering a handler for 'memory corruption' would require
-walking a list of dynamically allocated pointers. Can there be more than one entry? Can
-random drivers block memory_failure() while they allocate more memory to send packets over
-USB? What if it loops?
-
-For the standard error sources the kernel needs to run 'the' handler as quickly as
-possible, with a minimum of code/memory-access in the meantime. It already takes too long.
-
-
-Thanks,
-
-James
-
-
-> The same apply to the CCIX error sections and any other
-> error sections defined by the UEFI spec in the future.  
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -97,6 +97,13 @@ void __weak unxlate_dev_mem_ptr(phys_add
+ }
+ #endif
+ 
++static inline bool should_stop_iteration(void)
++{
++	if (need_resched())
++		cond_resched();
++	return fatal_signal_pending(current);
++}
++
+ /*
+  * This funcion reads the *physical* memory. The f_pos points directly to the
+  * memory location.
+@@ -175,6 +182,8 @@ static ssize_t read_mem(struct file *fil
+ 		p += sz;
+ 		count -= sz;
+ 		read += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 	kfree(bounce);
+ 
+@@ -251,6 +260,8 @@ static ssize_t write_mem(struct file *fi
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -464,6 +475,10 @@ static ssize_t read_kmem(struct file *fi
+ 			read += sz;
+ 			low_count -= sz;
+ 			count -= sz;
++			if (should_stop_iteration()) {
++				count = 0;
++				break;
++			}
+ 		}
+ 	}
+ 
+@@ -488,6 +503,8 @@ static ssize_t read_kmem(struct file *fi
+ 			buf += sz;
+ 			read += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
+@@ -540,6 +557,8 @@ static ssize_t do_write_kmem(unsigned lo
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -591,6 +610,8 @@ static ssize_t write_kmem(struct file *f
+ 			buf += sz;
+ 			virtr += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
 
 
