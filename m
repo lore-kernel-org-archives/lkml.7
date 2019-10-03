@@ -2,53 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCE8C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC33BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CD420673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B9920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122394;
-	bh=bJcao7SPBQMuapxEuG3Dz/UmDhKG/EGCDtv2S5A7S9s=;
+	s=default; t=1570122397;
+	bh=WXzNGseD5jr5zANbkRHH1Q37v3XRHzN4zPvYLkcjA6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fglPrA7fC1yf51URnKnPXPLfhLN/83WzqUHRJ4IkZYQ80oRCHVjxrcFezEj2g1vjm
-	 Fc7BPAoav1BIY4DWLOdlxJijXt2BKgjBP/zLKaJJPafaYmBxrtjDNaUBjMpy7dHP1O
-	 04K/UoToqzPA+o9sI7SIyaCfYdfBz8ZidxSj/PlQ=
+	b=fXncUNU4l57wJvxya7rSwXxyRTcufgF20c8I0LStgN3izgZALXhqyU4oWv66SR/GV
+	 3KCZT16w7LY3ki+sAcIkgVmlOHSLaEO80tsy/wo94PSKhVn4KgHRkxwI5AkkCbMD6R
+	 9STQzYYRrgB+8dLrtE6ylPqL6Ur/7ML7u5lV+Zqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404652AbfJCQiA (ORCPT
+        id S2392296AbfJCQh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392281AbfJCQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:56 -0400
+        id S2392264AbfJCQhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB5321783;
-        Thu,  3 Oct 2019 16:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5042133F;
+        Thu,  3 Oct 2019 16:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120675;
-        bh=bJcao7SPBQMuapxEuG3Dz/UmDhKG/EGCDtv2S5A7S9s=;
+        s=default; t=1570120672;
+        bh=WXzNGseD5jr5zANbkRHH1Q37v3XRHzN4zPvYLkcjA6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nnPjpilhh+lgrgozkawVBHgHmR9BeEkfbvioNpLfmYASomKZpz6UXL83Fo5LvdRJg
-         xrPH9pJB3zOSBnUWtq0Jb6oNmqX1hIf1ooQGmopwxEdZmCxDnMORXkadFlzDqrnnDY
-         3RFTvjZr0HifYCzckYlwnoUJy09kB58Vz4rZxNsE=
+        b=M+V+EZzmwlwZXzhqc+H/tXVg0LZqJ0/D2SyOSTrgTRu9FnedjOVUi+Z8h0pWP+s/L
+         5HyBn1JBpeCPFRrbz9o6mjziBn1Yk2prYyssMTgL6f0H+KnHaSzYZeUEDKjaUeXwgW
+         uGXwmheFp6t8ZfjefHLQoK3iotDDJaQ8qL4DHTcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        NeilBrown <neilb@suse.de>, Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 310/313] md/raid0: avoid RAID0 data corruption due to layout confusion.
-Date:   Thu,  3 Oct 2019 17:54:48 +0200
-Message-Id: <20191003154603.729871177@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.2 309/313] drm/amd/display: Restore backlight brightness after system resume
+Date:   Thu,  3 Oct 2019 17:54:47 +0200
+Message-Id: <20191003154603.632876506@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,140 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit c84a1372df929033cb1a0441fb57bd3932f39ac9 ]
+commit bb264220d9316f6bd7c1fd84b8da398c93912931 upstream.
 
-If the drives in a RAID0 are not all the same size, the array is
-divided into zones.
-The first zone covers all drives, to the size of the smallest.
-The second zone covers all drives larger than the smallest, up to
-the size of the second smallest - etc.
+Laptops with AMD APU doesn't restore display backlight brightness after
+system resume.
 
-A change in Linux 3.14 unintentionally changed the layout for the
-second and subsequent zones.  All the correct data is still stored, but
-each chunk may be assigned to a different device than in pre-3.14 kernels.
-This can lead to data corruption.
+This issue started when DC was introduced.
 
-It is not possible to determine what layout to use - it depends which
-kernel the data was written by.
-So we add a module parameter to allow the old (0) or new (1) layout to be
-specified, and refused to assemble an affected array if that parameter is
-not set.
+Let's use BL_CORE_SUSPENDRESUME so the backlight core calls
+update_status callback after system resume to restore the backlight
+level.
 
-Fixes: 20d0189b1012 ("block: Introduce new bio_split()")
-cc: stable@vger.kernel.org (3.14+)
-Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested on Dell Inspiron 3180 (Stoney Ridge) and Dell Latitude 5495
+(Raven Ridge).
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/raid0.c | 33 ++++++++++++++++++++++++++++++++-
- drivers/md/raid0.h | 14 ++++++++++++++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index bf5cf184a260b..297bbc0f41f05 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -19,6 +19,9 @@
- #include "raid0.h"
- #include "raid5.h"
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -1958,6 +1958,7 @@ static int amdgpu_dm_backlight_get_brigh
+ }
  
-+static int default_layout = 0;
-+module_param(default_layout, int, 0644);
-+
- #define UNSUPPORTED_MDDEV_FLAGS		\
- 	((1L << MD_HAS_JOURNAL) |	\
- 	 (1L << MD_JOURNAL_CLEAN) |	\
-@@ -139,6 +142,19 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
- 	}
- 	pr_debug("md/raid0:%s: FINAL %d zones\n",
- 		 mdname(mddev), conf->nr_strip_zones);
-+
-+	if (conf->nr_strip_zones == 1) {
-+		conf->layout = RAID0_ORIG_LAYOUT;
-+	} else if (default_layout == RAID0_ORIG_LAYOUT ||
-+		   default_layout == RAID0_ALT_MULTIZONE_LAYOUT) {
-+		conf->layout = default_layout;
-+	} else {
-+		pr_err("md/raid0:%s: cannot assemble multi-zone RAID0 with default_layout setting\n",
-+		       mdname(mddev));
-+		pr_err("md/raid0: please set raid.default_layout to 1 or 2\n");
-+		err = -ENOTSUPP;
-+		goto abort;
-+	}
- 	/*
- 	 * now since we have the hard sector sizes, we can make sure
- 	 * chunk size is a multiple of that sector size
-@@ -547,10 +563,12 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
- 
- static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- {
-+	struct r0conf *conf = mddev->private;
- 	struct strip_zone *zone;
- 	struct md_rdev *tmp_dev;
- 	sector_t bio_sector;
- 	sector_t sector;
-+	sector_t orig_sector;
- 	unsigned chunk_sects;
- 	unsigned sectors;
- 
-@@ -584,8 +602,21 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		bio = split;
- 	}
- 
-+	orig_sector = sector;
- 	zone = find_zone(mddev->private, &sector);
--	tmp_dev = map_sector(mddev, zone, sector, &sector);
-+	switch (conf->layout) {
-+	case RAID0_ORIG_LAYOUT:
-+		tmp_dev = map_sector(mddev, zone, orig_sector, &sector);
-+		break;
-+	case RAID0_ALT_MULTIZONE_LAYOUT:
-+		tmp_dev = map_sector(mddev, zone, sector, &sector);
-+		break;
-+	default:
-+		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
-+		bio_io_error(bio);
-+		return true;
-+	}
-+
- 	bio_set_dev(bio, tmp_dev->bdev);
- 	bio->bi_iter.bi_sector = sector + zone->dev_start +
- 		tmp_dev->data_offset;
-diff --git a/drivers/md/raid0.h b/drivers/md/raid0.h
-index 540e65d92642d..3816e5477db1e 100644
---- a/drivers/md/raid0.h
-+++ b/drivers/md/raid0.h
-@@ -8,11 +8,25 @@ struct strip_zone {
- 	int	 nb_dev;	/* # of devices attached to the zone */
+ static const struct backlight_ops amdgpu_dm_backlight_ops = {
++	.options = BL_CORE_SUSPENDRESUME,
+ 	.get_brightness = amdgpu_dm_backlight_get_brightness,
+ 	.update_status	= amdgpu_dm_backlight_update_status,
  };
- 
-+/* Linux 3.14 (20d0189b101) made an unintended change to
-+ * the RAID0 layout for multi-zone arrays (where devices aren't all
-+ * the same size.
-+ * RAID0_ORIG_LAYOUT restores the original layout
-+ * RAID0_ALT_MULTIZONE_LAYOUT uses the altered layout
-+ * The layouts are identical when there is only one zone (all
-+ * devices the same size).
-+ */
-+
-+enum r0layout {
-+	RAID0_ORIG_LAYOUT = 1,
-+	RAID0_ALT_MULTIZONE_LAYOUT = 2,
-+};
- struct r0conf {
- 	struct strip_zone	*strip_zone;
- 	struct md_rdev		**devlist; /* lists of rdevs, pointed to
- 					    * by strip_zone->dev */
- 	int			nr_strip_zones;
-+	enum r0layout		layout;
- };
- 
- #endif
--- 
-2.20.1
-
 
 
