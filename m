@@ -2,173 +2,206 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54868C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F0FC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170CC207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8LL/5DS"
+	by mail.kernel.org (Postfix) with ESMTP id 1382F215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388841AbfJCUje (ORCPT
+        id S2389312AbfJCUjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:39:34 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43661 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729891AbfJCUjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:39:33 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c3so5493545qtv.10;
-        Thu, 03 Oct 2019 13:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c5v0Ayn3zo5649C9SEeg+lS3ZwQJtN55TT1dAsho3tE=;
-        b=L8LL/5DSNN7PcsbocdWR7gM/PGi+bHDR9Esq0SBUn9toL+v8n8ifL4Lf8et0uoWDyI
-         3M9R906KW/Wi1Ar5dgfuIOO0IYSxuhPgM5fpySrr2wBjdL1/JCRq5qVGfeZT0mtVuz64
-         a2PRVv2kZBH8wIiSrlq3EOatqpjKx35sSfGweMEGRAmtaFBYyI4y51Ym/ga31U7IJsCf
-         f/hts4rhe9KHpbOmNXe7uRwIQWO1J0eQ1GItj3JJ2DwvTEpYH1aiFNqoD2wGH3fgh37P
-         qJG6YMHQtx+0nMN7E906Nd8Lyn0EtsTGqbuM0Ci4VH3xnmE61CsG3JmpKoq/eyJu0gWU
-         QkWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c5v0Ayn3zo5649C9SEeg+lS3ZwQJtN55TT1dAsho3tE=;
-        b=XzAR6ucbaSlUEMhGUar/RAp1ZmNC393myVxlhcv7M8ANfWyyc55A3ZQ+mjKUrneJWD
-         xnJ0yZmWR3MYqju/lVqsbSLQMgtq5yp9tpC4njIMRnz1QMAgaw6YpZQj0IhMudprDY8g
-         biLk7UXeC2pl71T50H3CPGypC67v+VPQL5ygLkkA1vHW1n2BVnUSHaw2UoX6x9NhuudQ
-         Cu1dGSHinplyNul4U1di+wetLYGQN5TUgMRUUORIBisOVukffk0shryrHKBPXyQNxXo0
-         5tfy7umUWx0vVIcvRFNtLAZ2Nhl9mvHDsCrWFrNVwl+JLPT2IjZhDsJ75lkpH8nVKnvS
-         c9mA==
-X-Gm-Message-State: APjAAAXnG8KhAgrXfIF7GTKsNxrnnyRBBhSX75H8bc5swlzfzCs1KyWP
-        05/v/CNDQTcH4Iiylgq0wkGuxjBFNhkTwZIP7Nf6kcI1
-X-Google-Smtp-Source: APXvYqw7nFDvBQrLYt8LQT23ZuQZKHZ+C32m4Il/c3x3OBmEOFxjRaW+5Io1922Ypof0CQNJgVR+iiav+lPYu1K8new=
-X-Received: by 2002:ac8:4593:: with SMTP id l19mr12258563qtn.271.1570135171067;
- Thu, 03 Oct 2019 13:39:31 -0700 (PDT)
+        Thu, 3 Oct 2019 16:39:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24069 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729278AbfJCUjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:39:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 13:39:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="392078344"
+Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Oct 2019 13:39:47 -0700
+Date:   Thu, 3 Oct 2019 13:37:26 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+Message-ID: <20191003203726.GA14637@skuppusw-desk.amr.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+References: <abfb75fc-6f88-7117-b0d8-1a374ee99d3e@linux.intel.com>
+ <20191003190413.GA182793@google.com>
 MIME-Version: 1.0
-References: <1570121672-12172-1-git-send-email-zdai@linux.vnet.ibm.com>
- <CAKgT0Udz7vt5C=+6vpFPbys4sODAZtCjrkSvOdgP80rX7Ww+Ng@mail.gmail.com> <1570128658.1250.8.camel@oc5348122405>
-In-Reply-To: <1570128658.1250.8.camel@oc5348122405>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 3 Oct 2019 13:39:19 -0700
-Message-ID: <CAKgT0UcHvAQoChS1bkV8LsxaJcyRrTSPru+qsYXBsxHgr+aJmg@mail.gmail.com>
-Subject: Re: [v1] e1000e: EEH on e1000e adapter detects io perm failure can
- trigger crash
-To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        David Miller <davem@davemloft.net>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, zdai@us.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003190413.GA182793@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 11:51 AM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
->
-> On Thu, 2019-10-03 at 10:39 -0700, Alexander Duyck wrote:
-> > On Thu, Oct 3, 2019 at 9:59 AM David Dai <zdai@linux.vnet.ibm.com> wrote:
-> > >
-> > > We see the behavior when EEH e1000e adapter detects io permanent failure,
-> > > it will crash kernel with this stack:
-> > > EEH: Beginning: 'error_detected(permanent failure)'
-> > > EEH: PE#900000 (PCI 0115:90:00.1): Invoking e1000e->error_detected(permanent failure)
-> > > EEH: PE#900000 (PCI 0115:90:00.1): e1000e driver reports: 'disconnect'
-> > > EEH: PE#900000 (PCI 0115:90:00.0): Invoking e1000e->error_detected(permanent failure)
-> > > EEH: PE#900000 (PCI 0115:90:00.0): e1000e driver reports: 'disconnect'
-> > > EEH: Finished:'error_detected(permanent failure)'
-> > > Oops: Exception in kernel mode, sig: 5 [#1]
-> > > NIP [c0000000007b1be0] free_msi_irqs+0xa0/0x280
-> > >  LR [c0000000007b1bd0] free_msi_irqs+0x90/0x280
-> > > Call Trace:
-> > > [c0000004f491ba10] [c0000000007b1bd0] free_msi_irqs+0x90/0x280 (unreliable)
-> > > [c0000004f491ba70] [c0000000007b260c] pci_disable_msi+0x13c/0x180
-> > > [c0000004f491bab0] [d0000000046381ac] e1000_remove+0x234/0x2a0 [e1000e]
-> > > [c0000004f491baf0] [c000000000783cec] pci_device_remove+0x6c/0x120
-> > > [c0000004f491bb30] [c00000000088da6c] device_release_driver_internal+0x2bc/0x3f0
-> > > [c0000004f491bb80] [c00000000076f5a8] pci_stop_and_remove_bus_device+0xb8/0x110
-> > > [c0000004f491bbc0] [c00000000006e890] pci_hp_remove_devices+0x90/0x130
-> > > [c0000004f491bc50] [c00000000004ad34] eeh_handle_normal_event+0x1d4/0x660
-> > > [c0000004f491bd10] [c00000000004bf10] eeh_event_handler+0x1c0/0x1e0
-> > > [c0000004f491bdc0] [c00000000017c4ac] kthread+0x1ac/0x1c0
-> > > [c0000004f491be30] [c00000000000b75c] ret_from_kernel_thread+0x5c/0x80
-> > >
-> > > Basically the e1000e irqs haven't been freed at the time eeh is trying to
-> > > remove the the e1000e device.
-> > > Need to make sure when e1000e_close is called to bring down the NIC,
-> > > if adapter error_state is pci_channel_io_perm_failure, it should also
-> > > bring down the link and free irqs.
-> > >
-> > > Reported-by: Morumuri Srivalli  <smorumu1@in.ibm.com>
-> > > Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
-> > > ---
-> > >  drivers/net/ethernet/intel/e1000e/netdev.c |    3 ++-
-> > >  1 files changed, 2 insertions(+), 1 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> > > index d7d56e4..cf618e1 100644
-> > > --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> > > +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> > > @@ -4715,7 +4715,8 @@ int e1000e_close(struct net_device *netdev)
-> > >
-> > >         pm_runtime_get_sync(&pdev->dev);
-> > >
-> > > -       if (!test_bit(__E1000_DOWN, &adapter->state)) {
-> > > +       if (!test_bit(__E1000_DOWN, &adapter->state) ||
-> > > +           (adapter->pdev->error_state == pci_channel_io_perm_failure)) {
-> > >                 e1000e_down(adapter, true);
-> > >                 e1000_free_irq(adapter);
-> >
-> > It seems like the issue is the fact that e1000_io_error_detected is
-> > calling e1000e_down without the e1000_free_irq() bit. Instead of doing
-> > this couldn't you simply add the following to e1000_is_slot_reset in
-> > the "result = PCI_ERS_RESULT_DISCONNECT" case:
-> >     if (netif_running(netdev)
-> >         e1000_free_irq(adapter);
-> >
-> > Alternatively we could look at freeing and reallocating the IRQs in
-> > the event of an error like we do for the e1000e_pm_freeze and
-> > e1000e_pm_thaw cases. That might make more sense since we are dealing
-> > with an error we might want to free and reallocate the IRQ resources
-> > assigned to the device.
-> >
-> > Thanks.
-> >
-> > - Alex
->
-> Thanks for the quick reply and comment!
-> Looked the e1000_io_slot_reset() routine:
->         err = pci_enable_device_mem(pdev);
->         if (err) {
->                 dev_err(&pdev->dev,
->                         "Cannot re-enable PCI device after reset.\n");
->                 result = PCI_ERS_RESULT_DISCONNECT;
->         } else {
-> I didn't see log message "Cannot re-enable PCI device after reset" at
-> the time of crash.
->
-> I can still apply the same logic in e1000_io_error_detected() routine:
->     if (state == pci_channel_io_perm_failure) {
-> +       if (netif_running(netdev))
-> +           e1000_free_irq(adapter);
->         return PCI_ERS_RESULT_DISCONNECT;
->     }
-> Will test this once the test hardware is available again.
+On Thu, Oct 03, 2019 at 02:04:13PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2019 at 10:20:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > Hi Bjorn,
+> > 
+> > Thanks for looking into this patch set.
+> > 
+> > On 9/5/19 12:18 PM, Bjorn Helgaas wrote:
+> > > On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > Since pci_prg_resp_pasid_required() function has dependency on both
+> > > > PASID and PRI, define it only if both CONFIG_PCI_PRI and
+> > > > CONFIG_PCI_PASID config options are enabled.
+> > > > 
+> > > > Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+> > > > interface.")
+> > > [Don't split tags, including "Fixes:" across lines]
+> > > 
+> > > This definitely doesn't fix e5567f5f6762.  That commit added
+> > > pci_prg_resp_pasid_required(), but with no dependency on
+> > > CONFIG_PCI_PRI or CONFIG_PCI_PASID.
+> > > 
+> > > This patch is only required when a subsequent patch is applied.  It
+> > > should be squashed into the commit that requires it so it's obvious
+> > > why it's needed.
+> > > 
+> > > I've been poking at this series, and I'll post a v8 soon with this and
+> > > other fixes.
+> > In your v8 submission you did not merge this patch. You did not use
+> > pri_cap or pasid_cap cached values. Instead you have re-read the
+> > value from register. Is this intentional?
+> > 
+> > Since this function will be called for every VF device we might loose some
+> > performance benefit.
+> 
+> This particular patch doesn't do any caching.  IIRC it fiddles with
+> ifdefs to solve a problem that would be introduced by a future patch.
+> I don't remember the exact details, but I think the series I merged
+> doesn't have that problem.  If it does, let me know the details and we
+> can fix it.
+This patch by itself does not do any caching. But your caching patch
+missed modifying this function to use cached values. Please check the
+current implementation of this function. It still reads
+PCI_EXT_CAP_ID_PRI register instead of using cached value. Please let
+me know your comments.
 
-Are you sure this is the path you are hitting? Things aren't adding up.
+int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+{
+    u16 status;
+    int pri;
 
-I thought the issue was that the interface for the error handling was
-calling e1000e_down() but not freeing the IRQs? In the path where you
-are adding your code I don't see how the __E1000_DOWN would have been
-set?
+    if (pdev->is_virtfn)
+        pdev = pci_physfn(pdev);
 
-- Alex
+    pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+    if (!pri)
+        return 0;
+
+    pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
+
+    if (status & PCI_PRI_STATUS_PASID)
+        return 1;
+
+    return 0;
+}
+EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+
+If caching is applied to this function then we need this #ifdef
+dependency correction patch.
+
+> 
+> I did include the caching patches for both PRI and PASID capabilities,
+> but they're only performance optimizations so I moved them to the end
+> so the functional fixes would be smaller and earlier in the series.
+> 
+> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > ---
+> > > >   drivers/pci/ats.c       | 10 ++++++----
+> > > >   include/linux/pci-ats.h | 12 +++++++++---
+> > > >   2 files changed, 15 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > > > index e18499243f84..cdd936d10f68 100644
+> > > > --- a/drivers/pci/ats.c
+> > > > +++ b/drivers/pci/ats.c
+> > > > @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > > > +#ifdef CONFIG_PCI_PRI
+> > > > +
+> > > >   /**
+> > > >    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+> > > >    *				 status.
+> > > > @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+> > > >    *
+> > > >    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+> > > >    *
+> > > > - * Even though the PRG response PASID status is read from PRI Status
+> > > > - * Register, since this API will mainly be used by PASID users, this
+> > > > - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+> > > > - * CONFIG_PCI_PRI.
+> > > > + * Since this API has dependency on both PRI and PASID, protect it
+> > > > + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+> > > >    */
+> > > >   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   {
+> > > > @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+> > > > +#endif
+> > > > +
+> > > >   #define PASID_NUMBER_SHIFT	8
+> > > >   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+> > > >   /**
+> > > > diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> > > > index 1ebb88e7c184..1a0bdaee2f32 100644
+> > > > --- a/include/linux/pci-ats.h
+> > > > +++ b/include/linux/pci-ats.h
+> > > > @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+> > > >   void pci_restore_pasid_state(struct pci_dev *pdev);
+> > > >   int pci_pasid_features(struct pci_dev *pdev);
+> > > >   int pci_max_pasids(struct pci_dev *pdev);
+> > > > -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> > > >   #else  /* CONFIG_PCI_PASID */
+> > > > @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+> > > >   	return -EINVAL;
+> > > >   }
+> > > > +#endif /* CONFIG_PCI_PASID */
+> > > > +
+> > > > +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+> > > > +
+> > > > +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> > > > +
+> > > > +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+> > > > +
+> > > >   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > >   {
+> > > >   	return 0;
+> > > >   }
+> > > > -#endif /* CONFIG_PCI_PASID */
+> > > > -
+> > > > +#endif
+> > > >   #endif /* LINUX_PCI_ATS_H*/
+> > > > -- 
+> > > > 2.21.0
+> > > > 
+> > -- 
+> > Sathyanarayanan Kuppuswamy
+> > Linux kernel developer
+> > 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
