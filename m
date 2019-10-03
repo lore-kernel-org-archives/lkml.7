@@ -2,161 +2,101 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B721FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E7CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F47620862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE63420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124009;
-	bh=2+FcyMHDjxFQ28Ij1ASllU/GvnthM1pbt1/VA2nje2I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JmMN9Md2Jy0S3VUa0kTcCv3l5W25v1OA1uoPmQqBOV+hYeJuHkDXGR8wEiP/rt+Pz
-	 sfoIPXSDRuPF5yCtV+cDtLT99ugb2S2b/4bq/cR5qllc++9bzSm/xoz9ZVu4NHMsAu
-	 NOnL10l1ZivmJusNQ8Crrc7pKeXs/jlHjqWspOtQ=
+	s=default; t=1570124015;
+	bh=1lsTLTacUge/TmK094kPtZgnZ5shmTQX/+pqj5VYXjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nnsoeb74C/DZ7CyX1b4z1IY3MmqUyGEi70q+HXOAVp3F385wYN9PdMfQAcgj8fjZb
+	 2mbvihS7omKANwJ58OkvQNw2AcZl2Og3P31mKu4utK1kkZGzCjiCy1Zgqna4afvhHV
+	 hgar2AxJvJh2VrLiy48wKMaewfjiw5EuF/xajs2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732693AbfJCRd3 (ORCPT
+        id S1732850AbfJCRdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732979AbfJCQHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E081215EA;
-        Thu,  3 Oct 2019 16:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118858;
-        bh=2+FcyMHDjxFQ28Ij1ASllU/GvnthM1pbt1/VA2nje2I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTDkK2CjDFO7dE/UitDXZk70/M/1wOT2NTovkzV4xKeYYqWwm0M+HUSbYTTS7a9lU
-         Dr2Z8YMZnSdMd97rS25KlpXVe8z4zzX6kbY4hsjPleBuDedGGyjz8e3jlLeYFN683U
-         9IgFN2EfwVusI6HQdMN+qN0gkMK4x9O0qSdhQjJo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 034/185] arcnet: provide a buffer big enough to actually receive packets
-Date:   Thu,  3 Oct 2019 17:51:52 +0200
-Message-Id: <20191003154445.232219705@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:33:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53724 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732705AbfJCRdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:33:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1lsTLTacUge/TmK094kPtZgnZ5shmTQX/+pqj5VYXjE=; b=re036ledOxvJgkwTEi0ql8CqX
+        uqD9VjHxS8mTVjj0ThUKiclF4XhTek9fMKqjW4oXRYJwD5MacDUoqB9/3eTCfjMGbbMiWPrahAVDp
+        TxEvPEaF88oafdaXTj69DBU0VUbUnGN8V6Rau9S+3uF9jDtqnLGk1s8+zeC72R5dZEkEw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iG4ym-0005vr-JL; Thu, 03 Oct 2019 17:33:28 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D07612740210; Thu,  3 Oct 2019 18:33:27 +0100 (BST)
+Date:   Thu, 3 Oct 2019 18:33:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.3 204/344] SoC: simple-card-utils: set 0Hz to sysclk
+ when shutdown
+Message-ID: <20191003173327.GC6090@sirena.co.uk>
+References: <20191003154540.062170222@linuxfoundation.org>
+ <20191003154600.389003319@linuxfoundation.org>
+ <20191003172849.GB6090@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
+Content-Disposition: inline
+In-Reply-To: <20191003172849.GB6090@sirena.co.uk>
+X-Cookie: Reactor error - core dumped!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 108639aac35eb57f1d0e8333f5fc8c7ff68df938 ]
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-struct archdr is only big enough to hold the header of various types of
-arcnet packets. So to provide enough space to hold the data read from
-hardware provide a buffer large enough to hold a packet with maximal
-size.
+On Thu, Oct 03, 2019 at 06:28:49PM +0100, Mark Brown wrote:
+> On Thu, Oct 03, 2019 at 05:52:49PM +0200, Greg Kroah-Hartman wrote:
 
-The problem was noticed by the stack protector which makes the kernel
-oops.
+> > Some codecs set rate constraints that derives from sysclk. This
+> > mechanism works correctly if machine drivers give fixed frequency.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Acked-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/arcnet/arcnet.c |   31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+> This is a new feature which seems out of scope for stable - I thought
+> I'd raised this already?
 
---- a/drivers/net/arcnet/arcnet.c
-+++ b/drivers/net/arcnet/arcnet.c
-@@ -1064,31 +1064,34 @@ EXPORT_SYMBOL(arcnet_interrupt);
- static void arcnet_rx(struct net_device *dev, int bufnum)
- {
- 	struct arcnet_local *lp = netdev_priv(dev);
--	struct archdr pkt;
-+	union {
-+		struct archdr pkt;
-+		char buf[512];
-+	} rxdata;
- 	struct arc_rfc1201 *soft;
- 	int length, ofs;
- 
--	soft = &pkt.soft.rfc1201;
-+	soft = &rxdata.pkt.soft.rfc1201;
- 
--	lp->hw.copy_from_card(dev, bufnum, 0, &pkt, ARC_HDR_SIZE);
--	if (pkt.hard.offset[0]) {
--		ofs = pkt.hard.offset[0];
-+	lp->hw.copy_from_card(dev, bufnum, 0, &rxdata.pkt, ARC_HDR_SIZE);
-+	if (rxdata.pkt.hard.offset[0]) {
-+		ofs = rxdata.pkt.hard.offset[0];
- 		length = 256 - ofs;
- 	} else {
--		ofs = pkt.hard.offset[1];
-+		ofs = rxdata.pkt.hard.offset[1];
- 		length = 512 - ofs;
- 	}
- 
- 	/* get the full header, if possible */
--	if (sizeof(pkt.soft) <= length) {
--		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(pkt.soft));
-+	if (sizeof(rxdata.pkt.soft) <= length) {
-+		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(rxdata.pkt.soft));
- 	} else {
--		memset(&pkt.soft, 0, sizeof(pkt.soft));
-+		memset(&rxdata.pkt.soft, 0, sizeof(rxdata.pkt.soft));
- 		lp->hw.copy_from_card(dev, bufnum, ofs, soft, length);
- 	}
- 
- 	arc_printk(D_DURING, dev, "Buffer #%d: received packet from %02Xh to %02Xh (%d+4 bytes)\n",
--		   bufnum, pkt.hard.source, pkt.hard.dest, length);
-+		   bufnum, rxdata.pkt.hard.source, rxdata.pkt.hard.dest, length);
- 
- 	dev->stats.rx_packets++;
- 	dev->stats.rx_bytes += length + ARC_HDR_SIZE;
-@@ -1097,13 +1100,13 @@ static void arcnet_rx(struct net_device
- 	if (arc_proto_map[soft->proto]->is_ip) {
- 		if (BUGLVL(D_PROTO)) {
- 			struct ArcProto
--			*oldp = arc_proto_map[lp->default_proto[pkt.hard.source]],
-+			*oldp = arc_proto_map[lp->default_proto[rxdata.pkt.hard.source]],
- 			*newp = arc_proto_map[soft->proto];
- 
- 			if (oldp != newp) {
- 				arc_printk(D_PROTO, dev,
- 					   "got protocol %02Xh; encap for host %02Xh is now '%c' (was '%c')\n",
--					   soft->proto, pkt.hard.source,
-+					   soft->proto, rxdata.pkt.hard.source,
- 					   newp->suffix, oldp->suffix);
- 			}
- 		}
-@@ -1112,10 +1115,10 @@ static void arcnet_rx(struct net_device
- 		lp->default_proto[0] = soft->proto;
- 
- 		/* in striking contrast, the following isn't a hack. */
--		lp->default_proto[pkt.hard.source] = soft->proto;
-+		lp->default_proto[rxdata.pkt.hard.source] = soft->proto;
- 	}
- 	/* call the protocol-specific receiver. */
--	arc_proto_map[soft->proto]->rx(dev, bufnum, &pkt, length);
-+	arc_proto_map[soft->proto]->rx(dev, bufnum, &rxdata.pkt, length);
- }
- 
- static void null_rx(struct net_device *dev, int bufnum,
+No, I didn't sorry - that was a similar patch in a device driver that
+I'd flagged (and has been correctly dropped).
 
+--7qSK/uQB79J36Y4o
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2WMOYACgkQJNaLcl1U
+h9BuXQf7BIZUChyxBFPjAWKEbc9ifRghqSEGtDwFhm+kNuPma03Ue2Azp+uqISuZ
+XDANYfw0mMFJBSPGqXS2xLtpL4KZu3cv3lFRNWWC3mMpHV5bnwWrw+jhN28aT5z8
+7nwxAAGoWXtE4N/ecTEeUqCYBEUp9RwV9QApnBWC9Y9achU741W691H9XXIaUYB3
+hOgpysLCGryH8PVNxIR+MYzWcvwRtBmNoMW0KSX76YUYZYsLnc7717GZcUXx0qEO
+xK1TBJmUeH9QPxj3x7VI9kNXdwHATHqe1HOU1DEQYvN6molKbGF6S/ANpt+k5iVl
+oDgD0Gb/+EFrkQRLkGdb+enxosxdtw==
+=4XgQ
+-----END PGP SIGNATURE-----
+
+--7qSK/uQB79J36Y4o--
