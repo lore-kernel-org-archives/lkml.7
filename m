@@ -2,102 +2,149 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986DBC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E656C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DCD20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:29:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNx2/2uE"
+	by mail.kernel.org (Postfix) with ESMTP id 4E78C20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfJCO33 (ORCPT
+        id S1730657AbfJCO3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:29:29 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34938 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfJCO33 (ORCPT
+        Thu, 3 Oct 2019 10:29:53 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42112 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJCO3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:29:29 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so3023968lji.2;
-        Thu, 03 Oct 2019 07:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pPX6hZuTAKscoMR2pVUc6O2c3J5blh2oSncwZUdgBs0=;
-        b=QNx2/2uEq3OIs68G+c7YaycV7Fq+Ty/tmEsjmJN2O1wK/L20mVZIg0TgD0Vn3YJDiU
-         44bumczvzhdkqZxYEV+Wyi37+06A8HeOnIcCFakx2Hi1/YEiHklQ2hQLtPqeHx5eNU6E
-         EDcU7okyDqkMBR7RycSpw2Dt5H/qjbL0qmzyXkybR+T4SOMn3cpb7SlqkPMqmKX+2wTM
-         gGnWt/PhrMniousn5W2B73m4sVahsXS/JGg9lLt5TegpnytwEmbboAvkZa02rvfgPslD
-         5wN/h5ZOt1fYdJuWgpEk5vhPx6WL2PGhmqbO1Sl6/rtyhDXsxn1tez9+/Ev+6IcD5GhO
-         YN3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pPX6hZuTAKscoMR2pVUc6O2c3J5blh2oSncwZUdgBs0=;
-        b=Lc1BNJf0n6t6XOWg7zNXfdp9SGz4moSG5d3DNVSVsNzed9Pcayp0TEV/WuYZ86KYM2
-         6HxxsgXNR5GINhg1l04fU+VA3CCHAXdnJTVGYtZwqFkrePRHVSEyQDGyMwGOjnAQYx74
-         9F1VXP62ou2rypi/GaPvXP5uWeC1GvxiAweGxUZyVK/iAomYD5mYhK0fXpd3QLuasegC
-         t70GeAhHM/Pg2F+YljUXreeDSYd8jxGiWLOrP8K1SlkUamWMlK5zuiE2jdpRsk5nvdA3
-         JlC5M8tYOEWs0nNnoVqJawm+YXLtg93A34bKh3lv+A9JbgISi8BXcsW/xTtIXI08fLjL
-         v0WA==
-X-Gm-Message-State: APjAAAUXgkFmscF7oOdlGX7Ntv8vBfAB6ufy0fEcjaNUTWEYQVNMWJ6U
-        vG9xyb6xfaZjEf2UUQP5+DRQOpuWmCJJfIiuLIQ=
-X-Google-Smtp-Source: APXvYqzrcxzFW/+/EqjTje5qh9q51U5wuUGgGdtKJsVPYwQHr3s96kYVhvW2iDIi5EcJCY8ThfZEOB8n0in7gNpCt0U=
-X-Received: by 2002:a2e:7d0d:: with SMTP id y13mr6366997ljc.170.1570112966775;
- Thu, 03 Oct 2019 07:29:26 -0700 (PDT)
+        Thu, 3 Oct 2019 10:29:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: bbrezillon)
+        with ESMTPSA id 33AF328E8BE
+Date:   Thu, 3 Oct 2019 16:29:43 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i3c@lists.infradead.org, bbrezillon@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com,
+        Joao.Pinto@synopsys.com, stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] i3c: master: make sure ->boardinfo is
+ initialized in add_i3c_dev_locked()
+Message-ID: <20191003162943.4a0d0274@collabora.com>
+In-Reply-To: <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
+References: <cover.1567608245.git.vitor.soares@synopsys.com>
+        <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
- <20191003081742.0933264b@coco.lan> <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
- <20191003094904.3aa5fdc7@coco.lan> <20191003095237.2efa0e7f@coco.lan>
- <20191003130224.GA2596@Limone> <CANL0fFQR4KDU5PKeedK6wF45nSTu6dUyz_MBwmP1QsJxYQAWNg@mail.gmail.com>
- <20191003110551.19f06922@coco.lan>
-In-Reply-To: <20191003110551.19f06922@coco.lan>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Thu, 3 Oct 2019 16:29:15 +0200
-Message-ID: <CANL0fFSPxJO597qyt9SgYaqAPxkP4P-R1ZuvdmOtav9KEX5qsQ@mail.gmail.com>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Try to reduce the bus speed to 10kbps
+On Thu,  5 Sep 2019 12:00:35 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-Nope:
+> The newdev->boardinfo assignment was missing in
+> i3c_master_add_i3c_dev_locked() and hence the ->of_node info isn't
+> propagated to i3c_dev_desc.
+> 
+> Fix this by trying to initialize device i3c_dev_boardinfo if available.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> ---
+> Change in v3:
+>   - None
+> 
+> Changes in v2:
+>   - Change commit message
+>   - Change i3c_master_search_i3c_boardinfo(newdev) to
+>   i3c_master_init_i3c_dev_boardinfo(newdev)
+>   - Add fixes, stable tags
+> 
+>  drivers/i3c/master.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 586e34f..9fb99bc 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -1798,6 +1798,22 @@ i3c_master_search_i3c_dev_duplicate(struct i3c_dev_desc *refdev)
+>  	return NULL;
+>  }
+>  
+> +static void i3c_master_init_i3c_dev_boardinfo(struct i3c_dev_desc *dev)
+> +{
+> +	struct i3c_master_controller *master = i3c_dev_get_master(dev);
+> +	struct i3c_dev_boardinfo *boardinfo;
+> +
+> +	if (dev->boardinfo)
+> +		return;
+> +
+> +	list_for_each_entry(boardinfo, &master->boardinfo.i3c, node) {
+> +		if (dev->info.pid == boardinfo->pid) {
+> +			dev->boardinfo = boardinfo;
+> +			return;
+> +		}
+> +	}
+> +}
+> +
+>  /**
+>   * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
+>   * @master: master used to send frames on the bus
+> @@ -1818,8 +1834,9 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  				  u8 addr)
+>  {
+>  	struct i3c_device_info info = { .dyn_addr = addr };
+> -	struct i3c_dev_desc *newdev, *olddev;
+>  	u8 old_dyn_addr = addr, expected_dyn_addr;
+> +	enum i3c_addr_slot_status addrstatus;
+> +	struct i3c_dev_desc *newdev, *olddev;
+>  	struct i3c_ibi_setup ibireq = { };
+>  	bool enable_ibi = false;
+>  	int ret;
+> @@ -1878,6 +1895,8 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  	if (ret)
+>  		goto err_detach_dev;
+>  
+> +	i3c_master_init_i3c_dev_boardinfo(newdev);
+> +
+>  	/*
+>  	 * Depending on our previous state, the expected dynamic address might
+>  	 * differ:
+> @@ -1895,7 +1914,11 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  	else
+>  		expected_dyn_addr = newdev->info.dyn_addr;
+>  
+> -	if (newdev->info.dyn_addr != expected_dyn_addr) {
+> +	addrstatus = i3c_bus_get_addr_slot_status(&master->bus,
+> +						  expected_dyn_addr);
+> +
+> +	if (newdev->info.dyn_addr != expected_dyn_addr &&
+> +	    addrstatus == I3C_ADDR_SLOT_FREE) {
 
-#define I2C_SPEED_REGISTER 260  // ~10k
+First, this change shouldn't be part of this patch, since the commit
+message only mentions the boardinfo init stuff, not the extra 'is slot
+free check'. Plus, I want the fix to be backported so we should avoid
+any unneeded deps.
 
-[  117.860961] si2168 1-0067: downloading firmware from file
-'dvb-demod-si2168-b40-01.fw'
-[  118.958355] si2168 1-0067: firmware version: B 4.0.25
-[  118.968882] si2157 2-0063: Bogus chip version, trying with new firmware
-[  118.968888] si2157 2-0063: found a 'Silicon Labs Si21255-\xff\xff\xff'
-[  118.972005] si2157 2-0063: downloading firmware from file
-'dvb-tuner-si2157-a30-01.fw'
-[  121.154130] si2157 2-0063: rebooting tuner...
-[  121.169626] si2157 2-0063: querying firmware version...
-[  121.172799] si2157 2-0063: firmware version: \xff.\xff.255
-[  121.172803] si2157 2-0063: querying chip revision...
-[  121.175911] si2157 2-0063: chip revision: 255.255.255.255
+But even with those 2 things addressed, I'm still convinced the
+'free desc when device is not reachable' change you do in patch 1 is
+not that great, and the fact that you can't pre-reserve the address to
+make sure no one uses it until the device had a chance to show up tends
+to prove me right.
 
-g
+Can we please do what I suggest and solve the "not enough dev slots"
+problem later on (if we really have to).
 
+>  		/*
+>  		 * Try to apply the expected dynamic address. If it fails, keep
+>  		 * the address assigned by the master.
 
-
--- 
-g
