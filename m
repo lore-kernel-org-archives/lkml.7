@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADD7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB37CC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B27B222C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F2D207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118323;
-	bh=vjBaosXqtd9ltgOm7s+SR9vWpf2jQAJtR0eeELBX1YY=;
+	s=default; t=1570118329;
+	bh=fuQVCnZpD/kZPOjogsugRHIBxW76GMvJxErOmtJ5zVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pWPD6Vh9xwilRXQgz0pdVcA2pYX8aKnb+Rx8K/H2PEepqEiVDJlLzf61uodjr43tG
-	 nbJr0ZiECWhe3SUez3aMp4z4ZAjdI5WSl6KS+zg8j7eDlcebkt134YWEPv7NKmr7vp
-	 fheVxEYOug3s4p9JpJmgDnf3hIpCkJnwm5tNJmpk=
+	b=0hzRBtftCQGiqivmF0eBvl2sSwbix87sS78Wyj2FgTMFw+byxkROvm50ST9xCAtRt
+	 opesJRnYIolP6yJ61b1iS32l/YOROi6L4YeASEOm9h2zLuKLRdSzlQYUc4r7gBYMDP
+	 wynj6Eerx2hqe2vq9o6xWMvkcwvvDzBBgsz4fkUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbfJCP6m (ORCPT
+        id S1731289AbfJCP6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41482 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730091AbfJCP6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:40 -0400
+        id S1731288AbfJCP6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A31421848;
-        Thu,  3 Oct 2019 15:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B96D9222C9;
+        Thu,  3 Oct 2019 15:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118319;
-        bh=vjBaosXqtd9ltgOm7s+SR9vWpf2jQAJtR0eeELBX1YY=;
+        s=default; t=1570118325;
+        bh=fuQVCnZpD/kZPOjogsugRHIBxW76GMvJxErOmtJ5zVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llxWVXiOvb/pFN8LN8MhAMFSBIOIVVr7CeJ1Tn00fs898pJtE4RlqEk5kopQH8UlD
-         ojTA01GCcgBL9hML2htwZMnRvMfjh9jiAP5yVvkjgwNlQjRl8rZRcFSmuNmeHOJW74
-         Pbqcl48PUfARV+Xruw4DRDWzzUlUs8g5YVRELQLg=
+        b=Ag3dHIYWAcTY1MezTPBdtGnaMGQJ+351QztDSoIOFX5xGA+YBQGRBwjyu5som2cVy
+         f0aDlzVT3QCt0t0+1Wdz8Eo9/hJJLyqH+WGADm5oKVCuanl6/fubDMUVZSJThrQjOh
+         F5fCBaTSQHB4/0VzJdDGOeGLyEjFe1xV2yYO2C8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 68/99] kprobes: Prohibit probing on BUG() and WARN() address
-Date:   Thu,  3 Oct 2019 17:53:31 +0200
-Message-Id: <20191003154329.926825063@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 70/99] mmc: sdhci: Fix incorrect switch to HS mode
+Date:   Thu,  3 Oct 2019 17:53:33 +0200
+Message-Id: <20191003154331.105083591@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -67,68 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Al Cooper <alcooperx@gmail.com>
 
-[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
+[ Upstream commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37 ]
 
-Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
-get the address where the BUG() has occurred, kprobes can not
-do single-step out-of-line that instruction. So prohibit
-probing on such address.
+When switching from any MMC speed mode that requires 1.8v
+(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+ends up configured for SDR12 with a 50MHz clock which is an illegal
+mode.
 
-Without this fix, if someone put a kprobe on WARN(), the
-kernel will crash with invalid opcode error instead of
-outputing warning message, because kernel can not find
-correct bug address.
+This happens because the SDHCI_CTRL_VDD_180 bit in the
+SDHCI_HOST_CONTROL2 register is left set and when this bit is
+set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+because there is no UHS mode being set.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The fix is to change sdhci_set_uhs_signaling() to set the
+SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+any switch to HS mode.
+
+This was found on a new eMMC controller that does strict checking
+of the speed mode and the corresponding clock rate. It caused the
+switch to HS400 mode to fail because part of the sequence to switch
+to HS400 requires a switch from HS200 to HS before going to HS400.
+
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bug.h | 5 +++++
- kernel/kprobes.c    | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index 7f4818673c41f..581a53dfbd310 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -102,6 +102,11 @@ int is_valid_bugaddr(unsigned long addr);
- 
- #else	/* !CONFIG_GENERIC_BUG */
- 
-+static inline void *find_bug(unsigned long bugaddr)
-+{
-+	return NULL;
-+}
-+
- static inline enum bug_trap_type report_bug(unsigned long bug_addr,
- 					    struct pt_regs *regs)
- {
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index a53998cba804c..fdde50d39a46d 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1454,7 +1454,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure it is not in reserved area nor out of text */
- 	if (!kernel_text_address((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
--	    jump_label_text_reserved(p->addr, p->addr)) {
-+	    jump_label_text_reserved(p->addr, p->addr) ||
-+	    find_bug((unsigned long)p->addr)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 62d37d2ac557b..1d6dfde1104d1 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1452,7 +1452,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_SD_HS ||
++		 timing == MMC_TIMING_MMC_HS ||
++		 timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
 -- 
 2.20.1
 
