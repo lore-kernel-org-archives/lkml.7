@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B3EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EA2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CE92054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF09215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119114;
-	bh=CWplDRHvnU4qVEGUG6qVOqgU1eeqSvaAMKYt+59QDHg=;
+	s=default; t=1570119119;
+	bh=rhHRo2v442EhnNaf/8eTEgT06HCu/RNtjBI3CumZBPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NRaAiZ894GXSAPkZtJlv2eEtpVVXLsgG3XZHrh5r1n/oXKfdDssZemWaacTUjECkh
-	 YAxllCuCyACzaogjKop8OYwZ5FP3qjH4NbiRPNoRX4sYvCfMy83OgA28L3rYmzqeM8
-	 +DrlSUA8Fk5533LNzVtX7+gmnLzEMi4/jiC61HUE=
+	b=UkFyYfFAj1IwVkBk9AFt6V+4pBgxB4dEqqsMJBSeM1cTkVYPrX57MC6n4w/4/O96n
+	 31lD8CimqB28+2VJgnTCPvqgPbN1IwG+klwM6PR1vq5EKvBqG46is/dKEDY/th5YyN
+	 8T92XK7tH0XFinFYnBVggIf9r6qE+L6Sq5u2xSmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387934AbfJCQLx (ORCPT
+        id S2387671AbfJCQL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387913AbfJCQLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:50 -0400
+        id S2387928AbfJCQLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36FC82054F;
-        Thu,  3 Oct 2019 16:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF52A20865;
+        Thu,  3 Oct 2019 16:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119109;
-        bh=CWplDRHvnU4qVEGUG6qVOqgU1eeqSvaAMKYt+59QDHg=;
+        s=default; t=1570119112;
+        bh=rhHRo2v442EhnNaf/8eTEgT06HCu/RNtjBI3CumZBPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVtmVfa+nuDMfq6l2+DOMVFb2H+dKhG/kDCcjEdQTyyBGfYMgIGXts/fzprCLfP/h
-         cWnMkiOP+aQkeEpnuUNGcZ5ohwlzegfSWoEcBp5FVVmvRCaE11sJ/wv82nfsQR+6KS
-         BphxEIf9gwmYfEVP0Cm2RzoMFqxbWde1jckkOLPE=
+        b=1UOPMFLZp7naOFCE2vxg3OGhoD3grQyE47I7TlbUWgpLOudcj+u+yGcKwHVNXl6CG
+         ssbY0QU/kl4NFz1WqJ0Yc3e0Bu46qhTq/41eKv/nDsxrHS/nnRienC9vWkrEgSQwGO
+         GsiK3sWTQpeLEsvCNs8ygCAYStS/WNSYlr3FG7Ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Douthit <stephend@silicom-usa.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 081/185] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
-Date:   Thu,  3 Oct 2019 17:52:39 +0200
-Message-Id: <20191003154455.825352683@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 123/185] dmaengine: ti: edma: Do not reset reserved paRAM slots
+Date:   Thu,  3 Oct 2019 17:53:21 +0200
+Message-Id: <20191003154505.673074578@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,65 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Douthit <stephend@silicom-usa.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 29a3388bfcce7a6d087051376ea02bf8326a957b ]
+[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
 
-Depending on how BIOS has marked the reserved region containing the 32KB
-MCHBAR you can get warnings like:
+Skip resetting paRAM slots marked as reserved as they might be used by
+other cores.
 
-resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans more than reserved [mem 0xfed10000-0xfed17fff]
-caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
-
-Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
-MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
-size to ioremap() depending on which resource we're reading from.
-
-Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/pnd2_edac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/dma/edma.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index 7f9bb9d9fcdc4..641ff19b2f57a 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -266,11 +266,14 @@ static u64 get_sideband_reg_base_addr(void)
- 	}
- }
+diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+index a7ea20e7b8e94..519c24465dea4 100644
+--- a/drivers/dma/edma.c
++++ b/drivers/dma/edma.c
+@@ -2268,9 +2268,6 @@ static int edma_probe(struct platform_device *pdev)
  
-+#define DNV_MCHBAR_SIZE  0x8000
-+#define DNV_SB_PORT_SIZE 0x10000
- static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *name)
- {
- 	struct pci_dev *pdev;
- 	char *base;
- 	u64 addr;
-+	unsigned long size;
+ 	ecc->default_queue = info->default_queue;
  
- 	if (op == 4) {
- 		pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x1980, NULL);
-@@ -285,15 +288,17 @@ static int dnv_rd_reg(int port, int off, int op, void *data, size_t sz, char *na
- 			addr = get_mem_ctrl_hub_base_addr();
- 			if (!addr)
- 				return -ENODEV;
-+			size = DNV_MCHBAR_SIZE;
- 		} else {
- 			/* MMIO via sideband register base address */
- 			addr = get_sideband_reg_base_addr();
- 			if (!addr)
- 				return -ENODEV;
- 			addr += (port << 16);
-+			size = DNV_SB_PORT_SIZE;
+-	for (i = 0; i < ecc->num_slots; i++)
+-		edma_write_slot(ecc, i, &dummy_paramset);
+-
+ 	if (info->rsv) {
+ 		/* Set the reserved slots in inuse list */
+ 		rsv_slots = info->rsv->rsv_slots;
+@@ -2283,6 +2280,12 @@ static int edma_probe(struct platform_device *pdev)
  		}
+ 	}
  
--		base = ioremap((resource_size_t)addr, 0x10000);
-+		base = ioremap((resource_size_t)addr, size);
- 		if (!base)
- 			return -ENODEV;
- 
++	for (i = 0; i < ecc->num_slots; i++) {
++		/* Reset only unused - not reserved - paRAM slots */
++		if (!test_bit(i, ecc->slot_inuse))
++			edma_write_slot(ecc, i, &dummy_paramset);
++	}
++
+ 	/* Clear the xbar mapped channels in unused list */
+ 	xbar_chans = info->xbar_chans;
+ 	if (xbar_chans) {
 -- 
 2.20.1
 
