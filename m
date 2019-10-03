@@ -2,126 +2,84 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5A9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5108C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475E621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA50222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQzhlNI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfJCHaP (ORCPT
+        id S1728346AbfJCHil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:30:15 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38729 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfJCHaP (ORCPT
+        Thu, 3 Oct 2019 03:38:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43449 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbfJCHil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:30:15 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7F46720000E;
-        Thu,  3 Oct 2019 07:30:12 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 09:31:55 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2 3/3] media: ov5640: Make 2592x1944 mode only available
- at 15 fps
-Message-ID: <20191003073155.4sl3jkmobnm53tm2@uno.localdomain>
-References: <20191002135134.12273-1-bparrot@ti.com>
- <20191002135134.12273-4-bparrot@ti.com>
+        Thu, 3 Oct 2019 03:38:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j18so971978wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 00:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
+        bh=ZM83gOZXBzuKBPm+cpBADT50KzkbNlmHyWH4vyQovk4=;
+        b=UQzhlNI95Rym1id7Fj11KXbhswjhng4OESyiZubeTTkhvIjnlZqXXnNzAZMr+gbKmH
+         zMpLuG5HOGiOvyH2b+ipaCoFhLvLushCE8jzLdB4Wgfphd+mDtIBzyIq5E9PwxYmnMd0
+         +F5cdOzxlalBki7or97eQ4zro9J5gpspm6DW20F1eEJs7IcrRqgxq3+46RHLvD7IwQZJ
+         8XG1oVUyncQZL2VJJctkTmWYOsQ7Rw7RWML0c4+AHjcMFP9qLv/ssh86pbGkr7TFGkEx
+         Lc40b/11bARHVsPkIE7/pCWQ5+KVNxN80An5JZ9XTYcIHN7fnfZG+FuXKPyOA9VIXHgC
+         xO3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ZM83gOZXBzuKBPm+cpBADT50KzkbNlmHyWH4vyQovk4=;
+        b=hdw72/Ujct8G9TNvfddR3PfCNlD3gZ2BP0ILG6KX+/suk4HeKsdqI3QYx533fuW+uS
+         3JHAXXxiabSSMC1B4QVb3hSdRlwbVZI5MIoFqcC8Z0uVgWo9+/VMK8yTZcXa36TSnfS4
+         W+asylvRTCuh4gFk/ljTDloh2++rlP/pSR91iW6LdX3Arj7UUgXgpZCoBm/u2Zc3cuq7
+         F6CA0xkDIjndadNL4y4hAQ1clx59E+L4GcrxgLt0J/qnA50DdRwP275tp3tTGXek2P13
+         2KMtlIjn3lQDn9PcpH1jh4csS6wQHA8OxMGaiHMy2KoncmdYQqXa6B0svXpm7FsqAS9C
+         uJLA==
+X-Gm-Message-State: APjAAAXNWkmA1t8TW+gTlb6c0jA98ykvjB6rOOqf6J6ZkEgBg1aNCAY1
+        75z9xtZH6ay2qSLVfSh8I3pIRgPnZFS05yHT6uLFfysepIs=
+X-Google-Smtp-Source: APXvYqxuAzyywXV+QPlEJW7NYosSLHEFZ91NpQBpcBDY2xrxvYCk5/I57822uMeik6rUXKo4hgxHd5r6Yth91kApIVo=
+X-Received: by 2002:adf:f092:: with SMTP id n18mr6065076wro.262.1570088319505;
+ Thu, 03 Oct 2019 00:38:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n5rftw743bmspsmn"
-Content-Disposition: inline
-In-Reply-To: <20191002135134.12273-4-bparrot@ti.com>
-User-Agent: NeoMutt/20180716
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 3 Oct 2019 09:38:27 +0200
+Message-ID: <CA+icZUW9wrOAtEEXUNjHetq238D86c9c_Cf0iKQGiD+CH5bJrg@mail.gmail.com>
+Subject: [Linux-5.3.y] Versions in stable.git and stable-rc.git
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
---n5rftw743bmspsmn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+I see two commits with "Linux 5.3.2" - in [1] it is tagged but there
+is a second one in [2] - both in stable.git.
 
-Hi Benoit,
+In stable-rc.git I see a commit "Linux 5.3.4-rc1" and there was no
+v5.3.3 released before.
 
-On Wed, Oct 02, 2019 at 08:51:34AM -0500, Benoit Parrot wrote:
-> The sensor data sheet clearly state that 2592x1944 only works at 15 fps
-> make sure we don't try to miss configure the pll out of acceptable
-> range.
+Can you look at this?
 
-The datasheet clearly indicates that 15 fps is the maximum achievable
-rate with that resolution, so I guess preventing it from being set
-to anything faster than that it's acceptable.
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/i2c/ov5640.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> index 103a4e8f88e1..d5b0be2c7a0a 100644
-> --- a/drivers/media/i2c/ov5640.c
-> +++ b/drivers/media/i2c/ov5640.c
-> @@ -1613,6 +1613,11 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
->  	    !(mode->hact == 640 && mode->vact == 480))
->  		return NULL;
->
-> +	/* 2592x1944 only works at 15fps */
-> +	if (fr != OV5640_15_FPS &&
+Thanks.
 
-As long as 15 fps is the lower framerate declared in
-ov5640_framerates[] this is ok, but I would make this condition a
-check for "fr  > OV5640_15_FPS" so that it's safe for future
-extensions.
+Regards,
+- Sedat -
 
-(And I would check for the resolution first then FPS, so you check
-the most unlikely condition first, but that's really a minor
-optimization).
-
-With the above small details addressed
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-   j
-
-> +	    (mode->hact == 2592 && mode->vact == 1944))
-> +		return NULL;
-> +
->  	return mode;
->  }
->
-> --
-> 2.17.1
->
-
---n5rftw743bmspsmn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2Vo+sACgkQcjQGjxah
-VjyJKw/9Gz/lz6Mb9xgW4HAr0QAEBl3gR9e2mbU14RmyMNI78KyX+Ygnl9b6rllZ
-FKl36MewrCwPiVFbOWcOtCTNuoCC+I4t7HZCCR+cY/sSJmSm/jspU7RvJ/5dR4xU
-t4HdpbARvjSjII6jicou6wcQlEo4NCkhuQuerzZPWXoZBcJ5dq3NfadWlvcqJVcP
-3RuSt65oOxchYT7FjnqTyOrVyf6+z5XLAYCmhqDweDYR3VhGeJB/+OGqYSQ0SYnz
-OmWm6pvpa38+Bo0IGgK8drYCP5rzKlSV0yNnjrxy21XOvW8wLTZXvsPG/8fnupvd
-OSEczRur15CJLm/J23FnTbTGrJFivvT8LqQeKr748dSvDIZRQgELO3UiDhntV5fr
-Vv7rTIBx0VyGhprM8p3ZDB/JFcxE02Cz1Y/wpjV+ccbfxwXGMg4vbTSwwzCWS1/7
-kYi+EX8Qc2jJ0v5KWDpn1Zbz2zH7klvD5KMcxP/KvMX/1uIOObCZMedukzDuwdwD
-BCdaSKbiyW//QS8ZkCKv39NnyA1qSiBtH2gwzhKBoH6eHrplumD4JPJZXvfxoOGj
-J1nJCmgQ8xUP8W6l8qe09aiE+W5jS+tY+++UrgN6vIuMONmE2kMea0TM4NkcIntZ
-9lDuCK2XhHRpULsvLKfeWNgBSCnQFQgyVH6n/RaQCLKqE0qe7SM=
-=r89m
------END PGP SIGNATURE-----
-
---n5rftw743bmspsmn--
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.3.y&id=b09339127155bf38eb28bf8ef4781a53b4c1f13f
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.3.y&id=9c30694424ee15cc30a23f92a913d5322b9e5bd2
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.3.y&id=11340e406e61338f7585324b65b1126503547bea
