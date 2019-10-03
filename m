@@ -2,177 +2,139 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5123DECE58B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0ACE20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2180820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B1MkE0cI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ceR0uFZF"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ZxEj+hUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbfJCSRo (ORCPT
+        id S2388321AbfJCSS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:17:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55136 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731113AbfJCSRo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:17:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5281E60112; Thu,  3 Oct 2019 18:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570126662;
-        bh=xIqGqW0piKiXUEqR/RPS5JaWIHumHlqdtcjkLnL5uH8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B1MkE0cIx5kNzPL7VzqfuaywF4O4399544rZoFcRj1d+HXWwQiemu6nBSRc81nBgQ
-         42IsRZbwmDM2ZLg98JPtr/lIvaCEvqSRfB/Mw0iSQRJkOxvhODbCjlh5oHY/YnQDVx
-         f2nBRI7gt3ur56gpIAyLpiwtaN0W5keO8PcJ/Hk8=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 0587B60112;
-        Thu,  3 Oct 2019 18:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570126660;
-        bh=xIqGqW0piKiXUEqR/RPS5JaWIHumHlqdtcjkLnL5uH8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ceR0uFZFvg7YiG94VsMZQHuxWzrPrKkG3DHt0nbfPwoFKq4muZCdgi8jhy1adG+r0
-         CilfgCJ6ahfzK5CBuBuY1J1DxIaabRinKaZ405sHJbKUn2RcGaLmcyo8r7Wzq/dBuc
-         X4Y8To2O0+RotsF52BviWWHqkewTzU3HnVEn43jI=
+        Thu, 3 Oct 2019 14:18:59 -0400
+Received: from mail-eopbgr1300110.outbound.protection.outlook.com ([40.107.130.110]:58944
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731113AbfJCSS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:18:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i5LYwP1wkUCJhK41joc5buLVaVApHP9A5w4ftxCD7PeO5u/fs3xEicXf3eRYFXA0yfvoQc4QLgW03mr+6czLOuJJzs1Xw3EQVjdtSXBvNCmW6heKOJklO0hghY7x4HPjQRSOm/kMujUpzxmjVtD//+fB7h6c+XUPVOYqVnvenpa0FibI+bcZ2AwIDEMBy6V60bGjv7JWOSJuga832k769u3xc+GkWj338Zvq03EeG7iKUr0CgVReVu7qKW1WvC4aDP5gFvMgCcptdVS5MY7uaCpR5t89FowLWgEqvlvgaeHqMHysbq/Fe1lygkpYSyPCqrYu76gCpNnPADl8OCRd4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lZVzpDglIsz6Us7WGaF6KHFvSgYy7koC23diZDQqa6M=;
+ b=a74INfAH++hBF98o/BCcIyO7Imu/Z1qF0id9Rrb3fyYDNvKnHN8213pXykHgN4P7iKFTw2raFvyohwJ+DMUdvtiC1fzvRQw8zkWMwbGKLOZ+YI/gDY84/PGGohF5DbT8Uii+Xv2sJaZOoQwtmyeqUpVAxMDoqXeWuo5i+RTEbMJTW6+ZOmQcDRFQNS61m0OnBv2PwCmGR1Qy4r/iOvb8GkhwWqq3+9Ym30sweWr2VqEjkFoMDBBuTHy6rlUWZ75Kn/lpG/EMwYcQ2rtYepWC3qNtiB0ckgKkZcyoRFJAeRzfE1Kw6ISJUBcpXZoqb+VXnmxS98bMpjUEzxvt+6MLhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lZVzpDglIsz6Us7WGaF6KHFvSgYy7koC23diZDQqa6M=;
+ b=ZxEj+hURUKvMuxoJG4jp+6AUjBIkgjglwPH5CUJVvuAEyMT+OlWSAl8affuNb/Y3vH5iJuV+tzoYiN8FrZ4S6IUz02XA5QyqOBeYFrSqEP6rtxpi4DnOF1IEWCpEKNd4psgYu0OgvywdDQTRSsM6K8C4xrhUxKMr+p0h+tQ8AK8=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0108.APCP153.PROD.OUTLOOK.COM (10.170.188.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.10; Thu, 3 Oct 2019 18:18:37 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.021; Thu, 3 Oct 2019
+ 18:18:37 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4VggAqesgCABFerkIAAR5AAgAAEvxCAA52PEIAAuuYAgAAIzDA=
+Date:   Thu, 3 Oct 2019 18:18:37 +0000
+Message-ID: <PU1P153MB016904AA7BAC9255552A89E1BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
+ <20190919161752.GS237523@dtor-ws>
+ <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190928003156.GU237523@dtor-ws>
+ <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190930230652.GW237523@dtor-ws>
+ <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <PU1P153MB0169CC57749BF297F2581B02BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20191003174530.GB22365@dtor-ws>
+In-Reply-To: <20191003174530.GB22365@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T18:18:35.5985548Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=33ad7441-da83-448d-b128-7a96e2c029e8;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:e8be:9c25:96c9:9a3c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a1826418-1d76-4f6e-29bd-08d7482e1c67
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0108:|PU1P153MB0108:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB010888048611AE415CA99A1ABF9F0@PU1P153MB0108.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(189003)(199004)(5640700003)(229853002)(74316002)(5660300002)(2351001)(305945005)(107886003)(8936002)(14454004)(99286004)(81156014)(8676002)(6246003)(7696005)(6916009)(6436002)(1361003)(6506007)(10290500003)(486006)(476003)(316002)(2501003)(22452003)(76176011)(446003)(186003)(11346002)(55016002)(7736002)(9686003)(54906003)(71200400001)(478600001)(71190400001)(46003)(14444005)(256004)(64756008)(66556008)(33656002)(66476007)(66946007)(76116006)(102836004)(8990500004)(52536014)(66446008)(86362001)(25786009)(10090500001)(2906002)(4326008)(81166006)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0108;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: op95pzlrpbwfKDGzhroTWub/CrivSmxUvRYbHBOD7GJm3q2ccB1gy/jlILtr2Irear0o2kUU6mGTUG1QWvhOF3aKF6+6sL3K12QYK3DvCEel1e6qKi2RK9075z5u7YMfTnFGtfYYPfWjJlolf0nSHqjiJ7yQyaNNLvmWvf6eJA2ZJq8aGqBdAXwEF85eE1MBWXwc//LIeC9GR+xdm279+eNkX3p3usClUKL8Uje9ciozZ4hX8+X3aH7PDuPEy6C+N2B4DOhqghaMLZL3WhXU6r0gk0+ulpEJmcxLbDThrDbSR9397Apr1eyoMYcSqzbMRIkXb0h143wCxTycQ+60LNpju1f8E1Ezwvn+ur7T2eZIzX7wrxQ1B9iSbbt5pdrECqFRx+VuOp51mE1nmhKdQ+K3ejyJAP0jUqqfDvdwR30=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 03 Oct 2019 11:17:39 -0700
-From:   mnalajal@codeaurora.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     rafael@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
-In-Reply-To: <20191003070502.GB1814133@kroah.com>
-References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
- <20191003070502.GB1814133@kroah.com>
-Message-ID: <dd126bd256feb2e32f38409b2a7ba5cc@codeaurora.org>
-X-Sender: mnalajal@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1826418-1d76-4f6e-29bd-08d7482e1c67
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 18:18:37.4235
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XZbyaLYTWd+346zLLABlxVPtqglh5Zk/SmjOmyPsPxql4YWZZeuctJcCOPpOPQWHGMIEfOsePdj9JnvqgP/LuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-03 00:05, Greg KH wrote:
-> On Wed, Oct 02, 2019 at 05:06:14PM -0700, Murali Nalajala wrote:
->> Soc framework exposed sysfs entries are not sufficient for some
->> of the h/w platforms. Currently there is no interface where soc
->> drivers can expose further information about their SoCs via soc
->> framework. This change address this limitation where clients can
->> pass their custom entries as attribute group and soc framework
->> would expose them as sysfs properties.
->> 
->> Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
->> ---
->>  drivers/base/soc.c      | 26 ++++++++++++++++++--------
->>  include/linux/sys_soc.h |  1 +
->>  2 files changed, 19 insertions(+), 8 deletions(-)
-> 
-> Can you change a soc driver to use this?  I don't think that this patch
-> works because:
-> 
->> 
->> diff --git a/drivers/base/soc.c b/drivers/base/soc.c
->> index 7c0c5ca..ec70a58 100644
->> --- a/drivers/base/soc.c
->> +++ b/drivers/base/soc.c
->> @@ -15,6 +15,8 @@
->>  #include <linux/err.h>
->>  #include <linux/glob.h>
->> 
->> +#define NUM_ATTR_GROUPS 3
->> +
->>  static DEFINE_IDA(soc_ida);
->> 
->>  static ssize_t soc_info_get(struct device *dev,
->> @@ -104,11 +106,6 @@ static ssize_t soc_info_get(struct device *dev,
->>  	.is_visible = soc_attribute_mode,
->>  };
->> 
->> -static const struct attribute_group *soc_attr_groups[] = {
->> -	&soc_attr_group,
->> -	NULL,
->> -};
->> -
->>  static void soc_release(struct device *dev)
->>  {
->>  	struct soc_device *soc_dev = container_of(dev, struct soc_device, 
->> dev);
->> @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
->>  struct soc_device *soc_device_register(struct soc_device_attribute 
->> *soc_dev_attr)
->>  {
->>  	struct soc_device *soc_dev;
->> +	const struct attribute_group **soc_attr_groups = NULL;
->>  	int ret;
->> 
->>  	if (!soc_bus_type.p) {
->> @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct 
->> soc_device_attribute *soc_dev_attr
->>  		goto out1;
->>  	}
->> 
->> +	soc_attr_groups = kzalloc(sizeof(*soc_attr_groups) *
->> +						NUM_ATTR_GROUPS, GFP_KERNEL);
->> +	if (!soc_attr_groups) {
->> +		ret = -ENOMEM;
->> +		goto out2;
->> +	}
->> +	soc_attr_groups[0] = &soc_attr_group;
->> +	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
->> +	soc_attr_groups[2] = NULL;
-> 
-> You set this, but never do anything with it that I can see.  What am I
-> missing?
-no, since i am using the "soc_attr_groups" name as it here you do not 
-see the assignment below.
-It is something like this soc_dev->dev.groups = soc_attr_groups;
-> 
->> +
->>  	/* Fetch a unique (reclaimable) SOC ID. */
->>  	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
->>  	if (ret < 0)
->> -		goto out2;
->> +		goto out3;
->>  	soc_dev->soc_dev_num = ret;
->> 
->>  	soc_dev->attr = soc_dev_attr;
->> @@ -151,14 +159,16 @@ struct soc_device *soc_device_register(struct 
->> soc_device_attribute *soc_dev_attr
->> 
->>  	ret = device_register(&soc_dev->dev);
->>  	if (ret)
->> -		goto out3;
->> +		goto out4;
->> 
->>  	return soc_dev;
->> 
->> -out3:
->> +out4:
->>  	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
->>  	put_device(&soc_dev->dev);
->>  	soc_dev = NULL;
->> +out3:
->> +	kfree(soc_attr_groups);
->>  out2:
->>  	kfree(soc_dev);
->>  out1:
-> 
-> You don't free it when the soc is removed?
-agree, will fix it in my next patch.
-> 
-> thanks,
-> 
-> greg k-h
-These changes are verified at my side on SM8250 with mode static 
-compilation and module.
+PiBGcm9tOiBkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tIDxkbWl0cnkudG9yb2tob3ZAZ21haWwu
+Y29tPg0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAzLCAyMDE5IDEwOjQ2IEFNDQo+ID4NCj4g
+PiBJIHRoaW5rIEkgdW5kZXJzdG9vZCBub3c6IGl0IGxvb2tzIHRoZSB2bWJ1cyBkcml2ZXIgc2hv
+dWxkIGltcGxlbWVudA0KPiA+IGEgcHJlcGFyZSgpIG9yIGZyZWV6ZSgpLCB3aGljaCBjYWxscyB0
+aGUgaHlwZXJ2X2tleWJvYXJkIGRyaXZlcidzDQo+ID4gcHJlcGFyZSgpIG9yIGZyZWV6ZSgpLCB3
+aGljaCBjYW4gc2V0IHRoZSBmbGFnIG9yIGRpc2FibGUgdGhlIGtleWJvYXJkDQo+ID4gZXZlbnQg
+aGFuZGxpbmcuIFRoaXMgd2F5IHdlIGRvbid0IG5lZWQgdGhlIG5vdGlmaWVyLg0KPiANCj4gUmln
+aHQuIEkgdGhpbmsgaW4gcHJhY3RpY2UgdGhlIGN1cnJlbnQgc3VzcGVuZCBpbXBsZW1lbnRhdGlv
+biBjYW4gd29yaw0KPiBhcyBmcmVlemUoKSBmb3IgdGhlIEhWIGtleWJvYXJkLCBiZWNhdXNlIGlu
+IHN1c3BlbmQgeW91IHNodXQgb2ZmIHZtYnVzDQo+IGNoYW5uZWwsIHNvIHRoZXJlIHNob3VsZCBu
+b3QgYmUgd2FrZXVwIHNpZ25hbHMgYW55bW9yZS4gV2hhdCB5b3UgZG8gbm90DQo+IHdhbnQgaXMg
+dG8gaGF2ZSB0aGUgY3VycmVudCByZXN1bWUgdG8gYmUgdXNlZCBpbiBwbGFjZSBvZiB0aGF3KCks
+IGFzDQo+IHRoZXJlIHlvdSByZS1lbmFibGUgdGhlIHZtYnVzIGNoYW5uZWwgYW5kIHJlc3VtZSBz
+ZW5kaW5nIHdha2V1cCByZXF1ZXN0cw0KPiBhcyB5b3UgYXJlIHdyaXRpbmcgb3V0IHRoZSBoaWJl
+cm5hdGlvbiBpbWFnZSB0byBzdG9yYWdlLg0KPiANCj4gSSB0aGluayBpZiB2bWJ1cyBhbGxvd2Vk
+IEhWIGtleWJvYXJkIGRyaXZlciB0byBzdXBwbHkgZW1wdHkgdGhhdygpIGFuZA0KPiBwb3dlcm9m
+ZigpIGltcGxlbWVudGF0aW9ucywgd2hpbGUgdXNpbmcgc3VzcGVuZCgpIGFzIGZyZWV6ZSgpIGFu
+ZA0KPiByZXN1bWUoKSBhcyByZXN0b3JlKCksIGl0IHdvdWxkIHNvbHZlIHRoZSBpc3N1ZSBmb3Ig
+eW91Lg0KPiANCj4gRG1pdHJ5DQoNCkV4YWN0bHkuIEknbGwgaGF2ZSB0byBmaXggdm1idXMgZmly
+c3QsIHRoZW4gcG9zdCBhIHYyIGZvciB0aGlzIHBhdGNoLg0KDQpUaGFua3MsDQotLSBEZXh1YW4N
+Cg==
