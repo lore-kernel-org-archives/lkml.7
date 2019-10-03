@@ -2,59 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657ACC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CBC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A18215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3740B20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119146;
-	bh=lw8qQB2XdoKBsbDUtcWe7KhHVToJ6iBMTQBYsvMtJCE=;
+	s=default; t=1570119150;
+	bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1K42njTwgVxOkv7DGzQAQtSWL+RFMkbKPlSL/325Zwao//gWxIhlYPXBJjWpPPX4z
-	 v7uP641mQ4SstNDgdcAs/mn04JFrLi6WgQk7uTWlAjt/y9qX4nQlFiZJV3rtx28kvm
-	 f82bR1WSb2w3lLx5J3N84nznlot+eba4zfu/c0LI=
+	b=w6wp3juwRNCMXFBIfYyHcio+a1aXAEXF4RXJPKr7AOGJs5lcGigrb4NUSsEEaz97n
+	 dEjcnMHpnsz+1zQb8MlRVadz1GlfRBevZUAVrKYDpTn0a8LpAJiM6vC3PJK+iRZ7Bp
+	 0CeioffoJR/tAn/6vhICSInn6lFKRoGoWATwE3yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388037AbfJCQMZ (ORCPT
+        id S2388053AbfJCQM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387990AbfJCQMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:22 -0400
+        id S2388035AbfJCQMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 602FB20865;
-        Thu,  3 Oct 2019 16:12:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E9520700;
+        Thu,  3 Oct 2019 16:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119141;
-        bh=lw8qQB2XdoKBsbDUtcWe7KhHVToJ6iBMTQBYsvMtJCE=;
+        s=default; t=1570119144;
+        bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWI9A3sukhjhbGb/evMMhZ0LlMq23xIeGmrq/f3dBgytLH57eXMaWL+WJZT3fQEk2
-         ckxvls247w6NBx/MgGNngQ2YhuSqbX587FZ1jFpUETitFbDb42K7i7ELkAoy+fjklw
-         QuyjgyvBCQSt8D9lzN9ILIV0pzekKZmxHzCHbzEQ=
+        b=RQfh8jDxCIiswM3HN7mFguwudPeC5/bgpahoLMmEtSnSgIP8pN2Pdi/COqZlnFIIg
+         F/0HDBHIKXOrg9I7bnjwhkomnq2+igyPg0ZJIpzqx5iNSZ/W5SFdBgB0/cGTNU9ugz
+         ET54q96myHf9CTCDv+aWqoEqX+DYNzFXKfi35Bcw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 124/185] kprobes: Prohibit probing on BUG() and WARN() address
-Date:   Thu,  3 Oct 2019 17:53:22 +0200
-Message-Id: <20191003154505.846550065@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
+        Ales Novak <alnovak@suse.cz>,
+        Shane Seymour <shane.seymour@hpe.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 142/185] scsi: scsi_dh_rdac: zero cdb in send_mode_select()
+Date:   Thu,  3 Oct 2019 17:53:40 +0200
+Message-Id: <20191003154509.969401555@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -67,70 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Martin Wilck <Martin.Wilck@suse.com>
 
-[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
+commit 57adf5d4cfd3198aa480e7c94a101fc8c4e6109d upstream.
 
-Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
-get the address where the BUG() has occurred, kprobes can not
-do single-step out-of-line that instruction. So prohibit
-probing on such address.
+cdb in send_mode_select() is not zeroed and is only partially filled in
+rdac_failover_get(), which leads to some random data getting to the
+device. Users have reported storage responding to such commands with
+INVALID FIELD IN CDB. Code before commit 327825574132 was not affected, as
+it called blk_rq_set_block_pc().
 
-Without this fix, if someone put a kprobe on WARN(), the
-kernel will crash with invalid opcode error instead of
-outputing warning message, because kernel can not find
-correct bug address.
+Fix this by zeroing out the cdb first.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Identified & fix proposed by HPE.
+
+Fixes: 327825574132 ("scsi_dh_rdac: switch to scsi_execute_req_flags()")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20190904155205.1666-1-martin.wilck@suse.com
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Ales Novak <alnovak@suse.cz>
+Reviewed-by: Shane Seymour <shane.seymour@hpe.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/bug.h | 5 +++++
- kernel/kprobes.c    | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/device_handler/scsi_dh_rdac.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index da4231c905c85..f485974177914 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -45,6 +45,11 @@ int is_valid_bugaddr(unsigned long addr);
+--- a/drivers/scsi/device_handler/scsi_dh_rdac.c
++++ b/drivers/scsi/device_handler/scsi_dh_rdac.c
+@@ -546,6 +546,8 @@ static void send_mode_select(struct work
+ 	spin_unlock(&ctlr->ms_lock);
  
- #else	/* !CONFIG_GENERIC_BUG */
- 
-+static inline void *find_bug(unsigned long bugaddr)
-+{
-+	return NULL;
-+}
+  retry:
++	memset(cdb, 0, sizeof(cdb));
 +
- static inline enum bug_trap_type report_bug(unsigned long bug_addr,
- 					    struct pt_regs *regs)
- {
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index c43bc2bc5b2ca..f7a4602a76f98 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1501,7 +1501,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure it is not in reserved area nor out of text */
- 	if (!kernel_text_address((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
--	    jump_label_text_reserved(p->addr, p->addr)) {
-+	    jump_label_text_reserved(p->addr, p->addr) ||
-+	    find_bug((unsigned long)p->addr)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
--- 
-2.20.1
-
+ 	data_size = rdac_failover_get(ctlr, &list, cdb);
+ 
+ 	RDAC_LOG(RDAC_LOG_FAILOVER, sdev, "array %s, ctlr %d, "
 
 
