@@ -2,52 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ADBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122D7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C626222CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CE0215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118462;
-	bh=laAxBeLgUCL7CLKkEoF7O8sqpowtY5MtgmlxoiWAa/o=;
+	s=default; t=1570118465;
+	bh=YFa7vuHZRVFBfCUsJQNIUTavCvqGBAJxICHgJ+nGQP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ROSim43QdTRpWBxRCLEqgEvlGV5FD5Ijoe3AuFSGbx84MTmoUDBuQpk3TNAAprMqd
-	 /k78UACLOEhDs0lzCYjBmZ3Bf6j1yOalpHMhnREtPhdzSuFxgcXMKcAWe2kw06BocK
-	 ZVlBTgcKU+oxcNRPw4uKX6s8WC+A9t8UL8xkzdz0=
+	b=gk7kyfJZcrksdBjBAFGfLF/5ajjNWAwp/4nqAkx8nIyOfyH7g9l1p9JEXn+APOFYM
+	 twLKbxegt3mCW+fWQsB1Lj3WxaiDf4gTPorT5c5c6whxsgwevb+2HhmVHqyfyr7rUW
+	 hj8P1RD//c5anppBJh6B5TjBl7avgx3+SCRoU9qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbfJCQBB (ORCPT
+        id S1731699AbfJCQBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45022 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbfJCQA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:58 -0400
+        id S1729528AbfJCQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E99C21A4C;
-        Thu,  3 Oct 2019 16:00:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1AE5215EA;
+        Thu,  3 Oct 2019 16:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118457;
-        bh=laAxBeLgUCL7CLKkEoF7O8sqpowtY5MtgmlxoiWAa/o=;
+        s=default; t=1570118461;
+        bh=YFa7vuHZRVFBfCUsJQNIUTavCvqGBAJxICHgJ+nGQP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTT/kqL2d/R2afgxdd9kuRyA/+hRBywSqXJmwYaPhPOn2qqoG4MaE2JEaE3a5v3fL
-         PbcE04lrsxWIbFsD4abBjVW8o6cxkE9DcBNT/AIoZCvdsHH3a5vYSMLMRxVfkbjKpW
-         UPALiuJbftcDCycDU0BhjamSHlilXD1PqukIhia0=
+        b=xQCe+nYEMlAhhX/gYZfaK6TA7rcv8TM7aGBvehih3Ojyn+4Cx4mmhU6j3RGdmFcLy
+         zXH4j/LVu/vR8jqxR/7B0rKCmp0ximsjvmNPZhN+I1aKXiMYYi/uZ/oevKBae03fM1
+         KJg+8R4j8DgA+mq8vfhRCElans1QcnQGmTTOih0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 019/129] f2fs: fix to do sanity check on segment bitmap of LFS curseg
-Date:   Thu,  3 Oct 2019 17:52:22 +0200
-Message-Id: <20191003154327.846915437@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.m>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 002/129] IB/core: Add an unbound WQ type to the new CQ API
+Date:   Thu,  3 Oct 2019 17:52:05 +0200
+Message-Id: <20191003154319.715869108@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,110 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit c854f4d681365498f53ba07843a16423625aa7e9 ]
+commit f794809a7259dfaa3d47d90ef5a86007cf48b1ce upstream.
 
-As Jungyeon Reported in bugzilla:
+The upstream kernel commit cited below modified the workqueue in the
+new CQ API to be bound to a specific CPU (instead of being unbound).
+This caused ALL users of the new CQ API to use the same bound WQ.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
+Specifically, MAD handling was severely delayed when the CPU bound
+to the WQ was busy handling (higher priority) interrupts.
 
-- Reproduces
-gcc poc_13.c
-./run.sh f2fs
+This caused a delay in the MAD "heartbeat" response handling,
+which resulted in ports being incorrectly classified as "down".
 
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2133!
- RIP: 0010:update_sit_entry+0x35d/0x3e0
- Call Trace:
-  f2fs_allocate_data_block+0x16c/0x5a0
-  do_write_page+0x57/0x100
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x364/0x13a0
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+To fix this, add a new "unbound" WQ type to the new CQ API, so that users
+have the option to choose either a bound WQ or an unbound WQ.
 
-The testcase fails because that, in fuzzed image, current segment was
-allocated with LFS type, its .next_blkoff should point to an unused
-block address, but actually, its bitmap shows it's not. So during
-allocation, f2fs crash when setting bitmap.
+For MADs, choose the new "unbound" WQ.
 
-Introducing sanity_check_curseg() to check such inconsistence of
-current in-used segment.
+Fixes: b7363e67b23e ("IB/device: Convert ib-comp-wq to be CPU-bound")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.m>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/infiniband/core/cq.c     |    8 ++++++--
+ drivers/infiniband/core/device.c |   15 ++++++++++++++-
+ drivers/infiniband/core/mad.c    |    2 +-
+ include/rdma/ib_verbs.h          |    9 ++++++---
+ 4 files changed, 27 insertions(+), 7 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 2fb99a081de8f..1d5a352138109 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2490,6 +2490,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
- 	return init_victim_secmap(sbi);
+--- a/drivers/infiniband/core/cq.c
++++ b/drivers/infiniband/core/cq.c
+@@ -102,12 +102,12 @@ static void ib_cq_poll_work(struct work_
+ 	completed = __ib_process_cq(cq, IB_POLL_BUDGET_WORKQUEUE);
+ 	if (completed >= IB_POLL_BUDGET_WORKQUEUE ||
+ 	    ib_req_notify_cq(cq, IB_POLL_FLAGS) > 0)
+-		queue_work(ib_comp_wq, &cq->work);
++		queue_work(cq->comp_wq, &cq->work);
  }
  
-+static int sanity_check_curseg(struct f2fs_sb_info *sbi)
-+{
-+	int i;
-+
-+	/*
-+	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
-+	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
-+	 */
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		struct curseg_info *curseg = CURSEG_I(sbi, i);
-+		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
-+		unsigned int blkofs = curseg->next_blkoff;
-+
-+		if (f2fs_test_bit(blkofs, se->cur_valid_map))
-+			goto out;
-+
-+		if (curseg->alloc_type == SSR)
-+			continue;
-+
-+		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
-+			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
-+				continue;
-+out:
-+			f2fs_msg(sbi->sb, KERN_ERR,
-+				"Current segment's next free block offset is "
-+				"inconsistent with bitmap, logtype:%u, "
-+				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
-+				i, curseg->segno, curseg->alloc_type,
-+				curseg->next_blkoff, blkofs);
-+			return -EINVAL;
-+		}
+ static void ib_cq_completion_workqueue(struct ib_cq *cq, void *private)
+ {
+-	queue_work(ib_comp_wq, &cq->work);
++	queue_work(cq->comp_wq, &cq->work);
+ }
+ 
+ /**
+@@ -159,9 +159,12 @@ struct ib_cq *ib_alloc_cq(struct ib_devi
+ 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
+ 		break;
+ 	case IB_POLL_WORKQUEUE:
++	case IB_POLL_UNBOUND_WORKQUEUE:
+ 		cq->comp_handler = ib_cq_completion_workqueue;
+ 		INIT_WORK(&cq->work, ib_cq_poll_work);
+ 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
++		cq->comp_wq = (cq->poll_ctx == IB_POLL_WORKQUEUE) ?
++				ib_comp_wq : ib_comp_unbound_wq;
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -196,6 +199,7 @@ void ib_free_cq(struct ib_cq *cq)
+ 		irq_poll_disable(&cq->iop);
+ 		break;
+ 	case IB_POLL_WORKQUEUE:
++	case IB_POLL_UNBOUND_WORKQUEUE:
+ 		cancel_work_sync(&cq->work);
+ 		break;
+ 	default:
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -59,6 +59,7 @@ struct ib_client_data {
+ };
+ 
+ struct workqueue_struct *ib_comp_wq;
++struct workqueue_struct *ib_comp_unbound_wq;
+ struct workqueue_struct *ib_wq;
+ EXPORT_SYMBOL_GPL(ib_wq);
+ 
+@@ -1005,10 +1006,19 @@ static int __init ib_core_init(void)
+ 		goto err;
+ 	}
+ 
++	ib_comp_unbound_wq =
++		alloc_workqueue("ib-comp-unb-wq",
++				WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM |
++				WQ_SYSFS, WQ_UNBOUND_MAX_ACTIVE);
++	if (!ib_comp_unbound_wq) {
++		ret = -ENOMEM;
++		goto err_comp;
 +	}
-+	return 0;
-+}
 +
- /*
-  * Update min, max modified time for cost-benefit GC algorithm
-  */
-@@ -2583,6 +2618,10 @@ int build_segment_manager(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
+ 	ret = class_register(&ib_class);
+ 	if (ret) {
+ 		pr_warn("Couldn't create InfiniBand device class\n");
+-		goto err_comp;
++		goto err_comp_unbound;
+ 	}
  
-+	err = sanity_check_curseg(sbi);
-+	if (err)
-+		return err;
-+
- 	init_min_max_mtime(sbi);
- 	return 0;
- }
--- 
-2.20.1
-
+ 	ret = ibnl_init();
+@@ -1055,6 +1065,8 @@ err_ibnl:
+ 	ibnl_cleanup();
+ err_sysfs:
+ 	class_unregister(&ib_class);
++err_comp_unbound:
++	destroy_workqueue(ib_comp_unbound_wq);
+ err_comp:
+ 	destroy_workqueue(ib_comp_wq);
+ err:
+@@ -1071,6 +1083,7 @@ static void __exit ib_core_cleanup(void)
+ 	addr_cleanup();
+ 	ibnl_cleanup();
+ 	class_unregister(&ib_class);
++	destroy_workqueue(ib_comp_unbound_wq);
+ 	destroy_workqueue(ib_comp_wq);
+ 	/* Make sure that any pending umem accounting work is done. */
+ 	destroy_workqueue(ib_wq);
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -3163,7 +3163,7 @@ static int ib_mad_port_open(struct ib_de
+ 	}
+ 
+ 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
+-			IB_POLL_WORKQUEUE);
++			IB_POLL_UNBOUND_WORKQUEUE);
+ 	if (IS_ERR(port_priv->cq)) {
+ 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
+ 		ret = PTR_ERR(port_priv->cq);
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -63,6 +63,7 @@
+ 
+ extern struct workqueue_struct *ib_wq;
+ extern struct workqueue_struct *ib_comp_wq;
++extern struct workqueue_struct *ib_comp_unbound_wq;
+ 
+ union ib_gid {
+ 	u8	raw[16];
+@@ -1415,9 +1416,10 @@ struct ib_ah {
+ typedef void (*ib_comp_handler)(struct ib_cq *cq, void *cq_context);
+ 
+ enum ib_poll_context {
+-	IB_POLL_DIRECT,		/* caller context, no hw completions */
+-	IB_POLL_SOFTIRQ,	/* poll from softirq context */
+-	IB_POLL_WORKQUEUE,	/* poll from workqueue */
++	IB_POLL_DIRECT,		   /* caller context, no hw completions */
++	IB_POLL_SOFTIRQ,	   /* poll from softirq context */
++	IB_POLL_WORKQUEUE,	   /* poll from workqueue */
++	IB_POLL_UNBOUND_WORKQUEUE, /* poll from unbound workqueue */
+ };
+ 
+ struct ib_cq {
+@@ -1434,6 +1436,7 @@ struct ib_cq {
+ 		struct irq_poll		iop;
+ 		struct work_struct	work;
+ 	};
++	struct workqueue_struct *comp_wq;
+ };
+ 
+ struct ib_srq {
 
 
