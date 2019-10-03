@@ -2,52 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2407C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB535C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E9221783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F7E21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119202;
-	bh=AMxdu2iAMkSh3XMhlH/qsHZK8WG69YqnxAMbGUcPvu4=;
+	s=default; t=1570119205;
+	bh=DK+VYKzLxLOxqlDf2LOXe0BiTUa7g4axbqL/DscNXnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFCebWL6afSA/3tE0Lx1+DsDezX3WjsVdd23aAMz6qPb7QMBW5X5cHLpZzpop1OYX
-	 bimR/nVd8Ndo/9GXZ6aqaRIsFZQGOWQdN1lnb29lYGPDv0LLW607cYj5WA5N+u+MIA
-	 fuD2WCBO/mSpRnwApBBKGVnwaD/zXJV2AxJHbghw=
+	b=aethz/yMucdl656bTEjZdcWmj0ykbP7WxC8Z2Bts046jaIEmvyb/mN9hifAu0u2Tl
+	 5DfgiN6HD9Yn1Ni+3NVmSULA2abUDl7Zwiw0U7Nvcj7RIZ+1p5rXx1Y/FMfQK4lQuz
+	 2kRuVJq97n0TLETBgtaoIpaCQXa+mr/Kn8MVAa1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388270AbfJCQNW (ORCPT
+        id S2388300AbfJCQNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:13:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388197AbfJCQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:19 -0400
+        id S2388261AbfJCQNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C03A21D81;
-        Thu,  3 Oct 2019 16:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A923121783;
+        Thu,  3 Oct 2019 16:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119198;
-        bh=AMxdu2iAMkSh3XMhlH/qsHZK8WG69YqnxAMbGUcPvu4=;
+        s=default; t=1570119201;
+        bh=DK+VYKzLxLOxqlDf2LOXe0BiTUa7g4axbqL/DscNXnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YG0Ng4vdPu4UmffPQC97SF+YSfkhOh8qC081+lBRgr6FXnYJEvFWZMvsajDr6NAps
-         jJE4CLSbgqZzZu6Hap/1WnTMIV+efM+PL+Lm+7WxEP2TLrpHrBCRPPWZzHHwCbrvLn
-         qfvPQhxPJGOboJd+hXdhSGXrmdHCshzXIyif1jfM=
+        b=wmMEQRT5h034JiiEFKvIsiO5Ju3liOAd0/xozrXXx3SdpeVxAxzGOeRxw+C9SFwBQ
+         eIVb91KqjFsNMwyF9e/M1xUokVPlu6QhFvq1l9dsidXTttK4PkXmlXkhGGGvK0phyd
+         hkZAO+2mRHMj78Y0ZyZ53zfQGLnWK7bCwgOWj3YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 161/185] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
-Date:   Thu,  3 Oct 2019 17:53:59 +0200
-Message-Id: <20191003154515.507387737@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Arthur She <arthur.she@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 126/185] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
+Date:   Thu,  3 Oct 2019 17:53:24 +0200
+Message-Id: <20191003154506.356128880@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,49 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
+[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
 
-ENOTSUPP is not supposed to be returned to userspace. This was found on an
-OpenPower machine, where the RTC does not support set_alarm.
+Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
+other purposes.
 
-On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
-"524 Unknown error 524"
+Currently it is left empty with the dmaengine-pcm, in this case copy the
+pcm->id string as pcm->name.
 
-Replace it with EOPNOTSUPP which results in the expected "95 Operation not
-supported" error.
+For example IGT is using this to find the HDMI PCM for testing audio on it.
 
-Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reported-by: Arthur She <arthur.she@linaro.org>
+Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/alarmtimer.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -676,7 +676,7 @@ static int alarm_timer_create(struct k_i
- 	enum  alarmtimer_type type;
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index d53786498b612..052778c6afad6 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -311,6 +311,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
  
- 	if (!alarmtimer_get_rtcdev())
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
+ 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
+ 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
++
++		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
++			strncpy(rtd->pcm->streams[i].pcm->name,
++				rtd->pcm->streams[i].pcm->id,
++				sizeof(rtd->pcm->streams[i].pcm->name));
++		}
+ 	}
  
- 	if (!capable(CAP_WAKE_ALARM))
- 		return -EPERM;
-@@ -794,7 +794,7 @@ static int alarm_timer_nsleep(const cloc
- 	int ret = 0;
- 
- 	if (!alarmtimer_get_rtcdev())
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	if (flags & ~TIMER_ABSTIME)
- 		return -EINVAL;
+ 	return 0;
+-- 
+2.20.1
+
 
 
