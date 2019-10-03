@@ -2,96 +2,116 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3741EC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3412ECE58B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10772086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G//YceGf"
+	by mail.kernel.org (Postfix) with ESMTP id D1C5B2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732388AbfJCV4t (ORCPT
+        id S1731959AbfJCV5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:56:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50827 "EHLO ozlabs.org"
+        Thu, 3 Oct 2019 17:57:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:65447 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfJCV4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:56:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46kn0F5q3Nz9sPl;
-        Fri,  4 Oct 2019 07:56:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570139805;
-        bh=h9nN/ZgKI9bs7xE62e7QIoDmPYM8Zxxl4Udwidfyin0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=G//YceGfGwrKyOXTlFHG7v25TTEiE3xzb+G0n7bnTCUY/PkxUtdkRtBn4CE7xya7L
-         yiFLy5ywOhF3fPry+DEQ8bWte6sgK9k3rjyZW2qcEseLZk0XkYjkMWS3/r/iCqImMs
-         I8SddJbVloGf00r+nmj4l0/1su/vYr/sTAmBnnkyowSpDvHd3fqdc3eRvejnz+hm/v
-         eQQ18f6qDIO8dXNNSwG+hPzleov3iDCIBxck74/hL3crE2CBYAhoUTI0iBpp8J66L4
-         fcb04nK62IR1Aqy9098YqzsepouEes1SY2BOTs+aQPxnUwVZqMEGSZ11OWyfZUdCT9
-         RCGlw75dNPHHw==
-Date:   Fri, 4 Oct 2019 07:56:45 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hugh Cole-Baker <sigmaris@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the rockchip tree
-Message-ID: <20191004075645.715fb074@canb.auug.org.au>
+        id S1726002AbfJCV5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:57:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 14:57:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="195352340"
+Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by orsmga003.jf.intel.com with ESMTP; 03 Oct 2019 14:57:44 -0700
+Date:   Fri, 4 Oct 2019 00:57:43 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     David Safford <david.safford@ge.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191003215743.GB30511@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <20191003215125.GA30511@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/30ogMC48ZC4suie7lnnLB0l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003215125.GA30511@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/30ogMC48ZC4suie7lnnLB0l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Oct 04, 2019 at 12:51:25AM +0300, Jarkko Sakkinen wrote:
+> On Thu, Oct 03, 2019 at 02:53:47PM -0400, Mimi Zohar wrote:
+> > [Cc'ing David Safford]
+> > 
+> > On Thu, 2019-10-03 at 20:58 +0300, Jarkko Sakkinen wrote:
+> > > On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
+> > > > On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
+> > > > > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
+> > > > > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> > > > > > > Only the kernel random pool should be used for generating random numbers.
+> > > > > > > TPM contributes to that pool among the other sources of entropy. In here it
+> > > > > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > > > > > > but in order to remove tpm_get_random() we need to first remove all the
+> > > > > > > call sites.
+> > > > > > 
+> > > > > > At what point during boot is the kernel random pool available?  Does
+> > > > > > this imply that you're planning on changing trusted keys as well?
+> > > > > 
+> > > > > Well trusted keys *must* be changed to use it. It is not a choice
+> > > > > because using a proprietary random number generator instead of defacto
+> > > > > one in the kernel can be categorized as a *regression*.
+> > > > 
+> > > > I really don't see how using the TPM random number for TPM trusted
+> > > > keys would be considered a regression.  That by definition is a
+> > > > trusted key.  If anything, changing what is currently being done would
+> > > > be the regression. 
+> > > 
+> > > It is really not a TPM trusted key. It trusted key that gets sealed with
+> > > the TPM. The key itself is used in clear by kernel. The random number
+> > > generator exists in the kernel to for a reason.
+> > > 
+> > > It is without doubt a regression.
+> > 
+> > You're misusing the term "regression" here.  A regression is something
+> > that previously worked and has stopped working.  In this case, trusted
+> > keys has always been based on the TPM random number generator.  Before
+> > changing this, there needs to be some guarantees that the kernel
+> > random number generator has a pool of random numbers early, on all
+> > systems including embedded devices, not just servers.
+> 
+> I'm not using the term regression incorrectly here. Wrong function
+> was used to generate random numbers for the payload here. It is an
+> obvious bug.
 
-Hi all,
+At the time when trusted keys was introduced I'd say that it was a wrong
+design decision and badly implemented code. But you are right in that as
+far that code is considered it would unfair to speak of a regression.
 
-In commit
+asym-tpm.c on the other hand this is fresh new code. There has been
+*countless* of discussions over the years that random numbers should
+come from multiple sources of entropy. There is no other categorization
+than a bug for the tpm_get_random() there.
 
-  b62ce630fddb ("arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line")
-
-Fixes tag
-
-  Fixes: e4f3fb4 ("arm64: dts: rockchip: add initial dts support for Rockpr=
-o64")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/30ogMC48ZC4suie7lnnLB0l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2Wbp0ACgkQAVBC80lX
-0GzUoAf/f5C+acLVyTkfj1UKwXxVdcX0aXTmCZpcned9VDl5YK7qSWptMO2dVIiJ
-ARSLYfpI5zDlEehDPfA9wkF1r7JfE5hxh676i9lmqc7Xc4jUETodcGN0FrCdJyex
-IsPBi75Y20xf1VM6WYakGdBXMAS1MSP+uoJ6ns/uJbDjcpr6eeQnDrEyvszh/ypA
-JdVs4xGM1mJxYuVpmZPemuwXlydy2P12ykTcFwl6rRPB5xFgqljIn179BpXJLLak
-FQXTzFzH/XoUYNoZbc/wXkth0pCSwitX0YooPJUXVkV+PzDv6OQFf6ugoCVNoxV0
-Bas3rauMf/GV8z41PkwwiWsAyrbHSQ==
-=l3CR
------END PGP SIGNATURE-----
-
---Sig_/30ogMC48ZC4suie7lnnLB0l--
+/Jarkko
