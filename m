@@ -2,108 +2,124 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E076C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E966C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4276420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpxiUa56"
+	by mail.kernel.org (Postfix) with ESMTP id 2510F2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570123025;
+	bh=QvtTFry1qIsP6+TuBN+Z8h7wwAlSQ6vclB0+CEJJ6wE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K+99EJufDQC8wNKaseSSHx5+4MTcjKYweRcOQLtpX2pKEogUC6JuCfwFMU+7wEixV
+	 SldqmpQD3Kc+f87gbvTilGMUrHrpSpggDPPJswjarPY9rM7xaQ05IQDOQNkyJnQgeb
+	 oVSRPJWGXwq0idmZf3tuR+Mkunnq0ZSi83vrJfwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391768AbfJCRQz (ORCPT
+        id S2390567AbfJCQX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:16:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39905 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390569AbfJCQXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:33 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a15so3077634edt.6;
-        Thu, 03 Oct 2019 09:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ziG5nQu3xPwJ88X/LZnL5pMrIpk4xw9VvyMbz8MQsEI=;
-        b=fpxiUa563sqwJxlPjEOcPMPQdDUdznpeUznfXE/xQIhBee3RpywOZqk9RAeDW9Ajfh
-         8uVC4M7k/c838eY5QG17PMfwiK4f+s3+IthwdsafIluDZkNiXhni+Zm8nUInhripCcMm
-         hV8qFZTLQePOm4nOE8+Xu05x0RcIwaP530Dmr5t0hRzxtL+F3DD8ZFb/TVv/9GfVKkAK
-         xeZTs69UNOYpzikIClqyjf9NK5YzH23jpf0y/Xi1q8icvzYBPUVL4kZihjhjn6o7G4IV
-         kf1ud8T5z1cCXIKUFr+LHzjIZg0rYBHq5AJiJoLyipV4ASm4vJXaC2YysqxuA6IuTi/D
-         gN3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ziG5nQu3xPwJ88X/LZnL5pMrIpk4xw9VvyMbz8MQsEI=;
-        b=GzgHSLq7r4gl2fu897Nvzsed4zZrkX0jYWf5QXePNApCh6pFYIPgxYuZmnTtT7Id9o
-         aZtI4XnG03CAZ2BWFmYhMMS+L05UYOiNiZw3hMDDqsk2kW6s+ikMJyn0yB9Yw3cZD068
-         rHDIBIcV1gU9EeA0+Tap/mkzN6BNymX86mhutp2sQrBasiI/jzdGniWb60x3/c2OXx0J
-         7arMHtvh/nWmkv9v0mxSJADbOJrd7K+TqBUghpkLMYhTOJTvT1B2Yq1O20M5FlRhvYom
-         9a8NbCeKLEdbCj06DzXRPEQKP5xfh0afq8ddnekiwGY0bXkhsRlBmXB44zJiwVner6b4
-         I/Mw==
-X-Gm-Message-State: APjAAAVcaDHCD45L9ajJbOZX9ZnbfEhJE/fYzm4eVa1d8ycpvDJrjKKS
-        7nsZCxKeguQ2iYR7C4BoRbI=
-X-Google-Smtp-Source: APXvYqykHTQaML6sqsg8BxBtjQGr8gUpDoprCG7qt8I1pR9ipgNcQLUR4cUehkL63L5ZZelA3Nb1KQ==
-X-Received: by 2002:a17:906:255b:: with SMTP id j27mr8481324ejb.96.1570119810698;
-        Thu, 03 Oct 2019 09:23:30 -0700 (PDT)
-Received: from Limone ([46.114.33.103])
-        by smtp.gmail.com with ESMTPSA id c1sm549687edd.21.2019.10.03.09.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 09:23:29 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 18:23:26 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003162326.GA2727@Limone>
-References: <20191002150650.GA4227@gofer.mess.org>
- <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
- <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <20191003080539.2b13c03b@coco.lan>
- <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
- <20191003120238.75811da6@coco.lan>
- <20191003160336.GA5125@Limone>
- <20191003130909.01d29b77@coco.lan>
+        Thu, 3 Oct 2019 12:23:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390535AbfJCQXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FF9C21783;
+        Thu,  3 Oct 2019 16:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119801;
+        bh=QvtTFry1qIsP6+TuBN+Z8h7wwAlSQ6vclB0+CEJJ6wE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dsPaipRFTn2RSqv2MOLLYA97NhZuRwCYqUySEMhTbSBhLbVupR2uvy3gU/ho9TCIT
+         jaSDxCNaMITFoTJogCgXgAMHqZ5AjjRu/QDNjAvPng+w+eSf0oznGEQaTfZexDRtCa
+         2XkFX9JcKEJWBXfE98P8H8qnjn32HvU2PKrpZJaE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 161/211] scsi: implement .cleanup_rq callback
+Date:   Thu,  3 Oct 2019 17:53:47 +0200
+Message-Id: <20191003154524.771140869@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003130909.01d29b77@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> No, I mean with the first patch you sent to the ML, with the powerup
-> hack.
+From: Ming Lei <ming.lei@redhat.com>
 
-Boot time:
+[ Upstream commit b7e9e1fb7a9227be34ad4a5e778022c3164494cf ]
 
-[    4.653257] si2168 1-0067: Silicon Labs Si2168-B40 successfully identified
-[    4.653259] si2168 1-0067: firmware version: B 4.0.2
-[    4.653279] usb 2-1: DVB: registering adapter 0 frontend 0 (Silicon Labs Si2168)...
-[    4.653284] dvbdev: dvb_create_media_entity: media entity 'Silicon Labs Si2168' registered.
-...
-[    4.694785] si2157 2-0063: found a 'Silicon Labs Si2147-A30'
-[    4.694787] si2157 2-0063: Silicon Labs Si2147/2148/2157/2158 successfully attached
-[    4.717814] usb 2-1: dvb_usb_v2: 'Logilink VG0022A' successfully initialized and connected
-[    4.717880] usbcore: registered new interface driver dvb_usb_af9035
+Implement .cleanup_rq() callback for freeing driver private part
+of the request. Then we can avoid to leak this part if the request isn't
+completed by SCSI, and freed by blk-mq or upper layer(such as dm-rq) finally.
 
-VLC time:
+Cc: Ewan D. Milne <emilne@redhat.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: dm-devel@redhat.com
+Cc: <stable@vger.kernel.org>
+Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/scsi_lib.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-[  175.490609] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
-[  176.746585] si2168 1-0067: firmware version: B 4.0.25
-[  176.781570] si2157 2-0063: firmware version: \xff.\xff.255
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 75b926e700766..abfcc2f924ce8 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1252,6 +1252,18 @@ static void scsi_initialize_rq(struct request *rq)
+ 	cmd->retries = 0;
+ }
+ 
++/*
++ * Only called when the request isn't completed by SCSI, and not freed by
++ * SCSI
++ */
++static void scsi_cleanup_rq(struct request *rq)
++{
++	if (rq->rq_flags & RQF_DONTPREP) {
++		scsi_mq_uninit_cmd(blk_mq_rq_to_pdu(rq));
++		rq->rq_flags &= ~RQF_DONTPREP;
++	}
++}
++
+ /* Add a command to the list used by the aacraid and dpt_i2o drivers */
+ void scsi_add_cmd_to_list(struct scsi_cmnd *cmd)
+ {
+@@ -2339,6 +2351,7 @@ static const struct blk_mq_ops scsi_mq_ops = {
+ 	.init_request	= scsi_mq_init_request,
+ 	.exit_request	= scsi_mq_exit_request,
+ 	.initialize_rq_fn = scsi_initialize_rq,
++	.cleanup_rq	= scsi_cleanup_rq,
+ 	.map_queues	= scsi_map_queues,
+ };
+ 
+-- 
+2.20.1
 
-g
+
 
