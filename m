@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB63C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAFDC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA9B207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D070E207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118575;
-	bh=wHqDZJIituYx9y3q6KEtPRBcqok4mbWdkHwToUoZq6o=;
+	s=default; t=1570118581;
+	bh=4oyMsZn2PFZxFlfSAjj89JOUHSLgS0K9EA9CcXgbRlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMpkNFDQ2wTW0DWIPO+5r85M8jIfmjWoB0cjL5Ig5sKngMiIhy+xIpeHX+5rQTeCi
-	 OLnLq38tqu+rUZ2UpatY2spf/MDrBmAf7ZTjqy6SGegmHdCFtbHwsHykctN6sITkhR
-	 eC36evx1WcgKFXuNsKS9zjJeHpDMqVBU0P1etxDU=
+	b=Ro5Alk5sm0zU+geTvBc2RBD0mQb4uRSQMmmBeS2hcEuPpgh/mguMSPBzH3tJmAJ+H
+	 DH4IT2BA59uZObUjThSF0pVxap9qCEENWQDaPoYc2+MPcjbDm+gYeR+1myIfiY26ME
+	 XuA+3zPy3SIwZj6IeCB8FXd2XKs0wOfkTbcYp5WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbfJCQCy (ORCPT
+        id S1732110AbfJCQC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729741AbfJCQCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:47 -0400
+        id S1732078AbfJCQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3272120700;
-        Thu,  3 Oct 2019 16:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 835A720700;
+        Thu,  3 Oct 2019 16:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118566;
-        bh=wHqDZJIituYx9y3q6KEtPRBcqok4mbWdkHwToUoZq6o=;
+        s=default; t=1570118572;
+        bh=4oyMsZn2PFZxFlfSAjj89JOUHSLgS0K9EA9CcXgbRlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMsc8h4Vzd9j1C0UnpLmP6HSEGQhWB5eaQ7hpoCgRCuxxjmwULmJUXsHyDMg785XM
-         Je1DKZaAIokNE7R2HtSKOGPeWTSWYWCYMXrEw01+rN21ZsPOYKJQy3ab8nrfhLV+/7
-         eWsHKS0jY5pxMeX17FO3zJHf5Vk2Irpe4Th8Gh4o=
+        b=0cEGaeSaUYSKaR5Jdt0ujP0slrs4b2E62K6kmsPWEziOPLb4XcFSgqCyJvUBuI25U
+         GWHKvc5H8be5sKxELZo44BHuCUTjk4Bdf1S91u2Itx7/3RcfA5FTPTtzLE6hVuV3dZ
+         tcK+fdCqNuMVehMvJz/FESqv8QcgxAcdWYfchXTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        James Morse <james.morse@arm.com>,
-        kernel-janitors@vger.kernel.org,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 057/129] EDAC/altera: Use the proper type for the IRQ status bits
-Date:   Thu,  3 Oct 2019 17:53:00 +0200
-Message-Id: <20191003154344.255520786@linuxfoundation.org>
+Subject: [PATCH 4.9 059/129] md: dont set In_sync if array is frozen
+Date:   Thu,  3 Oct 2019 17:53:02 +0200
+Message-Id: <20191003154345.521821921@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -66,57 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
+[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
 
-Smatch complains about the cast of a u32 pointer to unsigned long:
+When a disk is added to array, the following path is called in mdadm.
 
-  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
-  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
+Manage_subdevs -> sysfs_freeze_array
+               -> Manage_add
+               -> sysfs_set_str(&info, NULL, "sync_action","idle")
 
-This code wouldn't work on a 64 bit big endian system because it would
-read past the end of &irq_status.
+Then from kernel side, Manage_add invokes the path (add_new_disk ->
+validate_super = super_1_validate) to set In_sync flag.
 
- [ bp: massage. ]
+Since In_sync means "device is in_sync with rest of array", and the new
+added disk need to resync thread to help the synchronization of data.
+And md_reap_sync_thread would call spare_active to set In_sync for the
+new added disk finally. So don't set In_sync if array is in frozen.
 
-Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: kernel-janitors@vger.kernel.org
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/altera_edac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/md.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index b0bd0f64d8f21..6037efa94c9ba 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1651,6 +1651,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
- 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	int irq = irq_desc_get_irq(desc);
-+	unsigned long bits;
- 
- 	dberr = (irq == edac->db_irq) ? 1 : 0;
- 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
-@@ -1660,7 +1661,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
- 
- 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
- 
--	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
-+	bits = irq_status;
-+	for_each_set_bit(bit, &bits, 32) {
- 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
- 		if (irq)
- 			generic_handle_irq(irq);
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index c1c514792457a..da8708b65356e 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1662,8 +1662,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+ 				if (!(le32_to_cpu(sb->feature_map) &
+ 				      MD_FEATURE_RECOVERY_BITMAP))
+ 					rdev->saved_raid_disk = -1;
+-			} else
+-				set_bit(In_sync, &rdev->flags);
++			} else {
++				/*
++				 * If the array is FROZEN, then the device can't
++				 * be in_sync with rest of array.
++				 */
++				if (!test_bit(MD_RECOVERY_FROZEN,
++					      &mddev->recovery))
++					set_bit(In_sync, &rdev->flags);
++			}
+ 			rdev->raid_disk = role;
+ 			break;
+ 		}
 -- 
 2.20.1
 
