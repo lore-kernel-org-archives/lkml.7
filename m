@@ -2,122 +2,126 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D201C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1703C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643A92086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="M/vTDOH5"
+	by mail.kernel.org (Postfix) with ESMTP id CF36B222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfJCKO2 (ORCPT
+        id S1728962AbfJCKOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:14:28 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:13120 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725827AbfJCKO1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:14:27 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x93A1XYB005313;
-        Thu, 3 Oct 2019 12:14:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=MsUZ3Un62yxRwQi4yRJRkjzgs7EZoNS0M8FD2ejbYXQ=;
- b=M/vTDOH5TOj+MW946TPa7I7ampt54o6A5s+fwy78xnkOuP9trvchBSwpPum37NKHXQCT
- Z5d1BO7+GjcnZT1HJe7IYddFTVwpQmc/e7hDPu6mRmxh65MbCNBxtb7ecNYejpCSWCnK
- RZp227FcBs3gKM2t7R+cQtT0BJqh8OMf5FVdgKzM2fBMp6Ym2lw6AChn7amXhuGltMwr
- aZJgJhVU5IyrDjd8kpQEC/+kiws2mXSMR0O+KFBt9kHEDrMa3VCKabkVOtbsxiZf2vAY
- 195EWJWHufBGFZ5ybqBmivmDRZPj1kCdZxKVScGa4skfGCRlk9wLe5hNug9BPE8lRZ86 wA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vcem38uhm-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 03 Oct 2019 12:14:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A616C22;
-        Thu,  3 Oct 2019 10:14:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 05E2F2B5CD1;
-        Thu,  3 Oct 2019 12:14:07 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 3 Oct
- 2019 12:14:06 +0200
-Subject: Re: [PATCH 2/5] net: ethernet: stmmac: fix warning when w=1 option is
- used during build
-To:     Christophe Roullier <christophe.roullier@st.com>,
-        <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>
-References: <20190920053817.13754-1-christophe.roullier@st.com>
- <20190920053817.13754-3-christophe.roullier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <3715b72a-4b7c-32f4-a037-94d2862ad07d@st.com>
-Date:   Thu, 3 Oct 2019 12:14:06 +0200
+        Thu, 3 Oct 2019 06:14:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34598 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfJCKOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:14:36 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2AB658665A
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 10:14:36 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id n3so905102wrt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:14:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ia+gGf8D4RKqD3mYHNJW4KBxV39P1F98Z1sPmxgCPUE=;
+        b=dFBnO5imJsSEz675kmxuuTWRZrgxtgcEUdn2dGRYAw0EdX87YVKHNN+qnDnsv6nSvM
+         wXIneTZyLT/6Hd5qPJyKUOlNrS/T/xssYqiapilaudC+2WiiAfg8kbjFeDiaIHtbFu20
+         TxVwDPtXKRc4LU/xyhfciOsV9jHaPA1cN/Xw5dije6aMifBjK/uYRMa4KfVAPJ0ooyEV
+         tzXDdwG6382gtDsAtLq3JEWpnarJKwZvwR+2y5ws943oVpFfS9xKA+1nYDQKuZMF8xEA
+         cjgVxEXeNwQTAdar0F3YIS8cyQSgSCQkjD1Nbl/kqj/zhvcvoGykH3JE0zvUWwz42e2b
+         Mxhg==
+X-Gm-Message-State: APjAAAWKeey/aMNZrmlqmLhY63AH1sXqCXYAzfceRBAksD6Coq9cckr/
+        MVv9/nsBn3uUSP5F+fWR8Oyur4cc4FBCHajiTAUNv+sYJ+5zp2XzBh3L+AbKP9jEgRgNycvJsbJ
+        3KvWRhp6EyZSgvJno2boKCqOk
+X-Received: by 2002:adf:fa86:: with SMTP id h6mr6381154wrr.152.1570097674773;
+        Thu, 03 Oct 2019 03:14:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxiL1KyYf7AH8ZuOpHEBO+Sv2DSfWFZnG8bjX9o9BKUHcZpAC6YIg7sjWK9r+jlV/CkD8mV7w==
+X-Received: by 2002:adf:fa86:: with SMTP id h6mr6381135wrr.152.1570097674523;
+        Thu, 03 Oct 2019 03:14:34 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b903:6d6f:a447:e464? ([2001:b07:6468:f312:b903:6d6f:a447:e464])
+        by smtp.gmail.com with ESMTPSA id n8sm2851784wma.7.2019.10.03.03.14.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 03:14:33 -0700 (PDT)
+Subject: Re: [PATCH tip/core/rcu 2/9] x86/kvm/pmu: Replace
+ rcu_swap_protected() with rcu_replace()
+To:     paulmck@kernel.org, rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+References: <20191003014153.GA13156@paulmck-ThinkPad-P72>
+ <20191003014310.13262-2-paulmck@kernel.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <dd735e5f-c326-4b53-1126-98c5e38961d3@redhat.com>
+Date:   Thu, 3 Oct 2019 12:14:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190920053817.13754-3-christophe.roullier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20191003014310.13262-2-paulmck@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-03_04:2019-10-01,2019-10-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 9/20/19 7:38 AM, Christophe Roullier wrote:
-> This patch fix the following warning:
+On 03/10/19 03:43, paulmck@kernel.org wrote:
+> From: "Paul E. McKenney" <paulmck@kernel.org>
 > 
-> warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
->    int val, ret;
+> This commit replaces the use of rcu_swap_protected() with the more
+> intuitively appealing rcu_replace() as a step towards removing
+> rcu_swap_protected().
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: <x86@kernel.org>
+> Cc: <kvm@vger.kernel.org>
 > ---
-
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-
->   drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>  arch/x86/kvm/pmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index 7e6619868cc1..167a5e99960a 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -184,7 +184,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
->   {
->   	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
->   	u32 reg = dwmac->mode_reg;
-> -	int val, ret;
-> +	int val;
->   
->   	switch (plat_dat->interface) {
->   	case PHY_INTERFACE_MODE_MII:
-> @@ -220,8 +220,8 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
->   	}
->   
->   	/* Need to update PMCCLRR (clear register) */
-> -	ret = regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
-> -			   dwmac->ops->syscfg_eth_mask);
-> +	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
-> +		     dwmac->ops->syscfg_eth_mask);
->   
->   	/* Update PMCSETR (set register) */
->   	return regmap_update_bits(dwmac->regmap, reg,
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 46875bb..4c37266 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -416,8 +416,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+>  	*filter = tmp;
+>  
+>  	mutex_lock(&kvm->lock);
+> -	rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
+> -			   mutex_is_locked(&kvm->lock));
+> +	filter = rcu_replace(kvm->arch.pmu_event_filter, filter,
+> +			     mutex_is_locked(&kvm->lock));
+>  	mutex_unlock(&kvm->lock);
+>  
+>  	synchronize_srcu_expedited(&kvm->srcu);
 > 
+
+Should go without saying, but
+
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Paolo
