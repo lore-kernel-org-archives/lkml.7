@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE614C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211EBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A5920830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87D92133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120406;
-	bh=3vz0jGokF/tADKiAtasvrTU/In2SROOiBNXQon2ojrc=;
+	s=default; t=1570120413;
+	bh=gvv0LsompVGXjpuBgj9I67q5B+fRbpqCxYEYavnNq64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vpf/m/UYaGczSVOGDMmNOLvrc7+WTzNrf/xH1a1Gk8i7y3C+0CGxQf5Gj3k0qiMj7
-	 bbRFxJkmIh7uSamm6kQBZNMkqSc1oGE6avq/JAGlZV4LAeMgRxMeG8Htzbh4AX+tDd
-	 Dr4Z16iXhkIYF/xTZLYLwe3+KvJkCa+L8eXupd64=
+	b=brws779UCUeSmn1jWV8gxlv2k3PYOJg1D2GIMkRiZOKDvkVlM4NVRWAol1q2FnTxw
+	 CJef568rjC8XJHZlu5mk4EcdPCGRjuPxQ82m06qQ4GkhaMGBFVYC7PwkRptMkfB6O4
+	 vCzMYtYhkhYSWG5V3RBYLu3/dj/w5MrWOYreNc6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404102AbfJCQdZ (ORCPT
+        id S2389987AbfJCQdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390306AbfJCQdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:21 -0400
+        id S2404066AbfJCQdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D04A20830;
-        Thu,  3 Oct 2019 16:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2CA620830;
+        Thu,  3 Oct 2019 16:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120400;
-        bh=3vz0jGokF/tADKiAtasvrTU/In2SROOiBNXQon2ojrc=;
+        s=default; t=1570120403;
+        bh=gvv0LsompVGXjpuBgj9I67q5B+fRbpqCxYEYavnNq64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ixt9aduXyAmmJGz53j9j6ABIX9rz9di8PpM/2WYwE/uu4Bs4RBho/oZghy67Mcbvc
-         lfOhfhZ2Qb0Ni9ezZVWn3TQ/oxSpvR1t9rtd0FArXASW1Yuh1G5/rjffjwhUTNK9ZL
-         Ikk8lEh0MR4EL4Z+wEJwT3an73U/QJ9ZSHWLuXe8=
+        b=vUTpc35BEGi5yUjGB+wSkqQ3+NXsh1dsqYEXRgLhKg/VzHMhja+OPM4BKJrzbFY9D
+         HqQibdxppNgJTEcvBGI2XYYMKsQ70sowHksdt5r/O1nYKMwpcPp67d7SnSEzRMaGXz
+         RGhCQOUPWav7z13C0NOiZmNxaot3ncxli8P0nyF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Jiri Palecek <jpalecek@web.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 201/313] media: ttusb-dec: Fix info-leak in ttusb_dec_send_command()
-Date:   Thu,  3 Oct 2019 17:52:59 +0200
-Message-Id: <20191003154552.772713695@linuxfoundation.org>
+Subject: [PATCH 5.2 210/313] kvm: Nested KVM MMUs need PAE root too
+Date:   Thu,  3 Oct 2019 17:53:08 +0200
+Message-Id: <20191003154553.658097188@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,37 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
+From: Jiří Paleček <jpalecek@web.de>
 
-[ Upstream commit a10feaf8c464c3f9cfdd3a8a7ce17e1c0d498da1 ]
+[ Upstream commit 1cfff4d9a5d01fa61e5768a6afffc81ae1c8ecb9 ]
 
-The function at issue does not always initialize each byte allocated
-for 'b' and can therefore leak uninitialized memory to a USB device in
-the call to usb_bulk_msg()
+On AMD processors, in PAE 32bit mode, nested KVM instances don't
+work. The L0 host get a kernel OOPS, which is related to
+arch.mmu->pae_root being NULL.
 
-Use kzalloc() instead of kmalloc()
+The reason for this is that when setting up nested KVM instance,
+arch.mmu is set to &arch.guest_mmu (while normally, it would be
+&arch.root_mmu). However, the initialization and allocation of
+pae_root only creates it in root_mmu. KVM code (ie. in
+mmu_alloc_shadow_roots) then accesses arch.mmu->pae_root, which is the
+unallocated arch.guest_mmu->pae_root.
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This fix just allocates (and frees) pae_root in both guest_mmu and
+root_mmu (and also lm_root if it was allocated). The allocation is
+subject to previous restrictions ie. it won't allocate anything on
+64-bit and AFAIK not on Intel.
+
+Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=203923
+Fixes: 14c07ad89f4d ("x86/kvm/mmu: introduce guest_mmu")
+Signed-off-by: Jiri Palecek <jpalecek@web.de>
+Tested-by: Jiri Palecek <jpalecek@web.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/ttusb-dec/ttusb_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/mmu.c | 30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-index 1d0afa340f47c..3198f9624b7c0 100644
---- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
-+++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-@@ -319,7 +319,7 @@ static int ttusb_dec_send_command(struct ttusb_dec *dec, const u8 command,
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 66055ca29b6b4..9130152d5ed83 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5607,13 +5607,13 @@ slot_handle_leaf(struct kvm *kvm, struct kvm_memory_slot *memslot,
+ 				 PT_PAGE_TABLE_LEVEL, lock_flush_tlb);
+ }
  
- 	dprintk("%s\n", __func__);
+-static void free_mmu_pages(struct kvm_vcpu *vcpu)
++static void free_mmu_pages(struct kvm_mmu *mmu)
+ {
+-	free_page((unsigned long)vcpu->arch.mmu->pae_root);
+-	free_page((unsigned long)vcpu->arch.mmu->lm_root);
++	free_page((unsigned long)mmu->pae_root);
++	free_page((unsigned long)mmu->lm_root);
+ }
  
--	b = kmalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
-+	b = kzalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
- 	if (!b)
+-static int alloc_mmu_pages(struct kvm_vcpu *vcpu)
++static int alloc_mmu_pages(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu)
+ {
+ 	struct page *page;
+ 	int i;
+@@ -5634,9 +5634,9 @@ static int alloc_mmu_pages(struct kvm_vcpu *vcpu)
+ 	if (!page)
  		return -ENOMEM;
+ 
+-	vcpu->arch.mmu->pae_root = page_address(page);
++	mmu->pae_root = page_address(page);
+ 	for (i = 0; i < 4; ++i)
+-		vcpu->arch.mmu->pae_root[i] = INVALID_PAGE;
++		mmu->pae_root[i] = INVALID_PAGE;
+ 
+ 	return 0;
+ }
+@@ -5644,6 +5644,7 @@ static int alloc_mmu_pages(struct kvm_vcpu *vcpu)
+ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+ {
+ 	uint i;
++	int ret;
+ 
+ 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
+ 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+@@ -5661,7 +5662,19 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.guest_mmu.prev_roots[i] = KVM_MMU_ROOT_INFO_INVALID;
+ 
+ 	vcpu->arch.nested_mmu.translate_gpa = translate_nested_gpa;
+-	return alloc_mmu_pages(vcpu);
++
++	ret = alloc_mmu_pages(vcpu, &vcpu->arch.guest_mmu);
++	if (ret)
++		return ret;
++
++	ret = alloc_mmu_pages(vcpu, &vcpu->arch.root_mmu);
++	if (ret)
++		goto fail_allocate_root;
++
++	return ret;
++ fail_allocate_root:
++	free_mmu_pages(&vcpu->arch.guest_mmu);
++	return ret;
+ }
+ 
+ 
+@@ -6134,7 +6147,8 @@ unsigned long kvm_mmu_calculate_default_mmu_pages(struct kvm *kvm)
+ void kvm_mmu_destroy(struct kvm_vcpu *vcpu)
+ {
+ 	kvm_mmu_unload(vcpu);
+-	free_mmu_pages(vcpu);
++	free_mmu_pages(&vcpu->arch.root_mmu);
++	free_mmu_pages(&vcpu->arch.guest_mmu);
+ 	mmu_free_memory_caches(vcpu);
+ }
  
 -- 
 2.20.1
