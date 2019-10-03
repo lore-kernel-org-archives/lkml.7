@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E774C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C8BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D682133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB11221A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121045;
-	bh=aCeOu7Setfrgi0G235/LuiodlneTa/ZnHrrPVIws2c0=;
+	s=default; t=1570121048;
+	bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/kLJLzaB75xkmoSWCYPuSEYJ7jFouJoLrFZDkVs1lkVuhABd+xQqtKs6nA9FuyEw
-	 KQ9yTF7aMSRh/sFgg/56gh7bZ+aAoXcooDhYzyEvsGEv0PMpFM6aweEv30ZagQQGJ/
-	 TFmghYNeio4tBwyxxtmbgySxWJkNOQK1i7b1x5vI=
+	b=S0LC+ahXBcPvlMtklHsuASpfFs8crxKaGnz86ytVFj8e/KN1TDAvCdsbtyzayJ3JK
+	 HY0JykbAh4uMEibpF2wPSfxCno8+pA2BwqoeQwne7KbijJK4CmS092HOkjtUW/x/uZ
+	 g3MlmVjD014U/8ZqjsmIf/js14GJEYWpNgLaXfzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405328AbfJCQoE (ORCPT
+        id S2392410AbfJCQoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405317AbfJCQoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:44:02 -0400
+        id S2404781AbfJCQoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E80272054F;
-        Thu,  3 Oct 2019 16:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99BDE2054F;
+        Thu,  3 Oct 2019 16:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121041;
-        bh=aCeOu7Setfrgi0G235/LuiodlneTa/ZnHrrPVIws2c0=;
+        s=default; t=1570121044;
+        bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1vfENMraFUgCTDYxk/m/V4CvafmKMo3hFJiSPnPlwjpy2Ze85T8OyV3Eo9xLwRFD
-         F2rH1aMnpqwHBvd1BVVOB/AAjysdh0zou1zu6x5R4kl9wbnJUqZ+pnl7n2R8mAd7qT
-         CEoj0aJZwV3QlzsCEel0GRqd8KIZXlPLYSTqT7/8=
+        b=tLZ1pGcBmhoF9yLNsC45NxxENr3vXP+xCeui17DEWIAIGJ4g+/H0xFF4srspBuz5N
+         R1UMg7Ij4rA3WMhUTRLdH4H4oF0qdTVVKbaGZwNlGMGf4QtZzxFs/UwOZRg8f2+Q+N
+         w34e0/vx0wYbkGkeS/z5S5lmQHVyv0ztvPSRYfss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 132/344] ASoC: sun4i-i2s: Dont use the oversample to calculate BCLK
-Date:   Thu,  3 Oct 2019 17:51:37 +0200
-Message-Id: <20191003154553.242159405@linuxfoundation.org>
+Subject: [PATCH 5.3 106/344] media: mtk-mdp: fix reference count on old device tree
+Date:   Thu,  3 Oct 2019 17:51:11 +0200
+Message-Id: <20191003154550.692726688@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,70 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
 
-[ Upstream commit 7df8f9a20196072162d9dc8fe99943f2d35f23d5 ]
+[ Upstream commit 864919ea0380e62adb2503b89825fe358acb8216 ]
 
-The BCLK divider should be calculated using the parameters that actually
-make the BCLK rate: the number of channels, the sampling rate and the
-sample width.
+of_get_next_child() increments the reference count of the returning
+device_node. Decrement it in the check if we are using the old or the
+new DTB.
 
-We've been using the oversample_rate previously because in the former SoCs,
-the BCLK's parent is MCLK, which in turn is being used to generate the
-oversample rate, so we end up with something like this:
-
-oversample = mclk_rate / sampling_rate
-bclk_div = oversample / word_size / channels
-
-So, bclk_div = mclk_rate / sampling_rate / word_size / channels.
-
-And this is actually better, since the oversampling ratio only plays a role
-because the MCLK is its parent, not because of what BCLK is supposed to be.
-
-Furthermore, that assumption of MCLK being the parent has been broken on
-newer SoCs, so let's use the proper formula, and have the parent rate as an
-argument.
-
-Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
-Fixes: 21faaea1343f ("ASoC: sun4i-i2s: Add support for A83T")
-Fixes: 66ecce332538 ("ASoC: sun4i-i2s: Add compatibility with A64 codec I2S")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/c3595e3a9788c2ef2dcc30aa3c8c4953bb5cc249.1566242458.git-series.maxime.ripard@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Acked-by: Houlong Wei <houlong.wei@mediatek.com>
+[hverkuil-cisco@xs4all.nl: use node instead of parent as temp variable]
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 7fa5c61169db0..ab8cb83c8b1a8 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -222,10 +222,11 @@ static const struct sun4i_i2s_clk_div sun4i_i2s_mclk_div[] = {
- };
+diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+index fc9faec85edb6..5d44f2e92dd50 100644
+--- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
++++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+@@ -110,7 +110,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+ 	mutex_init(&mdp->vpulock);
  
- static int sun4i_i2s_get_bclk_div(struct sun4i_i2s *i2s,
--				  unsigned int oversample_rate,
-+				  unsigned long parent_rate,
-+				  unsigned int sampling_rate,
- 				  unsigned int word_size)
- {
--	int div = oversample_rate / word_size / 2;
-+	int div = parent_rate / sampling_rate / word_size / 2;
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(sun4i_i2s_bclk_div); i++) {
-@@ -315,8 +316,8 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 		return -EINVAL;
- 	}
- 
--	bclk_div = sun4i_i2s_get_bclk_div(i2s, oversample_rate,
--					  word_size);
-+	bclk_div = sun4i_i2s_get_bclk_div(i2s, i2s->mclk_freq,
-+					  rate, word_size);
- 	if (bclk_div < 0) {
- 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
- 		return -EINVAL;
+ 	/* Old dts had the components as child nodes */
+-	if (of_get_next_child(dev->of_node, NULL)) {
++	node = of_get_next_child(dev->of_node, NULL);
++	if (node) {
++		of_node_put(node);
+ 		parent = dev->of_node;
+ 		dev_warn(dev, "device tree is out of date\n");
+ 	} else {
 -- 
 2.20.1
 
