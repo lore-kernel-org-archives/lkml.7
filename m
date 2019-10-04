@@ -2,112 +2,124 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337CEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AF5C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB5A222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570193691;
-	bh=MM7IOqWgkdbOitP7bMDfuncCK3Gie1OWlQpqXI5OzJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lk8qmhr5KxzOCwajVmRM2NJg9d/3jA5D1fg8Ha89q3BDsIIlP3RJ3WXgfMJsvzasM
-	 eD3HKtiBNTeMr++VFIH0FMxJtExQLFfdrXO/8si8FnQXCiwuKcBR5BYdyhrzu6OHOO
-	 jlEZh4BYDQ9m2Xkvc4sZhzKdhPQ+WgCKMRtx0T2s=
+	by mail.kernel.org (Postfix) with ESMTP id 738B02070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DF2MWzbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388079AbfJDMyu (ORCPT
+        id S2388100AbfJDMzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387769AbfJDMyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:54:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 082E62070B;
-        Fri,  4 Oct 2019 12:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570193689;
-        bh=MM7IOqWgkdbOitP7bMDfuncCK3Gie1OWlQpqXI5OzJA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QYJmfHCf10oqPx/Yw73jVx8CFUmuFBqH8G3U6b9tqOWUlohBXRtLSzuawBbVXcnUR
-         yHg1pzIclSZ4OXMIzDAywNzH3p/kBYl+bOcxF0ImRpUhiq7McbxSYEvtnpelwuzqtW
-         5ZtdhuFw1C/BtBtGp7MtJhDA0tdT8EOZzcmfTYmA=
-Date:   Fri, 4 Oct 2019 14:54:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH] serial: move Non-standard serial drivers menu to the
- Serial drivers menu
-Message-ID: <20191004125446.GB583048@kroah.com>
-References: <8e583967-4453-368b-6be5-a24df9b2b5dc@infradead.org>
+        Fri, 4 Oct 2019 08:55:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37665 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387719AbfJDMzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:55:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p14so6126249wro.4;
+        Fri, 04 Oct 2019 05:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2rHqJdypJd0DpptSQAbAu2oMkWuEe9MsrDHs1Du//rI=;
+        b=DF2MWzbsC2Asi2Gnr/CI21X/qnFP61GWEpwl80XUDTqhGXB3+BBplFMPT4dot2tOIm
+         q5t0tMLcz1Dt63c8PrE2Rr/8ssAedbneXDyT2lJIygz7thJx5RlzF28sHYXnmKGTOW8f
+         bjnGXnADMzKVQoPypEnRN+quaksn3a7zIUXA+l6F+ranNKFgsSO5HZE7VcTpC4C8aKCp
+         gm9mh706njzMqOuwPln/yMdaTPOi4BjQRX6L70POXRoFlVBQNwsikPN7k6LGD4IL7Cpp
+         5Q2WBuxSF9atJWf9kPL8hyu7KgXjVn88gv7Jl9QZ/Z7G7VIOEsCFcprbnz62ZdRE/2VY
+         XczA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2rHqJdypJd0DpptSQAbAu2oMkWuEe9MsrDHs1Du//rI=;
+        b=EDq53koPxEnRjG0Cy21iXqkNLXtR+XEZ3NN2XQo1F09NFS9lL4uw7C0Kufkl1RT/gb
+         MjZzxPf+cz4BRXF9f2rxkIO9+uNwKvdGO3neHsGJ8kwwQZdEjEIgEQLc4r9rkSXpls+F
+         ORPH/AJ9O39wj27xZUGAHySfkC5ZUlTkmHasLV6BSjbOwjgkN8nXvbT1PzX3ShxgCOjq
+         nHttpZu4rbPfdBwuLoQEfCoKBZwpCv7jUABkENJmpAkvot1RBXVz1rjemdy1cSKTeZ7M
+         PiF3TUb7PgbRkRDtLDyxh29iE9owU4ed/CENe/uRm3+sF5CgrhJ52g73X8X/yshLQtLP
+         ho5Q==
+X-Gm-Message-State: APjAAAVtmAZJ7d1+6ULJkGOCujGMAXmjxU/qpwt40NpzznpWaruAD9lW
+        n+FXpOKr0WOIw/yaQdtcOhg8OXSpyEgLix4sYrw=
+X-Google-Smtp-Source: APXvYqy8KM1R+jii8lv+15rBGuFP7KVh7Nffpmw4utZFyRG9g8ITym8TZa9ET9jU8+LLfiQFulKpd6tg50WCki56Mg4=
+X-Received: by 2002:adf:e951:: with SMTP id m17mr11364492wrn.154.1570193708775;
+ Fri, 04 Oct 2019 05:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e583967-4453-368b-6be5-a24df9b2b5dc@infradead.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191003215227.23540-1-colin.king@canonical.com> <55116b72-4e15-7efe-09a6-283a7090966a@amd.com>
+In-Reply-To: <55116b72-4e15-7efe-09a6-283a7090966a@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 4 Oct 2019 08:54:56 -0400
+Message-ID: <CADnq5_N-tdCJ_LUwunwmrj88vAPBbCLD2uwDTBGzB0XJWdak2g@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amdgpu: fix uninitialized variable pasid_mapping_needed
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 06:16:28PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Since Non-standard serial port drivers are also Serial drivers,
-> move the "Non-standard serial port support" menu to be under/in
-> the "Serial drivers" menu. With this move, the "Serial drivers"
-> menu contains (a) 8250/16550 support, (b) non-8250 support, and
-> (c) non-standard serial port support.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> ---
->  drivers/tty/Kconfig        |  119 -----------------------------------
->  drivers/tty/serial/Kconfig |  119 +++++++++++++++++++++++++++++++++++
->  2 files changed, 119 insertions(+), 119 deletions(-)
-> 
-> --- lnx-53.orig/drivers/tty/Kconfig
-> +++ lnx-53/drivers/tty/Kconfig
-> @@ -151,125 +151,6 @@ config LEGACY_PTY_COUNT
->  	  When not in use, each legacy PTY occupies 12 bytes on 32-bit
->  	  architectures and 24 bytes on 64-bit architectures.
->  
-> -config SERIAL_NONSTANDARD
-> -	bool "Non-standard serial port support"
-> -	depends on HAS_IOMEM
-> -	---help---
-> -	  Say Y here if you have any non-standard serial boards -- boards
-> -	  which aren't supported using the standard "dumb" serial driver.
-> -	  This includes intelligent serial boards such as Cyclades,
-> -	  Digiboards, etc. These are usually used for systems that need many
-> -	  serial ports because they serve many terminals or dial-in
-> -	  connections.
-> -
-> -	  Note that the answer to this question won't directly affect the
-> -	  kernel: saying N will just cause the configurator to skip all
-> -	  the questions about non-standard serial boards.
-> -
-> -	  Most people can say N here.
-> -
-> -config ROCKETPORT
-> -	tristate "Comtrol RocketPort support"
-> -	depends on SERIAL_NONSTANDARD && (ISA || EISA || PCI)
+On Fri, Oct 4, 2019 at 3:28 AM Koenig, Christian
+<Christian.Koenig@amd.com> wrote:
+>
+> Am 03.10.19 um 23:52 schrieb Colin King:
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > The boolean variable pasid_mapping_needed is not initialized and
+> > there are code paths that do not assign it any value before it is
+> > is read later.  Fix this by initializing pasid_mapping_needed to
+> > false.
+> >
+> > Addresses-Coverity: ("Uninitialized scalar variable")
+> > Fixes: 6817bf283b2b ("drm/amdgpu: grab the id mgr lock while accessing =
+passid_mapping")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
 
-I would agree with the move, but the files are not in
-drivers/tty/serial/ for the drivers you are asking to configure in that
-directory.
+Applied.  thanks!
 
-So unless we want to move these drivers (and it's not really worth it,
-unless we want to create drivers/tty/serial/obsolete/ or something like
-that), I would just leave this alone.
+Alex
 
-thanks,
-
-greg k-h
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/a=
+md/amdgpu/amdgpu_vm.c
+> > index a2c797e34a29..be10e4b9a94d 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+> > @@ -1055,7 +1055,7 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, str=
+uct amdgpu_job *job,
+> >               id->oa_size !=3D job->oa_size);
+> >       bool vm_flush_needed =3D job->vm_needs_flush;
+> >       struct dma_fence *fence =3D NULL;
+> > -     bool pasid_mapping_needed;
+> > +     bool pasid_mapping_needed =3D false;
+> >       unsigned patch_offset =3D 0;
+> >       int r;
+> >
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
