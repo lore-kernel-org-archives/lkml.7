@@ -2,72 +2,127 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2988C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D735DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F0420862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D98222C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GRiT1kNt";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GkeyLHMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388558AbfJDRi1 (ORCPT
+        id S2388348AbfJDRjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:38:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54915 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387428AbfJDRi0 (ORCPT
+        Fri, 4 Oct 2019 13:39:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60824 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387428AbfJDRjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:38:26 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iGRX7-0004R3-8T; Fri, 04 Oct 2019 17:38:25 +0000
-Date:   Fri, 4 Oct 2019 19:38:24 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] process fixes for v5.4-rc2
-Message-ID: <20191004173823.3q3ik6azezuqykpq@wittgenstein>
-References: <20191004093947.14471-1-christian.brauner@ubuntu.com>
- <CAHk-=wgNpZdAy3G+6zekugbV+SObfPQRy=fneqwPomFRX3Ym+A@mail.gmail.com>
+        Fri, 4 Oct 2019 13:39:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 342A86081E; Fri,  4 Oct 2019 17:39:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570210781;
+        bh=Xy3fQzgklWWmrTL56KOs57tZvRR4HJiCwiXK2LW/+2U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GRiT1kNtfbftNap7rnqSoOhcBvBJvKr7cMBwB7AFi8SRsPiaB6deP5LDpezqpQB9i
+         FBenvrQ62ecA0vh5D+Axpcwh3xwiQ7+qo/VJb28dqSA0LgnPOu/rzmAIj/OZTAE8G4
+         YvUxsHs1CNNAecUcr3KalDF9oCiNImgBohfMsMCk=
+Received: from [10.79.165.229] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DD9E6016D;
+        Fri,  4 Oct 2019 17:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570210780;
+        bh=Xy3fQzgklWWmrTL56KOs57tZvRR4HJiCwiXK2LW/+2U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GkeyLHMcqKS10Cha3XKBd3VfPjuyAA9vxaCy5r2w0HAuxTM4WOJ9VlHTQ9tiVOnG6
+         IZFf11s10EMq5BMykHNoFBXR67hSc9YFTFEzqsFFpMXXQx+dkj7a1L9xnsavUjfbZN
+         uv0IylCjnT0vfx5PHqVuu0vGzmH7VQWTL99uvbpg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DD9E6016D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
+ <20190918213946.DC03521924@mail.kernel.org>
+ <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+ <20190924231223.9012C207FD@mail.kernel.org>
+ <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+ <20190925130346.42E0820640@mail.kernel.org>
+ <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+ <20191001143825.CD3212054F@mail.kernel.org>
+ <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
+ <20191003160130.5A19B222D0@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
+Date:   Fri, 4 Oct 2019 23:09:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgNpZdAy3G+6zekugbV+SObfPQRy=fneqwPomFRX3Ym+A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191003160130.5A19B222D0@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 10:24:05AM -0700, Linus Torvalds wrote:
-> On Fri, Oct 4, 2019 at 2:40 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > This pull request contains a couple of fixes:
-> 
-> Pulled.
-> 
-> Small note: it is sad, and I'm ashamed of my life, but to me "process"
-> these days is about development process rather than about a group of
-> threads sharing a VM.
-> 
-> I know, I know. I feel like a (shudder) manager. But when I see a pull
-> request for "process fixes", my mind goes to documentation about our
-> processes for pull requests and sending patches etc.
+Hi Stephen,
 
-Well, there are an aweful lot of mails about development process
-recently...
-
+On 10/3/2019 9:31 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-10-03 03:31:15)
+>> Hi Stephen,
+>>
+>> On 10/1/2019 8:08 PM, Stephen Boyd wrote:
+>>>
+>>> Why do you want to keep them critical and registered? I'm suggesting
+>>> that any clk that is marked critical and doesn't have a parent should
+>>> instead become a register write in probe to turn the clk on.
+>>>
+>> Sure, let me do a one-time enable from probe for the clocks which
+>> doesn't have a parent.
+>> But I would now have to educate the clients of these clocks to remove
+>> using them.
+>>
 > 
-> You don't need to change anything in your life or emails - you've got
-> it right - but this just explains why your pull request is now labeled
-> "clone3/pidfd fixes" in my tree, and why it might be better to talk to
-> me about "treads" rather than processes.
+> If anyone is using these clks we can return NULL from the provider for
+> the specifier so that we indicate there isn't support for them in the
+> kernel. At least I hope that code path still works given all the recent
+> changes to clk_get().
+> 
 
-Noted. Next pr will be "thread".
+Could you please confirm if you are referring to update the below?
 
-Christian
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -218,7 +218,7 @@ static struct clk_hw *qcom_cc_clk_hw_get(struct 
+of_phandle_args *clkspec,
+                 return ERR_PTR(-EINVAL);
+         }
+
+-       return cc->rclks[idx] ? &cc->rclks[idx]->hw : ERR_PTR(-ENOENT);
++       return cc->rclks[idx] ? &cc->rclks[idx]->hw : NULL;
+  }
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
