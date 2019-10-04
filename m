@@ -2,91 +2,130 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB225C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83272C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DD2222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hboFmV/U"
+	by mail.kernel.org (Postfix) with ESMTP id 4F0C1222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570225720;
+	bh=WA3T/PAtDprvjgAO0DxDIqyu/cLUaJW7k84J4sbMSlY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HdjERgG12m7hUC57xSaCs7xXuo72k8N6pNZkKjILT3S6Tlpct/2a/IZcuDP/kpMLZ
+	 +hjDef0R3XpkM6gCYHurHewQ0/v0h0dOl9hGhrl+q8P0mQpMv8HQffgUlcUw8AQTcQ
+	 yzy+dgxnCmY16tMLzmVh2AGaTuPXXe59x2TiE+BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfJDVsB (ORCPT
+        id S1730882AbfJDVsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:48:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36152 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfJDVsA (ORCPT
+        Fri, 4 Oct 2019 17:48:39 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37417 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbfJDVsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 17:48:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v24so7936323ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:47:59 -0700 (PDT)
+        Fri, 4 Oct 2019 17:48:39 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l21so7940141lje.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:48:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=96jk8p/6XP5ut+JBHE0IBsdTmxOUR/fsv3ZcRWDzMOg=;
-        b=hboFmV/U4IcPI89MtzDp+OzE5KwsWErja8LOnkuuLwv0fksWiRpqJQZRis7rFIeVPP
-         Ooj27rcXns2Y4feoVEtg49n8CryY2RaGyouBUeaqk2ra5EWaVF1b9SJCzpbS0ccPcx6o
-         OKGdwKxr435NLGf2rhVWgjPumSWR2SHoXx0hKGzQWcUyTo9N2UXJEk48l4i2HhDZs/lk
-         /w5UDGdeyD3/r3JdKqYvjgprnF2+BDf/24afsGx6mveKIokPtaSJGfI7WbyMW88ICvUl
-         cpiuvmH0N+uNxhDXRpNNofDROfjzaePmP13ERqR66MmREXUZCh8g2+gPv00qpvzL0Kk7
-         +7fA==
+        bh=kSvi6bN3MgmA9q6zMgIL0cUcdQWLY9tbHblghBTgstI=;
+        b=hBuewRInP5i+6gtlRLW9UtlDY0YPe0z67E0xbXSSSKYA7biQf+uXTlrPp7zLuAUPeq
+         5uQ2rwixtXebf99m1RfUdMDyjGKPh3VgF3DuF8NvshRtQGRa2wNkvwDCWMNQ0VKjXHWB
+         ZmI6XqYkyQwmdmiffnmLI1+ZMJ0oT9STysqR8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=96jk8p/6XP5ut+JBHE0IBsdTmxOUR/fsv3ZcRWDzMOg=;
-        b=sOSL9YjctVIX34ZAY9Zrla7NFP9IUePuTpcsB94cpUlM31NOpdbUabUN2ucBPq2Hmr
-         sxAp1bEpC1r4YibOMyMwDEviIXwjvJ0W6q5V79VNo3lphaNngdGQUPBniphM7bPp9PGZ
-         B0KZTbdKXiWpr9Lg3K6V96k8AiP/NxN4p+6XRcMwe5gVgFTCH75I/zIapIYzXu1Vqu5E
-         LShuQk4nLLWBFv2KktZjcqefN/0fmZq/X1x+rEoVtVzSSJuwzxFIpxqPsgiqz1r7YuZx
-         W9Wjz4I6+aMLJE40G0Z2lh87TN7iwkDnnPyX4emW0zs4tByUzlqyl3pOQyjwagnpgvcS
-         BxLA==
-X-Gm-Message-State: APjAAAV5yE2FVpiIuOJmqUfCIHg2WwM7tuMUZE+bOFb0kTq3tyBu0zJc
-        qKamhpV1uQmedQanoeO9WukDI4Q55QEOv/Ye1v30sB/A7LI=
-X-Google-Smtp-Source: APXvYqxdZOCfwMC4ckXG//o/o4H8hELcsXHe3EoTOHIYVBOebIobkD8VaGs1KQIIBFvGy9ppesFAq6cvMyUvfIsKzS0=
-X-Received: by 2002:a2e:6344:: with SMTP id x65mr10670505ljb.59.1570225678386;
- Fri, 04 Oct 2019 14:47:58 -0700 (PDT)
+        bh=kSvi6bN3MgmA9q6zMgIL0cUcdQWLY9tbHblghBTgstI=;
+        b=gtFvGo54fP6FCMpghCBK0KW0WxtOwtI17EEhfbDZeIr30IaABFRMcXG9qF6dY2A13Z
+         9hQVgFwQSuEVu4DAwQh9a7s8tba8WjftVOSwwP18Xn1qg6hopiON751fVG4YhyT55a2n
+         8VuTw4/9G2wiy6Kf3V9+OOsR01E+mzlgoHrFgge4hIfPKi3d9+sSwFatwuBlteK5u8q2
+         Lq9tB6EccwJECkIjNiuOJoKYyfg+42rB988RaR6PxUmYDU0jDBtNVeLrmCTTXlJz0OSn
+         G/to35Zddr+/YphnD38lzbqbiDqIvgmACohMp8HiTZPBU3PyjqCIVC2BKlQaPUbUnSLZ
+         0F9A==
+X-Gm-Message-State: APjAAAXC2tBUn/zgmboHbn8PF0H2z7NMPq1pgztS/HhExgL0AZOeZWDN
+        znXRgxeQRCq9IDAuf9QYG7hPtPfvGzI=
+X-Google-Smtp-Source: APXvYqyYoPX0suHREaVTfCqPa1djgbBm9vi35cZDHzpc6+3ezCSM2a9/5U8VtWXfEncjDzHHUexgNg==
+X-Received: by 2002:a2e:7d0d:: with SMTP id y13mr10876610ljc.170.1570225716623;
+        Fri, 04 Oct 2019 14:48:36 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id n3sm1344200lfl.62.2019.10.04.14.48.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Oct 2019 14:48:36 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id x80so5476444lff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:48:36 -0700 (PDT)
+X-Received: by 2002:a19:7d55:: with SMTP id y82mr10113290lfc.106.1570225353484;
+ Fri, 04 Oct 2019 14:42:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191001125837.4472-1-brgl@bgdev.pl> <20191001125837.4472-2-brgl@bgdev.pl>
-In-Reply-To: <20191001125837.4472-2-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Oct 2019 23:47:47 +0200
-Message-ID: <CACRpkdbnkMvcSOoLGWi9nSfcpcNT0T28kFX=gyk6jSZ4UWG3gQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] backlight: gpio: remove unneeded include
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190923090249.127984-1-brendanhiggins@google.com> <20191004213812.GA24644@mit.edu>
+In-Reply-To: <20191004213812.GA24644@mit.edu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 4 Oct 2019 14:42:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+Message-ID: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        kieran.bingham@ideasonboard.com,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, robh@kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>, Tim.Bird@sony.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, jdike@addtoit.com,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 2:59 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 >
-> We no longer use any symbols from of_gpio.h. Remove this include.
+> This question is primarily directed at Shuah and Linus....
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> What's the current status of the kunit series now that Brendan has
+> moved it out of the top-level kunit directory as Linus has requested?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+We seemed to decide to just wait for 5.5, but there is nothing that
+looks to block that. And I encouraged Shuah to find more kunit cases
+for when it _does_ get merged.
 
-Thanks Bartosz,
-Linus Walleij
+So if the kunit branch is stable, and people want to start using it
+for their unit tests, then I think that would be a good idea, and then
+during the 5.5 merge window we'll not just get the infrastructure,
+we'll get a few more users too and not just examples.
+
+             Linus
