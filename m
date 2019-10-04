@@ -2,73 +2,76 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C50C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CF8C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3C3215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176E5222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UtT5E80f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390217AbfJDQCc (ORCPT
+        id S2390228AbfJDQDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:02:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52970 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389131AbfJDQCc (ORCPT
+        Fri, 4 Oct 2019 12:03:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55980 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389131AbfJDQDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:02:32 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iGQ2F-0005CI-A4; Fri, 04 Oct 2019 16:02:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ath10k: fix null dereference on pointer crash_data
-Date:   Fri,  4 Oct 2019 17:02:27 +0100
-Message-Id: <20191004160227.31577-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 4 Oct 2019 12:03:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6bnnMnywYc1KPMDxc8Uzb+dKxSoXRZCe+CE3Bai6Kig=; b=UtT5E80fTfG3N3Zhy/JcUm0s9
+        6fAQ+GfAQ1fWDBVlo4KlV/uXeLNhhh2xwUmdjTM2lFq/54r+Kuo3J+GcgzVx9ge+yDsxlA3wcS5Tj
+        6TSx6InmuT8BRMhmzFleM0ykBWvU72vyMh9sS01g1CuKImZltMQFUG5iWqiX7iZoG/ZVs9sMorDk0
+        MdRkZxZqgvULDXblBpojXUTTrVWrS/ikRT48b0y6P8ofphz3Z7VJMROz69AWXbOdXOtpPOidh1Wz/
+        0UUubi6OQAcZbPltXYZDJmlXKugsL20OQsnIcgCAPENPzN+eVej+PIhBO/4vGlujvnPMjZ/6zPdNe
+        o9FOXgO1g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGQ3X-00030a-VP; Fri, 04 Oct 2019 16:03:47 +0000
+Date:   Fri, 4 Oct 2019 09:03:47 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH -next 00/11] lib/interval-tree: move to half closed
+ intervals
+Message-ID: <20191004160347.GH32665@bombadil.infradead.org>
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191004002609.GB1492@ziepe.ca>
+ <CANN689G3chM1FjFPdCNm9_OQxazs7YP1PuZLpqGtq=qzaZ0Hbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANN689G3chM1FjFPdCNm9_OQxazs7YP1PuZLpqGtq=qzaZ0Hbw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Oct 04, 2019 at 06:15:11AM -0700, Michel Lespinasse wrote:
+> My take is that this (Davidlohr's) patch series does not necessarily
+> need to be applied all at once - we could get the first change in
+> (adding the interval_tree_gen.h header), and convert the first few
+> users, without getting them all at once, as long as we have a plan for
+> finishing the work. So, if you have cleanups in progress in some of
+> the files, just tell us which ones and we can leave them out from the
+> first pass.
 
-Currently when pointer crash_data is null the present null check
-will also check that crash_data->ramdump_buf is null and will cause
-a null pointer dereference on crash_data. Fix this by using the ||
-operator instead of &&.
-
-Fixes: 3f14b73c3843 ("ath10k: Enable MSA region dump support for WCN3990")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index cd22c8654aa9..16177497bba7 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -1400,7 +1400,7 @@ static void ath10k_msa_dump_memory(struct ath10k *ar,
- 	size_t buf_len;
- 	u8 *buf;
- 
--	if (!crash_data && !crash_data->ramdump_buf)
-+	if (!crash_data || !crash_data->ramdump_buf)
- 		return;
- 
- 	mem_layout = ath10k_coredump_get_mem_layout(ar);
--- 
-2.20.1
-
+Since we have users which do need to use the full ULONG_MAX range
+(as pointed out by Christian Koenig), I don't think adding a second
+implementation which is half-open is a good idea.  It'll only lead to
+confusion.
