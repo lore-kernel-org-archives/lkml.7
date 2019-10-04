@@ -2,84 +2,69 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B367AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FC0C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3B421D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A517222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570221614;
+	bh=Z7Zi/ugxF+Q3pcYNcdgcQQvCqIBbDj42thUFa54CgCY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=IppA97wOr6F6vMTHtwua+s5omn/s9KciU/0S4IP8aBCZiWiPp3zxF/YGTvKNwF2mT
+	 wVW5UFflJg19rzDVxbxaO1/7f1QW7QqPAu0aqqzWrttfGmse8h0m40bGTrroBRcbO6
+	 WxXSnIxvsw1JUbsu0IUUiSXVSrYMU7xzR1waYxY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388318AbfJDUjr (ORCPT
+        id S2388496AbfJDUkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 16:39:47 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47615 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388107AbfJDUjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 16:39:47 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iGUMQ-00047D-Kn; Fri, 04 Oct 2019 22:39:34 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iGUMP-0000YC-L0; Fri, 04 Oct 2019 22:39:33 +0200
-Date:   Fri, 4 Oct 2019 22:39:33 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Claudiu.Beznea@microchip.com
-Cc:     kamel.bouhara@bootlin.com, wsa@the-dreams.de,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Message-ID: <20191004203933.tfhr6cwbsq2hxrov@pengutronix.de>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
- <08e99a4b-851e-0bee-4c5a-8578b42c283e@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08e99a4b-851e-0bee-4c5a-8578b42c283e@microchip.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 4 Oct 2019 16:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388217AbfJDUkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 16:40:13 -0400
+Subject: Re: [GIT PULL] Devicetree fixes for v5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570221613;
+        bh=Z7Zi/ugxF+Q3pcYNcdgcQQvCqIBbDj42thUFa54CgCY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=EU8tWiIUErYlsSMsfibswATQWXLATBWUTrDloGzm3DZFkZfW3fideJiTVdKMp/rid
+         Yo7jJPs1DFIuQV/O2dngcU6fu814RemlyE3QW62+jH2WC4/N+wtkF2WUNYCqIIJQ65
+         cJBQu7l9Bg0zaClntAMEyTTmepjJFj1wpP5mUH/c=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191004132203.GA29838@bogus>
+References: <20191004132203.GA29838@bogus>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191004132203.GA29838@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-fixes-for-5.4
+X-PR-Tracked-Commit-Id: f437ade3296bacaddb6d7882ba0515940f01daf4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a4ad51e9528e614a60c8828901ee9d7b9f4538d5
+Message-Id: <157022161303.19958.16424809656101131288.pr-tracker-bot@kernel.org>
+Date:   Fri, 04 Oct 2019 20:40:13 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 09:35:23AM +0000, Claudiu.Beznea@microchip.com wrote:
-> Hi Kamel,
-> 
-> On 02.10.2019 17:46, Kamel Bouhara wrote:
-> > +static int at91_init_twi_recovery_info(struct platform_device *pdev,
-> > +				       struct at91_twi_dev *dev)
-> > +{
-> > +	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-> > +
-> > +	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
-> > +	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
-> 
-> You may use IS_ERR_OR_NULL() here.
+The pull request you sent on Fri, 4 Oct 2019 08:22:03 -0500:
 
-Can devm_pinctrl_get return NULL? From a quick look, it cannot.
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.4
 
-rule of thumb: IS_ERR_OR_NULL is wrong as it is a sign of poor return
-value semantics.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a4ad51e9528e614a60c8828901ee9d7b9f4538d5
 
-Best regards
-Uwe
+Thank you!
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
