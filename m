@@ -2,93 +2,97 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487E7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202E0222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC5320867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbfJDKFT (ORCPT
+        id S1731261AbfJDKHZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:05:19 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54825 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfJDKFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:05:19 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 6A84080309; Fri,  4 Oct 2019 12:05:01 +0200 (CEST)
-Date:   Fri, 4 Oct 2019 12:05:14 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Liguang Zhang <zhangliguang@linux.alibaba.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.2 123/313] ACPI / APEI: Release resources if
- gen_pool_add() fails
-Message-ID: <20191004100514.GA24970@amd>
-References: <20191003154533.590915454@linuxfoundation.org>
- <20191003154545.050926099@linuxfoundation.org>
+        Fri, 4 Oct 2019 06:07:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40428 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729466AbfJDKHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:07:25 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D2722C05AA56;
+        Fri,  4 Oct 2019 10:07:24 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ED85600C4;
+        Fri,  4 Oct 2019 10:07:22 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190911052849.7344-1-hdanton@sina.com>
+References: <20190911052849.7344-1-hdanton@sina.com> 
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     dhowells@redhat.com,
+        syzbot <syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com>,
+        MAILER_DAEMON@email.uscc.net, davem@davemloft.net,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in rxrpc_send_keepalive
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Content-Disposition: inline
-In-Reply-To: <20191003154545.050926099@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7411.1570183641.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 04 Oct 2019 11:07:21 +0100
+Message-ID: <7412.1570183641@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 04 Oct 2019 10:07:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the fix, I think.
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+David
+---
+rxrpc: Fix call ref leak
 
-Hi!
+When sendmsg() finds a call to continue on with, if the call is in an
+inappropriate state, it doesn't release the ref it just got on that call
+before returning an error.
 
-> @@ -172,7 +173,19 @@ int ghes_estatus_pool_init(int num_ghes)
->  	 */
->  	vmalloc_sync_all();
-> =20
-> -	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
-> +	rc =3D gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
-> +	if (rc)
-> +		goto err_pool_add;
-> +
-> +	return 0;
-> +
-> +err_pool_add:
-> +	vfree((void *)addr);
-> +
+This causes the following symptom to show up with kasan:
 
-AFAICT this cast should not be neccessary.
+        BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
+        net/rxrpc/output.c:635
+        Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
 
-Best regards,
-									Pavel
+where line 635 is:
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+        whdr.epoch      = htonl(peer->local->rxnet->epoch);
 
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The local endpoint (which cannot be pinned by the call) has been released,
+but not the peer (which is pinned by the call).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
+Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+ sendmsg.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-iEYEARECAAYFAl2XGVoACgkQMOfwapXb+vITrQCeKWIYX7A0qg3mm2+giDF0YuAc
-p74An0EhumHqGNowy1oF32N5XiGgmYSu
-=svwu
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 6cd55b1d79f9..79b5b23db4c1 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -661,6 +661,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
+ 		case RXRPC_CALL_SERVER_PREALLOC:
+ 		case RXRPC_CALL_SERVER_SECURING:
+ 		case RXRPC_CALL_SERVER_ACCEPTING:
++			rxrpc_put_call(call, rxrpc_call_put);
+ 			ret = -EBUSY;
+ 			goto error_release_sock;
+ 		default:
