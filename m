@@ -2,55 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C621C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1510C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5998620700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6446222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388742AbfJDNnM convert rfc822-to-8bit (ORCPT
+        id S2388491AbfJDNpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:43:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58035 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388417AbfJDNnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:43:12 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 35B2B300CB6E;
-        Fri,  4 Oct 2019 13:43:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C20928E640;
-        Fri,  4 Oct 2019 13:43:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <00000000000014f8600593c30eb0@google.com>
-References: <00000000000014f8600593c30eb0@google.com>
-To:     syzbot <syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com>
-Cc:     dhowells@redhat.com, MAILER_DAEMON@email.uscc.net,
-        davem@davemloft.net, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in rxrpc_put_peer
+        Fri, 4 Oct 2019 09:45:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40870 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387917AbfJDNpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:45:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 01C0AAFAE;
+        Fri,  4 Oct 2019 13:45:08 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     wahrenst@gmx.net, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mmc: sdhci-iproc: fix spurious interrupts on Multiblock reads with bcm2711
+Date:   Fri,  4 Oct 2019 15:44:52 +0200
+Message-Id: <20191004134452.6493-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <29822.1570196590.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 04 Oct 2019 14:43:10 +0100
-Message-ID: <29823.1570196590@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 04 Oct 2019 13:43:12 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git cc9604d48fc3b73d9665ae80a2f07dc3fc0574c4
+The Raspberry Pi 4 SDHCI hardware seems to automatically issue CMD12
+after multiblock reads even when ACMD12 is disabled. This triggers
+spurious interrupts after the data transfer is done with the following
+message:
+
+  mmc1: Got data interrupt 0x00000002 even though no data operation was in progress.
+  mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
+  mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00001002
+  mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
+  mmc1: sdhci: Argument:  0x00000000 | Trn mode: 0x00000033
+  mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
+  mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
+  mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
+  mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000000
+  mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
+  mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+  mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
+  mmc1: sdhci: Cmd:       0x00000c1a | Max curr: 0x00080008
+  mmc1: sdhci: Resp[0]:   0x00000b00 | Resp[1]:  0x00edc87f
+  mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+  mmc1: sdhci: Host ctl2: 0x00000001
+  mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xf3025208
+  mmc1: sdhci: ============================================
+
+Enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 to enable ACMD12 on multiblock
+reads and suppress the spurious interrupts.
+
+Fixes: f84e411c85be ("mmc: sdhci-iproc: Add support for emmc2 of the BCM2711")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Matthias Brugger <mbrugger@suse.com>
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
+---
+
+Changes since v1:
+- Add Fixes tag and Acked-by
+
+ drivers/mmc/host/sdhci-iproc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+index 2b9cdcd1dd9d..f4f5f0a70cda 100644
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -262,6 +262,7 @@ static const struct sdhci_iproc_data bcm2835_data = {
+ };
+ 
+ static const struct sdhci_pltfm_data sdhci_bcm2711_pltfm_data = {
++	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+ 	.ops = &sdhci_iproc_32only_ops,
+ };
+ 
+-- 
+2.23.0
+
