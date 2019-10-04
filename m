@@ -2,98 +2,255 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563B9C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABBCC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFDF2246D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570175718;
-	bh=UuvG8lDsrw06dYiW7ZD+MvegXchW0FHoee1VIf8wfYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uZAuqiYmZ6us0mrZkhPRg9r50xKCxmUzphhYE1J5O0H3Dqa5Sv6suLDhT6VT2ocE6
-	 tKSjDDZXMU2lU7V+MuPOH/Wkj+tkcSS6EPuiYXzsgGaHHjeymdL57kjTWP28wLWIiD
-	 eFgjJGLWgUtPU0yZajGCe8BD2fz30GbLfXXH13uM=
+	by mail.kernel.org (Postfix) with ESMTP id 9F9D72245D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:55:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIsK0eO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388174AbfJDHzR (ORCPT
+        id S2388275AbfJDHza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 03:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387511AbfJDHzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 03:55:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E254207FF;
-        Fri,  4 Oct 2019 07:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570175716;
-        bh=UuvG8lDsrw06dYiW7ZD+MvegXchW0FHoee1VIf8wfYk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x5rYE/IvQu08H5jhQTfrJ3PCHyxaJAeDG+Q//6w/o6O5q/d7rwXKl2G3uYoiKqULi
-         K4CtXrntuB/hPkXtQiJU614XJEHl75D0wZkruFhzRZ0iFRILo3IAuHb95CmZRZ9vwA
-         EtFSrvkIS8MSnHHDSgWSZeFnqkYqUljStmakTtWo=
-Date:   Fri, 4 Oct 2019 09:55:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.3 000/344] 5.3.4-stable review
-Message-ID: <20191004075514.GB10406@kroah.com>
-References: <20191003154540.062170222@linuxfoundation.org>
- <fe3f55e2-9252-786d-0541-7dd253ffc438@nvidia.com>
+        Fri, 4 Oct 2019 03:55:30 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:36012 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387511AbfJDHza (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 03:55:30 -0400
+Received: by mail-lf1-f44.google.com with SMTP id x80so3804552lff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 00:55:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+Gu6cEOofmru4+/mu1CqeH3JyAm5zhExO/L4D/5t/mI=;
+        b=iIsK0eO6znrXnsFKAQvRUCRMBbrnRq1h5zG5HMmKb9+IEzdM2z+Daspn0ZPiiObjyC
+         hBtaGSpD9E1S0mM6B2y747H7as+0ivn1gOBicqxb5Q/MNPluMNSdJ/wfVFzlM7B0QaHw
+         pZRjp8qt1iilw7PmBYThGxM3SThLl6U3rKmEN+NrujKz5f67yvVSwonKN9fgsRQlNaBF
+         t5MHs2hZcv5uvg8D9qng6i1h8Dflj+Y6rdkMrYHX6FKwpaeJWMFul8elOyV5tMj3l3dx
+         dhARaYGzKKfx21+A9JEBCm6RhOEKpbv86JgnnJsMtEY4I4RA+WbtL4/EMY7ccEnNxd1M
+         q7Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+Gu6cEOofmru4+/mu1CqeH3JyAm5zhExO/L4D/5t/mI=;
+        b=hBb4ZR8aK9o1W7h4FCEHuxU2eleaODiuYOUcEAR0eygu0YoK+PtiM+gzWvL0Fappkk
+         cPHzVXDrDRq1Z7iACGzd4k2Zp37MbtEo6VSE8XfA24/7c+znA4x7opJ4/V78y96kjsXC
+         loMu2T40Z+qVTFZ3U/cjh17cIISUSwhh7++nfMnHfoo58u92uyndPKxKo5TGTf8aziC+
+         RwbaiC7UbyxiX5APAkyjCCGDa/JVsb+5VKmp3uoBwQBsn+vSoasvlRRoJHYgYMP2W467
+         Q3Hn76od9nCYu6cQnQA4D9IYZCHrp/gCIlZIUHskfkbauNnLhTy0Bfh6htCAJSLXBi+S
+         VvOg==
+X-Gm-Message-State: APjAAAV0BpVX93cV33x4IWpz3WWh5IhoFFbB4XGdmc66R1i9J8AxTxda
+        0maxGgIjunV78UrQBVzgdLiRJ2+7c8+O0dKTLhAyiDFp
+X-Google-Smtp-Source: APXvYqwRypcGGydOmXJYdrw/ZGyk020eo7dkI6peQcd3rCUYf+GJ9gt703pigB8ao5XOhssnF82P/QbOqgCj4RbczZg=
+X-Received: by 2002:a19:22cd:: with SMTP id i196mr7937476lfi.160.1570175727516;
+ Fri, 04 Oct 2019 00:55:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe3f55e2-9252-786d-0541-7dd253ffc438@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 4 Oct 2019 17:55:16 +1000
+Message-ID: <CAPM=9txgjvF2366P7_Sj-sLdS0rjdnsyFEg7xKF35sEG7ZTXBQ@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.4-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 08:38:48AM +0100, Jon Hunter wrote:
-> 
-> On 03/10/2019 16:49, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.4 release.
-> > There are 344 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.4-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.3:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.3.4-rc1-gc9adc631ac5f
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
+Hey Linus,
 
-Wonderful, thanks for testing all of these and letting me know.
+Been offline for 3 days, got back and had some fixes queued up,
+nothing too major, the i915 dp-mst fix is important, and amdgpu has a
+bulk move speedup fix and some regressions, but nothing too insane for
+an rc2 pull. The intel fixes are also 2 weeks worth, they missed the
+boat last week.
 
-greg k-h
+Dave.
+
+drm-fixes-2019-10-04:
+drm fixes for 5.4-rc2
+
+core:
+- writeback fixes
+
+i915:
+- Fix DP-MST crtc_mask
+- Fix dsc dpp calculations
+- Fix g4x sprite scaling stride check with GTT remapping
+- Fix concurrence on cases where requests where getting retired at
+same time as resubmitted to HW
+- Fix gen9 display resolutions by setting the right max plane width
+- Fix GPU hang on preemption
+- Mark contents as dirty on a write fault. This was breaking cursor
+sprite with dumb buffers.
+
+komeda:
+- memory leak fix
+
+tilcdc:
+- include fix
+
+amdgpu:
+- Enable bulk moves
+- Power metrics fixes for Navi
+- Fix S4 regression
+- Add query for tcc disabled mask
+- Fix several leaks in error paths
+- randconfig fixes
+- clang fixes
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c=
+:
+
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-10-04
+
+for you to fetch changes up to 07bba341c99694a4fe6b07edfa4f97ca90c8784c:
+
+  Merge tag 'drm-intel-fixes-2019-10-03-1' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes (2019-10-04
+16:31:06 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.4-rc2
+
+core:
+- writeback fixes
+
+i915:
+- Fix DP-MST crtc_mask
+- Fix dsc dpp calculations
+- Fix g4x sprite scaling stride check with GTT remapping
+- Fix concurrence on cases where requests where getting retired at
+same time as resubmitted to HW
+- Fix gen9 display resolutions by setting the right max plane width
+- Fix GPU hang on preemption
+- Mark contents as dirty on a write fault. This was breaking cursor
+sprite with dumb buffers.
+
+komeda:
+- memory leak fix
+
+tilcdc:
+- include fix
+
+amdgpu:
+- Enable bulk moves
+- Power metrics fixes for Navi
+- Fix S4 regression
+- Add query for tcc disabled mask
+- Fix several leaks in error paths
+- randconfig fixes
+- clang fixes
+
+----------------------------------------------------------------
+Aaron Liu (1):
+      Revert "drm/amdgpu: disable stutter mode for renoir"
+
+Alex Deucher (1):
+      drm/amdgpu: don't increment vram lost if we are in hibernation
+
+Arnd Bergmann (6):
+      drm/tilcdc: include linux/pinctrl/consumer.h again
+      drm/amdgpu: make pmu support optional, again
+      drm/amdgpu: hide another #warning
+      drm/amdgpu: display_mode_vba_21: remove uint typedef
+      drm/amd/display: hide an unused variable
+      drm/amd/display: fix dcn21 Makefile for clang
+
+Christian K=C3=B6nig (1):
+      drm/amdgpu: revert "disable bulk moves for now"
+
+Dave Airlie (3):
+      Merge tag 'drm-fixes-5.4-2019-10-02' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge tag 'drm-misc-fixes-2019-10-03' of
+git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
+      Merge tag 'drm-intel-fixes-2019-10-03-1' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+
+Kevin Wang (2):
+      drm/amd/powerplay: change metrics update period from 1ms to 100ms
+      drm/amd/powerplay: add sensor lock support for smu
+
+Lowry Li (Arm Technology China) (2):
+      drm: Free the writeback_job when it with an empty fb
+      drm: Clear the fence pointer when writeback job signaled
+
+Maarten Lankhorst (1):
+      drm/i915/dp: Fix dsc bpp calculations, v5.
+
+Marek Ol=C5=A1=C3=A1k (1):
+      drm/amdgpu: return tcc_disabled_mask to userspace
+
+Maxime Ripard (2):
+      Merge drm/drm-fixes into drm-misc-fixes
+      Merge drm-misc-next-fixes-2019-10-02 into drm-misc-fixes
+
+Navid Emamdoost (3):
+      drm/komeda: prevent memory leak in komeda_wb_connector_add
+      drm/amdgpu: fix multiple memory leaks in acp_hw_init
+      drm/amd/display: memory leak
+
+Tomi Valkeinen (1):
+      drm/omap: fix max fclk divider for omap36xx
+
+Ville Syrj=C3=A4l=C3=A4 (2):
+      drm/i915: Fix g4x sprite scaling stride check with GTT remapping
+      Revert "drm/i915: Fix DP-MST crtc_mask"
+
+ drivers/gpu/drm/amd/amdgpu/Makefile                |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c            |  34 ++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |   3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.h            |   1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c            |   2 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c             |   2 -
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c             |  12 ++
+ drivers/gpu/drm/amd/amdgpu/nv.c                    |   6 +-
+ drivers/gpu/drm/amd/amdgpu/soc15.c                 |   8 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   4 +-
+ .../drm/amd/display/dc/dce100/dce100_resource.c    |   1 +
+ .../drm/amd/display/dc/dce110/dce110_resource.c    |   1 +
+ .../drm/amd/display/dc/dce112/dce112_resource.c    |   1 +
+ .../drm/amd/display/dc/dce120/dce120_resource.c    |   1 +
+ .../gpu/drm/amd/display/dc/dce80/dce80_resource.c  |   1 +
+ .../gpu/drm/amd/display/dc/dcn10/dcn10_resource.c  |   1 +
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c  |   1 +
+ drivers/gpu/drm/amd/display/dc/dcn21/Makefile      |  12 +-
+ .../amd/display/dc/dml/dcn21/display_mode_vba_21.c |  13 +-
+ drivers/gpu/drm/amd/powerplay/amdgpu_smu.c         |   2 +
+ drivers/gpu/drm/amd/powerplay/arcturus_ppt.c       |   2 +
+ drivers/gpu/drm/amd/powerplay/inc/amdgpu_smu.h     |   1 +
+ drivers/gpu/drm/amd/powerplay/navi10_ppt.c         |   4 +-
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c         |   2 +
+ .../drm/arm/display/komeda/komeda_wb_connector.c   |   7 +-
+ drivers/gpu/drm/arm/malidp_mw.c                    |   4 +-
+ drivers/gpu/drm/drm_atomic.c                       |  13 +-
+ drivers/gpu/drm/drm_writeback.c                    |  23 ++-
+ drivers/gpu/drm/i915/display/intel_display.c       |  12 +-
+ drivers/gpu/drm/i915/display/intel_display.h       |   2 +-
+ drivers/gpu/drm/i915/display/intel_dp.c            | 184 +++++++++++------=
+----
+ drivers/gpu/drm/i915/display/intel_dp.h            |   6 +-
+ drivers/gpu/drm/i915/display/intel_dp_mst.c        |   4 +-
+ drivers/gpu/drm/i915/display/intel_sprite.c        |   5 +-
+ drivers/gpu/drm/omapdrm/dss/dss.c                  |   2 +-
+ drivers/gpu/drm/rcar-du/rcar_du_writeback.c        |   4 +-
+ drivers/gpu/drm/tilcdc/tilcdc_tfp410.c             |   1 +
+ drivers/gpu/drm/vc4/vc4_txp.c                      |   5 +-
+ include/uapi/drm/amdgpu_drm.h                      |   2 +
+ 39 files changed, 232 insertions(+), 159 deletions(-)
