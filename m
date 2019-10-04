@@ -6,101 +6,177 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E61C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C743BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE91F20830
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9C220873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="nZMtS8X0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u/7F3yeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389058AbfJDOGT (ORCPT
+        id S2388886AbfJDOHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:06:19 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50440 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388149AbfJDOGS (ORCPT
+        Fri, 4 Oct 2019 10:07:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52301 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388376AbfJDOHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:06:18 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 796F42E14C7;
-        Fri,  4 Oct 2019 17:06:14 +0300 (MSK)
-Received: from sas1-7fab0cd91cd2.qloud-c.yandex.net (sas1-7fab0cd91cd2.qloud-c.yandex.net [2a02:6b8:c14:3a93:0:640:7fab:cd9])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Kz1vR6wPb5-6DN4Tx7N;
-        Fri, 04 Oct 2019 17:06:14 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1570197974; bh=DBfHEamxKvTx1Gir1cokMNTtd0g/hC8mtUDDJ9PbayI=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=nZMtS8X0K9sl17tuougE1rULdQXzuwqnfOkxfmWIvrNzQw8Zr0UJVwgETvLGzsF12
-         KeZbIf8Jz2uYI7LQX+cMQKSVo/W/HCa0+Ab0C962s+iXo4xH3JsOtmgI5VPTy4I58/
-         1gtqNTSyTVDZOU04hgxP0tLP8Hd8pVm8FHaUeHi8=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by sas1-7fab0cd91cd2.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id FdBjul4HHu-6DI0MXcv;
-        Fri, 04 Oct 2019 17:06:13 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v2] mm/swap: piggyback lru_add_drain_all() calls
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-References: <157019456205.3142.3369423180908482020.stgit@buzz>
- <20191004131230.GL9578@dhcp22.suse.cz>
- <c1617cff-847f-4cbf-d314-0382a3e9233d@yandex-team.ru>
- <20191004133929.GN9578@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <d2884a8d-2b0d-efba-8a23-5eff8e0fe27b@yandex-team.ru>
-Date:   Fri, 4 Oct 2019 17:06:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 10:07:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r19so5998956wmh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=A0tzZseII5xzIl9YCNKonWwWH+g7D6y/11SCn90fFa0=;
+        b=u/7F3yeEkzbmYPJdYJn3nRYRckHjBCQ/LmlWRUSYF9lyEOSHzRjcawwke4+jFXVLUT
+         kHsbcb5/E/yHItCsd/pfddSmHrr66hfrm7S92SnviPG8VNIdXeoic245Jt6SJbS34P0W
+         bteXozhw8aTWpbHKm7zmDgLZAqVyK8BlaNN3u6JrK7l+vtdRDZa8KtFAVn4DaY5/q38i
+         01oVyZbK8k6hERzBywOCoP2bEkUe99K29/EeOxIqxWHVfSvpgS+rEnXc99i/D/I9FueC
+         yTBX6S5geM6Ca81yhK8au3IDpY0W2ioZFjCYUFZRm14fhgJEMx8xWXpkB21jB6AuvCR6
+         nPOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=A0tzZseII5xzIl9YCNKonWwWH+g7D6y/11SCn90fFa0=;
+        b=a11pzRc2mzAYEWcjK0srkyDF+ZCgtVobGhwaetxn7R7NTeLi3vPOzsFZHW86myGhuu
+         DZe66wBgccqQFFKSa/p6ETRy5PGpxyNoNQ7f7dpmSOn98xQx6xHLPWtNagWZAJ+Pn6eL
+         HjG/drxO7qFCiGxX/+5BMIONfIEt36Ius+YkT466TAPva3BLbJNfRx4W/tiOGQ36i2rB
+         eSLj/hM9G+eifK6BZtLxBidhPPjgu2A+2pdYhtqgLCDKhTrc4ZQyG5RW9UEJUvBvau1u
+         hFplLHAUYqh96BjIwnXiRve4PZ1ECfPIPJ3ppb6YcMIgiVy3Xo5EAhOXVR+IfKhPmHJG
+         a0dA==
+X-Gm-Message-State: APjAAAUj9Bn++0/DCkysGp3ipSETekttmZhtnyqFSpcVjJ4oa+2GeNdc
+        tQbusuiaMQ1+NOTjPfBlqvun+A==
+X-Google-Smtp-Source: APXvYqwK7+3XZzG9HhNAdrLbxuLF7sxCmgoMIkqzIGlV1kFiPlSv6FGn0BRxH07QIGRB7Ylj6B44dA==
+X-Received: by 2002:a1c:5411:: with SMTP id i17mr10885330wmb.170.1570198071459;
+        Fri, 04 Oct 2019 07:07:51 -0700 (PDT)
+Received: from dell ([2.27.167.122])
+        by smtp.gmail.com with ESMTPSA id a3sm9658820wmc.3.2019.10.04.07.07.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Oct 2019 07:07:51 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 15:07:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's
+ mc34708
+Message-ID: <20191004140749.GH18429@dell>
+References: <20190909214440.30674-1-lukma@denx.de>
+ <20190930095159.64e1001a@jawa>
+ <20191001064130.GA11769@dell>
+ <20191001101909.79aacda0@jawa>
 MIME-Version: 1.0
-In-Reply-To: <20191004133929.GN9578@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001101909.79aacda0@jawa>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 16.39, Michal Hocko wrote:
-> On Fri 04-10-19 16:32:39, Konstantin Khlebnikov wrote:
->> On 04/10/2019 16.12, Michal Hocko wrote:
->>> On Fri 04-10-19 16:09:22, Konstantin Khlebnikov wrote:
->>>> This is very slow operation. There is no reason to do it again if somebody
->>>> else already drained all per-cpu vectors while we waited for lock.
->>>>
->>>> Piggyback on drain started and finished while we waited for lock:
->>>> all pages pended at the time of our enter were drained from vectors.
->>>>
->>>> Callers like POSIX_FADV_DONTNEED retry their operations once after
->>>> draining per-cpu vectors when pages have unexpected references.
->>>
->>> This describes why we need to wait for preexisted pages on the pvecs but
->>> the changelog doesn't say anything about improvements this leads to.
->>> In other words what kind of workloads benefit from it?
->>
->> Right now POSIX_FADV_DONTNEED is top user because it have to freeze page
->> reference when removes it from cache. invalidate_bdev calls it for same reason.
->> Both are triggered from userspace, so it's easy to generate storm.
->>
->> mlock/mlockall no longer calls lru_add_drain_all - I've seen here
->> serious slowdown on older kernel.
->>
->> There are some less obvious paths in memory migration/CMA/offlining
->> which shouldn't be called frequently.
+On Tue, 01 Oct 2019, Lukasz Majewski wrote:
+> > On Mon, 30 Sep 2019, Lukasz Majewski wrote:
+> > 
+> > > Dear Lee,
+> > >   
+> > > > This patch set provides several enhancements to mc13xxx MFD family
+> > > > of devices by introducing mc34708 as a separate device.
+> > > > 
+> > > > This IC has dedicated pen detection feature, which allows better
+> > > > touchscreen experience.
+> > > > 
+> > > > This is the fifth version of this code (v5).
+> > > > Discussion regarding previous versions can be found here:
+> > > > https://lkml.org/lkml/2018/4/12/351
+> > > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.html
+> > > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.html
+> > > > https://lkml.org/lkml/2019/7/17/705  
+> > > 
+> > > Gentle ping on this patch series. It is now 3 weeks without any
+> > > reply...  
+> > 
+> > Please take note and follow the kernel release cycle.
+> > 
+> > These patches were sent after the release of -rc7 i.e. very late
+> > in the release cycle and a point where most kernel maintainers stop
+> > reviewing/applying patches
 > 
-> Can you back those claims by any numbers?
+> Maybe something has changed recently, but I thought that the review is
+> an ongoing process (that the discussion about patches takes place all
+> the time to refine the code).
 > 
+> (and nobody expects maintainers pulling new patches after merge window).
 
-Well, worst case requires non-trivial workload because lru_add_drain_all
-skips cpus where vectors are empty. Something must constantly generates
-flow of pages at each cpu. Also cpus must be busy to make scheduling per-cpu
-works slower. And machine must be big enough (64+ cpus in our case).
+Nothing changed recently.  Some maintainers will review just before
+and during the merge windows, others use the time to prepare their
+branches for submission and welcome the break from reviewing during
+this time.  Either way, please do not *expect* a fast turn-around
+during in this period of the cycle.
 
-In our case that was massive series of mlock calls in map-reduce while other
-tasks writes log (and generates flow of new pages in per-cpu vectors). Mlock
-calls were serialized by mutex and accumulated latency up to 10 second and more.
+> > and start to prepare for the impending
+> > merge-window.
+> > 
+> > Also, there is no such thing as a gentle ping.
+> 
+> I'm a bit puzzled now. 
+> I do know that maintainers are overworked - and I do understand that.
+> 
+> However, NO reply for such a long time is at best confusing for
+> somebody who is willing to fix the kernel.
 
-Kernel does not call lru_add_drain_all on mlock paths since 4.15, but same scenario
-could be triggered by fadvise(POSIX_FADV_DONTNEED) or any other remaining user.
+If you respect the merge cycle, you will come to expect a short delay
+at the end and during the merge-window.  Please also understand that
+Maintainers also take vacation, attend conferences and have other work
+to attend to.
+
+> (Maybe this has changed too - but I do remember that there was a "rule
+> of thumb" to express any comment about the patch in 2 weeks time).
+
+Same rule of thumb applies.  If after 2 weeks you have not received a
+review, feel free to send a [RESEND].  However, bumping threads with
+contentless pings is considered bad form.
+
+As an aside, I (and others) conduct reviews in batches and in
+chronological order (first come, first served) of how the mails are
+represented in my inbox.  Thus, if you bump a thread, it goes to the
+back of the queue.
+
+> >  If you genuinely think
+> > your patches have unlikely("slipped though the gaps"), then post a
+> > [RESEND] complete with a note alluding your reasons doing such.
+> > 
+> 
+> Please forgive me, but are patches from this series eligible for pulling
+> (to v5.4 or even next release)?
+
+v5.4-rc1 has already been released.  No new functionality will hit
+v5.4.  We have around 6-7 weeks to agree on acceptance for this set
+for them to be eligible for v5.5.
+
+> > > > Sascha Hauer (3):
+> > > >   mfd: mc13xxx: Add mc34708 adc support
+> > > >   input: touchscreen mc13xxx: Make platform data optional
+> > > >   input: touchscreen mc13xxx: Add mc34708 support
+> > > > 
+> > > >  drivers/input/touchscreen/mc13783_ts.c | 63 ++++++++++++++---
+> > > >  drivers/mfd/mc13xxx-core.c             | 98
+> > > > +++++++++++++++++++++++++- include/linux/mfd/mc34708.h
+> > > > | 37 ++++++++++ 3 files changed, 185 insertions(+), 13
+> > > > deletions(-) create mode 100644 include/linux/mfd/mc34708.h  
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
