@@ -2,137 +2,180 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2014BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E8CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FF921D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vUmqqKfe"
+	by mail.kernel.org (Postfix) with ESMTP id 61F15207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388475AbfJDNW3 (ORCPT
+        id S2388501AbfJDNXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:22:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38245 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387952AbfJDNW2 (ORCPT
+        Fri, 4 Oct 2019 09:23:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46727 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387952AbfJDNXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:22:28 -0400
-Received: by mail-io1-f65.google.com with SMTP id u8so13465900iom.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 06:22:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LEJ9dg5xbbVV3C3q2sRRPp0B1uzrgFWed1hhJkYm69Y=;
-        b=vUmqqKfe0iMgqQT1tBxf5L1Tzjr/8LsPzYoTRi5HnnZQi6OPLN+MSrqfkvxFB+KJ8g
-         J9TSTshM2pCNFHqUrXr7VWcEaqbB0zClY5hRVcYS7c2VS3XzldzVcvDZUD/4jUzEglN1
-         L3MxWuOxvJNCHRVQv2ut5Dp0i++aZiOmqPOxf6g80n4QyQWCc9NDVP195xFSbZmFsSw5
-         qSC6svrQG+aRjdCg3/AzDyeO2ufS+lVeOTC8evuIySD7T9s0N44Vh8tGGxGKbex5JbSN
-         xA3mBb26Yj7FdvVCNxGaldGhi0xovY9K+VXUkqFx9sFpxVxMOY6Fln1oLJIdiGCqg6vZ
-         VCmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LEJ9dg5xbbVV3C3q2sRRPp0B1uzrgFWed1hhJkYm69Y=;
-        b=YukR7eWFGlOMwXQySr/I6fCX/kkv7jr5zGCj2sRmKa9P8HmdiVAlk6Cm/kiDX0T2KR
-         mWfoLSZ12TXSu+kBgK0hVs/ZZ+yxFABKewuQXMsniSfS82/jsXi9Kxi5nkRjRDq4jPFZ
-         wHW7oQZbbjtK8R9Yw2Io/SpglMSb5mMa3JV3v5MLUv4fKL1qeZKcLuVCmcgZEMv1ayog
-         CE9eRTRnYYS3iKsDSLY8RflRWkzSQ7y8XQw6h4Rp80Dm/YK0wr4bkrWEbTOAhjADf/ab
-         h+Ov8AZTEA6L/1fb6c4j7krhBw0CpvfK8ayK7t8nVRKmMPNDSsGDrJV0wcC60riMAelT
-         3MQw==
-X-Gm-Message-State: APjAAAVDulIc6224tRHykr5tLm9vTuvGa+Mg9jgxWwKdkOyovoD8zi9e
-        TKPrdH/hFh5w0DuZ0LRdd2P85Q==
-X-Google-Smtp-Source: APXvYqwQrXsm+JA/LtxH6GpCLZs4bFRPqRu7If4SldN0S4B5xsUwRTuxEufarPrQTL32YciKOaVH/Q==
-X-Received: by 2002:a02:7f49:: with SMTP id r70mr14623123jac.85.1570195347722;
-        Fri, 04 Oct 2019 06:22:27 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c65sm3169547ilg.26.2019.10.04.06.22.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 06:22:26 -0700 (PDT)
-Subject: Re: [PATCH 1/2] bdi: Do not use freezable workqueue
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Pavel Machek <pavel@ucw.cz>, Jan Kara <jack@suse.cz>,
-        Tejun Heo <tj@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20191004100025.70798-1-mika.westerberg@linux.intel.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0002b2f3-d17c-0d49-52f4-b2ce31832e6c@kernel.dk>
-Date:   Fri, 4 Oct 2019 07:22:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 09:23:25 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1iGNWS-0001sz-5V; Fri, 04 Oct 2019 15:21:28 +0200
+Message-ID: <bc05540f2aa46cff5d6239faab83446401ba7b5f.camel@pengutronix.de>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Fri, 04 Oct 2019 15:21:03 +0200
+In-Reply-To: <20191004092727.GX25745@shell.armlinux.org.uk>
+References: <20190926160433.GD32311@linux.ibm.com>
+         <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
+         <20190928073331.GA5269@linux.ibm.com>
+         <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
+         <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
+         <20191002073605.GA30433@linux.ibm.com>
+         <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
+         <20191003053451.GA23397@linux.ibm.com>
+         <20191003084914.GV25745@shell.armlinux.org.uk>
+         <20191003113010.GC23397@linux.ibm.com>
+         <20191004092727.GX25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20191004100025.70798-1-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 4:00 AM, Mika Westerberg wrote:
-> A removable block device, such as NVMe or SSD connected over Thunderbolt
-> can be hot-removed any time including when the system is suspended. When
-> device is hot-removed during suspend and the system gets resumed, kernel
-> first resumes devices and then thaws the userspace including freezable
-> workqueues. What happens in that case is that the NVMe driver notices
-> that the device is unplugged and removes it from the system. This ends
-> up calling bdi_unregister() for the gendisk which then schedules
-> wb_workfn() to be run one more time.
+Am Freitag, den 04.10.2019, 10:27 +0100 schrieb Russell King - ARM
+Linux admin:
+> On Thu, Oct 03, 2019 at 02:30:10PM +0300, Mike Rapoport wrote:
+> > On Thu, Oct 03, 2019 at 09:49:14AM +0100, Russell King - ARM Linux
+> > admin wrote:
+> > > On Thu, Oct 03, 2019 at 08:34:52AM +0300, Mike Rapoport wrote:
+> > > > (trimmed the CC)
+> > > > 
+> > > > On Wed, Oct 02, 2019 at 06:14:11AM -0500, Adam Ford wrote:
+> > > > > On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <
+> > > > > rppt@linux.ibm.com> wrote:
+> > > > > 
+> > > > > Before the patch:
+> > > > > 
+> > > > > # cat /sys/kernel/debug/memblock/memory
+> > > > >    0: 0x10000000..0x8fffffff
+> > > > > # cat /sys/kernel/debug/memblock/reserved
+> > > > >    0: 0x10004000..0x10007fff
+> > > > >   34: 0x2fffff88..0x3fffffff
+> > > > > 
+> > > > > 
+> > > > > After the patch:
+> > > > > # cat /sys/kernel/debug/memblock/memory
+> > > > >    0: 0x10000000..0x8fffffff
+> > > > > # cat /sys/kernel/debug/memblock/reserved
+> > > > >    0: 0x10004000..0x10007fff
+> > > > >   36: 0x80000000..0x8fffffff
+> > > > 
+> > > > I'm still not convinced that the memblock refactoring didn't
+> > > > uncovered an
+> > > > issue in etnaviv driver.
+> > > > 
+> > > > Why moving the CMA area from 0x80000000 to 0x30000000 makes it
+> > > > fail?
+> > > 
+> > > I think you have that the wrong way round.
+> > 
+> > I'm relying on Adam's reports of working and non-working versions.
+> > According to that etnaviv works when CMA area is at 0x80000000 and
+> > does not
+> > work when it is at 0x30000000.
+> > 
+> > He also sent logs a few days ago [1], they also confirm that.
+> > 
+> > [1] 
+> > https://lore.kernel.org/linux-mm/CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com/
 > 
-> However, since the bdi_wq is still frozen flush_delayed_work() call in
-> wb_shutdown() blocks forever halting system resume process. User sees
-> this as hang as nothing is happening anymore.
+> Sorry, yes, you're right.  Still, I've reported this same regression
+> a while back, and it's never gone away.
 > 
-> Triggering sysrq-w reveals this:
+> > > > BTW, the code that complained about "command buffer outside
+> > > > valid memory
+> > > > window" has been removed by the commit 17e4660ae3d7
+> > > > ("drm/etnaviv:
+> > > > implement per-process address spaces on MMUv2"). 
+> > > > 
+> > > > Could be that recent changes to MMU management of etnaviv
+> > > > resolve the
+> > > > issue?
+> > > 
+> > > The iMX6 does not have MMUv2 hardware, it has MMUv1.  With MMUv1
+> > > hardware requires command buffers within the first 2GiB of
+> > > physical
+> > > RAM.
+> > 
+> > I've mentioned that patch because it removed the check for cmdbuf
+> > address
+> > for MMUv1:
+> > 
+> > @@ -785,15 +768,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+> >                                   PAGE_SIZE);
+> >         if (ret) {
+> >                 dev_err(gpu->dev, "could not create command
+> > buffer\n");
+> > -               goto unmap_suballoc;
+> > -       }
+> > -
+> > -       if (!(gpu->identity.minor_features1 &
+> > chipMinorFeatures1_MMU_VERSION) &&
+> > -           etnaviv_cmdbuf_get_va(&gpu->buffer, &gpu-
+> > >cmdbuf_mapping) > 0x80000000) {
+> > -               ret = -EINVAL;
+> > -               dev_err(gpu->dev,
+> > -                       "command buffer outside valid memory
+> > window\n");
+> > -               goto free_buffer;
+> > +               goto fail;
+> >         }
+> >  
+> >         /* Setup event management */
+> > 
+> > 
+> > I really don't know how etnaviv works, so I hoped that people who
+> > understand it would help.
 > 
->    Workqueue: nvme-wq nvme_remove_dead_ctrl_work [nvme]
->    Call Trace:
->     ? __schedule+0x2c5/0x630
->     ? wait_for_completion+0xa4/0x120
->     schedule+0x3e/0xc0
->     schedule_timeout+0x1c9/0x320
->     ? resched_curr+0x1f/0xd0
->     ? wait_for_completion+0xa4/0x120
->     wait_for_completion+0xc3/0x120
->     ? wake_up_q+0x60/0x60
->     __flush_work+0x131/0x1e0
->     ? flush_workqueue_prep_pwqs+0x130/0x130
->     bdi_unregister+0xb9/0x130
->     del_gendisk+0x2d2/0x2e0
->     nvme_ns_remove+0xed/0x110 [nvme_core]
->     nvme_remove_namespaces+0x96/0xd0 [nvme_core]
->     nvme_remove+0x5b/0x160 [nvme]
->     pci_device_remove+0x36/0x90
->     device_release_driver_internal+0xdf/0x1c0
->     nvme_remove_dead_ctrl_work+0x14/0x30 [nvme]
->     process_one_work+0x1c2/0x3f0
->     worker_thread+0x48/0x3e0
->     kthread+0x100/0x140
->     ? current_work+0x30/0x30
->     ? kthread_park+0x80/0x80
->     ret_from_fork+0x35/0x40
+> From what I can see, removing that check is a completely insane thing
+> to do, and I note that these changes are _not_ described in the
+> commit
+> message.  The problem was known about _before_ (June 22) the patch
+> was
+> created (July 5).
 > 
-> This is not limited to NVMes so exactly same issue can be reproduced by
-> hot-removing SSD (over Thunderbolt) while the system is suspended.
-> 
-> Prevent this from happening by removing WQ_FREEZABLE from bdi_wq.
+> Lucas, please can you explain why removing the above check, which is
+> well known to correctly trigger on various platforms to prevent
+> incorrect GPU behaviour, is safe?
 
-This series looks good for me, I don't think there's a reason for
-the workers to be marked freezable.
+It isn't. It's a pretty big oversight in this commit to remove this
+check. It can't be done at the same spot in the code anymore, as we
+don't have a mapping context at this time anymore, but it should have
+moved into etnaviv_iommu_context_init(). I'll send a patch to fix this
+up.
 
--- 
-Jens Axboe
+Regards,
+Lucas
 
