@@ -6,152 +6,112 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB580C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7352249A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34657207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfJDHm6 (ORCPT
+        id S2387927AbfJDHyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 03:42:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57406 "EHLO mx1.redhat.com"
+        Fri, 4 Oct 2019 03:54:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:56043 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730165AbfJDHm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 03:42:56 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5161230860D5;
-        Fri,  4 Oct 2019 07:42:55 +0000 (UTC)
-Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E4F25C1D8;
-        Fri,  4 Oct 2019 07:42:52 +0000 (UTC)
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-To:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190924143615.19628-1-david@redhat.com>
- <1570052242.5576.266.camel@lca.pw>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <be2cb67b-5432-d147-cfa1-efe3c7e77db6@redhat.com>
-Date:   Fri, 4 Oct 2019 09:42:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727409AbfJDHyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 03:54:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 00:54:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,255,1566889200"; 
+   d="scan'208";a="205799275"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 04 Oct 2019 00:54:26 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 04 Oct 2019 10:54:26 +0300
+Date:   Fri, 4 Oct 2019 10:54:26 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     yehezkelshb@gmail.com, linux-usb@vger.kernel.org,
+        andreas.noever@gmail.com, michael.jamet@intel.com,
+        rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191004075426.GA2819@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
+ <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
+ <20191002083913.GG2714@lahna.fi.intel.com>
+ <767f2f97059e4e9f861080672aaa18d3@AUSX13MPC105.AMER.DELL.COM>
+ <CA+CmpXs4YsTA3QnD77SaXq3mRYX6oFwx+pm-3wEErwkF-02M+A@mail.gmail.com>
+ <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
+ <20191003080028.GK2819@lahna.fi.intel.com>
+ <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-In-Reply-To: <1570052242.5576.266.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 04 Oct 2019 07:42:55 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.10.19 23:37, Qian Cai wrote:
-> On Tue, 2019-09-24 at 16:36 +0200, David Hildenbrand wrote:
->> Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
->> rwsem") we do a cpus_read_lock() in mem_hotplug_begin(). This was
->> introduced to fix a potential deadlock between get_online_mems() and
->> get_online_cpus() - the memory and cpu hotplug lock. The root issue was
->> that build_all_zonelists() -> stop_machine() required the cpu hotplug lock:
->>     The reason is that memory hotplug takes the memory hotplug lock and
->>     then calls stop_machine() which calls get_online_cpus().  That's the
->>     reverse lock order to get_online_cpus(); get_online_mems(); in
->>     mm/slub_common.c
->>
->> So memory hotplug never really required any cpu lock itself, only
->> stop_machine() and lru_add_drain_all() required it. Back then,
->> stop_machine_cpuslocked() and lru_add_drain_all_cpuslocked() were used
->> as the cpu hotplug lock was now obtained in the caller.
->>
->> Since commit 11cd8638c37f ("mm, page_alloc: remove stop_machine from build
->> all_zonelists"), the stop_machine_cpuslocked() call is gone.
->> build_all_zonelists() does no longer require the cpu lock and does no
->> longer make use of stop_machine().
->>
->> Since commit 9852a7212324 ("mm: drop hotplug lock from
->> lru_add_drain_all()"), lru_add_drain_all() "Doesn't need any cpu hotplug
->> locking because we do rely on per-cpu kworkers being shut down before our
->> page_alloc_cpu_dead callback is executed on the offlined cpu.". The
->> lru_add_drain_all_cpuslocked() variant was removed.
->>
->> So there is nothing left that requires the cpu hotplug lock. The memory
->> hotplug lock and the device hotplug lock are sufficient.
+On Thu, Oct 03, 2019 at 02:41:11PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Sent: Thursday, October 3, 2019 3:00 AM
+> > To: Limonciello, Mario
+> > Cc: yehezkelshb@gmail.com; linux-usb@vger.kernel.org;
+> > andreas.noever@gmail.com; michael.jamet@intel.com;
+> > rajmohan.mani@intel.com; nicholas.johnson-opensource@outlook.com.au;
+> > lukas@wunner.de; gregkh@linuxfoundation.org; stern@rowland.harvard.edu;
+> > anthony.wong@canonical.com; linux-kernel@vger.kernel.org
+> > Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > On Wed, Oct 02, 2019 at 04:00:55PM +0000, Mario.Limonciello@dell.com wrote:
+> > > > It's not even "same location - another meaning", the vendor ID comes from
+> > the
+> > > > DROM section, so it takes a few internal jumps inside the NVM to find the
+> > > > location. One of the "pointers" or section headers will be broken for sure.
+> > > >
+> > > > And after this, we need to find the NVM in LVFS and it has to pass validation
+> > in
+> > > > a few other locations. The chances are so low that I'd think it isn't worth
+> > > > worrying about it.
+> > >
+> > > And now I remember why the back of my mind was having this thought of
+> > wanting
+> > > sysfs attribute in the first place.  The multiple jumps means that a lot more of
+> > the
+> > > NVM has to be dumped to get that data, which slows down fwupd startup
+> > significantly.
+> > 
+> > IIRC currently fwupd does two reads of total 128 bytes from the active
+> > NVM. Is that really slowing down fwupd startup significantly?
 > 
-> Actually, powerpc does,
+> Yeah, I timed it with fwupd.  Here's the averages:
 > 
-> arch_add_memory()
->   resize_hpt_for_hotplug()
->     pseries_lpar_resize_hpt()
->       stop_machine_cpuslocked()
+> Without doing the reads to jump to this it's 0:00.06 seconds to probe a tree of
+> Host controller and dock plugged in.
 > 
+> With doing the reads and just host controller:
+> 0:04.40 seconds
+>
+> With doing the reads and host controller and dock plugged in:
+> 0:10.73 seconds
 
-Thanks for that observation. This will need some further thought.
+OK, it clearly takes time to read them. I wonder if this includes
+powering up the controller?
 
-Another proof that locking is messed up :)
-
-Maybe we should start decoupling locking of the memory
-onlining/offlining path (e.g., get_online_mems()) from the memory
-adding/removing path (e.g., later something like get_present_mems()).
-Then we can push down the cpu hotplug lock to the PPC path and use
-stop_machine() directly.
-
-Time to document properly which lock protects what :)
-
--- 
-
-Thanks,
-
-David / dhildenb
+Also if you can get the hw_vendor_id and hw_product_id from the kernel
+does that mean you don't need to do the two reads or you still need
+those?
