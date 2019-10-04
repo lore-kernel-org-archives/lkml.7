@@ -2,242 +2,187 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4BDC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9467C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6BA3222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828212133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tQ4sUy8v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtDoZWYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfJDUss (ORCPT
+        id S1729727AbfJDUxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 16:48:48 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38791 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJDUsr (ORCPT
+        Fri, 4 Oct 2019 16:53:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39853 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJDUxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 16:48:47 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so16436857iom.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 13:48:46 -0700 (PDT)
+        Fri, 4 Oct 2019 16:53:21 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s22so6404333otr.6
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 13:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mXk0BhWuyKY9S12hwt/zCXZNfl9ZEoSf4e1tOm5hhII=;
-        b=tQ4sUy8vYR3a4AXx7+UJpcvRAeHNAccGQPbGW21Oe8vTIXfVWZPUTS0y02UggATI+b
-         PsNffFy9iHz3o+uLD9chOgD1+asrq5hluSMCBR3syuyh9MYktmZ/SVoQ50HX9j4NPCmO
-         vjnC4ZVs2jGoHCtol+takXB6fJmvIIqke3s8sOwIdbcS9rJ2v9x0E4BNO3IO+lU7hmmy
-         kHWGqWfgyexhZO2fUFTBukvPPEn5zV3nRIjHsIn5DszX6clrmwnEynoYeSkoQOBcvj4F
-         o7Clnn3A5lF2UXKERyV/B8K6BR2ZkHE3RLtP1kf1DlMD7eCZdSBG4m6eSnmP7SBeZYyR
-         yndQ==
+        bh=TAjnuPHw3tO3uVocMnkpXK9WavD6g0ytImUkTHWoads=;
+        b=AtDoZWYM8rsG9RE3VueQA0mbi5yWVltfodn/kWBNidSY+z8TqakvLRpOrSosSonS66
+         b0PwaFX95OwS6MrWaLpLwAzf+Va2wLM5rS+0aRS76egxt+M49Fj3sbGbWuVXit593HT9
+         GbG7Ju1cKAlI6VD/Zf1sv7kWmZuKy7EPPAdGUtWFKHflNUzMRqfufwAqc6bnWlikrtts
+         FlYMP7BL8PHiF0/0+dK5/ugxC/WPTguO3bcodiO9Sx+tJsVqjUnSV7KbwtPL9mSEBwM0
+         PW0qx5bmpFx1b6j6irBs3ItUrUOjmPtKP43bRgQnAgxwYGlX3QdU8b3qPcDT+W56cfKV
+         MOUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mXk0BhWuyKY9S12hwt/zCXZNfl9ZEoSf4e1tOm5hhII=;
-        b=hnuDOuI+kAWNyk7DkSnW3meHGsX3U6UDKn2UcYk5BvWqVxNYRK9kLla/tHQi9UYodo
-         DxXBZc/oj/GW6f7JdcsPXyH46C/2bWDEfDCuIAv/ik7/Kur8fTo5S1QeSecZQnJ1Rdb3
-         DqyFqUaxqSzDFKP/eV82AzGB1OR6hp7Eo+AHNGGHHaiQAmb2O6Q5+iMiHgoirdrTSdzZ
-         u0Axwid4Y4ql/Y0I0MBdUaO9A7Yrw3tmDJ2rUcd72+tH7K7BdnN+ymJeiwni3SZvuQAz
-         K26q0xMwsh97utb72/O/NZjI6mnNagK5VAdQP+ESmbS4eLe6ypE5KAN3bFFtHM1XTVr1
-         bbwg==
-X-Gm-Message-State: APjAAAVOQYTvRKyqA1l3Qe+eNgrnOUP2DDBV3Uxo1qzauIO1yBW5O/Dq
-        c40fnfK/9yonRF8g0J7ngIRogLVpT5JKd3s+OqT9+Q==
-X-Google-Smtp-Source: APXvYqz7XSZPboz6oE6U0NNJCWB5vYvylBWKnU9bLb5Jyo8VAudlfs/WwEJoxxwmFAfYvVhiWGHTlibup+DMmCRUeKU=
-X-Received: by 2002:a6b:1606:: with SMTP id 6mr15851427iow.108.1570222125924;
- Fri, 04 Oct 2019 13:48:45 -0700 (PDT)
+        bh=TAjnuPHw3tO3uVocMnkpXK9WavD6g0ytImUkTHWoads=;
+        b=ArOBIiJKGyCjW2Q3bqUJeJvnY1XbDd2TCdwzdFrV7J0Q4dEwwB4QGpVmF7h5uFWWyR
+         OrZLXLjUNvNGDQa6szRjW9qNTVDR7t15WdoW56x8YluQdIUyMxNdKSOpi7nR+ItRJZwQ
+         kokr6+vISRhEEaEjg06jEekbb3VJJ178X4eon83LzRGLEABVY2QyUtR/hd+06dwhi/m3
+         g2ql9BqmWFDi8BEkjdmurmNG1WWbBfTxCNJ48ommCPEzMWgyy0fu69ayVy+Q8yuSI00j
+         bYXwwFS/UmvUsYp0wCu7bMH4L1/ZCJKbRK/f5iX33At+jOx4/D1QksEqbjvZs8xok7HA
+         DfrQ==
+X-Gm-Message-State: APjAAAXocchY3uF7zS3bXNA4ALfVoj3p3ZodNPVVHTi22Nu90ruqj96X
+        pyAHCcNpKxkrCyEm7K+bEK0XvpNfTHeHYkSyJ28iUA==
+X-Google-Smtp-Source: APXvYqzO6x90iT0W5MMs7J07MRh0s1yRHTSoEYZjIKxU8+L9kOrJWzZNsKE9rvwjF395L+RglCQBpKFxk0vi3yIZWPg=
+X-Received: by 2002:a9d:7842:: with SMTP id c2mr9087845otm.171.1570222399879;
+ Fri, 04 Oct 2019 13:53:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190917085304.16987-1-weijiang.yang@intel.com> <20190917085304.16987-3-weijiang.yang@intel.com>
-In-Reply-To: <20190917085304.16987-3-weijiang.yang@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 4 Oct 2019 13:48:34 -0700
-Message-ID: <CALMp9eSEkZiFq3RhTuJSUCx3WDJy4EfYHk7GDoN=MO9tRt4=hQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/9] vmx: spp: Add control flags for Sub-Page Protection(SPP)
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
+References: <20191004180920.105572-1-harshadshirwadkar@gmail.com>
+In-Reply-To: <20191004180920.105572-1-harshadshirwadkar@gmail.com>
+From:   harshad shirwadkar <harshadshirwadkar@gmail.com>
+Date:   Fri, 4 Oct 2019 13:53:08 -0700
+Message-ID: <CAD+ocby9=Xyy=0cENHw2ndmnvKk-Eti3XFzJ6WzAE4tbqC7-hg@mail.gmail.com>
+Subject: Re: [PATCH] blk-wbt: fix performance regression in wbt scale_up/scale_down
+To:     linux-kernel@vger.kernel.org
+Cc:     Josef Bacik <jbacik@fb.com>, vaibhavrustagi@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 1:52 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
+On Fri, Oct 4, 2019 at 11:09 AM Harshad Shirwadkar
+<harshadshirwadkar@gmail.com> wrote:
 >
-> Check SPP capability in MSR_IA32_VMX_PROCBASED_CTLS2, its 23-bit
-> indicates SPP capability. Enable SPP feature bit in CPU capabilities
-> bitmap if it's supported.
+> scale_up wakes up waiters after scaling up. But after scaling max, it
+> should not wake up more waiters as waiters will not have anything to
+> do. This patch fixes this by making scale_up (and also scale_down)
+> return when threshold is reached.
 >
-> Co-developed-by: He Chen <he.chen@linux.intel.com>
-> Signed-off-by: He Chen <he.chen@linux.intel.com>
-> Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> This bug causes increased fdatasync latency when fdatasync and dd
+> conv=sync are performed in parallel on 4.19 compared to 4.14. This
+> bug was introduced during refactoring of blk-wbt code.
+>
+> Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
+> Cc: Josef Bacik <jbacik@fb.com>
+> Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
 > ---
->  arch/x86/include/asm/cpufeatures.h |  1 +
->  arch/x86/include/asm/vmx.h         |  1 +
->  arch/x86/kernel/cpu/intel.c        |  4 ++++
->  arch/x86/kvm/mmu.h                 |  2 ++
->  arch/x86/kvm/vmx/capabilities.h    |  5 +++++
->  arch/x86/kvm/vmx/vmx.c             | 10 ++++++++++
->  6 files changed, 23 insertions(+)
+>  block/blk-rq-qos.c | 14 +++++++++-----
+>  block/blk-rq-qos.h |  4 ++--
+>  block/blk-wbt.c    |  6 ++++--
+>  3 files changed, 15 insertions(+), 9 deletions(-)
 >
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index e880f2408e29..ee2c76fdadf6 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -228,6 +228,7 @@
->  #define X86_FEATURE_FLEXPRIORITY       ( 8*32+ 2) /* Intel FlexPriority */
->  #define X86_FEATURE_EPT                        ( 8*32+ 3) /* Intel Extended Page Table */
->  #define X86_FEATURE_VPID               ( 8*32+ 4) /* Intel Virtual Processor ID */
-> +#define X86_FEATURE_SPP                        ( 8*32+ 5) /* Intel EPT-based Sub-Page Write Protection */
->
->  #define X86_FEATURE_VMMCALL            ( 8*32+15) /* Prefer VMMCALL to VMCALL */
->  #define X86_FEATURE_XENPV              ( 8*32+16) /* "" Xen paravirtual guest */
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index a39136b0d509..e1137807affc 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -68,6 +68,7 @@
->  #define SECONDARY_EXEC_XSAVES                  0x00100000
->  #define SECONDARY_EXEC_PT_USE_GPA              0x01000000
->  #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC     0x00400000
-> +#define SECONDARY_EXEC_ENABLE_SPP              0x00800000
->  #define SECONDARY_EXEC_TSC_SCALING              0x02000000
->
->  #define PIN_BASED_EXT_INTR_MASK                 0x00000001
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 8d6d92ebeb54..27617e522f01 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -503,6 +503,7 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
->  #define X86_VMX_FEATURE_PROC_CTLS2_EPT         0x00000002
->  #define X86_VMX_FEATURE_PROC_CTLS2_VPID                0x00000020
->  #define x86_VMX_FEATURE_EPT_CAP_AD             0x00200000
-> +#define X86_VMX_FEATURE_PROC_CTLS2_SPP         0x00800000
->
->         u32 vmx_msr_low, vmx_msr_high, msr_ctl, msr_ctl2;
->         u32 msr_vpid_cap, msr_ept_cap;
-> @@ -513,6 +514,7 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
->         clear_cpu_cap(c, X86_FEATURE_EPT);
->         clear_cpu_cap(c, X86_FEATURE_VPID);
->         clear_cpu_cap(c, X86_FEATURE_EPT_AD);
-> +       clear_cpu_cap(c, X86_FEATURE_SPP);
->
->         rdmsr(MSR_IA32_VMX_PROCBASED_CTLS, vmx_msr_low, vmx_msr_high);
->         msr_ctl = vmx_msr_high | vmx_msr_low;
-> @@ -536,6 +538,8 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
->                 }
->                 if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VPID)
->                         set_cpu_cap(c, X86_FEATURE_VPID);
-> +               if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_SPP)
-> +                       set_cpu_cap(c, X86_FEATURE_SPP);
-
-SPP requires EPT, so this could be moved up next to the EPT_AD check.
-In fact, I would suggest changing 'SPP' to 'EPT_SPP' to make it clear
-that this feature is *EPT* sub-page permissions.
-
->         }
+> diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
+> index 3954c0dc1443..d92abb43000c 100644
+> --- a/block/blk-rq-qos.c
+> +++ b/block/blk-rq-qos.c
+> @@ -142,24 +142,27 @@ bool rq_depth_calc_max_depth(struct rq_depth *rqd)
+>         return ret;
 >  }
 >
-> diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-> index 54c2a377795b..3c1423526a98 100644
-> --- a/arch/x86/kvm/mmu.h
-> +++ b/arch/x86/kvm/mmu.h
-> @@ -26,6 +26,8 @@
->  #define PT_PAGE_SIZE_MASK (1ULL << PT_PAGE_SIZE_SHIFT)
->  #define PT_PAT_MASK (1ULL << 7)
->  #define PT_GLOBAL_MASK (1ULL << 8)
-> +#define PT_SPP_SHIFT 61
-> +#define PT_SPP_MASK (1ULL << PT_SPP_SHIFT)
-
-Since these constants are only applicable to EPT, would it be more
-appropriate to define them in paging_tmpl.h, under '#elif PTTYPE ==
-PTTYPE_EPT'? If not, it seems that they should at least be renamed to
-PT64_SPP_* for consistency with the other macros here.
-
->  #define PT64_NX_SHIFT 63
->  #define PT64_NX_MASK (1ULL << PT64_NX_SHIFT)
->
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index d6664ee3d127..e3bde7a32123 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -241,6 +241,11 @@ static inline bool cpu_has_vmx_pml(void)
->         return vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_PML;
->  }
->
-> +static inline bool cpu_has_vmx_ept_spp(void)
-> +{
-> +       return vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_SPP;
-> +}
-> +
->  static inline bool vmx_xsaves_supported(void)
+> -void rq_depth_scale_up(struct rq_depth *rqd)
+> +/* Returns true on success and false if scaling up wasn't possible */
+> +bool rq_depth_scale_up(struct rq_depth *rqd)
 >  {
->         return vmcs_config.cpu_based_2nd_exec_ctrl &
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index c030c96fc81a..8ecf9cb24879 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -60,6 +60,7 @@
->  #include "vmcs12.h"
->  #include "vmx.h"
->  #include "x86.h"
-> +#include "spp.h"
+>         /*
+>          * Hit max in previous round, stop here
+>          */
+>         if (rqd->scaled_max)
+> -               return;
+> +               return false;
 >
->  MODULE_AUTHOR("Qumranet");
->  MODULE_LICENSE("GPL");
-> @@ -113,6 +114,7 @@ module_param_named(pml, enable_pml, bool, S_IRUGO);
+>         rqd->scale_step--;
 >
->  static bool __read_mostly dump_invalid_vmcs = 0;
->  module_param(dump_invalid_vmcs, bool, 0644);
-> +static bool __read_mostly spp_supported = 0;
+>         rqd->scaled_max = rq_depth_calc_max_depth(rqd);
+> +       return true;
+>  }
 >
->  #define MSR_BITMAP_MODE_X2APIC         1
->  #define MSR_BITMAP_MODE_X2APIC_APICV   2
-> @@ -2279,6 +2281,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->                         SECONDARY_EXEC_RDSEED_EXITING |
->                         SECONDARY_EXEC_RDRAND_EXITING |
->                         SECONDARY_EXEC_ENABLE_PML |
-> +                       SECONDARY_EXEC_ENABLE_SPP |
->                         SECONDARY_EXEC_TSC_SCALING |
->                         SECONDARY_EXEC_PT_USE_GPA |
->                         SECONDARY_EXEC_PT_CONCEAL_VMX |
-> @@ -3931,6 +3934,9 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
->         if (!enable_pml)
->                 exec_control &= ~SECONDARY_EXEC_ENABLE_PML;
+>  /*
+>   * Scale rwb down. If 'hard_throttle' is set, do it quicker, since we
+> - * had a latency violation.
+> + * had a latency violation. Returns true on success and returns false if
+> + * scaling down wasn't possible.
+>   */
+> -void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
+> +bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
+>  {
+>         /*
+>          * Stop scaling down when we've hit the limit. This also prevents
+> @@ -167,7 +170,7 @@ void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
+>          * keep up.
+>          */
+>         if (rqd->max_depth == 1)
+> -               return;
+> +               return false;
 >
-> +       if (!spp_supported)
-> +               exec_control &= ~SECONDARY_EXEC_ENABLE_SPP;
-> +
->         if (vmx_xsaves_supported()) {
->                 /* Exposing XSAVES only when XSAVE is exposed */
->                 bool xsaves_enabled =
-> @@ -7521,6 +7527,10 @@ static __init int hardware_setup(void)
->         if (!cpu_has_vmx_flexpriority())
->                 flexpriority_enabled = 0;
+>         if (rqd->scale_step < 0 && hard_throttle)
+>                 rqd->scale_step = 0;
+> @@ -176,6 +179,7 @@ void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
 >
-> +       if (cpu_has_vmx_ept_spp() && enable_ept &&
-> +           boot_cpu_has(X86_FEATURE_SPP))
-> +               spp_supported = 1;
+>         rqd->scaled_max = false;
+>         rq_depth_calc_max_depth(rqd);
+> +       return 0;
+Oops, I meant return true here, thanks Vaibhav (+cc) for pointing this
+out. I'll fix this in V2.
 
-Don't cpu_has_vmx_ept_spp() and boot_cpu_has(X86_FEATURE_SPP) test
-exactly the same thing?
-
->         if (!cpu_has_virtual_nmis())
->                 enable_vnmi = 0;
+>  }
 >
+>  struct rq_qos_wait_data {
+> diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
+> index 2300e038b9fa..c0f0778d5396 100644
+> --- a/block/blk-rq-qos.h
+> +++ b/block/blk-rq-qos.h
+> @@ -125,8 +125,8 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
+>                  acquire_inflight_cb_t *acquire_inflight_cb,
+>                  cleanup_cb_t *cleanup_cb);
+>  bool rq_wait_inc_below(struct rq_wait *rq_wait, unsigned int limit);
+> -void rq_depth_scale_up(struct rq_depth *rqd);
+> -void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
+> +bool rq_depth_scale_up(struct rq_depth *rqd);
+> +bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
+>  bool rq_depth_calc_max_depth(struct rq_depth *rqd);
+>
+>  void __rq_qos_cleanup(struct rq_qos *rqos, struct bio *bio);
+> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
+> index 313f45a37e9d..5a96881e7a52 100644
+> --- a/block/blk-wbt.c
+> +++ b/block/blk-wbt.c
+> @@ -308,7 +308,8 @@ static void calc_wb_limits(struct rq_wb *rwb)
+>
+>  static void scale_up(struct rq_wb *rwb)
+>  {
+> -       rq_depth_scale_up(&rwb->rq_depth);
+> +       if (!rq_depth_scale_up(&rwb->rq_depth))
+> +               return;
+>         calc_wb_limits(rwb);
+>         rwb->unknown_cnt = 0;
+>         rwb_wake_all(rwb);
+> @@ -317,7 +318,8 @@ static void scale_up(struct rq_wb *rwb)
+>
+>  static void scale_down(struct rq_wb *rwb, bool hard_throttle)
+>  {
+> -       rq_depth_scale_down(&rwb->rq_depth, hard_throttle);
+> +       if (!rq_depth_scale_down(&rwb->rq_depth, hard_throttle))
+> +               return;
+>         calc_wb_limits(rwb);
+>         rwb->unknown_cnt = 0;
+>         rwb_trace_step(rwb, "scale down");
 > --
-> 2.17.2
+> 2.23.0.581.g78d2f28ef7-goog
 >
