@@ -2,133 +2,241 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581D5C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 03:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B68C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 03:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20274207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 03:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78AC207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 03:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="i7xc3Bhy"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZpyY0dXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387555AbfJDDfz (ORCPT
+        id S2387607AbfJDDkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 23:35:55 -0400
-Received: from mx3.ucr.edu ([138.23.248.64]:33947 "EHLO mx3.ucr.edu"
+        Thu, 3 Oct 2019 23:40:13 -0400
+Received: from mout.web.de ([212.227.15.4]:49089 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387463AbfJDDfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 23:35:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1570160155; x=1601696155;
-  h=mime-version:from:date:message-id:subject:to;
-  bh=Z8VeGOGEm9LC9RfPoH1+Khc4hCaxDK2hry4bcLjvcEk=;
-  b=i7xc3Bhynjy0kBIGjj1oX2C3NDYWiHoBOVFSLUkuOhD8ZoEGJbbMXs4j
-   xH7iXv2sPLchAeruQGQtIwZbHznqay92c3zAN8l6nklmd5mnfefIDOAnA
-   j8WuevTgab+63AhDjDsFf7NiE81yEblV1I3wzma12USOChiEo/K65XNNe
-   ZlLks77+dF4tuPgYQnUJfkAySQ7eL3kPvCQurcVH/zPYIKS0BflZ5SXaD
-   3ago/n91FWWUqRwP6YYZMk6hia/pDwv71zGJe/9n3KaViVE6sLV4sehwW
-   GWZSchFvwvg30X9yPWioCcp6DRPrkqhu6u16iBw3JtNAFIYj5aKSCVVVP
-   A==;
-IronPort-SDR: 8GKzqSE2vnwKnURxtxdKkzrtNCtBbhi16FVfJUB8avb4ggWO4U7xgjkHpq90dwSp5oBGEj2u1B
- ZPoQ0UNTv1eqPu/K+WxnBVSsR2Ju2YhFxVzcVwMJPLfdXZt8eSwy2WwmEJrZ2+WP/76I0vrySP
- keIgU2f/kXT3V7XcxenoD7WZYzSPMUvPLTXGrLt82SPMww8UxCHur/i2W0idGmhxzvn4iCq7Zw
- RRMCPqcNJ1LskHJpU91hsev6ArS7uPrARFLj21btBeuRED8cQ2nXiSms+r7B8CmgSUHGO+Dxv+
- D6U=
-IronPort-PHdr: =?us-ascii?q?9a23=3AYw46/x9AP1pjdP9uRHKM819IXTAuvvDOBiVQ1K?=
- =?us-ascii?q?B21OkcTK2v8tzYMVDF4r011RmVBN6dtqoP07SempujcFRI2YyGvnEGfc4EfD?=
- =?us-ascii?q?4+ouJSoTYdBtWYA1bwNv/gYn9yNs1DUFh44yPzahANS47xaFLIv3K98yMZFA?=
- =?us-ascii?q?nhOgppPOT1HZPZg9iq2+yo9JDffgtFiCC9bL9uIxm6sQTcvdQKjIV/Lao81g?=
- =?us-ascii?q?HHqWZSdeRMwmNoK1OTnxLi6cq14ZVu7Sdete8/+sBZSan1cLg2QrJeDDQ9Lm?=
- =?us-ascii?q?A6/9brugXZTQuO/XQTTGMbmQdVDgff7RH6WpDxsjbmtud4xSKXM9H6QawyVD?=
- =?us-ascii?q?+/9KpgVgPmhzkbOD446GHXi9J/jKRHoBK6uhdzx5fYbJyJOPZie6/Qe84RS2?=
- =?us-ascii?q?hcUcZLTyFODYOyYYUMAeQcI+hXs5Lwp0cSoRakGQWgGP/jxz1Oi3Tr3aM6ye?=
- =?us-ascii?q?MhEQTe0QMiHtIPsXTUrMjyNKwPUu+1zLPHzTTeZP5R2Tb86YjIfQogof2QQb?=
- =?us-ascii?q?59f9HcyVQzGAPflFmft5HqPy6M2+kLrmOV7PJgWPqxh2I7rwx9uDuiy8c2ho?=
- =?us-ascii?q?XUh48YyErI+CR9zYszONa2UlR0YcS+H5tVryyaMox2Td48TGxwoyY6z6EGuY?=
- =?us-ascii?q?a8fCgX1JQr3x7fZOKDc4iP+h/jUfyeITZ8hH58fLK/iQu+/VGuyuD9UsS4yl?=
- =?us-ascii?q?lKri1CktnDsnACyQbf5dSASvt45kuh2DCP2B7P6uxcP0w4ia7WJ4Qiz7MwjJ?=
- =?us-ascii?q?YfrEXOEy3slEj3iKKabkAk9fKp6+TjbLXmvJicN4pshwD+M6UumtawAeUkPg?=
- =?us-ascii?q?QSUWWW4vm826H5/UHjXrpFk+A2nrHDsJ/GPcQburK5AwhN34Yn6ha/CSqm0d?=
- =?us-ascii?q?sBkXkEMl1FYhSHgJbtO1zVPvD4Aumwg062nDdo2f/GJLvhDYvJLnTZl7fhZ7?=
- =?us-ascii?q?l9uAZgz18CzMtS4dpmCqwIJv27Dl7wr9HeSA05LgWyzM7nFdxi24JYUmWKVO?=
- =?us-ascii?q?vRC6rWsFvAw+8vP+DEMJQcvDf5bf0o5+LnpX8kkEAQfO+i2p5BLDjyMv14Ik?=
- =?us-ascii?q?nRWjykp9YFFWoQ9EJqQOX0hViqXTdNanO2WKwgoDc2FNTiRYHOWoygnpSf0y?=
- =?us-ascii?q?qhWJ5bfGZLDhaLC3isP4GFXeocLSGfOMlslhQaWrW7DYwszxejsEn90bUjZt?=
- =?us-ascii?q?jU+zwFs9ra1dFzr7nBlRAj6DptJ8+GlXyGVSd5kn5eA3cd3K15rl1ggmyE16?=
- =?us-ascii?q?cw1/dDEtpcz/hSFBoxL9jRw/EsWP7oXQeUT9abSEuhCuemCDB5GsMjw9YPOx?=
- =?us-ascii?q?4mM8iplFbO0zf8UOxdrKCCGJFhqvGU5HP2Pcsoji+ejKQ=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HfAgBsvZZdh0WnVdFlDoVtM4RMjl6?=
- =?us-ascii?q?FFwGYGAEIAQEBDi8BAYcIIzgTAgMJAQEFAQEBAQEFBAEBAhABAQEIDQkIKYV?=
- =?us-ascii?q?AgjopAYNVEXwPAiYCJBIBBQEiATSDAIILoWaBAzyLJoEyhAwBhFkBCQ2BSBJ?=
- =?us-ascii?q?6KIwOgheDbnOHUYJYBIE3AQEBlSuWUgEGAoIRFAOMUYhEG4IqlxaOK5lKDyO?=
- =?us-ascii?q?BRoF7MxolfwZngU9PEBSBWw4JjWgEAVYkkXsBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2HfAgBsvZZdh0WnVdFlDoVtM4RMjl6FFwGYGAEIAQEBD?=
- =?us-ascii?q?i8BAYcIIzgTAgMJAQEFAQEBAQEFBAEBAhABAQEIDQkIKYVAgjopAYNVEXwPA?=
- =?us-ascii?q?iYCJBIBBQEiATSDAIILoWaBAzyLJoEyhAwBhFkBCQ2BSBJ6KIwOgheDbnOHU?=
- =?us-ascii?q?YJYBIE3AQEBlSuWUgEGAoIRFAOMUYhEG4IqlxaOK5lKDyOBRoF7MxolfwZng?=
- =?us-ascii?q?U9PEBSBWw4JjWgEAVYkkXsBAQ?=
-X-IronPort-AV: E=Sophos;i="5.67,254,1566889200"; 
-   d="scan'208";a="84987594"
-Received: from mail-lf1-f69.google.com ([209.85.167.69])
-  by smtp3.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Oct 2019 20:35:54 -0700
-Received: by mail-lf1-f69.google.com with SMTP id n5so545313lfi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 20:35:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=NHPkNFk4ddcSKGzRQIl5S9NE3sI5owUIMgWAvgZYtmE=;
-        b=g5DcQFX99TC2fKqcvVuLC44QKZXmkzRWPNfhgRmPUlvCtlTtSRTnV+fsenyIVW6mnc
-         Fw6CyliDXtDkXWM1+UWN06Qrj3VcWZWrai7Z+3VePCMvjeEYkTVRv4SJA0Nmfx3lQd6e
-         nzATc80fYLdbut3apeUnnZwRD5Pc37LNY/wIuY07eHzRyz2O1pOr1cOabaHjTkiQPGWV
-         T12SGAo3JulmHRenaksK/7wBGFWptS/rHvZ8SUgqhgSe+Bhe6IBPReK8G7F4YQiQArvy
-         yP3rOMyWMZahSQ3CLWCV0zWEuK64zNSds14nbJnxEkYSzzrZRP59NoAD5dqLVIOyfmlj
-         qKFg==
-X-Gm-Message-State: APjAAAUmw5WGLZ4sd/Ho+D2eSmUOPuPSYWay2I7bp2rf0+RpEpoH5y17
-        rbbObAj7YMU5hvqKYg+iU538yWshecgTAYmXIywLsLmxJFcPdpW4WriP7wRD387Om2k2KJ+7EyU
-        L3FP8rdsuEXPP+50egrIKBfb1SBgIMSIelu/hOphlhA==
-X-Received: by 2002:a2e:9753:: with SMTP id f19mr7976438ljj.197.1570160151878;
-        Thu, 03 Oct 2019 20:35:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzavRFwyK4RgialwrG04QE2qj4cBa+T9m8wd7kE3DcN+LkDESOBcSAksIuOaOGx5op8dUGF43Cc7y62iJohxTk=
-X-Received: by 2002:a2e:9753:: with SMTP id f19mr7976426ljj.197.1570160151696;
- Thu, 03 Oct 2019 20:35:51 -0700 (PDT)
+        id S2387567AbfJDDkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 23:40:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1570160395;
+        bh=M2hr1DFTmVUJtV0KSUX/LhA146pG6rhKVo+Ai17B1nU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=ZpyY0dXOTpwwqAFAFHizLTQBvV9RYXIbq1FI5oRN7fy6FET+CxPgQK22B/aU5Cu6M
+         w8hk+k7NrL/oJlBzqVOa1CdftsvorLyaupw+X3R7FHsLG6e7b/5BIQnfwmLl44pDw6
+         XexSVCV5fQ+iypzVc42hjkRftykR0HQynXslggDM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.27] ([77.183.117.42]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0McWbQ-1iXtr0345I-00HbDo; Fri, 04
+ Oct 2019 05:39:54 +0200
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_3/3=5d_arm64=3a_dts=3a_rockchip=3a_fix_Roc?=
+ =?UTF-8?B?a1BybzY0IHNkbW1jIHNldHRpbmdz44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGlu?=
+ =?UTF-8?Q?ux-rockchip-bounces+shawn=2elin=3drock-chips=2ecom=40lists=2einfr?=
+ =?UTF-8?B?YWRlYWQub3Jn5Luj5Y+R44CR?=
+To:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191003215036.15023-1-smoch@web.de>
+ <20191003215036.15023-3-smoch@web.de>
+ <31181f3c-20ec-e717-1f7e-8b35cd54d96d@arm.com>
+ <a8b20c45-0426-ee42-4efc-52e56ea6bb20@web.de>
+ <120e2dbc-55eb-2205-b00f-7e50928ec706@rock-chips.com>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <1c452b8b-853f-8f58-5f3a-0bbecbe20557@web.de>
+Date:   Fri, 4 Oct 2019 05:39:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   Yizhuo Zhai <yzhai003@ucr.edu>
-Date:   Thu, 3 Oct 2019 20:35:38 -0700
-Message-ID: <CABvMjLTiwHQ7cpUCYXJFHfHk+syeE5uQe=3waUGhJSVc5Udb1g@mail.gmail.com>
-Subject: Potential uninitialized variables in subsys net: hisilicon
-To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Chengyu Song <csong@cs.ucr.edu>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <120e2dbc-55eb-2205-b00f-7e50928ec706@rock-chips.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:KiA97Kjmyv4wFkvQ0/dhatW3EPzZBAUT7SGV1rKafjmtxsn00Lx
+ ZuwA20AQdpNfoTr8YYmi92f2N/UGkWxJ9p5Gyf8j7DmYgDtav37azDQAFNv5ZT/WkzqPGWP
+ zjMEM7bm7ZukdM4HtNmVPE37KDCWKrYDN/6uutZ+4SWq95R6H2TceDOCCsd2M2pla1cWuiB
+ WuFhbGn5E95o4io0Oed/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0RMfn7JLJKA=:aLtcRB63cedwkhHqYcK3An
+ RP0UlDMnYvySyUBVjSoaOBaRua+NUvP9W+GHrjUIc3vKxC0W9crsjUrkZLn8U1SD1un0RgSQ9
+ 4VyZ8iLEhrvg5Lhq+uKKvOqw6IHD43+M6hGzJkqxEFD7QoE01kIdRs4aV3KiM0sw/EZb6iVYN
+ tNdAQzEWOS+bahYMaFiK3o6oMYgJkP6ls/BUr2FFhx/5P6EBzRJB2xTJyj+aGNE7B/BsqFK6S
+ 3t/GDwXPBQi63crIGCk9fWMTxG58k90LHOQginzDzfj6MAa/L++MFfKL/tTA/eXcwxJTbh9ir
+ rUz7slNxFEjchlcnIIk0T3TOBJASxhfYxNuyx/7ZPdvt49Lg6OONRFg+ZgN/zOvZFvqcy9v3G
+ 3JQc9zo2KBFCssebPr+VaGjBRr0DnWEbfz83raGYbCy8idYBvv6+dxaSLehJLEWSu3cPUZB10
+ 5kjT2pcSNkxihJ3MV0xe7EV3X0aMTnNExMhcJjqvduV/jzmdE8rjTDeIA3tt1aBO1Q562F9+9
+ oZM0q8thQ2YTjfdNzLePbHKUKkYN8Vqp4DxFNIaCSeHWzAS5wtn57Cp2UysDFHeZipO0jXa0I
+ GJklneAK/dxYneXyFV4CawDPT2HcVZfu7RuClHPK3wXjwTw22nlEcFIeo9wtdQIDrTfkTaGze
+ g2R14RGLymYai5VBqdjW9OMIRI9sqJeTW535gI0aJ3nJKhGKrmuDjJESZCXt1emh6waavv8bD
+ 5ccivHFmUmMdzts4NL9HqyRpDAQ/kUePJUwdb4oJP/7vQyZ4X7CHhi4rRr7+/hhRQWKhX+3mv
+ SLpXY5AQhErnmQl3WOLDFVMsDsdBzTkXU1mWKSg25R95AUQ9PjV7hSUIpiVO5GYgngwmWq/bc
+ swAcqul1OKTjnGFq5sr0f4GEgFRqlKepFmQbpkL/5hyZ7X1N4NsWNawfIxiaiCNOOLNy+Kf7K
+ /ehjY7VOX3yjmvdfUF3z8Mne4keME4HwlB6aR/Yh9iajNn58No2WMVQzYUamxtwgnuJDGBVtG
+ C3pWTxZs+ygJDyya9uf5Y669cxFC6qHZsBw6F+gM1LtsOG1ItCvb1GVkSpkZXxdYm+aG/lfLW
+ yw0akWYMeaRsBc2LFZ6ljjJRqiV53qf/4g57qdt7Y2peoo12UrnF0MyrU7eX6WbTKyLS6Nwa+
+ itLyDiCbH3mrPT5HQka8/exeghviIUKEN4cVXsQIvSXvETnh9qJarlpUmGicHH1b/Eh9Ujop3
+ fwixYoBYAwOywTmEH5Avo3/CGS9zdga/mw4e1hQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All:
 
-drivers/net/ethernet/hisilicon/hip04_eth.c:
 
-In function hip04_reset_ppe(), variable "val" could be uninitialized
-if regmap_read() returns -EINVAL. However, "val" is used to decide
-the control flow, which is potentially unsafe.
+On 04.10.19 04:13, Shawn Lin wrote:
+> On 2019/10/4 8:53, Soeren Moch wrote:
+>>
+>>
+>> On 04.10.19 02:01, Robin Murphy wrote:
+>>> On 2019-10-03 10:50 pm, Soeren Moch wrote:
+>>>> According to the RockPro64 schematic [1] the rk3399 sdmmc
+>>>> controller is
+>>>> connected to a microSD (TF card) slot, which cannot be switched to
+>>>> 1.8V.
+>>>
+>>> Really? AFAICS the SDMMC0 wiring looks pretty much identical to the
+>>> NanoPC-T4 schematic (it's the same reference design, after all), and I
+>>> know that board can happily drive a UHS-I microSD card with 1.8v I/Os,
+>>> because mine's doing so right now.
+>>>
+>>> Robin.
+>> OK, the RockPro64 does not allow a card reset (power cycle) since
+>> VCC3V0_SD is directly connected to VCC3V3_SYS (via R89555), the
+>> SDMMC0_PWH_H signal is not connected. So the card fails to identify
+>> itself after suspend or reboot when switched to 1.8V operation.
+>>
+>
+> I believe we addressed this issue long time ago, please check:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
+t/?id=3D6a11fc47f175c8d87018e89cb58e2d36c66534cb
+>
+Thanks for the pointer.
+In this case I guess I should use following patch instead:
 
-Also, we cannot simply return -EINVAL in hip04_reset_ppe() because
-the return type is void.
+=2D-- rk3399-rockpro64.dts.bak =C2=A0=C2=A0 2019-10-03 22:14:00.067745799 =
++0200
++++ rk3399-rockpro64.dts=C2=A0=C2=A0=C2=A0 2019-10-04 00:02:50.047892366 +=
+0200
+@@ -619,6 +619,8 @@
+=C2=A0=C2=A0=C2=A0=C2=A0 max-frequency =3D <150000000>;
+=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>=
+;
++=C2=A0=C2=A0=C2=A0 sd-uhs-sdr104;
++=C2=A0=C2=A0=C2=A0 vqmmc-supply =3D <&vcc_sdio>;
+=C2=A0=C2=A0=C2=A0=C2=A0 status =3D "okay";
+=C2=A0};
+=C2=A0
+When I do so, the sd card is detected as SDR104, but a reboot hangs:
 
-Thanks for your time to check this case.
+Boot1: 2018-06-26, version: 1.14
+CPUId =3D 0x0
+ChipType =3D 0x10, 286
+Spi_ChipId =3D c84018
+no find rkpartition
+SpiBootInit:ffffffff
+mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+mmc: ERROR: Card did not respond to voltage select!
+emmc reinit
+mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+mmc: ERROR: Card did not respond to voltage select!
+emmc reinit
+mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+mmc: ERROR: Card did not respond to voltage select!
+SdmmcInit=3D2 1
+mmc0:cmd5,32
+mmc0:cmd7,32
+mmc0:cmd5,32
+mmc0:cmd7,32
+mmc0:cmd5,32
+mmc0:cmd7,32
+SdmmcInit=3D0 1
 
--- 
-Kind Regards,
+So I guess I should use a different miniloader for this reboot to work!?
+Or what else could be wrong here?
 
-Yizhuo Zhai
+Thanks,
+Soeren
 
-Computer Science, Graduate Student
-University of California, Riverside
+>> Regards,
+>> Soeren
+>>>
+>>>> So also configure the vcc_sdio regulator, which drives the i/o voltag=
+e
+>>>> of the sdmmc controller, accordingly.
+>>>>
+>>>> While at it, also remove the cap-mmc-highspeed property of the sdmmc
+>>>> controller, since no mmc card can be connected here.
+>>>>
+>>>> [1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+>>>>
+>>>> Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support
+>>>> for Rockpro64")
+>>>> Signed-off-by: Soeren Moch <smoch@web.de>
+>>>> ---
+>>>> Cc: Heiko Stuebner <heiko@sntech.de>
+>>>> Cc: linux-rockchip@lists.infradead.org
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> ---
+>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 3 +-=
+-
+>>>> =C2=A0=C2=A0 1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>>>> b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>>>> index 2e44dae4865a..084f1d994a50 100644
+>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>>>> @@ -353,7 +353,7 @@
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-name =3D "vcc_sdio";
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-always-on;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-boot-on;
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 regulator-min-microvolt =3D <1800000>;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 regulator-min-microvolt =3D <3000000>;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-max-microvolt =3D <30000=
+00>;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-state-mem {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-=
+on-in-suspend;
+>>>> @@ -624,7 +624,6 @@
+>>>>
+>>>> =C2=A0=C2=A0 &sdmmc {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bus-width =3D <4>;
+>>>> -=C2=A0=C2=A0=C2=A0 cap-mmc-highspeed;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap-sd-highspeed;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cd-gpios =3D <&gpio0 7 GPIO_ACTI=
+VE_LOW>;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 disable-wp;
+>>>> --=C2=A0
+>>>> 2.17.1
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> Linux-rockchip mailing list
+>>>> Linux-rockchip@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>
+>
+>
+
