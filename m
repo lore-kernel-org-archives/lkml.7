@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB324C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C51C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BBD222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E03D215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570194941;
-	bh=HKVYJOd8nlFyRLZWLG9ZCwnPGqerccWR7yCvAb5VGKk=;
+	s=default; t=1570194943;
+	bh=YjQzJWZUrhm5linhyZffPirWe01ErrN9pHdR+7TeZdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eK8xukufdEV7tX07q9NK6S64yfQipXV97b6yY8VDlbSbNLktcqZHvvjNEEHkHHRhI
-	 B720B80YMQLBLw6YmyARopur1nqGaJJurgW7oT5CUho5syIb08/YV0j+RAZceErkYZ
-	 mWuOS4Fhb+wuRMmHw1gfHpucNlvuf/90j8lwq1qc=
+	b=EPo3u/eGy6A3DVaO0aehXeJSz0x1GwH/GQOsupD9MF96JTY8DZtUpJNbLTONNVK2Z
+	 TWx0QwMfsQEIbXNdG1JVFtaXoRd5VnzWOcyj8y/X+v2krBfc4J7U0vj0jruvVURSbT
+	 S4e/+to2iHZaRrNknJB/jxx3jNeubl+AjEpCgEOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbfJDNPh (ORCPT
+        id S2388437AbfJDNPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:15:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45552 "EHLO
+        Fri, 4 Oct 2019 09:15:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45540 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388362AbfJDNPd (ORCPT
+        with ESMTP id S2387952AbfJDNPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 09:15:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,18 +34,18 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5Jk2FsConQzsRK+hX40Ij18Y47YadtEMXcbabS4xxtY=; b=jXIrfHc8V9Vh47xoIPFMutpDf9
-        RL16l8pr5w31/0SRBIMtw+5g9PUj2bVglq4SWN4RyY6ZlDE4CwYAjkujYBAHnN9yiacvsDn3LdyhA
-        aNUGOADYAzg6zLCfA1HID5O12KsDHq46t7G/063BWC/LYG7kijxCXQ/adGv+ip8ZktHDzqFhksEb/
-        GcXSWfrssd2bPFeit8r+7P07YzjwnlXolwy7hNjWR9tGDh20qExWz2RxT9pl43oblRAscvuuxbCBi
-        kB3H4+flB+LMFsjzcQ4JlmQciCIRwo1FF0edQxdiAUloYljwgg6rXd6XBrvDlCJE2Go+Ra96Zo5Ba
-        b5raJcrw==;
+        bh=lseTzraBAp75Lo1Q8/p9aRzFrQm3YPsPcT62ELgzx3w=; b=U3ZRACpORziHbyR8hAzqUV+bpb
+        NkSAJYAtYm5CGEOyeHQNJCooxYbr3ea5L2r5C22rFLK5f3Q10mVZiUcoNXK5rgtEXu5r08xA6LsWi
+        xJYZpbtUHXvRY2mTDj74aFTzjrjWro2E4fNkH28h7nQyN9KsjgN2Ek2yUkN6VatlnxhIxx+82u4on
+        9Q8nG2OkxsBvVjYLXMGiQh3UsUPGfDD2Nj5JslXlC26kPy1sj/ie1opxdpOFfFDvUUFediQQJaaJr
+        6ij6ww6DwaLQ7b7DpxL4NfBfLo81/CeUh9I1pkaAUmH9vJVxJwc1TQBE4fWxP6OG1VBNPyTMDrLMU
+        u3OdsF3Q==;
 Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGNQj-0007jG-5d; Fri, 04 Oct 2019 13:15:33 +0000
+        id 1iGNQi-0007jE-TU; Fri, 04 Oct 2019 13:15:32 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.2)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1iGNQg-0002hw-8j; Fri, 04 Oct 2019 10:15:30 -0300
+        id 1iGNQg-0002hp-6w; Fri, 04 Oct 2019 10:15:30 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
@@ -53,12 +53,12 @@ Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         JP <jp@jpvw.nl>, Gonsolo <gonsolo@gmail.com>, crope@iki.fi,
         Sean Young <sean@mess.org>,
         Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/4] media: af9035: add support for Logilink VG0022A
-Date:   Fri,  4 Oct 2019 10:15:24 -0300
-Message-Id: <9618316567493f917c41109f7dba94e533fbfb4b.1570194906.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 1/4] media: si2168: use bits instead of bool for flags
+Date:   Fri,  4 Oct 2019 10:15:22 -0300
+Message-Id: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
-References: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
+In-Reply-To: <20191004090855.14e418ed@coco.lan>
+References: <20191004090855.14e418ed@coco.lan>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,66 +66,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This it930x-based device has an issue with si2068.
+Using bool on struct is not recommended, as it wastes lots of
+space. So, instead, let's use bits.
 
-When the si2168 firmware that came with the device is replaced
-by a new one, any I2C data received from the tuner will be
-replaced by 0xff.
-
-Probably, the vendor firmware has some patch specifically
-designed for this device. So, we can't replace by the generic
-firmware.
-
-The right solution would be to extract the si2168 firmware from
-the original driver and ask the driver to load the specifically
-designed firmware, but, while we don't have that, the next best
-solution is to just keep the original firmware at the device.
-
-For more details, see the discussions at:
-	https://lore.kernel.org/linux-media/20191002141359.30166-2-gonsolo@gmail.com/
+While here, convert the comments to kernel-doc format.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- drivers/media/usb/dvb-usb-v2/af9035.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/media/dvb-frontends/si2168.h      | 47 +++++++++++++----------
+ drivers/media/dvb-frontends/si2168_priv.h | 10 ++---
+ 2 files changed, 31 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 3afd18733614..e555483c3077 100644
---- a/drivers/media/usb/dvb-usb-v2/af9035.c
-+++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -1255,6 +1255,23 @@ static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
- 	si2168_config.fe = &adap->fe[0];
- 	si2168_config.ts_mode = SI2168_TS_SERIAL;
+diff --git a/drivers/media/dvb-frontends/si2168.h b/drivers/media/dvb-frontends/si2168.h
+index 50dccb394efa..ecd21adf8950 100644
+--- a/drivers/media/dvb-frontends/si2168.h
++++ b/drivers/media/dvb-frontends/si2168.h
+@@ -9,38 +9,43 @@
+ #define SI2168_H
  
-+	/*
-+	 * HACK: The Logilink VG0022A has a bug: when the si2168
-+	 * firmware that came with the device is replaced by a new
-+	 * one, the I2C transfers to the tuner will return just 0xff.
-+	 *
-+	 * Probably, the vendor firmware has some patch specifically
-+	 * designed for this device. So, we can't replace by the
-+	 * generic firmware. The right solution would be to extract
-+	 * the si2168 firmware from the original driver and ask the
-+	 * driver to load the specifically designed firmware, but,
-+	 * while we don't have that, the next best solution is to just
-+	 * keep the original firmware at the device.
-+	 */
-+	if (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK &&
-+	    le16_to_cpu(d->udev->descriptor.idProduct) == 0x0100)
-+		si2168_config.dont_load_firmware = true;
-+
- 	state->af9033_config[adap->id].fe = &adap->fe[0];
- 	state->af9033_config[adap->id].ops = &state->ops;
- 	ret = af9035_add_i2c_dev(d, "si2168",
-@@ -2121,6 +2138,8 @@ static const struct usb_device_id af9035_id_table[] = {
- 		&it930x_props, "ITE 9303 Generic", NULL) },
- 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TD310,
- 		&it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
-+	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
-+		&it930x_props, "Logilink VG0022A", NULL) },
- 	{ }
+ #include <linux/dvb/frontend.h>
+-/*
+- * I2C address
+- * 0x64
++/**
++ * struct si2168_config - configuration parameters for si2168
++ *
++ * @fe:
++ *	frontend returned by driver
++ * @i2c_adapter:
++ *	tuner I2C adapter returned by driver
++ * @ts_mode:
++ *	Transport Stream mode. Can be:
++ *	- %SI2168_TS_PARALLEL
++ *	- %SI2168_TS_SERIAL
++ *	- %SI2168_TS_TRISTATE
++ *	- %SI2168_TS_CLK_MANUAL
++ * @ts_clock_inv:
++ *	TS clock inverted
++ * @ts_clock_gapped:
++ *	TS clock gapped
++ * @spectral_inversion:
++ *	Inverted spectrum
++ *
++ * Note:
++ *	The I2C address of this demod is 0x64.
+  */
+ struct si2168_config {
+-	/*
+-	 * frontend
+-	 * returned by driver
+-	 */
+ 	struct dvb_frontend **fe;
+-
+-	/*
+-	 * tuner I2C adapter
+-	 * returned by driver
+-	 */
+ 	struct i2c_adapter **i2c_adapter;
+ 
+-	/* TS mode */
+ #define SI2168_TS_PARALLEL	0x06
+ #define SI2168_TS_SERIAL	0x03
+ #define SI2168_TS_TRISTATE	0x00
+ #define SI2168_TS_CLK_MANUAL	0x20
+ 	u8 ts_mode;
+ 
+-	/* TS clock inverted */
+-	bool ts_clock_inv;
+-
+-	/* TS clock gapped */
+-	bool ts_clock_gapped;
+-
+-	/* Inverted spectrum */
+-	bool spectral_inversion;
++	/* Flags */
++	unsigned int ts_clock_inv:1;
++	unsigned int ts_clock_gapped:1;
++	unsigned int spectral_inversion:1;
  };
- MODULE_DEVICE_TABLE(usb, af9035_id_table);
+ 
+ #endif
+diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
+index 804d5b30c697..18bea5222082 100644
+--- a/drivers/media/dvb-frontends/si2168_priv.h
++++ b/drivers/media/dvb-frontends/si2168_priv.h
+@@ -34,12 +34,12 @@ struct si2168_dev {
+ 	unsigned int chip_id;
+ 	unsigned int version;
+ 	const char *firmware_name;
+-	bool active;
+-	bool warm;
+ 	u8 ts_mode;
+-	bool ts_clock_inv;
+-	bool ts_clock_gapped;
+-	bool spectral_inversion;
++	unsigned int active:1;
++	unsigned int warm:1;
++	unsigned int ts_clock_inv:1;
++	unsigned int ts_clock_gapped:1;
++	unsigned int spectral_inversion:1;
+ };
+ 
+ /* firmware command struct */
 -- 
 2.21.0
 
