@@ -2,103 +2,108 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD7C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B452C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B28221D71
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570185068;
-	bh=TP+ksJikbiZvmklDMw92OFFPcZ8LA44JDb33NoKHJkQ=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=YqMxrxAgRMIOfsis/p72MUj6fBBSN4yOZqz9Op7WBuBAJtiGng9YlvS5m+fucPNxv
-	 APvOCSTiE0DFCrouzh9LHwguY8SPPkSY715BfOvx0A8xVsZbliYLIu+AvVMybwJGT/
-	 zHsrb349VlytGWIEqRetRXaTwYtuOPkwxtpIfq4c=
+	by mail.kernel.org (Postfix) with ESMTP id 03BF7222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbfJDKbH (ORCPT
+        id S1729802AbfJDKbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:31:07 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:35641 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDKbH (ORCPT
+        Fri, 4 Oct 2019 06:31:17 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:50161 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbfJDKbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:31:07 -0400
-Received: by mail-wr1-f41.google.com with SMTP id v8so6542611wrt.2;
-        Fri, 04 Oct 2019 03:31:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0sO0rv2WFDM2B56JzJt62DBkoicLCV6GGFXAS4MJE9Q=;
-        b=hBhpYlRQ6HS0Wpe0PpcIvDtmErIyTOaqwtoHN/rgS/uURFfnKWIogM1VpLPpKPlbSx
-         Hl+HUUL3fsym1EaEzGqFChstEznGUB2JON92pLVA6Cawn59hAv1/uqyclnU8ZmKF0i+i
-         8lC+rww/WZ2sdzTpqm84+FMatjne/r5/Wl7i80N/dgpc0kUGGnyBFKmxC3sVqVir/Rzq
-         3kwV8tudxAPXh2VyR5OCLNpVQ+r8xXSmdRyRziovL4Ru0lDlkYCRntbqZJ7xDn+7uqKE
-         DaTxwB4Uda8pNS1k7zT/duEutFqngrsPC4U1wsNNtTwzxtl2VNCGc/KJvOI8eSodudJ7
-         6LJw==
-X-Gm-Message-State: APjAAAX3UtZSyDAb2bLWsPsk1dVytEgtnNHPir4RKJMNaVxmJXvIyErZ
-        ImAwdijswT2vfCEmlIXDjP8=
-X-Google-Smtp-Source: APXvYqwRzwsUGvltETEBhrXSxWhDZg0vSWGhh6uMJ37eqdE3Dm/SZGQk+dOyT+pLpEySMZOIaLqOfw==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr10537639wrq.257.1570185064934;
-        Fri, 04 Oct 2019 03:31:04 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id a13sm13449859wrf.73.2019.10.04.03.31.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 03:31:04 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 12:31:01 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Devfreq looks for unsupported frequencies on Exynos
-Message-ID: <20191004103101.GA9176@pi3>
+        Fri, 4 Oct 2019 06:31:17 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id GKrfiwHVajZ8vGKrjitP8k; Fri, 04 Oct 2019 12:31:15 +0200
+Subject: Re: [PATCH v9 8/8] media: imx214: Add new control with
+ V4L2_CID_UNIT_CELL_SIZE
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191001112421.2778-1-ribalda@kernel.org>
+ <20191001112421.2778-9-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <98d3b559-8be0-a240-c94f-3171dd543009@xs4all.nl>
+Date:   Fri, 4 Oct 2019 12:31:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191001112421.2778-9-ribalda@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMy/oL8/mlNdx7sRvyQ1IU0HZpBPMjSeYURwQwfB19Shv+jtdoHWFIxac+VpL+bM7ouH7AIQLe9HmNJudktFshuWeHrlD4eepVsMfgkWFvHq3dfV4gYw
+ o68AdhF1ud81VSnbLZB63OC/MzuNgRqLNq61bD54jghpKbv9XkK+YmGPRAYPX1R93SkPrtrz4xX/XwdvD9Cfb1jUlpVvz8jC0h6j90Kb5sqdzw9vnqa3KxnM
+ VDNuG/0uAr9K20Hv845ps6o7ZdUUMFhhV7J5LYH4dx5SBCv4ez9bxxmxQMKbyDR+WawqQ76ABfOoeCgy3/jYgg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/1/19 1:24 PM, Ricardo Ribalda Delgado wrote:
+> According to the product brief, the unit cell size is 1120 nanometers^2.
+> 
+> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  drivers/media/i2c/imx214.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index 159a3a604f0e..adcaaa8c86d1 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -47,6 +47,7 @@ struct imx214 {
+>  	struct v4l2_ctrl *pixel_rate;
+>  	struct v4l2_ctrl *link_freq;
+>  	struct v4l2_ctrl *exposure;
+> +	struct v4l2_ctrl *unit_size;
+>  
+>  	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
+>  
+> @@ -948,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
+>  	static const s64 link_freq[] = {
+>  		IMX214_DEFAULT_LINK_FREQ,
+>  	};
+> +	static const struct v4l2_area unit_size = {
+> +		.width = 1120,
+> +		.height = 1120,
+> +	};
+>  	int ret;
+>  
+>  	ret = imx214_parse_fwnode(dev);
+> @@ -1029,6 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
+>  					     V4L2_CID_EXPOSURE,
+>  					     0, 3184, 1, 0x0c70);
+>  
+> +	imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
+> +				NULL,
+> +				V4L2_CID_UNIT_CELL_SIZE,
+> +				v4l2_ctrl_ptr_create((void *)&unit_size));
 
-Hi All,
+The imx214 supports two modes: 4096x2304 and 1920x1080. I assume that the
+latter is using binning? So shouldn't the unit cell size be different in that
+case?
 
-I noticed recently error logs when booting Odroid HC1 (Exynos5422) on
-exynos_defconfig, 5.4.0-rc1-next-20191004:
+I'm not so sure the unit cell size should depend on binning. I'd rather have
+the binning information exposed somehow and let userspace do the calculation.
 
-[    5.168786] exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
-[    5.177022] exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
-[    5.184705] exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
-[    5.192903] exynos-bus: new bus device registered: soc:bus_fsys (100000 KHz ~ 200000 KHz)
-[    5.201414] exynos-bus: new bus device registered: soc:bus_fsys2 ( 75000 KHz ~ 150000 KHz)
-[    5.209986] exynos-bus: new bus device registered: soc:bus_mfc ( 96000 KHz ~ 333000 KHz)
-[    5.217931] exynos-bus: new bus device registered: soc:bus_gen ( 89000 KHz ~ 267000 KHz)
-[    5.225222] exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
-[    5.225975] exynos-bus: new bus device registered: soc:bus_peri ( 67000 KHz ~  67000 KHz)
-[    5.238824] exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
-[    5.245719] exynos-bus: new bus device registered: soc:bus_g2d ( 84000 KHz ~ 333000 KHz)
-[    5.252653] exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
-[    5.263518] exynos-bus: new bus device registered: soc:bus_g2d_acp ( 67000 KHz ~ 267000 KHz)
-[    5.280650] exynos-bus: new bus device registered: soc:bus_jpeg ( 75000 KHz ~ 300000 KHz)
-[    5.288827] exynos-bus: new bus device registered: soc:bus_jpeg_apb ( 84000 KHz ~ 167000 KHz)
-[    5.296957] exynos-bus: new bus device registered: soc:bus_disp1_fimd (120000 KHz ~ 200000 KHz)
-[    5.305939] exynos-bus: new bus device registered: soc:bus_disp1 (120000 KHz ~ 300000 KHz)
-[    5.314036] exynos-bus: new bus device registered: soc:bus_gscl_scaler (150000 KHz ~ 300000 KHz)
-[    5.323090] exynos-bus: new bus device registered: soc:bus_mscl ( 84000 KHz ~ 400000 KHz)
+Regards,
 
-You can see that Exynos devfreq was trying to set 532000000 Hz for
-wcore, 111000000 for noc and 222000000 for fsys_apb. These are higher
-frequencies than we have in DTSI.
+	Hans
 
-Any ideas why? It does not look normal...
+>  	ret = imx214->ctrls.error;
+>  	if (ret) {
+>  		dev_err(&client->dev, "%s control init failed (%d)\n",
+> 
 
-Best regards,
-Krzysztof
