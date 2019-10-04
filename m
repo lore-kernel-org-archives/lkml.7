@@ -2,172 +2,102 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C51C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327F2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E03D215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FB0222C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570194943;
-	bh=YjQzJWZUrhm5linhyZffPirWe01ErrN9pHdR+7TeZdM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPo3u/eGy6A3DVaO0aehXeJSz0x1GwH/GQOsupD9MF96JTY8DZtUpJNbLTONNVK2Z
-	 TWx0QwMfsQEIbXNdG1JVFtaXoRd5VnzWOcyj8y/X+v2krBfc4J7U0vj0jruvVURSbT
-	 S4e/+to2iHZaRrNknJB/jxx3jNeubl+AjEpCgEOU=
+	s=default; t=1570195021;
+	bh=JhC4q3xQd1BuHOAbskODkPKUuTj7CTnwNuwebrzeljI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GU9rwY6eoTwfunzC2yQwMQPn40RgFAEWa16TZyrNlk57FDbWwtZl4Td70ifeQCQuQ
+	 uT+w1CcJqAaZnp3RlyTt57g71XOtR3XLmEUU7X0IcdA9JJwzNFnRH7a9qbEj+uboSy
+	 OZam4mvDMPVKPTDAAF+SC02Z634DAjv2UrOqJJFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388437AbfJDNPf (ORCPT
+        id S2388508AbfJDNRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:15:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45540 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387952AbfJDNPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:15:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lseTzraBAp75Lo1Q8/p9aRzFrQm3YPsPcT62ELgzx3w=; b=U3ZRACpORziHbyR8hAzqUV+bpb
-        NkSAJYAtYm5CGEOyeHQNJCooxYbr3ea5L2r5C22rFLK5f3Q10mVZiUcoNXK5rgtEXu5r08xA6LsWi
-        xJYZpbtUHXvRY2mTDj74aFTzjrjWro2E4fNkH28h7nQyN9KsjgN2Ek2yUkN6VatlnxhIxx+82u4on
-        9Q8nG2OkxsBvVjYLXMGiQh3UsUPGfDD2Nj5JslXlC26kPy1sj/ie1opxdpOFfFDvUUFediQQJaaJr
-        6ij6ww6DwaLQ7b7DpxL4NfBfLo81/CeUh9I1pkaAUmH9vJVxJwc1TQBE4fWxP6OG1VBNPyTMDrLMU
-        u3OdsF3Q==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGNQi-0007jE-TU; Fri, 04 Oct 2019 13:15:32 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.2)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1iGNQg-0002hp-6w; Fri, 04 Oct 2019 10:15:30 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        JP <jp@jpvw.nl>, Gonsolo <gonsolo@gmail.com>, crope@iki.fi,
-        Sean Young <sean@mess.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/4] media: si2168: use bits instead of bool for flags
-Date:   Fri,  4 Oct 2019 10:15:22 -0300
-Message-Id: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191004090855.14e418ed@coco.lan>
-References: <20191004090855.14e418ed@coco.lan>
+        Fri, 4 Oct 2019 09:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388149AbfJDNRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:17:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF8D215EA;
+        Fri,  4 Oct 2019 13:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570195019;
+        bh=JhC4q3xQd1BuHOAbskODkPKUuTj7CTnwNuwebrzeljI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GnefFeSdOLNAo25NzwCIS2oDkpTO5ngijHOLf6DtdkxA6RLo//Ab/4PS3f14/JcMK
+         /1pmZ3dS8n/GuoZlyAL03kcZllwSmcwIMya6GMsvw8FDoMBfD8TqH8keYW4u4xKN87
+         FcZwl01OScs31EXVQExe76jyycGeanL53X+i9vJg=
+Date:   Fri, 4 Oct 2019 15:16:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tomas Winkler <tomas.winkler@intel.com>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [char-misc for v4.5-rc2 2/2] mei: avoid FW version request on
+ Ibex Peak and earlier
+Message-ID: <20191004131656.GA703365@kroah.com>
+References: <20191001235958.19979-1-tomas.winkler@intel.com>
+ <20191001235958.19979-2-tomas.winkler@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001235958.19979-2-tomas.winkler@intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using bool on struct is not recommended, as it wastes lots of
-space. So, instead, let's use bits.
+On Wed, Oct 02, 2019 at 02:59:58AM +0300, Tomas Winkler wrote:
+> From: Alexander Usyskin <alexander.usyskin@intel.com>
+> 
+> The fixed MKHI client on PCH 6 gen platforms
+> does not support fw version retrieval.
+> The error is not fatal, but it fills up the kernel logs and
+> slows down the driver start.
+> This patch disables requesting FW version on GEN6 and earlier platforms.
+> 
+> Fixes warning:
+> [   15.964298] mei mei::55213584-9a29-4916-badf-0fb7ed682aeb:01: Could not read FW version
+> [   15.964301] mei mei::55213584-9a29-4916-badf-0fb7ed682aeb:01: version command failed -5
+> 
+> Cc: <stable@vger.kernel.org> +v4.18
+> Cc: Paul Menzel <pmenzel@molgen.mpg.de>
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> ---
+>  drivers/misc/mei/bus-fixup.c | 16 +++++++++++++---
+>  drivers/misc/mei/hw-me.c     | 21 ++++++++++++++++++---
+>  drivers/misc/mei/hw-me.h     |  8 ++++++--
+>  drivers/misc/mei/mei_dev.h   |  4 ++++
+>  drivers/misc/mei/pci-me.c    | 10 +++++-----
+>  5 files changed, 46 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
+> index 32e9b1aed2ca..5ac679ac9b19 100644
+> --- a/drivers/misc/mei/bus-fixup.c
+> +++ b/drivers/misc/mei/bus-fixup.c
+> @@ -218,13 +218,23 @@ static void mei_mkhi_fix(struct mei_cl_device *cldev)
+>  {
+>  	int ret;
+>  
+> +	dev_dbg(&cldev->dev, "running hook %s\n", __func__);
 
-While here, convert the comments to kernel-doc format.
+That is what ftrace is for, don't sprinkle that all over the kernel for
+no reason :(
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- drivers/media/dvb-frontends/si2168.h      | 47 +++++++++++++----------
- drivers/media/dvb-frontends/si2168_priv.h | 10 ++---
- 2 files changed, 31 insertions(+), 26 deletions(-)
+thanks,
 
-diff --git a/drivers/media/dvb-frontends/si2168.h b/drivers/media/dvb-frontends/si2168.h
-index 50dccb394efa..ecd21adf8950 100644
---- a/drivers/media/dvb-frontends/si2168.h
-+++ b/drivers/media/dvb-frontends/si2168.h
-@@ -9,38 +9,43 @@
- #define SI2168_H
- 
- #include <linux/dvb/frontend.h>
--/*
-- * I2C address
-- * 0x64
-+/**
-+ * struct si2168_config - configuration parameters for si2168
-+ *
-+ * @fe:
-+ *	frontend returned by driver
-+ * @i2c_adapter:
-+ *	tuner I2C adapter returned by driver
-+ * @ts_mode:
-+ *	Transport Stream mode. Can be:
-+ *	- %SI2168_TS_PARALLEL
-+ *	- %SI2168_TS_SERIAL
-+ *	- %SI2168_TS_TRISTATE
-+ *	- %SI2168_TS_CLK_MANUAL
-+ * @ts_clock_inv:
-+ *	TS clock inverted
-+ * @ts_clock_gapped:
-+ *	TS clock gapped
-+ * @spectral_inversion:
-+ *	Inverted spectrum
-+ *
-+ * Note:
-+ *	The I2C address of this demod is 0x64.
-  */
- struct si2168_config {
--	/*
--	 * frontend
--	 * returned by driver
--	 */
- 	struct dvb_frontend **fe;
--
--	/*
--	 * tuner I2C adapter
--	 * returned by driver
--	 */
- 	struct i2c_adapter **i2c_adapter;
- 
--	/* TS mode */
- #define SI2168_TS_PARALLEL	0x06
- #define SI2168_TS_SERIAL	0x03
- #define SI2168_TS_TRISTATE	0x00
- #define SI2168_TS_CLK_MANUAL	0x20
- 	u8 ts_mode;
- 
--	/* TS clock inverted */
--	bool ts_clock_inv;
--
--	/* TS clock gapped */
--	bool ts_clock_gapped;
--
--	/* Inverted spectrum */
--	bool spectral_inversion;
-+	/* Flags */
-+	unsigned int ts_clock_inv:1;
-+	unsigned int ts_clock_gapped:1;
-+	unsigned int spectral_inversion:1;
- };
- 
- #endif
-diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
-index 804d5b30c697..18bea5222082 100644
---- a/drivers/media/dvb-frontends/si2168_priv.h
-+++ b/drivers/media/dvb-frontends/si2168_priv.h
-@@ -34,12 +34,12 @@ struct si2168_dev {
- 	unsigned int chip_id;
- 	unsigned int version;
- 	const char *firmware_name;
--	bool active;
--	bool warm;
- 	u8 ts_mode;
--	bool ts_clock_inv;
--	bool ts_clock_gapped;
--	bool spectral_inversion;
-+	unsigned int active:1;
-+	unsigned int warm:1;
-+	unsigned int ts_clock_inv:1;
-+	unsigned int ts_clock_gapped:1;
-+	unsigned int spectral_inversion:1;
- };
- 
- /* firmware command struct */
--- 
-2.21.0
-
+greg k-h
