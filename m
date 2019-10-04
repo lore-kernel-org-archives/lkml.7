@@ -2,165 +2,182 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F785C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6400DC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86458215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BDE215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:13:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+iGnGe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfJDSM3 (ORCPT
+        id S1730331AbfJDSNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:12:29 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38207 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfJDSM2 (ORCPT
+        Fri, 4 Oct 2019 14:13:07 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44668 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbfJDSNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:12:28 -0400
-X-Originating-IP: 132.205.229.217
-Received: from aptenodytes (unknown [132.205.229.217])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A878A1BF203;
-        Fri,  4 Oct 2019 18:12:24 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 14:12:22 -0400
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
- multi-function device
-Message-ID: <20191004181222.GA16927@aptenodytes>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
- <20190927221550.GA28831@bogus>
- <20191004144551.GR18429@dell>
- <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
+        Fri, 4 Oct 2019 14:13:07 -0400
+Received: by mail-io1-f68.google.com with SMTP id w12so15436999iol.11;
+        Fri, 04 Oct 2019 11:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v8UsR0kNBiv7TX5BwyKWmoMM1TMa1sl5V/BHTRSzPsE=;
+        b=P+iGnGe4QIyf7I+F1pUZZO0Kppw6jE6Vmy5VOoqHcsA6AWDz8YcGV3K6NxBfefAU0T
+         04tweKxfpC5BZExMV/aSOPmTkQ8kiRcQTIbwHdltftyXJ9glKPgc8XOtoCz1eNwTtuQ2
+         JP6+ZBWCsTnokEvApQIl2o4ZdkR1VDZjJAMtIy1aOOIYxaFhG6LYhZFzcK+R1a5u5Sap
+         6qXwMJfpg7G1/uMbSGGdyA4cKu3vsOwFIcCcrUkK+mcsfdO9b9JBsIo2h95+1gQCrTiJ
+         92HSrGiIGJ0kqcQCqnxxfhW2Unyps/KZABW2W0Ykmgfjo7ZSDj7K7Ow8PGjPfHnCi2i5
+         deZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v8UsR0kNBiv7TX5BwyKWmoMM1TMa1sl5V/BHTRSzPsE=;
+        b=aMW6yksH5vBC6/GmLDuBdgTH2q6RWNgR0SDvxKINVlR+QIfyzQDcxsszXnd1GmmnFd
+         5eZCjj3wSqL9YYPOMq/odTkjurKr2jJw3nJwnNC7xQIviehpwQsWbPcAUwcGOCON0K5O
+         IFATXkWXkjTLzBrV6n4QrM+9QbdEFxzSI/7V5wTyRl+kmylOf920NOkTqNqCLwOxTbkm
+         ukGUzA9A0EZ47zpyN22H5gxhktJ6ucPfMpVIf0jIQlFdQCF2qkhHRwWcjXJzXFTxNU9W
+         8krddZylhYW1framyxZiNLKQ3QX0YnEHyOQtiyvT9irXHAZwNFeUePtesCPpKPZ7lbjV
+         yCVg==
+X-Gm-Message-State: APjAAAVrp/lMBNL0uyY6JhOnNKDn9XYnFBdVRqca7XOPHq32yZwbZ8i0
+        E53pBEZJSbfWE5dPMXHP4J8O1VXN+Cwa62boAUE=
+X-Google-Smtp-Source: APXvYqzZcW+suOjUfS0TSiHIIW0vthhI/MVBQ2EcnpCIQ2562V4H7KFuoAtjJUn1UieH6X9UaAEDmm/kqtdk8Sl0rZM=
+X-Received: by 2002:a92:8702:: with SMTP id m2mr17674771ild.294.1570212786091;
+ Fri, 04 Oct 2019 11:13:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20190923050823.GL14368@unreal> <20190923155300.20407-1-navid.emamdoost@gmail.com>
+ <20191001135430.GA27086@ziepe.ca> <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
+ <20191003102510.GA10875@chelsio.com>
+In-Reply-To: <20191003102510.GA10875@chelsio.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Fri, 4 Oct 2019 13:12:55 -0500
+Message-ID: <CAEkB2ERA_Tn_yYz=ZQ58rF6sLGopxFghuTFBD=pWwcPwjLjTmw@mail.gmail.com>
+Subject: Re: [PATCH v2] RDMA: release allocated skb
+To:     Potnuri Bharat Teja <bharat@chelsio.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Leon and Potnuri,
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Based on the following call sequence, skb is passed along to uld_send().
+c4iw_ref_send_wait
+        c4iw_ofld_send
+                cxgb4_ofld_send
+                        t4_ofld_send
+                                uld_send
 
-Hi,
+In uld_send() skb is consumed (released or added to queue) via
+ctrl_xmit() or ofld_xmit(), which assures no leak is happening. But in
+the condition check for txq_info the return value is NET_XMIT_DROP
+which means the skb should be released. Here I believe skb is being
+leaked:
 
-On Fri 04 Oct 19, 11:09, Rob Herring wrote:
-> On Fri, Oct 4, 2019 at 9:45 AM Lee Jones <lee.jones@linaro.org> wrote:
+        txq_info = adap->sge.uld_txq_info[tx_uld_type];
+        if (unlikely(!txq_info)) {
+                WARN_ON(true);
+                return NET_XMIT_DROP;
+        }
+
+Please let me know what you think, then I can go ahead and fix the patch.
+
+Thank you,
+Navid.
+
+On Thu, Oct 3, 2019 at 5:25 AM Potnuri Bharat Teja <bharat@chelsio.com> wrote:
+>
+> On Thursday, October 10/03/19, 2019 at 03:05:06 +0530, Navid Emamdoost wrote:
+> > Hi Jason,
 > >
-> > On Fri, 27 Sep 2019, Rob Herring wrote:
+> > Thanks for the feedback. Yes, you are right if the skb release is
+> > moved under err4 label it will cause a double free as
+> > c4iw_ref_send_wait will release skb in case of error.
+> > So, in order to avoid leaking skb in case of c4iw_bar2_addrs failure,
+> > the kfree(skb) could be placed under the error check like the way
+> > patch v1 did. Do you see any mistake in version 1?
+> > https://lore.kernel.org/patchwork/patch/1128510/
+>
+> Hi Navid,
+> Both the revisions of the patch are invalid. skb is freed in both the cases of
+> failure and success through c4iw_ofld_send().
+> case success: in ctrl_xmit()
+> case failure: in c4iw_ofld_send()
+>
+> Thanks,
+> Bharat.
+>
+>
 > >
-> > > On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
-> > > > The LogiCVC is a display engine which also exposes GPIO functionali=
-ty.
-> > > > For this reason, it is described as a multi-function device that is=
- expected
-> > > > to provide register access to its children nodes for gpio and displ=
-ay.
-> > > >
-> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > ---
-> > > >  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++=
-++++
-> > > >  1 file changed, 50 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,log=
-icvc.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.ya=
-ml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..abc9937506e0
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-> > > > @@ -0,0 +1,50 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > > +# Copyright 2019 Bootlin
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
-> > > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > > > +
-> > > > +title: Xylon LogiCVC multi-function device
-> > > > +
-> > > > +maintainers:
-> > > > +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > +
-> > > > +description: |
-> > > > +  The LogiCVC is a display controller that also contains a GPIO co=
-ntroller.
-> > > > +  As a result, a multi-function device is exposed as parent of the=
- display
-> > > > +  and GPIO blocks.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    items:
-> > > > +      - enum:
-> > > > +          - xylon,logicvc-3.02.a
-> > > > +      - const: syscon
-> > > > +      - const: simple-mfd
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +select:
-> > > > +  properties:
-> > > > +    compatible:
-> > > > +      contains:
-> > > > +        enum:
-> > > > +          - xylon,logicvc-3.02.a
+> >
+> > Thanks,
+> > Navid
+> >
+> > On Tue, Oct 1, 2019 at 8:54 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > > >
-> > > I've seen a couple of these with 'syscon' today, so I fixed the schema
-> > > tool to just exclude 'syscon' and 'simple-mfd' from the generated
-> > > 'select'. So you can drop select now.
+> > > On Mon, Sep 23, 2019 at 10:52:59AM -0500, Navid Emamdoost wrote:
+> > > > In create_cq, the allocated skb buffer needs to be released on error
+> > > > path.
+> > > > Moved the kfree_skb(skb) under err4 label.
+> > >
+> > > This didn't move anything
+> > >
+> > > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > > >  drivers/infiniband/hw/cxgb4/cq.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
+> > > > index b1bb61c65f4f..1886c1af10bc 100644
+> > > > +++ b/drivers/infiniband/hw/cxgb4/cq.c
+> > > > @@ -173,6 +173,7 @@ static int create_cq(struct c4iw_rdev *rdev, struct t4_cq *cq,
+> > > >  err4:
+> > > >       dma_free_coherent(&rdev->lldi.pdev->dev, cq->memsize, cq->queue,
+> > > >                         dma_unmap_addr(cq, mapping));
+> > > > +     kfree_skb(skb);
+> > > >  err3:
+> > > >       kfree(cq->sw_queue);
+> > > >  err2:
+> > >
+> > > This looks wrong to me:
+> > >
+> > > int c4iw_ofld_send(struct c4iw_rdev *rdev, struct sk_buff *skb)
+> > > {
+> > >         int     error = 0;
+> > >
+> > >         if (c4iw_fatal_error(rdev)) {
+> > >                 kfree_skb(skb);
+> > >                 pr_err("%s - device in error state - dropping\n", __func__);
+> > >                 return -EIO;
+> > >         }
+> > >         error = cxgb4_ofld_send(rdev->lldi.ports[0], skb);
+> > >         if (error < 0)
+> > >                 kfree_skb(skb);
+> > >         return error < 0 ? error : 0;
+> > > }
+> > >
+> > > Jason
 > >
-> > Does this need to happen before this patch can be applied?
->=20
-> Drop the 'select'? Yes that should happen first.
+> >
+> >
+> > --
+> > Navid.
 
-I'll definitely respin the series for a v3 soon so no worries, I'll get rid
-of it.
 
-Cheers,
 
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2Xi4YACgkQ3cLmz3+f
-v9HpAgf/a8qK5j4yyiRTtn9wRE0GwK+Ammm9c6YApasFhMqQ4fMGrYZThmMNepOB
-/VwPfRJx6qFbQ33IAZ/J3zK2T61jYlybouAEm7h+UO2W/9RazqGyx2NBPSq1t5Q7
-wbTHABnhrs06T8bDZTiKKeFV28gnCRPE3EkNLdeydpTZ7lbtW85VEP56Ua5xkVv1
-RzvJOIvd8BzqECyd95iZOe1G+TXC89AMQ5W8pMnpLNBnM3mwb0RvWSVHJ46u/Tkm
-NMxyUqe5jnj6fWeTFe0613OwraqgqBtU7smGdfKf09m8AsOyawxgBVfgrSvvDObT
-R5OlwonQzTy2wCjL5uK4Q75gpOd7qw==
-=eX7p
------END PGP SIGNATURE-----
-
---9jxsPFA5p3P2qPhR--
+-- 
+Navid.
