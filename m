@@ -2,337 +2,104 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342C7C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1F6C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AD320873
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B5820873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NcNyGRtf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s5zIP7p/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390388AbfJDQHg (ORCPT
+        id S2390399AbfJDQHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:07:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33356 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390128AbfJDQHf (ORCPT
+        Fri, 4 Oct 2019 12:07:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58858 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390128AbfJDQHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:07:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94G7Uex002547;
-        Fri, 4 Oct 2019 11:07:30 -0500
+        Fri, 4 Oct 2019 12:07:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94G6tgi076297;
+        Fri, 4 Oct 2019 11:06:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570205250;
-        bh=g67REGNjPHkMUt4Iq+9jtnEaNelyPFm23KrbMHhzvIM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NcNyGRtfDy2SQvRY1m9NEHZTErq++ozIFSNh41JGrLtG07qZ/DS3aEXjH1ZKGivGd
-         Gf09edh6s7WA5qIofbtSdz5xmgvzPzpH/wpm6azBhMrdHehrsuUEsh9suFiYY1aZG3
-         86zC4og4ymSNKIrdGjgvXNO5LvpwhazdiUNBuSgU=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94G7Ugs038729
+        s=ti-com-17Q1; t=1570205215;
+        bh=BsWmvlcQuJmrgH47mTCBTA5XIa3Tj4rOkLTCsDrH5lI=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=s5zIP7p/cygckP402n3In5MDCx6l9VOg6OJ0y+y3FVaUzY6kIrV4NAtkgQw6BkLZ9
+         MLnBvtxoDIQJ6Fk8TPW0GV8SZVEoOLZVuJxHv8dkzoX8MJXnzC3SCsbhmoi9rtCyHn
+         b2ktdoIQEN6w0B9xUzQZbtD8QMtetWQauCVBPRdU=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94G6tso024225
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Oct 2019 11:07:30 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 4 Oct 2019 11:06:55 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
- 2019 11:07:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 11:06:55 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 4 Oct 2019 11:07:29 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94G7SMb056206;
-        Fri, 4 Oct 2019 11:07:29 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmurphy@ti.com>, <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v6 2/2] leds: Add control of the voltage/current regulator to the LED core
-Date:   Fri, 4 Oct 2019 18:07:24 +0200
-Message-ID: <20191004160724.18390-3-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191004160724.18390-1-jjhiblot@ti.com>
-References: <20191004160724.18390-1-jjhiblot@ti.com>
+ Frontend Transport; Fri, 4 Oct 2019 11:06:55 -0500
+Received: from [10.250.132.26] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94G6qn9059591;
+        Fri, 4 Oct 2019 11:06:53 -0500
+Subject: Re: [PATCH] mtd: spi-nor: Fix direction of the write_sr() transfer
+To:     <Tudor.Ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <john.garry@huawei.com>
+References: <c703dec2-dd11-5898-83ad-fb06127b6575@huawei.com>
+ <20191004104746.23537-1-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <3a09e103-a705-7e4c-6b75-82a928cac2d6@ti.com>
+Date:   Fri, 4 Oct 2019 21:36:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191004104746.23537-1-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A LED is usually powered by a voltage/current regulator. Let the LED core
-know about it. This allows the LED core to turn on or off the power supply
-as needed.
 
-Because turning ON/OFF a regulator might block, it is not done
-synchronously but done in a workqueue. Turning ON the regulator is always
-done as soon as possible, turning it off can be delayed by setting the
-"power-off-delays-ms" property. The intent is to keep the regulator
-powered on when the blink rate of the LED is high.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/led-class.c |  21 +++++++
- drivers/leds/led-core.c  | 122 ++++++++++++++++++++++++++++++++++++++-
- drivers/leds/leds.h      |  18 ++++++
- include/linux/leds.h     |   8 +++
- 4 files changed, 167 insertions(+), 2 deletions(-)
+On 04-Oct-19 4:17 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> write_sr() sends data to the SPI memory, fix the direction.
+> 
+> Fixes: b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
+> Reported-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 80c96dd96afc..47d9f920091c 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -344,6 +344,7 @@ int led_classdev_register_ext(struct device *parent,
- 	char final_name[LED_MAX_NAME_SIZE];
- 	const char *proposed_name = composed_name;
- 	int ret;
-+	struct regulator *regulator;
- 
- 	if (init_data) {
- 		if (init_data->devname_mandatory && !init_data->devicename) {
-@@ -379,6 +380,24 @@ int led_classdev_register_ext(struct device *parent,
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
- 				led_cdev->name, dev_name(led_cdev->dev));
- 
-+	regulator = devm_regulator_get_optional(led_cdev->dev, "power");
-+	if (IS_ERR(regulator)) {
-+		if (regulator != ERR_PTR(-ENODEV)) {
-+			dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-+				led_cdev->name);
-+			device_unregister(led_cdev->dev);
-+			mutex_unlock(&led_cdev->led_access);
-+			return PTR_ERR(regulator);
-+		}
-+		led_cdev->regulator = NULL;
-+	} else {
-+		mutex_init(&led_cdev->regulator_access);
-+		led_cdev->regulator = regulator;
-+		atomic_set(&led_cdev->regulator_state, REG_R_OFF_U_OFF);
-+		fwnode_property_read_u32(init_data->fwnode, "off-delay-ms",
-+					 &led_cdev->reg_off_delay);
-+	}
-+
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
- 		if (ret) {
-@@ -458,6 +477,8 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
- 	up_write(&leds_list_lock);
- 
- 	mutex_destroy(&led_cdev->led_access);
-+	if (led_cdev->regulator)
-+		mutex_destroy(&led_cdev->regulator_access);
- }
- EXPORT_SYMBOL_GPL(led_classdev_unregister);
- 
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f1f718dbe0f8..81105c1ee907 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -37,6 +37,73 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
- };
- EXPORT_SYMBOL_GPL(led_colors);
- 
-+static void turn_off_regulator_if_needed(struct led_classdev *led_cdev)
-+{
-+	int old = atomic_cmpxchg(&led_cdev->regulator_state, REG_R_ON_U_OFF,
-+				  REG_R_OFF_U_OFF);
-+	if (old == REG_R_ON_U_OFF) {
-+		int rc = regulator_disable(led_cdev->regulator);
-+
-+		if (rc) {
-+			dev_err(led_cdev->dev,
-+				"Failed to disable the regulator (%d)\n", rc);
-+			atomic_or(REG_R_ON, &led_cdev->regulator_state);
-+		}
-+	}
-+}
-+
-+static void try_turn_on_regulator_if_needed(struct led_classdev *led_cdev)
-+{
-+	int old = atomic_cmpxchg(&led_cdev->regulator_state, REG_R_OFF_U_ON,
-+			      REG_R_ON_U_ON);
-+	if (old == REG_R_OFF_U_ON) {
-+		int rc = regulator_enable(led_cdev->regulator);
-+
-+		if (rc) {
-+			dev_err(led_cdev->dev,
-+				"Failed to enable the regulator (%d)\n", rc);
-+			atomic_and(~REG_R_ON, &led_cdev->regulator_state);
-+		}
-+	}
-+}
-+
-+static void turn_off_regulator_delayed(struct work_struct *ws)
-+{
-+	struct led_classdev *led_cdev =
-+		container_of(ws, struct led_classdev, reg_off_work.work);
-+
-+	/*
-+	 * Take the lock to prevent very unlikely updates due to
-+	 * led_handle_regulator() being executed at the same time
-+	 */
-+	mutex_lock(&led_cdev->regulator_access);
-+
-+	turn_off_regulator_if_needed(led_cdev);
-+
-+	mutex_unlock(&led_cdev->regulator_access);
-+}
-+
-+static void led_handle_regulator(struct led_classdev *led_cdev)
-+{
-+	int delay = (led_cdev->flags & LED_SUSPENDED) ? 0 :
-+		    led_cdev->reg_off_delay;
-+
-+	if (!led_cdev->regulator)
-+		return;
-+
-+	/*
-+	 * Take the lock to prevent very unlikely updates due to
-+	 * turn_off_regulator_delayed() being executed at the same time
-+	 */
-+	mutex_lock(&led_cdev->regulator_access);
-+
-+	try_turn_on_regulator_if_needed(led_cdev);
-+	if (!delay)
-+		turn_off_regulator_if_needed(led_cdev);
-+
-+	mutex_unlock(&led_cdev->regulator_access);
-+}
-+
- static int __led_set_brightness(struct led_classdev *led_cdev,
- 				enum led_brightness value)
- {
-@@ -135,6 +202,8 @@ static void set_brightness_delayed(struct work_struct *ws)
- 	    (led_cdev->flags & LED_HW_PLUGGABLE)))
- 		dev_err(led_cdev->dev,
- 			"Setting an LED's brightness failed (%d)\n", ret);
-+
-+	 led_handle_regulator(led_cdev);
- }
- 
- static void led_set_software_blink(struct led_classdev *led_cdev,
-@@ -189,6 +258,7 @@ static void led_blink_setup(struct led_classdev *led_cdev,
- void led_init_core(struct led_classdev *led_cdev)
- {
- 	INIT_WORK(&led_cdev->set_brightness_work, set_brightness_delayed);
-+	INIT_DELAYED_WORK(&led_cdev->reg_off_work, turn_off_regulator_delayed);
- 
- 	timer_setup(&led_cdev->blink_timer, led_timer_function, 0);
- }
-@@ -269,8 +339,56 @@ EXPORT_SYMBOL_GPL(led_set_brightness);
- void led_set_brightness_nopm(struct led_classdev *led_cdev,
- 			      enum led_brightness value)
- {
--	/* Use brightness_set op if available, it is guaranteed not to sleep */
--	if (!__led_set_brightness(led_cdev, value))
-+	bool defer_work = false;
-+	bool regulator_on = !!value;
-+
-+
-+	if (led_cdev->regulator) {
-+		int old;
-+
-+		if (regulator_on)
-+			old = atomic_fetch_or(REG_U_ON,
-+					      &led_cdev->regulator_state);
-+		else
-+			old = atomic_fetch_and(~REG_U_ON,
-+					       &led_cdev->regulator_state);
-+
-+		if (!regulator_on && old == REG_R_ON_U_ON) {
-+			int delay = (led_cdev->flags & LED_SUSPENDED) ? 0 :
-+				    led_cdev->reg_off_delay;
-+
-+			/*
-+			 * the regulator must  be turned off. This cannot be
-+			 * here because we can't sleep. Defer the job or, if a
-+			 * delay is asked for, schedule a delayed work
-+			 */
-+			if (delay)
-+				schedule_delayed_work(
-+						 &led_cdev->reg_off_work,
-+						 msecs_to_jiffies(delay));
-+			else
-+				defer_work = true;
-+		} else if (regulator_on && old == REG_R_OFF_U_OFF) {
-+			/*
-+			 * the regulator must be enabled. This cannot be here
-+			 * because we can't sleep. Defer the job
-+			 */
-+			defer_work = true;
-+		}
-+		/*
-+		 * small optimization. Cancel the work that had been started
-+		 * to turn OFF the regulator. It wouldn't have been turned off
-+		 * anyway because regulator_state has changed to REG_R_x_U_ON
-+		 */
-+		if (regulator_on && old == REG_R_ON_U_OFF)
-+			cancel_delayed_work(&led_cdev->reg_off_work);
-+	}
-+
-+	/*
-+	 * If defered work is not asked for, use brightness_set
-+	 * op now if available, it is guaranteed not to sleep
-+	 */
-+	if (!defer_work && !__led_set_brightness(led_cdev, value))
- 		return;
- 
- 	/* If brightness setting can sleep, delegate it to a work queue task */
-diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-index 0b577cece8f7..5cb76e547b7d 100644
---- a/drivers/leds/leds.h
-+++ b/drivers/leds/leds.h
-@@ -11,6 +11,24 @@
- 
- #include <linux/rwsem.h>
- #include <linux/leds.h>
-+#include <linux/regulator/consumer.h>
-+
-+/*
-+ * The regulator state tracks 2 boolean variables:
-+ * - the state of regulator (or more precisely the state required by
-+ *   led core layer, as many users can interact with the same regulator).
-+ *   It is tracked by bit 0.
-+ * - the state last asked-for by the LED user. It is tracked by bit 1.
-+ */
-+#define REG_R_ON BIT(0)
-+#define REG_U_ON BIT(1)
-+
-+enum {	REG_R_OFF_U_OFF = 0,
-+	REG_R_ON_U_OFF = REG_R_ON,
-+	REG_R_OFF_U_ON = REG_U_ON,
-+	REG_R_ON_U_ON = REG_R_ON | REG_U_ON
-+};
-+
- 
- static inline int led_get_brightness(struct led_classdev *led_cdev)
- {
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 9b94cf752012..90afbbc67bb0 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -149,6 +149,14 @@ struct led_classdev {
- 
- 	/* Ensures consistent access to the LED Flash Class device */
- 	struct mutex		led_access;
-+
-+	/* regulator */
-+	struct regulator	*regulator;
-+	struct mutex		regulator_access;
-+	atomic_t		regulator_state;
-+	int			reg_off_delay;
-+	struct delayed_work	reg_off_work;
-+
- };
- 
- /**
--- 
-2.17.1
+Thanks for the quick fix!
 
+Acked-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+>  drivers/mtd/spi-nor/spi-nor.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 1d8621d43160..7acf4a93b592 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -487,7 +487,7 @@ static int write_sr(struct spi_nor *nor, u8 val)
+>  			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WRSR, 1),
+>  				   SPI_MEM_OP_NO_ADDR,
+>  				   SPI_MEM_OP_NO_DUMMY,
+> -				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
+> +				   SPI_MEM_OP_DATA_OUT(1, nor->bouncebuf, 1));
+>  
+>  		return spi_mem_exec_op(nor->spimem, &op);
+>  	}
+> 
