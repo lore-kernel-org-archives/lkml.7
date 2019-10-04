@@ -2,85 +2,76 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA2CC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A77C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCE3222CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E2A215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbfJDTMl (ORCPT
+        id S1729684AbfJDTWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:12:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:41347 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728360AbfJDTMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:12:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 12:12:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="392407462"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Oct 2019 12:12:40 -0700
-Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 4 Oct 2019 12:12:40 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.161]) by
- ORSMSX122.amr.corp.intel.com ([169.254.11.236]) with mapi id 14.03.0439.000;
- Fri, 4 Oct 2019 12:12:40 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-CC:     "kristen@linux.intel.com" <kristen@linux.intel.com>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>
-Subject: Re: [RFC PATCH 12/13] mmap: Add XO support for KVM XO
-Thread-Topic: [RFC PATCH 12/13] mmap: Add XO support for KVM XO
-Thread-Index: AQHVejL810qxbL99z0uaNll5uKFEJqdKjTaAgADDGoA=
-Date:   Fri, 4 Oct 2019 19:12:39 +0000
-Message-ID: <a52a8d1058ab6752c3d0402076f831b52c7844d7.camel@intel.com>
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-         <20191003212400.31130-13-rick.p.edgecombe@intel.com>
-         <a0ea3b34-2131-3fd5-3842-ae3f98edf8d8@redhat.com>
-In-Reply-To: <a0ea3b34-2131-3fd5-3842-ae3f98edf8d8@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F411B2DEF13E8948A71F00EC5EAB3314@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 4 Oct 2019 15:22:18 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51485 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfJDTWS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:22:18 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iGT9a-0005j9-2W; Fri, 04 Oct 2019 21:22:14 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iGT9W-0006gL-R1; Fri, 04 Oct 2019 21:22:10 +0200
+Date:   Fri, 4 Oct 2019 21:22:10 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 4/6] dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
+Message-ID: <20191004192210.777t6tuku3y45fn3@pengutronix.de>
+References: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
+ <20191004133207.6663-5-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191004133207.6663-5-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEwLTA0IGF0IDA5OjM0ICswMjAwLCBQYW9sbyBCb256aW5pIHdyb3RlOg0K
-PiBPbiAwMy8xMC8xOSAyMzoyMywgUmljayBFZGdlY29tYmUgd3JvdGU6DQo+ID4gKw0KPiA+ICsJ
-cHJvdGVjdGlvbl9tYXBbNF0gPSBQQUdFX0VYRUNPTkxZOw0KPiA+ICsJcHJvdGVjdGlvbl9tYXBb
-MTJdID0gUEFHRV9FWEVDT05MWTsNCj4gDQo+IENhbiB5b3UgYWRkICNkZWZpbmVzIGZvciB0aGUg
-Yml0cyBpbiBwcm90ZWN0aW9uX21hcD8gIEFsc28gcGVyaGFwcyB5b3UNCj4gY2FuIHJlcGxhY2Ug
-dGhlIHBfeG8vcF94ci9zX3hvL3NfeHIgY2hlY2tzIHdpdGgganVzdCB3aXRoICJpZg0KPiAocGd0
-YWJsZV9rdm14b19lbmFibGVkKCkiLg0KPiANCj4gUGFvbG8NCg0KUEFHRV9FWEVDT05MWSBpcyBu
-b3Qga25vd24gYXQgY29tcGlsZSB0aW1lIHNpbmNlIHRoZSBOUiBiaXQgcG9zaXRpb24gZGVwZW5k
-cw0Kb24gdGhlIG51bWJlciBvZiBwaHlzaWNhbCBhZGRyZXNzIGJpdHMuIFNvIGl0IGNhbid0IGJl
-IHNldCB0aGUgd2F5IHRoZSBvdGhlcg0Kb25lcyBhcmUgaW4gcHJvdGVjdGlvbl9tYXBbXSwgaWYg
-dGhhdHMgd2hhdCB5b3UgYXJlIHNheWluZy4NCg0KSSBkaWRuJ3QgbG92ZSB0aGUgcF94by9wX3hy
-L3NfeG8vc194ciBjaGVja3MsIGJ1dCBzaW5jZSBtbS9tbWFwLmMgaXMgY3Jvc3MgYXJjaA0KaXQg
-c2VlbWVkIHRoZSBiZXN0IG9wdGlvbi4gTWF5YmUgYSBjcm9zcyBhcmNoIGhlbHBlciBsaWtlDQpu
-b25fcGtleV94b19zdXBwb3J0ZWQoKSBpbnN0ZWFkPw0K
+On Fri, Oct 04, 2019 at 03:32:05PM +0200, Rasmus Villemoes wrote:
+> We need to increase the pwm-cells for the optional flags parameter, in
+> order to implement support for polarity setting via DT.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
