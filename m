@@ -2,125 +2,106 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC8C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB48FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC35222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A9cyjOZf"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA2A20873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfJDXbf (ORCPT
+        id S1731570AbfJDXbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:31:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35907 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDXbf (ORCPT
+        Fri, 4 Oct 2019 19:31:39 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57293 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725730AbfJDXbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:31:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so4616798pgk.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z/e8EWlo6oLC7kCwtiuv+KxxSwajNXvXX9ykyyY6BXQ=;
-        b=A9cyjOZfmGNJRtBUCkiBi2TuxwF55Q/M0+hqtI34DENevjHtgY9umyIm7u36Iz0j+g
-         Lkd4Ob68hSOl0uzuZTbsgLxNwwwb9nHDqlVVzndUFWVcTvi2G8I0/p/YuMAcd79CNQWO
-         5SkxAMqekumVhVpWVAADypyDFqRazJQxzofpQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z/e8EWlo6oLC7kCwtiuv+KxxSwajNXvXX9ykyyY6BXQ=;
-        b=m8ACbB5FdBQg7SzgExs/Hmcf7UsKiCTWLEsXf4SIznAfpFcIvwJlxBiRAKXu1qE+r6
-         mLf6wBjGrb9DcmiXwF9Z50tJQgZ+tqc2hBUQoIxvUQ1TuAigtK6orICYWm4IxNhXrptP
-         pilfXsdf8TtT+UfpBF/JXpT5BhvFw/Yrff78+QvEE3nDdfFXLihNdmt7BNED4qU5vGB5
-         CGr8rfYbHLWUJkGIseshUwaNIeA6OH9fBjcctiAePTHa3KyiOkzlt66TunhiIBDJ8Efy
-         tM4MJBF3tbNMfE6clN2IoPDpZZr+NuKJsC2MjMl8zt2EuW7HCWdFSe3CW/Rd43beKbns
-         pE9Q==
-X-Gm-Message-State: APjAAAVUlvjjxJuZbSH46sANWO9VqLrgu8HXqS0r9B1/ElNnLqqE05zy
-        4p41LBDxbwBE/Wz9UB/Z/xmcdA==
-X-Google-Smtp-Source: APXvYqy8JT/xvn3Mcha8YwAHzxwblBG3zVfUPB4cSLKRJxVmOvfKOSrnLLhHkWqixsEGTNN59npHyA==
-X-Received: by 2002:a17:90a:8b8c:: with SMTP id z12mr20065560pjn.100.1570231894192;
-        Fri, 04 Oct 2019 16:31:34 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g24sm7893668pfi.81.2019.10.04.16.31.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 16:31:33 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: [PATCH] soc: qcom: llcc: Name regmaps to avoid collisions
-Date:   Fri,  4 Oct 2019 16:31:32 -0700
-Message-Id: <20191004233132.194336-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        Fri, 4 Oct 2019 19:31:39 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x94NTuAQ024308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 4 Oct 2019 19:29:57 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id CCF8D42088C; Fri,  4 Oct 2019 19:29:55 -0400 (EDT)
+Date:   Fri, 4 Oct 2019 19:29:55 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     shuah <shuah@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        kieran.bingham@ideasonboard.com,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, robh@kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>, Tim.Bird@sony.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, jdike@addtoit.com,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20191004232955.GC12012@mit.edu>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu>
+ <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+ <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We'll end up with debugfs collisions if we don't give names to the
-regmaps created inside this driver. Copy the template config over into
-this function and give the regmap the same name as the resource name.
+On Fri, Oct 04, 2019 at 04:47:09PM -0600, shuah wrote:
+> > However, if I encourage arbitrary tests/improvements into my KUnit
+> > branch, it further diverges away from torvalds/master, and is more
+> > likely that there will be a merge conflict or issue that is not related
+> > to the core KUnit changes that will cause the whole thing to be
+> > rejected again in v5.5.
+> 
+> The idea is that the new development will happen based on kunit in
+> linux-kselftest next. It will work just fine. As we accepts patches,
+> they will go on top of kunit that is in linux-next now.
 
-Fixes: 7f9c136216c7 ("soc: qcom: Add broadcast base for Last Level Cache Controller (LLCC)")
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc: Evan Green <evgreen@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/soc/qcom/llcc-slice.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+I don't see how this would work.  If I add unit tests to ext4, they
+would be in fs/ext4.  And to the extent that I need to add test mocks
+to allow the unit tests to work, they will involve changes to existing
+files in fs/ext4.  I can't put them in the ext4.git tree without
+pulling in the kunit changes into the ext4 git tree.  And if they ext4
+unit tests land in the kunit tree, it would be a receipe for large
+numbers of merge conflicts.
 
-diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
-index 9090ea12eaf3..aa342938c403 100644
---- a/drivers/soc/qcom/llcc-slice.c
-+++ b/drivers/soc/qcom/llcc-slice.c
-@@ -48,13 +48,6 @@
- 
- static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
- 
--static const struct regmap_config llcc_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.fast_io = true,
--};
--
- /**
-  * llcc_slice_getd - get llcc slice descriptor
-  * @uid: usecase_id for the client
-@@ -314,6 +307,12 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
- {
- 	struct resource *res;
- 	void __iomem *base;
-+	static struct regmap_config llcc_regmap_config = {
-+		.reg_bits = 32,
-+		.reg_stride = 4,
-+		.val_bits = 32,
-+		.fast_io = true,
-+	};
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
- 	if (!res)
-@@ -323,6 +322,7 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
- 	if (IS_ERR(base))
- 		return ERR_CAST(base);
- 
-+	llcc_regmap_config.name = name;
- 	return devm_regmap_init_mmio(&pdev->dev, base, &llcc_regmap_config);
- }
- 
--- 
-Sent by a computer through tubes
-
+						- Ted
