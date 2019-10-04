@@ -2,152 +2,195 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B78C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF88C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BF1222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gPJO1Pca"
+	by mail.kernel.org (Postfix) with ESMTP id E384A215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388281AbfJDRWo (ORCPT
+        id S1730116AbfJDRYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:22:44 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42948 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387769AbfJDRWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:22:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94HM8rk073552;
-        Fri, 4 Oct 2019 12:22:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570209729;
-        bh=PuZIAkt+6XCPqV6EhuUmgB8LrN5ix8GqAB9mLOAtllE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gPJO1Pcaznhnz38nCSuc9npAzxIUChwU7wVdboZaMo05XzexN/4vGEQ2sX3V6Jonr
-         WcV+nIyBB0oB9TJ4ORYDHq9P2t5e6IHFwuVjR58NZ1cBq24epihfae4ZSLAHBFwW5/
-         fO0DfLaH3uTY+DaAh2P9h/D8Kj6PEPo5x8UyFszQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94HM8WE123869
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Oct 2019 12:22:08 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
- 2019 12:22:08 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 4 Oct 2019 12:22:08 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94HM7Vb041112;
-        Fri, 4 Oct 2019 12:22:08 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 1/3] media: ov5640: add PIXEL_RATE control
-Date:   Fri, 4 Oct 2019 12:24:16 -0500
-Message-ID: <20191004172418.2339-2-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191004172418.2339-1-bparrot@ti.com>
-References: <20191004172418.2339-1-bparrot@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 4 Oct 2019 13:24:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:37967 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfJDRYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 13:24:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 10:23:59 -0700
+X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
+   d="scan'208";a="195623520"
+Received: from spandruv-mobl.jf.intel.com ([10.24.11.4])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 10:23:59 -0700
+Message-ID: <dbda91d07e656ada3a01e19bedef1a447a1a5470.camel@linux.intel.com>
+Subject: Re: [PATCH v2 6/7] intel-speed-select: Implement 'perf-profile
+ info' on CascadeLake-N
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Prarit Bhargava <prarit@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Fri, 04 Oct 2019 10:23:59 -0700
+In-Reply-To: <20191003121112.25870-7-prarit@redhat.com>
+References: <20191003121112.25870-1-prarit@redhat.com>
+         <20191003121112.25870-7-prarit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add v4l2 controls to report the pixel rates of each mode. This is
-needed by some CSI2 receiver in order to perform proper DPHY
-configuration.
+On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
+> Add functionality for perf-profile info on CascadeLake-N.
+> 
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+This results in 
+#intel-speed-select perf-profile info
+Intel(R) Speed Select Technology
+Executing on CPU model:85[0x55]
+intel-speed-select:
+/sys/devices/system/cpu/cpu40/cpufreq/base_frequency: open failed: No
+such file or directory
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 500d9bbff10b..a3946ca6a13d 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -193,6 +193,7 @@ struct ov5640_mode_info {
- 
- struct ov5640_ctrls {
- 	struct v4l2_ctrl_handler handler;
-+	struct v4l2_ctrl *pixel_rate;
- 	struct {
- 		struct v4l2_ctrl *auto_exp;
- 		struct v4l2_ctrl *exposure;
-@@ -1614,6 +1615,16 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
- 	return mode;
- }
- 
-+static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-+{
-+	u64 rate;
-+
-+	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-+	rate *= ov5640_framerates[sensor->current_fr];
-+
-+	return rate;
-+}
-+
- /*
-  * sensor changes between scaling and subsampling, go through
-  * exposure calculation
-@@ -1818,8 +1829,7 @@ static int ov5640_set_mode(struct ov5640_dev *sensor)
- 	 * All the formats we support have 16 bits per pixel, seems to require
- 	 * the same rate than YUV, so we can just use 16 bpp all the time.
- 	 */
--	rate = mode->vtot * mode->htot * 16;
--	rate *= ov5640_framerates[sensor->current_fr];
-+	rate = ov5640_calc_pixel_rate(sensor) * 16;
- 	if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
- 		rate = rate / sensor->ep.bus.mipi_csi2.num_data_lanes;
- 		ret = ov5640_set_mipi_pclk(sensor, rate);
-@@ -2233,6 +2243,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
- 	if (mbus_fmt->code != sensor->fmt.code)
- 		sensor->pending_fmt_change = true;
- 
-+	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+				 ov5640_calc_pixel_rate(sensor));
- out:
- 	mutex_unlock(&sensor->lock);
- 	return ret;
-@@ -2657,6 +2669,12 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
- 	/* we can use our own mutex for the ctrl lock */
- 	hdl->lock = &sensor->lock;
- 
-+	/* Clock related controls */
-+	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-+					      0, INT_MAX, 1,
-+					      ov5640_calc_pixel_rate(sensor));
-+	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+
- 	/* Auto/manual white balance */
- 	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
- 					   V4L2_CID_AUTO_WHITE_BALANCE,
-@@ -2816,6 +2834,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
- 		sensor->frame_interval = fi->interval;
- 		sensor->current_mode = mode;
- 		sensor->pending_mode_change = true;
-+
-+		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+					 ov5640_calc_pixel_rate(sensor));
- 	}
- out:
- 	mutex_unlock(&sensor->lock);
--- 
-2.17.1
+Let me fix this.
+
+Also the previous crash was also for this v2 series.
+
+Thanks,
+Srinivas
+
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> ---
+>  .../x86/intel-speed-select/isst-config.c      | 20 +++++++++++++++
+> ----
+>  .../x86/intel-speed-select/isst-display.c     | 12 +++++++++++
+>  tools/power/x86/intel-speed-select/isst.h     |  1 +
+>  3 files changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
+> b/tools/power/x86/intel-speed-select/isst-config.c
+> index 3ab0edade5ec..d9b580139a07 100644
+> --- a/tools/power/x86/intel-speed-select/isst-config.c
+> +++ b/tools/power/x86/intel-speed-select/isst-config.c
+> @@ -836,6 +836,12 @@ static void clx_n_config(void)
+>  	ctdp_level->fact_enabled = 0;
+>  }
+>  
+> +static void dump_cn_config_for_cpu(int cpu, void *arg1, void *arg2,
+> +				   void *arg3, void *arg4)
+> +{
+> +	isst_ctdp_display_information(cpu, outf, tdp_level,
+> &clx_n_pkg_dev);
+> +}
+> +
+>  static void dump_isst_config_for_cpu(int cpu, void *arg1, void
+> *arg2,
+>  				     void *arg3, void *arg4)
+>  {
+> @@ -854,6 +860,8 @@ static void dump_isst_config_for_cpu(int cpu,
+> void *arg1, void *arg2,
+>  
+>  static void dump_isst_config(int arg)
+>  {
+> +	void *fn;
+> +
+>  	if (cmd_help) {
+>  		fprintf(stderr,
+>  			"Print Intel(R) Speed Select Technology
+> Performance profile configuration\n");
+> @@ -865,14 +873,17 @@ static void dump_isst_config(int arg)
+>  		exit(0);
+>  	}
+>  
+> +	if (!is_clx_n_platform())
+> +		fn = dump_isst_config_for_cpu;
+> +	else
+> +		fn = dump_cn_config_for_cpu;
+> +
+>  	isst_ctdp_display_information_start(outf);
+>  
+>  	if (max_target_cpus)
+> -		for_each_online_target_cpu_in_set(dump_isst_config_for_
+> cpu,
+> -						  NULL, NULL, NULL,
+> NULL);
+> +		for_each_online_target_cpu_in_set(fn, NULL, NULL, NULL,
+> NULL);
+>  	else
+> -		for_each_online_package_in_set(dump_isst_config_for_cpu
+> , NULL,
+> -					       NULL, NULL, NULL);
+> +		for_each_online_package_in_set(fn, NULL, NULL, NULL,
+> NULL);
+>  
+>  	isst_ctdp_display_information_end(outf);
+>  }
+> @@ -1633,6 +1644,7 @@ static void get_clos_assoc(int arg)
+>  }
+>  
+>  static struct process_cmd_struct clx_n_cmds[] = {
+> +	{ "perf-profile", "info", dump_isst_config, 0 },
+>  	{ NULL, NULL, NULL, 0 }
+>  };
+>  
+> diff --git a/tools/power/x86/intel-speed-select/isst-display.c
+> b/tools/power/x86/intel-speed-select/isst-display.c
+> index 1caa7ae25245..8309810e7425 100644
+> --- a/tools/power/x86/intel-speed-select/isst-display.c
+> +++ b/tools/power/x86/intel-speed-select/isst-display.c
+> @@ -202,6 +202,9 @@ static void _isst_pbf_display_information(int
+> cpu, FILE *outf, int level,
+>  		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
+>  	format_and_print(outf, disp_level + 1, header, value);
+>  
+> +	if (is_clx_n_platform())
+> +		return;
+> +
+>  	snprintf(header, sizeof(header), "tjunction-temperature(C)");
+>  	snprintf(value, sizeof(value), "%d", pbf_info->t_prochot);
+>  	format_and_print(outf, disp_level + 1, header, value);
+> @@ -375,6 +378,15 @@ void isst_ctdp_display_information(int cpu, FILE
+> *outf, int tdp_level,
+>  			snprintf(value, sizeof(value), "unsupported");
+>  		format_and_print(outf, base_level + 4, header, value);
+>  
+> +		if (is_clx_n_platform()) {
+> +			if (ctdp_level->pbf_support)
+> +				_isst_pbf_display_information(cpu,
+> outf,
+> +							      tdp_level
+> ,
+> +							  &ctdp_level-
+> >pbf_info,
+> +							      base_leve
+> l + 4);
+> +			continue;
+> +		}
+> +
+>  		snprintf(header, sizeof(header), "thermal-design-
+> power(W)");
+>  		snprintf(value, sizeof(value), "%d", ctdp_level-
+> >pkg_tdp);
+>  		format_and_print(outf, base_level + 4, header, value);
+> diff --git a/tools/power/x86/intel-speed-select/isst.h
+> b/tools/power/x86/intel-speed-select/isst.h
+> index 0dcae17b3945..bef27bd6138e 100644
+> --- a/tools/power/x86/intel-speed-select/isst.h
+> +++ b/tools/power/x86/intel-speed-select/isst.h
+> @@ -239,4 +239,5 @@ extern void isst_display_result(int cpu, FILE
+> *outf, char *feature, char *cmd,
+>  extern int isst_clos_get_clos_information(int cpu, int *enable, int
+> *type);
+>  extern void isst_clos_display_clos_information(int cpu, FILE *outf,
+>  					       int clos_enable, int
+> type);
+> +extern int is_clx_n_platform(void);
+>  #endif
 
