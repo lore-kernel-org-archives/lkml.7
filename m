@@ -2,85 +2,101 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04E1C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B9DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F35B20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EABC20659
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570200564;
+	bh=jnzg6tZ7K1hPkhvqKC8ZhfTM+i8WQS1OKsKSGXkhAC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dW+7c7863+1ITppZJugLLxzTGgq2QZ0a6sb8I/6qOOqwh5sLhEDiH0kaZ9FzsLAZu
+	 5NG/x/1EZYcVlO7fUx/wDrhuG4bqExsnWwGu9H4Xa9DTyDAQLsAamf+rfFfJKYABmG
+	 x6VuzdcdXeIk8W/CzTnxXZFwDxavyoYnZfdb8mE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389444AbfJDOsp (ORCPT
+        id S2389495AbfJDOtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:48:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:47296 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388870AbfJDOsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:48:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDE8F1597;
-        Fri,  4 Oct 2019 07:48:44 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 779DC3F68E;
-        Fri,  4 Oct 2019 07:48:43 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 15:48:41 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Subject: Re: [PATCH] lib/generic-radix-tree.c: add kmemleak annotations
-Message-ID: <20191004144841.GI638@arrakis.emea.arm.com>
-References: <CACT4Y+aGjg_JTL-OPMSi1wS4=Zy4xFAizWW5fa8_KMOFpfMeXg@mail.gmail.com>
- <20191004065039.727564-1-ebiggers@kernel.org>
+        Fri, 4 Oct 2019 10:49:23 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33515 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388870AbfJDOtX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:49:23 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a22so6839371ljd.0;
+        Fri, 04 Oct 2019 07:49:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AICnQvY7QcNF7f+/M4M7hIgheGhg17w1bpamNJvqPmY=;
+        b=tkFCdZAg4Bda89sCDZdt5sY+A7SR+mRB2xixkQwgQYXtIOqtianMUj9xnGc9CSwxk0
+         j7CkLl4Nx4qmVBoQYiSlS1R9j6fceFFBPBEkrgmNSQZoLyUVWQkrKfINIuKZ8A+yHK5s
+         xik8zoiLQR3SQO0wIP0dlqRhivoMRG6coI6yBgm7dF1jsBZ3yyEbyd2wiweMKu9vgHyb
+         qIUKOi/w3czVQXQbAiDCJQZTYqPdr0P3t1bGm880P9ekuu5jNBMBeYtk6rrWhK743e/n
+         rGJ9gFaH3k8H3TABiXKj9GjQ84QoFP5oVBtTyV7bSamN8UlNPBq9svgoQUo1ClxPYoIA
+         98xA==
+X-Gm-Message-State: APjAAAVDw8qc+Bn5SAPvNGxiMSW/966+UslxN73ZcKLalRi7sKhSLXzH
+        W76PAi6JU9d+UJEXBz2bb+o=
+X-Google-Smtp-Source: APXvYqxeivwiGvJSLj2qnzaww/e3vxhBx0aQeGAz7MOTp/aSTBo8DiGeHX+enW/cZawQMX4B5qQb1A==
+X-Received: by 2002:a2e:9585:: with SMTP id w5mr4088615ljh.220.1570200560185;
+        Fri, 04 Oct 2019 07:49:20 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id y26sm1584105ljj.90.2019.10.04.07.49.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 07:49:19 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@kernel.org>)
+        id 1iGOte-0005Vp-Uy; Fri, 04 Oct 2019 16:49:31 +0200
+Date:   Fri, 4 Oct 2019 16:49:30 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Denis Efremov <efremov@linux.com>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>
+Subject: Re: [PATCH] rsi: fix potential null dereference in rsi_probe()
+Message-ID: <20191004144930.GC13531@localhost>
+References: <20191002171811.23993-1-efremov@linux.com>
+ <20191004134736.2D517619F4@smtp.codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004065039.727564-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191004134736.2D517619F4@smtp.codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:50:39PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Fri, Oct 04, 2019 at 01:47:36PM +0000, Kalle Valo wrote:
+> Denis Efremov <efremov@linux.com> wrote:
 > 
-> Kmemleak is falsely reporting a leak of the slab allocation in
-> sctp_stream_init_ext():
-> 
-> BUG: memory leak
-> unreferenced object 0xffff8881114f5d80 (size 96):
->    comm "syz-executor934", pid 7160, jiffies 4294993058 (age 31.950s)
->    hex dump (first 32 bytes):
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    backtrace:
->      [<00000000ce7a1326>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
->      [<00000000ce7a1326>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<00000000ce7a1326>] slab_alloc mm/slab.c:3326 [inline]
->      [<00000000ce7a1326>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
->      [<000000007abb7ac9>] kmalloc include/linux/slab.h:547 [inline]
->      [<000000007abb7ac9>] kzalloc include/linux/slab.h:742 [inline]
->      [<000000007abb7ac9>] sctp_stream_init_ext+0x2b/0xa0  net/sctp/stream.c:157
->      [<0000000048ecb9c1>] sctp_sendmsg_to_asoc+0x946/0xa00  net/sctp/socket.c:1882
->      [<000000004483ca2b>] sctp_sendmsg+0x2a8/0x990 net/sctp/socket.c:2102
->      [...]
-> 
-> But it's freed later.  Kmemleak misses the allocation because its
-> pointer is stored in the generic radix tree sctp_stream::out, and the
-> generic radix tree uses raw pages which aren't tracked by kmemleak.
-> 
-> Fix this by adding the kmemleak hooks to the generic radix tree code.
-> 
-> Reported-by: syzbot+7f3b6b106be8dcdcdeec@syzkaller.appspotmail.com
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > The id pointer can be NULL in rsi_probe().
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+While the existing code in rsi_probe() may lead you to believe that,
+this statement is false. 
+
+> > It is checked everywhere except
+> > for the else branch in the idProduct condition. The patch adds NULL check
+> > before the id dereference in the rsi_dbg() call.
+> > 
+> > Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
+> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> > Cc: Siva Rebbagondla <siva8118@gmail.com>
+> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> > Signed-off-by: Denis Efremov <efremov@linux.com>
+> 
+> Patch applied to wireless-drivers-next.git, thanks.
+> 
+> f170d44bc4ec rsi: fix potential null dereference in rsi_probe()
+
+I just sent a revert to prevent the confusion from spreading (e.g. to
+stable autosel and contributers looking for things to work on). Hope you
+don't mind, Kalle.
+
+Johan
