@@ -2,183 +2,196 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB52C32792
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F49C32792
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72F820862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbWTIUYJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7044F2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570154004;
+	bh=6odMtoguJBjNIxmq0WvWcpWk1CrE1EvPomXzTsSYIrs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=J+8x1FfNg9VBYq79YYU2mXd5eVaeMoN8r2dIRkP5Q/1TWv8LMyU0UdzbK488Ca0/i
+	 g9w1sWiNXwLJ5FpgZqFerkstQ0DKU7rtVhsBs6AAzcWHVS5MID639knsuxOrGIHXKg
+	 YVHz4zQqvk/toFxOhfef7U866hNbV5D8PuBRR+zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfJDBqH (ORCPT
+        id S1730699AbfJDBxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 21:46:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46647 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729891AbfJDBqG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 21:46:06 -0400
-Received: by mail-pl1-f194.google.com with SMTP id q24so2348948plr.13;
-        Thu, 03 Oct 2019 18:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F2Ug4BOLGPrMjjEj52g7g4pWiptas8bJOxWiWz/fDVU=;
-        b=PbWTIUYJu/Xb4h87WBSmtho2pGiy7vMg+m3KA0/4TuBxNM68QPvXEM7REe7FEgDyOB
-         C/MkrPLVUfrCJT5k3VvlPCCF9Rb4MNn+GRhaiQLEp13xhVdtj/p8UWW0EmefL/sgP9yH
-         NcvrfT4cWSbm+IThZXmSPJChYqX7fpuvK/7CDa/JWshZTJ2QZsZClMaouA9xBK3DaW7F
-         ouBt54Z44CYdW3PEBMF56LIGVeha5OEUuTXsiwsU13kR3QNqsHhk7Whec9/N5H8LZ40C
-         PXbacFyfqvGoSKfo7BHq5T9lJTBeLuIy53+VpVDJdox7FuhP5fI2UwZSlbnztdxVUTL1
-         HDrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F2Ug4BOLGPrMjjEj52g7g4pWiptas8bJOxWiWz/fDVU=;
-        b=me/5r4v7114Bf/4khV7RPUiktiSTLcbqjyZ/dmmlmSM+MT+OhIqbPtGNhkyTFjKR2I
-         R19fjID5tVSXcmYGMTNb7b9Nvutx3i7LDyXkR7x8t3ZEIiiD76u9zybDCh6Vcu4Gp/Wl
-         jd45C75Axhdrad1n6/ZL9nayyOjv+kwRk5bkI80CRN1c+yPpa4b1f4ZQ97a41pZU6JFz
-         brXKiXfdd5yypsEH/z1JIj5lw/hIBOnVi5uE+A9WhDNVd8y2qua4rkaYbyYnDN/oTG/j
-         WpX6Nr6YM5j+RyUszM8r8n8Koh8N1Vp0pgM5HncUWvf8VXVEHbMPCwrgFmGLUMbZUjPY
-         3Y1w==
-X-Gm-Message-State: APjAAAVNtr+qmdWOBZ/Smy7H88BIrlRP7KzkXYqzwXfe1TTKEV0rE4nL
-        AgGE7dWce7UBhfafkp5GZl33XMe0wNA=
-X-Google-Smtp-Source: APXvYqzD5JuUHJ3dQCJweyuHhGuiHfqNxgxYzkz0cxux7VBByd5MhYM993TSZb5o7eTm04RUHnJyfA==
-X-Received: by 2002:a17:902:5983:: with SMTP id p3mr12808037pli.156.1570153564249;
-        Thu, 03 Oct 2019 18:46:04 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id e4sm4333514pff.22.2019.10.03.18.46.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 18:46:03 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect' usage
-Date:   Thu,  3 Oct 2019 18:45:48 -0700
-Message-Id: <20191004014548.29583-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 3 Oct 2019 21:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728360AbfJDBxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 21:53:23 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64E4621848;
+        Fri,  4 Oct 2019 01:53:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570154001;
+        bh=6odMtoguJBjNIxmq0WvWcpWk1CrE1EvPomXzTsSYIrs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AwYuS5MYR5UrpmjoK052xwB8qTp8H9UDlMezDdYyl1pA840CiRONdKV/9uIsNNUqR
+         8lS/Fn/bEO6ooPXWi0TrohOTpOF3Ns2e31Xa3u0mQ1E/6uy2d7lmgYF3+oI2NEfjpu
+         hqjRtZ6gUBLiJNLCfnIPomVdwPxetJaQRrPlwlY8=
+Received: by mail-qk1-f171.google.com with SMTP id z67so4360929qkb.12;
+        Thu, 03 Oct 2019 18:53:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAWYhBOVbr3BzHbOF/38i/QVFFCMCGkCjs+NW2K3eZqo6YdzXBst
+        gFNrqmW0B6riRUmUqtU6AJaPaGCQnYa9UICZhQ==
+X-Google-Smtp-Source: APXvYqy3/i1ov1ukyfSyJerD8h8tAJrCXAUbX0bSNjR5ZiZsqQGKwdIgHZwn3X3XEQRrLm3086Gb58Gtpxhh9D2C0Ws=
+X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr7829021qkl.152.1570154000420;
+ Thu, 03 Oct 2019 18:53:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-6-robh@kernel.org>
+ <20190930125752.GD12051@infradead.org> <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+ <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com> <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
+In-Reply-To: <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 3 Oct 2019 20:53:09 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
+Message-ID: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to
-Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
-i2c-mux-idle-disconnect is a property of a parent node since it
-pertains to the mux/switch as a whole, so move it there and drop all
-of the concurrences in child nodes.
+On Tue, Oct 1, 2019 at 10:43 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Mon, 2019-09-30 at 16:24 -0500, Rob Herring wrote:
+> > On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> > > > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > > > > -int of_dma_configure(struct device *dev, struct device_node *np, bool
+> > > > > force_dma)
+> > > > > +int of_dma_configure(struct device *dev, struct device_node *parent,
+> > > > > bool
+> > > > > force_dma)
+> > > >
+> > > > This creates a > 80 char line.
+> > > >
+> > > > >  {
+> > > > >     u64 dma_addr, paddr, size = 0;
+> > > > >     int ret;
+> > > > >     bool coherent;
+> > > > >     unsigned long offset;
+> > > > >     const struct iommu_ops *iommu;
+> > > > > +   struct device_node *np;
+> > > > >     u64 mask;
+> > > > >
+> > > > > +   np = dev->of_node;
+> > > > > +   if (!np)
+> > > > > +           np = parent;
+> > > > > +   if (!np)
+> > > > > +           return -ENODEV;
+> > > >
+> > > > I have to say I find the older calling convention simpler to understand.
+> > > > If we want to enforce the invariant I'd rather do that explicitly:
+> > > >
+> > > >       if (dev->of_node && np != dev->of_node)
+> > > >               return -EINVAL;
+> > >
+> > > As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
+> >
+> > This may break PCI too for devices that have a DT node.
+> >
+> > > static int fsl_mc_dma_configure(struct device *dev)
+> > > {
+> > >         struct device *dma_dev = dev;
+> > >
+> > >         while (dev_is_fsl_mc(dma_dev))
+> > >                 dma_dev = dma_dev->parent;
+> > >
+> > >         return of_dma_configure(dev, dma_dev->of_node, 0);
+> > > }
+> > >
+> > > But I think that with this series, given the fact that we now treat the lack
+> > > of
+> > > dma-ranges as a 1:1 mapping instead of an error, we could rewrite the
+> > > function
+> > > like this:
+> >
+> > Now, I'm reconsidering allowing this abuse... It's better if the code
+> > which understands the bus structure in DT for a specific bus passes in
+> > the right thing. Maybe I should go back to Robin's version (below).
+> > OTOH, the existing assumption that 'dma-ranges' was in the immediate
+> > parent was an assumption on the bus structure which maybe doesn't
+> > always apply.
+> >
+> > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > index a45261e21144..6951450bb8f3 100644
+> > --- a/drivers/of/device.c
+> > +++ b/drivers/of/device.c
+> > @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
+> > device_node *parent, bool force_
+> >         u64 mask;
+> >
+> >         np = dev->of_node;
+> > -       if (!np)
+> > -               np = parent;
+> > +       if (np)
+> > +               parent = of_get_dma_parent(np);
+> > +       else
+> > +               np = of_node_get(parent);
+> >         if (!np)
+> >                 return -ENODEV;
+> >
+> > -       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+> > +       ret = of_dma_get_range(parent, &dma_addr, &paddr, &size);
+> > +       of_node_put(parent);
+> >         if (ret < 0) {
+> >                 /*
+> >                  * For legacy reasons, we have to assume some devices need
+>
+> I spent some time thinking about your comments and researching. I came to the
+> realization that both these solutions break the usage in
+> drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
+> 'dev->of_node' and 'parent' exist yet the device receiving the configuration
+> and 'parent' aren't related in any way.
 
-Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceBoard, based on TI AM3874")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Benoît Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
-Cc: linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
+I knew there was some reason I didn't like those virtual DT nodes...
 
-This is purely a drive-by fix, since it concerns the HW I've never
-heard of before. However I was working with PCA9548
-(vf610-zii-scu4-aib is my HW) and looking at various users in the
-kernel, when this code caught my eye. Apologies for the noise if this
-fix is somehow bogus.
+That does seem to be the oddest case. Several of the others are just
+non-DT child platform devices. Perhaps we need a "copy the DMA config
+from another struct device (or parent struct device)" function to
+avoid using a DT function on a non-DT device.
 
-In case that it matters this patch is based on top of 5.4-rc1.
+> IOW we can't just use 'dev->of_node' as a starting point to walk upwards the
+> tree. We always have to respect whatever DT node the bus provided, and start
+> there. This clashes with the current solutions, as they are based on the fact
+> that we can use dev->of_node when present.
 
-Thanks,
-Andrey Smirnov
+Yes, you are right.
 
- arch/arm/boot/dts/am3874-iceboard.dts | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+> My guess at this point, if we're forced to honor that behaviour, is that we
+> have to create a new API for the PCI use case. Something the likes of
+> of_dma_configure_parent().
 
-diff --git a/arch/arm/boot/dts/am3874-iceboard.dts b/arch/arm/boot/dts/am3874-iceboard.dts
-index 883fb85135d4..1b4b2b0500e4 100644
---- a/arch/arm/boot/dts/am3874-iceboard.dts
-+++ b/arch/arm/boot/dts/am3874-iceboard.dts
-@@ -111,13 +111,13 @@
- 		reg = <0x70>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
- 
- 		i2c@0 {
- 			/* FMC A */
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@1 {
-@@ -125,7 +125,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <1>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@2 {
-@@ -133,7 +132,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <2>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@3 {
-@@ -141,7 +139,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <3>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@4 {
-@@ -149,14 +146,12 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <4>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@5 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <5>;
--			i2c-mux-idle-disconnect;
- 
- 			ina230@40 { compatible = "ti,ina230"; reg = <0x40>; shunt-resistor = <5000>; };
- 			ina230@41 { compatible = "ti,ina230"; reg = <0x41>; shunt-resistor = <5000>; };
-@@ -182,14 +177,12 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <6>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@7 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <7>;
--			i2c-mux-idle-disconnect;
- 
- 			u41: pca9575@20 {
- 				compatible = "nxp,pca9575";
--- 
-2.21.0
+I think of_dma_configure just has to work with the device_node of
+either the device or the device parent and dev->of_node is never used
+unless the caller sets it.
 
+Rob
