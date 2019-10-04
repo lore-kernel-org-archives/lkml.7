@@ -2,161 +2,59 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43770C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B6AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22BFE2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2E620873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389689AbfJDP1m (ORCPT
+        id S2389761AbfJDP2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:27:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:48300 "EHLO foss.arm.com"
+        Fri, 4 Oct 2019 11:28:08 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:42354 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389210AbfJDP1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:27:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 345CB1597;
-        Fri,  4 Oct 2019 08:27:41 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E854B3F68E;
-        Fri,  4 Oct 2019 08:27:39 -0700 (PDT)
-Subject: Re: drm_sched with panfrost crash on T820
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        Hillf Danton <hdanton@sina.com>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Erico Nunes <nunes.erico@gmail.com>
-References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
- <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
- <20190930145228.14000-1-hdanton@sina.com>
- <d2888614-8644-7d04-b73b-3ab7c6623e9a@amd.com>
- <7339b7a1-2d1c-4379-89a0-daf8b28d81c8@baylibre.com>
- <94096e4e-0f60-79d1-69b5-c7c3e59a4d78@amd.com>
- <f44204b4-ce5c-b26e-580d-5bb21314be1f@baylibre.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <8c4ecad8-c2e2-eec1-9132-48e126577baa@arm.com>
-Date:   Fri, 4 Oct 2019 16:27:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2389572AbfJDP2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:28:08 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iGPUs-0000oG-E8; Sat, 05 Oct 2019 01:27:59 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 05 Oct 2019 01:27:56 +1000
+Date:   Sat, 5 Oct 2019 01:27:56 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] crypto: talitos - fix hash result for VMAP_STACK
+Message-ID: <20191004152756.GC5148@gondor.apana.org.au>
+References: <20190910060414.C1E3D6B734@pc16032vm.idsi0.si.c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <f44204b4-ce5c-b26e-580d-5bb21314be1f@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910060414.C1E3D6B734@pc16032vm.idsi0.si.c-s.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 16:03, Neil Armstrong wrote:
-> On 04/10/2019 16:53, Grodzovsky, Andrey wrote:
->>
->> On 10/3/19 4:34 AM, Neil Armstrong wrote:
->>> Hi Andrey,
->>>
->>> Le 02/10/2019 à 16:40, Grodzovsky, Andrey a écrit :
->>>> On 9/30/19 10:52 AM, Hillf Danton wrote:
->>>>> On Mon, 30 Sep 2019 11:17:45 +0200 Neil Armstrong wrote:
->>>>>> Did a new run from 5.3:
->>>>>>
->>>>>> [   35.971972] Call trace:
->>>>>> [   35.974391]  drm_sched_increase_karma+0x5c/0xf0
->>>>>> 			ffff000010667f38	FFFF000010667F94
->>>>>> 			drivers/gpu/drm/scheduler/sched_main.c:335
->>>>>>
->>>>>> The crashing line is :
->>>>>>                                   if (bad->s_fence->scheduled.context ==
->>>>>>                                       entity->fence_context) {
->>>>>>
->>>>>> Doesn't seem related to guilty job.
->>>>> Bail out if s_fence is no longer fresh.
->>>>>
->>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>>>> @@ -333,6 +333,10 @@ void drm_sched_increase_karma(struct drm
->>>>>    
->>>>>    			spin_lock(&rq->lock);
->>>>>    			list_for_each_entry_safe(entity, tmp, &rq->entities, list) {
->>>>> +				if (!smp_load_acquire(&bad->s_fence)) {
->>>>> +					spin_unlock(&rq->lock);
->>>>> +					return;
->>>>> +				}
->>>>>    				if (bad->s_fence->scheduled.context ==
->>>>>    				    entity->fence_context) {
->>>>>    					if (atomic_read(&bad->karma) >
->>>>> @@ -543,7 +547,7 @@ EXPORT_SYMBOL(drm_sched_job_init);
->>>>>    void drm_sched_job_cleanup(struct drm_sched_job *job)
->>>>>    {
->>>>>    	dma_fence_put(&job->s_fence->finished);
->>>>> -	job->s_fence = NULL;
->>>>> +	smp_store_release(&job->s_fence, 0);
->>>>>    }
->>>>>    EXPORT_SYMBOL(drm_sched_job_cleanup);
->>> This fixed the problem on the 10 CI runs.
->>>
->>> Neil
->>
->>
->> These are good news but I still fail to see how this fixes the problem - 
->> Hillf, do you mind explaining how you came up with this particular fix - 
->> what was the bug you saw ?
+On Tue, Sep 10, 2019 at 06:04:14AM +0000, Christophe Leroy wrote:
+> When VMAP_STACK is selected, stack cannot be DMA-mapped.
+> Therefore, the hash result has to be DMA-mapped in the request
+> context and copied into areq->result at completion.
 > 
-> As Steven explained, seems the same job was submitted on both HW slots,
-> and then when timeout occurs each thread calls panfrost_job_timedout
-> which leads to drm_sched_stop() on the first call and on the
-> second call the job was already freed.
-> 
-> Steven proposed a working fix, and this one does the same but on
-> the drm_sched side. This one looks cleaner, but panfrost should
-> not call drm_sched_stop() twice for the same job.
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  drivers/crypto/talitos.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-I'm not sure that Hillf's fix is sufficient. In particular in
-drm_sched_increase_karma() I don't understand how the smp_load_acquire()
-call prevents bad->s_fence becoming NULL immediately afterwards (but
-admittedly the window is much smaller). But really this is just a
-Panfrost bug (calling drm_sched_stop() twice on the same job).
-
-The part of my change that I'd welcome feedback on is changing
-cancel_delayed_work() to cancel_delayed_work_sync() in drm_sched_stop()
-when called on different scheduler to the bad job. It's not clear to me
-exactly what the semantics of the function should be, and I haven't
-tested the effect of the change on drivers other than Panfrost.
-
-Steve
-
-> Neil
-> 
->>
->> Andrey
->>
->>>
->>>> Does this change help the problem ? Note that drm_sched_job_cleanup is
->>>> called from scheduler thread which is stopped at all times when work_tdr
->>>> thread is running and anyway the 'bad' job is still in the
->>>> ring_mirror_list while it's being accessed from
->>>> drm_sched_increase_karma so I don't think drm_sched_job_cleanup can be
->>>> called for it BEFORE or while drm_sched_increase_karma is executed.
->>>>
->>>> Andrey
->>>>
->>>>
->>>>>    
->>>>> --
->>>>>
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
