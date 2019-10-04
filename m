@@ -2,107 +2,107 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF5DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9679C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998D0222C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTwXzKKX"
+	by mail.kernel.org (Postfix) with ESMTP id 84BC1222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbfJDTl2 (ORCPT
+        id S1730643AbfJDTmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:41:28 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39434 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfJDTl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:41:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y3so7661746ljj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 12:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lKdiNzyflX1qifC5XC0/R1ENRYDqFG5nqNIeHJGhC9c=;
-        b=KTwXzKKXxYtdYVYAyRPHF5pabKA8YkMM0SRyWPhD/SpHiZ5JiNFPBkCEeMw9/3PqZU
-         /KB8zyT7qfMfNp/S5nfmS2hQTwPdPfhP2er0Oeg2qOINbkqOCFnRkq4bUY3h6Rv2nlfT
-         1ZquD6PxAawVJm0tLCJVEep05bgPNEs2qJo2GQW84SP+GuErKh+d0I/iNYYb9s6sJVA0
-         X11fWhKRQeyVj1Qzx8a0cN+yz4sVpCJUNUMCE1bCrjz1IjvjMCt0UsgxpfvT3w/dWw6o
-         3RwY1eK31O/i6p8w6fbSMuXwfAsOiI2bPO1s7ITVaJFCNpVaBpsGwip2JYRX3fOOKL8H
-         58nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lKdiNzyflX1qifC5XC0/R1ENRYDqFG5nqNIeHJGhC9c=;
-        b=LFbrPtkJ1MF2FObM9SI8JOowQI1CS/yaeGQZDXpgQ9Kt3I10o22sNAmMtv9KxN+96i
-         RFcIuw4nPq3XCrTcOj57DXgN2VnodbKt1x5TLj5RlFODDNYwMruFdyKkytnk8onsxoKu
-         HjwL4jn0kZ6gthGYLAZWJBGV413Mpp5AnOkaWppftOb5BXhGNSZdegwF9+nRBDyu40ll
-         xlH0AL+/z9AzBVSGBlOBqR13GaKc2M7xE4NuECz1rb9HteReP7n5m84o1ofdW6IMQAbR
-         s4jYVYU3IMBB8US/kZbn/i3wG6IEiKFLFkRcQNvJtOL5tdYOfK8Ob07yXWnbfaW/bwES
-         gHqQ==
-X-Gm-Message-State: APjAAAXuuP4H/BteOPxy//qz5uKGZdZ+ZGhSLT7lubwBnmoy4kjTyKar
-        EcXJJGlIWGZVplMdHJMZyIQFlCPqEjmx+5FdmyNbsg==
-X-Google-Smtp-Source: APXvYqxcAjEf5jSw1FQIUN5tjMJ7zHHze2fmxgHbMJDye516yP2RLhmHOWNNK8dMzlSsiqV2U5SsXtnT8VHpBX+Oaxk=
-X-Received: by 2002:a2e:80d3:: with SMTP id r19mr10309621ljg.41.1570218084405;
- Fri, 04 Oct 2019 12:41:24 -0700 (PDT)
+        Fri, 4 Oct 2019 15:42:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50378 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727978AbfJDTmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:42:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AF892AD4F;
+        Fri,  4 Oct 2019 19:42:20 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 12:41:11 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     akpm@linux-foundation.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 05/11] IB/hfi1: convert __mmu_int_rb to half closed
+ intervals
+Message-ID: <20191004194111.2ntsr5kus5dgnnt4@linux-p48b>
+Mail-Followup-To: Michel Lespinasse <walken@google.com>,
+        akpm@linux-foundation.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191003201858.11666-6-dave@stgolabs.net>
+ <20191004115057.GA2371@google.com>
 MIME-Version: 1.0
-References: <20190917124246.11732-1-m.felsch@pengutronix.de> <20190917124246.11732-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190917124246.11732-4-m.felsch@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Oct 2019 21:41:12 +0200
-Message-ID: <CACRpkdYAjj+EuF+iu4fKjt2Cviu8V+U66HnQThawwU58UGRUzQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] regulator: da9062: add voltage selection gpio support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191004115057.GA2371@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 2:43 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Fri, 04 Oct 2019, Michel Lespinasse wrote:
 
-> +       /*
-> +        * We only must ensure that the gpio device is probed before the
-> +        * regulator driver so no need to store the reference global. Luckily
-> +        * devm_* releases the gpio upon a unbound action.
-> +        */
-> +       gpi = devm_gpiod_get_from_of_node(cfg->dev, np, prop, 0, GPIOD_IN |
-> +                                         GPIOD_FLAGS_BIT_NONEXCLUSIVE, label);
+>On Thu, Oct 03, 2019 at 01:18:52PM -0700, Davidlohr Bueso wrote:
+>> diff --git a/drivers/infiniband/hw/hfi1/mmu_rb.c b/drivers/infiniband/hw/hfi1/mmu_rb.c
+>> index 14d2a90964c3..fb6382b2d44e 100644
+>> --- a/drivers/infiniband/hw/hfi1/mmu_rb.c
+>> +++ b/drivers/infiniband/hw/hfi1/mmu_rb.c
+>> @@ -47,7 +47,7 @@
+>>  #include <linux/list.h>
+>>  #include <linux/rculist.h>
+>>  #include <linux/mmu_notifier.h>
+>> -#include <linux/interval_tree_generic.h>
+>> +#include <linux/interval_tree_gen.h>
+>>
+>>  #include "mmu_rb.h"
+>>  #include "trace.h"
+>> @@ -89,7 +89,7 @@ static unsigned long mmu_node_start(struct mmu_rb_node *node)
+>>
+>>  static unsigned long mmu_node_last(struct mmu_rb_node *node)
+>>  {
+>> -	return PAGE_ALIGN(node->addr + node->len) - 1;
+>> +	return PAGE_ALIGN(node->addr + node->len);
+>>  }
+>
+>May as well rename the function mmu_node_end(). I was worried if it
+>was used anywhere else, but it turned out it's only used when defining
+>the interval tree.
 
-Do you really need the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag here?
-I don't think so, but describe what usecase you have that warrants this
-being claimed twice. Normally that is just needed when you let the
-regulator core handle enablement of a regulator over GPIO, i.e.
-ena_gpiod in struct regulator_config.
+Right.
 
-> +       /* We need the local number */
-> +       nr = da9062_gpio_get_hwgpio(gpi);
+In general I tried not to rename everything to end because I wanted to
+avoid bloating the diffstat, albeit having naming discrepancies within
+the code (which isn't new either fwiw).
 
-If you really need this we should add a public API to gpiolib and not
-create custom APIs.
+>
+>I would also suggest moving this function (as well as mmu_node_first)
+>right before its use, rather than just after, which would allow you to
+>also remove the function prototype a few lines earlier.
 
-Just make a patch adding
+Indeed, but again I don't want to unnecessarily grow the patch. I have
+several notes to come back to once/if this series is settled.
 
-int gpiod_to_offset(struct gpio_desc *d);
+>
+>Looks good to me otherwise.
+>
+>Reviewed-by: Michel Lespinasse <walken@google.com>
 
-to the public gpiolib API in include/linux/gpio/consumer.h
-
-and add the code in gpiolib.c to do this trick.
-
-Yours,
-Linus Walleij
+Thanks,
+Davidlohr
