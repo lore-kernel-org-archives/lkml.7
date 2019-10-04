@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6FCC32792
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9581C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B9820865
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0CE208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktjoXLJh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLpQ7mt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732729AbfJDBUu (ORCPT
+        id S1732769AbfJDBUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 21:20:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46744 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732433AbfJDBUq (ORCPT
+        Thu, 3 Oct 2019 21:20:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46752 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732698AbfJDBUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 21:20:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so4888204wrv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 18:20:45 -0700 (PDT)
+        Thu, 3 Oct 2019 21:20:50 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o18so4888376wrv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 18:20:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pZK0w2b4erKd/e8ROSamoBX4PuMHp18vIxATYiudH00=;
-        b=ktjoXLJh3whler9EKApcW1gsz2MSKZzvoGKH/tAZa72yLxqF3z/rOD/4rg562y/oZT
-         JgdjFCmzZh60hL9PKvp0LX0HNpXaSGbJifteFnKvdm++55HB1g5qXyHQRF2deyQ6JfPj
-         MNRAdfaBzdu02TjsKNa4trY/aJmokBTct5PB3axt+s2fvwp3k72iK9QsFqBeAg7PFC0i
-         U78lNhc6oPkiFtYOuj+26QUSj9J03ABBds3BoJoLFolx29WkeuRYJqgwjf62FXlCauqA
-         g5SpyHnue5Qdz7fY3QsPR57fm+zI3iuDMPGCaF6zx07p5jkD57odqji/RXWLh2aUdq3I
-         ZUOg==
+        bh=nUAonWj+crtkdXG/WWKIValoecqHVHH6udCzw0FtFkA=;
+        b=vLpQ7mt3ThQb0VSxXv49DD4KXlBDUNrlQmJp0dM20xHrM7td1QN4D7E3RNX0OHcRlu
+         8V37WKkj94esobZIItKhQneuIdxzi7hufucFjV0REHpXBKZtK0uGqClaCBwXTNZoZta8
+         uhJfuyA/alk6gF5CzPBB4KFu04OdtcBs8d098NlgITGIxeclz6dz2LwPgX5243ogjbsG
+         T4/OeqMAzLf6x2kqOcpdLjSAXcVHWmWOt//XIZjfPauEzvjg7RLVIC2hVvfNP5QSxs/j
+         B1j2tc04vGHjdpZvxe9J/ThuInnQB4gkSwxdiOSI+ZCHGPC7tbawnJAZ1dI7O2IiMmbU
+         46pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pZK0w2b4erKd/e8ROSamoBX4PuMHp18vIxATYiudH00=;
-        b=W56DgXOwWNqEeH8PenkeVQg13DoS+0lIazHBH7+UBJk/abOL158w9S5jNDs2EpDKKe
-         Or9MtK6+DAEoPyjw27zPEmABgMvXTZsShkFb+ebQlZZlgOWI1SiUQjSQV/iMiz+53mAN
-         PIEZpAOfiQyLZeFNji3SLjm8N7X8gkfL32LsvK3CQpPqFWCKthg2L9pdqekzPMwL/npv
-         q/M1SGCuvvM9J6BTUw56acddUaIqzyOIGWcXbw6evjhTZYzicXWVLUuLBLy7AjgcGy/f
-         WQckRKWj6R6j94XtDxlKrUPX2JZBQ8siwnthjR1CN9UiUE8xNELbe0xR/4Wh9nu+wnst
-         jb/g==
-X-Gm-Message-State: APjAAAV2KinLqvQuFiPI+ajYdCv4m2A4/Hkart8Ot9vZ9ghmtPDt3Yb0
-        kPbgzblrf+eWz9RxXc8tk169FnGOG61WiA==
-X-Google-Smtp-Source: APXvYqz7ZTzM84THnELxFgDZJVEU+bOPCxEcvZVSr8zcKmuV7UxpzdrbdI/tU1+HR/CW8X5YZadoGg==
-X-Received: by 2002:adf:ee05:: with SMTP id y5mr8846845wrn.291.1570152044620;
-        Thu, 03 Oct 2019 18:20:44 -0700 (PDT)
+        bh=nUAonWj+crtkdXG/WWKIValoecqHVHH6udCzw0FtFkA=;
+        b=W3L6wW+b8cD/XRO0JNbjVH6GOBszZrvOtC3K4/aT45jIv7d1NvPTVox202YAG770k9
+         8yAit2whaw3aOX5TIa5lQTt9c24z+4/VsXL2SpNfyvlsUE5C/DrDk050cTdopExA6W1d
+         n2LF8rw9ij+AuSFE2rt5HXq9hvXTctzktbc+PQoHCHTCDqbBD96r3eOSuDJAA2fBIBpt
+         1ikHJFp3rHQ6ZMFKKifxsx35/IKGu62rMjxEeS6NxSS9xC6ZF7IvDP7ROi3nNTv3BtZK
+         kvUWjfMH0bgPsnYUgohyh2FQ4vixMUUY7UIE46auW7leV/HC0Mtomuc/ki3Cv5aLUsei
+         55HA==
+X-Gm-Message-State: APjAAAWl49HWQ9dQHyzuXY+hqMf7PzgpMtbltVrrQnF0VE7NXa+ANAJq
+        JL/fpSnNY6ZIjU7zG8ZLtZAT4NB+dANqYQ==
+X-Google-Smtp-Source: APXvYqzmE/7+G/TNlgdVxbF34gURdIGzZm+D6rwY1er+oIdfx5HC05wpQ+Q2xajsIvx0B2hYjNEpXw==
+X-Received: by 2002:adf:eec5:: with SMTP id a5mr5127263wrp.191.1570152048538;
+        Thu, 03 Oct 2019 18:20:48 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id a4sm4097404wmm.10.2019.10.03.18.20.41
+        by smtp.gmail.com with ESMTPSA id a4sm4097404wmm.10.2019.10.03.18.20.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 18:20:44 -0700 (PDT)
+        Thu, 03 Oct 2019 18:20:47 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [RESEND PATCH v3 5/9] hacking: Move Oops into 'Lockups and Hangs'
-Date:   Fri,  4 Oct 2019 09:20:06 +0800
-Message-Id: <20191004012010.11287-6-changbin.du@gmail.com>
+Subject: [RESEND PATCH v3 6/9] hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
+Date:   Fri,  4 Oct 2019 09:20:07 +0800
+Message-Id: <20191004012010.11287-7-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191004012010.11287-1-changbin.du@gmail.com>
 References: <20191004012010.11287-1-changbin.du@gmail.com>
@@ -76,91 +76,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are similar options so place them together.
+They are both memory debug options to debug kernel stack issues.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Acked-by: Randy Dunlap <rdunlap@infradead.org>
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 ---
- lib/Kconfig.debug | 58 +++++++++++++++++++++++------------------------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+ lib/Kconfig.debug | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9911e5c6eafa..389876ee49d8 100644
+index 389876ee49d8..2cf52b3b5726 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
-@@ -775,7 +775,35 @@ config DEBUG_SHIRQ
- 	  Drivers ought to be able to handle interrupts coming in at those
- 	  points; some don't and need to be caught.
+@@ -634,6 +634,18 @@ config DEBUG_STACK_USAGE
  
--menu "Debug Lockups and Hangs"
-+menu "Debug Oops, Lockups and Hangs"
-+
-+config PANIC_ON_OOPS
-+	bool "Panic on Oops"
+ 	  This option will slow down process creation somewhat.
+ 
++config SCHED_STACK_END_CHECK
++	bool "Detect stack corruption on calls to schedule()"
++	depends on DEBUG_KERNEL
++	default n
 +	help
-+	  Say Y here to enable the kernel to panic when it oopses. This
-+	  has the same effect as setting oops=panic on the kernel command
-+	  line.
++	  This option checks for a stack overrun on calls to schedule().
++	  If the stack end location is found to be over written always panic as
++	  the content of the corrupted region can no longer be trusted.
++	  This is to ensure no erroneous behaviour occurs which could result in
++	  data corruption or a sporadic crash at a later stage once the region
++	  is examined. The runtime overhead introduced is minimal.
 +
-+	  This feature is useful to ensure that the kernel does not do
-+	  anything erroneous after an oops which could result in data
-+	  corruption or other issues.
-+
-+	  Say N if unsure.
-+
-+config PANIC_ON_OOPS_VALUE
-+	int
-+	range 0 1
-+	default 0 if !PANIC_ON_OOPS
-+	default 1 if PANIC_ON_OOPS
-+
-+config PANIC_TIMEOUT
-+	int "panic timeout"
-+	default 0
-+	help
-+	  Set the timeout value (in seconds) until a reboot occurs when the
-+	  the kernel panics. If n = 0, then we wait forever. A timeout
-+	  value n > 0 will wait n seconds before rebooting, while a timeout
-+	  value n < 0 will reboot immediately.
+ config DEBUG_VM
+ 	bool "Debug VM"
+ 	depends on DEBUG_KERNEL
+@@ -987,18 +999,6 @@ config SCHEDSTATS
+ 	  application, you can say N to avoid the very slight overhead
+ 	  this adds.
  
- config LOCKUP_DETECTOR
- 	bool
-@@ -933,34 +961,6 @@ config WQ_WATCHDOG
- 
- endmenu # "Debug lockups and hangs"
- 
--config PANIC_ON_OOPS
--	bool "Panic on Oops"
+-config SCHED_STACK_END_CHECK
+-	bool "Detect stack corruption on calls to schedule()"
+-	depends on DEBUG_KERNEL
+-	default n
 -	help
--	  Say Y here to enable the kernel to panic when it oopses. This
--	  has the same effect as setting oops=panic on the kernel command
--	  line.
+-	  This option checks for a stack overrun on calls to schedule().
+-	  If the stack end location is found to be over written always panic as
+-	  the content of the corrupted region can no longer be trusted.
+-	  This is to ensure no erroneous behaviour occurs which could result in
+-	  data corruption or a sporadic crash at a later stage once the region
+-	  is examined. The runtime overhead introduced is minimal.
 -
--	  This feature is useful to ensure that the kernel does not do
--	  anything erroneous after an oops which could result in data
--	  corruption or other issues.
--
--	  Say N if unsure.
--
--config PANIC_ON_OOPS_VALUE
--	int
--	range 0 1
--	default 0 if !PANIC_ON_OOPS
--	default 1 if PANIC_ON_OOPS
--
--config PANIC_TIMEOUT
--	int "panic timeout"
--	default 0
--	help
--	  Set the timeout value (in seconds) until a reboot occurs when the
--	  the kernel panics. If n = 0, then we wait forever. A timeout
--	  value n > 0 will wait n seconds before rebooting, while a timeout
--	  value n < 0 will reboot immediately.
--
- config SCHED_DEBUG
- 	bool "Collect scheduler debugging info"
- 	depends on DEBUG_KERNEL && PROC_FS
+ config DEBUG_TIMEKEEPING
+ 	bool "Enable extra timekeeping sanity checking"
+ 	help
 -- 
 2.20.1
 
