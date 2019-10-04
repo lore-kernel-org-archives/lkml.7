@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6151CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36C2C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B5920700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AB5215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yu3JokhA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PsT/Hu4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389237AbfJDOiy (ORCPT
+        id S2389276AbfJDOjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:38:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33051 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389074AbfJDOiy (ORCPT
+        Fri, 4 Oct 2019 10:39:04 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45914 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389259AbfJDOjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:38:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r17so9770570wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:38:52 -0700 (PDT)
+        Fri, 4 Oct 2019 10:39:04 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r5so7475630wrm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=YJvih0AsR33ViZwBb015+RycjOZ9btNkziiHqgTe20E=;
-        b=Yu3JokhAmryrtzowEz6R3vPkgY4HM3KIe667y0r7YQ4WcVmxDn1Sty5y59LuwrVZzc
-         m52B+kRGFegj76+8YKRGb5o/DEcFlBpf+7D4ibju5O55VReLIZvH9zcJY4YXm+6GAS60
-         9kOTmyKpxxXU+NCumlcbF75BHw3QTClcKtMIXgWN9IFrgQ0F+3Pke17pO0WuqRkgs1aJ
-         CEs/JNYIw4K0FfBn/hgjXUdMs8wViWxrXED4l5RRLIXuL0mCG7PCoJqfTUch5PUFr1w5
-         wMjWLf9SdLaije47D8IuJM07zmvo4t3afOctbaOOYe/gfmHIDHKtj5nRfYzc2A+KmhcQ
-         ecVw==
+        bh=YSJx2AVpZIhH/SmIkBCouxV6Yw+6RdyUnfQbUQg9xHo=;
+        b=PsT/Hu4bN1kmMpoS7Yly/JpXitObRi+4sbIGKFaai/teDTC9OsWJHnN90FDzXMmGgu
+         vDzmp+y7NDwNf0Su4i1PgkqpGAWXTLkHU2uXngFzosjFEGJm9iyWqkLHpebJx31+UEAJ
+         0ilVeTNjLXs6Qq7bLksNbUK5Jq3BV7phYGxtv7wur3XKDa13A531Xm8I7saFpPKrTP6A
+         bfI2eLNE5whWj5eKAbahdxGsKH6Z8jk7GpBRJg2p3GUO5HCtk9JODApjwH6OxufpB4Ps
+         pXQcjPf66zltB8NNV25hQh2tnppa4/upLtnyfWVk0qsDEe5ejnPtflbSph2LNW9wX0sP
+         q+Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=YJvih0AsR33ViZwBb015+RycjOZ9btNkziiHqgTe20E=;
-        b=cB5w5mroRZn5P2Jc1amku0NO3u6SxhJ+lLuBn+Th6NLe472jUNjRfuORXx/lL8ffUS
-         HfBk/+esh03yrF/S5zfO/Xtpn5hWhN/YHrxgbNInLQo7oQzg6ryVDobt2//MPXo0CFZ2
-         1MqdbQHKCqgz55dlImjtBOtkocIR21twOVLXIFitrTdFaLFfXECy5INTS/5i+D/MNap+
-         EAabisxEfB+0Uy0gqWrwzAaeKRWptZol9ibCMLWAke9sNQzf76RFXjqyaKyJL71B2oa3
-         VrZiBnA93LV2QAqtC1hex8v2LetKdmgyW7DhBqwbtTIpiSnr+WIJu93RuxHXaYhb4pxO
-         vH0g==
-X-Gm-Message-State: APjAAAX1aaNBscUQb0oTdYKZj7Qsl9V63TDV9U3cnnoL8lEUraNPRfet
-        w8BPngN8A+JmOUqH82eEfYKhrw==
-X-Google-Smtp-Source: APXvYqxaIbrB05oPH5diNroquYYUcFG0Ky2cGHUBNsZqv03BqdPWyrc1uWBrIKxtW+c3tbw7CrOe/g==
-X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr10801719wmi.106.1570199932083;
-        Fri, 04 Oct 2019 07:38:52 -0700 (PDT)
+        bh=YSJx2AVpZIhH/SmIkBCouxV6Yw+6RdyUnfQbUQg9xHo=;
+        b=karBMzqWpTvM1lMyaOGO/+VvmSaFfILjiCeJGJHFTd0tuzky/qoPJ/GcIm2di1UcpQ
+         et0upPycqCjMYRVPjDY1pA4HNnX/8AmKmYh4HPB4FiwYeN5E9HQR9e2MdaP+aRjcovNI
+         GY66dKo3S3DzkfYuP9vMUtILrp01jIJYiZSMygHtl7GiSV5AHmDmk2GuAkdAOQE5EuIj
+         9nHCYmWQYtwfZ1C4fUuwW1eKgn265lfZKcGHNhh92vR9SLKhDVRnP6iKE8CjZFQrsZTG
+         T3waZFevgfpoVRI9/uECf4BuNS2ARO0w0IFKr6m8j3Vv9hE+cvI7poAL3GKQ8+X+t5JR
+         VMzQ==
+X-Gm-Message-State: APjAAAWxOXPM/e6fwcx82ZyNXs0WNjCBoHPzLyRsPBdDd1xkH4OLnMU8
+        Vw3GTAFJ1AG9Ttwwl5C/9Nubwg==
+X-Google-Smtp-Source: APXvYqzWsK19yzkIkp4GiYmqNcrSqqri+QClnftj1qCLCnM7D7Z/q2g2MF9SygafVBX8aUWGmDkoOg==
+X-Received: by 2002:a5d:48d0:: with SMTP id p16mr2445899wrs.83.1570199942428;
+        Fri, 04 Oct 2019 07:39:02 -0700 (PDT)
 Received: from dell ([2.27.167.122])
-        by smtp.gmail.com with ESMTPSA id o19sm10233542wmh.27.2019.10.04.07.38.51
+        by smtp.gmail.com with ESMTPSA id o4sm1065292wre.91.2019.10.04.07.39.01
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 07:38:51 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 15:38:50 +0100
+        Fri, 04 Oct 2019 07:39:01 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 15:39:00 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
 Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
         mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com,
         linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v7 4/5] dt-bindings: backlight: Add led-backlight binding
-Message-ID: <20191004143850.GN18429@dell>
+Subject: Re: [PATCH v7 5/5] backlight: add led-backlight driver
+Message-ID: <20191004143900.GO18429@dell>
 References: <20190918145730.22805-1-jjhiblot@ti.com>
- <20190918145730.22805-5-jjhiblot@ti.com>
+ <20190918145730.22805-6-jjhiblot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918145730.22805-5-jjhiblot@ti.com>
+In-Reply-To: <20190918145730.22805-6-jjhiblot@ti.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -82,14 +82,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 18 Sep 2019, Jean-Jacques Hiblot wrote:
 
-> Add DT binding for led-backlight.
+> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > 
+> This patch adds a led-backlight driver (led_bl), which is similar to
+> pwm_bl except the driver uses a LED class driver to adjust the
+> brightness in the HW. Multiple LEDs can be used for a single backlight.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
->  .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>  drivers/video/backlight/Kconfig  |   7 +
+>  drivers/video/backlight/Makefile |   1 +
+>  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++
+>  3 files changed, 268 insertions(+)
+>  create mode 100644 drivers/video/backlight/led_bl.c
 
 Applied, thanks.
 
