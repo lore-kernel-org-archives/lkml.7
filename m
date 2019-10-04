@@ -2,182 +2,187 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6400DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5852EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40BDE215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C906215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+iGnGe4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jSQrChLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfJDSNH (ORCPT
+        id S2388496AbfJDSOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:13:07 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44668 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfJDSNH (ORCPT
+        Fri, 4 Oct 2019 14:14:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34198 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387447AbfJDSOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:13:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id w12so15436999iol.11;
-        Fri, 04 Oct 2019 11:13:06 -0700 (PDT)
+        Fri, 4 Oct 2019 14:14:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y35so4218325pgl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v8UsR0kNBiv7TX5BwyKWmoMM1TMa1sl5V/BHTRSzPsE=;
-        b=P+iGnGe4QIyf7I+F1pUZZO0Kppw6jE6Vmy5VOoqHcsA6AWDz8YcGV3K6NxBfefAU0T
-         04tweKxfpC5BZExMV/aSOPmTkQ8kiRcQTIbwHdltftyXJ9glKPgc8XOtoCz1eNwTtuQ2
-         JP6+ZBWCsTnokEvApQIl2o4ZdkR1VDZjJAMtIy1aOOIYxaFhG6LYhZFzcK+R1a5u5Sap
-         6qXwMJfpg7G1/uMbSGGdyA4cKu3vsOwFIcCcrUkK+mcsfdO9b9JBsIo2h95+1gQCrTiJ
-         92HSrGiIGJ0kqcQCqnxxfhW2Unyps/KZABW2W0Ykmgfjo7ZSDj7K7Ow8PGjPfHnCi2i5
-         deZw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=0IDOtQgHmElD8p5B2w+YjcptWdtlf5vVNP5fCQ18Cjw=;
+        b=jSQrChLhcmVVMxN2vgpR1Q4UdZbgBNU+3E5G58XTneDBys4wlfUOE/GPLXVR6uhnZL
+         C1ui8JAyehI+IdvfyllS9IV1T4aFagv+PAyy04d/FQwIS16exf2GNN1UZFS5Jb3XLE6c
+         mrYnztcJZlAuKjskuh33FNmaFjfevzrjGaS1s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v8UsR0kNBiv7TX5BwyKWmoMM1TMa1sl5V/BHTRSzPsE=;
-        b=aMW6yksH5vBC6/GmLDuBdgTH2q6RWNgR0SDvxKINVlR+QIfyzQDcxsszXnd1GmmnFd
-         5eZCjj3wSqL9YYPOMq/odTkjurKr2jJw3nJwnNC7xQIviehpwQsWbPcAUwcGOCON0K5O
-         IFATXkWXkjTLzBrV6n4QrM+9QbdEFxzSI/7V5wTyRl+kmylOf920NOkTqNqCLwOxTbkm
-         ukGUzA9A0EZ47zpyN22H5gxhktJ6ucPfMpVIf0jIQlFdQCF2qkhHRwWcjXJzXFTxNU9W
-         8krddZylhYW1framyxZiNLKQ3QX0YnEHyOQtiyvT9irXHAZwNFeUePtesCPpKPZ7lbjV
-         yCVg==
-X-Gm-Message-State: APjAAAVrp/lMBNL0uyY6JhOnNKDn9XYnFBdVRqca7XOPHq32yZwbZ8i0
-        E53pBEZJSbfWE5dPMXHP4J8O1VXN+Cwa62boAUE=
-X-Google-Smtp-Source: APXvYqzZcW+suOjUfS0TSiHIIW0vthhI/MVBQ2EcnpCIQ2562V4H7KFuoAtjJUn1UieH6X9UaAEDmm/kqtdk8Sl0rZM=
-X-Received: by 2002:a92:8702:: with SMTP id m2mr17674771ild.294.1570212786091;
- Fri, 04 Oct 2019 11:13:06 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=0IDOtQgHmElD8p5B2w+YjcptWdtlf5vVNP5fCQ18Cjw=;
+        b=n/5ICK1t5SxVn2agWEwAvKxrONMb6/42c+c9sdX2MLg07RK6lLGsQFNEbGBLbxS29e
+         MPIxwxig7q1usaBywedQ0hFluC+0NoOeEThkM1WYQa0Lr8y50mPrQ3LSFSQW0vOv8GF7
+         VGal3LDIXpAjXNU0keGVq1wSPRvMfbdyj76sybXOzTL+dXQOAjrIWzBS0l3Pn/i4aw3g
+         4Fnr9mkPFKHGwm/Lgr6WJBuQ78ps8zNdcmemuqkvtpCCPhaHdyJ7C20dhrjxbd4hM9dp
+         ka6EXET1KN1O6qOcnqbb0ueWvR8GqmU8aUxVcKNGf8rl6WdPZYTW6xrGXBZ2vXZQndii
+         CYNQ==
+X-Gm-Message-State: APjAAAWe2BorOUPyXcxXIwT1BPZ5cHWfvNJpne94hzvVl4JnFydrhsNv
+        I30X3kiNzgyY23X3ioCEtpeHyg==
+X-Google-Smtp-Source: APXvYqzXmG1bMyrx+EgqINn91jy469r0K12/xfrx1x9Ey0oZZUEtP/hNvIYFYGlkN+MklxIFvSurxQ==
+X-Received: by 2002:a62:62c6:: with SMTP id w189mr18679300pfb.235.1570212858215;
+        Fri, 04 Oct 2019 11:14:18 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id i6sm10089700pfq.20.2019.10.04.11.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 11:14:17 -0700 (PDT)
+Message-ID: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190923050823.GL14368@unreal> <20190923155300.20407-1-navid.emamdoost@gmail.com>
- <20191001135430.GA27086@ziepe.ca> <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
- <20191003102510.GA10875@chelsio.com>
-In-Reply-To: <20191003102510.GA10875@chelsio.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Fri, 4 Oct 2019 13:12:55 -0500
-Message-ID: <CAEkB2ERA_Tn_yYz=ZQ58rF6sLGopxFghuTFBD=pWwcPwjLjTmw@mail.gmail.com>
-Subject: Re: [PATCH v2] RDMA: release allocated skb
-To:     Potnuri Bharat Teja <bharat@chelsio.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <91d09847-31ad-e238-d84d-f7e0e21c6ef1@codeaurora.org>
+References: <20190925054133.206992-1-swboyd@chromium.org> <20190925055933.GA2810@tuxbook-pro> <5d8b6b8b.1c69fb81.14b36.c053@mx.google.com> <91d09847-31ad-e238-d84d-f7e0e21c6ef1@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Dai <daidavid1@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>
+Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and reduce DT binding
+User-Agent: alot/0.8.1
+Date:   Fri, 04 Oct 2019 11:14:16 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leon and Potnuri,
+Quoting David Dai (2019-09-27 10:16:07)
+>=20
+> On 9/25/2019 6:28 AM, Stephen Boyd wrote:
+> > Quoting Bjorn Andersson (2019-09-24 22:59:33)
+> >> On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
+> >>
+> >>> The DT binding could also be simplified somewhat. Currently a path ne=
+eds
+> >>> to be specified in DT for each and every use case that is possible fo=
+r a
+> >>> device to want. Typically the path is to memory, which looks to be
+> >>> reserved for in the binding with the "dma-mem" named path, but someti=
+mes
+> >>> the path is from a device to the CPU or more generically from a device
+> >>> to another device which could be a CPU, cache, DMA master, or another
+> >>> device if some sort of DMA to DMA scenario is happening. Let's remove
+> >>> the pair part of the binding so that we just list out a device's
+> >>> possible endpoints on the bus or busses that it's connected to.
+> >>>
+> >>> If the kernel wants to figure out what the path is to memory or the C=
+PU
+> >>> or a cache or something else it should be able to do that by finding =
+the
+> >>> node for the "destination" endpoint, extracting that node's
+> >>> "interconnects" property, and deriving the path in software. For
+> >>> example, we shouldn't need to write out each use case path by path in=
+ DT
+> >>> for each endpoint node that wants to set a bandwidth to memory. We
+> >>> should just be able to indicate what endpoint(s) a device sits on bas=
+ed
+> >>> on the interconnect provider in the system and then walk the various
+> >>> interconnects to find the path from that source endpoint to the
+> >>> destination endpoint.
+> >>>
+> >> But doesn't this implies that the other end of the path is always some
+> >> specific node, e.g. DDR? With a single node how would you describe
+> >> CPU->LLCC or GPU->OCIMEM?
+> > By only specifying the endpoint the device uses it describes what the
+> > hardware block interfaces with. It doesn't imply that there's only one
+> > other end of the path. It implies that the paths should be discoverable
+> > by walking the interconnect graph given some source device node and
+> > target device node. In most cases the target device node will be a DDR
+> > controller node, but sometimes it could be LLCC or OCIMEM. We may need
+> > to add some sort of "get the DDR controller device" API or work it into
+> > the interconnect API somehow to indicate what target endpoint is
+> > desired. By not listing all those paths in DT we gain flexibility to add
+> > more paths later on without having to update or tweak DT to describe
+> > more paths/routes through the interconnect.
+>=20
+>=20
+> I'm unsure that using the target device node or target source device is=20
+> the correct way to represent the constraints that the consumers apply on =
 
-Based on the following call sequence, skb is passed along to uld_send().
-c4iw_ref_send_wait
-        c4iw_ofld_send
-                cxgb4_ofld_send
-                        t4_ofld_send
-                                uld_send
+> the interconnects. While it's true the traffic is intended for the=20
+> targeted devices, the constraints(QoS or BW) are for the interconnect or =
 
-In uld_send() skb is consumed (released or added to queue) via
-ctrl_xmit() or ofld_xmit(), which assures no leak is happening. But in
-the condition check for txq_info the return value is NET_XMIT_DROP
-which means the skb should be released. Here I believe skb is being
-leaked:
+> specifically the paths that span across the ports of various=20
+> interconnects(NoC devices in this case). I think having both src and dst =
 
-        txq_info = adap->sge.uld_txq_info[tx_uld_type];
-        if (unlikely(!txq_info)) {
-                WARN_ON(true);
-                return NET_XMIT_DROP;
-        }
+> properties is still the simplest way to achieve the flexibility that we=20
+> require to set the constraints for ports(that may not have a target=20
+> device defined in DT or exists as some intermediate port across multiple =
 
-Please let me know what you think, then I can go ahead and fix the patch.
+> interconnects).
+>=20
 
-Thank you,
-Navid.
+The need for paths described in DT may make sense for certain cases but
+that seems to be the minority. My guess is that maybe an OPP binding
+would need to describe the path to apply the bandwidth to. Otherwise I
+don't see what the need is for. Maybe you can list out more scenarios?
 
-On Thu, Oct 3, 2019 at 5:25 AM Potnuri Bharat Teja <bharat@chelsio.com> wrote:
->
-> On Thursday, October 10/03/19, 2019 at 03:05:06 +0530, Navid Emamdoost wrote:
-> > Hi Jason,
-> >
-> > Thanks for the feedback. Yes, you are right if the skb release is
-> > moved under err4 label it will cause a double free as
-> > c4iw_ref_send_wait will release skb in case of error.
-> > So, in order to avoid leaking skb in case of c4iw_bar2_addrs failure,
-> > the kfree(skb) could be placed under the error check like the way
-> > patch v1 did. Do you see any mistake in version 1?
-> > https://lore.kernel.org/patchwork/patch/1128510/
->
-> Hi Navid,
-> Both the revisions of the patch are invalid. skb is freed in both the cases of
-> failure and success through c4iw_ofld_send().
-> case success: in ctrl_xmit()
-> case failure: in c4iw_ofld_send()
->
-> Thanks,
-> Bharat.
->
->
-> >
-> >
-> > Thanks,
-> > Navid
-> >
-> > On Tue, Oct 1, 2019 at 8:54 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Mon, Sep 23, 2019 at 10:52:59AM -0500, Navid Emamdoost wrote:
-> > > > In create_cq, the allocated skb buffer needs to be released on error
-> > > > path.
-> > > > Moved the kfree_skb(skb) under err4 label.
-> > >
-> > > This didn't move anything
-> > >
-> > > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > > >  drivers/infiniband/hw/cxgb4/cq.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
-> > > > index b1bb61c65f4f..1886c1af10bc 100644
-> > > > +++ b/drivers/infiniband/hw/cxgb4/cq.c
-> > > > @@ -173,6 +173,7 @@ static int create_cq(struct c4iw_rdev *rdev, struct t4_cq *cq,
-> > > >  err4:
-> > > >       dma_free_coherent(&rdev->lldi.pdev->dev, cq->memsize, cq->queue,
-> > > >                         dma_unmap_addr(cq, mapping));
-> > > > +     kfree_skb(skb);
-> > > >  err3:
-> > > >       kfree(cq->sw_queue);
-> > > >  err2:
-> > >
-> > > This looks wrong to me:
-> > >
-> > > int c4iw_ofld_send(struct c4iw_rdev *rdev, struct sk_buff *skb)
-> > > {
-> > >         int     error = 0;
-> > >
-> > >         if (c4iw_fatal_error(rdev)) {
-> > >                 kfree_skb(skb);
-> > >                 pr_err("%s - device in error state - dropping\n", __func__);
-> > >                 return -EIO;
-> > >         }
-> > >         error = cxgb4_ofld_send(rdev->lldi.ports[0], skb);
-> > >         if (error < 0)
-> > >                 kfree_skb(skb);
-> > >         return error < 0 ? error : 0;
-> > > }
-> > >
-> > > Jason
-> >
-> >
-> >
-> > --
-> > Navid.
+Either way, the binding has been designed to cover all the possibilities
+by just saying that we have to describe at least two points for an
+'interconnect'. It is a path based binding. I'd rather see us have an
+endpoint based binding with the option to fallback to paths if we need
+to constrain something. Maybe this can be a new property that is used
+the majority of the time?
 
+ gpu@f00 {
+   interconnect-endpoints =3D <&icc GPU_SLAVE_PORT>, <&icc GPU_MASTER_PORT0=
+>, <&icc GPU_MASTER_PORT1>;
+   interconnect-endpoint-names =3D "slave", "master0", "master1";
+ };
 
+(Or we can invert it and make interconnect-paths be non-standard)
 
--- 
-Navid.
+The property would describe what's going to this device and how it's
+integrated into the SoC. This is similar to how we describe what port is
+connected to a device with the of graph binding or how we only list the
+clk or regulator that goes to a device and not the whole path to the
+root of the respective tree.
+
+There can be a driver API that gets these port numbers out and
+constructs a path to another struct device or struct device_node. I
+imagine that 90% of the time a driver is going to request some bandwidth
+from their master port (or ports) to the DDR controller. We could either
+make the DDR controller a device that can be globally acquired or
+integrate it deeply into the API to the point that it looks for a DDR
+controller somewhere or relies on interconnect providers to tell the
+framework about the controller.
+
+TL;DR is that I don't want to have to specify paths in each and every
+node to say that some port on this device here is connected to some port
+on the DDR controller and that we want to adjust the bandwidth or QoS
+across this path. I'd like to describe a device "hermetically" by
+listing out the ports the device has. Then we can rely on the OS to
+figure out what paths to construct and change. If we need to constrain
+or tweak those paths then we can do that with the existing interconnects
+binding, but let's worry about that when we get there.
+
