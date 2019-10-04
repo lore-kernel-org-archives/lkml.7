@@ -2,142 +2,129 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A54C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02136C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0580C20862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB24E21D71
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Ji0Vq67R";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Mj9KMh+Z"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="byb19n7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbfJDMAE (ORCPT
+        id S1730170AbfJDMC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:00:04 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38261 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728219AbfJDMAD (ORCPT
+        Fri, 4 Oct 2019 08:02:56 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23172 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726002AbfJDMCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:00:03 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id E079C2134B;
-        Fri,  4 Oct 2019 07:59:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 04 Oct 2019 07:59:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=frl/vm4h86LNbeoJ/taoBPTtQ1g
-        C7KmqOyW9f93NFGg=; b=Ji0Vq67Rh4PJLGXNIzPkvLzWK3KsedwzhH644ARAXEd
-        x3Xc97KIHq7K/epUyYQNE0d8v7V7+BauvUFAwPRt5VGC9cE7q5tamJmpZ7pQ/qod
-        hdI+yW/WhAgwk2RCcGmT6RqKtYcq+UlVK4eUlYfIVu+dXZ3HlQJzDG9Kf5gedTbx
-        w+DLQpX0Sl4XiKtwStpDmVzo6AuLyc3EWnoJL1aqzvOjkMEJgQbNQi8jkXdwdC6h
-        w+4c5yYBMdeP7tEZEFqKdKPHY/fy2nY2fwTU1lXIs0Oh9rIJzYHwE6bEvHoDZm72
-        XjrxNYWhYoMfTK1dvIkrad39pxSLeJs6ox/sgY6DY0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=frl/vm
-        4h86LNbeoJ/taoBPTtQ1gC7KmqOyW9f93NFGg=; b=Mj9KMh+Z7dxpMwNcKJKrkd
-        jiamMqKL8SX73UuQWQIPBICWILoZ5kCRicJQEPxEpIOUwqt6b9bH/6gm6PE/VwT4
-        AvUHvbgsVOyTnljOeZJJbrkgeg2qcus3216eAOdIAluRqWyspyxDfEBAwWx+W+uq
-        nsDpT76nfn14ad+WYUc6PmHwEL50wEOGcX8nI7isyzzTMdNUzAkPo6erOAHshzfL
-        j8cYUIftSoZuO835BXOX6N4OKorG39r+KgsPcp0FXK/44pAj45QMLJ8bZWIzhHZT
-        ywGtYxKPcVaVQLk8Z7stVa5KE5jCr5o85S67Vs+PqjITxnqwp3wz0gtHiV4m1n8Q
-        ==
-X-ME-Sender: <xms:PzSXXWuB9XR8Z8lFUXlARaHIfS0sV1l7W4pUaETA9oNl04pPARh1vg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrhedugdegtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:PzSXXc_YUzrXFVphGL--waTrHDXg94GG1MlxHI78KdSQvVVjwl7rFg>
-    <xmx:PzSXXfYi962AqYgRwzGmzGZzE17HpKUF6c0to7FR2b7GsXOePzl6zg>
-    <xmx:PzSXXYqZKrdw4xuI5atx_qvmq4zzH7bWgP3rUMOi5VdU4ojilhlxsA>
-    <xmx:PzSXXU9mevn65kDGdVcvjvzIMNvKNI6bjmKAB6V5VoMKOcIJq6r62w>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 27D6680064;
-        Fri,  4 Oct 2019 07:59:59 -0400 (EDT)
-Date:   Fri, 4 Oct 2019 13:59:57 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     linux-bluetooth@vger.kernel.org, linux-usb@vger.kernel.org,
-        dianders@chromium.org, Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Bluetooth: btusb: Reset realtek devices on user
- suspend
-Message-ID: <20191004115957.GB339043@kroah.com>
-References: <20190917212702.35747-1-abhishekpandit@chromium.org>
- <20190917212702.35747-3-abhishekpandit@chromium.org>
+        Fri, 4 Oct 2019 08:02:55 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94C15vH001012;
+        Fri, 4 Oct 2019 14:02:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=4QY8SUtb7bnVdDKSVIQK8kgBMMlxRMq5qdwdZdxQHs0=;
+ b=byb19n7NEEVN0ch3sez9/DSpvdvDNCnteUmmoE4ItEZ1o4rWNoWXO7Uoe89RaO6ovpQE
+ yF8tmzfuLZC+2nvnmalonoMvVgT+Z2cr6Bb1ZtgArG+H5/U3cm6ay+XhHd+XR0ao+jji
+ g4YCKwEsAvDsosw9a3eMejqVLyQf6HI7pwzbVa0kdkuuzeyQGBj957K2prZ4D8CMleKB
+ W2uoVtkzBEnhu7LFLZPRdIW2tkSehMpUC5ND/GKH15BZRf07waAgBrwJjla3U1GF0sCY
+ 9Va3N6A/wgZI774l1ZkGnZfNhAfl1csCAPuGhHWHB/78gFgiA5HerHEBZY51NtUoEvs0 Qw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v9vnatu8j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 14:02:44 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A6297100034;
+        Fri,  4 Oct 2019 14:02:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 95CAF2BA5BC;
+        Fri,  4 Oct 2019 14:02:43 +0200 (CEST)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
+ 14:02:43 +0200
+Received: from localhost (10.201.23.25) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 14:02:43
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH] remoteproc: stm32: fix probe error case
+Date:   Fri, 4 Oct 2019 14:02:35 +0200
+Message-ID: <1570190555-12465-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917212702.35747-3-abhishekpandit@chromium.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_06:2019-10-03,2019-10-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 02:27:02PM -0700, Abhishek Pandit-Subedi wrote:
-> Reset realtek devices on user suspend if not configured as a wakeup source.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
->  drivers/bluetooth/btusb.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index a9c35ebb30f8..ce3a10642f4e 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -493,6 +493,8 @@ struct btusb_data {
->  
->  	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
->  	unsigned cmd_timeout_cnt;
-> +
-> +	bool reset_on_suspend; /* reset on suspend if not a wakeup source */
->  };
->  
->  
-> @@ -3818,6 +3820,8 @@ static int btusb_probe(struct usb_interface *intf,
->  		 * (DEVICE_REMOTE_WAKEUP)
->  		 */
->  		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
-> +		/* We'll explicitly reset the device around user suspend too. */
-> +		data->reset_on_suspend = true;
->  	}
->  #endif
->  
-> @@ -4007,6 +4011,22 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
->  	return 0;
->  }
->  
-> +static int btusb_suspend_noirq(struct usb_interface *intf, pm_message_t message)
-> +{
-> +	struct btusb_data *data = usb_get_intfdata(intf);
-> +
-> +	BT_DBG("suspend_noirq %p", intf);
-> +
-> +	/* Only reset if not configured for wakeup */
-> +	if (!device_may_wakeup(&data->udev->dev) &&
-> +	    data->reset_on_suspend && data->reset_gpio) {
-> +		BT_DBG("resetting in suspend_noirq\n");
-> +		gpiod_set_value_cansleep(data->reset_gpio, 1);
+If the rproc driver is probed before the mailbox driver and if the rproc
+Device Tree node has some mailbox properties, the rproc driver probe
+shall be deferred instead of being probed without mailbox support.
 
-That's a totally out-of-band message for a USB driver to do.  Why can it
-suddenly set a GPIO pin and not talk to the USB device here?
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ drivers/remoteproc/stm32_rproc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-If this is a GPIO driver, then why not get the suspend message from that
-subsystem?
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index 2cf4b29..410b794 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -310,7 +310,7 @@ static const struct stm32_mbox stm32_rproc_mbox[MBOX_NB_MBX] = {
+ 	}
+ };
+ 
+-static void stm32_rproc_request_mbox(struct rproc *rproc)
++static int stm32_rproc_request_mbox(struct rproc *rproc)
+ {
+ 	struct stm32_rproc *ddata = rproc->priv;
+ 	struct device *dev = &rproc->dev;
+@@ -328,11 +328,15 @@ static void stm32_rproc_request_mbox(struct rproc *rproc)
+ 		cl->dev = dev->parent;
+ 
+ 		ddata->mb[i].chan = mbox_request_channel_byname(cl, name);
+-		if (IS_ERR(ddata->mb[i].chan)) {
++		if (PTR_ERR(ddata->mb[i].chan) == -EPROBE_DEFER) {
++			return -EPROBE_DEFER;
++		} else if (IS_ERR(ddata->mb[i].chan)) {
+ 			dev_warn(dev, "cannot get %s mbox\n", name);
+ 			ddata->mb[i].chan = NULL;
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ static int stm32_rproc_set_hold_boot(struct rproc *rproc, bool hold)
+@@ -596,7 +600,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	stm32_rproc_request_mbox(rproc);
++	ret = stm32_rproc_request_mbox(rproc);
++	if (ret)
++		goto free_rproc;
+ 
+ 	ret = rproc_add(rproc);
+ 	if (ret)
+-- 
+2.7.4
 
-
-greg k-h
