@@ -6,122 +6,122 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CF8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F23C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED332084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1169D215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfJDSdq (ORCPT
+        id S1730116AbfJDSex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:33:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50734 "EHLO mx1.redhat.com"
+        Fri, 4 Oct 2019 14:34:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:52144 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfJDSdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:33:45 -0400
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 12940C05AA61
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 18:33:45 +0000 (UTC)
-Received: by mail-io1-f71.google.com with SMTP id z10so13445884ioj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:33:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=aeQSWmmaMbD2rtAedaridPsedsaFdmXVu7fisAVhdps=;
-        b=t+oelv/K9bYEZdmxjhpxC1o0Bkl0j7/Fa3MoXKpKXWL+OrZSf5/cmKBqpjN3TvMtJT
-         9XjO/yxOia2E8vD1ed6oNiXNQYpMkv79PKu1tQt9lr96ZOYmYVYqqHDEL9Vu3Vk9ga6J
-         HQ1xlHICLERF25UO7pcFNwI53k1OigPXEPa6qQub3hfaFv5sYho5purk4Xq+3/i/01T0
-         VeE1nRaSoDy3AQr2Fzm3/1PpmTYSXNEmJileayC/hfPkERhVbKlHaI7IQVOnfm5VuALQ
-         IS7vmYkCVlQkxEcwGkp0Zcp2X2e7L4+uJXgm2Nvk/dyaSaa0HFcZshGBVKo+U/khpzxO
-         zb7A==
-X-Gm-Message-State: APjAAAUuNTpdsBLuP3eUSvL1uZS5sCcrket5OV6m0RLgyGumaImiJ3pt
-        wfm9XZbYEUWJmKDoAx3L9cumpaSDOxHxp1ff3ygR90O4v30cL70udPy47i7nXBe+QHCT9v5N3Cm
-        Gqq+IscXE+iOLGfSZ4DGYIUlF
-X-Received: by 2002:a92:5f13:: with SMTP id t19mr17505483ilb.163.1570214024465;
-        Fri, 04 Oct 2019 11:33:44 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxhnv9IbiNP0vZP4Q/OhxamH9k+1d3iqKOa6kLDIX8ihrMTs9eEUpMLXlE7X21laTFOo11IWg==
-X-Received: by 2002:a92:5f13:: with SMTP id t19mr17505467ilb.163.1570214024240;
-        Fri, 04 Oct 2019 11:33:44 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id l3sm2318388ioj.7.2019.10.04.11.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 11:33:43 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 11:33:42 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Safford <david.safford@ge.com>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        id S1728882AbfJDSex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 14:34:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5D215A1;
+        Fri,  4 Oct 2019 11:34:52 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2143F534;
+        Fri,  4 Oct 2019 11:34:50 -0700 (PDT)
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Tim Harvey <tharvey@gateworks.com>,
+        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191004183342.y63qdvspojyf3m55@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Safford <david.safford@ge.com>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191003114119.GF8933@linux.intel.com>
- <1570107752.4421.183.camel@linux.ibm.com>
- <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
- <20191003215125.GA30511@linux.intel.com>
- <20191003215743.GB30511@linux.intel.com>
- <1570140491.5046.33.camel@linux.ibm.com>
- <1570147177.10818.11.camel@HansenPartnership.com>
- <20191004182216.GB6945@linux.intel.com>
- <1570213491.3563.27.camel@HansenPartnership.com>
+References: <20190301192017.39770-1-dianders@chromium.org>
+ <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+ <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
+ <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
+ <1f6f7eb0-e1dc-d5a8-fb38-44c5bd839894@arm.com>
+ <CAJ+vNU1Nd2p-ot2Qkj6vD9yD6gcYM-vm+snNWyt0ChgSqe4tBg@mail.gmail.com>
+ <5cf9ec03-f6fb-8227-4ec5-62445038f283@arm.com>
+ <CAJ+vNU28LrroW-XC4X2g3bdN171j0ieZenhYE1TrEM8yvKi=cQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <cb6392ff-fac6-300b-2e04-b34df8c42f28@arm.com>
+Date:   Fri, 4 Oct 2019 19:34:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1570213491.3563.27.camel@HansenPartnership.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAJ+vNU28LrroW-XC4X2g3bdN171j0ieZenhYE1TrEM8yvKi=cQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Oct 04 19, James Bottomley wrote:
->On Fri, 2019-10-04 at 21:22 +0300, Jarkko Sakkinen wrote:
->> On Thu, Oct 03, 2019 at 04:59:37PM -0700, James Bottomley wrote:
->> > I think the principle of using multiple RNG sources for strong keys
->> > is a sound one, so could I propose a compromise:  We have a tpm
->> > subsystem random number generator that, when asked for <n> random
->> > bytes first extracts <n> bytes from the TPM RNG and places it into
->> > the kernel entropy pool and then asks for <n> random bytes from the
->> > kernel RNG? That way, it will always have the entropy to satisfy
->> > the request and in the worst case, where the kernel has picked up
->> > no other entropy sources at all it will be equivalent to what we
->> > have now (single entropy source) but usually it will be a much
->> > better mixed entropy source.
+On 04/10/2019 18:13, Tim Harvey wrote:
+[...]
+>>> No difference... still need 'arm-smmu.disable_bypass=n' to boot. Are
+>>> all four iommu-map props above supposed to be the same? Seems to me
+>>> they all point to the same thing which looks wrong.
 >>
->> I think we should rely the existing architecture where TPM is
->> contributing to the entropy pool as hwrng.
->
->That doesn't seem to work: when I trace what happens I see us inject 32
->bytes of entropy at boot time, but never again.  I think the problem is
->the kernel entropy pool is push not pull and we have no triggering
->event in the TPM to get us to push.  I suppose we could set a timer to
->do this or perhaps there is a pull hook and we haven't wired it up
->correctly?
->
->James
->
+>> Hmm... :/
+>>
+>> Those mappings just set Stream ID == PCI RID (strictly each one should
+>> only need to cover the bus range assigned to that bridge, but it's not
+>> crucial) which is the same thing the driver assumes for the mmu-masters
+>> property, so either that's wrong and never could have worked anyway -
+>> have you tried VFIO on this platform? - or there are other devices also
+>> mastering through the SMMU that aren't described at all. Are you able to
+>> capture a boot log? The SMMU faults do encode information about the
+>> offending ID, and you can typically correlate their appearance
+>> reasonably well with endpoint drivers probing.
+>>
+> 
+> Robin,
+> 
+> VFIO is enabled in the kernel but I don't know anything about how to
+> test/use it:
+> $ grep VFIO .config
+> CONFIG_KVM_VFIO=y
+> CONFIG_VFIO_IOMMU_TYPE1=y
+> CONFIG_VFIO_VIRQFD=y
+> CONFIG_VFIO=y
+> # CONFIG_VFIO_NOIOMMU is not set
+> CONFIG_VFIO_PCI=y
+> CONFIG_VFIO_PCI_MMAP=y
+> CONFIG_VFIO_PCI_INTX=y
+> # CONFIG_VFIO_PLATFORM is not set
+> # CONFIG_VFIO_MDEV is not set
 
-Shouldn't hwrng_fillfn be pulling from it?
+No worries - since it's a networking-focused SoC I figured there was a 
+chance you might be using DPDK or similar userspace drivers with the NIC 
+VFs, but I was just casting around for a quick and easy baseline of 
+whether the SMMU works at all (another way would be using Qemu to run a 
+VM with one or more PCI devices assigned).
+
+> I do have a boot console yet I'm not seeing any smmu faults at all.
+> Perhaps I've mis-diagnosed the issue completely. To be clear when I
+> boot with arm-smmu.disable_bypass=y the serial console appears to not
+> accept input in userspace and with arm-smmu.disable_bypass=n I'm fine.
+> I'm using a buildroot initramfs rootfs for simplicity. The system
+> isn't hung as I originally expected as the LED heartbeat trigger
+> continues blinking... I just can't get console to accept input.
+
+Curiouser and curiouser... I'm inclined to suspect that the interrupt 
+configuration might also be messed up, such that the SMMU is blocking 
+traffic and jammed up due to pending faults, but you're not getting the 
+IRQ delivered to find out. Does this patch help reveal anything?
+
+http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=29ac3648b580920692c9b417b2fc606995826517
+
+(untested, but it's a direct port of the one I've used for SMMUv3 to 
+diagnose something similar)
+
+That said, it's also puzzling that no other drivers are reporting DMA 
+errors or timeouts either - is there any chance that some device is set 
+running by the firmware/bootloader and not taken over by a kernel driver?
+
+Robin.
