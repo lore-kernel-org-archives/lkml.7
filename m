@@ -2,116 +2,98 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563B9C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34657207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFDF2246D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570175718;
+	bh=UuvG8lDsrw06dYiW7ZD+MvegXchW0FHoee1VIf8wfYk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uZAuqiYmZ6us0mrZkhPRg9r50xKCxmUzphhYE1J5O0H3Dqa5Sv6suLDhT6VT2ocE6
+	 tKSjDDZXMU2lU7V+MuPOH/Wkj+tkcSS6EPuiYXzsgGaHHjeymdL57kjTWP28wLWIiD
+	 eFgjJGLWgUtPU0yZajGCe8BD2fz30GbLfXXH13uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387927AbfJDHyc (ORCPT
+        id S2388174AbfJDHzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 03:54:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:56043 "EHLO mga03.intel.com"
+        Fri, 4 Oct 2019 03:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbfJDHyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 03:54:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 00:54:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,255,1566889200"; 
-   d="scan'208";a="205799275"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 04 Oct 2019 00:54:26 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 04 Oct 2019 10:54:26 +0300
-Date:   Fri, 4 Oct 2019 10:54:26 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     yehezkelshb@gmail.com, linux-usb@vger.kernel.org,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        rajmohan.mani@intel.com,
-        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
-        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
-        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Message-ID: <20191004075426.GA2819@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-18-mika.westerberg@linux.intel.com>
- <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
- <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
- <20191002083913.GG2714@lahna.fi.intel.com>
- <767f2f97059e4e9f861080672aaa18d3@AUSX13MPC105.AMER.DELL.COM>
- <CA+CmpXs4YsTA3QnD77SaXq3mRYX6oFwx+pm-3wEErwkF-02M+A@mail.gmail.com>
- <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
- <20191003080028.GK2819@lahna.fi.intel.com>
- <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
+        id S2387511AbfJDHzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 03:55:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E254207FF;
+        Fri,  4 Oct 2019 07:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570175716;
+        bh=UuvG8lDsrw06dYiW7ZD+MvegXchW0FHoee1VIf8wfYk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x5rYE/IvQu08H5jhQTfrJ3PCHyxaJAeDG+Q//6w/o6O5q/d7rwXKl2G3uYoiKqULi
+         K4CtXrntuB/hPkXtQiJU614XJEHl75D0wZkruFhzRZ0iFRILo3IAuHb95CmZRZ9vwA
+         EtFSrvkIS8MSnHHDSgWSZeFnqkYqUljStmakTtWo=
+Date:   Fri, 4 Oct 2019 09:55:14 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.3 000/344] 5.3.4-stable review
+Message-ID: <20191004075514.GB10406@kroah.com>
+References: <20191003154540.062170222@linuxfoundation.org>
+ <fe3f55e2-9252-786d-0541-7dd253ffc438@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <fe3f55e2-9252-786d-0541-7dd253ffc438@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:41:11PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Sent: Thursday, October 3, 2019 3:00 AM
-> > To: Limonciello, Mario
-> > Cc: yehezkelshb@gmail.com; linux-usb@vger.kernel.org;
-> > andreas.noever@gmail.com; michael.jamet@intel.com;
-> > rajmohan.mani@intel.com; nicholas.johnson-opensource@outlook.com.au;
-> > lukas@wunner.de; gregkh@linuxfoundation.org; stern@rowland.harvard.edu;
-> > anthony.wong@canonical.com; linux-kernel@vger.kernel.org
-> > Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Wed, Oct 02, 2019 at 04:00:55PM +0000, Mario.Limonciello@dell.com wrote:
-> > > > It's not even "same location - another meaning", the vendor ID comes from
-> > the
-> > > > DROM section, so it takes a few internal jumps inside the NVM to find the
-> > > > location. One of the "pointers" or section headers will be broken for sure.
-> > > >
-> > > > And after this, we need to find the NVM in LVFS and it has to pass validation
-> > in
-> > > > a few other locations. The chances are so low that I'd think it isn't worth
-> > > > worrying about it.
-> > >
-> > > And now I remember why the back of my mind was having this thought of
-> > wanting
-> > > sysfs attribute in the first place.  The multiple jumps means that a lot more of
-> > the
-> > > NVM has to be dumped to get that data, which slows down fwupd startup
-> > significantly.
-> > 
-> > IIRC currently fwupd does two reads of total 128 bytes from the active
-> > NVM. Is that really slowing down fwupd startup significantly?
+On Fri, Oct 04, 2019 at 08:38:48AM +0100, Jon Hunter wrote:
 > 
-> Yeah, I timed it with fwupd.  Here's the averages:
+> On 03/10/2019 16:49, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.3.4 release.
+> > There are 344 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.4-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> Without doing the reads to jump to this it's 0:00.06 seconds to probe a tree of
-> Host controller and dock plugged in.
+> All tests are passing for Tegra ...
 > 
-> With doing the reads and just host controller:
-> 0:04.40 seconds
->
-> With doing the reads and host controller and dock plugged in:
-> 0:10.73 seconds
+> Test results for stable-v5.3:
+>     12 builds:	12 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	38 pass, 0 fail
+> 
+> Linux version:	5.3.4-rc1-gc9adc631ac5f
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
 
-OK, it clearly takes time to read them. I wonder if this includes
-powering up the controller?
+Wonderful, thanks for testing all of these and letting me know.
 
-Also if you can get the hw_vendor_id and hw_product_id from the kernel
-does that mean you don't need to do the two reads or you still need
-those?
+greg k-h
