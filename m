@@ -2,80 +2,171 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28DFC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADF4C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21E4215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570192051;
-	bh=5BsV8wSWbxyVqhhX79nMUYfk6RC2pG+PtlDpZLgRmbg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fYJ6+Oh+PRp0bocn4zTuxMZcyytVwgWYTdyOCb8zR2C4xnXKJ7tMHDcC/bWJ7lP6l
-	 VYy0pf6X24H/kmsvgcgkglN6N64MCLJu0qSJa0ddcfvznyGd4ONZzSCXhTaB/aX9mp
-	 pub9otaikFxPYYX/rzV/gypEn/d8E5NYchko4eCw=
+	by mail.kernel.org (Postfix) with ESMTP id 18F12222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfJDM1a (ORCPT
+        id S1730532AbfJDM1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 4 Oct 2019 08:27:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52720 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730101AbfJDM1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:27:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7EC52AD14;
-        Fri,  4 Oct 2019 12:27:28 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 14:27:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/swap: piggyback lru_add_drain_all() calls
-Message-ID: <20191004122727.GA10845@dhcp22.suse.cz>
-References: <157018386639.6110.3058050375244904201.stgit@buzz>
- <20191004121017.GG32665@bombadil.infradead.org>
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:46962 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729950AbfJDM13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:27:29 -0400
+Received: from cpe-2606-a000-111b-43ee-0-0-0-115f.dyn6.twc.com ([2606:a000:111b:43ee::115f] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1iGMg0-0001aX-1z; Fri, 04 Oct 2019 08:27:22 -0400
+Date:   Fri, 4 Oct 2019 08:27:11 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Subject: Re: [PATCH] lib/generic-radix-tree.c: add kmemleak annotations
+Message-ID: <20191004122711.GA14248@hmswarspite.think-freely.org>
+References: <CACT4Y+aGjg_JTL-OPMSi1wS4=Zy4xFAizWW5fa8_KMOFpfMeXg@mail.gmail.com>
+ <20191004065039.727564-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004121017.GG32665@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191004065039.727564-1-ebiggers@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 04-10-19 05:10:17, Matthew Wilcox wrote:
-> On Fri, Oct 04, 2019 at 01:11:06PM +0300, Konstantin Khlebnikov wrote:
-> > This is very slow operation. There is no reason to do it again if somebody
-> > else already drained all per-cpu vectors after we waited for lock.
-> > +	seq = raw_read_seqcount_latch(&seqcount);
-> > +
-> >  	mutex_lock(&lock);
-> > +
-> > +	/* Piggyback on drain done by somebody else. */
-> > +	if (__read_seqcount_retry(&seqcount, seq))
-> > +		goto done;
-> > +
-> > +	raw_write_seqcount_latch(&seqcount);
-> > +
+On Thu, Oct 03, 2019 at 11:50:39PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> Do we really need the seqcount to do this?  Wouldn't a mutex_trylock()
-> have the same effect?
+> Kmemleak is falsely reporting a leak of the slab allocation in
+> sctp_stream_init_ext():
+> 
+> BUG: memory leak
+> unreferenced object 0xffff8881114f5d80 (size 96):
+>    comm "syz-executor934", pid 7160, jiffies 4294993058 (age 31.950s)
+>    hex dump (first 32 bytes):
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>    backtrace:
+>      [<00000000ce7a1326>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+>      [<00000000ce7a1326>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>      [<00000000ce7a1326>] slab_alloc mm/slab.c:3326 [inline]
+>      [<00000000ce7a1326>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+>      [<000000007abb7ac9>] kmalloc include/linux/slab.h:547 [inline]
+>      [<000000007abb7ac9>] kzalloc include/linux/slab.h:742 [inline]
+>      [<000000007abb7ac9>] sctp_stream_init_ext+0x2b/0xa0  net/sctp/stream.c:157
+>      [<0000000048ecb9c1>] sctp_sendmsg_to_asoc+0x946/0xa00  net/sctp/socket.c:1882
+>      [<000000004483ca2b>] sctp_sendmsg+0x2a8/0x990 net/sctp/socket.c:2102
+>      [...]
+> 
+> But it's freed later.  Kmemleak misses the allocation because its
+> pointer is stored in the generic radix tree sctp_stream::out, and the
+> generic radix tree uses raw pages which aren't tracked by kmemleak.
+> 
+> Fix this by adding the kmemleak hooks to the generic radix tree code.
+> 
+> Reported-by: syzbot+7f3b6b106be8dcdcdeec@syzkaller.appspotmail.com
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  lib/generic-radix-tree.c | 32 ++++++++++++++++++++++++++------
+>  1 file changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
+> index ae25e2fa2187..f25eb111c051 100644
+> --- a/lib/generic-radix-tree.c
+> +++ b/lib/generic-radix-tree.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/export.h>
+>  #include <linux/generic-radix-tree.h>
+>  #include <linux/gfp.h>
+> +#include <linux/kmemleak.h>
+>  
+>  #define GENRADIX_ARY		(PAGE_SIZE / sizeof(struct genradix_node *))
+>  #define GENRADIX_ARY_SHIFT	ilog2(GENRADIX_ARY)
+> @@ -75,6 +76,27 @@ void *__genradix_ptr(struct __genradix *radix, size_t offset)
+>  }
+>  EXPORT_SYMBOL(__genradix_ptr);
+>  
+> +static inline struct genradix_node *genradix_alloc_node(gfp_t gfp_mask)
+> +{
+> +	struct genradix_node *node;
+> +
+> +	node = (struct genradix_node *)__get_free_page(gfp_mask|__GFP_ZERO);
+> +
+> +	/*
+> +	 * We're using pages (not slab allocations) directly for kernel data
+> +	 * structures, so we need to explicitly inform kmemleak of them in order
+> +	 * to avoid false positive memory leak reports.
+> +	 */
+> +	kmemleak_alloc(node, PAGE_SIZE, 1, gfp_mask);
+> +	return node;
+> +}
+> +
+> +static inline void genradix_free_node(struct genradix_node *node)
+> +{
+> +	kmemleak_free(node);
+> +	free_page((unsigned long)node);
+> +}
+> +
+>  /*
+>   * Returns pointer to the specified byte @offset within @radix, allocating it if
+>   * necessary - newly allocated slots are always zeroed out:
+> @@ -97,8 +119,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+>  			break;
+>  
+>  		if (!new_node) {
+> -			new_node = (void *)
+> -				__get_free_page(gfp_mask|__GFP_ZERO);
+> +			new_node = genradix_alloc_node(gfp_mask);
+>  			if (!new_node)
+>  				return NULL;
+>  		}
+> @@ -121,8 +142,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+>  		n = READ_ONCE(*p);
+>  		if (!n) {
+>  			if (!new_node) {
+> -				new_node = (void *)
+> -					__get_free_page(gfp_mask|__GFP_ZERO);
+> +				new_node = genradix_alloc_node(gfp_mask);
+>  				if (!new_node)
+>  					return NULL;
+>  			}
+> @@ -133,7 +153,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+>  	}
+>  
+>  	if (new_node)
+> -		free_page((unsigned long) new_node);
+> +		genradix_free_node(new_node);
+>  
+>  	return &n->data[offset];
+>  }
+> @@ -191,7 +211,7 @@ static void genradix_free_recurse(struct genradix_node *n, unsigned level)
+>  				genradix_free_recurse(n->children[i], level - 1);
+>  	}
+>  
+> -	free_page((unsigned long) n);
+> +	genradix_free_node(n);
+>  }
+>  
+>  int __genradix_prealloc(struct __genradix *radix, size_t size,
+> -- 
+> 2.23.0
+> 
+> 
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 
-Yeah, this makes sense. From correctness point of view it should be ok
-because no caller can expect that per-cpu pvecs are empty on return.
-This might have some runtime effects that some paths might retry more -
-e.g. offlining path drains pcp pvces before migrating the range away, if
-there are pages still waiting for a worker to drain them then the
-migration would fail and we would retry. But this not a correctness
-issue.
-
--- 
-Michal Hocko
-SUSE Labs
