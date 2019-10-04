@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D5BECE58B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3064CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E940F2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D232222CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570211569;
-	bh=SvXLLkyq55t4NzIqBgvIxrfk9d3lzgSwo/AFqUkn3sY=;
+	s=default; t=1570211570;
+	bh=RJpqncNz1KHw9uMFjYmeiWDKtb/hqm2wH99odyACv3o=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=R+yDL5cvGFSk+16Duoc4eHOM4G33vhjjSQEYNy/YZPeQnmbNn88GE0LKLv69q6pnT
-	 UtEQUtBV6HNGN0AvbJ1OpX0zuKnM8YWLfY/UfHa/TQhYhc0KyvlHtgr9ITi1ZOrWfo
-	 fv5q/PB08js7hnMTRwxAktnGUzbcmcy0pvK2R2lY=
+	b=JHFA6mA5sl6f3CvCYLkwWZyFN2K5KA10CjaOELwgKQTzD2Y62AR16XmT/I+TxvQWc
+	 7M3lFTsqXGmSLR8QUVouLawfhu/R469bxtayYFRX/YzbKKP3lZHDLbHHmIlrRPiF1e
+	 Frbs0+qlgRFi7hBqvTBvAZNj/LNUMeD0wqX+EV0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388835AbfJDRws (ORCPT
+        id S2388866AbfJDRws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 4 Oct 2019 13:52:48 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50924 "EHLO
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51008 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388197AbfJDRwr (ORCPT
+        with ESMTP id S2388643AbfJDRws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:52:47 -0400
+        Fri, 4 Oct 2019 13:52:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=sMkHH0pSI2MS68VocQhEDZJx0GzenhkJgmdqKKsYmK4=; b=WVjzwc/oa81x
-        zzmtESpbNy+upbrHA/owAtwq/OsaAWGB/T7X76VR4Y0LAX1yCIpcLzPAJ3U4gQbmVHCJggh3UvwtU
-        W+6mtE7spWEK47np5unguxMkowlQ7AXQDXOj9e/G8KsqP1n5f5osKAUF0e2JZtApxlFc40aDWX6nx
-        fMiS4=;
+        List-Archive; bh=OHEeUE0SSoaNVUapw+tZEBpcTGS3QVSsO8YGo6q6aDY=; b=XPZ7k3PRN4Qa
+        HO2iEQZCIDk4tBsqW2WZu/u514X3Ie/Qnn8UET6cDjh9+OBtAFTfWyeV+sjnquot42vwDy6xCRUgt
+        eD+duwUvTBB2diF4e8KZhHFJ6qMxpvYn1e7MHBCxKw+2jovEboSAdHsLxR3KdR4dF9SDL8vAGUfbW
+        R0xw0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iGRkw-0003wG-Tm; Fri, 04 Oct 2019 17:52:42 +0000
+        id 1iGRkx-0003wO-GE; Fri, 04 Oct 2019 17:52:43 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 690D52741EF0; Fri,  4 Oct 2019 18:52:42 +0100 (BST)
+        id 0BD252741EF0; Fri,  4 Oct 2019 18:52:42 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
+To:     Yizhuo <yzhai003@ucr.edu>
+Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk, csong@cs.ucr.edu,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: qcom-rpmh: add PM6150/PM6150L regulator support" to the regulator tree
-In-Reply-To: <1570183734-30706-3-git-send-email-kgunda@codeaurora.org>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        zhiyunq@cs.ucr.edu
+Subject: Applied "regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()" to the regulator tree
+In-Reply-To: <20191003175813.16415-1-yzhai003@ucr.edu>
 X-Patchwork-Hint: ignore
-Message-Id: <20191004175242.690D52741EF0@ypsilon.sirena.org.uk>
+Message-Id: <20191004175243.0BD252741EF0@ypsilon.sirena.org.uk>
 Date:   Fri,  4 Oct 2019 18:52:42 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: qcom-rpmh: add PM6150/PM6150L regulator support
+   regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
 
 has been applied to the regulator tree at
 
@@ -88,107 +88,63 @@ to this mail.
 Thanks,
 Mark
 
-From 75bb518e9bbf666a851cd43a9aba8e085b5008d8 Mon Sep 17 00:00:00 2001
-From: Kiran Gunda <kgunda@codeaurora.org>
-Date: Fri, 4 Oct 2019 15:38:54 +0530
-Subject: [PATCH] regulator: qcom-rpmh: add PM6150/PM6150L regulator support
+From 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 Mon Sep 17 00:00:00 2001
+From: Yizhuo <yzhai003@ucr.edu>
+Date: Thu, 3 Oct 2019 10:58:13 -0700
+Subject: [PATCH] regulator: max8907: Fix the usage of uninitialized variable
+ in max8907_regulator_probe()
 
-Add support for PM6150/PM6150L regulators. This ensures
-that consumers are able to modify the physical state of PMIC
-regulators.
+Inside function max8907_regulator_probe(), variable val could
+be uninitialized if regmap_read() fails. However, val is used
+later in the if statement to decide the content written to
+"pmic", which is potentially unsafe.
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-Link: https://lore.kernel.org/r/1570183734-30706-3-git-send-email-kgunda@codeaurora.org
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 62 ++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
+ drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index db6c085da65e..8ae7ddf93b52 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
--// Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+// Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
+index 76152aaa330b..96dc0eea7659 100644
+--- a/drivers/regulator/max8907-regulator.c
++++ b/drivers/regulator/max8907-regulator.c
+@@ -296,7 +296,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
  
- #define pr_fmt(fmt) "%s: " fmt, __func__
- 
-@@ -878,6 +878,58 @@ static const struct rpmh_vreg_init_data pm8009_vreg_data[] = {
- 	{},
- };
- 
-+static const struct rpmh_vreg_init_data pm6150_vreg_data[] = {
-+	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
-+	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
-+	RPMH_VREG("smps3",  "smp%s3",  &pmic5_ftsmps510, "vdd-s3"),
-+	RPMH_VREG("smps4",  "smp%s4",  &pmic5_hfsmps510, "vdd-s4"),
-+	RPMH_VREG("smps5",  "smp%s5",  &pmic5_hfsmps510, "vdd-s5"),
-+	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_nldo,      "vdd-l1"),
-+	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_nldo,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_nldo,      "vdd-l4-l7-l8"),
-+	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,   "vdd-l5-l16-l17-l18-l19"),
-+	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_nldo,      "vdd-l6"),
-+	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_nldo,      "vdd-l4-l7-l8"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_nldo,      "vdd-l4-l7-l8"),
-+	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_nldo,      "vdd-l9"),
-+	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo_lv,   "vdd-l10-l14-l15"),
-+	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo_lv,   "vdd-l11-l12-l13"),
-+	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l11-l12-l13"),
-+	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo_lv,   "vdd-l11-l12-l13"),
-+	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l10-l14-l15"),
-+	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l10-l14-l15"),
-+	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,   "vdd-l5-l16-l17-l18-l19"),
-+	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,   "vdd-l5-l16-l17-l18-l19"),
-+	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_pldo,   "vdd-l5-l16-l17-l18-l19"),
-+	RPMH_VREG("ldo19",  "ldo%s19", &pmic5_pldo,   "vdd-l5-l16-l17-l18-l19"),
-+	{},
-+};
+ 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
+-	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	if (ret)
++		return ret;
 +
-+static const struct rpmh_vreg_init_data pm6150l_vreg_data[] = {
-+	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
-+	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
-+	RPMH_VREG("smps3",  "smp%s3",  &pmic5_ftsmps510, "vdd-s3"),
-+	RPMH_VREG("smps4",  "smp%s4",  &pmic5_ftsmps510, "vdd-s4"),
-+	RPMH_VREG("smps5",  "smp%s5",  &pmic5_ftsmps510, "vdd-s5"),
-+	RPMH_VREG("smps6",  "smp%s6",  &pmic5_ftsmps510, "vdd-s6"),
-+	RPMH_VREG("smps7",  "smp%s7",  &pmic5_ftsmps510, "vdd-s7"),
-+	RPMH_VREG("smps8",  "smp%s8",  &pmic5_hfsmps510, "vdd-s8"),
-+	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_pldo_lv,   "vdd-l1-l8"),
-+	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_nldo,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_pldo,      "vdd-l4-l5-l6"),
-+	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l4-l5-l6"),
-+	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l4-l5-l6"),
-+	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l11"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo,      "vdd-l1-l8"),
-+	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,      "vdd-l9-l10"),
-+	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l9-l10"),
-+	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo,      "vdd-l7-l11"),
-+	RPMH_VREG("bob",    "bob%s1",  &pmic5_bob,       "vdd-bob"),
-+	{},
-+};
+ 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
+ 	    MAX8907_II2RR_VERSION_REV_B) {
+ 		pmic->desc[MAX8907_SD1].min_uV = 637500;
+@@ -333,14 +336,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 		}
+ 
+ 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
 +
- static int rpmh_regulator_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -940,6 +992,14 @@ static const struct of_device_id rpmh_regulator_match_table[] = {
- 		.compatible = "qcom,pmi8998-rpmh-regulators",
- 		.data = pmi8998_vreg_data,
- 	},
-+	{
-+		.compatible = "qcom,pm6150-rpmh-regulators",
-+		.data = pm6150_vreg_data,
-+	},
-+	{
-+		.compatible = "qcom,pm6150l-rpmh-regulators",
-+		.data = pm6150l_vreg_data,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
+ 			if ((val & MAX8907_MASK_LDO_SEQ) !=
+ 			    MAX8907_MASK_LDO_SEQ)
+ 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
+ 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
+ 						MAX8907_MASK_OUT5V_ENSRC)) !=
+ 			    MAX8907_MASK_OUT5V_ENSRC)
 -- 
 2.20.1
 
