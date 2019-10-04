@@ -2,130 +2,128 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2734EC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17C7C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B5421D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A18F21848
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSiBR/IZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJyVp4pR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbfJDFlf (ORCPT
+        id S1731705AbfJDFvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 01:41:35 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37532 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730009AbfJDFle (ORCPT
+        Fri, 4 Oct 2019 01:51:01 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44076 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731388AbfJDFvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 01:41:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u20so2608906plq.4;
-        Thu, 03 Oct 2019 22:41:33 -0700 (PDT)
+        Fri, 4 Oct 2019 01:51:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i14so3092361pgt.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 22:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GKVLI9LUqHPEjp3RS7mC+DCEnq9WI1TJleS4Dvszv8U=;
-        b=iSiBR/IZvtIKmtKsBEg1fXjUd7BM/mtimLVfxJcmzcJZHuweE259D07Hmy+3/MWnQY
-         Z8RAYJDJepnKC13JaqVKO6RfkeuFBbR28+lOoc7cnadTlpS1XI2DTtgZTEVPPd3bhcD4
-         C9ud0mFDJHUXpXGFYStQm8qqh5djbXa/nrYYRMTUmB/+ZNGJTw2zwYaPkQcdDDhgRx7C
-         9c2AZCjEaD8lI9wXWwqDF2jVYflssod3yWyFW9OpmFD+fEED/wZfNbjrALLGNxw09Uxg
-         9g5RD7Jmz54At0evGtvhSxKGa8G8Bl2y1ALwgOOQthJOEA4PsTFVi0FH3CqURhb9Znlb
-         VPBw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=unJ1v6HVKxuDiPc/aS201QU9G4bHdnBp/CHw6DE6gKk=;
+        b=rJyVp4pRytBy0bcdhLCHyuZczSU3u3NXL75qLt2S963EyjEQ1ZMcT8MJAa6qWY2nDI
+         HluMh/daIYQuIRVBhTAGrJcsSGiwPLHju1/+GPKnDxCJGnadJK2rfgDKt2qf9qHypvk0
+         xw3o1TADQ5k7Jn365mGwDTlLxyhnF8I3afLp9BfV3VAe5rbSIQjk3phhVVmN2LdZktcQ
+         fPeIPaximdKA/5SI+l1HJfevuqsMdgOueH+bJQ/KzTHSxXJDmpewLTsWAwrr9ZA/guuQ
+         /j1FBHdNKs6h/uClA9iAzNIQCBlshZonQBpz218FHo2t/IrP7WMFwXQNjorwuzVL0W4v
+         CVKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GKVLI9LUqHPEjp3RS7mC+DCEnq9WI1TJleS4Dvszv8U=;
-        b=HyA+rZHCDcJkycZB0i8VIFCVO+dCRKHS1S9JTVi/jWkr+W9im3AnPPi0K5E+yDzP9g
-         Il4tNUQtniU9XKd0muyrSOWoIgMApiz19AEGu3iKuVE0DJba8HTLttaeiX4E/lojhFkS
-         B5Ws9V/DBEE9nGIpqjE+9Kd8IwJcEEIDIsAPlffyz86ogqKW/x26bbPGXKZtYyQjFdAJ
-         U5OMdcSwg3Im/y/opQxg/DhjSlHZsEf97eNCGAMhViqZ3RLRx8FDVptL6kjnNX5tGnjn
-         5Mdn7hKnLRE+dJITDJ1CroqiicJoWhIxTwvzMCWrYXCxTcEagShr83HUYkGE/RLnfoBR
-         OuRw==
-X-Gm-Message-State: APjAAAX/SG4F8uQ6H0L5mLGSTUS8w8S/QctS8ipusRA/Xa1ipErikhxL
-        aW2xL245qr+qB7eq/Z8Uq4U=
-X-Google-Smtp-Source: APXvYqxq2ZMNDYaJCoOc9QDAeCL1dkqqeXLO4Zk30uye0zXZCYarwbW9lkud/Ozlu47vWdC7smk5jQ==
-X-Received: by 2002:a17:902:a418:: with SMTP id p24mr13411978plq.312.1570167692424;
-        Thu, 03 Oct 2019 22:41:32 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id o67sm5651892pje.17.2019.10.03.22.41.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=unJ1v6HVKxuDiPc/aS201QU9G4bHdnBp/CHw6DE6gKk=;
+        b=BBUa6iXP5N66siBj2h0wRnivfBkL9eoivJEQ2yPd4fabrbJS9M7Sj+ppFagoOkNkuI
+         CrhkloOKoeP+NAYluBstVKWWzNS8lCoUBoF/KraUrQhrvUm/zWPfTDuLz1m8HhndghC+
+         5BzTTbD5Nh7S+bynCO2ysk81PlQKKey9lx4abJ0KQhdqANwWcJpEZGWeRbegXqCrgG3d
+         aUAkr5oHC0nrK+k851jzn/aHNZb2iEUgjFtXpbvXovbEZnX4WP/kL0bS7TESl20Cn1rQ
+         NjCVt3YbL847kYZACUxYTPEjoiOdJdQbKIVQh4TsxvO8g2AMhiRwi6vCm6Y/esPzoz7s
+         4EPg==
+X-Gm-Message-State: APjAAAWnyutA668eUrL3GcLyq0gnUGNUocge3+j8XN8wZeyAhQpGTGnC
+        HV39Dv5P4oi5qfNN5fGzDW3WZg==
+X-Google-Smtp-Source: APXvYqwHr6jPi9lKuz1Q2laCdggCEKW3g9g+9aQYxeAS32OyaqviYwJ54MsS3rwS7Cvd/XDdDIpSww==
+X-Received: by 2002:a17:90a:fe04:: with SMTP id ck4mr15107769pjb.74.1570168260323;
+        Thu, 03 Oct 2019 22:51:00 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h8sm5111262pfo.64.2019.10.03.22.50.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 22:41:31 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Jeff White <jeff.white@zii.aero>,
-        Rick Ramstetter <rick@anteaterllc.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: vf610-zii-scu4-aib: Specify 'i2c-mux-idle-disconnect'
-Date:   Thu,  3 Oct 2019 22:41:15 -0700
-Message-Id: <20191004054115.26082-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 03 Oct 2019 22:50:59 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 22:50:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Murali Nalajala <mnalajal@codeaurora.org>,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] base: soc: Handle custom soc information sysfs entries
+Message-ID: <20191004055057.GH63675@minitux>
+References: <1570146710-13503-1-git-send-email-mnalajal@codeaurora.org>
+ <5d96daca.1c69fb81.fe5e4.e623@mx.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d96daca.1c69fb81.fe5e4.e623@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify 'i2c-mux-idle-disconnect' for both I2C switches present on the
-board, since both are connected to the same parent bus and all of
-their children have the same I2C address.
+On Thu 03 Oct 22:38 PDT 2019, Stephen Boyd wrote:
 
-Fixes: ca4b4d373fcc ("ARM: dts: vf610: Add ZII SCU4 AIB board")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Jeff White <jeff.white@zii.aero>
-Cc: Rick Ramstetter <rick@anteaterllc.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-Shawn:
+> Quoting Murali Nalajala (2019-10-03 16:51:50)
+> > @@ -151,14 +156,16 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
+> >  
+> >         ret = device_register(&soc_dev->dev);
+> >         if (ret)
+> > -               goto out3;
+> > +               goto out4;
+> >  
+> >         return soc_dev;
+> >  
+> > -out3:
+> > +out4:
+> >         ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+> >         put_device(&soc_dev->dev);
+> >         soc_dev = NULL;
+> > +out3:
+> > +       kfree(soc_attr_groups);
+> 
+> This code is tricky. put_device(&soc_dev->dev) will call soc_release()
+> so we set soc_dev to NULL before calling kfree() on the error path. This
+> way we don't doubly free a pointer that the release function will take
+> care of. I wonder if the release function could free the ida as well,
+> and then we could just make the device_register() failure path call
+> put_device() and return ERR_PTR(ret) directly. Then the error path is
+> simpler because we can avoid changing two pointers to NULL to avoid the
+> double free twice. Or just inline the ida remove and put_device() call
+> in the if and then goto out1 to consolidate the error pointer
+> conversion.
+> 
 
-If this is possible, I'd like this one to go into 5.4.
+But if we instead allocates the ida before the soc_dev, wouldn't the
+error path be something like?:
 
-Thanks,
-Andrey Smirnov
+foo:
+	put_device(&soc_dev->dev);
+bar:
+	ida_simple_remove(&soc_ida, soc_num);
+	return err;
 
- arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-index dc8a5f37a1ef..c8ebb23c4e02 100644
---- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-+++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-@@ -602,6 +602,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		reg = <0x70>;
-+		i2c-mux-idle-disconnect;
- 
- 		sff0_i2c: i2c@1 {
- 			#address-cells = <1>;
-@@ -640,6 +641,7 @@
- 		reg = <0x71>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
- 
- 		sff5_i2c: i2c@1 {
- 			#address-cells = <1>;
--- 
-2.21.0
+I think we still need two exit paths from soc_device_register()
+regardless of moving the ida_simple_remove() into the release, but we
+could drop it from the unregister(). So not sure if this is cleaner...
 
+Regards,
+Bjorn
+
+> >  out2:
+> >         kfree(soc_dev);
+> >  out1:
