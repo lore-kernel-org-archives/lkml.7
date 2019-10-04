@@ -2,119 +2,90 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3968DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3ECC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1251620700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128CF20700
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jN7pYUj2";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ViTfqnTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbfJDNqa (ORCPT
+        id S2388822AbfJDNqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:46:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:45510 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388333AbfJDNqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:46:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6845B15A1;
-        Fri,  4 Oct 2019 06:46:29 -0700 (PDT)
-Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E22F3F739;
-        Fri,  4 Oct 2019 06:46:28 -0700 (PDT)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Marc Dionne <marc.c.dionne@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] kmemleak: Do not corrupt the object_list during clean-up
-Date:   Fri,  4 Oct 2019 14:46:24 +0100
-Message-Id: <20191004134624.46216-1-catalin.marinas@arm.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 4 Oct 2019 09:46:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50854 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388733AbfJDNqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:46:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 62F9D61A37; Fri,  4 Oct 2019 13:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570196801;
+        bh=7z8K8z1kVtW4QRmy9LQUNBsQnTcmL+HKDaKSTRVrlrk=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=jN7pYUj2OrIhhdjp/i8GP2SYmK6REE/SkjCzJwZvh4FlUWwxB14XZpz9n/ulXpeue
+         ikaeeDigxkc9pO0IXRR1GXLLbY1moi0FKgATgM8OSxxGvDockGl4qbS+VTY+x9+Owr
+         08eOjd2JjsNQZvTfLFkKPYplzOXGP5hpWB6I9lbU=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40FD2613A8;
+        Fri,  4 Oct 2019 13:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570196800;
+        bh=7z8K8z1kVtW4QRmy9LQUNBsQnTcmL+HKDaKSTRVrlrk=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=ViTfqnTxmBIMf4p1Hx277E8BubfHs+nBxCPzvrE/JNSgJ1JjSfbBjO+SzAWFQpDWw
+         NMi5PtAtTJw96KeSqS0vcM8BKX82vv3jiQ542DUG6ovIS6xMyT6P6IfNWdFefh0iOO
+         7gKaeeclOdMMHzX/S8JIFNdXaEeMeAGqlqB+a/gE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40FD2613A8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] libertas: remove redundant assignment to variable ret
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191002101517.10836-1-colin.king@canonical.com>
+References: <20191002101517.10836-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191004134641.62F9D61A37@smtp.codeaurora.org>
+Date:   Fri,  4 Oct 2019 13:46:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of an error (e.g. memory pool too small), kmemleak disables
-itself and cleans up the already allocated metadata objects. However, if
-this happens early before the RCU callback mechanism is available,
-put_object() skips call_rcu() and frees the object directly. This is not
-safe with the RCU list traversal in __kmemleak_do_cleanup().
+Colin King <colin.king@canonical.com> wrote:
 
-Change the list traversal in __kmemleak_do_cleanup() to
-list_for_each_entry_safe() and remove the rcu_read_{lock,unlock} since
-the kmemleak is already disabled at this point. In addition, avoid an
-unnecessary metadata object rb-tree look-up since it already has the
-struct kmemleak_object pointer.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being assigned a value that is never read and is
+> being re-assigned a little later on. The assignment is redundant and hence
+> can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Fixes: c5665868183f ("mm: kmemleak: use the memory pool for early allocations")
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reported-by: Marc Dionne <marc.c.dionne@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
- mm/kmemleak.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 03a8d84badad..244607663363 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -526,6 +526,16 @@ static struct kmemleak_object *find_and_get_object(unsigned long ptr, int alias)
- 	return object;
- }
- 
-+/*
-+ * Remove an object from the object_tree_root and object_list. Must be called
-+ * with the kmemleak_lock held _if_ kmemleak is still enabled.
-+ */
-+static void __remove_object(struct kmemleak_object *object)
-+{
-+	rb_erase(&object->rb_node, &object_tree_root);
-+	list_del_rcu(&object->object_list);
-+}
-+
- /*
-  * Look up an object in the object search tree and remove it from both
-  * object_tree_root and object_list. The returned object's use_count should be
-@@ -538,10 +548,8 @@ static struct kmemleak_object *find_and_remove_object(unsigned long ptr, int ali
- 
- 	write_lock_irqsave(&kmemleak_lock, flags);
- 	object = lookup_object(ptr, alias);
--	if (object) {
--		rb_erase(&object->rb_node, &object_tree_root);
--		list_del_rcu(&object->object_list);
--	}
-+	if (object)
-+		__remove_object(object);
- 	write_unlock_irqrestore(&kmemleak_lock, flags);
- 
- 	return object;
-@@ -1834,12 +1842,16 @@ static const struct file_operations kmemleak_fops = {
- 
- static void __kmemleak_do_cleanup(void)
- {
--	struct kmemleak_object *object;
-+	struct kmemleak_object *object, *tmp;
- 
--	rcu_read_lock();
--	list_for_each_entry_rcu(object, &object_list, object_list)
--		delete_object_full(object->pointer);
--	rcu_read_unlock();
-+	/*
-+	 * Kmemleak has already been disabled, no need for RCU list traversal
-+	 * or kmemleak_lock held.
-+	 */
-+	list_for_each_entry_safe(object, tmp, &object_list, object_list) {
-+		__remove_object(object);
-+		__delete_object(object);
-+	}
- }
- 
- /*
+60b5b49f6a6e libertas: remove redundant assignment to variable ret
+
+-- 
+https://patchwork.kernel.org/patch/11170731/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
