@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF99C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7F5C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFFB222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996ED2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="hp2oQtYu"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="OyCayt1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfJDSxW (ORCPT
+        id S1731072AbfJDSw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:53:22 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45487 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731157AbfJDSw7 (ORCPT
+        Fri, 4 Oct 2019 14:52:56 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44207 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731001AbfJDSwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:52:59 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z67so6722563qkb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:52:59 -0700 (PDT)
+        Fri, 4 Oct 2019 14:52:53 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u40so9909234qth.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:52:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=uw6s1yEhhfH1B/xKucsl67sYBjMXvbaEFciAMxIuXLw=;
-        b=hp2oQtYuJrMbhDPdnGXMyVvw7bO5R9sCxEz6mqLZaMoCVUgkRNU+bRFrOXMif6WGFV
-         BPazXBHf7IXF2CoRPMQuMh+H49+cyRJrj01ujBd/1l3AtthsgkVVpnqNE8GEoQkkSrsX
-         DE0VHbwCsxNhDECggnhwwM4GiRFY9yLGMr4uVqmgwXyicuCZ1UHFVv//tUaj/Oz8fFVS
-         GqZMxb1QX38FtAyl5Il4eDIp1x8IfSodulFd9gY3HjaB9FUoJ4rZ/3+Q5Ig6+RtOsw51
-         9TCTwhIwrNaHy979SGHWZJScdz3qyv98M0crh0QddhF3DYvQPP9GkbEi+2E5R2dGZG22
-         Z03Q==
+        bh=8siMf3fobBUu5F2lrRA7fZbgWPSz5rNvj4DCBxzRhNc=;
+        b=OyCayt1uFlxilP39qY7gBlnFz/zKeWG2M5RdCuiThq11OE7UzyLuG5GGcEgu6ilc/u
+         YlJdy+7u48qyFnDW0FMXMpYbE057z/88nbFcW1BfuYtQPdhPLxzGBgptLmZ4l+xJmVeO
+         E2KLIhgxE5PIxAi69vTiy2epqTh1dA92drvResp9lXdcjxwlic7zIoWykTawJz/dTDrL
+         L97nFCeYjdcpEuk0oYTyVD6S6cvZh4tcl3Q0bw7dPfEz+2hM6cfohKE2kXvKge8gNVBY
+         f2DbAD7jyEXXu0qm4KmKvG3pkTZe+wumB/AN4EIKHG86AlgnV7iV78vdvAKZk8ysRjx/
+         98QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uw6s1yEhhfH1B/xKucsl67sYBjMXvbaEFciAMxIuXLw=;
-        b=KNlUrur+EhvtN7ug9TaEx1ss7jr9WSPPLm9gezRfBBNW00AVIShTCfelABdWa1D2W4
-         zw+LuHEAXqVW61gx/pwgwCZOKG4h8reTrhxhoirHO4aoAqPGK8dPnd0KuBajE1CUvL8B
-         tsBaHTSveEOgYt/2KZkb9RL8G/YgqXs2CrHvGscpK+OjSMoglHp7bey1zgS06pMa4V+9
-         YryRqGUep6+ZKmVPUtioW4D/00/O9RLihRORmwxWbocMyA/Za4CVSNkQUbnmcZlGkRss
-         RUdYsKGPaKCk5Eep50zLdLHlYHRgiLrKGiCsJ0BdSzC5CxSqsmtvi+XlGJ/uCVHQFrmE
-         +OaA==
-X-Gm-Message-State: APjAAAXXyxp1ByjtENWrvbazS/spHpA95ySCjrLP42VnX8f2+lcxg4ON
-        0o7xFgsyW1vqxEqhNlr8h4BQXQ==
-X-Google-Smtp-Source: APXvYqwCl4S8vsOC2ebItdC2tPnW6HNlIJgki2BHXbNKJETrk8oMVX82Q1h6EAWJg8yKkBkCaZGc+g==
-X-Received: by 2002:a37:4e55:: with SMTP id c82mr11793481qkb.437.1570215178431;
-        Fri, 04 Oct 2019 11:52:58 -0700 (PDT)
+        bh=8siMf3fobBUu5F2lrRA7fZbgWPSz5rNvj4DCBxzRhNc=;
+        b=GAXaDnAkq//TKDxbbWXfFsMrNrBxDgsgnHIkVxVTU23BRI1Gaf5fqf83o4ZRxVWFk9
+         8G3kJv6jUAOjleTylW59bXpC6Q2XQAKmdkFpIGHBjewXp/7IPN1WR2inhFnjhYB+ZSgv
+         4Elis2ZCBBXUvYjEgt0L8uUM3MQkSHRqXqBOezoWRzxg2QxznSL/MG4cic7KYfoo/blw
+         MdZvC5/dXlmCZmXgYL0J952V++VclkiKeu3FQM+kVLCcs60zmlIETiGnYKiJA46+X5Lu
+         340vP1XI9NNEFumemC/xgZG4UtpaWcmO+oYZ44QmOz768zRe0SeyBRt5RE07wisKgtGY
+         TMjw==
+X-Gm-Message-State: APjAAAXdN6xMcXDCN7eCqugMHuVuRipuZdRSSh7UvmDq5uuWcXhVwaro
+        cTJQr68gNUCilXcf4XmdwOPAvA==
+X-Google-Smtp-Source: APXvYqxjVdTbi7ArzXEHLy2iBtjm5c4zKRPTour0RrGi7Z35uLzLCUZI8ex++pF5fCJRduBdHGhG3Q==
+X-Received: by 2002:ac8:185d:: with SMTP id n29mr18041046qtk.237.1570215169974;
+        Fri, 04 Oct 2019 11:52:49 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id p77sm4042514qke.6.2019.10.04.11.52.57
+        by smtp.gmail.com with ESMTPSA id p77sm4042514qke.6.2019.10.04.11.52.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 11:52:57 -0700 (PDT)
+        Fri, 04 Oct 2019 11:52:49 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -65,9 +65,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         james.morse@arm.com, vladimir.murzin@arm.com,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com
-Subject: [PATCH v6 15/17] arm64: kexec: add expandable argument to relocation function
-Date:   Fri,  4 Oct 2019 14:52:32 -0400
-Message-Id: <20191004185234.31471-16-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 09/17] arm64: hibernate: move page handling function to new trans_pgd.c
+Date:   Fri,  4 Oct 2019 14:52:26 -0400
+Message-Id: <20191004185234.31471-10-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
@@ -78,358 +78,535 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kexec relocation function (arm64_relocate_new_kernel) accepts
-the following arguments:
-
-head:		start of array that contains relocation information.
-entry:		entry point for new kernel or purgatory.
-dtb_mem:	first and only argument to entry.
-
-The number of arguments cannot be easily expended, because this
-function is also called from HVC_SOFT_RESTART, which preserves only
-three arguments. And, also arm64_relocate_new_kernel is written in
-assembly but called without stack, thus no place to move extra
-arguments to free registers.
-
-Soon, we will need to pass more arguments: once we enable MMU we
-will need to pass information about page tables.
-
-Another benefit of allowing this function to accept more arguments, is that
-kernel can actually accept up to 4 arguments (x0-x3), however currently
-only one is used, but if in the future we will need for more (for example,
-pass information about when previous kernel exited to have a precise
-measurement in time spent in purgatory), we won't be easilty do that
-if arm64_relocate_new_kernel can't accept more arguments.
-
-So, add a new struct: kern_reloc_arg, and place it in kexec safe page (i.e
-memory that is not overwritten during relocation).
-Thus, make arm64_relocate_new_kernel to only take one argument, that
-contains all the needed information.
+Now, that we abstracted the required functions move them to a new home.
+Later, we will generalize these function in order to be useful outside
+of hibernation.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/kexec.h      | 18 ++++++
- arch/arm64/kernel/asm-offsets.c     |  9 +++
- arch/arm64/kernel/cpu-reset.S       |  4 +-
- arch/arm64/kernel/cpu-reset.h       |  8 +--
- arch/arm64/kernel/machine_kexec.c   | 29 +++++++++-
- arch/arm64/kernel/relocate_kernel.S | 88 ++++++++++-------------------
- 6 files changed, 87 insertions(+), 69 deletions(-)
+ arch/arm64/Kconfig                 |   4 +
+ arch/arm64/include/asm/trans_pgd.h |  20 +++
+ arch/arm64/kernel/hibernate.c      | 199 +-------------------------
+ arch/arm64/mm/Makefile             |   1 +
+ arch/arm64/mm/trans_pgd.c          | 219 +++++++++++++++++++++++++++++
+ 5 files changed, 245 insertions(+), 198 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_pgd.h
+ create mode 100644 arch/arm64/mm/trans_pgd.c
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d15ca1ca1e83..d5b79d4c7fae 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -90,12 +90,30 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 41a9b4257b72..5492d5f17359 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1017,6 +1017,10 @@ config CRASH_DUMP
  
-+/*
-+ * kern_reloc_arg is passed to kernel relocation function as an argument.
-+ * head		kimage->head, allows to traverse through relocation segments.
-+ * entry_addr	kimage->start, where to jump from relocation function (new
-+ *		kernel, or purgatory entry address).
-+ * kern_arg0	first argument to kernel is its dtb address. The other
-+ *		arguments are currently unused, and must be set to 0
-+ */
-+struct kern_reloc_arg {
-+	unsigned long	head;
-+	unsigned long	entry_addr;
-+	unsigned long	kern_arg0;
-+	unsigned long	kern_arg1;
-+	unsigned long	kern_arg2;
-+	unsigned long	kern_arg3;
-+};
+ 	  For more details see Documentation/admin-guide/kdump/kdump.rst
+ 
++config TRANS_TABLE
++	def_bool y
++	depends on HIBERNATION || KEXEC_CORE
 +
- #define ARCH_HAS_KIMAGE_ARCH
- 
- struct kimage_arch {
- 	void *dtb;
- 	unsigned long dtb_mem;
- 	unsigned long kern_reloc;
-+	unsigned long kern_reloc_arg;
- };
- 
- #ifdef CONFIG_KEXEC_FILE
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 214685760e1c..900394907fd8 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -23,6 +23,7 @@
+ config XEN_DOM0
+ 	def_bool y
+ 	depends on XEN
+diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
+new file mode 100644
+index 000000000000..c7b5402b7d87
+--- /dev/null
++++ b/arch/arm64/include/asm/trans_pgd.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Copyright (c) 2019, Microsoft Corporation.
++ * Pavel Tatashin <patatash@linux.microsoft.com>
++ */
++
++#ifndef _ASM_TRANS_TABLE_H
++#define _ASM_TRANS_TABLE_H
++
++#include <linux/bits.h>
++#include <asm/pgtable-types.h>
++
++int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
++			  unsigned long end);
++
++int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
++		       pgprot_t pgprot);
++
++#endif /* _ASM_TRANS_TABLE_H */
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index ded9034b9d39..d6346ad23f87 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -16,7 +16,6 @@
+ #define pr_fmt(x) "hibernate: " x
+ #include <linux/cpu.h>
+ #include <linux/kvm_host.h>
+-#include <linux/mm.h>
+ #include <linux/pm.h>
+ #include <linux/sched.h>
+ #include <linux/suspend.h>
+@@ -31,14 +30,12 @@
+ #include <asm/kexec.h>
+ #include <asm/memory.h>
+ #include <asm/mmu_context.h>
+-#include <asm/pgalloc.h>
+-#include <asm/pgtable.h>
+-#include <asm/pgtable-hwdef.h>
+ #include <asm/sections.h>
+ #include <asm/smp.h>
+ #include <asm/smp_plat.h>
  #include <asm/suspend.h>
- #include <linux/kbuild.h>
- #include <linux/arm-smccc.h>
-+#include <linux/kexec.h>
- 
- int main(void)
- {
-@@ -126,6 +127,14 @@ int main(void)
- #ifdef CONFIG_ARM_SDE_INTERFACE
-   DEFINE(SDEI_EVENT_INTREGS,	offsetof(struct sdei_registered_event, interrupted_regs));
-   DEFINE(SDEI_EVENT_PRIORITY,	offsetof(struct sdei_registered_event, priority));
-+#endif
-+#ifdef CONFIG_KEXEC_CORE
-+  DEFINE(KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
-+  DEFINE(KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
-+  DEFINE(KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
-+  DEFINE(KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
-+  DEFINE(KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
-+  DEFINE(KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
- #endif
-   return 0;
- }
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-index 6ea337d464c4..64c78a42919f 100644
---- a/arch/arm64/kernel/cpu-reset.S
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -43,9 +43,7 @@ ENTRY(__cpu_soft_restart)
- 	hvc	#0				// no return
- 
- 1:	mov	x18, x1				// entry
--	mov	x0, x2				// arg0
--	mov	x1, x3				// arg1
--	mov	x2, x4				// arg2
-+	mov	x0, x2				// arg
- 	br	x18
- ENDPROC(__cpu_soft_restart)
- 
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-index ed50e9587ad8..7a8720ff186f 100644
---- a/arch/arm64/kernel/cpu-reset.h
-+++ b/arch/arm64/kernel/cpu-reset.h
-@@ -11,12 +11,10 @@
+ #include <asm/sysreg.h>
++#include <asm/trans_pgd.h>
  #include <asm/virt.h>
  
- void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
--	unsigned long arg0, unsigned long arg1, unsigned long arg2);
-+			unsigned long arg);
+ /*
+@@ -182,45 +179,6 @@ int arch_hibernation_header_restore(void *addr)
+ }
+ EXPORT_SYMBOL(arch_hibernation_header_restore);
  
- static inline void __noreturn cpu_soft_restart(unsigned long entry,
--					       unsigned long arg0,
--					       unsigned long arg1,
--					       unsigned long arg2)
-+					       unsigned long arg)
- {
- 	typeof(__cpu_soft_restart) *restart;
- 
-@@ -25,7 +23,7 @@ static inline void __noreturn cpu_soft_restart(unsigned long entry,
- 	restart = (void *)__pa_symbol(__cpu_soft_restart);
- 
- 	cpu_install_idmap();
--	restart(el2_switch, entry, arg0, arg1, arg2);
-+	restart(el2_switch, entry, arg);
- 	unreachable();
+-int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
+-		       unsigned long dst_addr,
+-		       pgprot_t pgprot)
+-{
+-	pgd_t *pgdp;
+-	pud_t *pudp;
+-	pmd_t *pmdp;
+-	pte_t *ptep;
+-
+-	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+-	if (pgd_none(READ_ONCE(*pgdp))) {
+-		pudp = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!pudp)
+-			return -ENOMEM;
+-		pgd_populate(&init_mm, pgdp, pudp);
+-	}
+-
+-	pudp = pud_offset(pgdp, dst_addr);
+-	if (pud_none(READ_ONCE(*pudp))) {
+-		pmdp = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!pmdp)
+-			return -ENOMEM;
+-		pud_populate(&init_mm, pudp, pmdp);
+-	}
+-
+-	pmdp = pmd_offset(pudp, dst_addr);
+-	if (pmd_none(READ_ONCE(*pmdp))) {
+-		ptep = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!ptep)
+-			return -ENOMEM;
+-		pmd_populate_kernel(&init_mm, pmdp, ptep);
+-	}
+-
+-	ptep = pte_offset_kernel(pmdp, dst_addr);
+-	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
+-
+-	return 0;
+-}
+-
+ /*
+  * Copies length bytes, starting at src_start into an new page,
+  * perform cache maintenance, then maps it at the specified address low
+@@ -339,161 +297,6 @@ int swsusp_arch_suspend(void)
+ 	return ret;
  }
  
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 9b41da50e6f7..fb6138a1c9ff 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -43,6 +43,7 @@ static void _kexec_image_info(const char *func, int line,
- 	pr_debug("    head:        %lx\n", kimage->head);
- 	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
- 	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
-+	pr_debug("    kern_reloc_arg: %pa\n", &kimage->arch.kern_reloc_arg);
- 
- 	for (i = 0; i < kimage->nr_segments; i++) {
- 		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
-@@ -59,14 +60,39 @@ void machine_kexec_cleanup(struct kimage *kimage)
- 	/* Empty routine needed to avoid build errors. */
- }
- 
-+/* Allocates pages for kexec page table */
-+static void *kexec_page_alloc(void *arg)
+-static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
+-{
+-	pte_t pte = READ_ONCE(*src_ptep);
+-
+-	if (pte_valid(pte)) {
+-		/*
+-		 * Resume will overwrite areas that may be marked
+-		 * read only (code, rodata). Clear the RDONLY bit from
+-		 * the temporary mappings we use during restore.
+-		 */
+-		set_pte(dst_ptep, pte_mkwrite(pte));
+-	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
+-		/*
+-		 * debug_pagealloc will removed the PTE_VALID bit if
+-		 * the page isn't in use by the resume kernel. It may have
+-		 * been in use by the original kernel, in which case we need
+-		 * to put it back in our copy to do the restore.
+-		 *
+-		 * Before marking this entry valid, check the pfn should
+-		 * be mapped.
+-		 */
+-		BUG_ON(!pfn_valid(pte_pfn(pte)));
+-
+-		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
+-	}
+-}
+-
+-static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
+-		    unsigned long end)
+-{
+-	pte_t *src_ptep;
+-	pte_t *dst_ptep;
+-	unsigned long addr = start;
+-
+-	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
+-	if (!dst_ptep)
+-		return -ENOMEM;
+-	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
+-	dst_ptep = pte_offset_kernel(dst_pmdp, start);
+-
+-	src_ptep = pte_offset_kernel(src_pmdp, start);
+-	do {
+-		_copy_pte(dst_ptep, src_ptep, addr);
+-	} while (dst_ptep++, src_ptep++, addr += PAGE_SIZE, addr != end);
+-
+-	return 0;
+-}
+-
+-static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
+-		    unsigned long end)
+-{
+-	pmd_t *src_pmdp;
+-	pmd_t *dst_pmdp;
+-	unsigned long next;
+-	unsigned long addr = start;
+-
+-	if (pud_none(READ_ONCE(*dst_pudp))) {
+-		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
+-		if (!dst_pmdp)
+-			return -ENOMEM;
+-		pud_populate(&init_mm, dst_pudp, dst_pmdp);
+-	}
+-	dst_pmdp = pmd_offset(dst_pudp, start);
+-
+-	src_pmdp = pmd_offset(src_pudp, start);
+-	do {
+-		pmd_t pmd = READ_ONCE(*src_pmdp);
+-
+-		next = pmd_addr_end(addr, end);
+-		if (pmd_none(pmd))
+-			continue;
+-		if (pmd_table(pmd)) {
+-			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
+-				return -ENOMEM;
+-		} else {
+-			set_pmd(dst_pmdp,
+-				__pmd(pmd_val(pmd) & ~PMD_SECT_RDONLY));
+-		}
+-	} while (dst_pmdp++, src_pmdp++, addr = next, addr != end);
+-
+-	return 0;
+-}
+-
+-static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+-		    unsigned long end)
+-{
+-	pud_t *dst_pudp;
+-	pud_t *src_pudp;
+-	unsigned long next;
+-	unsigned long addr = start;
+-
+-	if (pgd_none(READ_ONCE(*dst_pgdp))) {
+-		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
+-		if (!dst_pudp)
+-			return -ENOMEM;
+-		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
+-	}
+-	dst_pudp = pud_offset(dst_pgdp, start);
+-
+-	src_pudp = pud_offset(src_pgdp, start);
+-	do {
+-		pud_t pud = READ_ONCE(*src_pudp);
+-
+-		next = pud_addr_end(addr, end);
+-		if (pud_none(pud))
+-			continue;
+-		if (pud_table(pud)) {
+-			if (copy_pmd(dst_pudp, src_pudp, addr, next))
+-				return -ENOMEM;
+-		} else {
+-			set_pud(dst_pudp,
+-				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
+-		}
+-	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
+-
+-	return 0;
+-}
+-
+-static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+-			    unsigned long end)
+-{
+-	unsigned long next;
+-	unsigned long addr = start;
+-	pgd_t *src_pgdp = pgd_offset_k(start);
+-
+-	dst_pgdp = pgd_offset_raw(dst_pgdp, start);
+-	do {
+-		next = pgd_addr_end(addr, end);
+-		if (pgd_none(READ_ONCE(*src_pgdp)))
+-			continue;
+-		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
+-			return -ENOMEM;
+-	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
+-
+-	return 0;
+-}
+-
+-int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+-			  unsigned long end)
+-{
+-	int rc;
+-	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
+-
+-	if (!trans_pgd) {
+-		pr_err("Failed to allocate memory for temporary page tables.\n");
+-		return -ENOMEM;
+-	}
+-
+-	rc = copy_page_tables(trans_pgd, start, end);
+-	if (!rc)
+-		*dst_pgdp = trans_pgd;
+-
+-	return rc;
+-}
+-
+ /*
+  * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
+  *
+diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+index 849c1df3d214..f3002f1d0e61 100644
+--- a/arch/arm64/mm/Makefile
++++ b/arch/arm64/mm/Makefile
+@@ -6,6 +6,7 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+ obj-$(CONFIG_ARM64_PTDUMP_CORE)	+= dump.o
+ obj-$(CONFIG_ARM64_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
++obj-$(CONFIG_TRANS_TABLE)	+= trans_pgd.o
+ obj-$(CONFIG_NUMA)		+= numa.o
+ obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
+ KASAN_SANITIZE_physaddr.o	+= n
+diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+new file mode 100644
+index 000000000000..5ac712b92439
+--- /dev/null
++++ b/arch/arm64/mm/trans_pgd.c
+@@ -0,0 +1,219 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Transitional page tables for kexec and hibernate
++ *
++ * This file derived from: arch/arm64/kernel/hibernate.c
++ *
++ * Copyright (c) 2019, Microsoft Corporation.
++ * Pavel Tatashin <patatash@linux.microsoft.com>
++ *
++ */
++
++/*
++ * Transitional tables are used during system transferring from one world to
++ * another: such as during hibernate restore, and kexec reboots. During these
++ * phases one cannot rely on page table not being overwritten. This is because
++ * hibernate and kexec can overwrite the current page tables during transition.
++ */
++
++#include <asm/trans_pgd.h>
++#include <asm/pgalloc.h>
++#include <asm/pgtable.h>
++#include <linux/suspend.h>
++#include <linux/bug.h>
++#include <linux/mm.h>
++#include <linux/mmzone.h>
++
++static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
 +{
-+	struct kimage *kimage = (struct kimage *)arg;
-+	struct page *page = kimage_alloc_control_pages(kimage, 0);
++	pte_t pte = READ_ONCE(*src_ptep);
 +
-+	if (!page)
-+		return NULL;
++	if (pte_valid(pte)) {
++		/*
++		 * Resume will overwrite areas that may be marked
++		 * read only (code, rodata). Clear the RDONLY bit from
++		 * the temporary mappings we use during restore.
++		 */
++		set_pte(dst_ptep, pte_mkwrite(pte));
++	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
++		/*
++		 * debug_pagealloc will removed the PTE_VALID bit if
++		 * the page isn't in use by the resume kernel. It may have
++		 * been in use by the original kernel, in which case we need
++		 * to put it back in our copy to do the restore.
++		 *
++		 * Before marking this entry valid, check the pfn should
++		 * be mapped.
++		 */
++		BUG_ON(!pfn_valid(pte_pfn(pte)));
 +
-+	memset(page_address(page), 0, PAGE_SIZE);
-+
-+	return page_address(page);
++		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
++	}
 +}
 +
- int machine_kexec_post_load(struct kimage *kimage)
- {
- 	unsigned long kern_reloc;
-+	struct kern_reloc_arg *kern_reloc_arg;
- 
- 	kern_reloc = page_to_phys(kimage->control_code_page);
- 	memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
- 	       arm64_relocate_new_kernel_size);
++static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
++		    unsigned long end)
++{
++	pte_t *src_ptep;
++	pte_t *dst_ptep;
++	unsigned long addr = start;
 +
-+	kern_reloc_arg = kexec_page_alloc(kimage);
-+	if (!kern_reloc_arg)
++	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
++	if (!dst_ptep)
 +		return -ENOMEM;
++	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
++	dst_ptep = pte_offset_kernel(dst_pmdp, start);
 +
- 	kimage->arch.kern_reloc = kern_reloc;
-+	kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
++	src_ptep = pte_offset_kernel(src_pmdp, start);
++	do {
++		_copy_pte(dst_ptep, src_ptep, addr);
++	} while (dst_ptep++, src_ptep++, addr += PAGE_SIZE, addr != end);
 +
-+	kern_reloc_arg->head = kimage->head;
-+	kern_reloc_arg->entry_addr = kimage->start;
-+	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
- 
- 	kexec_image_info(kimage);
- 	return 0;
-@@ -203,8 +229,7 @@ void machine_kexec(struct kimage *kimage)
- 	 * userspace (kexec-tools).
- 	 * In kexec_file case, the kernel starts directly without purgatory.
- 	 */
--	cpu_soft_restart(kimage->arch.kern_reloc, kimage->head, kimage->start,
--			 kimage->arch.dtb_mem);
-+	cpu_soft_restart(kimage->arch.kern_reloc, kimage->arch.kern_reloc_arg);
- 
- 	BUG(); /* Should never get here. */
- }
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index c1d7db71a726..d352faf7cbe6 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -8,7 +8,7 @@
- 
- #include <linux/kexec.h>
- #include <linux/linkage.h>
--
-+#include <asm/asm-offsets.h>
- #include <asm/assembler.h>
- #include <asm/kexec.h>
- #include <asm/page.h>
-@@ -17,86 +17,58 @@
- /*
-  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-  *
-- * The memory that the old kernel occupies may be overwritten when coping the
-+ * The memory that the old kernel occupies may be overwritten when copying the
-  * new image to its final location.  To assure that the
-  * arm64_relocate_new_kernel routine which does that copy is not overwritten,
-  * all code and data needed by arm64_relocate_new_kernel must be between the
-  * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
-  * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-- * control_code_page, a special page which has been set up to be preserved
-- * during the copy operation.
-+ * safe memory that has been set up to be preserved during the copy operation.
-  */
- ENTRY(arm64_relocate_new_kernel)
--
--	/* Setup the list loop variables. */
--	mov	x18, x2				/* x18 = dtb address */
--	mov	x17, x1				/* x17 = kimage_start */
--	mov	x16, x0				/* x16 = kimage_head */
--	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
--	mov	x14, xzr			/* x14 = entry ptr */
--	mov	x13, xzr			/* x13 = copy dest */
--
- 	/* Clear the sctlr_el2 flags. */
--	mrs	x0, CurrentEL
--	cmp	x0, #CurrentEL_EL2
-+	mrs	x2, CurrentEL
-+	cmp	x2, #CurrentEL_EL2
- 	b.ne	1f
--	mrs	x0, sctlr_el2
-+	mrs	x2, sctlr_el2
- 	ldr	x1, =SCTLR_ELx_FLAGS
--	bic	x0, x0, x1
-+	bic	x2, x2, x1
- 	pre_disable_mmu_workaround
--	msr	sctlr_el2, x0
-+	msr	sctlr_el2, x2
- 	isb
--1:
--
--	/* Check if the new image needs relocation. */
-+1:	/* Check if the new image needs relocation. */
-+	ldr	x16, [x0, #KRELOC_HEAD]		/* x16 = kimage_head */
- 	tbnz	x16, IND_DONE_BIT, .Ldone
--
-+	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
- .Lloop:
- 	and	x12, x16, PAGE_MASK		/* x12 = addr */
--
- 	/* Test the entry flags. */
- .Ltest_source:
- 	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
- 
- 	/* Invalidate dest page to PoC. */
--	mov     x0, x13
--	add     x20, x0, #PAGE_SIZE
-+	mov     x2, x13
-+	add     x20, x2, #PAGE_SIZE
- 	sub     x1, x15, #1
--	bic     x0, x0, x1
--2:	dc      ivac, x0
--	add     x0, x0, x15
--	cmp     x0, x20
-+	bic     x2, x2, x1
-+2:	dc      ivac, x2
-+	add     x2, x2, x15
-+	cmp     x2, x20
- 	b.lo    2b
- 	dsb     sy
- 
--	mov x20, x13
--	mov x21, x12
--	copy_page x20, x21, x0, x1, x2, x3, x4, x5, x6, x7
--
--	/* dest += PAGE_SIZE */
--	add	x13, x13, PAGE_SIZE
-+	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
- 	b	.Lnext
--
- .Ltest_indirection:
- 	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
--
--	/* ptr = addr */
--	mov	x14, x12
-+	mov	x14, x12			/* ptr = addr */
- 	b	.Lnext
--
- .Ltest_destination:
- 	tbz	x16, IND_DESTINATION_BIT, .Lnext
--
--	/* dest = addr */
--	mov	x13, x12
--
-+	mov	x13, x12			/* dest = addr */
- .Lnext:
--	/* entry = *ptr++ */
--	ldr	x16, [x14], #8
--
--	/* while (!(entry & DONE)) */
--	tbz	x16, IND_DONE_BIT, .Lloop
--
-+	ldr	x16, [x14], #8			/* entry = *ptr++ */
-+	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
- .Ldone:
- 	/* wait for writes from copy_page to finish */
- 	dsb	nsh
-@@ -105,18 +77,16 @@ ENTRY(arm64_relocate_new_kernel)
- 	isb
- 
- 	/* Start new image. */
--	mov	x0, x18
--	mov	x1, xzr
--	mov	x2, xzr
--	mov	x3, xzr
--	br	x17
--
--ENDPROC(arm64_relocate_new_kernel)
-+	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
-+	ldr	x3, [x0, #KRELOC_KERN_ARG3]
-+	ldr	x2, [x0, #KRELOC_KERN_ARG2]
-+	ldr	x1, [x0, #KRELOC_KERN_ARG1]
-+	ldr	x0, [x0, #KRELOC_KERN_ARG0]	/* x0 = dtb address */
-+	br	x4
-+END(arm64_relocate_new_kernel)
- 
- .ltorg
--
- .align 3	/* To keep the 64-bit values below naturally aligned. */
--
- .Lcopy_end:
- .org	KEXEC_CONTROL_PAGE_SIZE
- 
++	return 0;
++}
++
++static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
++		    unsigned long end)
++{
++	pmd_t *src_pmdp;
++	pmd_t *dst_pmdp;
++	unsigned long next;
++	unsigned long addr = start;
++
++	if (pud_none(READ_ONCE(*dst_pudp))) {
++		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
++		if (!dst_pmdp)
++			return -ENOMEM;
++		pud_populate(&init_mm, dst_pudp, dst_pmdp);
++	}
++	dst_pmdp = pmd_offset(dst_pudp, start);
++
++	src_pmdp = pmd_offset(src_pudp, start);
++	do {
++		pmd_t pmd = READ_ONCE(*src_pmdp);
++
++		next = pmd_addr_end(addr, end);
++		if (pmd_none(pmd))
++			continue;
++		if (pmd_table(pmd)) {
++			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
++				return -ENOMEM;
++		} else {
++			set_pmd(dst_pmdp,
++				__pmd(pmd_val(pmd) & ~PMD_SECT_RDONLY));
++		}
++	} while (dst_pmdp++, src_pmdp++, addr = next, addr != end);
++
++	return 0;
++}
++
++static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
++		    unsigned long end)
++{
++	pud_t *dst_pudp;
++	pud_t *src_pudp;
++	unsigned long next;
++	unsigned long addr = start;
++
++	if (pgd_none(READ_ONCE(*dst_pgdp))) {
++		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
++		if (!dst_pudp)
++			return -ENOMEM;
++		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
++	}
++	dst_pudp = pud_offset(dst_pgdp, start);
++
++	src_pudp = pud_offset(src_pgdp, start);
++	do {
++		pud_t pud = READ_ONCE(*src_pudp);
++
++		next = pud_addr_end(addr, end);
++		if (pud_none(pud))
++			continue;
++		if (pud_table(pud)) {
++			if (copy_pmd(dst_pudp, src_pudp, addr, next))
++				return -ENOMEM;
++		} else {
++			set_pud(dst_pudp,
++				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
++		}
++	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
++
++	return 0;
++}
++
++static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
++			    unsigned long end)
++{
++	unsigned long next;
++	unsigned long addr = start;
++	pgd_t *src_pgdp = pgd_offset_k(start);
++
++	dst_pgdp = pgd_offset_raw(dst_pgdp, start);
++	do {
++		next = pgd_addr_end(addr, end);
++		if (pgd_none(READ_ONCE(*src_pgdp)))
++			continue;
++		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
++			return -ENOMEM;
++	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
++
++	return 0;
++}
++
++int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
++			  unsigned long end)
++{
++	int rc;
++	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
++
++	if (!trans_pgd) {
++		pr_err("Failed to allocate memory for temporary page tables.\n");
++		return -ENOMEM;
++	}
++
++	rc = copy_page_tables(trans_pgd, start, end);
++	if (!rc)
++		*dst_pgdp = trans_pgd;
++
++	return rc;
++}
++
++int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
++		       pgprot_t pgprot)
++{
++	pgd_t *pgdp;
++	pud_t *pudp;
++	pmd_t *pmdp;
++	pte_t *ptep;
++
++	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
++	if (pgd_none(READ_ONCE(*pgdp))) {
++		pudp = (void *)get_safe_page(GFP_ATOMIC);
++		if (!pudp)
++			return -ENOMEM;
++		pgd_populate(&init_mm, pgdp, pudp);
++	}
++
++	pudp = pud_offset(pgdp, dst_addr);
++	if (pud_none(READ_ONCE(*pudp))) {
++		pmdp = (void *)get_safe_page(GFP_ATOMIC);
++		if (!pmdp)
++			return -ENOMEM;
++		pud_populate(&init_mm, pudp, pmdp);
++	}
++
++	pmdp = pmd_offset(pudp, dst_addr);
++	if (pmd_none(READ_ONCE(*pmdp))) {
++		ptep = (void *)get_safe_page(GFP_ATOMIC);
++		if (!ptep)
++			return -ENOMEM;
++		pmd_populate_kernel(&init_mm, pmdp, ptep);
++	}
++
++	ptep = pte_offset_kernel(pmdp, dst_addr);
++	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
++
++	return 0;
++}
 -- 
 2.23.0
 
