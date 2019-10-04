@@ -2,128 +2,115 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DB5C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88787C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2430720862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F26E2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwVTs6IT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gLU47tsM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gLU47tsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfJDLT6 (ORCPT
+        id S1730959AbfJDLUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:19:58 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41051 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbfJDLT6 (ORCPT
+        Fri, 4 Oct 2019 07:20:55 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45492 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729585AbfJDLUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:19:58 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f5so6088293ljg.8;
-        Fri, 04 Oct 2019 04:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eHbbyBI0YzhubY2xK/Fy9TQHAcFSxAHRDP1G9U6X/5w=;
-        b=ZwVTs6ITF1OZARiTDXBR9cv0O8YFIWaIs7/X53l22yjs/AfRrkN7vOR979gY90rnMO
-         sI9K0hwQ7BPyKach/dZz40Ew01I7IMRT3lw5XUiG4szb9LGp2dXC8jZRbxQWYpoceOxa
-         5/LUYHnITNZ2+adcm8RM+PfJPnn5osUlYxT8Gt7sD/lAK8sKN5gujLYkRfZka+YC/H0h
-         jxU0SUFy03+x/+jvAIJJNRin8a+pv1AYdTTdRjIqHRDcweH95bPb8sjI0ikSJZHteAKe
-         8TjRnAepz0Ee9ICP6F1zBNFt+M1UfpJhQw+ytV4VIbUYlvvhh3ZIFZC2yU5fac8xtIt5
-         4+7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eHbbyBI0YzhubY2xK/Fy9TQHAcFSxAHRDP1G9U6X/5w=;
-        b=HtYXqCLvEkRIX5w6C8jclGDLKYBWlDaERNcu9kAKHOphg5lMFHdPPr2S7KfvmY5wOZ
-         zjwvagXKemD/t8R6Dl4pENvr6oeXNo8gwu9zDvfRmkUrNR8U0XOml23NMmleu4ls3wry
-         ogEI+tjOrA9hvjRTXZ09PtzZxQc5EnVrKDppOZNNWHbZ0lfMlHK7O8gbPkSFbJqvspqN
-         p+kVD1VFf5sP/YrIG4FVSl4VNFrvrA+UVnd/pW/CEApZTeK+yW7+CgCDnhpbKKWlozJD
-         3QGUmN1vh3BPs6k2Iuwd3BpajnsTnjxB1TASJ9EmJitof//bklsexW4oWYbKfdkZqlLP
-         6zyw==
-X-Gm-Message-State: APjAAAVnaEleseJ/NuV2F5amu4qAi3ZGuPAkODWgpScHeHFuSzXtSAQZ
-        g1ThTN0sq+vt2+9ojzSMiWwwEe1o3mXoT6Fz8Hg=
-X-Google-Smtp-Source: APXvYqwphC/8akT4K4ZZo2FAEqmbhT5NdtBZSEXp3MGpNwS3nRBpRLJLa1fNenXtzAXvqTn8kUIkv9IvCN6TwZ0WAX8=
-X-Received: by 2002:a2e:b4c5:: with SMTP id r5mr2937831ljm.54.1570187996088;
- Fri, 04 Oct 2019 04:19:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
- <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
- <20191002083913.GG2714@lahna.fi.intel.com> <767f2f97059e4e9f861080672aaa18d3@AUSX13MPC105.AMER.DELL.COM>
- <CA+CmpXs4YsTA3QnD77SaXq3mRYX6oFwx+pm-3wEErwkF-02M+A@mail.gmail.com>
- <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
- <20191003080028.GK2819@lahna.fi.intel.com> <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
- <20191004075426.GA2819@lahna.fi.intel.com> <CA+CmpXsMkwZhCegGYPYQo2GwN6ROwDYbY3RVZTEeN+FfZ-PbMQ@mail.gmail.com>
- <20191004081951.GD2819@lahna.fi.intel.com>
-In-Reply-To: <20191004081951.GD2819@lahna.fi.intel.com>
-From:   Yehezkel Bernat <yehezkelshb@gmail.com>
-Date:   Fri, 4 Oct 2019 14:19:39 +0300
-Message-ID: <CA+CmpXvoro+m-NZLguMtDq_r_Og8LAFQgPGosvA+WsjMhi6m1Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        nicholas.johnson-opensource@outlook.com.au,
-        Lukas Wunner <lukas@wunner.de>, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu,
-        Anthony Wong <anthony.wong@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 4 Oct 2019 07:20:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AD9756034E; Fri,  4 Oct 2019 11:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570188053;
+        bh=13JrP6NAsup1Fp+Re+RfVIJcKlXbS8TUEZmgMR+KpCs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gLU47tsMK/5sQwAf2jcRZzGVW0l5rd49H73OaDttdUekdzxKisaK+Vr3o/zGj1Mjj
+         /2rYSfYecyxhqadepobOlCYmpekoFBdrsix3IWL1trV9ruswT23NKjlgXRe7vd8l/+
+         fNflSgIVTlsw4JZlEwlnGeRJbWJO9CPWqideMdzE=
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1E7D60A4E;
+        Fri,  4 Oct 2019 11:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570188053;
+        bh=13JrP6NAsup1Fp+Re+RfVIJcKlXbS8TUEZmgMR+KpCs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gLU47tsMK/5sQwAf2jcRZzGVW0l5rd49H73OaDttdUekdzxKisaK+Vr3o/zGj1Mjj
+         /2rYSfYecyxhqadepobOlCYmpekoFBdrsix3IWL1trV9ruswT23NKjlgXRe7vd8l/+
+         fNflSgIVTlsw4JZlEwlnGeRJbWJO9CPWqideMdzE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1E7D60A4E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for pm6150/pm6150l
+Date:   Fri,  4 Oct 2019 16:50:39 +0530
+Message-Id: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 11:19 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Fri, Oct 04, 2019 at 11:07:34AM +0300, Yehezkel Bernat wrote:
-> > > Also if you can get the hw_vendor_id and hw_product_id from the kernel
-> > > does that mean you don't need to do the two reads or you still need
-> > > those?
-> >
-> > Are those the chip vendor or the OEM, in case they are different?
->
-> Those are the actual USB4 hardware maker values, directly from
-> ROUTER_CS_0 (p. 287 in the USB4 spec). This almost certainly differ from
-> the OEM values from DROM we currently expose.
+Add support for the PM6150 and PM6150L GPIO support to the
+Qualcomm PMIC GPIO binding.
 
-Makes sense to me. Userspace can learn the relevant IDs that their NVM format is
-known.
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
+ 2 files changed, 6 insertions(+)
 
->
-> > Thinking about it again, I'd guess it shouldn't matter much, if the chip is from
-> > Intel, the FW supports NVM upgrade, isn't it?
->
-> So the bottom line is that if the kernel thinks the router supports NVM
-> upgrade it exposes the nvm_active/nvm_non_active files etc. I think
-> fwupd uses this information to display user whether the device can be
-> upgraded or not (for example ICL cannot as the NVM is part of BIOS).
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+index c32bf32..2f48cca 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+@@ -23,6 +23,8 @@ PMIC's from Qualcomm.
+ 		    "qcom,pms405-gpio"
+ 		    "qcom,pm8150-gpio"
+ 		    "qcom,pm8150b-gpio"
++		    "qcom,pm6150-gpio"
++		    "qcom,pm6150l-gpio"
+ 
+ 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
+ 		    if the device is on an spmi bus or an ssbi bus respectively
+@@ -100,6 +102,8 @@ to specify in a pin configuration subnode:
+ 					     and gpio8)
+ 		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
+ 		    gpio1-gpio12 for pm8150l (hole on gpio7)
++		    gpio1-gpio10 for pm6150
++		    gpio1-gpio12 for pm6150l
+ 
+ - function:
+ 	Usage: required
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index f1fece5..387917c 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -1121,6 +1121,8 @@ static int pmic_gpio_remove(struct platform_device *pdev)
+ 	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
+ 	/* pm8150l has 12 GPIOs with holes on 7 */
+ 	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
++	{ .compatible = "qcom,pm6150-gpio", .data = (void *) 10 },
++	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
+ 	{ },
+ };
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
 
-Yes, fwupd already takes this into account, but the question here is how to
-handle cases that NVM is available but the format isn't known to
-userspace (yet).
-
->
-> Exposing hw_vendor_id and hw_product_id may speed up fwupd because it
-> does not need to go over the active NVM to figure out whether the new
-> image is for the correct controller.
-
-It's not about finding the relevant image for upgrade (which must be searched
-for by looking in the DROM vendor/product values), but about the question if the
-NVM format is known to userspace and skip the parsing work if it's anyway going
-to fail.
-
-So yes, I think exposing vendor ID (and maybe also product ID) can improve the
-situation.
-
-Thanks!
