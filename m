@@ -2,166 +2,134 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778CFC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9548C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBBE222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8177215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388246AbfJDNIQ (ORCPT
+        id S2388270AbfJDNIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:08:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:57541 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387874AbfJDNIQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:08:16 -0400
-Received: from [192.168.1.162] ([37.4.249.116]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N4eOd-1i5kly1aQJ-011mpf; Fri, 04 Oct 2019 15:07:53 +0200
-Subject: Re: [PATCH] mmc: sdhci-iproc: fix spurious interrupts on Multiblock
- reads with bcm2711
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wahrenst@gmx.net, linux-arm-kernel@lists.infradead.org
-References: <20191004125226.27037-1-nsaenzjulienne@suse.de>
- <0b544f5bc31857fef2d13bd16275cf09ace58b89.camel@suse.de>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- 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 AQ==
-Message-ID: <aacf6c56-e156-41b4-40b9-e8228ab63fcd@i2se.com>
-Date:   Fri, 4 Oct 2019 15:07:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 09:08:40 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38014 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387545AbfJDNIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:08:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 06:08:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
+   d="scan'208";a="276041229"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga001.jf.intel.com with SMTP; 04 Oct 2019 06:08:36 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 04 Oct 2019 16:08:35 +0300
+Date:   Fri, 4 Oct 2019 16:08:35 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
+Message-ID: <20191004130835.GX1208@intel.com>
+References: <20190909135205.10277-1-benjamin.gaignard@st.com>
+ <20190909135205.10277-2-benjamin.gaignard@st.com>
+ <20191003142738.GM1208@intel.com>
+ <CA+M3ks4FBAgCRDDHZ=x7kvQ1Y=0dBdj4+KLO2djh__hW+L=3gQ@mail.gmail.com>
+ <20191003150526.GN1208@intel.com>
+ <CA+M3ks7-SNusVJsiHqrmy4AN+_OO5e1X=ZRN16Hj6f-V3GnVow@mail.gmail.com>
+ <20191003154627.GQ1208@intel.com>
+ <CA+M3ks4gpDdZTPdBYRd=CrwgEYiSWJbXqvtPb-0KpW1BhzvmEQ@mail.gmail.com>
+ <20191004122747.GT1208@intel.com>
+ <5fe9d7e2-f434-70cb-ac0f-ad66a565093d@st.com>
 MIME-Version: 1.0
-In-Reply-To: <0b544f5bc31857fef2d13bd16275cf09ace58b89.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:pR/2ExagJgkml9EmxezFDGY8zJHDHHGM39AFWHqtz3zhwcgM2Dw
- WyRU7QbbVx/0+eDddrnfK5On9VfcwMyIPI2/cfWt6jnTnA1Xj75dSz5GJ4UM+zOBrnMNx5Y
- Ynr1cLHNfa6vPmJKQ6UvtlCUt2zy53MedbbIt1x4aFzyajmafYfP3TiZIU3vJKBzrGzlPBW
- w5tQ23qth0Ou2+uoR7e0w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NRsH2DW6qo4=:q7TkvBteAnM+ASESva2mwt
- 1vBVwQlQApmrUnNlkC/9nYnp+DPFibxn1dLCgZspN3KXZSA/EfdsCvbamGFDidKyWS53kRZLx
- 89UOv6FgvEt6iRWtbglFezbA6rEDdl9W7dz/5msSmZ5aSPeASip4uxw/oxIj3sUwMegbwEDwk
- cZViMVjcXJu/W7d3z89ItlMqE6QZXqaroqmoxcBJFSnW1eI71GczmjetLRH102B4rx1OzRyEz
- U96Q4za82pjkgi4T9O5WZzd9n41cpGdJMRFrcIfJsGaZoJI9LbY7wTmNJOJgZ/u5OsRBRWzmv
- nqNSC/NQQ9Lc/GHk7HmbDI5M71RzvOTsdxJpJUVOxhml0xaKsPqw4jkq8uG3q1VLUIPeBccXA
- FQKpErj1MGPVvmHNT5/H6QqjkrzDhC3C13rf8oeBQY8BWcMeMXPXmJN9tfVygpe92cCQw8wPv
- 7Jmp83UZzCfHLAcsRh5blg7aCkSzX/oLcL6NJiGOXyOH5DYmZ7O/ieALDYQF3/JxV9J0rC2iA
- y0QpC1mI8Rx8oR3DhOdrneHrVf1T3R8wCbYJllV4NUuTZ13lxR8gTv9bhmE4tM/mPy2/LBwS7
- 6zXeC3SNRQIOOdXzL8HihgvUSCtSXu1xhuYnp57Y8gxjoBjvG69ZKWlfhhKSj+Eo6yccXypP/
- WdZWevlFw2ue4ZTA2pcZLzNL29E2ewDgslH6qG5zfphOKKBftGqa6+U5n9gg2T4jaD4U4Htnj
- Iz4C7y4A5Dyi2pCqz4GYJDsrhvDdn8sAocYIrXyBAh0lOpsUhHwKhxVRc3Fhw63CA5RNgWb62
- mKGChj7/M/PZTVdmlhR/ANq21roXy1jflBVYFQ5wfVkieGaSX7Q5Rv7ZIIx974dtuvgdRYlS3
- mFsI1OAqFwy3JR38nzFFYkP/+FENz1Ah+4h7huLWOwLZOvMIuHV09bgn8jjV8vZ0ou7bmd1+T
- W92tUOHxHgSY2wXWkTSBMfFTgxBsEseB5vjC2doujRnQs+9cTsaDX2J72Q4D/pYeGvhWr3X+c
- F0XBLapaI/xQFoafTh2XjkLTw5SG4PMloa/x6vE02Q0SIpfh1uGUQmWStw15gqPGtA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5fe9d7e2-f434-70cb-ac0f-ad66a565093d@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 04.10.19 um 14:59 schrieb Nicolas Saenz Julienne:
-> On Fri, 2019-10-04 at 14:52 +0200, Nicolas Saenz Julienne wrote:
->> The Raspberry Pi 4 SDHCI hardware seems to automatically issue CMD12
->> after multiblock reads even when ACMD12 is disabled. This triggers
->> spurious interrupts after the data transfer is done with the following
->> message:
->>
->>   mmc1: Got data interrupt 0x00000002 even though no data operation was in
->> progress.
->>   mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
->>   mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00001002
->>   mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
->>   mmc1: sdhci: Argument:  0x00000000 | Trn mode: 0x00000033
->>   mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
->>   mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
->>   mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
->>   mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000000
->>   mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
->>   mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
->>   mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
->>   mmc1: sdhci: Cmd:       0x00000c1a | Max curr: 0x00080008
->>   mmc1: sdhci: Resp[0]:   0x00000b00 | Resp[1]:  0x00edc87f
->>   mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
->>   mmc1: sdhci: Host ctl2: 0x00000001
->>   mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xf3025208
->>   mmc1: sdhci: ============================================
->>
->> Enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 to enable ACMD12 on multiblock
->> reads and suppress the spurious interrupts.
->>
->> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> Tested-by: Matthias Brugger <mbrugger@suse.com>
-> Forgot to add:
->
-> Fixes: f84e411c85be ("mmc: sdhci-iproc: Add support for emmc2 of the BCM2711")
->
-> I'll resend if needed.
+On Fri, Oct 04, 2019 at 12:36:56PM +0000, Benjamin GAIGNARD wrote:
+> 
+> On 10/4/19 2:27 PM, Ville Syrjälä wrote:
+> > On Fri, Oct 04, 2019 at 12:48:02PM +0200, Benjamin Gaignard wrote:
+> >> Le jeu. 3 oct. 2019 à 17:46, Ville Syrjälä
+> >> <ville.syrjala@linux.intel.com> a écrit :
+> >>> On Thu, Oct 03, 2019 at 05:37:15PM +0200, Benjamin Gaignard wrote:
+> >>>> Le jeu. 3 oct. 2019 à 17:05, Ville Syrjälä
+> >>>> <ville.syrjala@linux.intel.com> a écrit :
+> >>>>> On Thu, Oct 03, 2019 at 04:46:54PM +0200, Benjamin Gaignard wrote:
+> >>>>>> Le jeu. 3 oct. 2019 à 16:27, Ville Syrjälä
+> >>>>>> <ville.syrjala@linux.intel.com> a écrit :
+> >>>>>>> On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote:
+> >>>>>>>> Fix warnings with W=1.
+> >>>>>>>> Few for_each macro set variables that are never used later.
+> >>>>>>>> Prevent warning by marking these variables as __maybe_unused.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >>>>>>>> ---
+> >>>>>>>>   drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++------------------
+> >>>>>>>>   1 file changed, 18 insertions(+), 18 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> >>>>>>>> index aa16ea17ff9b..b69d17b0b9bd 100644
+> >>>>>>>> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> >>>>>>>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> >>>>>>>> @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
+> >>>>>>>>              struct drm_encoder *encoder)
+> >>>>>>>>   {
+> >>>>>>>>        struct drm_crtc_state *crtc_state;
+> >>>>>>>> -     struct drm_connector *connector;
+> >>>>>>>> +     struct drm_connector __maybe_unused *connector;
+> >>>>>>> Rather ugly. IMO would be nicer if we could hide something inside
+> >>>>>>> the iterator macros to suppress the warning.
+> >>>>>> Ok but how ?
+> >>>>>> connector is assigned in the macros but not used later and we can't
+> >>>>>> set "__maybe_unused"
+> >>>>>> in the macro.
+> >>>>>> Does another keyword exist for that ?
+> >>>>> Stick a (void)(connector) into the macro?
+> >>>> That could work but it will look strange inside the macro.
+> >>>>
+> >>>>> Another (arguably cleaner) idea would be to remove the connector/crtc/plane
+> >>>>> argument from the iterators entirely since it's redundant, and instead just
+> >>>>> extract it from the appropriate new/old state as needed.
+> >>>>>
+> >>>>> We could then also add a for_each_connector_in_state()/etc. which omit
+> >>>>> s the state arguments and just has the connector argument, for cases where
+> >>>>> you don't care about the states when iterating.
+> >>>> That may lead to get a macro for each possible combination of used variables.
+> >>> We already have new/old/oldnew, so would "just" add one more.
+> >> Not just one, it will be one each new/old/oldnew macro to be able to distinguish
+> >> when connector is used or not.
+> > What I'm suggesting is this:
+> > for_each_connector_in_state(state, connector, i)
+> > for_each_old_connector_in_state(state, old_conn_state, i)
+> > for_each_new_connector_in_state(state, new_conn_state, i)
+> > for_each_oldnew_connector_in_state(state, old_conn_state, new_conn_state, i)
+> >
+> > So only four in total for each object type, instead of the current
+> > three.
+> 
+> You are missing these cases: old and connector, new and connector,
+> 
+> old and new and connector are needed together.
 
-Yes, please and you can add my:
+No, that's redundant. You can always get the connector from
+old/new_conn_state->connector if you need it.
 
-Acked-by: Stefan Wahren <wahrenst@gmx.net>
-
->
-> Regards,
-> Nicolas
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Ville Syrjälä
+Intel
