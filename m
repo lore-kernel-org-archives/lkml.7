@@ -2,75 +2,58 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAC0C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E6CC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537B2222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMYufGuS"
+	by mail.kernel.org (Postfix) with ESMTP id 63036222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbfJDVzu (ORCPT
+        id S1731422AbfJDV41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:55:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44440 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfJDVzu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 17:55:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i14so4467658pgt.11;
-        Fri, 04 Oct 2019 14:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vkZt0GXM6qo82WWXoUdTiYWmectwUJ8fNOCzw+vFaZA=;
-        b=TMYufGuSnVoxWfOa8/Z/yRVBCyCrAwDmi57il930HlXUOWstAn1VqNgqDpxG1/s6FO
-         jVzxb47Maw5QTKV6BdRdm2QHqkXXajXuMft5uydWJ99ug99ePO0JfKZ7Yzs3AUFszp4z
-         oNO2bNEo5kVLPtTCaUmeaoeLPIFKW7K5j2s9Fuvd4oV86SZ9BhW+YIDKpSPrhj7Pzr5A
-         EQcZ5Y0bvs+1S/4dvq7NnL0CQLhxkGBTzgg6WUuRT2qhJlxsogGuTPP+NKpQ1/OdALTq
-         O0ToFvndKTQat/q1uNOZrmIfItPPQ8GhI9SnH5APlRoQS97Uu1BT7ZfL7paW94ySCiPj
-         CbYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vkZt0GXM6qo82WWXoUdTiYWmectwUJ8fNOCzw+vFaZA=;
-        b=c2GQDB9SWaEzFF6cFO25N7vNut0AAaQLW0WQWVHoTAEG6ySsrRyjl7iIdyCQUg6mWn
-         fZ2G0AHiV44p1StiYOMyvbrPSF4Qagq2DlRnyZWP6T5NOa/OuGmPQShFMiK2zsP0mj1o
-         kiDMxFhkDdwQ1VWVW9Ugw/zFQZFyqLZ+eptwb74XR57MSEwJGV5SPdbyN5XkUo8mZHjP
-         hvCxoK+b5gPwA8aW7Rc5tQC4J54e5Tk8vZoDN5lWgre3ECo3p7emIHocfsqtxshXsdpt
-         HxEetOW+fgFjScTXxHYxKqnRZbf16JqD0+mgKgF3F/cLuUmKdGuwSENhyUjC69+3TaUu
-         nljg==
-X-Gm-Message-State: APjAAAW9sgnutfhSI90DCXX+3HDRlKsIDxzhLcoZKxvK0UXe4XOY1O8Z
-        WBtDF3AO9H3eVlUknsRao8g=
-X-Google-Smtp-Source: APXvYqwx/LQCYgX/lCyiMKyiW7/oppBn2dDWhtxoXzCzqXC9DuFsGT8gP6S4+j+MAh1N3GHx0oTurA==
-X-Received: by 2002:a17:90a:1609:: with SMTP id n9mr19150165pja.64.1570226149687;
-        Fri, 04 Oct 2019 14:55:49 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id 207sm8094732pfu.129.2019.10.04.14.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 14:55:48 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: serial: fsl_lpuart: Fix lpuart_flush_buffer()
-Date:   Fri,  4 Oct 2019 14:55:37 -0700
-Message-Id: <20191004215537.5308-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 4 Oct 2019 17:56:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:5964 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727647AbfJDV41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 17:56:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 14:56:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
+   d="scan'208";a="191710644"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Oct 2019 14:56:25 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 00/16] x86/cpu: Clean up handling of VMX features
+Date:   Fri,  4 Oct 2019 14:55:59 -0700
+Message-Id: <20191004215615.5479-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,49 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix incorrect read-modify-write sequence in lpuart_flush_buffer() that
-was reading from UARTPFIFO and writing to UARTCFIFO instead of
-operating solely on the latter.
+Clean up a handful of interrelated warts in the kernel's handling of VMX:
 
-Fixes: 9bc19af9dacb ("tty: serial: fsl_lpuart: Flush HW FIFOs in .flush_buffer")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Vivien Didelot <vivien.didelot@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
+  - Enable VMX in IA32_FEATURE_CONTROL during boot instead of on-demand
+    during KVM load to avoid future contention over writing the MSR.
 
-Greg:
+  - Rework VMX feature reporting so that it is accurate and up-to-date,
+    now and in the future.
 
-This bug causes occasional boot hang on 5.4-rc1 on Vybrid, so it might
-be good to push that for 5.4-rc2.
+  - Consolidate code across CPUs that support VMX.
 
-Thanks,
-Andrey Sirnov
+The patches are based on tip/x86/cpu, commit
+ 
+  87d6021b8143 ("x86/math-emu: Limit MATH_EMULATION to 486SX compatibles")
 
- drivers/tty/serial/fsl_lpuart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please let me know if you'd prefer not to receive the full patch set on
+future versions of the series.  I cc'd everyone on all patches to provide
+the full picture, e.g. the motivation behind things like the perf patch.
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 3e17bb8a0b16..537896c4d887 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -548,7 +548,7 @@ static void lpuart_flush_buffer(struct uart_port *port)
- 		val |= UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH;
- 		lpuart32_write(&sport->port, val, UARTFIFO);
- 	} else {
--		val = readb(sport->port.membase + UARTPFIFO);
-+		val = readb(sport->port.membase + UARTCFIFO);
- 		val |= UARTCFIFO_TXFLUSH | UARTCFIFO_RXFLUSH;
- 		writeb(val, sport->port.membase + UARTCFIFO);
- 	}
+
+This series stems from two separate but related issues.  The first issue,
+pointed out by Boris in the SGX enabling series[1], is that the kernel
+currently doesn't ensure the IA32_FEATURE_CONTROL MSR is configured during
+boot.  The second issue is that the kernel's reporting of VMX features is
+stale, potentially inaccurate, and difficult to maintain.
+
+== IA32_FEATURE_CONTROL ==
+Lack of IA32_FEATURE_CONTROL configuration during boot isn't a functional
+issue in the current kernel as the majority of platforms set and lock
+IA32_FEATURE_CONTROL in firmware.  And when the MSR is left unlocked, KVM
+is the only subsystem that writes IA32_FEATURE_CONTROL.  That will change
+if/when SGX support is enabled, as SGX will also want to fully enable
+itself when IA32_FEATURE_CONTROL is unlocked.
+
+== VMX Feature Reporting ==
+VMX features are not enumerated via CPUID, but instead are enumerated
+through VMX MSRs.  As a result, new VMX features are not automatically
+reported via /proc/cpuinfo.
+
+An attempt was made long ago to report interesting and/or meaningful VMX
+features by synthesizing select features into a Linux-defined cpufeatures
+word.  Synthetic feature flags worked for the initial purpose, but the
+existence of the synthetic flags was forgotten almost immediately, e.g.
+only one new flag (EPT A/D) has been added in the the decade since the
+synthetic VMX features were introduced, while VMX and KVM have gained
+support for many new features.
+
+Placing the synthetic flags in x86_capability also allows them to be
+queried via cpu_has() and company, which is misleading as the flags exist
+purely for reporting via /proc/cpuinfo.  KVM, the only in-kernel user of
+VMX, ignores the flags.
+
+Last but not least, VMX features are reported in /proc/cpuinfo even
+when VMX is unusable due to lack of enabling in IA32_FEATURE_CONTROL.
+
+== Caveats ==
+All of the testing of non-standard flows was done in a VM, as I don't
+have a system that leaves IA32_FEATURE_CONTROL unlocked, or locks it with
+VMX disabled.
+
+The Centaur and Zhaoxin changes are somewhat speculative, as I haven't
+confirmed they actually support IA32_FEATURE_CONTROL, or that they want to
+gain "official" KVM support.  I assume they unofficially support KVM given
+that both CPUs went through the effort of enumerating VMX features.  That
+in turn would require them to support IA32_FEATURE_CONTROL since KVM will
+fault and refuse to load if the MSR doesn't exist.
+
+[1] https://lkml.kernel.org/r/20190925085156.GA3891@zn.tnic
+
+
+Sean Christopherson (16):
+  x86/intel: Initialize IA32_FEATURE_CONTROL MSR at boot
+  x86/mce: WARN once if IA32_FEATURE_CONTROL MSR is left unlocked
+  x86/centaur: Use common IA32_FEATURE_CONTROL MSR initialization
+  x86/zhaoxin: Use common IA32_FEATURE_CONTROL MSR initialization
+  KVM: VMX: Drop initialization of IA32_FEATURE_CONTROL MSR
+  x86/cpu: Clear VMX feature flag if VMX is not fully enabled
+  KVM: VMX: Use VMX feature flag to query BIOS enabling
+  KVM: VMX: Check for full VMX support when verifying CPU compatibility
+  x86/vmx: Introduce VMX_FEATURES_*
+  x86/cpu: Detect VMX features on Intel, Centaur and Zhaoxin CPUs
+  x86/cpu: Print VMX features as separate line item in /proc/cpuinfo
+  x86/cpufeatures: Drop synthetic VMX feature flags
+  KVM: VMX: Use VMX_FEATURE_* flags to define VMCS control bits
+  x86/cpufeatures: Clean up synthetic virtualization flags
+  perf/x86: Provide stubs of KVM helpers for non-Intel CPUs
+  KVM: VMX: Allow KVM_INTEL when building for Centaur and/or Zhaoxin
+    CPUs
+
+ MAINTAINERS                           |   2 +-
+ arch/x86/Kconfig.cpu                  |   8 ++
+ arch/x86/boot/mkcpustr.c              |   1 +
+ arch/x86/include/asm/cpufeatures.h    |  15 +---
+ arch/x86/include/asm/perf_event.h     |  22 +++--
+ arch/x86/include/asm/processor.h      |   4 +
+ arch/x86/include/asm/vmx.h            | 105 +++++++++++-----------
+ arch/x86/include/asm/vmxfeatures.h    | 121 ++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/Makefile          |   6 +-
+ arch/x86/kernel/cpu/centaur.c         |  35 +-------
+ arch/x86/kernel/cpu/common.c          |   3 +
+ arch/x86/kernel/cpu/cpu.h             |   4 +
+ arch/x86/kernel/cpu/feature_control.c | 106 ++++++++++++++++++++++
+ arch/x86/kernel/cpu/intel.c           |  49 +----------
+ arch/x86/kernel/cpu/mce/intel.c       |   7 +-
+ arch/x86/kernel/cpu/mkcapflags.sh     |  15 +++-
+ arch/x86/kernel/cpu/proc.c            |  15 ++++
+ arch/x86/kernel/cpu/zhaoxin.c         |  35 +-------
+ arch/x86/kvm/Kconfig                  |   9 +-
+ arch/x86/kvm/vmx/vmx.c                |  41 ++-------
+ 20 files changed, 368 insertions(+), 235 deletions(-)
+ create mode 100644 arch/x86/include/asm/vmxfeatures.h
+ create mode 100644 arch/x86/kernel/cpu/feature_control.c
+
 -- 
-2.21.0
+2.22.0
 
