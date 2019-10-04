@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4670BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EA1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A321222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD1E21D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbfJDSRQ (ORCPT
+        id S2388971AbfJDSRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:17:16 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15536 "EHLO mga07.intel.com"
+        Fri, 4 Oct 2019 14:17:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15531 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388618AbfJDSRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388610AbfJDSRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 14:17:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 11:17:07 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 11:17:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="204394825"
+   d="scan'208";a="204394817"
 Received: from chang-linux-3.sc.intel.com ([172.25.66.185])
-  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 11:17:07 -0700
+  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 11:17:06 -0700
 From:   "Chang S. Bae" <chang.seok.bae@intel.com>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
         chang.seok.bae@intel.com
-Subject: [PATCH v9 16/17] x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
-Date:   Fri,  4 Oct 2019 11:16:08 -0700
-Message-Id: <1570212969-21888-17-git-send-email-chang.seok.bae@intel.com>
+Subject: [PATCH v9 14/17] selftests/x86/fsgsbase: Test ptracer-induced GS base write with FSGSBASE
+Date:   Fri,  4 Oct 2019 11:16:06 -0700
+Message-Id: <1570212969-21888-15-git-send-email-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570212969-21888-1-git-send-email-chang.seok.bae@intel.com>
 References: <1570212969-21888-1-git-send-email-chang.seok.bae@intel.com>
@@ -45,24 +45,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+This validates that GS selector and base are independently preserved in
+ptrace commands.
 
-The kernel needs to explicitly enable FSGSBASE. So, the application needs
-to know if it can safely use these instructions. Just looking at the CPUID
-bit is not enough because it may be running in a kernel that does not
-enable the instructions.
-
-One way for the application would be to just try and catch the SIGILL.
-But that is difficult to do in libraries which may not want to overwrite
-the signal handlers of the main application.
-
-Enumerate the enabled FSGSBASE capability in bit 1 of AT_HWCAP2 in the ELF
-aux vector. AT_HWCAP2 is already used by PPC for similar purposes.
-
-The application can access it open coded or by using the getauxval()
-function in newer versions of glibc.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -77,41 +63,48 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Changes from v8: none
 
 Changes from v7:
-* No code change
-* Massaged changelog by Thomas
+* Fixed the test message
 ---
- arch/x86/include/uapi/asm/hwcap2.h | 3 +++
- arch/x86/kernel/cpu/common.c       | 4 +++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ tools/testing/selftests/x86/fsgsbase.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/uapi/asm/hwcap2.h b/arch/x86/include/uapi/asm/hwcap2.h
-index 8b2effe..5fdfcb4 100644
---- a/arch/x86/include/uapi/asm/hwcap2.h
-+++ b/arch/x86/include/uapi/asm/hwcap2.h
-@@ -5,4 +5,7 @@
- /* MONITOR/MWAIT enabled in Ring 3 */
- #define HWCAP2_RING3MWAIT		(1 << 0)
+diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
+index 950a48b..9a43498 100644
+--- a/tools/testing/selftests/x86/fsgsbase.c
++++ b/tools/testing/selftests/x86/fsgsbase.c
+@@ -465,7 +465,7 @@ static void test_ptrace_write_gsbase(void)
+ 	wait(&status);
  
-+/* Kernel allows FSGSBASE instructions available in Ring 3 */
-+#define HWCAP2_FSGSBASE			BIT(1)
-+
- #endif
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 9b59377bb..90d7e95 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1472,8 +1472,10 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	setup_umip(c);
+ 	if (WSTOPSIG(status) == SIGTRAP) {
+-		unsigned long gs;
++		unsigned long gs, base;
+ 		unsigned long gs_offset = USER_REGS_OFFSET(gs);
+ 		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
  
- 	/* Enable FSGSBASE instructions if available. */
--	if (cpu_has(c, X86_FEATURE_FSGSBASE))
-+	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
- 		cr4_set_bits(X86_CR4_FSGSBASE);
-+		elf_hwcap2 |= HWCAP2_FSGSBASE;
-+	}
+@@ -481,6 +481,7 @@ static void test_ptrace_write_gsbase(void)
+ 			err(1, "PTRACE_POKEUSER");
  
- 	/*
- 	 * The vendor-specific functions might have changed features.
+ 		gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
++		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
+ 
+ 		/*
+ 		 * In a non-FSGSBASE system, the nonzero selector will load
+@@ -501,8 +502,14 @@ static void test_ptrace_write_gsbase(void)
+ 			 */
+ 			if (gs == 0)
+ 				printf("\tNote: this is expected behavior on older kernels.\n");
++		} else if (have_fsgsbase && (base != 0xFF)) {
++			nerrs++;
++			printf("[FAIL]\tGSBASE changed to %lx\n", base);
+ 		} else {
+-			printf("[OK]\tGS remained 0x%hx\n", *shared_scratch);
++			printf("[OK]\tGS remained 0x%hx", *shared_scratch);
++			if (have_fsgsbase)
++				printf(" and GSBASE changed to 0xFF");
++			printf("\n");
+ 		}
+ 	}
+ 
 -- 
 2.7.4
 
