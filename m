@@ -2,98 +2,200 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABF1C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C9BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C2A222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVq6fcbr"
+	by mail.kernel.org (Postfix) with ESMTP id 65E11222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731671AbfJDX1I (ORCPT
+        id S1731710AbfJDX1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:27:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44856 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728913AbfJDX1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:27:07 -0400
-Received: by mail-io1-f65.google.com with SMTP id w12so16992913iol.11
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MgBtF74uU/h5axnlk7JkCOLmu+x1dOiph+vzsmYmvXk=;
-        b=uVq6fcbrUf2k6Z02rKXUYQfm+NxJ2X43dktUoENxNfmYB2XHRk95SxYzgRSsUxbcrB
-         VMY+k9uQhD+yw7Z86iccSLyRvIZnFRWINVLQMCAnizvTboxDa8tSgunhpBqy399TufJo
-         pTQgwsr0b4UWFteBOPGCKp4iaOAJbfAmgi0akHoXxFyE+3Odreox81GbAtjlHVpI3px2
-         Vbo5DzvIn0o5B/YPL/oms2GZI0hF4ZHLN5W6SagkqSMqr/NrriKUAizDRFMfuWBMfg3o
-         h5rMM9AS6TZh1Fjlyk+8lgmSMuV6Io0A48BTiKiatBflNxygHw3HopbT40WTIM5nuhhh
-         6BsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MgBtF74uU/h5axnlk7JkCOLmu+x1dOiph+vzsmYmvXk=;
-        b=KDDliHn5pcBsifpacGB9hR0tUKwfNHgTm0EC+rCH9lmtwETOScwSK1YKjZxL/x6QGz
-         7xLEKQAXbmSIspajFj647I+qLVpBb5jNd57jnYcMy2DKYImEMvTZ2X/Krr3nT7Pvpcwz
-         jh+/d5s3ula5OK3OIwzzu7OfM1ZeU9dFGHmXlzWZnuWPVvp5dvoy9p3OYJoN7WzdMIvc
-         HfuOg+/eLVM1CKEaPE+dkZqnf1HKgOYv7Lwx1/C4mH80SbgLlWN9Ugt3PgeMnuTknVCs
-         YJ2V18QtNt9+4l7t7H7yxRtvwJWWkVw+qzEEWuknCXjw/JQeyUtuZPhqu3QUViiqOtTD
-         hntA==
-X-Gm-Message-State: APjAAAWa3Ge2HmmXFim50sRWjSOhXslJcGdG2BKUixz/NVhNqip+TI1I
-        iY4x727F1CTv9Vhy7HXQA8NgqkQSh16ibv6B9L04QQ==
-X-Google-Smtp-Source: APXvYqzJcQzvaX5CC41I1TRQRNaPDPcG28y+blJrc8QdeTRZXOhchbrBqUvMeJR9kiv9S7ucRVxFUERN4ZPen7d4jzw=
-X-Received: by 2002:a05:6638:3:: with SMTP id z3mr17415762jao.54.1570231626712;
- Fri, 04 Oct 2019 16:27:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191004215615.5479-1-sean.j.christopherson@intel.com> <20191004215615.5479-8-sean.j.christopherson@intel.com>
-In-Reply-To: <20191004215615.5479-8-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 4 Oct 2019 16:26:55 -0700
-Message-ID: <CALMp9eRDxHAAbtvdUZyM2VyKiKhRxftW+zbmGANF6Y6qADK9_g@mail.gmail.com>
-Subject: Re: [PATCH 07/16] KVM: VMX: Use VMX feature flag to query BIOS enabling
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
+        Fri, 4 Oct 2019 19:27:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:56584 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728913AbfJDX1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 19:27:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92CEE15AD;
+        Fri,  4 Oct 2019 16:27:30 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFF9E3F68E;
+        Fri,  4 Oct 2019 16:27:28 -0700 (PDT)
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>,
+        Douglas Anderson <dianders@chromium.org>,
         Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190301192017.39770-1-dianders@chromium.org>
+ <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+ <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
+ <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
+ <1f6f7eb0-e1dc-d5a8-fb38-44c5bd839894@arm.com>
+ <CAJ+vNU1Nd2p-ot2Qkj6vD9yD6gcYM-vm+snNWyt0ChgSqe4tBg@mail.gmail.com>
+ <5cf9ec03-f6fb-8227-4ec5-62445038f283@arm.com>
+ <CAJ+vNU28LrroW-XC4X2g3bdN171j0ieZenhYE1TrEM8yvKi=cQ@mail.gmail.com>
+ <cb6392ff-fac6-300b-2e04-b34df8c42f28@arm.com>
+ <CAJ+vNU0kDseyqAMKAv+9+aw6wVKjBQcHcGD_8XgCy_KzZTM4Gg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4824ef05-7f57-9aab-cdbd-34b3f857b32b@arm.com>
+Date:   Sat, 5 Oct 2019 00:27:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <CAJ+vNU0kDseyqAMKAv+9+aw6wVKjBQcHcGD_8XgCy_KzZTM4Gg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:56 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Replace KVM's manual checks on IA32_FEATURE_CONTROL with a query on the
-> boot CPU's VMX feature flag.  The VMX flag is now cleared during boot if
-> VMX isn't fully enabled via IA32_FEATURE_CONTROL, including the case
-> where IA32_FEATURE_CONTROL isn't supported.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+On 2019-10-04 9:37 pm, Tim Harvey wrote:
+> On Fri, Oct 4, 2019 at 11:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 04/10/2019 18:13, Tim Harvey wrote:
+>> [...]
+>>>>> No difference... still need 'arm-smmu.disable_bypass=n' to boot. Are
+>>>>> all four iommu-map props above supposed to be the same? Seems to me
+>>>>> they all point to the same thing which looks wrong.
+>>>>
+>>>> Hmm... :/
+>>>>
+>>>> Those mappings just set Stream ID == PCI RID (strictly each one should
+>>>> only need to cover the bus range assigned to that bridge, but it's not
+>>>> crucial) which is the same thing the driver assumes for the mmu-masters
+>>>> property, so either that's wrong and never could have worked anyway -
+>>>> have you tried VFIO on this platform? - or there are other devices also
+>>>> mastering through the SMMU that aren't described at all. Are you able to
+>>>> capture a boot log? The SMMU faults do encode information about the
+>>>> offending ID, and you can typically correlate their appearance
+>>>> reasonably well with endpoint drivers probing.
+>>>>
+>>>
+>>> Robin,
+>>>
+>>> VFIO is enabled in the kernel but I don't know anything about how to
+>>> test/use it:
+>>> $ grep VFIO .config
+>>> CONFIG_KVM_VFIO=y
+>>> CONFIG_VFIO_IOMMU_TYPE1=y
+>>> CONFIG_VFIO_VIRQFD=y
+>>> CONFIG_VFIO=y
+>>> # CONFIG_VFIO_NOIOMMU is not set
+>>> CONFIG_VFIO_PCI=y
+>>> CONFIG_VFIO_PCI_MMAP=y
+>>> CONFIG_VFIO_PCI_INTX=y
+>>> # CONFIG_VFIO_PLATFORM is not set
+>>> # CONFIG_VFIO_MDEV is not set
+>>
+>> No worries - since it's a networking-focused SoC I figured there was a
+>> chance you might be using DPDK or similar userspace drivers with the NIC
+>> VFs, but I was just casting around for a quick and easy baseline of
+>> whether the SMMU works at all (another way would be using Qemu to run a
+>> VM with one or more PCI devices assigned).
+>>
+>>> I do have a boot console yet I'm not seeing any smmu faults at all.
+>>> Perhaps I've mis-diagnosed the issue completely. To be clear when I
+>>> boot with arm-smmu.disable_bypass=y the serial console appears to not
+>>> accept input in userspace and with arm-smmu.disable_bypass=n I'm fine.
+>>> I'm using a buildroot initramfs rootfs for simplicity. The system
+>>> isn't hung as I originally expected as the LED heartbeat trigger
+>>> continues blinking... I just can't get console to accept input.
+>>
+>> Curiouser and curiouser... I'm inclined to suspect that the interrupt
+>> configuration might also be messed up, such that the SMMU is blocking
+>> traffic and jammed up due to pending faults, but you're not getting the
+>> IRQ delivered to find out. Does this patch help reveal anything?
+>>
+>> http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=29ac3648b580920692c9b417b2fc606995826517
+>>
+>> (untested, but it's a direct port of the one I've used for SMMUv3 to
+>> diagnose something similar)
+> 
+> This shows:
+
+Yay (ish)!
+
+[ and the tangential challenge would be to find out what the real global 
+fault interrupt is, 'cause apparently it's not SPI 68... ]
+
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000140, GFSYNR2 0x00000000
+
+If that stream ID were a PCI RID, it would be 01:08.0
+
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+
+And this guy would be 00:02.0
+
+So it seems that either the stream ID mapping is non-trivial (and 
+"mmu-masters" couldn't have worked), or there are secret magic endpoints 
+writing to memory during boot. Either way it probably needs some input 
+from Cavium/Marvell to get straight. In the meantime, unless just 
+disabling and ignoring the SMMU altogether is a viable option, I guess 
+we have to resign to this being one of those "non-good" reasons for 
+needing global bypass :(
+
+Robin.
+
+(note to self: it would probably be useful if we dump GFAR in these logs 
+too. These are all writes, so it's possible they could be MSI attempts 
+targeting the ITS rather than DMA as such)
+
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> ...
+> arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> GFSYNR1 0x00000010, GFSYNR2 0x00000000
+> ^^^ these two repeat over and over
+> 
+>>
+>> That said, it's also puzzling that no other drivers are reporting DMA
+>> errors or timeouts either - is there any chance that some device is set
+>> running by the firmware/bootloader and not taken over by a kernel driver?
+>>
+> 
+> anything is possible - I'm using the Cavium 'BDK' as boot firmware to
+> configure the board which sits in from of arm trusted firmare and
+> bootloader.
+> 
+> Tim
+> 
