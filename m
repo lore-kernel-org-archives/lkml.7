@@ -2,90 +2,139 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED839ECE589
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A48C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DC0222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108D7215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfJDLoe (ORCPT
+        id S1731160AbfJDLsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:44:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3202 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726024AbfJDLod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:44:33 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5C8ABEC96BAA33C61D16;
-        Fri,  4 Oct 2019 19:44:30 +0800 (CST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 4 Oct 2019 19:44:22 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-CC:     Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH V5 4/4] ACPI: Let ACPI know we support Generic Initiator Affinity Structures
-Date:   Fri, 4 Oct 2019 19:43:30 +0800
-Message-ID: <20191004114330.104746-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+        Fri, 4 Oct 2019 07:48:04 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50339 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726024AbfJDLsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 07:48:04 -0400
+Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
+        by mail105.syd.optusnet.com.au (Postfix) with SMTP id 4235D3638C7
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 21:47:46 +1000 (AEST)
+Received: (qmail 23038 invoked by uid 501); 4 Oct 2019 11:47:45 -0000
+Date:   Fri, 4 Oct 2019 21:47:45 +1000
+From:   Duncan Roe <duncan_roe@optusnet.com.au>
+To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Cc:     Julian Anastasov <ja@ssi.bg>, Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms@verge.net.au>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] selftests: netfilter: introduce test cases for
+ ipvs
+Message-ID: <20191004114745.GB6803@dimstar.local.net>
+Mail-Followup-To: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Julian Anastasov <ja@ssi.bg>, Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms@verge.net.au>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org
+References: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <alpine.LFD.2.21.1910012133330.3887@ja.home.ssi.bg>
+ <20191002012726.GB9810@dimstar.local.net>
+ <8E2E81F3-8385-4397-9A22-F513E507507D@cmss.chinamobile.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8E2E81F3-8385-4397-9A22-F513E507507D@cmss.chinamobile.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=PO7r1zJSAAAA:8 a=YExiR9hJhUxYzP8DYcgA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Until we tell ACPI that we support generic initiators, it will have
-to operate in fall back domain mode and all _PXM entries should
-be on existing non GI domains.
+On Thu, Oct 03, 2019 at 10:41:06PM +0800, Haishuang Yan wrote:
+>
+>
+> > On 2019??10??2??, at ????9:27, Duncan Roe <duncan_roe@optusnet.com.au> wrote:
+> >
+> > On Tue, Oct 01, 2019 at 09:34:13PM +0300, Julian Anastasov wrote:
+> >>
+> >> 	Hello,
+> >>
+> >> On Tue, 1 Oct 2019, Haishuang Yan wrote:
+> >>
+> >>> This series patch include test cases for ipvs.
+> >>>
+> >>> The test topology is who as below:
+> >>> +--------------------------------------------------------------+
+> >>> |                      |                                       |
+> >>> |         ns0          |         ns1                           |
+> >>> |      -----------     |     -----------    -----------        |
+> >>> |      | veth01  | --------- | veth10  |    | veth12  |        |
+> >>> |      -----------    peer   -----------    -----------        |
+> >>> |           |          |                        |              |
+> >>> |      -----------     |                        |              |
+> >>> |      |  br0    |     |-----------------  peer |--------------|
+> >>> |      -----------     |                        |              |
+> >>> |           |          |                        |              |
+> >>> |      ----------     peer   ----------      -----------       |
+> >>> |      |  veth02 | --------- |  veth20 |     | veth12  |       |
+> >>> |      ----------      |     ----------      -----------       |
+> >>> |                      |         ns2                           |
+> >>> |                      |                                       |
+> >>> +--------------------------------------------------------------+
+> >>>
+> >>> Test results:
+> >>> # selftests: netfilter: ipvs.sh
+> >>> # Testing DR mode...
+> >>> # Testing NAT mode...
+> >>> # Testing Tunnel mode...
+> >>> # ipvs.sh: PASS
+> >>> ok 6 selftests: netfilter: ipvs.sh
+> >>>
+> >>> Haishuang Yan (3):
+> >>>  selftests: netfilter: add ipvs test script
+> >>>  selftests: netfilter: add ipvs nat test case
+> >>>  selftests: netfilter: add ipvs tunnel test case
+> >>
+> >> Acked-by: Julian Anastasov <ja@ssi.bg>
+> >>
+> >>> tools/testing/selftests/netfilter/Makefile |   2 +-
+> >>> tools/testing/selftests/netfilter/ipvs.sh  | 234 +++++++++++++++++++++++++++++
+> >>> 2 files changed, 235 insertions(+), 1 deletion(-)
+> >>> create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
+> >>
+> >> Regards
+> >>
+> >> --
+> >> Julian Anastasov <ja@ssi.bg>
+> >
+> > I still prefer #!/bin/sh in 1/3. You never know what's in someone's environment
+> >
+> > Cheers ... Duncan.
+> >
+>
+> It??s also my preference too. "_"	
+>
+> I have tested both #!/bin/bash and #!/bin/sh script, they all works properly.
 
-This patch sets the relevant OSC bit to make that happen.
+Enter these 2 lines:
+> ip(){ return 0; }
+> export -f ip
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/acpi/bus.c   | 1 +
- include/linux/acpi.h | 1 +
- 2 files changed, 2 insertions(+)
+Now try the #!/bin/bash script. If that now fails, try again with #!/bin/bash
+changed to #!/bin/bash -p
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 48bc96d45bab..9d40e465232f 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -302,6 +302,7 @@ static void acpi_bus_osc_support(void)
- 
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_HOTPLUG_OST_SUPPORT;
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
-+	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
- 
- #ifdef CONFIG_X86
- 	if (boot_cpu_has(X86_FEATURE_HWP)) {
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 8b4e516bac00..195b21e93aaa 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -505,6 +505,7 @@ acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
- #define OSC_SB_PCLPI_SUPPORT			0x00000080
- #define OSC_SB_OSLPI_SUPPORT			0x00000100
- #define OSC_SB_CPC_DIVERSE_HIGH_SUPPORT		0x00001000
-+#define OSC_SB_GENERIC_INITIATOR_SUPPORT	0x00002000
- 
- extern bool osc_sb_apei_support_acked;
- extern bool osc_pc_lpi_support_confirmed;
--- 
-2.20.1
+Any better now?
 
+Cheers ... Duncan.
