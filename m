@@ -2,87 +2,107 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA384C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF5DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E09222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998D0222C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ad3GJvsz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTwXzKKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbfJDTjN (ORCPT
+        id S2387473AbfJDTl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:39:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36256 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDTjN (ORCPT
+        Fri, 4 Oct 2019 15:41:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39434 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfJDTl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:39:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Dh6mxesa35qmVcJTZmiFw6dhEr9tO5B4IZfYPNiUpao=; b=ad3GJvszIb6b9FflfqMXULYkw
-        E5JOdU7XF2SecosMbmOk8xCCOzS15A09lBRxi0UcSiu16qKuCDnzY1eXwaTrB/6oH/uTfSfG152Kp
-        sXJwbgMShnInObtdWqPjgutj+FQ58bGUJIxNt1z0YpEQT2rWeeB0Z85s1MRiOPDGoDskGXUl1/Mdz
-        G0TIKEc46kuQasDEv83v+M7kT1sCT5/FVbuNwqN2VBf8qYcVcXLlOLH9j9Ya52jO3DPxNchG8KBiZ
-        E9hhKKNjoNKrY3R1kfVBAFeJkPPadPDflhgxAj6qeYgDq8IT9Jvkaxre2VLJqRCMZTKC4pthIFRH4
-        InXprJIjA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGTQ0-0007ms-OK; Fri, 04 Oct 2019 19:39:12 +0000
-Date:   Fri, 4 Oct 2019 12:39:12 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/15] mm: Add file_offset_of_ helpers
-Message-ID: <20191004193912.GP32665@bombadil.infradead.org>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-4-willy@infradead.org>
- <20190926140211.rm4b6yn2i5rlyvop@box>
+        Fri, 4 Oct 2019 15:41:27 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y3so7661746ljj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 12:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lKdiNzyflX1qifC5XC0/R1ENRYDqFG5nqNIeHJGhC9c=;
+        b=KTwXzKKXxYtdYVYAyRPHF5pabKA8YkMM0SRyWPhD/SpHiZ5JiNFPBkCEeMw9/3PqZU
+         /KB8zyT7qfMfNp/S5nfmS2hQTwPdPfhP2er0Oeg2qOINbkqOCFnRkq4bUY3h6Rv2nlfT
+         1ZquD6PxAawVJm0tLCJVEep05bgPNEs2qJo2GQW84SP+GuErKh+d0I/iNYYb9s6sJVA0
+         X11fWhKRQeyVj1Qzx8a0cN+yz4sVpCJUNUMCE1bCrjz1IjvjMCt0UsgxpfvT3w/dWw6o
+         3RwY1eK31O/i6p8w6fbSMuXwfAsOiI2bPO1s7ITVaJFCNpVaBpsGwip2JYRX3fOOKL8H
+         58nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lKdiNzyflX1qifC5XC0/R1ENRYDqFG5nqNIeHJGhC9c=;
+        b=LFbrPtkJ1MF2FObM9SI8JOowQI1CS/yaeGQZDXpgQ9Kt3I10o22sNAmMtv9KxN+96i
+         RFcIuw4nPq3XCrTcOj57DXgN2VnodbKt1x5TLj5RlFODDNYwMruFdyKkytnk8onsxoKu
+         HjwL4jn0kZ6gthGYLAZWJBGV413Mpp5AnOkaWppftOb5BXhGNSZdegwF9+nRBDyu40ll
+         xlH0AL+/z9AzBVSGBlOBqR13GaKc2M7xE4NuECz1rb9HteReP7n5m84o1ofdW6IMQAbR
+         s4jYVYU3IMBB8US/kZbn/i3wG6IEiKFLFkRcQNvJtOL5tdYOfK8Ob07yXWnbfaW/bwES
+         gHqQ==
+X-Gm-Message-State: APjAAAXuuP4H/BteOPxy//qz5uKGZdZ+ZGhSLT7lubwBnmoy4kjTyKar
+        EcXJJGlIWGZVplMdHJMZyIQFlCPqEjmx+5FdmyNbsg==
+X-Google-Smtp-Source: APXvYqxcAjEf5jSw1FQIUN5tjMJ7zHHze2fmxgHbMJDye516yP2RLhmHOWNNK8dMzlSsiqV2U5SsXtnT8VHpBX+Oaxk=
+X-Received: by 2002:a2e:80d3:: with SMTP id r19mr10309621ljg.41.1570218084405;
+ Fri, 04 Oct 2019 12:41:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926140211.rm4b6yn2i5rlyvop@box>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190917124246.11732-1-m.felsch@pengutronix.de> <20190917124246.11732-4-m.felsch@pengutronix.de>
+In-Reply-To: <20190917124246.11732-4-m.felsch@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 4 Oct 2019 21:41:12 +0200
+Message-ID: <CACRpkdYAjj+EuF+iu4fKjt2Cviu8V+U66HnQThawwU58UGRUzQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] regulator: da9062: add voltage selection gpio support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 05:02:11PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Sep 24, 2019 at 05:52:02PM -0700, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > The page_offset function is badly named for people reading the functions
-> > which call it.  The natural meaning of a function with this name would
-> > be 'offset within a page', not 'page offset in bytes within a file'.
-> > Dave Chinner suggests file_offset_of_page() as a replacement function
-> > name and I'm also adding file_offset_of_next_page() as a helper for the
-> > large page work.  Also add kernel-doc for these functions so they show
-> > up in the kernel API book.
-> > 
-> > page_offset() is retained as a compatibility define for now.
-> 
-> This should be trivial for coccinelle, right?
+On Tue, Sep 17, 2019 at 2:43 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Yes, should be.  I'd prefer not to do conversions for now to minimise
-conflicts when rebasing.
+> +       /*
+> +        * We only must ensure that the gpio device is probed before the
+> +        * regulator driver so no need to store the reference global. Luckily
+> +        * devm_* releases the gpio upon a unbound action.
+> +        */
+> +       gpi = devm_gpiod_get_from_of_node(cfg->dev, np, prop, 0, GPIOD_IN |
+> +                                         GPIOD_FLAGS_BIT_NONEXCLUSIVE, label);
 
-> > +static inline loff_t file_offset_of_next_page(struct page *page)
-> > +{
-> > +	return ((loff_t)page->index + compound_nr(page)) << PAGE_SHIFT;
-> 
-> Wouldn't it be more readable as
-> 
-> 	return file_offset_of_page(page) + page_size(page);
-> 
-> ?
+Do you really need the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag here?
+I don't think so, but describe what usecase you have that warrants this
+being claimed twice. Normally that is just needed when you let the
+regulator core handle enablement of a regulator over GPIO, i.e.
+ena_gpiod in struct regulator_config.
 
-Good idea.  I'll fix that up.
+> +       /* We need the local number */
+> +       nr = da9062_gpio_get_hwgpio(gpi);
+
+If you really need this we should add a public API to gpiolib and not
+create custom APIs.
+
+Just make a patch adding
+
+int gpiod_to_offset(struct gpio_desc *d);
+
+to the public gpiolib API in include/linux/gpio/consumer.h
+
+and add the code in gpiolib.c to do this trick.
+
+Yours,
+Linus Walleij
