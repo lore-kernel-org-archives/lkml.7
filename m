@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FA4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09EBC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029DE21D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC2B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570211584;
-	bh=D48/gZdSPpXgBlPNLO3NoJizQlbXv3x/q5xuF5rUphQ=;
+	s=default; t=1570211592;
+	bh=C9i87/6qPj+RxYngUdEFPT30B9GI091I8XIzh32A6Rs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Qr0vPvsTZHHlhmxwpHi8fhF3wZ4JunCYA7QNelQGQLinGyF6yfc8IWJUwQ7j1PvIU
-	 wsvYMQ9t4614H8+hrrKFfR2/EHbR1yZyEeqHa2LxWHcqpABkVkgi3n8gCPR7z412uL
-	 CvoxVOQ1OLuZnt+9cYaWwB/mAte5aGxPrbZsYV2s=
+	b=O+h1QWXKRL1YADv8WuLBTofsd0s9inHcdRKV26/vbJ4WoWGkwXVs7dMsAIOcHjKcD
+	 61JzA01APnCdufmCjT7UANaxTD+qkh1EerrG4p8Pnmx52vcrEPNjcwHsafFVjsfFUQ
+	 cJ7mFs5Bexe9a7RrFetDgiklRPwIAcOzgUnHX7No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389046AbfJDRxD (ORCPT
+        id S2389111AbfJDRxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:53:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51398 "EHLO
+        Fri, 4 Oct 2019 13:53:11 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50966 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389012AbfJDRxB (ORCPT
+        with ESMTP id S2388648AbfJDRwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:53:01 -0400
+        Fri, 4 Oct 2019 13:52:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=9rMD/iIRt+AstMhHvit3hB7IN7ex8Ugxf6OLt9MXTjw=; b=DGL87zhYsfQq
-        Q6fWG2jJZXD8hMQtWWddWRzLFW2gdL8ciheUJKNIb09GW5eDofezelfeLSj5rvsdlhSOQsVyVYlaI
-        mwGdxG2YpnKu8rup3WlrOgGYyf9Bea8/TiFfC5LkDYc5tYd11TuarP1rA9saitkF+d0O9G5opUCVs
-        mdc2k=;
+        List-Archive; bh=Z7nsFJXI9WnA9ER91wdkft7vbWP+YLeTSIFLA7ZXd9A=; b=lYettB7+ajDb
+        JD3KPvzeWCkXx3uhtELzTsMAQ2QMzjAF0765h3Q9saXBwlRBSbQo5pYjILePyTSAWA4krh8RN21m0
+        OenwhjTCRC4Vx10XU0zMlvtuyyl44HF/gB2bdX/3cJveAYSnehqUVUhRB2cKkIJmAmCrphtER4Vsc
+        5lyNA=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iGRkq-0003v7-5d; Fri, 04 Oct 2019 17:52:36 +0000
+        id 1iGRkx-0003wW-Np; Fri, 04 Oct 2019 17:52:43 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id A47FE2741EF2; Fri,  4 Oct 2019 18:52:35 +0100 (BST)
+        id 44F772741F98; Fri,  4 Oct 2019 18:52:43 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     alsa-devel@alsa-project.org, Frank Shi <shifu0704@thundersoft.com>,
-        Jaroslav Kysela <perex@perex.cz>, kbuild-all@01.org,
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "tas2770: fix platform_no_drv_owner.cocci warnings" to the asoc tree
-In-Reply-To: <20191001175504.ufhyxh66psrht42k@332d0cec05f4>
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: qcom-rpmh: Fix PMIC5 BoB min voltage" to the regulator tree
+In-Reply-To: <1570184215-5355-1-git-send-email-kgunda@codeaurora.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20191004175235.A47FE2741EF2@ypsilon.sirena.org.uk>
-Date:   Fri,  4 Oct 2019 18:52:35 +0100 (BST)
+Message-Id: <20191004175243.44F772741F98@ypsilon.sirena.org.uk>
+Date:   Fri,  4 Oct 2019 18:52:43 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   tas2770: fix platform_no_drv_owner.cocci warnings
+   regulator: qcom-rpmh: Fix PMIC5 BoB min voltage
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,38 +88,36 @@ to this mail.
 Thanks,
 Mark
 
-From 5a7423993007d08bfc7b982451eca0526f51744d Mon Sep 17 00:00:00 2001
-From: kbuild test robot <lkp@intel.com>
-Date: Wed, 2 Oct 2019 01:55:04 +0800
-Subject: [PATCH] tas2770: fix platform_no_drv_owner.cocci warnings
+From 77fd66c9ff3e992718a79fa6407148935d34b50f Mon Sep 17 00:00:00 2001
+From: Kiran Gunda <kgunda@codeaurora.org>
+Date: Fri, 4 Oct 2019 15:46:55 +0530
+Subject: [PATCH] regulator: qcom-rpmh: Fix PMIC5 BoB min voltage
 
-sound/soc/codecs/tas2770.c:796:3-8: No need to set .owner here. The core will do it.
+Correct the PMIC5 BoB min voltage from 0.3V to 3V. Also correct
+the voltage selector accordingly.
 
- Remove .owner field if calls are used which set it automatically
-
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
-
-Fixes: 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
-CC: Frank Shi <shifu0704@thundersoft.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20191001175504.ufhyxh66psrht42k@332d0cec05f4
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+Link: https://lore.kernel.org/r/1570184215-5355-1-git-send-email-kgunda@codeaurora.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/tas2770.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/regulator/qcom-rpmh-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-index 9da88ccb1d51..dbbb21fe0548 100644
---- a/sound/soc/codecs/tas2770.c
-+++ b/sound/soc/codecs/tas2770.c
-@@ -793,7 +793,6 @@ MODULE_DEVICE_TABLE(of, tas2770_of_match);
- static struct i2c_driver tas2770_i2c_driver = {
- 	.driver = {
- 		.name   = "tas2770",
--		.owner  = THIS_MODULE,
- 		.of_match_table = of_match_ptr(tas2770_of_match),
- 	},
- 	.probe      = tas2770_i2c_probe,
+diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+index db6c085da65e..0246b6f99fb5 100644
+--- a/drivers/regulator/qcom-rpmh-regulator.c
++++ b/drivers/regulator/qcom-rpmh-regulator.c
+@@ -735,8 +735,8 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps515 = {
+ static const struct rpmh_vreg_hw_data pmic5_bob = {
+ 	.regulator_type = VRM,
+ 	.ops = &rpmh_regulator_vrm_bypass_ops,
+-	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
+-	.n_voltages = 136,
++	.voltage_range = REGULATOR_LINEAR_RANGE(3000000, 0, 31, 32000),
++	.n_voltages = 32,
+ 	.pmic_mode_map = pmic_mode_map_pmic5_bob,
+ 	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
+ };
 -- 
 2.20.1
 
