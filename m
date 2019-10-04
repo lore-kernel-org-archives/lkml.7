@@ -2,155 +2,107 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AA2C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E25C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4639B2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51C0222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387790AbfJDRPW (ORCPT
+        id S2387866AbfJDRQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:15:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:37198 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387534AbfJDRPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:15:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 10:15:21 -0700
-X-ExtLoop1: 1
+        Fri, 4 Oct 2019 13:16:36 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:45382 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387534AbfJDRQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 13:16:35 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Cristian.Birsan@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Cristian.Birsan@microchip.com";
+  x-sender="Cristian.Birsan@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Cristian.Birsan@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Cristian.Birsan@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: d0aGSb/7YfeQDRGpZ7qzkTUS57vxpPVB6jYd3meyu/pZo8VLdozIGUweKW5KZWVZyssXSDeit2
+ EYPsBzzdb6xtBxWdGjr4H/5cciq4G9UBq4c8AHnd8MTGVuGdDj2bMF4MZOPwm95WqTyNBzfD8x
+ PU9uOmFyBrxEd11g2qB/i1Mm6pcdv/r6iGTrj8WEgB7O1uKVPuKD3m+XYNkWtJlwstjGJ5zgI/
+ L8SlIHo1VUgNSRGrJ+LU+MY51d7cRpE6JTQP2UHWIe7tf6SmXuTsTiXdo1RJAW1cCKp8N00wyp
+ JXY=
 X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="195621580"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by orsmga003.jf.intel.com with ESMTP; 04 Oct 2019 10:15:21 -0700
-Message-ID: <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
-Subject: Re: [PATCH v2 3/7] intel-speed-select: Add check for CascadeLake-N
- models
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Prarit Bhargava <prarit@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Date:   Fri, 04 Oct 2019 10:15:21 -0700
-In-Reply-To: <20191003121112.25870-4-prarit@redhat.com>
-References: <20191003121112.25870-1-prarit@redhat.com>
-         <20191003121112.25870-4-prarit@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="50474067"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2019 10:16:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 4 Oct 2019 10:16:34 -0700
+Received: from cristi-W530.mchp-main.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 4 Oct 2019 10:16:30 -0700
+From:   <cristian.birsan@microchip.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Cristian Birsan <cristian.birsan@microchip.com>
+Subject: [PATCH] usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
+Date:   Fri, 4 Oct 2019 20:10:54 +0300
+Message-ID: <20191004171054.19453-1-cristian.birsan@microchip.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
-> Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF
-> support.
-> 
-> Return an error if the CascadeLake processor is not one of these
-> specific
-> models.
-> 
-This patch sigfaults immediately on CLX.
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-> v2: Add is_clx_n_platform()
-> 
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> ---
->  .../x86/intel-speed-select/isst-config.c      | 44
-> ++++++++++++++++++-
->  1 file changed, 42 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
-> b/tools/power/x86/intel-speed-select/isst-config.c
-> index f4a23678416e..734a7960458c 100644
-> --- a/tools/power/x86/intel-speed-select/isst-config.c
-> +++ b/tools/power/x86/intel-speed-select/isst-config.c
-> @@ -23,6 +23,7 @@ static int debug_flag;
->  static FILE *outf;
->  
->  static int cpu_model;
-> +static int cpu_stepping;
->  
->  #define MAX_CPUS_IN_ONE_REQ 64
->  static short max_target_cpus;
-> @@ -72,7 +73,16 @@ void debug_printf(const char *format, ...)
->  	va_end(args);
->  }
->  
-> -static void update_cpu_model(void)
-> +
-> +int is_clx_n_platform(void)
-> +{
-> +	if (cpu_model == 0x55)
-> +		if (cpu_stepping == 0x6 || cpu_stepping == 0x7)
-> +			return 1;
-> +	return 0;
-> +}
-> +
-> +static int update_cpu_model(void)
->  {
->  	unsigned int ebx, ecx, edx;
->  	unsigned int fms, family;
-> @@ -82,6 +92,34 @@ static void update_cpu_model(void)
->  	cpu_model = (fms >> 4) & 0xf;
->  	if (family == 6 || family == 0xf)
->  		cpu_model += ((fms >> 16) & 0xf) << 4;
-> +
-> +	cpu_stepping = fms & 0xf;
-> +
-> +	/* only three CascadeLake-N models are supported */
-> +	if (is_clx_n_platform()) {
-> +		FILE *fp;
-> +		size_t n;
-> +		char *line;
-Need n = 0 and *line = NULL here as getline() will require if it has to
-allocate.
+Fix interrupt storm generated by endpoints when working in FIFO mode.
+The TX_COMPLETE interrupt is used only by control endpoints processing.
+Do not enable it for other types of endpoints.
 
-Anyway I will update the patchset and post after test.
+Fixes: 914a3f3b3754 ("USB: add atmel_usba_udc driver")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+---
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Thanks,
-Srinivas
-> +		int ret = 1;
-> +
-> +		fp = fopen("/proc/cpuinfo", "r");
-> +		if (!fp)
-> +			err(-1, "cannot open /proc/cpuinfo\n");
-> +
-> +		while (getline(&line, &n, fp) > 0) {
-> +			if (strstr(line, "model name")) {
-> +				if (strstr(line, "6252N") ||
-> +				    strstr(line, "6230N") ||
-> +				    strstr(line, "5218N"))
-> +					ret = 0;
-> +				break;
-> +			}
-> +		}
-> +		free(line);
-> +		fclose(fp);
-> +		return ret;
-> +	}
-> +	return 0;
->  }
->  
->  /* Open a file, and exit on failure */
-> @@ -1889,7 +1927,9 @@ static void cmdline(int argc, char **argv)
->  		fprintf(stderr, "Feature name and|or command not
-> specified\n");
->  		exit(0);
->  	}
-> -	update_cpu_model();
-> +	ret = update_cpu_model();
-> +	if (ret)
-> +		err(-1, "Invalid CPU model (%d)\n", cpu_model);
->  	printf("Intel(R) Speed Select Technology\n");
->  	printf("Executing on CPU model:%d[0x%x]\n", cpu_model,
-> cpu_model);
->  	set_max_cpu_num();
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index 86ffc8307864..1d0d8952a74b 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -449,9 +449,11 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
+ 		next_fifo_transaction(ep, req);
+ 		if (req->last_transaction) {
+ 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
+-			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
+ 		} else {
+-			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
++			if (ep_is_control(ep))
++				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
+ 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
+ 		}
+ 	}
+-- 
+2.17.1
 
