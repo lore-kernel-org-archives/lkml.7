@@ -2,215 +2,164 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F16C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF933C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B34207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:36:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4QFkSbd"
+	by mail.kernel.org (Postfix) with ESMTP id C40FE20673
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfJDXgb (ORCPT
+        id S1731696AbfJDXi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:36:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46561 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbfJDXga (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:36:30 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so4773988pfg.13;
-        Fri, 04 Oct 2019 16:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=uq5dLXCgT8nJTGVExdBj8Luqw5LRTYqv/HDSGnL/8bQ=;
-        b=C4QFkSbdL80M+PyNr5WjJ+pNwZAuWdXCHac6uCU82O9qb+50g2pJTgu1iK3Rjfnpyy
-         16wY0CfxUtWVqhJI8sHmGvFaYD26juIQ1MHMlbCAdslJ9qUKwXSyU3UPJVDitkBOeRAm
-         Trf5ZR4rSffI9S1RYClsS5zx+XAhAgo4VsvMMWVk1TgVJ0UPXoz1FTOWXlul06suhnF/
-         wJW8gH73t6AxOi/164gd/TW9DM04ayTz02ry+tiZuFU8BlPnaUUrRl6+0cW4cPONdDF0
-         4ax5mkwk8m17CGUM1x6ojljGAaLax3fbIIC3U0Z/ffPGOfj2dZQum4xst0TOz6/uq8Sd
-         1ZfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=uq5dLXCgT8nJTGVExdBj8Luqw5LRTYqv/HDSGnL/8bQ=;
-        b=Atmc1pP+okYvaMmwF3QgHuJkJNfUjea+WIH+JaLBoADiAfA/CsevsGVKOCiQWMeLh+
-         EiOmCuYblcGqfbzvPWNcIMPqSFd0h/VF0H+Ci+Bw+K1WvYT2vI1I+pjRMEScvLHJDp74
-         rH58bDBOitRDux2+2fuf3pT2W3bIQ+FMCLkOCf2OeyV8AFlt9ZgJfGlAiR9JPmqYl1Pz
-         QVeIi3NHVAIVTB5vZvMPxQwtaoun7/1SHisWNC3gfD9S0BgHBu2y6wIDHkdimkg1jIJo
-         BRJkVVPcNJxHtWulgDPa9ERS52hXI/6GsBnt8kPEBY1nCTsgnbgGvjIjJuM7FOUOILxX
-         Ln8Q==
-X-Gm-Message-State: APjAAAUgfX2DWtrjg8Cl2Hu+wK4tU/d9lOkdFd3sFpzfq7StBBoKT5cY
-        3gI09hrQN91su8vLXYSVaW8=
-X-Google-Smtp-Source: APXvYqxkTKd7qSSmhsjfIIXj9NqcVmR19wGr95pMepA+eZ5L+dtWv0zuz/vq5r6xBZ9M64jkBZMukA==
-X-Received: by 2002:a17:90a:3847:: with SMTP id l7mr19970718pjf.118.1570232189510;
-        Fri, 04 Oct 2019 16:36:29 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id y80sm8012493pfc.30.2019.10.04.16.36.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 16:36:28 -0700 (PDT)
-Subject: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
- between net and pci/pm
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     zdai@linux.vnet.ibm.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexander.duyck@gmail.com, intel-wired-lan@lists.osuosl.org,
-        jeffrey.t.kirsher@intel.com, zdai@us.ibm.com, davem@davemloft.net
-Date:   Fri, 04 Oct 2019 16:36:28 -0700
-Message-ID: <20191004233052.28865.1609.stgit@localhost.localdomain>
-In-Reply-To: <1570208647.1250.55.camel@oc5348122405>
-References: <1570208647.1250.55.camel@oc5348122405>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 4 Oct 2019 19:38:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59423 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfJDXi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 19:38:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 16:38:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,258,1566889200"; 
+   d="scan'208";a="204469325"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 16:38:52 -0700
+Date:   Sat, 5 Oct 2019 07:38:34 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH] fs/userfaultfd.c: simplify the calculation of new_flags
+Message-ID: <20191004233834.GA8839@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190806053859.2374-1-richardw.yang@linux.intel.com>
+ <20191003004505.GE13922@redhat.com>
+ <20191004224640.GC32588@richard>
+ <20191004232834.GP13922@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004232834.GP13922@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Fri, Oct 04, 2019 at 07:28:34PM -0400, Andrea Arcangeli wrote:
+>On Sat, Oct 05, 2019 at 06:46:40AM +0800, Wei Yang wrote:
+>> On Wed, Oct 02, 2019 at 08:45:05PM -0400, Andrea Arcangeli wrote:
+>> >Hello,
+>> >
+>> >On Tue, Aug 06, 2019 at 01:38:59PM +0800, Wei Yang wrote:
+>> >> Finally new_flags equals old vm_flags *OR* vm_flags.
+>> >> 
+>> >> It is not necessary to mask them first.
+>> >> 
+>> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> >> ---
+>> >>  fs/userfaultfd.c | 2 +-
+>> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >> 
+>> >> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+>> >> index ccbdbd62f0d8..653d8f7c453c 100644
+>> >> --- a/fs/userfaultfd.c
+>> >> +++ b/fs/userfaultfd.c
+>> >> @@ -1457,7 +1457,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+>> >>  			start = vma->vm_start;
+>> >>  		vma_end = min(end, vma->vm_end);
+>> >>  
+>> >> -		new_flags = (vma->vm_flags & ~vm_flags) | vm_flags;
+>> >> +		new_flags = vma->vm_flags | vm_flags;
+>> >>  		prev = vma_merge(mm, prev, start, vma_end, new_flags,
+>> >>  				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
+>> >>  				 vma_policy(vma),
+>> >
+>> >And then how do you clear the flags after the above?
+>> >
+>> >It must be possible to clear the flags (from
+>> >UFFDIO_REGISTER_MODE_MISSING|UFFDIO_REGISTER_MODE_WP to only one set
+>> >or invert).
+>> >
+>> >We have no WP support upstream yet, so maybe that's why it looks
+>> >superfluous in practice, but in theory it isn't because it would then
+>> >need to be reversed by Peter's (CC'ed) -wp patchset.
+>> >
+>> >The register code has already the right placeholder to support -wp and
+>> >so it's better not to break them.
+>> >
+>> >I would recommend reviewing the uffd-wp support and working on testing
+>> >the uffd-wp code instead of changing the above.
+>> >
+>> 
+>> Sorry, I don't get your point. This change is valid to me even from arithmetic
+>> point of view.
+>> 
+>>     vm_flags == VM_UFFD_MISSING | VM_UFFD_WP
+>> 
+>> The effect of current code is clear these two bits then add them. This equals
+>> to just add these two bits.
+>> 
+>> I am not sure which part I lost.
+>
+>The cleaned removed the "& ~" and that was enough to quickly tell the
+>cleaned up version was wrong.
+>
+>What I should have noticed right away as well is that the code was
+>already wrong, sorry. That code doesn't require a noop code cleanup,
+>it requires a fix and the "& ~" needs to stay.
+>
+>This isn't going to make any difference upstream until the uffd-wp
+>support is merged so it is enough to queue it in Peter's queue, or you
+>can merge it independently.
+>
 
-This patch is meant to address possible race conditions that can exist
-between network configuration and power management. A similar issue was
-fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
-netif_device_detach").
+ok, I get your point.
 
-In addition it consolidates the code so that the PCI error handling code
-will essentially perform the power management freeze on the device prior to
-attempting a reset, and will thaw the device afterwards if that is what it
-is planning to do. Otherwise when we call close on the interface it should
-see it is detached and not attempt to call the logic to down the interface
-and free the IRQs again.
+>Thanks,
+>Andrea
+>
+>>From a0f17bef184c6bb9b99294f202eefb50b6eb43cd Mon Sep 17 00:00:00 2001
+>From: Andrea Arcangeli <aarcange@redhat.com>
+>Date: Fri, 4 Oct 2019 19:09:59 -0400
+>Subject: [PATCH 1/1] uffd: wp: clear VM_UFFD_MISSING or VM_UFFD_WP during
+> userfaultfd_register()
+>
+>If the registration is repeated without VM_UFFD_MISSING or VM_UFFD_WP
+>they need to be cleared. Currently setting UFFDIO_REGISTER_MODE_WP
+>returns -EINVAL, so this patch is a noop until the
+>UFFDIO_REGISTER_MODE_WP support is applied.
+>
+>Reported-by: Wei Yang <richardw.yang@linux.intel.com>
+>Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 
->From what I can tell the check that was adding the check for __E1000_DOWN
-in e1000e_close was added when runtime power management was added. However
-it should not be relevant for us as we perform a call to
-pm_runtime_get_sync before we call e1000_down/free_irq so it should always
-be back up before we call into this anyway.
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
+>---
+> fs/userfaultfd.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+>index fe6d804a38dc..97596bb65dd5 100644
+>--- a/fs/userfaultfd.c
+>+++ b/fs/userfaultfd.c
+>@@ -1458,7 +1458,8 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+> 			start = vma->vm_start;
+> 		vma_end = min(end, vma->vm_end);
+> 
+>-		new_flags = (vma->vm_flags & ~vm_flags) | vm_flags;
+>+		new_flags = (vma->vm_flags &
+>+			     ~(VM_UFFD_MISSING|VM_UFFD_WP)) | vm_flags;
+> 		prev = vma_merge(mm, prev, start, vma_end, new_flags,
+> 				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
+> 				 vma_policy(vma),
 
-I'm putting this out as an RFC for now. I haven't had a chance to do much
-testing yet, but I have verified no build issues, and the driver appears
-to load, link, and pass traffic without problems.
-
-This should address issues seen with either double freeing or never freeing
-IRQs that have been seen on this and similar drivers in the past.
-
-I'll submit this formally after testing it over the weekend assuming there
-are no issues.
-
- drivers/net/ethernet/intel/e1000e/netdev.c |   33 ++++++++++++++--------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index d7d56e42a6aa..182a2c8f12d8 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4715,12 +4715,12 @@ int e1000e_close(struct net_device *netdev)
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
--	if (!test_bit(__E1000_DOWN, &adapter->state)) {
-+	if (netif_device_present(netdev)) {
- 		e1000e_down(adapter, true);
- 		e1000_free_irq(adapter);
- 
- 		/* Link status message must follow this format */
--		pr_info("%s NIC Link is Down\n", adapter->netdev->name);
-+		pr_info("%s NIC Link is Down\n", netdev->name);
- 	}
- 
- 	napi_disable(&adapter->napi);
-@@ -6299,6 +6299,7 @@ static int e1000e_pm_freeze(struct device *dev)
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
- 
-+	rtnl_lock();
- 	netif_device_detach(netdev);
- 
- 	if (netif_running(netdev)) {
-@@ -6313,6 +6314,8 @@ static int e1000e_pm_freeze(struct device *dev)
- 		e1000e_down(adapter, false);
- 		e1000_free_irq(adapter);
- 	}
-+	rtnl_unlock();
-+
- 	e1000e_reset_interrupt_capability(adapter);
- 
- 	/* Allow time for pending master requests to run */
-@@ -6626,27 +6629,30 @@ static int __e1000_resume(struct pci_dev *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
- static int e1000e_pm_thaw(struct device *dev)
- {
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
-+	int rc = 0;
- 
- 	e1000e_set_interrupt_capability(adapter);
--	if (netif_running(netdev)) {
--		u32 err = e1000_request_irq(adapter);
- 
--		if (err)
--			return err;
-+	rtnl_lock();
-+	if (netif_running(netdev)) {
-+		rc = e1000_request_irq(adapter);
-+		if (rc)
-+			goto err_irq;
- 
- 		e1000e_up(adapter);
- 	}
- 
- 	netif_device_attach(netdev);
--
--	return 0;
-+	rtnl_unlock();
-+err_irq:
-+	return rc;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
- static int e1000e_pm_suspend(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-@@ -6821,13 +6827,11 @@ static pci_ers_result_t e1000_io_error_detected(struct pci_dev *pdev,
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
- 
--	netif_device_detach(netdev);
-+	e1000e_pm_freeze(&pdev->dev);
- 
- 	if (state == pci_channel_io_perm_failure)
- 		return PCI_ERS_RESULT_DISCONNECT;
- 
--	if (netif_running(netdev))
--		e1000e_down(adapter, true);
- 	pci_disable_device(pdev);
- 
- 	/* Request a slot slot reset. */
-@@ -6893,10 +6897,7 @@ static void e1000_io_resume(struct pci_dev *pdev)
- 
- 	e1000_init_manageability_pt(adapter);
- 
--	if (netif_running(netdev))
--		e1000e_up(adapter);
--
--	netif_device_attach(netdev);
-+	e1000e_pm_thaw(&pdev->dev);
- 
- 	/* If the controller has AMT, do not set DRV_LOAD until the interface
- 	 * is up.  For all other cases, let the f/w know that the h/w is now
-
+-- 
+Wei Yang
+Help you, Help me
