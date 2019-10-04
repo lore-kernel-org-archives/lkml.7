@@ -2,102 +2,118 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EFAC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F6C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEECE222C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBBF207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberfiber.eu header.i=@cyberfiber.eu header.b="ZB9nbOTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388239AbfJDJkS (ORCPT
+        id S2388318AbfJDJl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:40:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41522 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388187AbfJDJkR (ORCPT
+        Fri, 4 Oct 2019 05:41:29 -0400
+Received: from filter01-out3.totaalholding.nl ([31.186.169.213]:49501 "EHLO
+        filter01-out3.totaalholding.nl" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388271AbfJDJl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:40:17 -0400
-Received: from [185.81.136.18] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iGK4N-0007ns-BF; Fri, 04 Oct 2019 09:40:15 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] process fixes for v5.4-rc2
-Date:   Fri,  4 Oct 2019 11:39:47 +0200
-Message-Id: <20191004093947.14471-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 4 Oct 2019 05:41:29 -0400
+X-Greylist: delayed 1039 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Oct 2019 05:41:28 EDT
+Received: from www98.totaalholding.nl ([185.94.230.81])
+        by filter01.totaalholding.nl with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <mjbaars1977.linux-kernel@cyberfiber.eu>)
+        id 1iGJol-0005lz-2x
+        for linux-kernel@vger.kernel.org; Fri, 04 Oct 2019 11:24:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=cyberfiber.eu; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Content-Type:Date:To:From:Subject:Message-ID:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7fbCrmBoXH7A68+AJFpjQq9ukOe3qj5mwDOpBcXgXcg=; b=ZB9nbOTyUSvH59bqtyakZIw50V
+        43DBF4n3H6jIHTy8qjk8QM7lJTV1uF4l1qrPixULXJ+ZviWTvY6W5UXt2mfyN+anyxi9QKuOO8pEg
+        VNuHfZypmlwGaV+BUiWhoB5IwcxArkG5pB5QoKLGi+N4arphEJXzISWqyHqRcr8kzSAe/qbT31xT1
+        5Be3/kKNjEeIJJ2KJ+S/9HkGoSE134dvMxuJfiUWx/PeGZIsqgJffM/AofrIzw785PIEEZNrEtJXv
+        bhHqNd1IPHu5BqmsmaOdxb1v2bkfMlO7nlzuetZQ3olR9w9/yS/aw9/RDAJ3s2ZYQqh3u7yxPq+dX
+        dANFGeng==;
+Received: from [85.146.134.134] (port=60958 helo=DT0E.cyberfiber.eu)
+        by www98.totaalholding.nl with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mjbaars1977.linux-kernel@cyberfiber.eu>)
+        id 1iGJok-0000Dw-UX
+        for linux-kernel@vger.kernel.org; Fri, 04 Oct 2019 11:24:06 +0200
+Message-ID: <6dd0cf2a58a7f99da3d2fdfb9b1d1bf957409893.camel@cyberfiber.eu>
+Subject: packet writing support
+From:   Mischa Baars <mjbaars1977.linux-kernel@cyberfiber.eu>
+To:     linux-kernel@vger.kernel.org
+Date:   Fri, 04 Oct 2019 11:22:39 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - www98.totaalholding.nl
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - cyberfiber.eu
+X-Get-Message-Sender-Via: www98.totaalholding.nl: authenticated_id: mjbaars1977.linux-kernel@cyberfiber.eu
+X-Authenticated-Sender: www98.totaalholding.nl: mjbaars1977.linux-kernel@cyberfiber.eu
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Originating-IP: 185.94.230.81
+X-SpamExperts-Domain: out.totaalholding.nl
+X-SpamExperts-Username: 185.94.230.81
+Authentication-Results: totaalholding.nl; auth=pass smtp.auth=185.94.230.81@out.totaalholding.nl
+X-SpamExperts-Outgoing-Class: unsure
+X-SpamExperts-Outgoing-Evidence: Combined (0.37)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0dWQ8c9lblW44odAlK6ziUapSDasLI4SayDByyq9LIhVP66eIxt/agQ7
+ YJNlpgi5CETNWdUk1Ol2OGx3IfrIJKywOmJyM1qr8uRnWBrbSAGD2wvHbfwld3xCwVQvwEuT77Ld
+ J48jzkmtY6e2hJZwYRTnx8yeplRO3sLIqUlSH7OGWh4Em/JI/vUjAvb24AuGwYMlhcTgOXSCz8qb
+ ysTVYVkxZLzl78CRJp/CkBuSEXrbq0f8Oqhr0yw75RiyQ1Tv4oYfDsyVogV4aMr3Qc/zKVxPR9o0
+ 14ICOs9pIWX8OtLJj1pqXi8btQCfqom9tO+O5GjSUnK0zv6WWniSLupvi3/C3VvUdjSCswikK/li
+ cfX+JDrjsxZHhy1AzMPULKZh4Agqdb/JjbdVZfbc9c+Jxpt+54iyUCc8aaknZho9naJYg0bolM7B
+ /rBFul0ycjYHG0NfDxtcqznH5VBUud8O4LV0JmbqROuof5+bHLNCgb4217NirEYyqwqMBGrw8ELi
+ qO86tByCP69i0Qh5ndH5heRCJ7rPXZbjpKeI7vxRvveCIK/1NH5THMtlYvyHAYGOGgjdb5hy4d8/
+ k+RlvkD7ATmoZ2kfng5rdXwjvpU4S+XAhVR1id1GLKHJBvyjlI1w1E/J5phsv+xvB6Q7084Dep/E
+ odhHmgT/Z/aIyKL3sc7t9dFZa5ukDvijt563XwguywX3MPaPCeumOhbpVZ03tIU95AZWtzQOODZY
+ aBS/QaPai/btrmlhC85OkmJRZ+my2YLTiFllyX974CpAmwOWQt/Apnqpdot95Z1s2bBwfdm/8X6o
+ RcYO63BwpS5C898CHX096OhfSRX9R5xa4rGFcC9OL4nawG8z87Sn7OLOV4LikazAQsNf7vua6ysA
+ xFAilnb3SCYVYDSdH4IKBn5oTTl9HKvj+Li+B0slZd4aadi2b667E/1TXseb92FolcPTrPL5sKTz
+ 3tp9wpvGYs38JV+Sgf0DiLPRXTSWmFEPKyP0gxb6VQ9Dyf1mdym/fWDvnb+h1IgCQbaPY30Vfjqb
+ xdTi1AYkryYheSAf/c7kR8HWm3EQIN2pUUDcOX/AZBHcfw==
+X-Report-Abuse-To: spam@filter01.totaalholding.nl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-/* Summary */
-This pull request contains a couple of fixes:
+If I'm correct, packet writing support is going to be removed from the
+Linux kernel. Is there any particular reason for
+this, as far as you people know? Both DVD-writers and Blueray-writers are
+still being sold to date.
 
-- Fix pidfd selftest compilation (Shuah Kahn)
-  Due to a false linking instruction in the Makefile compilation for the
-  pidfd selftests would fail on some systems.
+I'm currently working on quite a large project. I would be dependent
+solely on USB to store my backup files, when the packet writing support
+is removed. Actually I'm quite uncomfortable with that idea, because
+USB is rewritable. Any serious attempt to do damage to my project will
+result a permanent loss of code. Personally I would do anything to keep
+packet writing support in the kernel.
 
-- Fix compilation for glibc on RISC-V systems (Seth Forshee)
-  In some scenarios linux/uapi/linux/sched.h is included where __ASSEMBLY__
-  is defined causing a build failure because struct clone_args was not
-  guarded by an #ifndef __ASSEMBLY__.
+I'd hoped you could remove normal floppy disc support instead. That
+seems the more logical course of action. Floppy disc drives aren't
+being sold anymore for quite some years now.
 
-- Add missing clone3() and struct clone_args kernel-doc (Christian Brauner)
-  clone3() and struct clone_args were missing kernel-docs. (The goal is to
-  use kernel-doc for any function or type where it's worth it.)
-  For struct clone_args this also contains a comment about the fact that
-  it's versioned by size.
+Anybody there?
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+Have a pleasant day,
+Mischa Baars.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20191003
-
-for you to fetch changes up to 78f6face5af344f12f4bd48b32faa6f499a06f36:
-
-  sched: add kernel-doc for struct clone_args (2019-10-03 21:19:29 +0200)
-
-/* Testing */
-All patches have seen exposure in linux-next and are based on v5.4-rc1.
-
-/* Conflicts */
-At the time of creating this PR no merge conflicts were reported from
-linux-next.
-
-Please consider pulling these changes from the signed for-linus-20191003 tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-for-linus-20191003
-
-----------------------------------------------------------------
-Christian Brauner (2):
-      fork: add kernel-doc for clone3
-      sched: add kernel-doc for struct clone_args
-
-Seth Forshee (1):
-      sched: Add __ASSEMBLY__ guards around struct clone_args
-
-Shuah Khan (1):
-      selftests: pidfd: Fix undefined reference to pthread_create()
-
- include/uapi/linux/sched.h             | 28 ++++++++++++++++++++++++++--
- kernel/fork.c                          | 11 +++++++++++
- tools/testing/selftests/pidfd/Makefile |  2 +-
- 3 files changed, 38 insertions(+), 3 deletions(-)
