@@ -2,132 +2,283 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522FFC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695CCECE589
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B30215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3856E2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mp2DLOFO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ERmKYlHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfJDKjM (ORCPT
+        id S1730215AbfJDKkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:39:12 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46487 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729319AbfJDKjM (ORCPT
+        Fri, 4 Oct 2019 06:40:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38410 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfJDKkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:39:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id c6so12344806ioo.13;
-        Fri, 04 Oct 2019 03:39:11 -0700 (PDT)
+        Fri, 4 Oct 2019 06:40:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 3so5318997wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 03:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=qZkq2IFXpYdFUAnRVtV16PjDv6kvLyNtOPmSknMDol4=;
-        b=Mp2DLOFOq3R1RI5KaWj39fc1oBw6TxRdIvXzsQ0B0fhH/lbeuSRNfiJKbUfuQrK7WH
-         5luCH418ZMKmk7qe9lJvudy6XbTFEhj7D24H5TAsxvrxV9kq6YvyOUFFCSEJQTbWr3i8
-         QbzrQTlwPeXbbkREqQ7/g37cQ9U+TPxmI3kcGQT/HFPvRsiNQp9ok+J4fvOV22K0oTHf
-         C/vE9TMqxqjz4qzKwM6517/YXKAE3/+7CqG9BLlzpl2DT3ffDBl1/2aEBm4lH4gaAnhp
-         ZIKW5V7EqoetyfZ4eF1VqmLidThv1DLK79zUP3ikQRTs7AIT8W8LGkyER9YzZvO9u2Ry
-         k1xg==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ObH9+JWT5QlzGuiPiIPPz8SadjDsdoqDZZO8TLwA4Wg=;
+        b=ERmKYlHxhYJJlaT7s9PRcGzr1SmeXV00PBHtfynFVd/R5NXHpyZeeQhRK653MT3L/p
+         rQBVUIixRjWRntgz6lrBuD1naZDPZHcGWiX2z+8vsS6/Trt+FYi7BtLzgN5LhFpfXbZV
+         jr8o3lxw9MvQSo/lXWef5V3MrpaXTxgYiT+3uxkEVbzrF0SjoxkngX0sHdUIEotEYzCn
+         JryqYqGC1IaLTwk9lB8EorEUqEJ56Ospm/DIbv4cYSkQ9r17inpmR0jKeGbQEqPmfJuc
+         J7lYzXwCVxWBkcvgxsiSMGdWY3pQGhNTVrbMZVxD7CxbX1gahuXRvCvaTNpi2bYfMB6M
+         e0Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=qZkq2IFXpYdFUAnRVtV16PjDv6kvLyNtOPmSknMDol4=;
-        b=Wdl7ISq4J9kwt1hnhdu44b95oUsN/aRLoCE4u2NelaYpbJHncV/8wObUCCVgTYjurt
-         umNwNvKUwQ+JoFuJziyzHcl94u7WYFOEZS79wl3HgwyxsJPF/0nRM+1vbofGMWuqqPW4
-         vIjWeHNS46HOn4wGklGTKBv76hmr2GkTNaK6VY8gLfzwEQymIhqooOn+j97i6GI14Zb6
-         RXd/DxScQkPz93xSlbVroSq68k7MokDfvNR/e6BOdv8RG1kyqk/IOaRCSNNvAadbZwpo
-         dTVuR4UVR63Rty6KSWlLUdpswS7NZVMd1OnxEEtdT4/DGEib0qtR2D0fMfUZ4ZX0TCP9
-         sNPw==
-X-Gm-Message-State: APjAAAXO8ZW3xS4aN513bkWf4o4nb4YuqvNBKkmmZXrRi+Y8Z6/LFTV8
-        MsAM73gAGizBUQnct+kfRkHe4/0DDEcDjczpGSM=
-X-Google-Smtp-Source: APXvYqz+Xj/q8hbRyOg8+71Aa+R2dm9DnYdbORf3IizXzCYBaNRlGKcl0yuGyJeYNFdYvisEVnWOazRJtqbNoFnP1I0=
-X-Received: by 2002:a02:65cd:: with SMTP id u196mr13949946jab.3.1570185550237;
- Fri, 04 Oct 2019 03:39:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ObH9+JWT5QlzGuiPiIPPz8SadjDsdoqDZZO8TLwA4Wg=;
+        b=He1LB1BvJ2zlsj7kIgGm4ZC6Bt5o0duGU7xmASlabF80MtjfXlxFOA/798gOpxzXa1
+         qNQWEXuI4PLuQDyWpZlT6otLfWaFnXbQu2fC9kvaIfhAvbttBJ+Zwc0iPdRLXmrzaPVM
+         dj935r52Qa96n7AYqkpUryWyCHftpVr29RoCMrRc/8Guft/+JM1U3LvSihVmSxO5LZh5
+         AISFf4rjs5wAhUkEtMAoB/ZfTQ5i7yovukImvFgu2pcu1F5Wps/Ah3RDGyOKpAvEgBCM
+         GF+JU5gyuFvykWQP3Eb7S/18mV8qxw7BcFSH7YSSZeUYWegJFwnI2W0n4el4W3E9tD/S
+         LYBQ==
+X-Gm-Message-State: APjAAAXJWuokmg3SgTwYVJbHX1GTx49ZPF+zIJjOSjc5+zVXSNxMCE7x
+        py2lXFMniBZJVtb8eIxGv+IweA==
+X-Google-Smtp-Source: APXvYqwSFtxCK4lDOz7PwbHKo0+dQi51HBVhbeSrDiK8qujtfY+6jbEplDUl4zLzyMP055hAnXj2pw==
+X-Received: by 2002:a1c:4945:: with SMTP id w66mr10180402wma.40.1570185611599;
+        Fri, 04 Oct 2019 03:40:11 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id n22sm4139704wmk.19.2019.10.04.03.40.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 03:40:10 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 11:40:10 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Steve French <smfrench@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>
+Subject: Re: nsdeps not working on modules in 5.4-rc1
+Message-ID: <20191004104010.GA93243@google.com>
+References: <CAH2r5mv49T9gwwoJxKJfkgdi6xbf+hDALUiAJHghGikgUNParw@mail.gmail.com>
+ <CAH2r5mtVW=3-2L+0QFJAqBG+uj2sYmF=dtzT_kqwK59cu94vGw@mail.gmail.com>
+ <20191003104356.GA77584@google.com>
+ <CAH2r5msF5DF2ac+-V0xRR-8RYeQdwpsS1iBLHM6iKTB+aEVc5Q@mail.gmail.com>
+ <CAK7LNARrdQad9=U1LknT9yRYtRagNVS8T5r_Ovv5Sa91QO3TsA@mail.gmail.com>
+ <CAH2r5ms_GdhAG4q3kcadeU44EQPjnebzBG8=DUcsi9Gh5J8UXw@mail.gmail.com>
+ <CAK7LNATLCG6DOsnqfFNe61NkcEHV1fS4fCWyy2qzMHVvDDHHHw@mail.gmail.com>
+ <CAH2r5muRXaaa4MV0455Sx5JOPyO0ZE_TVTkhuy3rAJXAHyhccQ@mail.gmail.com>
+ <CAK7LNASNu2iovxs84_0ouD_GKNfkqnwy4k0QhUGu+XbH9oT0UQ@mail.gmail.com>
+ <CAH2r5mu8SiZUMwnfA6zZXUrNZhofc3pUFJOhKvq=0X6MZXVjyQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
-In-Reply-To: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 4 Oct 2019 05:38:59 -0500
-Message-ID: <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
-Subject: Re: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP
- vs SERIAL_OMAP
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Vignesh R <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAH2r5mu8SiZUMwnfA6zZXUrNZhofc3pUFJOhKvq=0X6MZXVjyQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 5:02 AM Adam Ford <aford173@gmail.com> wrote:
->
-> I am running Kernel 5.3.2 trying to troubleshoot some intermittent
-> Bluetooth issues, and I think I have narrowed it down to the serial
-> driver in use.
+Hi Steve,
 
-I should have also noted that it's using UART2 with CTS and RTS on the
-DM3730 (omap3630) and its configured with a baud rate of 3M.
-I tried slowing it to 115200, but that didn't help.  I tried disabling
-the DMA hooks from the device tree, and that didn't help.
+On Fri, Oct 04, 2019 at 12:01:20AM -0500, Steve French wrote:
+>ok - so to sum up, it sounds like you are saying the 350 false
+>positives (see attached file) that happen on building cifs.ko .will be
+>fixed by a
+>future change to modpost?  This is  a typical module build ...
 
-> By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
-> SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
-> appears fine.  When I enable Bluetooth, however, I get intermittent
-> errors on an DM3730 / OMAP3630.
->
-> Using the 8250 driver for Blueotooth I get intermittent frame errors
-> and data loss.
->
-> Scanning ...
-> [   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
-> [   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
->         F4:4E:FC:C9:2F:57       BluJax
-> # l2ping F4:4E:FC:C9:2F:57
-> Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-> 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
-> no response from F4:4E:FC:C9:2F:57: id 1
-> ^C2 sent, 1 received, 50% loss
->
-> (after a fairly long hang, I hit control-c)
->
-> However, disabling the 8250 driver and using the only SERIAL_OMAP and
-> the console routed to ttyO0, the Bluetooth works well, so I believe it
-> to be a serial driver issue and not a Bluetooth error.
->
-> # hcitool scan
-> Scanning ...
->         F4:4E:FC:C9:2F:57       BluJax
-> ^C
-> # l2ping F4:4E:FC:C9:2F:57
-> Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-> 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
-> ...
-> 44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
-> ^C15 sent, 15 received, 0% loss
-> #
->
-> 0% loss and regular, repeatable communication without any Frame
-> reassembly errors.
->
+Yes, the reason for you to see these false positive warnings is a bug in
+modpost. The patch series we were referring to addresses this problem
+(and some others). I do not believe you need to run nsdeps to fixup
+anything in fs/cifs at this time.
 
-I tried disabling SERIAL_OMAP and using only SERIAL_8250_OMAP, but
-that didn't help.  Because the issue goes away when I disable
-SERIAL_8250_OMAP, I am wondering if something is either being
-misconfigured or some IRQ or DMA integration is missing that may be
-present with the older SERIAL_OMAP driver.
-
-> Any suggestions on how to troubleshoot or what might cause the
-> difference between the two drivers?
+>download and install current kernel package (in this case Ubuntu
+>5.4-rc1). which saves huge amount of build time, then build just the
+>module of interest (in my case cifs.ko)
 >
-> adam
+>                   cd fs/cifs
+>                   make C=1 -C /usr/src/linux-headers-`uname -r` M=`pwd` modules
+>
+>If nsdeps is not needed to fixup some namespace issue then shouldn't
+>be a problem, just trying to avoid the distraction of 300+
+>warning messages every time I build just this one module.  Is there a
+>workaround?
+
+Sorry for the noise this creates. The only known workaround is to
+locally apply the complete patch series.
+
+Cheers,
+Matthias
+
+>On Thu, Oct 3, 2019 at 11:51 PM Masahiro Yamada
+><yamada.masahiro@socionext.com> wrote:
+>>
+>> Hi Steve,
+>>
+>> On Fri, Oct 4, 2019 at 1:28 PM Steve French <smfrench@gmail.com> wrote:
+>> >
+>> > On Thu, Oct 3, 2019 at 10:41 PM Masahiro Yamada
+>> > <yamada.masahiro@socionext.com> wrote:
+>> > >
+>> > > Hi Steve,
+>> > >
+>> > > On Fri, Oct 4, 2019 at 1:07 AM Steve French <smfrench@gmail.com> wrote:
+>> > > >
+>> > > > On Thu, Oct 3, 2019 at 10:24 AM Masahiro Yamada
+>> > > > <yamada.masahiro@socionext.com> wrote:
+>> > > > >
+>> > > > > Hi Steve,
+>> > > > >
+>> > > > > On Fri, Oct 4, 2019 at 12:15 AM Steve French <smfrench@gmail.com> wrote:
+>> > > > > >
+>> > > > > > On Thu, Oct 3, 2019 at 5:43 AM Matthias Maennich <maennich@google.com> wrote:
+>> > > > > > >
+>> > > > > > > Hi Steve!
+>> > > > > > >
+>> > > > > > > On Wed, Oct 02, 2019 at 06:54:26PM -0500, Steve French wrote:
+>> > > > > > > >And running the build differently, from the root of the git tree
+>> > > > > > > >(5.4-rc1) rather than using the Ubuntu 5.4-rc1 headers also fails
+>> > > > > > > >
+>> > > > > > > >e.g. "make  M=fs/cifs modules nsdeps"
+>> > > > > > > >
+>> > > > > > > >...
+>> > > > > > > >  LD [M]  fs/cifs/cifs.o
+>> > > > > > > >  Building modules, stage 2.
+>> > > > > > > >  MODPOST 1 modules
+>> > > > > > > >WARNING: module cifs uses symbol sigprocmask from namespace
+>> > > > > > > >_fs/cifs/cache.o), but does not import it.
+>> > > > > > > >...
+>> > > > > > > >WARNING: module cifs uses symbol posix_test_lock from namespace
+>> > > > > > > >cifs/cache.o), but does not import it.
+>> > > > > > > >  CC [M]  fs/cifs/cifs.mod.o
+>> > > > > > > >  LD [M]  fs/cifs/cifs.ko
+>> > > > > > > >  Building modules, stage 2.
+>> > > > > > > >  MODPOST 1 modules
+>> > > > > > > >./scripts/nsdeps: 34: local: ./fs/cifs/cifsfs.c: bad variable name
+>> > > > > > > >make: *** [Makefile:1710: nsdeps] Error 2
+>> > > > > > >
+>> > > > > > > Thanks for reporting this. It appears to me you hit a bug that was
+>> > > > > > > recently discovered: when building with `make M=some/subdirectory`,
+>> > > > > > > modpost is misbehaving. Can you try whether this patch series solves
+>> > > > > > > your problems:
+>> > > > > > > https://lore.kernel.org/lkml/20191003075826.7478-1-yamada.masahiro@socionext.com/
+>> > > > > > > In particular patch 2/6 out of the series.
+>> > > > > > >
+>> > > > > > > Cheers,
+>> > > > > > > Matthias
+>> > > > > >
+>> > > > > >
+>> > > > > > Applying just patch 2 and doing "make" from the root of the git tree
+>> > > > > > (5.4-rc1), at the tail end of the build I got
+>> > > > > >
+>> > > > > > ...
+>> > > > > > Kernel: arch/x86/boot/bzImage is ready  (#87)
+>> > > > > >   Building modules, stage 2.
+>> > > > > >   MODPOST 5340 modules
+>> > > > > > free(): invalid pointer
+>> > > > > > Aborted (core dumped)
+>> > > > >
+>> > > > >
+>> > > > > Right.
+>> > > > >
+>> > > > > Since 2/6 depends on 1/6,
+>> > > > > applying only the second one does not work.
+>> > > >
+>> > > > Applying both 1 and 2 I get the following error doing make (although
+>> > > > it makes it a long way into the build)
+>> > > >
+>> > > > <snip>
+>> > > > WARNING: drivers/usb/storage/usb-storage: 'USB_STORAGE' exported
+>> > > > twice. Previous export was in drivers/usb/storage/usb-storage.ko
+>> > > > ERROR: "usb_stor_set_xfer_buf" [drivers/usb/storage/ums-usbat.ko] undefined!
+>> > > > ERROR: "usb_stor_access_xfer_buf" [drivers/usb/storage/ums-usbat.ko] undefined!
+>> > > > ERROR: "usb_stor_post_reset" [drivers/usb/storage/ums-usbat.ko] undefined!
+>> > > > ERROR: "usb_stor_disconnect" [drivers/usb/storage/ums-usbat.ko] undefined!
+>> > > > <snip>
+>> > > > ERROR: "usb_stor_adjust_quirks" [drivers/usb/storage/uas.ko] undefined!
+>> > > > ERROR: "usb_stor_sense_invalidCDB" [drivers/usb/storage/uas.ko] undefined!
+>> > > > WARNING: "USB_STORAGE" [drivers/usb/storage/usb-storage] is a static
+>> > > > EXPORT_SYMBOL_GPL
+>> > > > make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+>> > > > make: *** [Makefile:1303: modules] Error 2
+>> > >
+>> > >
+>> > > Hmm, I do not see those error.
+>> > > I was able to build the kernel successfully.
+>> > > (I asked the 0-day bot to test whole of my patch set
+>> > > in case I am missing something.)
+>> > >
+>> > >
+>> > > Could you share the steps to reproduce the errors and your .config file?
+>> >
+>> > From the root of git tree - at exactly 5.4-rc1
+>> >
+>> > ~/cifs-2.6$ make nsdeps
+>> >   CALL    scripts/checksyscalls.sh
+>> >   CALL    scripts/atomic/check-atomics.sh
+>> >   DESCEND  objtool
+>> >   CHK     include/generated/compile.h
+>> >   CHK     kernel/kheaders_data.tar.xz
+>> >   Building modules, stage 2.
+>> >   MODPOST 5340 modules
+>> >   Building modules, stage 2.
+>> >   MODPOST 5340 modules
+>> > ./scripts/nsdeps: 34: local: ./fs/cifs/cifsfs.c: bad variable name
+>> > make: *** [Makefile:1710: nsdeps] Error 2
+>> >
+>> > I get the same error doing "rm fs/cifs/*.o" and repeating the "make
+>> > nsdeps" command
+>> >
+>> > I will send you the .config
+>>
+>>
+>>
+>> You need to clarify your problem.
+>>
+>> In the first post from you, you pointed out
+>> "hundreds of new warnings introduced by namespaces in 5.4-rc1 when
+>> building my module"
+>>
+>> So, 1/6 and 2/6 should address that problem.
+>> https://lore.kernel.org/patchwork/patch/1133628/
+>> https://lore.kernel.org/patchwork/patch/1133626/
+>>
+>>
+>> Then, in the previous email ("Applying both 1 and 2 I get the
+>> following error doing make")
+>> it looks like you were talking about in-kernel building
+>> instead of the external module.
+>>
+>>
+>> Then, in this email, you are talking about "make nsdeps".
+>> "make nsdeps" obviously does not support M=.
+>>
+>>
+>> I am afraid you are mixing up different issues,
+>> which is so confusing. (and I am afraid you were too confused)
+>>
+>> Currently, the namespace is used only by USB_STORAGE.
+>> So, it should not be a problem for your module.
+>>
+>> To sum up, you do not need to run nsdeps at all.
+>> The hundreds of false-positive warnings came from the modpost bug,
+>> and should be fixed soon.
+>>
+>>
+>> --
+>> Best Regards
+>> Masahiro Yamada
+>
+>
+>
+>-- 
+>Thanks,
+>
+>Steve
+
+
