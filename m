@@ -2,147 +2,101 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB34C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BEBC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBDD222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:53:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yx4qOeKm"
+	by mail.kernel.org (Postfix) with ESMTP id 69F3920862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570207990;
+	bh=iYn7MmWiQMonlsgUlhh4XLpmY+Ud1LVtoHrFhdY0EWg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MftWHDcBJ8jtbfvZBp0B4cimxkP1K2nizVUmbfi52rFWjS1uksJnYIvPj2mnCo5lR
+	 LdJAIgtp167qJp+JBzVWoI559EcsjdZft13WXTObaLW8K8EhL09vsbPUaaPp0vEWvi
+	 9CB8CNTactYVF9zN7U/VVT/qZQTq6Cvlgd5K/HDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfJDQxD (ORCPT
+        id S1729727AbfJDQxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:53:03 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42447 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDQxC (ORCPT
+        Fri, 4 Oct 2019 12:53:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39104 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfJDQxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:53:02 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f16so6397906qkl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:53:01 -0700 (PDT)
+        Fri, 4 Oct 2019 12:53:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y3so7212633ljj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=szbrEQ+44GjFscMv1BfBPhkqI0C+sNQmLHo22e0JAFc=;
-        b=Yx4qOeKmD0XWNid+LHX1bDDL6SZHVT2FZ1d+Lk1LZsJp3YgCRrxVe0NoV1WUz/PwLU
-         VM750Iuos8cQz6GTDnquCwvSVGHgK+fV7O+ZYK8ha/zvjamwmK+0LqOjujQ6Xl1Reisl
-         YFUlshXN68dyg3oU8t/UNexrAgauxC3gLdLLxNreI7fDa004Kb1x5Ggd7qDiDo0kmYtq
-         cfYxEgQdQz5TrJo9UnJKNFB+1tEA04/qFIRkB4zzHsJEPEmCuFE9Cznpl8ClP9V4Ioji
-         KkDvcE8KsUSSPdZgXqb2zlAkFedUwOdDVXHx16J9pxNDDXNFDCbN3F45KyOUm8wiQ28Q
-         FKlw==
+        bh=Xmm2BP8a9DWuDP+xds0k8TTHnrVyUujhwbGGQwiP4BU=;
+        b=eXmEOfmog2EGekU7f6PlODmT8wkU1BJJwHVJjyillhE8vzFgDkJ/psUWheGVhia7JV
+         UbbKj5qJD+z7tqKIFDLuguKIW4wE5mESUBF8Tn31nyynoCIy7mxChKbdwtBG8NclsAdk
+         pT9e7uSJS8FK1k3lnsW2QtcdPrg3UdPesIjO8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=szbrEQ+44GjFscMv1BfBPhkqI0C+sNQmLHo22e0JAFc=;
-        b=GnvwWCf/MVtAUUf8tvrvH5egkJKG5OqNss+eU0PEWpItsvTsQLOpccbfsC75s+MFn/
-         6V45xF3sL/eTiYoNlRKr5okTEUAnKjbTBaLdMKimlfLgkydMfAnBDouT5zS0yArVq2SN
-         CZ9fRkmUK1+upzw4tJXknTzblxvXuXoq72+8/cSn3gXeHbI2MJ02I3xFb0014IXtEF1Z
-         PJKMFAP/bEflxFR894fXBm/rPekauAfOvf2QGRsYjKyoy6XKZ+X71ceW2Xgqt99Wm0NL
-         k+sDGHPhtFg9sAGFwnj8bYzm/MfOqk9VaVNLEoB8Gxfv+BqiTjWMz2WRCgjbBd1t2O9U
-         YlUw==
-X-Gm-Message-State: APjAAAX8phNfyV7Rll1MvUCEmdRrsrxeVo9tfZ3fYNwCRD/GqrUqxGJC
-        RBpv/dEA5+fTmLByYNxNVhItmwRxXzOcgb6idnRG8A==
-X-Google-Smtp-Source: APXvYqzWIGhS5eddfBw1HGeHlIg5Y4jipnTwAaE+Wn20faNnBKw1aq7vtNfqOuReDvRLYOr6H2CtEBWUnjhuxzQi6TY=
-X-Received: by 2002:a37:d84:: with SMTP id 126mr10177395qkn.407.1570207980784;
- Fri, 04 Oct 2019 09:53:00 -0700 (PDT)
+        bh=Xmm2BP8a9DWuDP+xds0k8TTHnrVyUujhwbGGQwiP4BU=;
+        b=B6X7FVwa5iyg00zhX42n7MPQz/UpG2KpAwkDY7s4FyHmP3xaLtJz1nVcrRieubz9q+
+         Y2vSUbOkxatBkVSdlP7J4HZWRlI11YaWCyCVCDPFlewUDeEx/1kWMGkGE+1kbCGeioze
+         eiO780BXOktOQBjURkZ2n702ZuE0qGkMsSOZQhoBjA8jrYPJTnZqdxMvveKMTTqoLoVI
+         v0SlqPmKSTh8DWvpBHawCa4bx/qZPZshzFnZ59NiBjNyuYHAjMze0eA1qcw3eLdZ+UYk
+         KalIZQX2PuuZ4bceT09PtFxLuWOCx7zO28EKOTlH1FHLCL+uwQbTRodmoMX4zwi5DY5F
+         b7TQ==
+X-Gm-Message-State: APjAAAV7Lv9T2lzUCBh4HdQ1/QbiO0RbGpc7jrKyxQ2dyyE9wFqM+/15
+        wZNPVBowiCOYPw43kkO9oii6pYyOwro=
+X-Google-Smtp-Source: APXvYqzR0i1UqUKUv3EgpK+cqpaiJNo1c6BqTJ4EfC0prOr4GL7Xy5jhw96Zqzhl/lgu8VlY7p9XGQ==
+X-Received: by 2002:a2e:9450:: with SMTP id o16mr10061028ljh.178.1570207986841;
+        Fri, 04 Oct 2019 09:53:06 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id t4sm1370702lji.40.2019.10.04.09.53.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Oct 2019 09:53:06 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id t8so4916814lfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:53:05 -0700 (PDT)
+X-Received: by 2002:a19:7d55:: with SMTP id y82mr9520991lfc.106.1570207985437;
+ Fri, 04 Oct 2019 09:53:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20191001211948.GA42035@google.com> <CANpmjNNp=zVzM2iGcQwVYxzNHYjBo==_2nito4Dw=kHopy=0Sg@mail.gmail.com>
- <20191004164859.GD253167@google.com>
-In-Reply-To: <20191004164859.GD253167@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 4 Oct 2019 18:52:49 +0200
-Message-ID: <CACT4Y+bPZOb=h9m__Uo0feEshdGzPz0qGK7f2omsUc6-kEvwZA@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Marco Elver <elver@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Will Deacon <willdeacon@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
+References: <20191004140503.9817-1-christian.brauner@ubuntu.com> <20191004142748.GG26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191004142748.GG26530@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 4 Oct 2019 09:52:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wih7tK-PoRTSUXgarpgR-WA8kN_voiMynQr8eysvPPgfA@mail.gmail.com>
+Message-ID: <CAHk-=wih7tK-PoRTSUXgarpgR-WA8kN_voiMynQr8eysvPPgfA@mail.gmail.com>
+Subject: Re: [PATCH] devpts: Fix NULL pointer dereference in dcache_readdir()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Varad Gautam <vrd@amazon.de>, stable <stable@vger.kernel.org>,
+        Jan Glauber <jglauber@marvell.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 6:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+On Fri, Oct 4, 2019 at 7:27 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> On Wed, Oct 02, 2019 at 09:51:58PM +0200, Marco Elver wrote:
-> > Hi Joel,
-> >
-> > On Tue, 1 Oct 2019 at 23:19, Joel Fernandes <joel@joelfernandes.org> wrote:
-> > >
-> > > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > > > Hi all,
-> > > >
-> > > > We would like to share a new data-race detector for the Linux kernel:
-> > > > Kernel Concurrency Sanitizer (KCSAN) --
-> > > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> > > >
-> > > > To those of you who we mentioned at LPC that we're working on a
-> > > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > > > renamed it to KCSAN to avoid confusion with KTSAN).
-> > > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
-> > > >
-> > > > In the coming weeks we're planning to:
-> > > > * Set up a syzkaller instance.
-> > > > * Share the dashboard so that you can see the races that are found.
-> > > > * Attempt to send fixes for some races upstream (if you find that the
-> > > > kcsan-with-fixes branch contains an important fix, please feel free to
-> > > > point it out and we'll prioritize that).
-> > > >
-> > > > There are a few open questions:
-> > > > * The big one: most of the reported races are due to unmarked
-> > > > accesses; prioritization or pruning of races to focus initial efforts
-> > > > to fix races might be required. Comments on how best to proceed are
-> > > > welcome. We're aware that these are issues that have recently received
-> > > > attention in the context of the LKMM
-> > > > (https://lwn.net/Articles/793253/).
-> > > > * How/when to upstream KCSAN?
-> > >
-> > > Looks exciting. I think based on our discussion at LPC, you mentioned
-> > > one way of pruning is if the compiler generated different code with _ONCE
-> > > annotations than what would have otherwise been generated. Is that still on
-> > > the table, for the purposing of pruning the reports?
-> >
-> > This might be interesting at first, but it's not entirely clear how
-> > feasible it is. It's also dangerous, because the real issue would be
-> > ignored. It may be that one compiler version on a particular
-> > architecture generates the same code, but any change in compiler or
-> > architecture and this would no longer be true. Let me know if you have
-> > any more ideas.
->
-> My thought was this technique of looking at compiler generated code can be
-> used for prioritization of the reports.  Have you tested it though? I think
-> without testing such technique, we could not know how much of benefit (or
-> lack thereof) there is to the issue.
->
-> In fact, IIRC, the compiler generating different code with _ONCE annotation
-> can be given as justification for patches doing such conversions.
+> FWIW, vfs.git#fixes (or #next.dcache) ought to deal with that one.
 
+Dang, I thought this already got merged. But we only discussed it
+extensively and I guess it got delayed by all the discussions about
+possible fixes for the d_lock contention.
 
-We also should not forget about "missed mutex" races (e.g. unprotected
-radix tree), which are much worse and higher priority than a missed
-atomic annotation. If we look at codegen we may discard most of them
-as non important.
+Al, mind sending me that one - and honestly, I'd take the "cursors off
+the list at the end" patch too. That may not be stable material, but I
+still think it's going to help the d_lock contention at least
+partially in practice.
+
+               Linus
