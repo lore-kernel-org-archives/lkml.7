@@ -2,196 +2,92 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F49C32792
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A670C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7044F2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570154004;
-	bh=6odMtoguJBjNIxmq0WvWcpWk1CrE1EvPomXzTsSYIrs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J+8x1FfNg9VBYq79YYU2mXd5eVaeMoN8r2dIRkP5Q/1TWv8LMyU0UdzbK488Ca0/i
-	 g9w1sWiNXwLJ5FpgZqFerkstQ0DKU7rtVhsBs6AAzcWHVS5MID639knsuxOrGIHXKg
-	 YVHz4zQqvk/toFxOhfef7U866hNbV5D8PuBRR+zw=
+	by mail.kernel.org (Postfix) with ESMTP id 6B9BB20862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:56:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r40pwOBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbfJDBxX (ORCPT
+        id S1731232AbfJDB4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 21:53:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728360AbfJDBxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 21:53:23 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E4621848;
-        Fri,  4 Oct 2019 01:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570154001;
-        bh=6odMtoguJBjNIxmq0WvWcpWk1CrE1EvPomXzTsSYIrs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AwYuS5MYR5UrpmjoK052xwB8qTp8H9UDlMezDdYyl1pA840CiRONdKV/9uIsNNUqR
-         8lS/Fn/bEO6ooPXWi0TrohOTpOF3Ns2e31Xa3u0mQ1E/6uy2d7lmgYF3+oI2NEfjpu
-         hqjRtZ6gUBLiJNLCfnIPomVdwPxetJaQRrPlwlY8=
-Received: by mail-qk1-f171.google.com with SMTP id z67so4360929qkb.12;
-        Thu, 03 Oct 2019 18:53:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAWYhBOVbr3BzHbOF/38i/QVFFCMCGkCjs+NW2K3eZqo6YdzXBst
-        gFNrqmW0B6riRUmUqtU6AJaPaGCQnYa9UICZhQ==
-X-Google-Smtp-Source: APXvYqy3/i1ov1ukyfSyJerD8h8tAJrCXAUbX0bSNjR5ZiZsqQGKwdIgHZwn3X3XEQRrLm3086Gb58Gtpxhh9D2C0Ws=
-X-Received: by 2002:a05:620a:12d5:: with SMTP id e21mr7829021qkl.152.1570154000420;
- Thu, 03 Oct 2019 18:53:20 -0700 (PDT)
+        Thu, 3 Oct 2019 21:56:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45520 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728360AbfJDB4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 21:56:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x941sgar046492;
+        Fri, 4 Oct 2019 01:56:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=z0WaPDfidjEpxZMspmeDv6FD6/7TIl0mI3WRlHLb3KM=;
+ b=r40pwOBoOd+J/t8/IsPri7oF7i0KO3H3fp0STmlfuDclpd5jTsmr7u1DxA7cjxRVdkmZ
+ GBwmwNXdiyOOsndtRjQrOTslOjdDqXkSPK+2Y6f7AJPeUbgiyOD07UK31NdJ9MamB0bk
+ bcwhXaZGij3yzl7gS8eiMv9MTkjHCYytxxDQz1AnVAV4cyBz7B7OvF/EHhhO8Jmpmydo
+ ZPZbQyB8EPP8rtrNovNdpRTyk0P5JWuNXK8PaX1/X27DRO5d06HqFQAMiddUnTfH5V0y
+ u1BoRdguhrjc+4Gq6YAWn4uOYXFa5zWf/0Gkd4L6JjA+i6bgTA3enYTVeJH/mHYKL7YO jA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2va05s82k8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Oct 2019 01:56:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x941r2Zt118062;
+        Fri, 4 Oct 2019 01:56:39 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vdn18kwe3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Oct 2019 01:56:38 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x941ubIA020126;
+        Fri, 4 Oct 2019 01:56:37 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 18:56:36 -0700
+To:     Himanshu Madhani <hmadhani@marvell.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
+        Allen Pais <allen.pais@oracle.com>
+Subject: Re: [PATCH] qla2xxx: fix a potential NULL pointer dereference
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1568824618-4366-1-git-send-email-allen.pais@oracle.com>
+Date:   Thu, 03 Oct 2019 21:56:34 -0400
+In-Reply-To: <1568824618-4366-1-git-send-email-allen.pais@oracle.com> (Allen
+        Pais's message of "Wed, 18 Sep 2019 22:06:58 +0530")
+Message-ID: <yq1h84ps27h.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-6-robh@kernel.org>
- <20190930125752.GD12051@infradead.org> <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
- <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com> <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
-In-Reply-To: <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 3 Oct 2019 20:53:09 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
-Message-ID: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
-Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=768
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910040012
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=866 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910040013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:43 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Mon, 2019-09-30 at 16:24 -0500, Rob Herring wrote:
-> > On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > > On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
-> > > > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
-> > > > > -int of_dma_configure(struct device *dev, struct device_node *np, bool
-> > > > > force_dma)
-> > > > > +int of_dma_configure(struct device *dev, struct device_node *parent,
-> > > > > bool
-> > > > > force_dma)
-> > > >
-> > > > This creates a > 80 char line.
-> > > >
-> > > > >  {
-> > > > >     u64 dma_addr, paddr, size = 0;
-> > > > >     int ret;
-> > > > >     bool coherent;
-> > > > >     unsigned long offset;
-> > > > >     const struct iommu_ops *iommu;
-> > > > > +   struct device_node *np;
-> > > > >     u64 mask;
-> > > > >
-> > > > > +   np = dev->of_node;
-> > > > > +   if (!np)
-> > > > > +           np = parent;
-> > > > > +   if (!np)
-> > > > > +           return -ENODEV;
-> > > >
-> > > > I have to say I find the older calling convention simpler to understand.
-> > > > If we want to enforce the invariant I'd rather do that explicitly:
-> > > >
-> > > >       if (dev->of_node && np != dev->of_node)
-> > > >               return -EINVAL;
-> > >
-> > > As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
-> >
-> > This may break PCI too for devices that have a DT node.
-> >
-> > > static int fsl_mc_dma_configure(struct device *dev)
-> > > {
-> > >         struct device *dma_dev = dev;
-> > >
-> > >         while (dev_is_fsl_mc(dma_dev))
-> > >                 dma_dev = dma_dev->parent;
-> > >
-> > >         return of_dma_configure(dev, dma_dev->of_node, 0);
-> > > }
-> > >
-> > > But I think that with this series, given the fact that we now treat the lack
-> > > of
-> > > dma-ranges as a 1:1 mapping instead of an error, we could rewrite the
-> > > function
-> > > like this:
-> >
-> > Now, I'm reconsidering allowing this abuse... It's better if the code
-> > which understands the bus structure in DT for a specific bus passes in
-> > the right thing. Maybe I should go back to Robin's version (below).
-> > OTOH, the existing assumption that 'dma-ranges' was in the immediate
-> > parent was an assumption on the bus structure which maybe doesn't
-> > always apply.
-> >
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > index a45261e21144..6951450bb8f3 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
-> > device_node *parent, bool force_
-> >         u64 mask;
-> >
-> >         np = dev->of_node;
-> > -       if (!np)
-> > -               np = parent;
-> > +       if (np)
-> > +               parent = of_get_dma_parent(np);
-> > +       else
-> > +               np = of_node_get(parent);
-> >         if (!np)
-> >                 return -ENODEV;
-> >
-> > -       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> > +       ret = of_dma_get_range(parent, &dma_addr, &paddr, &size);
-> > +       of_node_put(parent);
-> >         if (ret < 0) {
-> >                 /*
-> >                  * For legacy reasons, we have to assume some devices need
->
-> I spent some time thinking about your comments and researching. I came to the
-> realization that both these solutions break the usage in
-> drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
-> 'dev->of_node' and 'parent' exist yet the device receiving the configuration
-> and 'parent' aren't related in any way.
 
-I knew there was some reason I didn't like those virtual DT nodes...
+> alloc_workqueue is not checked for errors and as a result,
+> a potential NULL dereference could occur.
 
-That does seem to be the oddest case. Several of the others are just
-non-DT child platform devices. Perhaps we need a "copy the DMA config
-from another struct device (or parent struct device)" function to
-avoid using a DT function on a non-DT device.
+Himanshu: Please review!
 
-> IOW we can't just use 'dev->of_node' as a starting point to walk upwards the
-> tree. We always have to respect whatever DT node the bus provided, and start
-> there. This clashes with the current solutions, as they are based on the fact
-> that we can use dev->of_node when present.
-
-Yes, you are right.
-
-> My guess at this point, if we're forced to honor that behaviour, is that we
-> have to create a new API for the PCI use case. Something the likes of
-> of_dma_configure_parent().
-
-I think of_dma_configure just has to work with the device_node of
-either the device or the device parent and dev->of_node is never used
-unless the caller sets it.
-
-Rob
+-- 
+Martin K. Petersen	Oracle Linux Engineering
