@@ -2,139 +2,157 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590F3C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B166DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9AD20862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:47:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGrIHGsJ"
+	by mail.kernel.org (Postfix) with ESMTP id 84A20222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570193345;
+	bh=Qq8yUf1E6rfRdC96Z95+tYp8yLd7gCODj3q1cTKqEkU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=h3KcEO8oQSrqX3r9UFua1M4k9Tcu7aqLvPaXIJThMqRHxAQq+Dm4ZNNJHaLo+1vLG
+	 A46Iqxajx6q1mZC7tn8mDco27re4uakLK4y2ct/eMxksKwb4WgywIPuTZn49BhICTY
+	 /cAU7mn9Gy6vAa0thR1/GkAUs7LEsk0LiQSdVgC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfJDMrT (ORCPT
+        id S2387764AbfJDMtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:47:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41006 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfJDMrT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:47:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q9so7019821wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 05:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SnebWYdJq5RJ8cEGOskgzENwcS3jAgltFMpNIZXBTo4=;
-        b=bGrIHGsJyA0Ku8gQIGnulfy2eoAecu7Xnx4vhgTr1CTIIh2mWqpFMN+hktK7ZH/ZDF
-         2vqwflC2++y0bDvYfmv+FnUKt/hfuQSamUhZxXF+viicwwhX8uIzYnfQ62rAPQ1JhGtV
-         0fex/UsHZZ3DhnMk9Syvl0Dpxl4hklf22sGum4BbDlOAY5+NWdZVA2okrLswTzfyDpio
-         p4N8DNu3eToUV0BaxtTy/i8jjK1GVitURbxsv8t1xGzBVoZ1ULMo80g2CwIFiV9pUSK5
-         l3EBOtXK+6klcsVi4hwp0DF2MHCQ0tPwl80wQD3OPbV4GIb9qvI0B6aEM3JZ6GK7ennF
-         Dh+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SnebWYdJq5RJ8cEGOskgzENwcS3jAgltFMpNIZXBTo4=;
-        b=sW4+YlH2nVInEGdW/xmIDeYkkQfL+mr+TltGLpUpcMzvqecTEXzH2+Ny835jdzaWYr
-         GFpJSg0rbmURKILhzl3/KXzrBspSlrBOXz4yiVXF0KEilIPWtnDDRmrETYrS+u2BfOMM
-         ECkgwoD9kxBlcVnxEYA55NqzklBjoTEkmLTPsMqrLUvpLBnDWLobPL1N2SM4pbG9vj/E
-         ywbsRfH4XMbyJSqvcXfaWw12Y/QZTnzNT00aZAZN8Cnmope+N6jWL8H6jFgr0SpEulqO
-         gCmpzJGHoqGV7Rf+iLlOUAEBCxpkxSx9qHe9lBGX4tS7gKWPxmObw3BiM3K5Cqr+VaYb
-         /WmA==
-X-Gm-Message-State: APjAAAX9GvVS5iSoKa9/jXJ+xnSZqQH+6/StORbJCzSe1/QCsmRyRWLW
-        YYzjpGe3/R9w+PAIahqzzoc6PzgY3G0OboyGUDM=
-X-Google-Smtp-Source: APXvYqyHGplE6tzKrXPkrAcz3R4MEH3r4IEGdZQAC3Z2CzFZCEIhK4LND+A4dyFM5Qjrm3e4tXbYRQvmcyVdbJjIvsU=
-X-Received: by 2002:adf:f287:: with SMTP id k7mr12034831wro.206.1570193236775;
- Fri, 04 Oct 2019 05:47:16 -0700 (PDT)
+        Fri, 4 Oct 2019 08:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387574AbfJDMtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:49:04 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C3E0215EA;
+        Fri,  4 Oct 2019 12:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570193343;
+        bh=Qq8yUf1E6rfRdC96Z95+tYp8yLd7gCODj3q1cTKqEkU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ALZlVgl62wYzdKB9RQfKgBLGvDHRZXQA/FWBp0chOg5Zt/Tdg493M9mrQmgle0Bdi
+         8dKq4PFHsv/+YcA//RjvDduCDipQp0q5u1v9i8DdEx9OhpXej1QJMOHfV207SulIwD
+         W3tGzD7RzIs0O7JoYVDBdVNbT2kCWHzTEwiQ7Nao=
+Date:   Fri, 4 Oct 2019 07:49:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+Message-ID: <20191004124901.GA40317@google.com>
 MIME-Version: 1.0
-References: <20191003142423.v3.1.I5c52c59b731fe266252588ab2b32c0e3d4d808f1@changeid>
-In-Reply-To: <20191003142423.v3.1.I5c52c59b731fe266252588ab2b32c0e3d4d808f1@changeid>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 4 Oct 2019 08:47:04 -0400
-Message-ID: <CADnq5_OzUR12aLNgF1fO2JNZOwK=7z8SP8GvsWtSZo9bjnOVKg@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/amd/display: fix struct init in update_bounding_box
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        hersen wu <hersenxs.wu@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b310600-045a-2f02-d82b-edb44cbcffcd@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 4:35 PM Raul E Rangel <rrangel@chromium.org> wrote:
->
-> dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
->   struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
->          ^
->
-> Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
->
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+On Thu, Oct 03, 2019 at 02:11:28PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> 
+> On 10/3/19 2:01 PM, Bjorn Helgaas wrote:
+> > On Thu, Oct 03, 2019 at 01:37:26PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > On Thu, Oct 03, 2019 at 02:04:13PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Oct 03, 2019 at 10:20:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > > > Hi Bjorn,
+> > > > > 
+> > > > > Thanks for looking into this patch set.
+> > > > > 
+> > > > > On 9/5/19 12:18 PM, Bjorn Helgaas wrote:
+> > > > > > On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > > > > 
+> > > > > > > Since pci_prg_resp_pasid_required() function has dependency on both
+> > > > > > > PASID and PRI, define it only if both CONFIG_PCI_PRI and
+> > > > > > > CONFIG_PCI_PASID config options are enabled.
+> > > > > > > 
+> > > > > > > Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+> > > > > > > interface.")
+> > > > > > [Don't split tags, including "Fixes:" across lines]
+> > > > > > 
+> > > > > > This definitely doesn't fix e5567f5f6762.  That commit added
+> > > > > > pci_prg_resp_pasid_required(), but with no dependency on
+> > > > > > CONFIG_PCI_PRI or CONFIG_PCI_PASID.
+> > > > > > 
+> > > > > > This patch is only required when a subsequent patch is applied.  It
+> > > > > > should be squashed into the commit that requires it so it's obvious
+> > > > > > why it's needed.
+> > > > > > 
+> > > > > > I've been poking at this series, and I'll post a v8 soon with this and
+> > > > > > other fixes.
+> > > > > In your v8 submission you did not merge this patch. You did not use
+> > > > > pri_cap or pasid_cap cached values. Instead you have re-read the
+> > > > > value from register. Is this intentional?
+> > > > > 
+> > > > > Since this function will be called for every VF device we might loose some
+> > > > > performance benefit.
+> > > > This particular patch doesn't do any caching.  IIRC it fiddles with
+> > > > ifdefs to solve a problem that would be introduced by a future patch.
+> > > > I don't remember the exact details, but I think the series I merged
+> > > > doesn't have that problem.  If it does, let me know the details and we
+> > > > can fix it.
+> > > This patch by itself does not do any caching. But your caching patch
+> > > missed modifying this function to use cached values. Please check the
+> > > current implementation of this function. It still reads
+> > > PCI_EXT_CAP_ID_PRI register instead of using cached value. Please let
+> > > me know your comments.
+> > > 
+> > > int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> > > {
+> > >      u16 status;
+> > >      int pri;
+> > > 
+> > >      if (pdev->is_virtfn)
+> > >          pdev = pci_physfn(pdev);
+> > > 
+> > >      pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> > >      if (!pri)
+> > >          return 0;
+> > > 
+> > >      pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
+> > > 
+> > >      if (status & PCI_PRI_STATUS_PASID)
+> > >          return 1;
+> > > 
+> > >      return 0;
+> > > }
+> > > EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+> > > 
+> > > If caching is applied to this function then we need this #ifdef
+> > > dependency correction patch.
+> > IIRC this #ifdef patch wasn't connected to the actual *need* for the
+> > #ifdef, so it was very difficult to review.  I thought this function
+> > would be infrequently used and it wasn't worth trying to sort out the
+> > #ifdef muddle to do the caching.  But it does seem sort of pointless
+> > to chase the capability list again here, so maybe it *is* worth
+> > optimizing.
+> > 
+> > The PRG Response PASID Required bit is read-only, so I wonder if it
+> > would be simpler if we just read PCI_PRI_STATUS once and save the bit
+> > in the struct pci_dev?  We could do that in pci_enable_pri(), or if we
+> > might need the value before that's called, we could add a
+> > pci_pri_init() and do it there.
+> 
+> Yes, caching PASID Required bit in pci_pri_init() function would
+> provide performance benefits. But another thing to consider is,
+> since this bit is same for both PF/VF, is it worth to add this bit
+> it to struct pci_dev?or struct pci_sriov is the more appropriate
+> place?
 
-Applied.  thanks!
+IIUC, the PRI capability is not specific to SR-IOV, so I don't think
+it would make sense to cache PRG Response PASID Required in pci_sriov.
 
-Alex
+PFs may implement PRI; VFs do not (PCIe r5.0, sec 10.5.2), so I think
+the bit should be cached in the pci_dev, and if we want to know the
+value for a VF, we should read it from the PF's pci_dev.
 
->
-> ---
->
-> Changes in v3:
-> - Use memset
->
-> Changes in v2:
-> - Use {{0}} instead of {}
->
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> index b949e202d6cb7..f72c26ae41def 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> @@ -2633,7 +2633,7 @@ static void cap_soc_clocks(
->  static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
->                 struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
->  {
-> -       struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-> +       struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES];
->         int i;
->         int num_calculated_states = 0;
->         int min_dcfclk = 0;
-> @@ -2641,6 +2641,8 @@ static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_
->         if (num_states == 0)
->                 return;
->
-> +       memset(calculated_states, 0, sizeof(calculated_states));
-> +
->         if (dc->bb_overrides.min_dcfclk_mhz > 0)
->                 min_dcfclk = dc->bb_overrides.min_dcfclk_mhz;
->         else
-> --
-> 2.23.0.444.g18eeb5a265-goog
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Bjorn
