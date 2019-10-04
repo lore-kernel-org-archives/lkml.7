@@ -2,169 +2,116 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68871C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E308C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F40C2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UnmENT/6"
+	by mail.kernel.org (Postfix) with ESMTP id F1C21222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570201669;
+	bh=/KV5I5DAghrskNH9QDWgNaeNLl+MrlIiwz5apfW4Vrg=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=XLwkqMqHeztKvw4ndRT0U53GjBMClTMFLQKPDFn4WqxdZ3+Kl1o6WsNStqfv0gDDr
+	 Fuf1GV8LZ1+cygJ/EM3B7sJzpnDp974rdTPc5O24Pj3wdndDocd3D74E0QkhM1eovS
+	 pSF8pj/wxmj9TVcwHXzldFrt0pPAB+jq1fgKonWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389583AbfJDPHp (ORCPT
+        id S2389620AbfJDPHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:07:45 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35639 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388802AbfJDPHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:07:45 -0400
-Received: by mail-io1-f66.google.com with SMTP id q10so14306659iop.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 08:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=H1tE0Tk0zvkxOuvcO9AJzSAbKgb4wOfbPAlGpreJplg=;
-        b=UnmENT/6ip+zJ0ZDV1IM9vwMCa5IluK20GCPlJeP7UQ0OLOlE/iB4yLBNoh+7p4Dcb
-         R0K1OjXbvc78E1NWyTQqZOcdX30jzfKuyigIcMAOF9H487XPvLtKcTBU4qxtgUC3KY31
-         fG2QJxjZhJXgD2G8EzqHxP9hUNEvZN68rA5dNdYJhk55EI9gtYXNqnln3dpU5+p+yLBx
-         hrWWYWLp0NlB+1tNfHI1mSfgUWkZMzlCAFYmJhWQ1zr4zB9Xo1m5HVBQmwGgMAhDD/TT
-         BOnmdsmH9o3VCJcq48BOAc9lEjD0e9albz9YzXSrVGV44cij4HS/ZwtJyuNg4kPgsHJo
-         RsEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=H1tE0Tk0zvkxOuvcO9AJzSAbKgb4wOfbPAlGpreJplg=;
-        b=DFDjibzaTwEhbct4/5JLcqaMUIQSsfJVDjxpyvRQ6npajqem0Na+lCVVCLZP3H+QTj
-         ro66zRt3EcyE47q/xUgAH1Mexk/6Vh6F2EUp1sPe4dvPRkBF34rWIuNAPqH5TxX/pU0j
-         B6pxmfdYTwObqBqhgT8mTl7lSITYBPGfsYVxUR/WnguZBmU26GmPuomOs7rtj/9h1gxM
-         hpN0d9p7Gzh0bGlFbaOrs4spfoH+izqPtRM/rTJUMHNHqTkfV7zyRUpzPfbrqIBQ4yhD
-         I1fsTVDn8cDJJ2hG+nC1RhMUVZ+uG4aOm1jwSSkrnsbRO05PpHoX4Ud86Z9bR3fdwODQ
-         8LxA==
-X-Gm-Message-State: APjAAAXgIN9RWiKWQuu6VDZnNuCC6w35H0YMufsbveFsXgx/G7u/TZ43
-        VWj35JFSukvEqTIDxqHvBNpMTw==
-X-Google-Smtp-Source: APXvYqyR/bA+KuWHIUGA5CFsIuFF2BpCp6wbrXIVItCxVyx5eRVpBY7kkzYbcyIPyGbg3ML2H+ekBQ==
-X-Received: by 2002:a5e:c709:: with SMTP id f9mr13414228iop.118.1570201664547;
-        Fri, 04 Oct 2019 08:07:44 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id v17sm3500537ill.76.2019.10.04.08.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 08:07:43 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 10:07:43 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 000/129] 4.9.195-stable review
-Message-ID: <20191004150743.iy36yintuszrw5zc@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-References: <20191003154318.081116689@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+        Fri, 4 Oct 2019 11:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388802AbfJDPHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:07:46 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB92207FF;
+        Fri,  4 Oct 2019 15:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570201666;
+        bh=/KV5I5DAghrskNH9QDWgNaeNLl+MrlIiwz5apfW4Vrg=;
+        h=From:To:Subject:Date:From;
+        b=OGWg8NtvNyerybT+VfuS22mipc6Oq+DcD1Z8b/NRsfgNtU+fi5fFNWhlzLyLr4abK
+         zcEUcMR0ODI6gine4L3mMTJiPnQlvO9Tb7aumA5IrUBoDCICHdx7W3waD0UV0sTKr6
+         I44zsBDOCS3Ya+4oGQmhNliofFEwAkYvvR2GW4sY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFT 1/3] power: supply: ab8500: Cleanup probe in reverse order
+Date:   Fri,  4 Oct 2019 17:07:36 +0200
+Message-Id: <20191004150738.6542-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:52:03PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.195 release.
-> There are 129 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
-> Anything received after that time might be too late.
+It is logical to cleanup in probe's error path in reverse order to
+previous actions.  It also makes easier to add additional goto labels
+within this error path.
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Summary
-------------------------------------------------------------------------
+---
 
-kernel: 4.9.195-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-4.9.y
-git commit: c1fc114556201dc059e2c202e99eac038af8495e
-git describe: v4.9.194-130-gc1fc11455620
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.194-130-gc1fc11455620
+Not marking as cc-stable as this was not reproduced and not tested.
+---
+ drivers/power/supply/ab8500_btemp.c | 4 ++--
+ drivers/power/supply/ab8500_fg.c    | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-No regressions (compared to build v4.9.194)
-
-No fixes (compared to build v4.9.194)
-
-Ran 23331 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* prep-tmp-disk
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
+diff --git a/drivers/power/supply/ab8500_btemp.c b/drivers/power/supply/ab8500_btemp.c
+index 8fe81259bfd9..a167938e32f2 100644
+--- a/drivers/power/supply/ab8500_btemp.c
++++ b/drivers/power/supply/ab8500_btemp.c
+@@ -1104,13 +1104,13 @@ static int ab8500_btemp_probe(struct platform_device *pdev)
+ 	return ret;
+ 
+ free_irq:
+-	power_supply_unregister(di->btemp_psy);
+-
+ 	/* We also have to free all successfully registered irqs */
+ 	for (i = i - 1; i >= 0; i--) {
+ 		irq = platform_get_irq_byname(pdev, ab8500_btemp_irq[i].name);
+ 		free_irq(irq, di);
+ 	}
++
++	power_supply_unregister(di->btemp_psy);
+ free_btemp_wq:
+ 	destroy_workqueue(di->btemp_wq);
+ 	return ret;
+diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
+index 6fc4bc30644c..36bbb8ea05da 100644
+--- a/drivers/power/supply/ab8500_fg.c
++++ b/drivers/power/supply/ab8500_fg.c
+@@ -3212,15 +3212,15 @@ static int ab8500_fg_probe(struct platform_device *pdev)
+ 	return ret;
+ 
+ free_irq:
+-	power_supply_unregister(di->fg_psy);
+-
+ 	/* We also have to free all registered irqs */
++	irq = platform_get_irq_byname(pdev, ab8500_fg_irq_bh[0].name);
++	free_irq(irq, di);
+ 	for (i = 0; i < ARRAY_SIZE(ab8500_fg_irq_th); i++) {
+ 		irq = platform_get_irq_byname(pdev, ab8500_fg_irq_th[i].name);
+ 		free_irq(irq, di);
+ 	}
+-	irq = platform_get_irq_byname(pdev, ab8500_fg_irq_bh[0].name);
+-	free_irq(irq, di);
++
++	power_supply_unregister(di->fg_psy);
+ free_inst_curr_wq:
+ 	destroy_workqueue(di->fg_wq);
+ 	return ret;
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+2.17.1
+
