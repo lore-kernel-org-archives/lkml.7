@@ -2,139 +2,156 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA8AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB580C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042532249C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:42:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rr1vtXU4"
+	by mail.kernel.org (Postfix) with ESMTP id 8C7352249A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfJDHm4 (ORCPT
+        id S1730678AbfJDHm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 4 Oct 2019 03:42:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57406 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730165AbfJDHm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 03:42:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27764 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728841AbfJDHmz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 03:42:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570174973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=aqehLXaXoxAk0FwHZXOGuzJYSxJSLBJhzUvAd2716fk=;
-        b=Rr1vtXU4q3+SGpiO80VYlygWZnF+oh9SNXZL/2MoaJjwkarhtSwVmsmPmqJCdgVLak977A
-        TS5ZFkMh43u3LMGEM6k4OboC8j7PJq+ju48mGP/d1SJstG+c/flJjcYc+H+NNYOyXnNcIq
-        z0rq5wsa3ovTmpiAUZ0yfIbq0/jqeNU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-K0Gubf-WMiqpsC3aMMgR5g-1; Fri, 04 Oct 2019 03:42:48 -0400
-Received: by mail-wr1-f72.google.com with SMTP id z17so2324166wru.13
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 00:42:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZnjEcv9bwMt98xcjyHQJSlCaW2NwBRCddFAr5LLLNdM=;
-        b=SQtcpJGGj3tbiaXPq5kXCsWRzd4OxTsgwGI/ZsNasLl7gHYzzhKZCjX/nnwX2IgZJ5
-         vjIHFsLGllTXWyjXuqOAdUDzCqtLV0hixZ/b4sOLBy20cbv8PnlHO31aaJ3RoDcN2mxk
-         l1EwUtuWs+c1lODIrZfHRtJM3jEAcX7RZaL3LIfQ7nQ+H4CmPfpmPK6Ufno6gyjyc/zy
-         ZXMQTpzjTKhsGeQP1oYnM7M9ZGzgZVUYMCPHJECGcs6z72n5cx1VZzFxs6sS4eJMdjIT
-         DhpoTZT7eJDXFsDy7Y/Gp1BeGI8WddlcLy6DSUIgQ4n3GW4T6u6w2vValdeIHCFetb/+
-         TD+g==
-X-Gm-Message-State: APjAAAVuiuXAc43stjkMiudUPx19jPFPvIrRKBzoUA+G8vFqvgNkHS3/
-        WOIs73Ztdc2XjrKZI2zP30hLSq32iEwTF4bUui16QsD17anBcY/UdVFRG9Xris0d2SYq9G6RmXf
-        Oq+jrh1/H5g76IQhAr3BX8UGW
-X-Received: by 2002:a7b:c74c:: with SMTP id w12mr444756wmk.156.1570174967431;
-        Fri, 04 Oct 2019 00:42:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqynjOXyxUR2wfWfnrZSAIIZmvVR76cHGNJO3pxfQrVbC+uRcG6jmeTYWszrSV/kMcDcAbBeIQ==
-X-Received: by 2002:a7b:c74c:: with SMTP id w12mr444744wmk.156.1570174967153;
-        Fri, 04 Oct 2019 00:42:47 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id o1sm7711517wrs.78.2019.10.04.00.42.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2019 00:42:46 -0700 (PDT)
-Subject: Re: [RFC PATCH 05/13] kvm: Add #PF injection for KVM XO
-To:     Rick Edgecombe <rick.p.edgecombe@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        luto@kernel.org, peterz@infradead.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, keescook@chromium.org
-Cc:     kristen@linux.intel.com, deneen.t.dock@intel.com
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
- <20191003212400.31130-6-rick.p.edgecombe@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5161230860D5;
+        Fri,  4 Oct 2019 07:42:55 +0000 (UTC)
+Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E4F25C1D8;
+        Fri,  4 Oct 2019 07:42:52 +0000 (UTC)
+Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
+To:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190924143615.19628-1-david@redhat.com>
+ <1570052242.5576.266.camel@lca.pw>
+From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
-Message-ID: <08e46327-7d98-5c63-58ba-e9a171790c25@redhat.com>
-Date:   Fri, 4 Oct 2019 09:42:44 +0200
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
+ 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
+ xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
+ jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
+ s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
+ m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
+ MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
+ z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
+ dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
+ UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
+ 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
+ uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
+ 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
+ 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
+ xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
+ 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
+ hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
+ u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
+ gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
+ rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
+ BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
+ KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
+ NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
+ YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
+ lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
+ qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
+ C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
+ W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
+ TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
+ +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <be2cb67b-5432-d147-cfa1-efe3c7e77db6@redhat.com>
+Date:   Fri, 4 Oct 2019 09:42:52 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191003212400.31130-6-rick.p.edgecombe@intel.com>
+In-Reply-To: <1570052242.5576.266.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MC-Unique: K0Gubf-WMiqpsC3aMMgR5g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 04 Oct 2019 07:42:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10/19 23:23, Rick Edgecombe wrote:
-> +=09if (!vcpu->arch.gva_available)
-> +=09=09return 0;
+On 02.10.19 23:37, Qian Cai wrote:
+> On Tue, 2019-09-24 at 16:36 +0200, David Hildenbrand wrote:
+>> Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
+>> rwsem") we do a cpus_read_lock() in mem_hotplug_begin(). This was
+>> introduced to fix a potential deadlock between get_online_mems() and
+>> get_online_cpus() - the memory and cpu hotplug lock. The root issue was
+>> that build_all_zonelists() -> stop_machine() required the cpu hotplug lock:
+>>     The reason is that memory hotplug takes the memory hotplug lock and
+>>     then calls stop_machine() which calls get_online_cpus().  That's the
+>>     reverse lock order to get_online_cpus(); get_online_mems(); in
+>>     mm/slub_common.c
+>>
+>> So memory hotplug never really required any cpu lock itself, only
+>> stop_machine() and lru_add_drain_all() required it. Back then,
+>> stop_machine_cpuslocked() and lru_add_drain_all_cpuslocked() were used
+>> as the cpu hotplug lock was now obtained in the caller.
+>>
+>> Since commit 11cd8638c37f ("mm, page_alloc: remove stop_machine from build
+>> all_zonelists"), the stop_machine_cpuslocked() call is gone.
+>> build_all_zonelists() does no longer require the cpu lock and does no
+>> longer make use of stop_machine().
+>>
+>> Since commit 9852a7212324 ("mm: drop hotplug lock from
+>> lru_add_drain_all()"), lru_add_drain_all() "Doesn't need any cpu hotplug
+>> locking because we do rely on per-cpu kworkers being shut down before our
+>> page_alloc_cpu_dead callback is executed on the offlined cpu.". The
+>> lru_add_drain_all_cpuslocked() variant was removed.
+>>
+>> So there is nothing left that requires the cpu hotplug lock. The memory
+>> hotplug lock and the device hotplug lock are sufficient.
+> 
+> Actually, powerpc does,
+> 
+> arch_add_memory()
+>   resize_hpt_for_hotplug()
+>     pseries_lpar_resize_hpt()
+>       stop_machine_cpuslocked()
+> 
 
-Please return RET_PF_* constants, RET_PF_EMULATE here.
+Thanks for that observation. This will need some further thought.
 
-> +=09if (error_code & PFERR_WRITE_MASK)
-> +=09=09fault_error_code |=3D X86_PF_WRITE;
-> +
-> +=09fault.vector =3D PF_VECTOR;
-> +=09fault.error_code_valid =3D true;
-> +=09fault.error_code =3D fault_error_code;
-> +=09fault.nested_page_fault =3D false;
-> +=09fault.address =3D vcpu->arch.gva_val;
-> +=09fault.async_page_fault =3D true;
+Another proof that locking is messed up :)
 
-Not an async page fault.
+Maybe we should start decoupling locking of the memory
+onlining/offlining path (e.g., get_online_mems()) from the memory
+adding/removing path (e.g., later something like get_present_mems()).
+Then we can push down the cpu hotplug lock to the PPC path and use
+stop_machine() directly.
 
-> +=09kvm_inject_page_fault(vcpu, &fault);
-> +
-> +=09return 1;
+Time to document properly which lock protects what :)
 
-Here you would return RET_PF_RETRY - you've injected the page fault and
-all that's left to do is reenter execution of the vCPU.
-
-[...]
-
-> +=09if (unlikely(vcpu->arch.xo_fault)) {
-> +=09=09/*
-> +=09=09 * If not enough information to inject the fault,
-> +=09=09 * emulate to figure it out and emulate the PF.
-> +=09=09 */
-> +=09=09if (!try_inject_exec_only_pf(vcpu, error_code))
-> +=09=09=09return RET_PF_EMULATE;
-> +
-> +=09=09return 1;
-> +=09}
-
-Returning 1 is wrong, it's also RET_PF_EMULATE.  If you change
-try_inject_exec_only_pf return values to RET_PF_*, you can simply return
-the value of try_inject_exec_only_pf(vcpu, error_code).
-
-That said, I wonder if it's better to just handle this in
-handle_ept_violation.  Basically, if bits 5:3 of the exit qualification
-are 100 you can bypass the whole mmu.c page fault handling and just
-inject an exec-only page fault.
+-- 
 
 Thanks,
 
-Paolo
-
+David / dhildenb
