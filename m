@@ -2,207 +2,107 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29543C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C1CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23DC215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570218499;
-	bh=YJvS4ja7QkCv/xeilE+vPBPFSgMehIFyb5QZZEJymuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GxNCkoUx7Z7wU3ovEtRgyP4Y4prqUMXl4RLnCgSoZ0Gqt70mi6uBENvanMtFEVRF/
-	 8vswleGR9n8os/BHWspYI6Ld0V8q7sqTGoK9nTRpal94e6+GPMKleq2S4PZyE4VchU
-	 AN16hDDoV9iCxl7a6FO11ruDHx8mbynsB+nGHCYk=
+	by mail.kernel.org (Postfix) with ESMTP id B37A52084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:49:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pimaker.at header.i=@pimaker.at header.b="u353UxAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbfJDTsS (ORCPT
+        id S1730989AbfJDTtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbfJDTsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:48:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EDF92084D;
-        Fri,  4 Oct 2019 19:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570218496;
-        bh=YJvS4ja7QkCv/xeilE+vPBPFSgMehIFyb5QZZEJymuI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CNHpFUafD0OqBoYBGlS8nwY8IPxdpCwd1umMDz6Bp61Jz+chsV2G4k1o8Vs3olmZm
-         qsb8NbW8BPEeGvNgnmWyL6dLhSzpNF59co0FdVCfj9NEMwDHASwHrRLKOhfkYM2pMB
-         9Gj7AoiQUfH1SYNtSjXGyKGH08O2tYf34UBCc52Q=
-Date:   Fri, 4 Oct 2019 14:48:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-Cc:     George Cherian <gcherian@marvell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>
-Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Message-ID: <20191004194813.GA76466@google.com>
+        Fri, 4 Oct 2019 15:49:19 -0400
+Received: from mail4.protonmail.ch ([185.70.40.27]:11038 "EHLO
+        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729542AbfJDTtS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:49:18 -0400
+Date:   Fri, 04 Oct 2019 19:49:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pimaker.at;
+        s=protonmail; t=1570218555;
+        bh=AS1CxfhygLyImk+JuXN7jBRLdNimwE9AoO8eGMwC5/g=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=u353UxAF/aC7YxxXkPdPXOQPoJzP+gMijoZGyE8P6AtP5GMibLaiDmuz3kHZ6+QwG
+         UGNn85jI52Y7R7fWKYt3yO2Y9Q2nHoM98BmlDkpAuoy4yLxiIBL+dmwWcipSljQ08N
+         uUM1lIHSr5PyJggQ08s7xzzC8lwhUq1qsU0T7S9o=
+To:     rcu@vger.kernel.org
+From:   Stefan Reiter <stefan@pimaker.at>
+Cc:     Stefan Reiter <stefan@pimaker.at>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org
+Reply-To: Stefan Reiter <stefan@pimaker.at>
+Subject: [PATCH] rcu/nocb: Fix dump_tree hierarchy print always active
+Message-ID: <20191004194854.11352-1-stefan@pimaker.at>
+Feedback-ID: ue9Y3QtBlktHf6EEpXP3zzomX_ELv4nrMskJ1DJAqtnBErUqnmreyaap-KHUztlMofpS6GrkVvbLJ97c2ByOFQ==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930232041.GA22852@dc5-eodlnx05.marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 11:20:50PM +0000, Jayachandran Chandrasekharan Nair wrote:
-> On Mon, Sep 30, 2019 at 03:34:10PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Sep 19, 2019 at 02:43:34AM +0000, George Cherian wrote:
-> > > Enhance the ACS quirk for Cavium Processors. Add the root port
-> > > vendor ID's in an array and use the same in match function.
-> > > For newer devices add the vendor ID's in the array so that the
-> > > match function is simpler.
-> > > 
-> > > Signed-off-by: George Cherian <george.cherian@marvell.com>
-> > > ---
-> > >  drivers/pci/quirks.c | 28 +++++++++++++++++++---------
-> > >  1 file changed, 19 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 44c4ae1abd00..64deeaddd51c 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
-> > >  #endif
-> > >  }
-> > >  
-> > > +static const u16 pci_quirk_cavium_acs_ids[] = {
-> > > +	/* CN88xx family of devices */
-> > > +	0xa180, 0xa170,
-> > > +	/* CN99xx family of devices */
-> > > +	0xaf84,
-> > > +	/* CN11xxx family of devices */
-> > > +	0xb884,
-> > > +};
-> > > +
-> > >  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
-> > >  {
-> > > -	/*
-> > > -	 * Effectively selects all downstream ports for whole ThunderX 1
-> > > -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> > > -	 * bits of device ID are used to indicate which subdevice is used
-> > > -	 * within the SoC.
-> > > -	 */
-> > > -	return (pci_is_pcie(dev) &&
-> > > -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
-> > > -		((dev->device & 0xf800) == 0xa000));
-> > > +	int i;
-> > > +
-> > > +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> > > +		return false;
-> > > +
-> > > +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> > > +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
-> > 
-> > I'm a little skeptical of this because the previous test:
-> > 
-> >   (dev->device & 0xf800) == 0xa000
-> > 
-> > could match *many* devices, but of those, the new code only matches two
-> > (0xa180, 0xa170).
-> > 
-> > And the comment says the new code matches the CN99xx and CN11xxx
-> > *families*, but it only matches a single device ID for each, which
-> > makes me think there may be more devices to come.
-> > 
-> > Maybe this is all what you want, but please confirm.
-> 
-> There are only a very few device IDs for root ports, so just listing
-> them out like this maybe better. The earlier match covered a lot of
-> ThunderX1 devices, but did not really match the ThunderX2 root ports.
-> 
-> This looks ok for ThunderX2. Sunil & Robert can comment on other
-> processor families I hope.
+Commit 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if
+dump_tree") added print statements to rcu_organize_nocb_kthreads for
+debugging, but incorrectly guarded them, causing the function to always
+spew out its message.
 
-I don't know which of these are ThunderX2 vs ThunderX1.
+This patch fixes it by guarding both pr_alert statements with dump_tree,
+while also changing the second pr_alert to a pr_cont, to print the
+hierarchy in a single line (assuming that's how it was supposed to
+work).
 
-I currently have the change below on a branch waiting for confirmation
-that this is what you intend.
+Fixes: 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if dump_tree"=
+)
+Signed-off-by: Stefan Reiter <stefan@pimaker.at>
+---
 
-> > The commit log should be explicit that this adds CN99xx and CN11xxx,
-> > which previously were not matched.
-> > 
-> > This looks like stable material?
-> > 
-> > > +			return true;
-> > > +
-> > > +	return false;
-> > >  }
-> > >  
-> > >  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+First time contributing to the kernel, hope I'm doing this right :)
 
-commit 37b22fbfec2d
-Author: George Cherian <george.cherian@marvell.com>
-Date:   Thu Sep 19 02:43:34 2019 +0000
+ kernel/rcu/tree_plugin.h | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-    PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
-    
-    Add an array of Cavium Root Port device IDs and apply the quirk only to the
-    listed devices.
-    
-    Instead of applying the quirk to all Root Ports where
-    "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
-    0xa170 Root Ports.
-    
-    Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
-    
-    Link: https://lore.kernel.org/r/20190919024319.GA8792@dc5-eodlnx05.marvell.com
-    Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
-    Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
-    Signed-off-by: George Cherian <george.cherian@marvell.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Cc: stable@vger.kernel.org      # v4.12+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 2defc7fe74c3..7cbf4a0f3eff 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -2346,15 +2346,19 @@ static void __init rcu_organize_nocb_kthreads(void)
+ =09=09=09nl =3D DIV_ROUND_UP(rdp->cpu + 1, ls) * ls;
+ =09=09=09rdp->nocb_gp_rdp =3D rdp;
+ =09=09=09rdp_gp =3D rdp;
+-=09=09=09if (!firsttime && dump_tree)
+-=09=09=09=09pr_cont("\n");
+-=09=09=09firsttime =3D false;
+-=09=09=09pr_alert("%s: No-CB GP kthread CPU %d:", __func__, cpu);
++=09=09=09if (dump_tree) {
++=09=09=09=09if (!firsttime)
++=09=09=09=09=09pr_cont("\n");
++=09=09=09=09firsttime =3D false;
++=09=09=09=09pr_alert("%s: No-CB GP kthread CPU %d:",
++=09=09=09=09=09 __func__, cpu);
++=09=09=09}
+ =09=09} else {
+ =09=09=09/* Another CB kthread, link to previous GP kthread. */
+ =09=09=09rdp->nocb_gp_rdp =3D rdp_gp;
+ =09=09=09rdp_prev->nocb_next_cb_rdp =3D rdp;
+-=09=09=09pr_alert(" %d", cpu);
++=09=09=09if (dump_tree)
++=09=09=09=09pr_cont(" %d", cpu);
+ =09=09}
+ =09=09rdp_prev =3D rdp;
+ =09}
+--=20
+2.23.0
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 320255e5e8f8..4e5048cb5ec6 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
- #endif
- }
- 
-+static const u16 pci_quirk_cavium_acs_ids[] = {
-+	0xa180, 0xa170,		/* CN88xx family of devices */
-+	0xaf84,			/* CN99xx family of devices */
-+	0xb884,			/* CN11xxx family of devices */
-+};
-+
- static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
- {
--	/*
--	 * Effectively selects all downstream ports for whole ThunderX 1
--	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
--	 * bits of device ID are used to indicate which subdevice is used
--	 * within the SoC.
--	 */
--	return (pci_is_pcie(dev) &&
--		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
--		((dev->device & 0xf800) == 0xa000));
-+	int i;
-+
-+	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+		return false;
-+
-+	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-+		if (pci_quirk_cavium_acs_ids[i] == dev->device)
-+			return true;
-+
-+	return false;
- }
- 
- static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+
