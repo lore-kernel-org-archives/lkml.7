@@ -2,107 +2,128 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36C2C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FEDC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AB5215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PsT/Hu4b"
+	by mail.kernel.org (Postfix) with ESMTP id B1182222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389276AbfJDOjE (ORCPT
+        id S2389295AbfJDOjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:39:04 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45914 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389259AbfJDOjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:39:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r5so7475630wrm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YSJx2AVpZIhH/SmIkBCouxV6Yw+6RdyUnfQbUQg9xHo=;
-        b=PsT/Hu4bN1kmMpoS7Yly/JpXitObRi+4sbIGKFaai/teDTC9OsWJHnN90FDzXMmGgu
-         vDzmp+y7NDwNf0Su4i1PgkqpGAWXTLkHU2uXngFzosjFEGJm9iyWqkLHpebJx31+UEAJ
-         0ilVeTNjLXs6Qq7bLksNbUK5Jq3BV7phYGxtv7wur3XKDa13A531Xm8I7saFpPKrTP6A
-         bfI2eLNE5whWj5eKAbahdxGsKH6Z8jk7GpBRJg2p3GUO5HCtk9JODApjwH6OxufpB4Ps
-         pXQcjPf66zltB8NNV25hQh2tnppa4/upLtnyfWVk0qsDEe5ejnPtflbSph2LNW9wX0sP
-         q+Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YSJx2AVpZIhH/SmIkBCouxV6Yw+6RdyUnfQbUQg9xHo=;
-        b=karBMzqWpTvM1lMyaOGO/+VvmSaFfILjiCeJGJHFTd0tuzky/qoPJ/GcIm2di1UcpQ
-         et0upPycqCjMYRVPjDY1pA4HNnX/8AmKmYh4HPB4FiwYeN5E9HQR9e2MdaP+aRjcovNI
-         GY66dKo3S3DzkfYuP9vMUtILrp01jIJYiZSMygHtl7GiSV5AHmDmk2GuAkdAOQE5EuIj
-         9nHCYmWQYtwfZ1C4fUuwW1eKgn265lfZKcGHNhh92vR9SLKhDVRnP6iKE8CjZFQrsZTG
-         T3waZFevgfpoVRI9/uECf4BuNS2ARO0w0IFKr6m8j3Vv9hE+cvI7poAL3GKQ8+X+t5JR
-         VMzQ==
-X-Gm-Message-State: APjAAAWxOXPM/e6fwcx82ZyNXs0WNjCBoHPzLyRsPBdDd1xkH4OLnMU8
-        Vw3GTAFJ1AG9Ttwwl5C/9Nubwg==
-X-Google-Smtp-Source: APXvYqzWsK19yzkIkp4GiYmqNcrSqqri+QClnftj1qCLCnM7D7Z/q2g2MF9SygafVBX8aUWGmDkoOg==
-X-Received: by 2002:a5d:48d0:: with SMTP id p16mr2445899wrs.83.1570199942428;
-        Fri, 04 Oct 2019 07:39:02 -0700 (PDT)
-Received: from dell ([2.27.167.122])
-        by smtp.gmail.com with ESMTPSA id o4sm1065292wre.91.2019.10.04.07.39.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 07:39:01 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 15:39:00 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v7 5/5] backlight: add led-backlight driver
-Message-ID: <20191004143900.GO18429@dell>
-References: <20190918145730.22805-1-jjhiblot@ti.com>
- <20190918145730.22805-6-jjhiblot@ti.com>
+        Fri, 4 Oct 2019 10:39:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49256 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388982AbfJDOjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:39:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B150E30860D5;
+        Fri,  4 Oct 2019 14:39:05 +0000 (UTC)
+Received: from redhat.com (ovpn-122-165.rdu2.redhat.com [10.10.122.165])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EDD960600;
+        Fri,  4 Oct 2019 14:39:04 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 10:39:01 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] livepatch: new API to track system state changes
+Message-ID: <20191004143901.GA3768@redhat.com>
+References: <20191003090137.6874-1-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918145730.22805-6-jjhiblot@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191003090137.6874-1-pmladek@suse.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 04 Oct 2019 14:39:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019, Jean-Jacques Hiblot wrote:
-
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On Thu, Oct 03, 2019 at 11:01:32AM +0200, Petr Mladek wrote:
+> Hi,
 > 
-> This patch adds a led-backlight driver (led_bl), which is similar to
-> pwm_bl except the driver uses a LED class driver to adjust the
-> brightness in the HW. Multiple LEDs can be used for a single backlight.
+> this is another piece in the puzzle that helps to maintain more
+> livepatches.
 > 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  drivers/video/backlight/Kconfig  |   7 +
->  drivers/video/backlight/Makefile |   1 +
->  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++
->  3 files changed, 268 insertions(+)
->  create mode 100644 drivers/video/backlight/led_bl.c
+> Especially pre/post (un)patch callbacks might change a system state.
+> Any newly installed livepatch has to somehow deal with system state
+> modifications done be already installed livepatches.
+> 
+> This patchset provides a simple and generic API that
+> helps to keep and pass information between the livepatches.
+> It is also usable to prevent loading incompatible livepatches.
+> 
+> Changes since v2:
+> 
+>   + Typo fixes [Miroslav]
+>   + Move the documentation at the end of the list [Miroslav]
+>   + Add Miroslav's acks
+> 
+> Changes since v1:
+> 
+>   + Use "unsigned long" instead of "int" for "state.id" [Nicolai]
+>   + Use "unsigned int" instead of "int" for "state.version [Petr]
+>   + Include "state.h" to avoid warning about non-static func [Miroslav]
+>   + Simplify logic in klp_is_state_compatible() [Miroslav]
+>   + Document how livepatches should handle the state [Nicolai]
+>   + Fix some typos, formulation, module metadata [Joe, Miroslav]
+> 
+> Petr Mladek (5):
+>   livepatch: Keep replaced patches until post_patch callback is called
+>   livepatch: Basic API to track system state changes
+>   livepatch: Allow to distinguish different version of system state
+>     changes
+>   livepatch: Documentation of the new API for tracking system state
+>     changes
+>   livepatch: Selftests of the API for tracking system state changes
+> 
+>  Documentation/livepatch/index.rst               |   1 +
+>  Documentation/livepatch/system-state.rst        | 167 +++++++++++++++++++++
+>  include/linux/livepatch.h                       |  17 +++
+>  kernel/livepatch/Makefile                       |   2 +-
+>  kernel/livepatch/core.c                         |  44 ++++--
+>  kernel/livepatch/core.h                         |   5 +-
+>  kernel/livepatch/state.c                        | 122 +++++++++++++++
+>  kernel/livepatch/state.h                        |   9 ++
+>  kernel/livepatch/transition.c                   |  12 +-
+>  lib/livepatch/Makefile                          |   5 +-
+>  lib/livepatch/test_klp_state.c                  | 161 ++++++++++++++++++++
+>  lib/livepatch/test_klp_state2.c                 | 190 ++++++++++++++++++++++++
+>  lib/livepatch/test_klp_state3.c                 |   5 +
+>  tools/testing/selftests/livepatch/Makefile      |   3 +-
+>  tools/testing/selftests/livepatch/test-state.sh | 180 ++++++++++++++++++++++
+>  15 files changed, 902 insertions(+), 21 deletions(-)
+>  create mode 100644 Documentation/livepatch/system-state.rst
+>  create mode 100644 kernel/livepatch/state.c
+>  create mode 100644 kernel/livepatch/state.h
+>  create mode 100644 lib/livepatch/test_klp_state.c
+>  create mode 100644 lib/livepatch/test_klp_state2.c
+>  create mode 100644 lib/livepatch/test_klp_state3.c
+>  create mode 100755 tools/testing/selftests/livepatch/test-state.sh
+> 
+> -- 
+> 2.16.4
+> 
 
-Applied, thanks.
+Hi Petr,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks for respinning this one with the latest updates.  The
+implementation looks fine to me.  I have two really minor nits for the
+selftest (I'll reply to that commit), but I wouldn't hold up the series
+for them.
+
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+
+-- Joe
