@@ -3,112 +3,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFC8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5727FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02241215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C79B2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMWp6/G+"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="jXLWkZ45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfJDKCT (ORCPT
+        id S2388512AbfJDKDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:02:19 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:36262 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfJDKCS (ORCPT
+        Fri, 4 Oct 2019 06:03:45 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:2565 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfJDKDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:02:18 -0400
-Received: by mail-io1-f51.google.com with SMTP id b136so12272048iof.3;
-        Fri, 04 Oct 2019 03:02:18 -0700 (PDT)
+        Fri, 4 Oct 2019 06:03:44 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: R9j6Uu7mv3bwJvkTmp3Mlw7Vv5lzQg1MOS1yhd6Dk7hMWjWOZm2UWT/hqPTjGyrXcDKifIsJSl
+ 15qNntoAKJmsX8q6FkciXez3ilE2oSyGrwhhz+pccyZ69eq5XEokuyoYKkx6JIYFW7YMSrCw5K
+ PFv2yvyD5CgQgYrUlQHUUC5JP2JcP0Ww6W7DIXXgsN0+IwuZOZQC2BnRDZ7bBVTNpMUyNTjpZ/
+ dyR2FOzpTbdPM/vDMGrFDZi2SZ/R2k8W230Hj1j2K/vvmHhNvade3sAJ/rsqes2XOKORJabSFP
+ f2Q=
+X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
+   d="scan'208";a="50170110"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2019 03:03:44 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 4 Oct 2019 03:03:42 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 4 Oct 2019 03:03:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RA3hBSDyFOq8CKm/VVVd+Ywn6GJ62rRbOYVWNeY04C08URavg04+TYfRfir2R42KOTbaoTO7B4tSc2OjrMYNVTsHNJq0Y/V4yxTqsVuWu7PczHVw5yZz5ZIeRABeYFtvhcKHPKGdRq+0JyjW31C/VZoV4BTP1jWTvyiV9JLo7pYiX3ZCjnITKKWxbs0ACBdiAof3n/B8I0e8gELgxbewUv9YTtDIoUzFhataWkYiPQOxx+uWn5CA1zXlVKS//uAWbr3TuWeXPZz2UHg6poYWrjFaMlkqllYZyONlECoMFgLCL0a3xBppNpL3ywlBqGi6lSL+9d3K2UZ+k5eCZceIOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/gaJ8odicUfqa/dz+sNHjmZDTMLu4YKgx4yuA2jMemM=;
+ b=O/PtKovO0tSmWCuypTv+L2J/gtGzFGoP4nI94dAACzSUkWy7klm4KUUcRcPpURpXujJP3Ui3xj+N4VFuo/S5BAZ54xSDipADO8vwnQq+PC7QXJEmbhY+VMjU1FBkXUihkknt70gtQWApPjuM7ydt05mMWtXLimZxwuMYLYF5PmkaMO0rmubJSkMondJpGq/8nHqkCyhYBrARmWY/Q1yPKaFpG6lfMHC+bQLErmk6vWR0E9YUZZQO+lKhIsTwkMZnEXj0Ct5sw+sROeBNgLRVWw1olb/bkzoEzk44K88sEnyI/wVAB6WLjfsQJNujywHIFA3sUcPwOJjisZ5BlEgGGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=zVzaL13aBMw0U8JG2NOEmJnjPxX8zMVFzGvL8Tcw4zE=;
-        b=QMWp6/G+6FQ1g1EQynFBy9qWtAZZvbEl3vOY2ZedehHYyxKZxM/Eonl4lW4ykcXIC9
-         3kiJdmKWs3Q8Z/0PPZNV7FfF+lkzhC7tyZp5I3lgBnlk2/dx0jCtyxFuUP4Kq3q+UaV9
-         j2zrTEBpydXkC24ZBOnRVqg8olG2y1m5ntg+ouIBV18wnKLvdHTJ1aSe0LOrqXlPBRMg
-         foVktVWwiAPyFKX202xdxFE1O3kdUG2v59sGkmod4c92aICgMbdfr3t/6fwCY/60fxD/
-         XUFu2W2PvCyn4JFcZUizrR5n4vGtTn3UgiVAkGHeJMU2jVoSr8F2M0+F6HsBwLf42ngb
-         vg8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=zVzaL13aBMw0U8JG2NOEmJnjPxX8zMVFzGvL8Tcw4zE=;
-        b=Pa8Iea1+rBsZKbGTf2sy8N82+lgIjLJVCeZQ6SpiG2DyyDZrua0XQS3pXYN+xhIGBW
-         anSqK1hTFzrgH6XOYqdOLzxor+T+G4MMfdLj3NLmNrUzNUaDmaGJXJ2HBOi8nkCphU8M
-         lkkkLrGy98NSEMelfwqdTWg0gNQuCYPAv26BERjsV0Qe365BuEpI5glcfkYG5faA4jty
-         j/9MxbNtnUygAr7nC726icOXNZn4Ghvf3FnrK7GFKteLE570gDcs4vYMgr1K4XuWk+ib
-         poh+u1biin+Pd3/Jys4dbtXvmLcgidH8OJ5ex5F6tZD8Uv+pmChLO/I2mE9R5ToGZCKc
-         bSLw==
-X-Gm-Message-State: APjAAAWGzyOPD1jUVqhW0ofvcmcKB1kW7uRiPc68mekQ8+LUUI7G6bot
-        3Ery/jKeKLEoGyO2Vx69AgUV+s3lR6/zoGjwXIY=
-X-Google-Smtp-Source: APXvYqzMrdeHLGJcpBa6sb2EAlzKy/w8w1xOVCGpGNdUkhtzyFrrOpSnqNRE8cnlYFCtBJxxnh89exYjDJhjAyKlo4M=
-X-Received: by 2002:a05:6638:3a5:: with SMTP id z5mr13854093jap.95.1570183337214;
- Fri, 04 Oct 2019 03:02:17 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/gaJ8odicUfqa/dz+sNHjmZDTMLu4YKgx4yuA2jMemM=;
+ b=jXLWkZ45fXXYqlQGMrLrt0/RRdWPFEFe1Oh3b8LQK0xadgjL3kPcTxoId/NxnuX994J7qWFSEw3lV3qcECZJs5OTsRr6H0RO8jwFLWvdzJASVpelK4/VpWlb8OKs3IeZSO2ezBvDWXeWfA376Rq5zRll66LVcRcXTCp8cT5yHHk=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3806.namprd11.prod.outlook.com (20.178.254.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Fri, 4 Oct 2019 10:03:41 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::340d:5a33:dc79:1184]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::340d:5a33:dc79:1184%5]) with mapi id 15.20.2305.023; Fri, 4 Oct 2019
+ 10:03:41 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <john.garry@huawei.com>, <vigneshr@ti.com>,
+        <boris.brezillon@collabora.com>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <geert+renesas@glider.be>,
+        <jonas@norrbonn.se>
+CC:     <linux-aspeed@lists.ozlabs.org>, <andrew@aj.id.au>,
+        <richard@nod.at>, <linux-kernel@vger.kernel.org>, <vz@mleia.com>,
+        <linux-mediatek@lists.infradead.org>, <joel@jms.id.au>,
+        <miquel.raynal@bootlin.com>, <matthias.bgg@gmail.com>,
+        <computersforpeace@gmail.com>, <dwmw2@infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 10/22] mtd: spi-nor: Rework write_sr()
+Thread-Topic: [PATCH v2 10/22] mtd: spi-nor: Rework write_sr()
+Thread-Index: AQHVcqwqkYJhMgq/4EeXQwoXNBbOlKdKSf6AgAAGmwA=
+Date:   Fri, 4 Oct 2019 10:03:40 +0000
+Message-ID: <e5d9b91f-cb86-0b82-5631-af0868ba4796@microchip.com>
+References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
+ <20190924074533.6618-11-tudor.ambarus@microchip.com>
+ <83d62334-bd1c-20b7-3c58-225392c819f8@huawei.com>
+In-Reply-To: <83d62334-bd1c-20b7-3c58-225392c819f8@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR10CA0100.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:28::29) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 921cd32e-2201-4542-3e5b-08d748b221e5
+x-ms-traffictypediagnostic: MN2PR11MB3806:
+x-microsoft-antispam-prvs: <MN2PR11MB380636FD88794155F9D96780F09E0@MN2PR11MB3806.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 018093A9B5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(136003)(396003)(39860400002)(376002)(199004)(189003)(8936002)(53546011)(26005)(71200400001)(71190400001)(86362001)(110136005)(2201001)(6506007)(76176011)(386003)(316002)(229853002)(4326008)(256004)(14444005)(446003)(11346002)(476003)(7416002)(5660300002)(2616005)(2906002)(99286004)(486006)(54906003)(102836004)(186003)(31686004)(305945005)(66476007)(6116002)(81156014)(81166006)(6486002)(6436002)(66446008)(36756003)(8676002)(64756008)(3846002)(66556008)(7736002)(66946007)(25786009)(6512007)(31696002)(52116002)(6246003)(14454004)(66066001)(2501003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3806;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YBrOp+C1V/aJhxyasW3i1fHiPbPK8x5bcVsVrVlrGhAMTod4FMYfBVJX/PraYPSpBAiCab359g57YttwOCKlXx1XBLofpjupCEIhto7x9iAB8xCsQWxScVV7QEkZo9vkeALUSlMO+MmbIn40KeNS5AMIFrKz3UQzQxVS18ABnzH2k1K1r/ad7RsW4/5dpREvnARMlfXPOUGt15Gnz9b9tYiWWjzldDtT2stztaU/yGleaPzQwO4S7/bZWkEvmn97Vk4KPhgIaTpnHlmy+UsgVw/5v5ZrwMosNT6m/vNLEIf7uD7ki7X9qe0TYOjC77W54k9Dhy4MLXMAKriYu1QRzDIR2hUpT4RIfO26ZgSZZIbc/5P2j72kfaEz3kqpDXYgkIeVPSTLyKhb5au7N7L2WFFxmTiJ1gHuZduxDBTc4EY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <05DA6A7F3CDA484CB53787B24189CD8A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 4 Oct 2019 05:02:05 -0500
-Message-ID: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
-Subject: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP vs SERIAL_OMAP
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Vignesh R <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 921cd32e-2201-4542-3e5b-08d748b221e5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 10:03:40.8383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +qw0O/ZziQfxQPNLXFtCRMEIPyuivh93a9vT+GhPNAvRZudcov4PRa0k6MN4oj/52n80hShfOCYUfB2VJPRt4Br3fwulTqNws4l1k+XfqNY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3806
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am running Kernel 5.3.2 trying to troubleshoot some intermittent
-Bluetooth issues, and I think I have narrowed it down to the serial
-driver in use.
-By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
-SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
-appears fine.  When I enable Bluetooth, however, I get intermittent
-errors on an DM3730 / OMAP3630.
-
-Using the 8250 driver for Blueotooth I get intermittent frame errors
-and data loss.
-
-Scanning ...
-[   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
-[   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
-        F4:4E:FC:C9:2F:57       BluJax
-# l2ping F4:4E:FC:C9:2F:57
-Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
-no response from F4:4E:FC:C9:2F:57: id 1
-^C2 sent, 1 received, 50% loss
-
-(after a fairly long hang, I hit control-c)
-
-However, disabling the 8250 driver and using the only SERIAL_OMAP and
-the console routed to ttyO0, the Bluetooth works well, so I believe it
-to be a serial driver issue and not a Bluetooth error.
-
-# hcitool scan
-Scanning ...
-        F4:4E:FC:C9:2F:57       BluJax
-^C
-# l2ping F4:4E:FC:C9:2F:57
-Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
-...
-44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
-^C15 sent, 15 received, 0% loss
-#
-
-0% loss and regular, repeatable communication without any Frame
-reassembly errors.
-
-Any suggestions on how to troubleshoot or what might cause the
-difference between the two drivers?
-
-adam
+SGksIEpvaG4sDQoNCk9uIDEwLzA0LzIwMTkgMTI6MzkgUE0sIEpvaG4gR2Fycnkgd3JvdGU6DQo+
+IEV4dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IE9uIDI0LzA5LzIwMTkgMDg6NDYsIFR1ZG9yLkFt
+YmFydXNAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+ICt9DQo+PiArDQo+PiArLyoqDQo+PiArICog
+c3BpX25vcl93cml0ZV9zcigpIC0gV3JpdGUgdGhlIFN0YXR1cyBSZWdpc3Rlci4NCj4+ICsgKiBA
+bm9yOsKgwqDCoCBwb2ludGVyIHRvICdzdHJ1Y3Qgc3BpX25vcicuDQo+PiArICogQHNyOsKgwqDC
+oMKgwqDCoMKgIGJ1ZmZlciB0byB3cml0ZSB0byB0aGUgU3RhdHVzIFJlZ2lzdGVyLg0KPj4gKyAq
+IEBsZW46wqDCoMKgIG51bWJlciBvZiBieXRlcyB0byB3cml0ZSB0byB0aGUgU3RhdHVzIFJlZ2lz
+dGVyLg0KPj4gKyAqDQo+PiArICogUmV0dXJuOiAwIG9uIHN1Y2Nlc3MsIC1lcnJubyBvdGhlcndp
+c2UuDQo+PiDCoCAqLw0KPj4gLXN0YXRpYyBpbnQgd3JpdGVfc3Ioc3RydWN0IHNwaV9ub3IgKm5v
+ciwgdTggdmFsKQ0KPj4gK3N0YXRpYyBpbnQgc3BpX25vcl93cml0ZV9zcihzdHJ1Y3Qgc3BpX25v
+ciAqbm9yLCBjb25zdCB1OCAqc3IsIHNpemVfdCBsZW4pDQo+PiDCoHsNCj4+IC3CoMKgwqAgbm9y
+LT5ib3VuY2VidWZbMF0gPSB2YWw7DQo+PiArwqDCoMKgIGludCByZXQ7DQo+PiArDQo+PiArwqDC
+oMKgIHJldCA9IHNwaV9ub3Jfd3JpdGVfZW5hYmxlKG5vcik7DQo+PiArwqDCoMKgIGlmIChyZXQp
+DQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJldDsNCj4+ICsNCj4gDQo+IEhpIFR1ZG9yLA0K
+PiANCj4+IMKgwqDCoMKgIGlmIChub3ItPnNwaW1lbSkgew0KPj4gwqDCoMKgwqDCoMKgwqDCoCBz
+dHJ1Y3Qgc3BpX21lbV9vcCBvcCA9DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1BJX01F
+TV9PUChTUElfTUVNX09QX0NNRChTUElOT1JfT1BfV1JTUiwgMSksDQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTUElfTUVNX09QX05PX0FERFIsDQo+PiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTUElfTUVNX09QX05PX0RVTU1ZLA0KPj4g
+LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTUElfTUVNX09QX0RBVEFfSU4o
+MSwgbm9yLT5ib3VuY2VidWYsIDEpKTsNCj4gDQo+IFRoaXMgYmUgU1BJX01FTV9PUF9EQVRBX09V
+VCgpIGluIHRoZSBjdXJyZW50IG1haW5saW5lIGNvZGUgYWxzbywgcmlnaHQ/DQoNCkluIHY1LjQt
+cmMxIHRoaXMgaXMgZGVmaW5lZCBhcyBTUElfTUVNX09QX0RBVEFfSU4sIHNvIHRoZSBNYWlubGlu
+ZSBjb2RlIHNob3VsZA0KZmFpbC4gVGhpcyBsb29rcyBsaWtlIGEgYnVnLiBJIGRpZG4ndCBub3Rp
+Y2VkIGl0IHdoZW4gZG9pbmcgdGhlIHBhdGNoLg0KDQo+IA0KPiBJJ20gdGVzdGluZyBteSB1bmRl
+ciBkZXZlbG9wbWVudCBkcml2ZXIgb24gdG9wIG9mIHY1LjQtcmMxLCBhbmQgZmxhc2hfbG9jayAt
+dSBpcyBicm9rZW4uDQoNCkl0J3Mgbm90IGNsZWFyIHRvIG1lLCBkb2VzIGZsYXNoX2xvY2sgZmFp
+bCB3aXRoIG15IHBhdGNoZXMgb24gdG9wIG9mIHY1LjQtcmMxPw0KT3IgaXQgZmFpbHMgd2hlbiB0
+ZXN0aW5nIHY1LjQtcmMxPw0KDQpDYW4geW91IHRlc3QgdjUuNC1yYzEgYW5kIHNlZSBpZiBmbGFz
+aF9sb2NrIHdvcmtzIG9uIHlvdSBmbGFzaCBvciBub3Q/DQoNClBsZWFzZSBzcGVjaWZ5IHdoaWNo
+IGZsYXNoIGRvIHlvdSB1c2UsIGFuZCB3aGljaCBjb250cm9sbGVyLg0KDQpUaGFua3MgZm9yIHRl
+c3RpbmcgdGhpcyENCnRhDQo=
