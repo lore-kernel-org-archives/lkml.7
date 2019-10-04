@@ -2,95 +2,73 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA5EC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE50C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D676222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B08222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MJ9Cw0wp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jSw3Dviy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbfJDVnk (ORCPT
+        id S1731160AbfJDVnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:43:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36396 "EHLO
+        Fri, 4 Oct 2019 17:43:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45628 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfJDVni (ORCPT
+        with ESMTP id S1729440AbfJDVni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 17:43:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so4697812pfr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:43:37 -0700 (PDT)
+Received: by mail-pf1-f193.google.com with SMTP id y72so4648802pfb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=42znpoZzZjmG9yaRFQAzNvyi78UFWYqHsVeXsUAMBvM=;
-        b=MJ9Cw0wp0Mh+XkAZ37PArMbq3cXXTtMOK8MgPDNXCkP0yXajJDHPB5xaYgU0YftimM
-         IZ9Xr5C2yJosZi22FLfNZvyhDcgs9mFbobfjnE1WeFcBQ21xU74RMtcoRM+q4pMigeCm
-         sJyAZ9okOsrTu89hmigncAMqTy1HVXQqwb/PM=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QwzY9zGvRb6P1N8Ed1qZtykz2VMjNZvPa05n7CMX4Gw=;
+        b=jSw3Dviyjy05ClBOUYY/QJuGuoSyAjvf8C5ubfUlFMJfpcjHzrg+b1IRO7zi1azAYa
+         6EtRIZkuwb8qqIWgHu/ujxJbM9AuKetLnAmhPd+2WrYV3rQJ4vHLXS1XELinhSq6oZ4b
+         /Oyx1txPmhFiEXmfsuqAcngarOOgc1FOJG0yA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=42znpoZzZjmG9yaRFQAzNvyi78UFWYqHsVeXsUAMBvM=;
-        b=O+V3ycPrBMeN5GyHaCKTAO0trwuPhnJTIWshUHKHnEbrXyqlwFeVygwxtQvO9BQW1+
-         7lZsev9qh5zzGRwpiSkGGN4GTq9bXAPjmwBzJIMW56oRBcomSDoOrYmDcymbD6SuaeCc
-         Qs+U+FDla4mhfNJkEPwzARlAnIPjKOAsnFrHZn+fXzVfyuGQNu6V49qNxhEr821nQjJ1
-         juZ5KHFSQQPehGPwmNSWrQ+ukYZvRs+4Ht1V26r3ziV0UxsrtQQ9Iwfz0Nb2jqoAGRio
-         3T4BUZXaPsPQoTvACr0Zwt+knLc0ilbAiFLin7fX4dXSahT3geLyyw5Gdg8vSPPDRe83
-         9umw==
-X-Gm-Message-State: APjAAAVbiOgkdj1UTnjmKd1AYDttxOGIHIWlOskJteyPVkZibOfbiZbS
-        PBNeGkQLsAVyzJ95RyOjdX7QAu26C70=
-X-Google-Smtp-Source: APXvYqy1SG4O+l1PxmR4D+2nW3K5VMykMwaSO5DOFDZyCRsqYuEK129X6z1/RcOxIP4TfZnnBe0BMw==
-X-Received: by 2002:a17:90a:e017:: with SMTP id u23mr4003152pjy.55.1570225416541;
-        Fri, 04 Oct 2019 14:43:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QwzY9zGvRb6P1N8Ed1qZtykz2VMjNZvPa05n7CMX4Gw=;
+        b=phjbFGPVYHvJCYKig7OW47XDEq0uVswgd/hKfwcyC/0JLjp6yMznxfnqQRiO1285el
+         TfGZuoDmi5VN2gd3ye/tvzLB5qppT0v/O0KhhnYON+LfkfOkAzG0xOf6we88Uy23hmQd
+         GRgvqlDslVOR/N6TVYsb1dMoMxrEQxIqLzbF/So9o7DV9CVVRasZLX49w8xhu77zqIAK
+         e/XBANRcB9y6vmp9zv0o9tBUhXbnQoRVR0WaM/sSMhmA2D1vLSAYxRWwXMcctTYxSM+9
+         14E96Y6RbZ/wcFooj2Gg5n0ltCQOb5QHc9zDd6ecnplvys7l2UJZYyrzFTfQXqkIsyFk
+         BUEQ==
+X-Gm-Message-State: APjAAAWQvtthB6Xtf2sD3K9YDPSP2SD1e7ujffP6a7rNjej6QT21tsOm
+        M7UcDDF7dqpjmrUggsK4B+B0QCftF7I=
+X-Google-Smtp-Source: APXvYqxkBBeV+sOFokmdCZP2CDSAx0V0nD19CAdCVC7j4pR3eBuLY7Lea48ZWWIDWRXRlCloHKfCdQ==
+X-Received: by 2002:a17:90a:7d06:: with SMTP id g6mr18468316pjl.53.1570225417391;
+        Fri, 04 Oct 2019 14:43:37 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a11sm10446799pfg.94.2019.10.04.14.43.35
+        by smtp.gmail.com with ESMTPSA id a11sm10446799pfg.94.2019.10.04.14.43.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 04 Oct 2019 14:43:36 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        alsa-devel@alsa-project.org, Andrew Lunn <andrew@lunn.ch>,
-        Arnd Bergmann <arnd@arndb.de>, Dan Murphy <dmurphy@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Frank Rowand <frowand.list@gmail.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jean Delvare <jdelvare@suse.com>, Jiri Slaby <jslaby@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-hwmon@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Richard Leitner <richard.leitner@skidata.com>,
         Riku Voipio <riku.voipio@iki.fi>,
         Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH 00/10] Stop NULLifying match pointer in of_match_device()
-Date:   Fri,  4 Oct 2019 14:43:24 -0700
-Message-Id: <20191004214334.149976-1-swboyd@chromium.org>
+        Frank Rowand <frowand.list@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org
+Subject: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
+Date:   Fri,  4 Oct 2019 14:43:25 -0700
+Message-Id: <20191004214334.149976-2-swboyd@chromium.org>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+In-Reply-To: <20191004214334.149976-1-swboyd@chromium.org>
+References: <20191004214334.149976-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -98,86 +76,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_match_device() uses of_match_ptr() to make the match table argument
-NULL via the pre-processor when CONFIG_OF=n. This makes life harder for
-compilers who think that match tables are never used and warn about
-unused variables when CONFIG_OF=n. This series changes various callers
-to use of_device_get_match_data() instead, which doesn't have this
-problem, and removes the of_match_ptr() usage from of_match_device() so
-that the compiler can stop complaining about unused variables. It will
-do dead code elimination instead and remove the match table if it isn't
-actually used.
+This driver can use the of_device_get_match_data() API to simplify the
+code. Replace calls to of_match_device() with this newer API under the
+assumption that where it is called will be when we know the device is
+backed by a DT node. This nicely avoids referencing the match table when
+it is undefined with configurations where CONFIG_OF=n.
 
-Huge Cc list!
-
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: <alsa-devel@alsa-project.org>
-Cc: Andrew Lunn <andrew@lunn.ch>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Frank Rowand <frowand.list@gmail.com>
 Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: <linux-hwmon@vger.kernel.org>
-Cc: <linux-leds@vger.kernel.org>
-Cc: <linux-media@vger.kernel.org>
-Cc: <linux-omap@vger.kernel.org>
-Cc: <linux-renesas-soc@vger.kernel.org>
-Cc: <linux-rtc@vger.kernel.org>
-Cc: <linux-serial@vger.kernel.org>
-Cc: <linux-spi@vger.kernel.org>
-Cc: <linux-usb@vger.kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Paul Cercueil <paul@crapouillou.net>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Richard Leitner <richard.leitner@skidata.com>
 Cc: Riku Voipio <riku.voipio@iki.fi>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: <linux-leds@vger.kernel.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
 
-Stephen Boyd (10):
-  leds: pca953x: Use of_device_get_match_data()
-  media: renesas-ceu: Use of_device_get_match_data()
-  rtc: armada38x: Use of_device_get_match_data()
-  drivers: net: davinci_mdio: Use of_device_get_match_data()
-  serial: stm32: Use of_device_get_match_data()
-  usb: usb251xb: Use of_device_get_match_data()
-  ASoC: jz4740: Use of_device_get_match_data()
-  spi: gpio: Look for a device node instead of match
-  hwmon: (lm70) Avoid undefined reference to match table
-  of/device: Don't NULLify match table in of_match_device() with
-    CONFIG_OF=n
+Please ack or pick for immediate merge so the last patch can be merged.
 
- drivers/hwmon/lm70.c                   |  2 +-
- drivers/leds/leds-pca9532.c            | 14 +----
- drivers/media/platform/renesas-ceu.c   |  2 +-
- drivers/net/ethernet/ti/davinci_mdio.c | 12 ++---
- drivers/rtc/rtc-armada38x.c            | 10 ++--
- drivers/spi/spi-gpio.c                 |  5 +-
- drivers/tty/serial/stm32-usart.c       | 71 ++++++++++++--------------
- drivers/tty/serial/stm32-usart.h       |  2 +-
- drivers/usb/misc/usb251xb.c            | 12 ++---
- include/linux/of_device.h              |  4 +-
- sound/soc/jz4740/jz4740-i2s.c          |  5 +-
- 11 files changed, 55 insertions(+), 84 deletions(-)
+ drivers/leds/leds-pca9532.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-
-base-commit: 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c
+diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+index c7c7199e8ebd..7d515d5e57bd 100644
+--- a/drivers/leds/leds-pca9532.c
++++ b/drivers/leds/leds-pca9532.c
+@@ -467,16 +467,11 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+ {
+ 	struct pca9532_platform_data *pdata;
+ 	struct device_node *child;
+-	const struct of_device_id *match;
+ 	int devid, maxleds;
+ 	int i = 0;
+ 	const char *state;
+ 
+-	match = of_match_device(of_pca9532_leds_match, dev);
+-	if (!match)
+-		return ERR_PTR(-ENODEV);
+-
+-	devid = (int)(uintptr_t)match->data;
++	devid = (int)(uintptr_t)of_device_get_match_data(dev);
+ 	maxleds = pca9532_chip_info_tbl[devid].num_leds;
+ 
+ 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+@@ -509,7 +504,6 @@ static int pca9532_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
+ 	int devid;
+-	const struct of_device_id *of_id;
+ 	struct pca9532_data *data = i2c_get_clientdata(client);
+ 	struct pca9532_platform_data *pca9532_pdata =
+ 			dev_get_platdata(&client->dev);
+@@ -525,11 +519,7 @@ static int pca9532_probe(struct i2c_client *client,
+ 			dev_err(&client->dev, "no platform data\n");
+ 			return -EINVAL;
+ 		}
+-		of_id = of_match_device(of_pca9532_leds_match,
+-				&client->dev);
+-		if (unlikely(!of_id))
+-			return -EINVAL;
+-		devid = (int)(uintptr_t) of_id->data;
++		devid = (int)(uintptr_t)of_device_get_match_data(&client->dev);
+ 	} else {
+ 		devid = id->driver_data;
+ 	}
 -- 
 Sent by a computer through tubes
+
