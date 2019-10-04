@@ -2,69 +2,132 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E65C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522FFC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DA021D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570185447;
-	bh=iBQF2+NS3IUMK5BhUwN9rX2yg8DwSDs2+jK+wIGNkkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oR0sNluLhq7bn31z0jmTaBZaDuQpNd2gz+BAFZ73GivZhVcXI0hL3IkabLgdm6ZzX
-	 4zrYNxgbcjFlAgGYCyBcAtxPKCIfmXuGckC58yecGPP8UBKU3B3pQUdBg7yUbDVsns
-	 +EnG8ug6T2BirSX4nxGt4/xkfwGnmiRk4nhC19+I=
+	by mail.kernel.org (Postfix) with ESMTP id 29B30215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:39:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mp2DLOFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387719AbfJDKh1 (ORCPT
+        id S1730137AbfJDKjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfJDKh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:37:26 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9D6B215EA;
-        Fri,  4 Oct 2019 10:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570185446;
-        bh=iBQF2+NS3IUMK5BhUwN9rX2yg8DwSDs2+jK+wIGNkkE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ign7A6WyVcqgWtlm8J4o3Lamf2+hcDBoVklGntADdUH0ePlfnG02YAsHEfXfTsOwz
-         Wo8n+BSt9/5agQ6bgT/JE2am3QYMnfMsmztBqBCxOWFiohmgPvIDtBcX/2D3jAfiX2
-         nnQATchgEYXKtKxYaP1aztOMER2qfHnYKK9OFAoY=
-Date:   Fri, 4 Oct 2019 11:37:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, suzuki.poulose@arm.com,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/4] arm64/cpufeature: Fix + doc update
-Message-ID: <20191004103721.tnjii772ts72pnm5@willie-the-truck>
-References: <20191003111211.483-1-julien.grall@arm.com>
+        Fri, 4 Oct 2019 06:39:12 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46487 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbfJDKjM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:39:12 -0400
+Received: by mail-io1-f67.google.com with SMTP id c6so12344806ioo.13;
+        Fri, 04 Oct 2019 03:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=qZkq2IFXpYdFUAnRVtV16PjDv6kvLyNtOPmSknMDol4=;
+        b=Mp2DLOFOq3R1RI5KaWj39fc1oBw6TxRdIvXzsQ0B0fhH/lbeuSRNfiJKbUfuQrK7WH
+         5luCH418ZMKmk7qe9lJvudy6XbTFEhj7D24H5TAsxvrxV9kq6YvyOUFFCSEJQTbWr3i8
+         QbzrQTlwPeXbbkREqQ7/g37cQ9U+TPxmI3kcGQT/HFPvRsiNQp9ok+J4fvOV22K0oTHf
+         C/vE9TMqxqjz4qzKwM6517/YXKAE3/+7CqG9BLlzpl2DT3ffDBl1/2aEBm4lH4gaAnhp
+         ZIKW5V7EqoetyfZ4eF1VqmLidThv1DLK79zUP3ikQRTs7AIT8W8LGkyER9YzZvO9u2Ry
+         k1xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=qZkq2IFXpYdFUAnRVtV16PjDv6kvLyNtOPmSknMDol4=;
+        b=Wdl7ISq4J9kwt1hnhdu44b95oUsN/aRLoCE4u2NelaYpbJHncV/8wObUCCVgTYjurt
+         umNwNvKUwQ+JoFuJziyzHcl94u7WYFOEZS79wl3HgwyxsJPF/0nRM+1vbofGMWuqqPW4
+         vIjWeHNS46HOn4wGklGTKBv76hmr2GkTNaK6VY8gLfzwEQymIhqooOn+j97i6GI14Zb6
+         RXd/DxScQkPz93xSlbVroSq68k7MokDfvNR/e6BOdv8RG1kyqk/IOaRCSNNvAadbZwpo
+         dTVuR4UVR63Rty6KSWlLUdpswS7NZVMd1OnxEEtdT4/DGEib0qtR2D0fMfUZ4ZX0TCP9
+         sNPw==
+X-Gm-Message-State: APjAAAXO8ZW3xS4aN513bkWf4o4nb4YuqvNBKkmmZXrRi+Y8Z6/LFTV8
+        MsAM73gAGizBUQnct+kfRkHe4/0DDEcDjczpGSM=
+X-Google-Smtp-Source: APXvYqz+Xj/q8hbRyOg8+71Aa+R2dm9DnYdbORf3IizXzCYBaNRlGKcl0yuGyJeYNFdYvisEVnWOazRJtqbNoFnP1I0=
+X-Received: by 2002:a02:65cd:: with SMTP id u196mr13949946jab.3.1570185550237;
+ Fri, 04 Oct 2019 03:39:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003111211.483-1-julien.grall@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
+In-Reply-To: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 4 Oct 2019 05:38:59 -0500
+Message-ID: <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
+Subject: Re: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP
+ vs SERIAL_OMAP
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 12:12:07PM +0100, Julien Grall wrote:
-> This patch fix an issue related to exposing the FRINT capability to
-> userspace (see patch #1). The rest is documentation update.
+On Fri, Oct 4, 2019 at 5:02 AM Adam Ford <aford173@gmail.com> wrote:
 >
-For patches 2-4:
+> I am running Kernel 5.3.2 trying to troubleshoot some intermittent
+> Bluetooth issues, and I think I have narrowed it down to the serial
+> driver in use.
 
-Acked-by: Will Deacon <will@kernel.org>
+I should have also noted that it's using UART2 with CTS and RTS on the
+DM3730 (omap3630) and its configured with a baud rate of 3M.
+I tried slowing it to 115200, but that didn't help.  I tried disabling
+the DMA hooks from the device tree, and that didn't help.
 
-Catalin can take them for 5.5, since I don't think they're urgent.
+> By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
+> SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
+> appears fine.  When I enable Bluetooth, however, I get intermittent
+> errors on an DM3730 / OMAP3630.
+>
+> Using the 8250 driver for Blueotooth I get intermittent frame errors
+> and data loss.
+>
+> Scanning ...
+> [   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
+> [   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
+>         F4:4E:FC:C9:2F:57       BluJax
+> # l2ping F4:4E:FC:C9:2F:57
+> Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+> 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
+> no response from F4:4E:FC:C9:2F:57: id 1
+> ^C2 sent, 1 received, 50% loss
+>
+> (after a fairly long hang, I hit control-c)
+>
+> However, disabling the 8250 driver and using the only SERIAL_OMAP and
+> the console routed to ttyO0, the Bluetooth works well, so I believe it
+> to be a serial driver issue and not a Bluetooth error.
+>
+> # hcitool scan
+> Scanning ...
+>         F4:4E:FC:C9:2F:57       BluJax
+> ^C
+> # l2ping F4:4E:FC:C9:2F:57
+> Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+> 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
+> ...
+> 44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
+> ^C15 sent, 15 received, 0% loss
+> #
+>
+> 0% loss and regular, repeatable communication without any Frame
+> reassembly errors.
+>
 
-Will
+I tried disabling SERIAL_OMAP and using only SERIAL_8250_OMAP, but
+that didn't help.  Because the issue goes away when I disable
+SERIAL_8250_OMAP, I am wondering if something is either being
+misconfigured or some IRQ or DMA integration is missing that may be
+present with the older SERIAL_OMAP driver.
+
+> Any suggestions on how to troubleshoot or what might cause the
+> difference between the two drivers?
+>
+> adam
