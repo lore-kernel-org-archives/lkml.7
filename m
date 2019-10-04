@@ -6,188 +6,99 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E502C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A25C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA29215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47510215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390111AbfJDQCR (ORCPT
+        id S2390194AbfJDQCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:02:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:49034 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389131AbfJDQCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:02:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E8C41597;
-        Fri,  4 Oct 2019 09:02:16 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D59923F68E;
-        Fri,  4 Oct 2019 09:02:14 -0700 (PDT)
-Subject: Re: drm_sched with panfrost crash on T820
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        Hillf Danton <hdanton@sina.com>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Erico Nunes <nunes.erico@gmail.com>
-References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
- <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
- <20190930145228.14000-1-hdanton@sina.com>
- <d2888614-8644-7d04-b73b-3ab7c6623e9a@amd.com>
- <7339b7a1-2d1c-4379-89a0-daf8b28d81c8@baylibre.com>
- <94096e4e-0f60-79d1-69b5-c7c3e59a4d78@amd.com>
- <f44204b4-ce5c-b26e-580d-5bb21314be1f@baylibre.com>
- <8c4ecad8-c2e2-eec1-9132-48e126577baa@arm.com>
- <590a1c78-5c86-92e2-01a1-92bd31397be5@amd.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <a09950d8-dba7-e359-da07-7383e7ac946e@arm.com>
-Date:   Fri, 4 Oct 2019 17:02:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 4 Oct 2019 12:02:24 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:47784 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389131AbfJDQCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:02:24 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGQ27-0006Xd-Tl; Fri, 04 Oct 2019 16:02:20 +0000
+Date:   Fri, 4 Oct 2019 17:02:19 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Varad Gautam <vrd@amazon.de>, stable@vger.kernel.org,
+        Jan Glauber <jglauber@marvell.com>
+Subject: Re: [PATCH] devpts: Fix NULL pointer dereference in dcache_readdir()
+Message-ID: <20191004160219.GI26530@ZenIV.linux.org.uk>
+References: <20191004140503.9817-1-christian.brauner@ubuntu.com>
+ <20191004142748.GG26530@ZenIV.linux.org.uk>
+ <20191004143301.kfzcut6a6z5owfee@wittgenstein>
+ <20191004151058.GH26530@ZenIV.linux.org.uk>
+ <20191004152526.adgg3a7u7jylfk4a@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <590a1c78-5c86-92e2-01a1-92bd31397be5@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004152526.adgg3a7u7jylfk4a@wittgenstein>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 16:34, Koenig, Christian wrote:
-> Am 04.10.19 um 17:27 schrieb Steven Price:
->> On 04/10/2019 16:03, Neil Armstrong wrote:
->>> On 04/10/2019 16:53, Grodzovsky, Andrey wrote:
->>>> On 10/3/19 4:34 AM, Neil Armstrong wrote:
->>>>> Hi Andrey,
->>>>>
->>>>> Le 02/10/2019 à 16:40, Grodzovsky, Andrey a écrit :
->>>>>> On 9/30/19 10:52 AM, Hillf Danton wrote:
->>>>>>> On Mon, 30 Sep 2019 11:17:45 +0200 Neil Armstrong wrote:
->>>>>>>> Did a new run from 5.3:
->>>>>>>>
->>>>>>>> [   35.971972] Call trace:
->>>>>>>> [   35.974391]  drm_sched_increase_karma+0x5c/0xf0
->>>>>>>> 			ffff000010667f38	FFFF000010667F94
->>>>>>>> 			drivers/gpu/drm/scheduler/sched_main.c:335
->>>>>>>>
->>>>>>>> The crashing line is :
->>>>>>>>                                    if (bad->s_fence->scheduled.context ==
->>>>>>>>                                        entity->fence_context) {
->>>>>>>>
->>>>>>>> Doesn't seem related to guilty job.
->>>>>>> Bail out if s_fence is no longer fresh.
->>>>>>>
->>>>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>> @@ -333,6 +333,10 @@ void drm_sched_increase_karma(struct drm
->>>>>>>     
->>>>>>>     			spin_lock(&rq->lock);
->>>>>>>     			list_for_each_entry_safe(entity, tmp, &rq->entities, list) {
->>>>>>> +				if (!smp_load_acquire(&bad->s_fence)) {
->>>>>>> +					spin_unlock(&rq->lock);
->>>>>>> +					return;
->>>>>>> +				}
->>>>>>>     				if (bad->s_fence->scheduled.context ==
->>>>>>>     				    entity->fence_context) {
->>>>>>>     					if (atomic_read(&bad->karma) >
->>>>>>> @@ -543,7 +547,7 @@ EXPORT_SYMBOL(drm_sched_job_init);
->>>>>>>     void drm_sched_job_cleanup(struct drm_sched_job *job)
->>>>>>>     {
->>>>>>>     	dma_fence_put(&job->s_fence->finished);
->>>>>>> -	job->s_fence = NULL;
->>>>>>> +	smp_store_release(&job->s_fence, 0);
->>>>>>>     }
->>>>>>>     EXPORT_SYMBOL(drm_sched_job_cleanup);
->>>>> This fixed the problem on the 10 CI runs.
->>>>>
->>>>> Neil
->>>>
->>>> These are good news but I still fail to see how this fixes the problem -
->>>> Hillf, do you mind explaining how you came up with this particular fix -
->>>> what was the bug you saw ?
->>> As Steven explained, seems the same job was submitted on both HW slots,
->>> and then when timeout occurs each thread calls panfrost_job_timedout
->>> which leads to drm_sched_stop() on the first call and on the
->>> second call the job was already freed.
->>>
->>> Steven proposed a working fix, and this one does the same but on
->>> the drm_sched side. This one looks cleaner, but panfrost should
->>> not call drm_sched_stop() twice for the same job.
->> I'm not sure that Hillf's fix is sufficient. In particular in
->> drm_sched_increase_karma() I don't understand how the smp_load_acquire()
->> call prevents bad->s_fence becoming NULL immediately afterwards (but
->> admittedly the window is much smaller). But really this is just a
->> Panfrost bug (calling drm_sched_stop() twice on the same job).
->>
->> The part of my change that I'd welcome feedback on is changing
->> cancel_delayed_work() to cancel_delayed_work_sync() in drm_sched_stop()
->> when called on different scheduler to the bad job. It's not clear to me
->> exactly what the semantics of the function should be, and I haven't
->> tested the effect of the change on drivers other than Panfrost.
+On Fri, Oct 04, 2019 at 05:25:28PM +0200, Christian Brauner wrote:
+> On Fri, Oct 04, 2019 at 04:10:58PM +0100, Al Viro wrote:
+> > On Fri, Oct 04, 2019 at 04:33:02PM +0200, Christian Brauner wrote:
+> > > On Fri, Oct 04, 2019 at 03:27:48PM +0100, Al Viro wrote:
+> > > > On Fri, Oct 04, 2019 at 04:05:03PM +0200, Christian Brauner wrote:
+> > > > > From: Will Deacon <will@kernel.org>
+> > > > > 
+> > > > > Closing /dev/pts/ptmx removes the corresponding pty under /dev/pts/
+> > > > > without synchronizing against concurrent path walkers. This can lead to
+> > > > > 'dcache_readdir()' tripping over a 'struct dentry' with a NULL 'd_inode'
+> > > > > field:
+> > > > 
+> > > > FWIW, vfs.git#fixes (or #next.dcache) ought to deal with that one.
+> > > 
+> > > Is it feasible to backport your changes? Or do we want to merge the one
+> > > here first and backport?
+> > 
+> > I'm not sure.  The whole pile is backportable, all right (and the first commit
 > 
-> Yeah, at least of hand that change doesn't seem to make sense to me.
+> Ok. So here's what I propose: we'll merge this one as it seems an
+> obvious fix to the problem and can easily be backported to stable
+> kernels.
+> Then you'll land your generic workaround alleviating callers from
+> holding inode_lock(). Then I'll send a patch to remove the inode_lock()
+> from devpts for master.
+> If we see that your fix is fine to backport and has no performance
+> impacts that you find unacceptable we backport it.
 
-We need to ensure that any other timeouts that might have started
-processing are complete before actually resetting the hardware.
-Otherwise after the reset another thread could come along and attempt to
-reset the hardware again (and cause a double free of a job). My change
-to use the _sync() variant prevents this happening.
+There's more than one bug here.
+	* fucked up lockless traversals.  Affect anything that uses dcache_readdir()
+	* devpts (and selinuxfs, while we are at it) running afoul of (implicit)
+assumption by dcache_readdir() - that stuff won't get removed from under it
+	* (possibly) cifs hitting the same on eviction by memory pressure alone
+(no locked inodes anywhere in sight).  Possibly == if cifs IPC$ share happens to
+show up non-empty (e.g. due to server playing silly buggers).
+	* (possibly) cifs hitting *another* lovely issue - lookup in one subdirectory
+of IPC$ root finding an alias for another subdirectory of said root, triggering
+d_move() of dentry of the latter.  IF the name happens to be long enough to be
+externally allocated and if dcache_readdir() on root is currently copying it to
+userland, Bad Things(tm) will happen.  That one almost certainly depends upon the
+server playing silly buggers and might or might not be possible.  I'm not familiar
+enough with CIFS to tell.
 
-> Multiple timeout workers can perfectly run in parallel, Panfrost needs 
-> to make sure that they don't affect each other.
-> 
-> The simplest way of doing this is to have a mutex you trylock when 
-> starting the reset.
-> 
-> The first one grabbing it wins, all other just silently return.
+The first 3 are dealt with by the first commit in that pile; the last one is
+not.  devpts patch of yours would deal with a part of the second bug.
+Performance regression comes with fixing the first one, which is also
+quite real.  There might be a way to avoid that performance hit,
+but it will be harder to backport.
 
-Ah that would simplify my change removing the need for the new variable.
-I hadn't thought to use trylock. I'll give that a spin and post a new
-simpler version.
-
-Thanks,
-
-Steve
-
-> Regards,
-> Christian.
-> 
->>
->> Steve
->>
->>> Neil
->>>
->>>> Andrey
->>>>
->>>>>> Does this change help the problem ? Note that drm_sched_job_cleanup is
->>>>>> called from scheduler thread which is stopped at all times when work_tdr
->>>>>> thread is running and anyway the 'bad' job is still in the
->>>>>> ring_mirror_list while it's being accessed from
->>>>>> drm_sched_increase_karma so I don't think drm_sched_job_cleanup can be
->>>>>> called for it BEFORE or while drm_sched_increase_karma is executed.
->>>>>>
->>>>>> Andrey
->>>>>>
->>>>>>
->>>>>>>     
->>>>>>> --
->>>>>>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-
+FWIW, some discussion of that fun went in a thread shortly before the merge
+window - look for "Possible FS race condition between iterate_dir and
+d_alloc_parallel" on fsdevel.  Some of that went off-list, though...
