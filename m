@@ -2,87 +2,94 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A5EC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3694DC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A3E206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17256218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfJGKQV (ORCPT
+        id S1727810AbfJGKQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:16:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58856 "EHLO mx1.suse.de"
+        Mon, 7 Oct 2019 06:16:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58894 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727754AbfJGKQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:16:18 -0400
+        id S1727755AbfJGKQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:16:21 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 161ACB201;
-        Mon,  7 Oct 2019 10:16:17 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 688B2B206;
+        Mon,  7 Oct 2019 10:16:18 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 13A1D1E4815; Fri,  4 Oct 2019 10:11:06 +0200 (CEST)
-Date:   Fri, 4 Oct 2019 10:11:06 +0200
+        id E6A461E4813; Fri,  4 Oct 2019 09:51:00 +0200 (CEST)
+Date:   Fri, 4 Oct 2019 09:51:00 +0200
 From:   Jan Kara <jack@suse.cz>
-To:     Chengguang Xu <cgxu519@zoho.com.cn>
-Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: avoid increasing DQST_LOOKUPS when iterating over
- dirty/inuse list
-Message-ID: <20191004081106.GA13650@quack2.suse.cz>
-References: <20190926083408.4269-1-cgxu519@zoho.com.cn>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: Lease semantic proposal
+Message-ID: <20191004075100.GA12412@quack2.suse.cz>
+References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
+ <20190923222620.GC16973@dread.disaster.area>
+ <20190925234602.GB12748@iweiny-DESK2.sc.intel.com>
+ <20190930084233.GO16973@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926083408.4269-1-cgxu519@zoho.com.cn>
+In-Reply-To: <20190930084233.GO16973@dread.disaster.area>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 26-09-19 16:34:08, Chengguang Xu wrote:
-> It is meaningless to increase DQST_LOOKUPS number while iterating
-> over dirty/inuse list, so just avoid it.
+On Mon 30-09-19 18:42:33, Dave Chinner wrote:
+> On Wed, Sep 25, 2019 at 04:46:03PM -0700, Ira Weiny wrote:
+> > On Tue, Sep 24, 2019 at 08:26:20AM +1000, Dave Chinner wrote:
+> > > Hence, AFIACT, the above definition of a F_RDLCK|F_LAYOUT lease
+> > > doesn't appear to be compatible with the semantics required by
+> > > existing users of layout leases.
+> > 
+> > I disagree.  Other than the addition of F_UNBREAK, I think this is consistent
+> > with what is currently implemented.  Also, by exporting all this to user space
+> > we can now write tests for it independent of the RDMA pinning.
 > 
-> Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+> The current usage of F_RDLCK | F_LAYOUT by the pNFS code allows
+> layout changes to occur to the file while the layout lease is held.
 
-Yeah, makes sense. I've queued up your patch. Thanks!
+I remember you saying that in the past conversations. But I agree with Ira
+that I don't see where in the code this would be implemented. AFAICS
+break_layout() called from xfs_break_leased_layouts() simply breaks all the
+leases with F_LAYOUT set attached to the inode... Now I'm not any expert on
+file leases but what am I missing?
+
+> IOWs, your definition of F_RDLCK | F_LAYOUT not being allowed
+> to change the is in direct contradition to existing users.
+> 
+> I've said this several times over the past few months now: shared
+> layout leases must allow layout modifications to be made. Only
+> allowing an exclusive layout lease to modify the layout rules out
+> many potential use cases for direct data placement and p2p DMA
+> applications, not to mention conflicts with the existing pNFS usage.
+> Layout leases need to support more than just RDMA, and tailoring the
+> API to exactly the immediate needs of RDMA is just going to make it
+> useless for anything else.
+
+I agree we should not tailor the layout lease definition to just RDMA
+usecase. But let's talk about the semantics once our confusion about how
+pNFS currently uses layout leases is clear out.
 
 								Honza
-
-> ---
->  fs/quota/dquot.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index 6e826b454082..00a3c6df2ea3 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -595,7 +595,6 @@ int dquot_scan_active(struct super_block *sb,
->  		/* Now we have active dquot so we can just increase use count */
->  		atomic_inc(&dquot->dq_count);
->  		spin_unlock(&dq_list_lock);
-> -		dqstats_inc(DQST_LOOKUPS);
->  		dqput(old_dquot);
->  		old_dquot = dquot;
->  		/*
-> @@ -649,7 +648,6 @@ int dquot_writeback_dquots(struct super_block *sb, int type)
->  			 * use count */
->  			dqgrab(dquot);
->  			spin_unlock(&dq_list_lock);
-> -			dqstats_inc(DQST_LOOKUPS);
->  			err = sb->dq_op->write_dquot(dquot);
->  			if (err) {
->  				/*
-> -- 
-> 2.20.1
-> 
-> 
-> 
-> 
 -- 
 Jan Kara <jack@suse.com>
 SUSE Labs, CR
