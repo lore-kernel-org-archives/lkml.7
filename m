@@ -2,161 +2,126 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F944C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F22C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5117C2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACFA20862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UaPcZXUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfJDAzA (ORCPT
+        id S1731075AbfJDBK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 20:55:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34172 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 21:10:29 -0400
+Received: from ozlabs.org ([203.11.71.1]:42791 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbfJDAzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 20:55:00 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728345AbfJDBK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 21:10:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96E6A315C00D;
-        Fri,  4 Oct 2019 00:54:58 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-116-91.phx2.redhat.com [10.3.116.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3686600CD;
-        Fri,  4 Oct 2019 00:54:35 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 20:54:23 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Xuewei Zhang <xueweiz@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org
-Subject: Re: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-Message-ID: <20191004005423.GA19076@lorien.usersys.redhat.com>
-References: <20191004001243.140897-1-xueweiz@google.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46ksHg47mrz9sPl;
+        Fri,  4 Oct 2019 11:10:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570151426;
+        bh=9xF7O4ugUmejFoawtgnL4B57TpXYia5KNWt+3CH/1g8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UaPcZXUZg71Ts9S4FUbZm6EyJxMlZFWwNe3cic0VtyosMGTo1wJD6LwY1O6luwA8w
+         Legev33i238czsZjmfXEGWX50N3+GhxRCzWy4dr/ObVWTRqv2ifZG1677nacnHBUAw
+         Y0MLNP4s8XaZgq/Fa6uY2pTJArOrjsMe5m65blpD8+kk59cWWigzCcLvusX/8yCl2D
+         YNJjJZ2PYsnGn7Hw398Qh9NNWD91H/VbS4lSlmc8JW8/ncs174zt6pgLrpMLSPW3Z7
+         gyeSoxY5HPykDuPiTrrtl4mY7/Aw48WAZDomvyZgcGIkunnniBBPw07yuzXqM9NILR
+         3GCNq8UR33DFA==
+Date:   Fri, 4 Oct 2019 11:10:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dariusz Marcinkiewicz <darekm@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Lyude Paul <lyude@redhat.com>
+Subject: linux-next: manual merge of the drm-misc tree with the admgpu tree
+Message-ID: <20191004111022.28bde6dc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004001243.140897-1-xueweiz@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 04 Oct 2019 00:54:59 +0000 (UTC)
+Content-Type: multipart/signed; boundary="Sig_/7L4.J4D3cO5/Rn4FGcSo6.9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/7L4.J4D3cO5/Rn4FGcSo6.9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 03, 2019 at 05:12:43PM -0700 Xuewei Zhang wrote:
-> quota/period ratio is used to ensure a child task group won't get more
-> bandwidth than the parent task group, and is calculated as:
-> normalized_cfs_quota() = [(quota_us << 20) / period_us]
-> 
-> If the quota/period ratio was changed during this scaling due to
-> precision loss, it will cause inconsistency between parent and child
-> task groups. See below example:
-> A userspace container manager (kubelet) does three operations:
-> 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-> 2) Create a few children cgroups.
-> 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-> 
-> These operations are expected to succeed. However, if the scaling of
-> 147/128 happens before step 3), quota and period of the parent cgroup
-> will be changed:
-> new_quota: 1148437ns, 1148us
-> new_period: 11484375ns, 11484us
-> 
-> And when step 3) comes in, the ratio of the child cgroup will be 104857,
-> which will be larger than the parent cgroup ratio (104821), and will
-> fail.
-> 
-> Scaling them by a factor of 2 will fix the problem.
+Hi all,
 
-I have no issues with the concept. We went around a bit about the actual
-numbers and made it an approximation. 
+Today's linux-next merge of the drm-misc tree got a conflict in:
 
-> 
-> Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-> Signed-off-by: Xuewei Zhang <xueweiz@google.com>
-> ---
->  kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
->  1 file changed, 22 insertions(+), 14 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 83ab35e2374f..b3d3d0a231cd 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
->  		if (++count > 3) {
->  			u64 new, old = ktime_to_ns(cfs_b->period);
->  
-> -			new = (old * 147) / 128; /* ~115% */
-> -			new = min(new, max_cfs_quota_period);
-> -
-> -			cfs_b->period = ns_to_ktime(new);
-> -
-> -			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> -			cfs_b->quota *= new;
-> -			cfs_b->quota = div64_u64(cfs_b->quota, old);
-> -
-> -			pr_warn_ratelimited(
-> -	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> -				smp_processor_id(),
-> -				div_u64(new, NSEC_PER_USEC),
-> -				div_u64(cfs_b->quota, NSEC_PER_USEC));
-> +			/*
-> +			 * Grow period by a factor of 2 to avoid lossing precision.
-> +			 * Precision loss in the quota/period ratio can cause __cfs_schedulable
-> +			 * to fail.
-> +			 */
-> +			new = old * 2;
-> +			if (new < max_cfs_quota_period) {
+  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
 
-I don't like this part as much. There may be a value between
-max_cfs_quota_period/2 and max_cfs_quota_period that would get us out of
-the loop. Possibly in practice it won't matter but here you trigger the
-warning and take no action to keep it from continuing.
+between commit:
 
-Also, if you are actually hitting this then you might want to just start at
-a higher but proportional quota and period.
+  2f232cf29e03 ("drm/amdgpu/dm/mst: Don't create MST topology managers for =
+eDP ports")
 
+from the admgpu tree and commit:
 
+  ae85b0df124f ("drm_dp_cec: add connector info support.")
+
+from the drm-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
 Cheers,
-Phil
+Stephen Rothwell
 
-> +				cfs_b->period = ns_to_ktime(new);
-> +				cfs_b->quota *= 2;
-> +
-> +				pr_warn_ratelimited(
-> +	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> +					smp_processor_id(),
-> +					div_u64(new, NSEC_PER_USEC),
-> +					div_u64(cfs_b->quota, NSEC_PER_USEC));
-> +			} else {
-> +				pr_warn_ratelimited(
-> +	"cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> +					smp_processor_id(),
-> +					div_u64(old, NSEC_PER_USEC),
-> +					div_u64(cfs_b->quota, NSEC_PER_USEC));
-> +			}
->  
->  			/* reset count so we don't come right back in here */
->  			count = 0;
-> -- 
-> 2.23.0.581.g78d2f28ef7-goog
-> 
+diff --cc drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 3af2b429ff1b,5ec14efd4d8c..000000000000
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@@ -414,11 -416,7 +414,11 @@@ void amdgpu_dm_initialize_dp_connector(
+ =20
+  	drm_dp_aux_register(&aconnector->dm_dp_aux.aux);
+  	drm_dp_cec_register_connector(&aconnector->dm_dp_aux.aux,
+- 				      aconnector->base.name, dm->adev->dev);
++ 				      &aconnector->base);
+ +
+ +	if (aconnector->base.connector_type =3D=3D DRM_MODE_CONNECTOR_eDP)
+ +		return;
+ +
+  	aconnector->mst_mgr.cbs =3D &dm_mst_cbs;
+  	drm_dp_mst_topology_mgr_init(
+  		&aconnector->mst_mgr,
 
--- 
+--Sig_/7L4.J4D3cO5/Rn4FGcSo6.9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2Wm/4ACgkQAVBC80lX
+0GzFRwf/WBPiEvkFmJsMLMuNNIGQgrcVmlJ29OLPyMqVGih9Pn++RZOa2LMBzbck
+p7mk5w6cEU4nhpk7tIYfcwrDA1ymh9RtqANl60h+wjkEDCnCOBLyKWSYX3+9NsVZ
+5HfuYp2vTKlJ39rRfRlhmBUMvaVA+0dtdH7OKRDB6BT3/bhlRIZKVsWwWRcQI9mP
+irBzxPH/qMY2eER6FuGYRot6P9H3B8PWwyYFEh9gjHL9eZ/OD3g8zpMoTL62lMY7
++ZzcNwrpmZf39EQtnmI3//LZM22USRC53JFFTPXgzcN96OdV/+dlfZON++AkaQvZ
+7XdAF9cBY4Vtj+jElHvMZczwACiA8Q==
+=PU8N
+-----END PGP SIGNATURE-----
+
+--Sig_/7L4.J4D3cO5/Rn4FGcSo6.9--
