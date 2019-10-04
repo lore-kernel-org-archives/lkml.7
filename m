@@ -2,129 +2,114 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E52DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13187C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23560215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA93E222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vElcvfBm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+HIkB/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbfJDLgO (ORCPT
+        id S1730970AbfJDLge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:36:14 -0400
-Received: from mail-eopbgr700058.outbound.protection.outlook.com ([40.107.70.58]:23264
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727254AbfJDLgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:36:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EgzLs6zYJHEVJMKPwedafN1xB/vXyjmKvTX4oZjBUFT6wvWb/C9tTo0shqn+bgVZlP1Xu6S/CNyY2etaEp6nS/06kCWb1O6AD9wnHah7X0ybUKN73M63ta0B2FJipU/7HnSSR4Efdnmjoh0NSwn0tp1bS8XKRIHs9eaXjS/pe0jHxHpFYBWvXwEEMw0ZdStd5vhPMDzvZEiZw7mcI4iP0AA7g5/mHQGqIkJ4f7c0gLkAyH+xKcRaG11lMScS1s9uyfhzLxSxby+qYU/Stbq+MAiMFPlP1YR28Femyfhiweas5QBTYBuhs5LT7uzVkcn7h1ZWN+4hhnR9WcRM5vTcuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dsj3ry4eOYYXIegmxc7cdQFZyjskzax6oVgd7GEN/3U=;
- b=UE3IC7OCJHE1CaAPZPq86M/7l7ekGxsB3cGpENzwi0YXDceiL5x9AtjDyw7pokqafcbQGefyQSfShxc0hLRGcrwU1LMSTP0rflrRNhAy2LSS4XM1oqlyPm2zqukQcYZu5O+HEEPEIN8pkRbYit05M1ZwNd4gfAvPOi750iI6GN5YzlfdLMA63VygyyWQVKkXSJBu+gmwFBjZerLe/f3PSAWKvxoVYhOiGdHxgFs6xxEmCFJuwjn0pCyG2LIWxSIs0/9SNncKAvH1x5yqewCSyEhyBz3/haOmPmn2cWEBui8bldJrqtF+v2Q5c0NAsY/yDzkQOkPXTb/p48PhSdn2zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 4 Oct 2019 07:36:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40815 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730240AbfJDLgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 07:36:33 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d22so3011433pll.7
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 04:36:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dsj3ry4eOYYXIegmxc7cdQFZyjskzax6oVgd7GEN/3U=;
- b=vElcvfBmd+Bu+yt4b50+SP7uDLaJTU4tYMXGV59ex6W1FfhHFQVlYD4M1Kup4x/wZvC+etEfPqZGXFfBKpCIwWgWbortWk3N3BsNN94ZJyNutwhis7X+55oUWA1jCFra9oyBM4T8f9Ck57yKEqWMAh1INnJJhDFAICzFK8b+B8Y=
-Received: from DM5PR12MB2376.namprd12.prod.outlook.com (52.132.143.139) by
- DM5PR12MB1676.namprd12.prod.outlook.com (10.172.36.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Fri, 4 Oct 2019 11:36:10 +0000
-Received: from DM5PR12MB2376.namprd12.prod.outlook.com
- ([fe80::2941:f319:f890:beb0]) by DM5PR12MB2376.namprd12.prod.outlook.com
- ([fe80::2941:f319:f890:beb0%7]) with mapi id 15.20.2305.023; Fri, 4 Oct 2019
- 11:36:10 +0000
-From:   Nirmoy <nirmodas@amd.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Das, Nirmoy" <Nirmoy.Das@amd.com>,
-        Nirmoy Das <nirmoy.aiemd@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>
-CC:     "airlied@linux.ie" <airlied@linux.ie>,
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nOCYZTp0wlW16jrmBzFl+zhQm0PaZWf4IPrpoghz8Yo=;
+        b=K+HIkB/DaYwobnDZtGi3XYvBspVWPMRJiBUETqqpwYTvQp9tFBZOt4UE5me6R4KH5S
+         Mpx9ZDpyd8o1w0mVzmm8xGfSJnTlB+fk7/XqioTy3S4hbK3Z5kH0ZqyrjIOzsB8/tH4D
+         pfUcTKQjyTZzSqwORuc9ZViuQQAwesVIU9ynZ29agbbAhvnjEeoO4Q3XkX0ZgukyrWyx
+         OlvSrz0HxL/0J8NRos64LcHFpCF7MEyzvjVw1ZWrt38q+v1BvfwltyrXUM8IdBp68K2O
+         qjUllfapLPCmx63lB2GJHG7VgeZVpYLRyL6TEoYakOevapQZBNzNwj6pu5yuCvW2iDrV
+         mrHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nOCYZTp0wlW16jrmBzFl+zhQm0PaZWf4IPrpoghz8Yo=;
+        b=uS3M3hEJLODruVpJV+1TNlhMvNMO1ZfUvpFFK+Wd2/hDNcqfcfkqo3G21muLs4ZZMY
+         5daZeXzuxeX6Nzsk9qAtCTi6IQUbGTIZtbfUIjC2g9pKY+c1bBx4pKGPWu5hb0/QGryc
+         OE2eeq1h2NKkxth4qMtWjxPicOb9ZQOf5mvGv7uCOhJdpdprTXJqH86SLLBKqo5I3Cbx
+         fAGtsf0k7NPlSuOX0qbxEwM9ULDXrWmF3Wavf4V688lOZbhgxMkCk6ZPQHFsNzFkT5u/
+         Jyy0fViAdN+fDB05MCHt8IDx20MChDds1ICjsxyHOgRyeldYTb4/dtSnq+C8VCKFIMuX
+         ZOEQ==
+X-Gm-Message-State: APjAAAVbwv6iz9+B1ftGR+gSwmXxG76b5gS/c31fRKkPcxMloNngEhkz
+        IZJ0xALqfpDAIsI7agmWWvC6mw==
+X-Google-Smtp-Source: APXvYqycHeOHIdMYTzA5mukhrOH4bcwhg8D6NWJcmxV+oLSJ8CZYEOinQHT3+LzyKtJ5O8kGHo7eRg==
+X-Received: by 2002:a17:902:6b4c:: with SMTP id g12mr15170702plt.80.1570188992416;
+        Fri, 04 Oct 2019 04:36:32 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:202:668d:6035:b425:3a3a])
+        by smtp.gmail.com with ESMTPSA id ev20sm5730991pjb.19.2019.10.04.04.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 04:36:30 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 04:36:28 -0700
+From:   Michel Lespinasse <walken@google.com>
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/amdgpu: fix memory leak
-Thread-Topic: [PATCH] drm/amdgpu: fix memory leak
-Thread-Index: AQHVepz+LK3ooMYyA0KdAv//MbdaAadKTA0AgAAEf4CAAAO5gIAAA4IAgAABSQCAAAGCAA==
-Date:   Fri, 4 Oct 2019 11:36:09 +0000
-Message-ID: <d5dc0a2d-4950-d85a-a45b-5e8e0eda6447@amd.com>
-References: <20191004101746.19574-1-nirmoy.das@amd.com>
- <62ea397d-2847-04d7-3c50-6292255845c5@amd.com>
- <32afa408-0968-2d1a-5add-593907636592@amd.com>
- <4d665d18-2109-675e-dd69-c15bd0b2a011@amd.com>
- <e79aa8f8-5198-bfd9-3f69-e7975bac3232@amd.com>
- <fef8697b-30c4-e4e1-f45c-d3377dbd444e@amd.com>
-In-Reply-To: <fef8697b-30c4-e4e1-f45c-d3377dbd444e@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0102CA0005.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::18) To DM5PR12MB2376.namprd12.prod.outlook.com
- (2603:10b6:4:b9::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nirmoy.Das@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2003:c5:8f2d:d200:7f12:8f2c:5192:3b71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4880813e-0500-4572-27bb-08d748bf0d6d
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR12MB1676:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB167642A33DA246A7728E80538B9E0@DM5PR12MB1676.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 018093A9B5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(199004)(189003)(66946007)(66476007)(66446008)(6486002)(66556008)(76176011)(64756008)(2906002)(305945005)(14454004)(71190400001)(8936002)(36756003)(52116002)(6506007)(229853002)(31696002)(386003)(53546011)(478600001)(102836004)(5660300002)(6246003)(186003)(31686004)(2616005)(476003)(14444005)(446003)(11346002)(6436002)(256004)(486006)(8676002)(25786009)(110136005)(99286004)(316002)(54906003)(6636002)(6116002)(6512007)(4326008)(81166006)(46003)(7736002)(71200400001)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1676;H:DM5PR12MB2376.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jfBTdozpO/dLPc55cw+uLtuFYck6poul+QUvk4m+6F3ORtqlbsyu4Lu6muiBAbHgfpDtG3NnxeXuydU4YaT9pkhT91bPXhccp5p89U0sB9BkrT/CkqdcM8Ibrapa4bxPNjdIhbnZQr65FoX4hftzGNr8KITMKTAkuMPy4903uToRgoKzMx6aiUrkN+NwbR+iX+bVoQpqrzksf5FXfIYM6XhOly4MoQU4o3O+OIe3lGnLslu11fJtI5nwl1lk7VEhQRMWJ/M2xBmO6SDwUZdak6kj2ZOagFnYkp37GyFO08ABsODDd7vS0RrvLpRMiwgkSFo2xpI7dms7Woi1exyycFAqdUaU/QLzWdpkx8Y528regYipCC8F52n4bMF1QhbVyuWRsr7wZ7hP4z8vIt1mdkx5RXRivH1oXBgyKFnvaHc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <531F55066347504497DD7BFAFAB9F4D8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 03/11] drm/amdgpu: convert amdgpu_vm_it to half closed
+ intervals
+Message-ID: <20191004113628.GA260828@google.com>
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191003201858.11666-4-dave@stgolabs.net>
+ <dc9cc8c4-7275-43be-5bed-91384e3246ae@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4880813e-0500-4572-27bb-08d748bf0d6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 11:36:09.8794
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HXSiZ4JIUzoOIzXksyfNaRWsBEohwq5O3eIdB9bxUl1eUPrJ54jvMdFcWiYto20XEAgJKRCec8TkjFueBw/62w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1676
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc9cc8c4-7275-43be-5bed-91384e3246ae@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxMC80LzE5IDE6MzAgUE0sIEtvZW5pZywgQ2hyaXN0aWFuIHdyb3RlOg0KPiBBbSAwNC4x
-MC4xOSB1bSAxMzoyNiBzY2hyaWViIERhcywgTmlybW95Og0KPj4gT24gMTAvNC8xOSAxOjEzIFBN
-LCBLb2VuaWcsIENocmlzdGlhbiB3cm90ZToNCj4+Pj4+IE5BSywgdGhhdCBpcyBhIGRvdWJsZSBm
-cmVlLiBUaGUgYm8gbGlzdCBlbnRyaWVzIGFyZSBmcmVlZCBieQ0KPj4+Pj4gYW1kZ3B1X2JvX2xp
-c3RfcHV0KCkuDQo+Pj4+IFRoYW5rcywgZGlkbid0IHJlYWxpemUgdGhhdC4NCj4+PiBXYWl0IGEg
-c2Vjb25kLCB3aGF0IGVudHJpZXMgYXJlIHlvdSB0YWxraW5nIGFib3V0Pw0KPj4+DQo+Pj4gVGhl
-IGVudHJpZXMgaW4gdGhlIGxpc3Qgb2JqZWN0IGFyZSBmcmVlZCB3aGVuIGFtZGdwdV9ib19saXN0
-X3B1dCgpIGlzDQo+Pj4gY2FsbGVkLCBidXQgdGhlIHRlbXBvcmFyeSBpbmZvIGFycmF5IHdpdGgg
-dGhlIGhhbmRsZXMgbmVlZHMgdG8gYmUgZnJlZWQNCj4+PiBhcyB3ZWxsLg0KPj4+DQo+Pj4gQW5k
-IGl0IGxvb2tzIGxpa2UgdGhhdCBpcyBpbmRlZWQgbGVha2VkIGhlcmUuDQo+PiBJIGFtIHRhbGtp
-bmcgYWJvdXQgdGhlIGBpbmZvYCBhcnJheSBjcmVhdGVkIGJ5DQo+PiBhbWRncHVfYm9fY3JlYXRl
-X2xpc3RfZW50cnlfYXJyYXkoKS4NCj4gWWVhaCwgdGhhdCBhcmUgdGhlIGhhbmRsZXMgYW5kIG5v
-dCB0aGUgZW50cmllcy4gU29ycnkgdGhhdCBJIHdhcw0KPiBjb25mdXNlZCBhYm91dCB0aGF0Lg0K
-Pg0KPiBZb3VyIHBhdGNoIGlzIGNvcnJlY3QsIHlvdSBzaG91bGQganVzdCB1cGRhdGUgdGhlIGNv
-bW1pdCBtZXNzYWdlIGEgYml0Lg0KPg0KPiBCVFc6IENvdWxkIHlvdSBjbGVhbnVwIGVycm9yIGhh
-bmRsaW5nIGhlcmUgYSBiaXQgbW9yZT8NCj4NCj4gRS5nLiBhZGQgYW4gZXJyb3JfcHV0X2xpc3Qg
-aGFuZGxlIGFuZCBkcm9wIHRoZSAiaWYgKGluZm8pIiBhbmQgaW5zdGVhZA0KPiByZXR1cm4gZGly
-ZWN0bHkgaWYgd2UgZmFpbCB0byBhbGxvY2F0ZSBpbmZvLg0KT2theSBJIHdpbGwgZG8gdGhhdCBp
-biB2MiBvZiB0aGlzIHBhdGNoLg0KPiBUaGFua3MsDQo+IENocmlzdGlhbi4NCg0KDQpSZWdhcmRz
-LA0KDQpOaXJtb3kNCg0K
+On Fri, Oct 04, 2019 at 06:54:54AM +0000, Koenig, Christian wrote:
+> Am 03.10.19 um 22:18 schrieb Davidlohr Bueso:
+> > The amdgpu_vm interval tree really wants [a, b) intervals,
+> 
+> NAK, we explicitly do need an [a, b[ interval here.
+
+Hi Christian,
+
+Just wanted to confirm where you stand on this patch, since I think
+you reconsidered your initial position after first looking at 9/11
+from this series.
+
+I do not know the amdgpu code well, but I think the changes should be
+fine - in struct amdgpu_bo_va_mapping, the "end" field will hold what
+was previously stored in the "last" field, plus one. The expectation
+is that overflows should not be an issue there, as "end" is explicitly
+declared as an uint64, and as the code was previously computing
+"last + 1" in many places.
+
+Does that seem workable to you ?
+
+Thanks,
+
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
