@@ -2,139 +2,306 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D3C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5383CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CA3206C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qF0GVukp"
+	by mail.kernel.org (Postfix) with ESMTP id 13DBC206C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387900AbfJDJBT (ORCPT
+        id S1730052AbfJDJDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:01:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45753 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387635AbfJDJBS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:01:18 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r5so6087777wrm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 02:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=EFydY0lgIP899wnAH99dy6et3EG1uYQ9KTgGCBLycYs=;
-        b=qF0GVukplt92gp1dIgMULefb5vjDSNNhk+Ho8zlhKs5lWbidTiPF3rXtAV/OMf/cWA
-         YLkSKjy8nyUM1mp1oJRyBI52MX4/1ErOfaNIxvRvwAubX3kc3rBJH3v3qLHXKvMs3UbI
-         YcI/Ok0ScCFkD8rDOZoGkYDiJwXlmBWCFD3XB2uGQSV9jjBXM70JO/9HSPqcK/BGDIEC
-         xWpCVkzTSpsysEwc2JVgLgsC4zIZNcdtrpK7cDk+k73kpVSC7zypLxAG7HiTT1tBNPJo
-         6wpcKeA3yYNu+7hfFihagaIfl0fv0Ennk/vsC72bxoG/8zycuhVhESXsBE60rKCZT7qp
-         u7MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EFydY0lgIP899wnAH99dy6et3EG1uYQ9KTgGCBLycYs=;
-        b=raFe3Scz2YNAXraZ+hR69aFugou12K1EJUhU6kxa6h5OaAgeSCHLKqzoMg1c6nHP3L
-         pdYXBpIw2cN8GxY0iOz761wqOF5vNr0Uxa62sLwP1FZ/5c+t3QaO6LraF1K/W6HyN753
-         Pq3qseWr8SpKO2cIIRNLdEEa2fJTAPi8wa+vDIgj/bj90wDFJDYfPgLkaxbNA0lw8/RN
-         AihDe3oPwa7RlLWg/M2g15Ds6+EOcM1Sw85zbEXXbilkSpkLt9Vm4junCayb0YJNZSgQ
-         Dp3xguCPUMypBKbe0HytSYIc+FagakFYo9Wws9NVfyGGna+8ynsfz0sq5xPTEd7SM/gF
-         qIXw==
-X-Gm-Message-State: APjAAAXL3wsx0Fp/qs7pE5ZerViGCgdBVijapecluPeuTsEExwVncc8f
-        4iS1/Nj6lKMOC9nO9klemYd4SA==
-X-Google-Smtp-Source: APXvYqyRiGMXW/wfqsay/UYMA7JeRdE57EW6un20v5k0NxiOZ3sdeT1X4JHfTYukfhmSHqxi20GgMQ==
-X-Received: by 2002:a5d:630d:: with SMTP id i13mr10380588wru.230.1570179676023;
-        Fri, 04 Oct 2019 02:01:16 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v8sm7765170wra.79.2019.10.04.02.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 02:01:15 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH v7 0/7] Add support of New Amlogic temperature sensor for G12 SoCs
-Date:   Fri,  4 Oct 2019 11:01:07 +0200
-Message-Id: <20191004090114.30694-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Oct 2019 05:03:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37654 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfJDJDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:03:41 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1D73B10CC1F1;
+        Fri,  4 Oct 2019 09:03:40 +0000 (UTC)
+Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6FE85C222;
+        Fri,  4 Oct 2019 09:03:35 +0000 (UTC)
+Subject: Re: [PATCH v5 01/10] mm/memunmap: Use the correct start and end pfn
+ when removing pages from zone
+From:   David Hildenbrand <david@redhat.com>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Pankaj Gupta <pagupta@redhat.com>
+References: <20191001144011.3801-1-david@redhat.com>
+ <20191001144011.3801-2-david@redhat.com>
+ <933f9cd8-9a32-8566-bd97-7e475a009275@redhat.com>
+ <09b61ab1-6099-d825-8e04-fbfb43abe4d2@redhat.com>
+ <cb6807a4-93c8-3964-bd65-e7087a0c7bf1@linux.ibm.com>
+ <6e71cd24-7696-e7ca-15a1-8f126b0860ee@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <25a72fa3-9859-3fdb-ffd3-deb7bf154fe0@redhat.com>
+Date:   Fri, 4 Oct 2019 11:03:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <6e71cd24-7696-e7ca-15a1-8f126b0860ee@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Fri, 04 Oct 2019 09:03:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchs series add support of New Amlogic temperature sensor and minimal
-thermal zone for SEI510 and ODROID-N2 boards.
+On 04.10.19 11:00, David Hildenbrand wrote:
+> On 03.10.19 18:48, Aneesh Kumar K.V wrote:
+>> On 10/1/19 8:33 PM, David Hildenbrand wrote:
+>>> On 01.10.19 16:57, David Hildenbrand wrote:
+>>>> On 01.10.19 16:40, David Hildenbrand wrote:
+>>>>> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+>>>>>
+>>>>> With altmap, all the resource pfns are not initialized. While initializing
+>>>>> pfn, altmap reserve space is skipped. Hence when removing pfn from zone
+>>>>> skip pfns that were never initialized.
+>>>>>
+>>>>> Update memunmap_pages to calculate start and end pfn based on altmap
+>>>>> values. This fixes a kernel crash that is observed when destroying
+>>>>> a namespace.
+>>>>>
+>>>>> [   81.356173] kernel BUG at include/linux/mm.h:1107!
+>>>>> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+>>>>>      pc: c0000000004b9728: memunmap_pages+0x238/0x340
+>>>>>      lr: c0000000004b9724: memunmap_pages+0x234/0x340
+>>>>> ...
+>>>>>      pid   = 3669, comm = ndctl
+>>>>> kernel BUG at include/linux/mm.h:1107!
+>>>>> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+>>>>> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+>>>>> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+>>>>> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+>>>>> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+>>>>> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+>>>>> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+>>>>> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+>>>>> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+>>>>> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+>>>>> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
+>>>>>
+>>>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>>>>> Cc: Logan Gunthorpe <logang@deltatee.com>
+>>>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>>>> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
+>>>>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>>>> [ move all pfn-realted declarations into a single line ]
+>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>> ---
+>>>>>   mm/memremap.c | 13 ++++++++-----
+>>>>>   1 file changed, 8 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/mm/memremap.c b/mm/memremap.c
+>>>>> index 557e53c6fb46..026788b2ac69 100644
+>>>>> --- a/mm/memremap.c
+>>>>> +++ b/mm/memremap.c
+>>>>> @@ -123,7 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+>>>>>   void memunmap_pages(struct dev_pagemap *pgmap)
+>>>>>   {
+>>>>>   	struct resource *res = &pgmap->res;
+>>>>> -	unsigned long pfn;
+>>>>> +	unsigned long pfn, nr_pages, start_pfn, end_pfn;
+>>>>>   	int nid;
+>>>>>   
+>>>>>   	dev_pagemap_kill(pgmap);
+>>>>> @@ -131,14 +131,17 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+>>>>>   		put_page(pfn_to_page(pfn));
+>>>>>   	dev_pagemap_cleanup(pgmap);
+>>>>>   
+>>>>> +	start_pfn = pfn_first(pgmap);
+>>>>> +	end_pfn = pfn_end(pgmap);
+>>>>> +	nr_pages = end_pfn - start_pfn;
+>>>>> +
+>>>>>   	/* pages are dead and unused, undo the arch mapping */
+>>>>> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+>>>>> +	nid = page_to_nid(pfn_to_page(start_pfn));
+>>>>>   
+>>>>>   	mem_hotplug_begin();
+>>>>>   	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+>>>>> -		pfn = PHYS_PFN(res->start);
+>>>>> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+>>>>> -				 PHYS_PFN(resource_size(res)), NULL);
+>>>>> +		__remove_pages(page_zone(pfn_to_page(start_pfn)), start_pfn,
+>>>>> +			       nr_pages, NULL);
+>>>>>   	} else {
+>>>>>   		arch_remove_memory(nid, res->start, resource_size(res),
+>>>>>   				pgmap_altmap(pgmap));
+>>>>>
+>>>>
+>>>> Aneesh, I was wondering why the use of "res->start" is correct (and we
+>>>> shouldn't also witch to start_pfn/nr_pages here. It would be good if Dan
+>>>> could review.
+>>>>
+>>>
+>>> To be more precise, I wonder if it should actually be
+>>>
+>>> __remove_pages(page_zone(pfn_to_page(start_pfn)), res->start,
+>>>                 resource_size(res))
+>>>
+>>
+>> yes, that would be make it much clear.
+>>
+>> But for MEMORY_DEVICE_PRIVATE start_pfn and pfn should be same?
+> 
+> Okay, let's recap. We should call add_pages()/__remove_pages()
+> and arch_add_memory()/arch_remove_memory() with the exact same ranges.
+> 
+> So with PHYS_PFN(res->start) and PHYS_PFN(resource_size(res)
+> 
+> Now, only a subset of the pages gets actually initialized,
+> meaning the NID and the ZONE we read could be stale.
+> That, we have to fix.
+> 
+> What about something like this (am I missing something?):
+> 
+> From d77b5c50f86570819a437517a897cc40ed29eefb Mon Sep 17 00:00:00 2001
+> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Date: Fri, 27 Sep 2019 16:02:24 +0530
+> Subject: [PATCH] mm/memunmap: Don't access uninitialized memmap in
+>  memunmap_pages()
+> 
+> With an altmap, the memmap falling into the reserved altmap space are
+> not initialized and, therefore, contain a garbage NID and a garbage
+> zone. Make sure to read the NID/zone from a memmap that was initialzed.
+> 
+> This fixes a kernel crash that is observed when destroying a namespace:
+> 
+> [   81.356173] kernel BUG at include/linux/mm.h:1107!
+> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+>     pc: c0000000004b9728: memunmap_pages+0x238/0x340
+>     lr: c0000000004b9724: memunmap_pages+0x234/0x340
+> ...
+>     pid   = 3669, comm = ndctl
+> kernel BUG at include/linux/mm.h:1107!
+> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> [ minimze code changes, rephrase description ]
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memremap.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 557e53c6fb46..8b11c0da345c 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -123,6 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+>  void memunmap_pages(struct dev_pagemap *pgmap)
+>  {
+>  	struct resource *res = &pgmap->res;
+> +	struct page *first_page;
+>  	unsigned long pfn;
+>  	int nid;
+>  
+> @@ -131,14 +132,16 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+>  		put_page(pfn_to_page(pfn));
+>  	dev_pagemap_cleanup(pgmap);
+>  
+> +	/* make sure to access a memmap that was actually initialized */
+> +	first_page = pfn_to_page(pfn_first(pgmap));
+> +
+>  	/* pages are dead and unused, undo the arch mapping */
+> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+> +	nid = page_to_nid(first_page);
+>  
+>  	mem_hotplug_begin();
+>  	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+> -		pfn = PHYS_PFN(res->start);
+> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+> -				 PHYS_PFN(resource_size(res)), NULL);
+> +		__remove_pages(page_zone(first_page), res->start,
+> +			       resource_size(res), NULL);
 
-First implementation was doing on IIO[1] but after comments i move on thermal framework.
-Formulas and calibration values come from amlogic.
+Keeping the PHYS_PFN() calls of course ...
 
-Changes since v6:
- - add missing critical trip point.
+>  	} else {
+>  		arch_remove_memory(nid, res->start, resource_size(res),
+>  				pgmap_altmap(pgmap));
+> 
 
-Changes since v5:
-  - fix patch 5 and 6 send twice
-
-Changes since v4:
-  - Move thermal-zone in soc dtsi file
-  - Remove critical trip point and add passive one
-  - fix commit message
-  - use devm_platform_ioremap_resource instead of platform_get_resource
-
-Changes since v3:
-  - Add cooling map and trip point for hot type
-  - move compatible on g12a instead of g12 to be aligned with others
-  - add all reviewer, sorry for this mistake
-
-Changes since v2:
-  - fix yaml documention
-  - remove unneeded status variable for temperature-sensor node
-  - rework driver after Martin review
-  - add some information in commit message
-
-Changes since v1:
-  - fix enum vs const in documentation
-  - fix error with thermal-sensor-cells value set to 1 instead of 0
-  - add some dependencies needed to add cooling-maps
-
-Dependencies :
-- patch 3,4 & 5: depends on Neil's patch and series :
-              - missing dwc2 phy-names[2]
-              - patchsets to add DVFS on G12a[3] which have deps on [4] and [5]
-
-[1] https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@baylibre.com/
-[2] https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@baylibre.com/
-[3] https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@baylibre.com/
-[4] https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@baylibre.com/
-[5] https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@baylibre.com/
-
-Guillaume La Roque (7):
-  dt-bindings: thermal: Add DT bindings documentation for Amlogic
-    Thermal
-  thermal: amlogic: Add thermal driver to support G12 SoCs
-  arm64: dts: amlogic: g12: add temperature sensor
-  arm64: dts: meson: g12: Add minimal thermal zone
-  arm64: dts: amlogic: g12a: add cooling properties
-  arm64: dts: amlogic: g12b: add cooling properties
-  MAINTAINERS: add entry for Amlogic Thermal driver
-
- .../bindings/thermal/amlogic,thermal.yaml     |  54 +++
- MAINTAINERS                                   |   9 +
- .../boot/dts/amlogic/meson-g12-common.dtsi    |  77 ++++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  24 ++
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  29 ++
- drivers/thermal/Kconfig                       |  11 +
- drivers/thermal/Makefile                      |   1 +
- drivers/thermal/amlogic_thermal.c             | 333 ++++++++++++++++++
- 8 files changed, 538 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
- create mode 100644 drivers/thermal/amlogic_thermal.c
 
 -- 
-2.17.1
 
+Thanks,
+
+David / dhildenb
