@@ -2,101 +2,104 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA401C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA974C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC8720867
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C726215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hkj0H1a1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbfJDJNo (ORCPT
+        id S1731277AbfJDJPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:13:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:39618 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfJDJNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:13:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7066C1597;
-        Fri,  4 Oct 2019 02:13:43 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FCE83F739;
-        Fri,  4 Oct 2019 02:13:41 -0700 (PDT)
-Subject: Re: [PATCH v5 05/10] KVM: arm64: Support stolen time reporting via
- shared structure
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191002145037.51630-1-steven.price@arm.com>
- <20191002145037.51630-6-steven.price@arm.com>
- <20191003132235.ruanyfmdim5s6npj@kamzik.brq.redhat.com>
- <20191004070301.d7ari5rjlu3uuara@kamzik.brq.redhat.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <b107c1ca-6804-dc47-af25-fcd0b201472f@arm.com>
-Date:   Fri, 4 Oct 2019 10:13:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 4 Oct 2019 05:15:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39891 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729874AbfJDJPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:15:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v4so3518306pff.6;
+        Fri, 04 Oct 2019 02:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s8tqsqMy+G0/tcU7luJERjELtm00m1qaFN1WnG1XMF0=;
+        b=Hkj0H1a17gfTA4IBRSDEr6jhOfHZKhPzQr7hTppiuNBr3rWcHa/1fVLIkJ7nLgY4MS
+         rpwqpba5HkFXM8g3eza+y2a9Z5Fu8jqQM8g61sED46Fzj8LDnDTTOtLerEFsicimyY9u
+         wtPARiHwWAULUZ0lDo8Ismp0mWIJJD0Z7yKJqRL+4uqQ062DbR9/y+6sQfqTxvaD1/Ps
+         77pPN3urY0mkMJ0KY4uN63apCjxPV482S+HU7GTuU9JfEPT75wb8JWK8L4yzI3jflByi
+         iPhYVTjwxRUhjQyKDNmCSrhynfidTWyls8p5tlPx4fz+TMCLYc0nH+at53J0y8lQMafG
+         wOVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s8tqsqMy+G0/tcU7luJERjELtm00m1qaFN1WnG1XMF0=;
+        b=RiZQbDe7xr3Qw5oXxeufNTEbVANIaBJu04wQRgKvhuSji+guu5Tx7p9/HcjovmjvBQ
+         xdIDKCDtYAOropsQwgMcTWyLjTt1TnOCJwR79yKixnkh9XCZJZjj4oyj3ZIBW0TPXMKN
+         754KF7AnTI4HSK3T7BJWnHtRqR/V3yvRJgTAG3J5ytBs8ZHh8nVGv6WPq8ZurCdsJV+E
+         /+w6R+ZRHY3vYv9SCT5F6t52x/MDyMYgZTnixWZsQtw3Vt2rYPADXjC7cjsXlmmBorth
+         BfJxzghPtVv7WJaDaO3+SvbM9qZq5S6HYRuonO64C6ba63dil287Hltt4FZKS6KKf8mk
+         cfKg==
+X-Gm-Message-State: APjAAAXLvDGWNDpRl1awymimjg23DFKVP0dz228R6cJXGBm3YdA0wAXo
+        /FwpIHesAX9kYfoLktDUPOuSbSUrHj4=
+X-Google-Smtp-Source: APXvYqx9jVrJypPIFTpq5omupfOySz1o3av2IBN3FGqG+lYUCL6l0UwNhhdXupVN4qNFWjnTwQYi8w==
+X-Received: by 2002:a17:90a:e50b:: with SMTP id t11mr15594108pjy.50.1570180551460;
+        Fri, 04 Oct 2019 02:15:51 -0700 (PDT)
+Received: from f1 (ag061063.dynamic.ppp.asahi-net.or.jp. [157.107.61.63])
+        by smtp.gmail.com with ESMTPSA id bb15sm3451428pjb.2.2019.10.04.02.15.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 02:15:50 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 18:15:45 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        GR-Linux-NIC-Dev@marvell.com, linux-kernel@vger.kernel.org,
+        Manish Chopra <manishc@marvell.com>
+Subject: Re: [PATCH v2 0/17] staging: qlge: Fix rx stall in case of
+ allocation failures
+Message-ID: <20191004091545.GA29467@f1>
+References: <20190927101210.23856-1-bpoirier@suse.com>
+ <20191004081931.GA67764@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191004070301.d7ari5rjlu3uuara@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004081931.GA67764@kroah.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 08:03, Andrew Jones wrote:
-> On Thu, Oct 03, 2019 at 03:22:35PM +0200, Andrew Jones wrote:
->> On Wed, Oct 02, 2019 at 03:50:32PM +0100, Steven Price wrote:
->>> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
->>> +{
->>> +	struct kvm *kvm = vcpu->kvm;
->>> +	u64 steal;
->>> +	u64 steal_le;
->>> +	u64 offset;
->>> +	int idx;
->>> +	u64 base = vcpu->arch.steal.base;
->>> +
->>> +	if (base == GPA_INVALID)
->>> +		return -ENOTSUPP;
->>> +
->>> +	/* Let's do the local bookkeeping */
->>> +	steal = vcpu->arch.steal.steal;
->>> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
->>> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
->>> +	vcpu->arch.steal.steal = steal;
->>> +
->>> +	steal_le = cpu_to_le64(steal);
->>
->> Agreeing on a byte order for this interface makes sense, but I don't see
->> it documented anywhere. Is this an SMCCC thing? Because I skimmed some
->> of those specs and other users too but didn't see anything obvious. Anyway
->> even if everybody but me knows that all data returned from SMCCC calls
->> should be LE, it might be nice to document that in the pvtime doc.
-
-A very good point - I'll document this in the Linux document and feed
-that back for DEN0057A.
-
+On 2019/10/04 10:19, Greg Kroah-Hartman wrote:
+> On Fri, Sep 27, 2019 at 07:11:54PM +0900, Benjamin Poirier wrote:
+[...]
 > 
-> I have another [potentially dumb] SMCCC byte order question. If we need
-> to worry about using LE for the members of this structure, then why don't
-> we need to worry about the actual return values of the SMCCC calls? Like
-> the IPA of the structure?
+> As this code got moved to staging with the goal to drop it from the
+> tree, why are you working on fixing it up?  Do you want it moved back
+> out of staging into the "real" part of the tree, or are you just fixing
+> things that you find in order to make it cleaner before we delete it?
+> 
+> confused,
+> 
 
-The SMCCC calls pass values in registers. It's only when reading/writing
-these values from/to memory that the endianness actually has any meaning.
+I expected one of two possible outcomes after moving the qlge driver to
+staging:
+1) it gets the attention of people looking for something to work on and
+the driver is improved and submitted for normal inclusion in the future
+2) it doesn't get enough attention and the driver is removed
 
-Steve
+I don't plan to do further work on it and I'm admittedly not holding my
+breath for others to rush in but I already had those patches; it wasn't
+a big effort to submit them as a first step towards outcome #1.
+
+If #2 is a foregone conclusion, then there's little point in applying
+the patches. The only benefit I can think of that if the complete
+removal is reverted in the future, this specific problem will at least
+be fixed.
