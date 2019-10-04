@@ -7,114 +7,114 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D3DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515ACC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7882084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F552215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570176856;
-	bh=8bLGvd62yyXJEEM75akm9KRsOhNqib/V80CUazhK6OE=;
+	s=default; t=1570176976;
+	bh=afMn/O6wEm/iszbGkPu1HoG2bx5Ui3thyNoRXEO0EnI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J6EBhbm2XpFUs9GcNX8nsWq8eHvypFdCIIrPU1dkBL4jF745HXACd4md/9NuuvNhR
-	 MnYP6QQvFb1xhFi+dViE1UF9v8qiC/uxp0XdLOBm3Eqi+Kijr4bnIwEXxfmkKDYbdC
-	 MmZ64QSaHpKr5YT3toosi4B6IV9i87vXq9R1hehQ=
+	b=n5X4+nXWn6XpwD6rXvDyMU5zSEgWfD1souvBK3UEejZ3KQDROe7ti6Ukw6RPINZl+
+	 ExF1u8Ww6PeWy+HDDXYXW/060ScGfOt+dJgM7E1B4ftc8sS4nWaYjkJhuks36abRpm
+	 CYwippWVTVTBJJs03Dquk3KtQE18U+wOBnGKGNqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbfJDIOP (ORCPT
+        id S1731121AbfJDIQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 04:14:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34936 "EHLO mx1.suse.de"
+        Fri, 4 Oct 2019 04:16:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37652 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387631AbfJDIOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 04:14:15 -0400
+        id S1725730AbfJDIQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 04:16:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6495EB16B;
-        Fri,  4 Oct 2019 08:14:12 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 10:13:58 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 50119AD22;
+        Fri,  4 Oct 2019 08:16:13 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 10:16:12 +0200
 From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, tj@kernel.org, vdavydov.dev@gmail.com,
-        hannes@cmpxchg.org, guro@fb.com, linux-mm@kvack.org,
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     mgorman@techsingularity.net, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/slub: fix a deadlock in show_slab_objects()
-Message-ID: <20191004081358.GA9578@dhcp22.suse.cz>
-References: <1570131869-2545-1-git-send-email-cai@lca.pw>
+Subject: Re: [PATCH] mm: vmscan: remove unused scan_control parameter from
+ pageout()
+Message-ID: <20191004081612.GB9578@dhcp22.suse.cz>
+References: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1570131869-2545-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 03-10-19 15:44:29, Qian Cai wrote:
-> Long time ago, there fixed a similar deadlock in show_slab_objects()
-> [1]. However, it is apparently due to the commits like 01fb58bcba63
-> ("slab: remove synchronous synchronize_sched() from memcg cache
-> deactivation path") and 03afc0e25f7f ("slab: get_online_mems for
-> kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
-> just reading files in /sys/kernel/slab will generate a lockdep splat
-> below.
-> 
-> Since the "mem_hotplug_lock" here is only to obtain a stable online node
-> mask while racing with NUMA node hotplug, it is probably fine to do
-> without it.
+On Fri 04-10-19 01:41:38, Yang Shi wrote:
+> Since lumpy reclaim was removed in v3.5 scan_control is not used by
+> may_write_to_{queue|inode} and pageout() anymore, remove the unused
+> parameter.
 
-"It is probably fine" is not a proper justification. Please have a look
-at my older email where I've exaplained why I believe it is safe.
+I haven't really checked whether it was the lumpy reclaim removal but it
+is clearly not used these days.
 
-> WARNING: possible circular locking dependency detected
-> ------------------------------------------------------
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-I pressume the deadlock is real. If that is the case then Cc: stable and
-Fixes tag would be really appreciated.
-
-> Signed-off-by: Qian Cai <cai@lca.pw>
-
-Anyway, I do agree that this is the right thing to do. With the improved
-changelog, fixed up the comment alignment feel free to add
 Acked-by: Michal Hocko <mhocko@suse.com>
 
+Thanks!
+
 > ---
->  mm/slub.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+>  mm/vmscan.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 42c1b3af3c98..922cdcf5758a 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -4838,7 +4838,15 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
->  		}
->  	}
->  
-> -	get_online_mems();
-> +/*
-> + * It is not possible to take "mem_hotplug_lock" here, as it has already held
-> + * "kernfs_mutex" which could race with the lock order:
-> + *
-> + * mem_hotplug_lock->slab_mutex->kernfs_mutex
-> + *
-> + * In the worest case, it might be mis-calculated while doing NUMA node
-> + * hotplug, but it shall be corrected by later reads of the same files.
-> + */
->  #ifdef CONFIG_SLUB_DEBUG
->  	if (flags & SO_ALL) {
->  		struct kmem_cache_node *n;
-> @@ -4879,7 +4887,6 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
->  			x += sprintf(buf + x, " N%d=%lu",
->  					node, nodes[node]);
->  #endif
-> -	put_online_mems();
->  	kfree(nodes);
->  	return x + sprintf(buf + x, "\n");
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index e5d52d6..17489b8 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -774,7 +774,7 @@ static inline int is_page_cache_freeable(struct page *page)
+>  	return page_count(page) - page_has_private(page) == 1 + page_cache_pins;
 >  }
+>  
+> -static int may_write_to_inode(struct inode *inode, struct scan_control *sc)
+> +static int may_write_to_inode(struct inode *inode)
+>  {
+>  	if (current->flags & PF_SWAPWRITE)
+>  		return 1;
+> @@ -822,8 +822,7 @@ static void handle_write_error(struct address_space *mapping,
+>   * pageout is called by shrink_page_list() for each dirty page.
+>   * Calls ->writepage().
+>   */
+> -static pageout_t pageout(struct page *page, struct address_space *mapping,
+> -			 struct scan_control *sc)
+> +static pageout_t pageout(struct page *page, struct address_space *mapping)
+>  {
+>  	/*
+>  	 * If the page is dirty, only perform writeback if that write
+> @@ -859,7 +858,7 @@ static pageout_t pageout(struct page *page, struct address_space *mapping,
+>  	}
+>  	if (mapping->a_ops->writepage == NULL)
+>  		return PAGE_ACTIVATE;
+> -	if (!may_write_to_inode(mapping->host, sc))
+> +	if (!may_write_to_inode(mapping->host))
+>  		return PAGE_KEEP;
+>  
+>  	if (clear_page_dirty_for_io(page)) {
+> @@ -1396,7 +1395,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  			 * starts and then write it out here.
+>  			 */
+>  			try_to_unmap_flush_dirty();
+> -			switch (pageout(page, mapping, sc)) {
+> +			switch (pageout(page, mapping)) {
+>  			case PAGE_KEEP:
+>  				goto keep_locked;
+>  			case PAGE_ACTIVATE:
 > -- 
 > 1.8.3.1
-> 
 
 -- 
 Michal Hocko
