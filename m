@@ -2,95 +2,72 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F2FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8534C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6D42133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570202384;
-	bh=Pq6hbDsQZxwre7MzFt398+CEXy84MFC3LjumafQCV4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jjh+0unMB+y4MmANvKtwEcsE5skck8Jux1U0qt7POEgnPBeLM9ZDWvfSshssAU6qM
-	 rLYyst0AymPTJOJu5fwwihYGza6XP1y08FHUmr0l7WXMyH2SS6HAeRA+CdqyEE4hyB
-	 5tQADLaiwFRTTa+bFplZp3AqlvjlOz9RUIBf6yos=
+	by mail.kernel.org (Postfix) with ESMTP id C5E00207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389853AbfJDPTn (ORCPT
+        id S2389862AbfJDPTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389643AbfJDPTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:19:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF5B222C2;
-        Fri,  4 Oct 2019 15:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570202382;
-        bh=Pq6hbDsQZxwre7MzFt398+CEXy84MFC3LjumafQCV4M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gCYK3lgUboe3FuKPEs2rc8lxU0t0/iNDy4oVyz2VV094/Q1KyzMTC1aKQReJ3rB8m
-         ipkK78pody2hXsi8W0iGDS8g6l/kRI1MFJHYsNnOEoBvPs+vb+cvTa8PhDQFRfK/jC
-         Dm5oZ7phqNtUUhFHwPust2e877Z581WnBLC3lb9c=
-Date:   Fri, 4 Oct 2019 17:19:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Benjamin Poirier <benjamin.poirier@gmail.com>
-Cc:     devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        GR-Linux-NIC-Dev@marvell.com, linux-kernel@vger.kernel.org,
-        Manish Chopra <manishc@marvell.com>
-Subject: Re: [PATCH v2 0/17] staging: qlge: Fix rx stall in case of
- allocation failures
-Message-ID: <20191004151916.GA776553@kroah.com>
-References: <20190927101210.23856-1-bpoirier@suse.com>
- <20191004081931.GA67764@kroah.com>
- <20191004091545.GA29467@f1>
+        Fri, 4 Oct 2019 11:19:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46946 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389461AbfJDPTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:19:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 02FADAF35;
+        Fri,  4 Oct 2019 15:19:50 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 17:20:03 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>
+Subject: [PATCH] firmware: dmi: Fix unlikely out-of-bounds read in
+ save_mem_devices
+Message-ID: <20191004172003.689f2c04@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004091545.GA29467@f1>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 06:15:45PM +0900, Benjamin Poirier wrote:
-> On 2019/10/04 10:19, Greg Kroah-Hartman wrote:
-> > On Fri, Sep 27, 2019 at 07:11:54PM +0900, Benjamin Poirier wrote:
-> [...]
-> > 
-> > As this code got moved to staging with the goal to drop it from the
-> > tree, why are you working on fixing it up?  Do you want it moved back
-> > out of staging into the "real" part of the tree, or are you just fixing
-> > things that you find in order to make it cleaner before we delete it?
-> > 
-> > confused,
-> > 
-> 
-> I expected one of two possible outcomes after moving the qlge driver to
-> staging:
-> 1) it gets the attention of people looking for something to work on and
-> the driver is improved and submitted for normal inclusion in the future
-> 2) it doesn't get enough attention and the driver is removed
-> 
-> I don't plan to do further work on it and I'm admittedly not holding my
-> breath for others to rush in but I already had those patches; it wasn't
-> a big effort to submit them as a first step towards outcome #1.
-> 
-> If #2 is a foregone conclusion, then there's little point in applying
-> the patches. The only benefit I can think of that if the complete
-> removal is reverted in the future, this specific problem will at least
-> be fixed.
+Before reading the Extended Size field, we should ensure it fits in
+the DMI record. There is already a record length check but it does
+not cover that field.
 
-That makes more sense, I'll go queue these up now, as I don't want to
-waste the work you did on this.
+It would take a seriously corrupted DMI table to hit that bug, so no
+need to worry, but we should still fix it.
 
-thanks,
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 6deae96b42eb ("firmware, DMI: Add function to look up a handle and return DIMM size")
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+---
+ drivers/firmware/dmi_scan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+--- linux-5.3.orig/drivers/firmware/dmi_scan.c	2019-10-04 16:14:24.575714482 +0200
++++ linux-5.3/drivers/firmware/dmi_scan.c	2019-10-04 16:18:18.878669652 +0200
+@@ -408,7 +408,7 @@ static void __init save_mem_devices(cons
+ 		bytes = ~0ull;
+ 	else if (size & 0x8000)
+ 		bytes = (u64)(size & 0x7fff) << 10;
+-	else if (size != 0x7fff)
++	else if (size != 0x7fff || dm->length < 0x20)
+ 		bytes = (u64)size << 20;
+ 	else
+ 		bytes = (u64)get_unaligned((u32 *)&d[0x1C]) << 20;
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
