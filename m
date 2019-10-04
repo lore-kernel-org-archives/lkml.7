@@ -2,288 +2,142 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513ABC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7DDC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EA920862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AuUusN/7"
+	by mail.kernel.org (Postfix) with ESMTP id 17726222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbfJDQ5H (ORCPT
+        id S1730090AbfJDQ5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:57:07 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40114 "EHLO mail.skyhub.de"
+        Fri, 4 Oct 2019 12:57:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50504 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfJDQ5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:57:07 -0400
-Received: from zn.tnic (p200300EC2F0C7700D5F6910340328F8F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:d5f6:9103:4032:8f8f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730043AbfJDQ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:57:18 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92EC71EC0626;
-        Fri,  4 Oct 2019 18:57:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570208225;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=h+0mivdjgezbd+ZZJIetcbwxDfHWLnjVmNKjpWtjkgY=;
-        b=AuUusN/7O6GlZJUNpEXx61THkrq/YEpn0/jbbGjeJTC411HQYMp6mDxR/QV9wXMt9LGHbi
-        E1rRd09BijI+dl/wrpmakX/7mcwtRjfvAHp2y6krXK27F6nRCU9s1ZpQXBjK58qHtbY4A8
-        SOYODxCpTLY2vTJJpwzuFHf+DPiPjNA=
-Date:   Fri, 4 Oct 2019 18:57:00 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com
-Subject: [PATCH -v2] EDAC/device: Rework error logging API
-Message-ID: <20191004165700.GB3362@zn.tnic>
-References: <20190923191741.29322-1-hhhawa@amazon.com>
- <20190923191741.29322-2-hhhawa@amazon.com>
- <20190930145046.GH29694@zn.tnic>
- <5263edad-e0c9-a05a-72d7-e69c59d78d8f@amazon.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1BBE62CE90A
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 16:57:18 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id n3so2906906wmf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:57:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4DO6HRjszW9MYsu/gJ4YiZkg106jhOFShol6836AY7U=;
+        b=dpCsp+MiKzeFObzpy+aNb4fvas6B50kfD7fhwPJ+RoMSUL5SZjJkI0fvDzEom0EO6m
+         gb+hGNdfiWauba2JMZ5V3UxTRHwF+V7OuLH5C0Hjo+iU9FdPhm022sVit1cHhH97Yd87
+         rNKFi9nx71n431Y0+JU31zi932c+QmiC0JhbtGsAlkP+I1/ETmSvce3gXfgKPyXGRqzb
+         jO5HfzPasgubbbFYsd50Mcc/vM6cBAhiYtM3nCj6mWhCdjKkAuzYPqIYtxu3XurygSfZ
+         JiEWFsbS0ECbYxXlqPc4TjiuYjQ2dI8Qz/biO/oQp7h3L/DXmJYuIBoeI1yqhk2FAisT
+         SkFg==
+X-Gm-Message-State: APjAAAUGnNLuGwjvHrq9jRuH6wEOB8zJqOwvadfTW8M0cUu3Qi9uFvk6
+        g61JO5fJs+MCHtR3iJ6mjq7IwbOHGrTEUSMw+xKqUSSHuciQYnvYqg1BRkp1I9YjbKFDsADBWty
+        NIAeo3DQ8K8mmWk/eDlN1i+6s
+X-Received: by 2002:adf:ce89:: with SMTP id r9mr4693340wrn.335.1570208236659;
+        Fri, 04 Oct 2019 09:57:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxZHhNq7nQiI6Fd/RsV8j3dFIp0ycu+uqTI+ubiO6/TGoQoY612gvIeAT0G0evGhIrNPG1XXw==
+X-Received: by 2002:adf:ce89:: with SMTP id r9mr4693320wrn.335.1570208236389;
+        Fri, 04 Oct 2019 09:57:16 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a192sm5727832wma.1.2019.10.04.09.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 09:57:15 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        x86@kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Subject: Re: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
+In-Reply-To: <20191003155200.22022-1-parri.andrea@gmail.com>
+References: <20191003155200.22022-1-parri.andrea@gmail.com>
+Date:   Fri, 04 Oct 2019 18:57:14 +0200
+Message-ID: <87k19k1mad.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5263edad-e0c9-a05a-72d7-e69c59d78d8f@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 12:25:55PM +0300, Hawa, Hanna wrote:
-> Missing count check, same in *_ue_count():
-> if (count)
+Andrea Parri <parri.andrea@gmail.com> writes:
 
-I think you meant:
+> If the hardware supports TSC scaling, Hyper-V will set bit 15 of the
+> HV_PARTITION_PRIVILEGE_MASK in guest VMs with a compatible Hyper-V
+> configuration version.  Bit 15 corresponds to the
+> AccessTscInvariantControls privilege.  If this privilege bit is set,
+> guests can access the HvSyntheticInvariantTscControl MSR: guests can
+> set bit 0 of this synthetic MSR to enable the InvariantTSC feature.
+> After setting the synthetic MSR, CPUID will enumerate support for
+> InvariantTSC.
 
-	if (!count)
+I tried getting more information from TLFS but as of 5.0C this feature
+is not described there. I'm really interested in why this additional
+interface is needed, e.g. why can't Hyper-V just set InvariantTSC
+unconditionally when TSC scaling is supported?
 
-Anyway, fixed:
-
----
-From 0e49a27859b947d2abded91ee3558639bf8ec0bd Mon Sep 17 00:00:00 2001
-From: Hanna Hawa <hhhawa@amazon.com>
-Date: Mon, 23 Sep 2019 20:17:40 +0100
-Subject: [PATCH] EDAC/device: Rework error logging API
-
-Make the main workhorse the "count" functions which can log a @count
-of errors. Have the current APIs edac_device_handle_{ce,ue}() call
-the _count() variants and this way keep the exported symbols number
-unchanged.
-
- [ bp: Rewrite. ]
-
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: benh@amazon.com
-Cc: dwmw@amazon.co.uk
-Cc: hanochu@amazon.com
-Cc: James Morse <james.morse@arm.com>
-Cc: jonnyc@amazon.com
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: ronenk@amazon.com
-Cc: talel@amazon.com
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190923191741.29322-2-hhhawa@amazon.com
----
- drivers/edac/edac_device.c | 50 ++++++++++++++++++++---------------
- drivers/edac/edac_device.h | 54 ++++++++++++++++++++++++++++++--------
- 2 files changed, 72 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-index 65cf2b9355c4..8c4d947fb848 100644
---- a/drivers/edac/edac_device.c
-+++ b/drivers/edac/edac_device.c
-@@ -555,12 +555,16 @@ static inline int edac_device_get_panic_on_ue(struct edac_device_ctl_info
- 	return edac_dev->panic_on_ue;
- }
- 
--void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
--			int inst_nr, int block_nr, const char *msg)
-+void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg)
- {
- 	struct edac_device_instance *instance;
- 	struct edac_device_block *block = NULL;
- 
-+	if (!count)
-+		return;
-+
- 	if ((inst_nr >= edac_dev->nr_instances) || (inst_nr < 0)) {
- 		edac_device_printk(edac_dev, KERN_ERR,
- 				"INTERNAL ERROR: 'instance' out of range "
-@@ -582,27 +586,31 @@ void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
- 
- 	if (instance->nr_blocks > 0) {
- 		block = instance->blocks + block_nr;
--		block->counters.ce_count++;
-+		block->counters.ce_count += count;
- 	}
- 
- 	/* Propagate the count up the 'totals' tree */
--	instance->counters.ce_count++;
--	edac_dev->counters.ce_count++;
-+	instance->counters.ce_count += count;
-+	edac_dev->counters.ce_count += count;
- 
- 	if (edac_device_get_log_ce(edac_dev))
- 		edac_device_printk(edac_dev, KERN_WARNING,
--				"CE: %s instance: %s block: %s '%s'\n",
--				edac_dev->ctl_name, instance->name,
--				block ? block->name : "N/A", msg);
-+				   "CE: %s instance: %s block: %s count: %d '%s'\n",
-+				   edac_dev->ctl_name, instance->name,
-+				   block ? block->name : "N/A", count, msg);
- }
--EXPORT_SYMBOL_GPL(edac_device_handle_ce);
-+EXPORT_SYMBOL_GPL(edac_device_handle_ce_count);
- 
--void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
--			int inst_nr, int block_nr, const char *msg)
-+void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg)
- {
- 	struct edac_device_instance *instance;
- 	struct edac_device_block *block = NULL;
- 
-+	if (!count)
-+		return;
-+
- 	if ((inst_nr >= edac_dev->nr_instances) || (inst_nr < 0)) {
- 		edac_device_printk(edac_dev, KERN_ERR,
- 				"INTERNAL ERROR: 'instance' out of range "
-@@ -624,22 +632,22 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
- 
- 	if (instance->nr_blocks > 0) {
- 		block = instance->blocks + block_nr;
--		block->counters.ue_count++;
-+		block->counters.ue_count += count;
- 	}
- 
- 	/* Propagate the count up the 'totals' tree */
--	instance->counters.ue_count++;
--	edac_dev->counters.ue_count++;
-+	instance->counters.ue_count += count;
-+	edac_dev->counters.ue_count += count;
- 
- 	if (edac_device_get_log_ue(edac_dev))
- 		edac_device_printk(edac_dev, KERN_EMERG,
--				"UE: %s instance: %s block: %s '%s'\n",
--				edac_dev->ctl_name, instance->name,
--				block ? block->name : "N/A", msg);
-+				   "UE: %s instance: %s block: %s count: %d '%s'\n",
-+				   edac_dev->ctl_name, instance->name,
-+				   block ? block->name : "N/A", count, msg);
- 
- 	if (edac_device_get_panic_on_ue(edac_dev))
--		panic("EDAC %s: UE instance: %s block %s '%s'\n",
--			edac_dev->ctl_name, instance->name,
--			block ? block->name : "N/A", msg);
-+		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
-+		      edac_dev->ctl_name, instance->name,
-+		      block ? block->name : "N/A", count, msg);
- }
--EXPORT_SYMBOL_GPL(edac_device_handle_ue);
-+EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
-diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
-index 1aaba74ae411..c4c0e0bdce14 100644
---- a/drivers/edac/edac_device.h
-+++ b/drivers/edac/edac_device.h
-@@ -286,27 +286,60 @@ extern int edac_device_add_device(struct edac_device_ctl_info *edac_dev);
- extern struct edac_device_ctl_info *edac_device_del_device(struct device *dev);
- 
- /**
-- * edac_device_handle_ue():
-- *	perform a common output and handling of an 'edac_dev' UE event
-+ * Log correctable errors.
-  *
-  * @edac_dev: pointer to struct &edac_device_ctl_info
-- * @inst_nr: number of the instance where the UE error happened
-- * @block_nr: number of the block where the UE error happened
-+ * @inst_nr: number of the instance where the CE error happened
-+ * @count: Number of errors to log.
-+ * @block_nr: number of the block where the CE error happened
-+ * @msg: message to be printed
-+ */
-+void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg);
-+
-+/**
-+ * Log uncorrectable errors.
-+ *
-+ * @edac_dev: pointer to struct &edac_device_ctl_info
-+ * @inst_nr: number of the instance where the CE error happened
-+ * @count: Number of errors to log.
-+ * @block_nr: number of the block where the CE error happened
-  * @msg: message to be printed
-  */
--extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
--				int inst_nr, int block_nr, const char *msg);
-+void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg);
-+
- /**
-- * edac_device_handle_ce():
-- *	perform a common output and handling of an 'edac_dev' CE event
-+ * edac_device_handle_ce(): Log a single correctable error
-  *
-  * @edac_dev: pointer to struct &edac_device_ctl_info
-  * @inst_nr: number of the instance where the CE error happened
-  * @block_nr: number of the block where the CE error happened
-  * @msg: message to be printed
-  */
--extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
--				int inst_nr, int block_nr, const char *msg);
-+static inline void
-+edac_device_handle_ce(struct edac_device_ctl_info *edac_dev, int inst_nr,
-+		      int block_nr, const char *msg)
-+{
-+	edac_device_handle_ce_count(edac_dev, 1, inst_nr, block_nr, msg);
-+}
-+
-+/**
-+ * edac_device_handle_ue(): Log a single uncorrectable error
-+ *
-+ * @edac_dev: pointer to struct &edac_device_ctl_info
-+ * @inst_nr: number of the instance where the UE error happened
-+ * @block_nr: number of the block where the UE error happened
-+ * @msg: message to be printed
-+ */
-+static inline void
-+edac_device_handle_ue(struct edac_device_ctl_info *edac_dev, int inst_nr,
-+		      int block_nr, const char *msg)
-+{
-+	edac_device_handle_ue_count(edac_dev, 1, inst_nr, block_nr, msg);
-+}
- 
- /**
-  * edac_device_alloc_index: Allocate a unique device index number
-@@ -316,5 +349,4 @@ extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-  */
- extern int edac_device_alloc_index(void);
- extern const char *edac_layer_name[];
--
- #endif
--- 
-2.21.0
-
+>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 5 +++++
+>  arch/x86/kernel/cpu/mshyperv.c     | 7 ++++++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 7741e211f7f51..5f10f7f2098db 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -86,6 +86,8 @@
+>  #define HV_X64_ACCESS_FREQUENCY_MSRS		BIT(11)
+>  /* AccessReenlightenmentControls privilege */
+>  #define HV_X64_ACCESS_REENLIGHTENMENT		BIT(13)
+> +/* AccessTscInvariantControls privilege */
+> +#define HV_X64_ACCESS_TSC_INVARIANT		BIT(15)
+>  
+>  /*
+>   * Feature identification: indicates which flags were specified at partition
+> @@ -278,6 +280,9 @@
+>  #define HV_X64_MSR_TSC_EMULATION_CONTROL	0x40000107
+>  #define HV_X64_MSR_TSC_EMULATION_STATUS		0x40000108
+>  
+> +/* TSC invariant control */
+> +#define HV_X64_MSR_TSC_INVARIANT_CONTROL	0x40000118
+> +
+>  /*
+>   * Declare the MSR used to setup pages used to communicate with the hypervisor.
+>   */
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 267daad8c0360..105844d542e5c 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -286,7 +286,12 @@ static void __init ms_hyperv_init_platform(void)
+>  	machine_ops.shutdown = hv_machine_shutdown;
+>  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
+>  #endif
+> -	mark_tsc_unstable("running on Hyper-V");
+> +	if (ms_hyperv.features & HV_X64_ACCESS_TSC_INVARIANT) {
+> +		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
+> +		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+> +	} else {
+> +		mark_tsc_unstable("running on Hyper-V");
+> +	}
+>  
+>  	/*
+>  	 * Generation 2 instances don't support reading the NMI status from
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Vitaly
