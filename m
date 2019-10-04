@@ -2,178 +2,95 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BDAC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD3C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0865020700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8102077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xiJSchKd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388954AbfJDODC (ORCPT
+        id S2388962AbfJDOEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:03:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:49879 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388197AbfJDODC (ORCPT
+        Fri, 4 Oct 2019 10:04:30 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:43456 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388270AbfJDOEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:03:02 -0400
-Received: by mail-io1-f72.google.com with SMTP id e14so12013494iot.16
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:03:01 -0700 (PDT)
+        Fri, 4 Oct 2019 10:04:30 -0400
+Received: by mail-io1-f42.google.com with SMTP id v2so13709441iob.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tJ+enjiw0qTMNSwdUMz2YW7UWK/wRJo2/Axq1O5DXYk=;
+        b=xiJSchKdeSoi94+f/1x5VooggmYSkgd+2JeynPOaNao1uuFPY3STxV/NIyLQdAGXLL
+         7s0SjqBiNn2MkWL4Y4SsnGjvLlTibEZQb9VIFPDdKX9M/qtzMZ1G2yt/WWtKXpm2gvP1
+         52jEsBKRune2it9b64BpiPD5vhmwwXhjY0fvfOmoSTzjnLBMXow8aaC4WsbNOUGCGsaX
+         C8JM/8Wi3kT2JwmFOUGD7Pi0OhnI/CsjBDETi7sT77RbbgxtOgM8r6fNlpiP1y/YRxFc
+         lWlfBwJizFEmCNm3U76Czx1MmAZ5WxoDzNzdikTgvdUa/FmDXeV9YRPm6nOY9qegB6Az
+         KTpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=378RZOSs6PafydwqJNoFgZvB2GShwFKLuaG5sOlABYQ=;
-        b=pPnS1acyCWGToqwd/GrAjMrBakwJNWoLyYuOx+Tb+elfDGmmVgkpcpWk7PLZqo2Dt+
-         Ygcnzw37ejO4UgRf93DzIRmQymxAzXe2c0JA+L4MDLDgd2nX1UcGw3z2H/8qcl/95SWu
-         dhKO6mmcyOZlPMI4qgHRxm5wB2SwyVCQaIQmnlFOrtxEQ8puBcsv33KEy63ku0zeLSEh
-         KGIMYBHtIGhelTQKJ4hFfsHpGTQZYDgSIr+qJkxw9RTBuj5hcw8/A5x30YUJa8Woz8EJ
-         cU/0jJP4W/MY+I2M+XrPHjQGfZH9IG/2ky6Jt/TP+Jk858Ykthg3dHHh5NEJOBwd41l/
-         BWoA==
-X-Gm-Message-State: APjAAAUQaMKC2vbN5gxLgOnnv0sAkeAt7BgNLP1kjbV588qIB52GPtvm
-        gwwcWUhczpFFva6/qy9Gs1V2+c972oFuxmLkwGwPnmvKWngO
-X-Google-Smtp-Source: APXvYqzLNXhBV8MJKcuRtZBXeX9VWQ+FgYkmxim/nRZw2xiofgC9rW+EgTucPDsDntfiaiI9313/kc4kIdODgpXG4JryzsUvc9Uy
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tJ+enjiw0qTMNSwdUMz2YW7UWK/wRJo2/Axq1O5DXYk=;
+        b=oALopg0lg8/Kv7AGYtqOJrA8jyKtLgjYLuLqGtbPbjQ9LDavsxmoBf+fj7xgx21O49
+         Z51gOCnFLUl8Tv+zZkjKICxTae8ypdHLtvAuT088MQmEYgzcTw35rlfG+ddKdwygA+KJ
+         RyxKd0E535J3ZLt/f7IXjtZE3Iw/G2orSiUQvIHFuIn5G49cKVLQ63eAkZJzZc015XUu
+         VA0yxZddhPGT4xoq1Bdx+tUdA/FW0Ysm0Bhvj36WvS0rW/nMN9lBHdgOLcdm0JAsbRaO
+         bk+ZSPVjFBBlUqtAPzJkejZVeSKeWDwBYN3sDq/Na+FsctL8+x9cO2jeBIDVCOmnw8q/
+         BTmA==
+X-Gm-Message-State: APjAAAUCNuO4HXUgi59etFzirjHtcnGBeiGXv91o6qwkJ2WpuW7hD0Nx
+        DZTKAau8YDmz+s8uGCshHdwTiw==
+X-Google-Smtp-Source: APXvYqxOx976iqiZp/CwDZh3dbMMahnxL+pKPqa0bJXnsa7TmE1KnsPXFNDLdxtpU8/0Hg6EisqK3Q==
+X-Received: by 2002:a92:d78c:: with SMTP id d12mr14803126iln.96.1570197869100;
+        Fri, 04 Oct 2019 07:04:29 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id o8sm3101385ild.55.2019.10.04.07.04.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 07:04:28 -0700 (PDT)
+Subject: Re: [PATCH v3] io_uring: Fix reversed nonblock flag
+To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kbuild test robot <lkp@intel.com>
+References: <eecaf117de4894b595f300b9fb567825330b2d24.1570183599.git.asml.silence@gmail.com>
+ <9752f33f509287c77801d5e807213cff9195197a.1570197234.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <063ca0ba-96ad-3552-50d3-7eb9f48499b6@kernel.dk>
+Date:   Fri, 4 Oct 2019 08:04:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:88c1:: with SMTP id m62mr15261646ilh.95.1570197780850;
- Fri, 04 Oct 2019 07:03:00 -0700 (PDT)
-Date:   Fri, 04 Oct 2019 07:03:00 -0700
-In-Reply-To: <29823.1570196590@warthog.procyon.org.uk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f4732e0594162801@google.com>
-Subject: Re: KASAN: use-after-free Read in rxrpc_put_peer
-From:   syzbot <syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com>
-To:     MAILER_DAEMON@email.uscc.net, davem@davemloft.net,
-        dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <9752f33f509287c77801d5e807213cff9195197a.1570197234.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 10/4/19 8:01 AM, Pavel Begunkov (Silence) wrote:
+> From: Pavel Begunkov <asml.silence@gmail.com>
+> 
+> io_queue_link_head() accepts @force_nonblock flag, but io_ring_submit()
+> passes something opposite.
+> 
+> v2: build error from test robot: Rebase to block-tree
+> v3: simplify with Jens suggestion
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: use-after-free Read in rxrpc_release_call
+Thanks, looks good to me. Two minor notes that I fixed up:
 
-==================================================================
-BUG: KASAN: use-after-free in rxrpc_release_call+0x973/0xaa0  
-net/rxrpc/call_object.c:498
-Read of size 8 at addr ffff88808888b910 by task syz-executor.5/9000
+1) The revision history should go below the --- line
+2) I've added a Fixes tag
 
-CPU: 1 PID: 9000 Comm: syz-executor.5 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  rxrpc_release_call+0x973/0xaa0 net/rxrpc/call_object.c:498
-  rxrpc_release_calls_on_socket+0x6e7/0x1320 net/rxrpc/call_object.c:528
-  rxrpc_release_sock net/rxrpc/af_rxrpc.c:897 [inline]
-  rxrpc_release+0x2a6/0x550 net/rxrpc/af_rxrpc.c:927
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a29
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6e3d494c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000459a29
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6e3d4956d4
-R13: 00000000004f93d2 R14: 00000000004d1e00 R15: 00000000ffffffff
-
-Allocated by task 9000:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:686 [inline]
-  rxrpc_alloc_connection+0x86/0x5f0 net/rxrpc/conn_object.c:41
-  rxrpc_alloc_client_connection net/rxrpc/conn_client.c:176 [inline]
-  rxrpc_get_client_conn net/rxrpc/conn_client.c:340 [inline]
-  rxrpc_connect_call+0x648/0x4c30 net/rxrpc/conn_client.c:698
-  rxrpc_new_client_call+0x9c0/0x1ad0 net/rxrpc/call_object.c:290
-  rxrpc_new_client_call_for_sendmsg net/rxrpc/sendmsg.c:595 [inline]
-  rxrpc_do_sendmsg+0xffa/0x1d5f net/rxrpc/sendmsg.c:652
-  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
-  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
-  __do_sys_sendmmsg net/socket.c:2442 [inline]
-  __se_sys_sendmmsg net/socket.c:2439 [inline]
-  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 16:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  rxrpc_destroy_connection+0x1f2/0x2d0 net/rxrpc/conn_object.c:373
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
-  rcu_core+0x581/0x1560 kernel/rcu/tree.c:2377
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88808888b6c0
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 592 bytes inside of
-  1024-byte region [ffff88808888b6c0, ffff88808888bac0)
-The buggy address belongs to the page:
-page:ffffea0002222280 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
-index:0xffff88808888bb40 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea000220ae88 ffffea0002809108 ffff8880aa400c40
-raw: ffff88808888bb40 ffff88808888a040 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808888b800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808888b880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808888b900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                          ^
-  ffff88808888b980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808888ba00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         cc9604d4 rxrpc: rxrpc_peer needs to hold a ref on the rxrp..
-git tree:        
-git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=126c3899600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6ffbfa7e4a36190f
-dashboard link: https://syzkaller.appspot.com/bug?extid=b9be979c55f2bea8ed30
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+-- 
+Jens Axboe
 
