@@ -2,195 +2,130 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4F5C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE706C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C0520862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570198577;
-	bh=vN+I4z6KD9sa+KPJIxtHrCrFtkmpfloyTofM0Lzd8sQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=F8nRK7nskW7J/8FlaDkgLpU7GME0XFtWxxSu1GhK198MnRnxBhF6SvmfWLYz0kSF+
-	 04bsliVWOX9xcCjhbUm72gyzb4Z+susD31sUxznNU64ezWEs6x0XuHtQ4fpcfpDcak
-	 gnUSiKZM4dPpbXDfdW88RUnt1g3zPQXW1wstfkeQ=
+	by mail.kernel.org (Postfix) with ESMTP id AF9AE222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388968AbfJDOQR (ORCPT
+        id S2389026AbfJDOSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:16:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56956 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388625AbfJDOQQ (ORCPT
+        Fri, 4 Oct 2019 10:18:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60381 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388874AbfJDOSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:16:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K76rJjsu5T7wRFe+vxEucJGUKWukcF9Mf7Z+aHg/kGY=; b=Znj5r4fbqgACzD42wqy8FZid8
-        uKoOt2+rsNU8KbfIVn6n3B6XEunKgI2VaurTbovQmtDzMI/gKLhEL22etJ/mJJdZVbrvGFX8y+ir+
-        6a23ww7Vds3AwyGlMx2DskKBj4RuIwE7egCSQavobzgA/zOn7MkG7BxFn1/cYuZBIzrOH4AibkSy+
-        UIDWxARxyA/EP5c1jGCDQSv7vKY81zDbRxutdTb1lOEwv88X66AW1ucb1Qpf20os389gTxTfr6Auk
-        ssJm6kpWBA9ng+PlxFWWx/BB3Q7jSXyfrt8Ue/k9r/tPJdOkks6TEC/EFFMghApjuPD+hSFogq/86
-        QP4LOCpcw==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGONQ-0008T8-Pb; Fri, 04 Oct 2019 14:16:13 +0000
-Date:   Fri, 4 Oct 2019 11:16:08 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     JP <jp@jpvw.nl>
-Cc:     Gonsolo <gonsolo@gmail.com>, crope@iki.fi,
-        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191004111608.74fdf94a@coco.lan>
-In-Reply-To: <4c7ed533-55dc-534d-7fc0-0acc766daa27@jpvw.nl>
-References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
-        <20191002154922.7f1cfc76@coco.lan>
-        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-        <20191003080539.2b13c03b@coco.lan>
-        <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
-        <20191003120238.75811da6@coco.lan>
-        <20191003160336.GA5125@Limone>
-        <20191003130909.01d29b77@coco.lan>
-        <20191003162326.GA2727@Limone>
-        <20191003144225.0137bf6c@coco.lan>
-        <20191003183200.GA2631@Limone>
-        <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
-        <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
-        <20191003163914.7c384d36@coco.lan>
-        <20191003164426.6da8538f@coco.lan>
-        <CANL0fFRSNbUhcik7rnhjZ0qUe-tZyzcjY+M1J_iGzUa5jNc9_A@mail.gmail.com>
-        <20191003170329.3624f7f2@coco.lan>
-        <23d9856c-cc12-7212-9126-90d80f67abfb@jpvw.nl>
-        <20191004090855.14e418ed@coco.lan>
-        <4c7ed533-55dc-534d-7fc0-0acc766daa27@jpvw.nl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 4 Oct 2019 10:18:42 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iGOPj-000863-Ht; Fri, 04 Oct 2019 16:18:35 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iGOPi-0004fb-Cb; Fri, 04 Oct 2019 16:18:34 +0200
+Date:   Fri, 4 Oct 2019 16:18:34 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] pwm: mxs: implement ->apply
+Message-ID: <20191004141834.4blhpjzvkh3hvlqf@pengutronix.de>
+References: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
+ <20191004133207.6663-2-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191004133207.6663-2-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 4 Oct 2019 15:50:18 +0200
-JP <jp@jpvw.nl> escreveu:
+Hello,
 
-> On 10/4/19 2:08 PM, Mauro Carvalho Chehab wrote:
-> > Em Fri, 4 Oct 2019 13:50:43 +0200
-> > JP <jp@jpvw.nl> escreveu:
-> > =20
-> >> On 10/3/19 10:03 PM, Mauro Carvalho Chehab wrote: =20
-> >>> Em Thu, 3 Oct 2019 21:51:35 +0200
-> >>> Gonsolo <gonsolo@gmail.com> escreveu:
-> >>>    =20
-> >>>>> 1) The firmware file is likely at the Windows driver for this device
-> >>>>> (probably using a different format). It should be possible to get
-> >>>>> it from there. =20
-> >>>> If you tell me how I'm willing to do this. :) =20
-> >>> I don't know. I was not the one that extracted the firmware. I guess
-> >>> Antti did it.
-> >>>
-> >>> I suspect that there are some comments about that in the past at the
-> >>> ML. seek at lore.kernel.org.
-> >>>    =20
-> >>>>> 2) Another possibility would be to add a way to tell the si2168 dri=
-ver
-> >>>>> to not try to load a firmware, using the original one. That would
-> >>>>> require adding a field at si2168_config to allow signalizing to it
-> >>>>> that it should not try to load a firmware file, and add a quirk at
-> >>>>> the af9035 that would set such flag for Logilink VG0022A. =20
-> >>>> I don't get this. Which firmware, si2168 or si2157? =20
-> >>> The one that it is causing the problem. If I understood well, the
-> >>> culprit was the si2168 firmware.
-> >>>    =20
-> >>>> I'm still for option 3: If there is a bogus chip revision number it's
-> >>>> likely the VG0022A and we can safely set fw to NULL, in which case
-> >>>> everything works.
-> >>>> All already working devices will continue to work as before.
-> >>>> With a low probability there are other devices that will return 0xff=
-ff
-> >>>> but a) they didn't work until now and b) they receive a clear message
-> >>>> that they return bogus numbers and this works just for the VG0022A, =
-in
-> >>>> which case this hardware can be tested.
-> >>>> At last, *my* VG0022A will work without a custom kernel which I'm a
-> >>>> big fan of. :))
-> >>>>
-> >>>> Are there any counterarguments except that it is not the cleanest
-> >>>> solution in the universe? ;) =20
-> >>> That's a really bad solution. Returning 0xff is what happens when
-> >>> things go wrong during I2C transfers. Several problems can cause it,
-> >>> including device misfunction. Every time someone comes with a patch
-> >>> trying to ignore it, things go sideways for other devices (existing
-> >>> or future ones).
-> >>>
-> >>> Ignoring errors is always a bad idea. =20
-> >> add module param say 'gonso_hack_vg0022a'
-> >> if true, act on error by setting a flag
-> >> if this flag is set don't load firmware =20
-> > Adding a module param should be the last resort, only when there's
-> > no way for the driver to autodetect. =20
-> Remember the guy reported the hw fix? Could be that
-> only some receiver units are affected. Therefore=C2=A0 the
-> module param.
->=20
-> The hw fix was original 4k7 and 10k added. That looks
-> like 3k3 total and all 3 chips on the bus work. 10k per
-> chip. Now Gon reported that said bus works with 2 chips
-> active on a faulty device with 4k7 resistor, which is 2
-> times 10k. It looks same hw error to me.
+On Fri, Oct 04, 2019 at 03:32:02PM +0200, Rasmus Villemoes wrote:
+> In preparation for supporting setting the polarity, switch the driver
+> to support the ->apply method.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  drivers/pwm/pwm-mxs.c | 70 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+> index b14376b47ac8..10efd3de0bb3 100644
+> --- a/drivers/pwm/pwm-mxs.c
+> +++ b/drivers/pwm/pwm-mxs.c
+> @@ -26,6 +26,7 @@
+>  #define  PERIOD_PERIOD_MAX	0x10000
+>  #define  PERIOD_ACTIVE_HIGH	(3 << 16)
+>  #define  PERIOD_INACTIVE_LOW	(2 << 18)
+> +#define  PERIOD_POLARITY_NORMAL	(PERIOD_ACTIVE_HIGH | PERIOD_INACTIVE_LOW)
+>  #define  PERIOD_CDIV(div)	(((div) & 0x7) << 20)
+>  #define  PERIOD_CDIV_MAX	8
+>  
+> @@ -41,6 +42,74 @@ struct mxs_pwm_chip {
+>  
+>  #define to_mxs_pwm_chip(_chip) container_of(_chip, struct mxs_pwm_chip, chip)
+>  
+> +static int mxs_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			 const struct pwm_state *state)
+> +{
+> +	struct mxs_pwm_chip *mxs = to_mxs_pwm_chip(chip);
+> +	int ret, div = 0;
+> +	unsigned int period_cycles, duty_cycles;
+> +	unsigned long rate;
+> +	unsigned long long c;
+> +
+> +	if (state->polarity != PWM_POLARITY_NORMAL)
+> +		return -ENOTSUPP;
+> +
+> +	/*
+> +	 * If the PWM channel is disabled, make sure to turn on the
+> +	 * clock before calling clk_get_rate() and writing to the
+> +	 * registers. Otherwise, just keep it enabled.
+> +	 */
+> +	if (!pwm_is_enabled(pwm)) {
+> +		ret = clk_prepare_enable(mxs->clk);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (!state->enabled && pwm_is_enabled(pwm))
+> +		writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + CLR);
 
-I'm not so sure. From the reports from Gonsolo, in the case of=20
-this specific issue with VG0022A, the device is not unstable. It is=20
-just that it works fine with the vendor-provided firmware, while it=20
-breaks with the new one.
+@Thierry: I wonder if it would be beneficial to stop the calculation of
+register contents if !state->enabled here. The only drawback (I'm aware)
+is that pwm_get_state won't return the previously set .period and
+.duty_cycle. (I also wonder if we should return (e.g.) .duty = 0,
+.period = 1 in pwm_get_state() if the PWM is off.)
 
-We don't know that the same thing would happen with the original
-reported bug. The only way to be sure would be to obtain the same
-hardware from the original post and test it to check if the device
-has issues without replacing the resistor.
+For the patch (which is orthogonal regarding the above question):
 
-Even the original reporter can't help, as his device was modified,
-and the issue won't be there anymore.
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Btw, if we end by noticing this bug happening on other it931x
-device models, we could simply disable firmware load for all of them,
-but we need more tests and reports before changing the behavior for
-other models, as older firmwares may have other problems.
+Best regards
+Uwe
 
-> > Making af9035 to detect vg0022a is quite simple.
-> >
-> > Considering this device's entry:
-> >
-> > 	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
-> > 		&it930x_props, "Logilink VG0022A", NULL) },
-> >
-> > the check, at af9035 would be:
-> >
-> > 	if (le16_to_cpu(d->udev->descriptor.idVendor) =3D=3D USB_VID_DEXATEK &&
-> > 	    le16_to_cpu(d->udev->descriptor.idProduct) =3D=3D 0x0100)
-> > 		/* do something to disable firmware load */
-> >
-> > So, no need to add any load time parameter.
-> >
-> > It should be noticed that a change just at af9035 won't work, as the
-> > firmware is updated by si2168 driver. So, the caller code needs to
-> > pass a config parameter to si2168 driver. =20
-
-> If it is a failing pull-up resistor on only some individual receiver
-> units, this seems overkill to me. In my proposal I did not realized
-> this change in the demod driver was needed.
-
-Agreed, but we have no means to know that until someone buys other
-units of the VG0022A and do tests with and without the patch.
-
-Thanks,
-Mauro
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
