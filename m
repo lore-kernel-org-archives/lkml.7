@@ -2,335 +2,173 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E02C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEA7C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091E8222C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B33D20867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O59mJcJX"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="brNY1Lf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfJDJSp (ORCPT
+        id S1731428AbfJDJTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:18:45 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43374 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729379AbfJDJSo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:18:44 -0400
-Received: by mail-qk1-f195.google.com with SMTP id h126so5123362qke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 02:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W6I9+yrZlBnu9vvasQaMrKa3ARAxTk84lZcanDGArco=;
-        b=O59mJcJXAE0a9gcD7AD3Yp9bGocXLU+GGCmLSOzXLdgDN27W/eQAy05/1K1m+plcUc
-         qnLOYNWUEf+SsN9dhYeXrX9pt6F/3vW1UWKD2d5azvtlxXaUhVr/uXk+j0xZY6MTg8Gh
-         a+IsQNhDMJJf5ZASgmH8rr0eLlNtpx8sKdPfSvmWvkqiuQ0A+UDOkpH+82M7i5hmqB4s
-         ShgpxMbaNvWDTsLfbHTVp4Uv+ZlaFZ+0feY33fqJOr01UsjoIGDrGeNIVXGXRqwH2kjK
-         4/trCgveBJDzademehYq0oEJgCo07tnbjaipEsGHMinMhPUOTt339wG7aiCIlSdwNsuN
-         ym/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W6I9+yrZlBnu9vvasQaMrKa3ARAxTk84lZcanDGArco=;
-        b=AaZGwanXDdLvUmuLi1LJzvfbdSvAJKASN+EvVF476mQDBvbG9q35w8rCK/IP7FvvVZ
-         LUpBGPRq/ZVMMZYR9eX0fWjL7eZ98BmfIZLmoDvCUNdof/vHrnr38BIyk/m5QaKdDKa5
-         MJR1Bsy94tRongcHd+7ue/T+fk0rI2sXHSOviswxuNFLDwN5ghmxtyCzmzHkpBsMBzIQ
-         IOPmxNsUIgzLAnwtQZKL5imZoH4wsfHA+gcqDoOekl0Of7n9lMtRP4V15Xak02Mdw5Zx
-         lKNTcPlxSS4eN2o4/NOW/1uxQYrxPKEwauVuu1rWacvI4RQonNvKDwscEBQ/qTF8wS8e
-         2SwA==
-X-Gm-Message-State: APjAAAVu2bNYI0ThZZYDYJYPbW6aeNiioMBHrU+znWKj9OsKF7y059ZE
-        QjaBgkmv5Ufsur7x5BtU/A7HaXPIGj82mIL9ZN0eHw==
-X-Google-Smtp-Source: APXvYqyjhhu83fr5eJLtYQWY7lriwK62bdmC7FDlzxTSblvQJIzzEYUbbFV10zD+6wFkh9cLT3vWPb2NXWm55+vafpU=
-X-Received: by 2002:a37:985:: with SMTP id 127mr8947602qkj.43.1570180722548;
- Fri, 04 Oct 2019 02:18:42 -0700 (PDT)
+        Fri, 4 Oct 2019 05:19:13 -0400
+Received: from mail-ve1eur04hn2011.outbound.protection.outlook.com ([52.101.139.11]:51331
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729379AbfJDJTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:19:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cC4ADhqv4YY4M+HxtEtgtlhdOm93u+hPWHhXBDlq6JVoWNIgOG21BmQmz9xL0FQE/qUdOZRGcKz5LzdZ2AdsVXSPvMyVwekr6L6ebQjDimq33sF8YIhnaREAGFn5W9ORusunp4uuRhl2PMcfezPvaJSgYOGiIjfw300iMl27wctB4C8WMDCEH34ePTYSHRHuNrx4DxCrT8Wjtfocf1gmhAU9NtNfzgNjjAWj50qhjG6J3t27SO3V4fEmeLMK+A3yHWEgDOl8n0ew3B63FCylYTpOZOkC/yhSjB7hNsYs+gE5c47i8ee3XXjCcVrW22YS6boi4o2+rVCob0nAX4AOBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oDVoLiCPfoZdyHyFGUK7dKnLd6IKBVuymCTzwUQ6f6Q=;
+ b=lkm0bAg964ObmliwKZeOzR/bxTpOxgxP4ex1lej8cpsHGztHLFMdKfT1zRj28Agd3bEbJaD1Gxq1RfWPAPsSmPcE3LCN0X+0HMsZX1PYiuUjhi5jN9W7Z9SV6iinK7kPW17755uUbDK4Gqu000COWxhvcVY92IZnFDJF6EcbbXVfwF0QgVToCUseyxR38G3z+674FHVPv0aMoAex93g7FtckKbePTypKaOVnyTRmZFa5sbimVmrY2N8Sk0MEkM5HROZxvTChA9c+FdxlMetSCGeH6l1g0gaCbdI2nEbWgTmHhDKsXZgo0SA7NagQ+yC+UFplBL0y/VT+opLqQTphvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oDVoLiCPfoZdyHyFGUK7dKnLd6IKBVuymCTzwUQ6f6Q=;
+ b=brNY1Lf2HzE7GcVBUhCgkfHO40Y73xNPEYyD6sEW7ZtynJ2vWHu1EVQn+hQclPfqtBV70Z8s+QYrxEtAp0eeHox08/4MysKasIg+YHBvUJXkKe+HHLoWvAVzRmp6i6XND4AmL9jgqOWu7/DE46DxYIrxumt2V+OZ3AB4ZmOopgw=
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com (20.179.36.87) by
+ AM0PR08MB3778.eurprd08.prod.outlook.com (20.178.23.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Fri, 4 Oct 2019 09:18:59 +0000
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3]) by AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3%7]) with mapi id 15.20.2305.023; Fri, 4 Oct 2019
+ 09:18:59 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+CC:     vkuznets <vkuznets@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Topic: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Index: AQHVeQrgrl6z6kaUqkyr6D3zFBAn2KdIv6eAgAAhHwCAAOlpQIAAbTiA
+Date:   Fri, 4 Oct 2019 09:18:58 +0000
+Message-ID: <20191004091855.GA26970@rkaganb.sw.ru>
+References: <20191002101923.4981-1-rkagan@virtuozzo.com>
+ <87muei14ms.fsf@vitty.brq.redhat.com> <20191003125236.GA2424@rkaganb.sw.ru>
+ <CY4PR21MB0136269170E69EA8F02A89E9D79E0@CY4PR21MB0136.namprd21.prod.outlook.com>
+In-Reply-To: <CY4PR21MB0136269170E69EA8F02A89E9D79E0@CY4PR21MB0136.namprd21.prod.outlook.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.12.1 (2019-06-15)
+mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Michael Kelley
+ <mikelley@microsoft.com>,      vkuznets <vkuznets@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,    Tianyu Lan
+ <Tianyu.Lan@microsoft.com>,    Joerg Roedel <jroedel@suse.de>, KY Srinivasan
+ <kys@microsoft.com>,   Haiyang Zhang <haiyangz@microsoft.com>, Stephen
+ Hemminger <sthemmin@microsoft.com>,    Sasha Levin <sashal@kernel.org>,        Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org"
+ <x86@kernel.org>,      "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>,        "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1PR0901CA0066.eurprd09.prod.outlook.com
+ (2603:10a6:3:45::34) To AM0PR08MB5537.eurprd08.prod.outlook.com
+ (2603:10a6:208:148::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57f1af69-c4d3-46af-9141-08d748abe360
+x-ms-traffictypediagnostic: AM0PR08MB3778:|AM0PR08MB3778:|AM0PR08MB3778:
+x-microsoft-antispam-prvs: <AM0PR08MB37783F504D3E4026714B5B9AC99E0@AM0PR08MB3778.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 018093A9B5
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(396003)(39850400004)(136003)(366004)(376002)(346002)(189003)(199004)(4326008)(2906002)(33656002)(36756003)(1511001)(66946007)(478600001)(14444005)(25786009)(486006)(256004)(7416002)(64756008)(76176011)(99286004)(66556008)(66446008)(305945005)(6916009)(7736002)(66476007)(66066001)(52116002)(476003)(58126008)(316002)(186003)(54906003)(8676002)(81166006)(81156014)(11346002)(102836004)(86362001)(5660300002)(26005)(386003)(6506007)(6486002)(9686003)(6512007)(3846002)(6116002)(8936002)(6246003)(1076003)(229853002)(71200400001)(71190400001)(14454004)(6436002)(446003)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:AM0PR08MB3778;H:AM0PR08MB5537.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-transport-forked: True
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: joUvr2lZQ85TV9zR1QCe+tHGCou2Oct1sHCSlJ2epH9G1tGahqP4POTqaWVS2N2elWrE+IFXqPwg7DmsxGMcFsiKPiPLkHDv7BIfuDYwhmzivVyu8HCWuAYEATkjKQws3Ax8x6ptiNuKFgJis77PEUUSRqJ85PlHWCP8FoysOuTR0zWoXI9EVdgYBksZ+qBbEwmIgwfSvVLIgiHOmEm4dTa1oevGo6sF32x4LIfrdVan8046aGKk3poFGApz/Q7DDGtfQABSClDxNp6lvYTaQ0ttyCA0rAP6UH0NzxlKwqZD89TsTOcEwrS2WPDBd5Xg4uYjh+4Q9W9cZBxQUpRoCJR/DR4G84x9r1gQoh04ZCSKWMOjPL5cWOck3w1cHD5P4LqitIjZZDJPgEfmwIxR7HaYuvICkOcG0U8g7JnJ7bUAJ/BSJ894hWmAWcUOph20g9Nob4dCmKn84mDHpUK0MgGOj0smTNnlErqc+EYjR/glLETPuRrnHL+FG9enFvms
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D98FC6662D0AD24BBE03A53140FCAC08@eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
- <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
- <1569594142.9045.24.camel@mtksdccf07> <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
- <1569818173.17361.19.camel@mtksdccf07> <1570018513.19702.36.camel@mtksdccf07>
- <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
- <1570069078.19702.57.camel@mtksdccf07> <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
- <1570095525.19702.59.camel@mtksdccf07> <1570110681.19702.64.camel@mtksdccf07>
- <CACT4Y+aKrC8mtcDTVhM-So-TTLjOyFCD7r6jryWFH6i2he1WJA@mail.gmail.com>
- <1570164140.19702.97.camel@mtksdccf07> <1570176131.19702.105.camel@mtksdccf07>
-In-Reply-To: <1570176131.19702.105.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 4 Oct 2019 11:18:31 +0200
-Message-ID: <CACT4Y+ZvhomaeXFKr4za6MJi=fW2SpPaCFP=fk06CMRhNcmFvQ@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57f1af69-c4d3-46af-9141-08d748abe360
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 09:18:59.0596
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SQYYIq54ZBSFvdBqQWwRJx5RhDRftfJKVLm0l+oV65UrCoNB52LyiyfYoC+JZ0zz5X8Y6jNMYiA9Dqr2TTtobA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3778
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 10:02 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> On Fri, 2019-10-04 at 12:42 +0800, Walter Wu wrote:
-> > On Thu, 2019-10-03 at 16:53 +0200, Dmitry Vyukov wrote:
-> > > On Thu, Oct 3, 2019 at 3:51 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:>
-> > > >
-> > > >  static void print_error_description(struct kasan_access_info *info)
-> > > >  {
-> > > > -       pr_err("BUG: KASAN: %s in %pS\n",
-> > > > -               get_bug_type(info), (void *)info->ip);
-> > > > -       pr_err("%s of size %zu at addr %px by task %s/%d\n",
-> > > > -               info->is_write ? "Write" : "Read", info->access_size,
-> > > > -               info->access_addr, current->comm, task_pid_nr(current));
-> > > > +       if ((long)info->access_size < 0) {
-> > > > +               pr_err("BUG: KASAN: invalid size %zu in %pS\n",
-> > > > +                       info->access_size, (void *)info->ip);
+On Fri, Oct 04, 2019 at 03:01:51AM +0000, Michael Kelley wrote:
+> From: Roman Kagan <rkagan@virtuozzo.com> Sent: Thursday, October 3, 2019 5:53 AM
 > > >
-> > > I would not introduce a new bug type.
-> > > These are parsed and used by some systems, e.g. syzbot. If size is
-> > > user-controllable, then a new bug type for this will mean 2 bug
-> > > reports.
-> > > It also won't harm to print Read/Write, definitely the address, so no
-> > > reason to special case this out of a dozen of report formats.
-> > > This can qualify as out-of-bounds (definitely will cross some
-> > > bounds!), so I would change get_bug_type() to return
-> > > "slab-out-of-bounds" (as the most common OOB) in such case (with a
-> > > comment).
-> > >
-> > Print Read/Write and address information, it is ok.
-> > But if we can directly point to the root cause of this problem, why we
-> > not do it?  see 1) and 2) to get a point, if we print OOB, then user
-> > needs one minute to think what is root case of this problem, but if we
-> > print invalid size, then user can directly get root case. this is my
-> > original thinking.
-> > 1)Invalid size is true then OOB is true.
-> > 2)OOB is true then invalid size may be true or false.
-> >
-> > But I see you say some systems have used bug report so that avoid this
-> > trouble, i will print the wrong type is "out-of-bound" in a unified way
-> > when size<0.
-> >
->
-> Updated my patch, please help to review it.
-> thanks.
->
-> commit 13e10a7e4264eb25c5a14193068027afc9c261f6
-> Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
-> Date:   Fri Oct 4 15:27:17 2019 +0800
->
->     kasan: detect negative size in memory operation function
->
->     It is an undefined behavior to pass a negative value to
-> memset()/memcpy()/memmove()
->     , so need to be detected by KASAN.
->
->     If size is negative value, then it will be larger than ULONG_MAX/2,
->     so that we will qualify as out-of-bounds issue.
->
->     KASAN report:
->
->      BUG: KASAN: out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
->      Read of size 18446744073709551608 at addr ffffff8069660904 by task
-> cat/72
->
->      CPU: 2 PID: 72 Comm: cat Not tainted
-> 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
->      Hardware name: linux,dummy-virt (DT)
->      Call trace:
->       dump_backtrace+0x0/0x288
->       show_stack+0x14/0x20
->       dump_stack+0x10c/0x164
->       print_address_description.isra.9+0x68/0x378
->       __kasan_report+0x164/0x1a0
->       kasan_report+0xc/0x18
->       check_memory_region+0x174/0x1d0
->       memmove+0x34/0x88
->       kmalloc_memmove_invalid_size+0x70/0xa0
->
->     [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
->
->     Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
->     Reported -by: Dmitry Vyukov <dvyukov@google.com>
->     Suggested-by: Dmitry Vyukov <dvyukov@google.com>
->
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 49cc4d570a40..06942cf585cc 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -283,6 +283,23 @@ static noinline void __init
-> kmalloc_oob_in_memset(void)
->         kfree(ptr);
->  }
->
-> +static noinline void __init kmalloc_memmove_invalid_size(void)
-> +{
-> +       char *ptr;
-> +       size_t size = 64;
-> +
-> +       pr_info("invalid size in memmove\n");
-> +       ptr = kmalloc(size, GFP_KERNEL);
-> +       if (!ptr) {
-> +               pr_err("Allocation failed\n");
-> +               return;
-> +       }
-> +
-> +       memset((char *)ptr, 0, 64);
-> +       memmove((char *)ptr, (char *)ptr + 4, -2);
-> +       kfree(ptr);
-> +}
-> +
->  static noinline void __init kmalloc_uaf(void)
->  {
->         char *ptr;
-> @@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
->         kmalloc_oob_memset_4();
->         kmalloc_oob_memset_8();
->         kmalloc_oob_memset_16();
-> +       kmalloc_memmove_invalid_size();
->         kmalloc_uaf();
->         kmalloc_uaf_memset();
->         kmalloc_uaf2();
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 6814d6d6a023..97dd6eecc3e7 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
->  #undef memset
->  void *memset(void *addr, int c, size_t len)
->  {
-> -       check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-> +       if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-> +               return NULL;
->
->         return __memset(addr, c, len);
->  }
-> @@ -110,7 +111,8 @@ void *memset(void *addr, int c, size_t len)
->  #undef memmove
->  void *memmove(void *dest, const void *src, size_t len)
->  {
-> -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_))
-> +               return NULL;
->         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> > > AFAIU you're trying to mirror native_x2apic_icr_write() here but this is
+> > > different from what hv_apic_icr_write() does
+> > > (SET_APIC_DEST_FIELD(id)).
+> > 
+> > Right.  In xapic mode the ICR2 aka the high 4 bytes of ICR is programmed
+> > with the destination id in the highest byte; in x2apic mode the whole
+> > ICR2 is set to the 32bit destination id.
+> > 
+> > > Is it actually correct? (I think you've tested this and it is but)
+> > 
+> > As I wrote in the commit log, I haven't tested it in the sense that I
+> > ran a Linux guest in a Hyper-V VM exposing x2apic to the guest, because
+> > I didn't manage to configure it to do so.  OTOH I did run a Windows
+> > guest in QEMU/KVM with hv_apic and x2apic enabled and saw it write
+> > destination ids unshifted to the ICR2 part of ICR, so I assume it's
+> > correct.
+> > 
+> > > Michael, could you please shed some light here?
+> > 
+> > Would be appreciated, indeed.
+> > 
+> 
+> The newest version of Hyper-V provides an x2apic in a guest VM when the
+> number of vCPUs in the VM is > 240.  This version of Hyper-V is beginning
+> to be deployed in Azure to enable the M416v2 VM size, but the functionality
+> is not yet available for the on-premises version of Hyper-V.  However, I can
+> test this configuration internally with the above patch -- give me a few days.
+> 
+> An additional complication is that when running on Intel processors that offer
+> vAPIC functionality, the Hyper-V "hints" value does *not* recommend using the
+> MSR-based APIC accesses.  In this case, memory-mapped access to the x2apic
+> registers is faster than the synthetic MSRs.
 
-I would check both calls.
-The current code seems to be over-specialized for handling of invalid
-size (you assume that if it's invalid size, then the first
-check_memory_region will detect it and checking the second one is
-pointless, right?).
-But check_memory_region can return false in other cases too.
-Also seeing first call checked, but the second not checked just hurts
-my eyes when reading code (whenever I will read such code my first
-reaction will be "why?").
+I guess you mean "using regular x2apic MSRs compared to the synthetic
+MSRs".  Indeed they do essentially the same thing, and there's no reason
+for one set of MSRs to be significantly faster than the other.  However,
+hv_apic_eoi_write makes use of "apic assists" aka lazy EOI which is
+certainly a win, and I'm not sure if it works without hv_apic.
 
+> I've already looked at a VM that has
+> the x2apic, and indeed that is the case, so the above code wouldn't run
+> anyway.  But I can temporarily code around that for testing purposes and see
+> if everything works.
 
->
->         return __memmove(dest, src, len);
-> @@ -119,7 +121,8 @@ void *memmove(void *dest, const void *src, size_t
-> len)
->  #undef memcpy
->  void *memcpy(void *dest, const void *src, size_t len)
->  {
-> -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_))
-> +               return NULL;
->         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
->
->         return __memcpy(dest, src, len);
-> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index 616f9dd82d12..02148a317d27 100644
-> --- a/mm/kasan/generic.c
-> +++ b/mm/kasan/generic.c
-> @@ -173,6 +173,11 @@ static __always_inline bool
-> check_memory_region_inline(unsigned long addr,
->         if (unlikely(size == 0))
->                 return true;
->
-> +       if (unlikely((long)size < 0)) {
-> +               kasan_report(addr, size, write, ret_ip);
-> +               return false;
-> +       }
-> +
->         if (unlikely((void *)addr <
->                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
->                 kasan_report(addr, size, write, ret_ip);
-> diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-> index 36c645939bc9..ae9596210394 100644
-> --- a/mm/kasan/generic_report.c
-> +++ b/mm/kasan/generic_report.c
-> @@ -107,6 +107,13 @@ static const char *get_wild_bug_type(struct
-> kasan_access_info *info)
->
->  const char *get_bug_type(struct kasan_access_info *info)
->  {
-> +       /*
-> +        * if access_size < 0, then it will be larger than ULONG_MAX/2,
-> +        * so that this can qualify as out-of-bounds.
-> +        */
-> +       if ((long)info->access_size < 0)
-> +               return "out-of-bounds";
-
-"out-of-bounds" is the _least_ frequent KASAN bug type. So saying
-"out-of-bounds" has downsides of both approaches and won't prevent
-duplicate reports by syzbot...
-
-> +
->         if (addr_has_shadow(info->access_addr))
->                 return get_shadow_bug_type(info);
->         return get_wild_bug_type(info);
-> diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-> index 0e987c9ca052..b829535a3ad7 100644
-> --- a/mm/kasan/tags.c
-> +++ b/mm/kasan/tags.c
-> @@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t
-> size, bool write,
->         if (unlikely(size == 0))
->                 return true;
->
-> +       if (unlikely((long)size < 0)) {
-> +               kasan_report(addr, size, write, ret_ip);
-> +               return false;
-> +       }
-> +
->         tag = get_tag((const void *)addr);
->
->         /*
-> diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-> index 969ae08f59d7..1e1ca81214b5 100644
-> --- a/mm/kasan/tags_report.c
-> +++ b/mm/kasan/tags_report.c
-> @@ -36,6 +36,13 @@
->
->  const char *get_bug_type(struct kasan_access_info *info)
->  {
-> +       /*
-> +        * if access_size < 0, then it will be larger than ULONG_MAX/2,
-> +        * so that this can qualify as out-of-bounds.
-> +        */
-> +       if ((long)info->access_size < 0)
-> +               return "out-of-bounds";
-> +
->  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
->         struct kasan_alloc_meta *alloc_meta;
->         struct kmem_cache *cache;
->
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1570176131.19702.105.camel%40mtksdccf07.
+Thanks!
+Roman.
