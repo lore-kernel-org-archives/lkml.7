@@ -2,150 +2,69 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B32C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6700C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C804B222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570229235;
-	bh=xzHJwRDpMutixnFislQvEBP/YT7jem/U/8kCBigrHuc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Rg3LajE8FFDB5YctxwAOVAt8sKcgPR7J9AsSKuhknq+8cDxO9gNh4KNUr/6iEiHiL
-	 KL7SXccT6n7C0aitWY6bGSygz8sMKUU7XWEIKzJ35uqybRX9GezRTXXa6RvNwuNNAV
-	 EIonUibB0yJil0NBulqYmYN8xxWK0+CfOmgDHopQ=
+	by mail.kernel.org (Postfix) with ESMTP id B6BBF20873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RoVawQ43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfJDWrP (ORCPT
+        id S1728913AbfJDWyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 18:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        Fri, 4 Oct 2019 18:54:10 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33536 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfJDWrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:47:14 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C0D20873;
-        Fri,  4 Oct 2019 22:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570229232;
-        bh=xzHJwRDpMutixnFislQvEBP/YT7jem/U/8kCBigrHuc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iwzzgBVqn0QkoDuULW/O4NrloecUNaYOg0c99vmkwrF/zjed3x2bOMaHRqdx3FMcB
-         x9c+A3rz+204+uJreaQuOoW8uMDh6bYqcKQgfB1jhKbgSV/JJFS70YgyJLCTDDtbp8
-         DUCzwKxib6rwVWWLjRz787WWmuX5+RAponaYusdk=
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        kieran.bingham@ideasonboard.com,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, robh@kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>, Tim.Bird@sony.com,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, jdike@addtoit.com,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        shuah <shuah@kernel.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
-Date:   Fri, 4 Oct 2019 16:47:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725730AbfJDWyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 18:54:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=19m7S1ibmLavrZocSRtbIxgDYoEh4ZDgSaklaxr4C+0=; b=RoVawQ43TmYht9G8E0Tv66fR6Q
+        xHjHxAiGrRAUs3kAOD8aXD21+iFFomqFnLF6vsLBntn3iJ7LuQjnFWGs3Q8kNg49BtN0m1Q10bdpN
+        TcaiZlf6mn39RJVZ9+SXInEoRCjdLumAJSzwslKFyYGqN8Qhen3E/6/JtPMXlgVQUy18=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iGWSV-0003ji-5G; Sat, 05 Oct 2019 00:53:59 +0200
+Date:   Sat, 5 Oct 2019 00:53:59 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: serial: fsl_lpuart: Fix lpuart_flush_buffer()
+Message-ID: <20191004225359.GE3817@lunn.ch>
+References: <20191004215537.5308-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191004222714.GA107737@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004215537.5308-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 4:27 PM, Brendan Higgins wrote:
-> On Fri, Oct 04, 2019 at 03:59:10PM -0600, shuah wrote:
->> On 10/4/19 3:42 PM, Linus Torvalds wrote:
->>> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->>>>
->>>> This question is primarily directed at Shuah and Linus....
->>>>
->>>> What's the current status of the kunit series now that Brendan has
->>>> moved it out of the top-level kunit directory as Linus has requested?
->>>
->>
->> The move happened smack in the middle of merge window and landed in
->> linux-next towards the end of the merge window.
->>
->>> We seemed to decide to just wait for 5.5, but there is nothing that
->>> looks to block that. And I encouraged Shuah to find more kunit cases
->>> for when it _does_ get merged.
->>>
->>
->> Right. I communicated that to Brendan that we could work on adding more
->> kunit based tests which would help get more mileage on the kunit.
->>
->>> So if the kunit branch is stable, and people want to start using it
->>> for their unit tests, then I think that would be a good idea, and then
->>> during the 5.5 merge window we'll not just get the infrastructure,
->>> we'll get a few more users too and not just examples.
+On Fri, Oct 04, 2019 at 02:55:37PM -0700, Andrey Smirnov wrote:
+> Fix incorrect read-modify-write sequence in lpuart_flush_buffer() that
+> was reading from UARTPFIFO and writing to UARTCFIFO instead of
+> operating solely on the latter.
 > 
-> I was planning on holding off on accepting more tests/changes until
-> KUnit is in torvalds/master. As much as I would like to go around
-> promoting it, I don't really want to promote too much complexity in a
-> non-upstream branch before getting it upstream because I don't want to
-> risk adding something that might cause it to get rejected again.
-> 
-> To be clear, I can understand from your perspective why getting more
-> tests/usage before accepting it is a good thing. The more people that
-> play around with it, the more likely that someone will find an issue
-> with it, and more likely that what is accepted into torvalds/master is
-> of high quality.
-> 
-> However, if I encourage arbitrary tests/improvements into my KUnit
-> branch, it further diverges away from torvalds/master, and is more
-> likely that there will be a merge conflict or issue that is not related
-> to the core KUnit changes that will cause the whole thing to be
-> rejected again in v5.5.
-> 
+> Fixes: 9bc19af9dacb ("tty: serial: fsl_lpuart: Flush HW FIFOs in .flush_buffer")
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-The idea is that the new development will happen based on kunit in
-linux-kselftest next. It will work just fine. As we accepts patches,
-they will go on top of kunit that is in linux-next now.
+Tested-by: Andrew Lunn <andrew@lunn.ch>
 
-thanks,
--- Shuah
+    Andrew
