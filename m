@@ -2,157 +2,62 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCCEC32792
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEF8C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DCC2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qHzGwag5"
+	by mail.kernel.org (Postfix) with ESMTP id 9CF412086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbfJDAMu (ORCPT
+        id S1732661AbfJDAPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 20:12:50 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:44799 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732327AbfJDAMu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 20:12:50 -0400
-Received: by mail-pg1-f201.google.com with SMTP id z7so3089333pgk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 17:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ICbLP1MuSAXizuW0BgmIirtLum0JXKK9vWjz+u8oZdo=;
-        b=qHzGwag5o9+V8imsCxLgTM+yncKYR7E5E0Q2yDvm4QruHteu1CLMS14NHJEUbwp3NB
-         7nXk34dPQiH7LirbOzy3sxC8CIRr6SZjKmDjqfBiA1D1HR4D7wMbin9PQsdLSQoP8wDp
-         Zswy3leTvQv7qj74/NaYED5B5yqO5kE60hz1wdehXUJUHSTEmoIUuL+qnd7/Tu0LX8OK
-         75jXavIAbQSROfC7n/Y1EVjwPWSgCQRwIfBPGrAhkg/zkr7hAzfPTPsxm0OMkHreU6qA
-         kliuz4jpsth1+gCh7Zt9Q2IkU/ROOANzumit5ge6nlRERr4XXJ4xj/BbB4twS65VX13c
-         GIZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ICbLP1MuSAXizuW0BgmIirtLum0JXKK9vWjz+u8oZdo=;
-        b=PYypYuJWCKSq2OdoNEH28GGKmViJ/4kMQ3XkTWO1bviRlwUsL/LxsVndEnoVRje/CV
-         HYL5MlcohBnz2UVSREbry2xRZNarNhZ5yfBRjtQhcODj6AwfojTP7/nOyVtRdkrQE1gq
-         zH4tF1ETGH75C1aPGTIfk6KISyJpEfygHn6nIv7rQJQ1DuqS9yyDf2+9HroUHo98kH0b
-         wi5nO5Eq4gvL0ZrPGcUITO/oMusR6KDn9EmDdsK1G8LUsdaG64k8CfFvAF1VF8nd2LxC
-         akDaYRDykdSKY2sFjWiSvllP0J0InbrYg/tr61Yo1f778iaLC2Y8eM23u+j1cjU51TNV
-         I4RQ==
-X-Gm-Message-State: APjAAAVgjDodSqf7cda2P2fOg/iOM/sr86IGQNXvmAsZaw5ikI+yT7vN
-        +W/tQwuCJZAOnwAVBpVyd3yOF4bE+ylZ
-X-Google-Smtp-Source: APXvYqxkbSI4OdH0HCiZGSHO70WvfkHJQsScIdXdfQYVec6YvlFgoRPmXOupJhaUo4uWiyhQe6Yd381CTDBd
-X-Received: by 2002:a65:528a:: with SMTP id y10mr12572307pgp.70.1570147968231;
- Thu, 03 Oct 2019 17:12:48 -0700 (PDT)
-Date:   Thu,  3 Oct 2019 17:12:43 -0700
-Message-Id: <20191004001243.140897-1-xueweiz@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-From:   Xuewei Zhang <xueweiz@google.com>
-To:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org, Xuewei Zhang <xueweiz@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Oct 2019 20:15:02 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4428 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732368AbfJDAPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 20:15:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 17:15:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,254,1566889200"; 
+   d="scan'208";a="191423701"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 17:15:00 -0700
+Date:   Thu, 3 Oct 2019 17:15:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v22 16/24] x86/vdso: Add support for exception fixup in
+ vDSO functions
+Message-ID: <20191004001459.GD14325@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-17-jarkko.sakkinen@linux.intel.com>
+ <20191002231804.GA14315@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002231804.GA14315@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-quota/period ratio is used to ensure a child task group won't get more
-bandwidth than the parent task group, and is calculated as:
-normalized_cfs_quota() = [(quota_us << 20) / period_us]
-
-If the quota/period ratio was changed during this scaling due to
-precision loss, it will cause inconsistency between parent and child
-task groups. See below example:
-A userspace container manager (kubelet) does three operations:
-1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-2) Create a few children cgroups.
-3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-
-These operations are expected to succeed. However, if the scaling of
-147/128 happens before step 3), quota and period of the parent cgroup
-will be changed:
-new_quota: 1148437ns, 1148us
-new_period: 11484375ns, 11484us
-
-And when step 3) comes in, the ratio of the child cgroup will be 104857,
-which will be larger than the parent cgroup ratio (104821), and will
-fail.
-
-Scaling them by a factor of 2 will fix the problem.
-
-Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-Signed-off-by: Xuewei Zhang <xueweiz@google.com>
----
- kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 83ab35e2374f..b3d3d0a231cd 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (++count > 3) {
- 			u64 new, old = ktime_to_ns(cfs_b->period);
- 
--			new = (old * 147) / 128; /* ~115% */
--			new = min(new, max_cfs_quota_period);
--
--			cfs_b->period = ns_to_ktime(new);
--
--			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
--			cfs_b->quota *= new;
--			cfs_b->quota = div64_u64(cfs_b->quota, old);
--
--			pr_warn_ratelimited(
--	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
--				smp_processor_id(),
--				div_u64(new, NSEC_PER_USEC),
--				div_u64(cfs_b->quota, NSEC_PER_USEC));
-+			/*
-+			 * Grow period by a factor of 2 to avoid lossing precision.
-+			 * Precision loss in the quota/period ratio can cause __cfs_schedulable
-+			 * to fail.
-+			 */
-+			new = old * 2;
-+			if (new < max_cfs_quota_period) {
-+				cfs_b->period = ns_to_ktime(new);
-+				cfs_b->quota *= 2;
-+
-+				pr_warn_ratelimited(
-+	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-+					smp_processor_id(),
-+					div_u64(new, NSEC_PER_USEC),
-+					div_u64(cfs_b->quota, NSEC_PER_USEC));
-+			} else {
-+				pr_warn_ratelimited(
-+	"cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-+					smp_processor_id(),
-+					div_u64(old, NSEC_PER_USEC),
-+					div_u64(cfs_b->quota, NSEC_PER_USEC));
-+			}
- 
- 			/* reset count so we don't come right back in here */
- 			count = 0;
--- 
-2.23.0.581.g78d2f28ef7-goog
-
+I'll tackle this tomorrow.  I've been working on the feature control MSR
+series and will get that sent out tomorrow as well.  I should also be able
+to get you the multi-page EADD patch.
