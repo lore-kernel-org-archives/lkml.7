@@ -2,149 +2,75 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FCBC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE12DC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29672133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EjXCs01N"
+	by mail.kernel.org (Postfix) with ESMTP id 875712133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388478AbfJDJ54 (ORCPT
+        id S1730434AbfJDJ73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:57:56 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:57234 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387423AbfJDJ5z (ORCPT
+        Fri, 4 Oct 2019 05:59:29 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59890 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJDJ73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:57:55 -0400
-Received: by mail-qt1-f202.google.com with SMTP id m6so5866609qtk.23
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 02:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=1/VpF4gesFXU4507UWxnVqQ50T2yMtX0vj1yZbNb6oQ=;
-        b=EjXCs01Nw9e85QbwhhT2J7CTEZu2WaD0wE4BqfUUDVzVWVU028VQ8BTERUBxKdYCud
-         MA243tqwxNN5ZMv+MijBP/HwGQn1TDDQR82nDKo0OxslMQ/vn9mde3VL2uRXgW2Qdo8D
-         vzdH7lDcznW/2FXUsmgMYlytbjNXeOSZrb6jAO6euFMwnM73Bwgq+upRy3G0qgF8yZCO
-         B+VHFwgykCM4yR1WymcI/HBJtLVJDtakY1wEi4K34lpkRnT1jgogUopWcBZitko8fIij
-         QuREfON3rxVDSqjhMQhBc8d/7Qdy4qH9pntPhSx2KfLkBbaJkODzpTLMq2iBs9NWO3qu
-         NHSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=1/VpF4gesFXU4507UWxnVqQ50T2yMtX0vj1yZbNb6oQ=;
-        b=oIT0rnGMv3Wb0k0OpoJRzG7xcEOEg9UdiyxWTBzE2cNYKq/jrZtTGZMY4FcFhIxtx9
-         HcgbGutUBTpsOcWysLUXv0rxkRsQwoIawrSrEbdrKfs3EYcMqjMI8fHe2C95apc5Sv5B
-         XuAW3D4hetxlpcwS8uL/zT1BKV33PZm4JZpY5kCN8h1KWf4Bd26WH+6kwU+iqP6JqWvw
-         g5U4mtxOV9J9+nQhk4i7t36xT8oo5jjyGQpbpS2URbbUyMpnStAmiEeXoWTxB4pQE2H9
-         v4Z8r6k3j7N4JlbpIoP16OsqlC5FvQMuwxx/tJ10EUY4YUY9+MwEeOoe87TB4EYgYOoL
-         ByDw==
-X-Gm-Message-State: APjAAAVO9laQOMXZgZjDFUBV3tH20kIcAsmgLm1L/zZG8CpjebCfk+cP
-        0678AViagFyGJgCtq1DM3MHCo35/9U/YDRkpkbUBBDalHv3Z00aA1UHrv3SMTKQCSrPbXShJ9es
-        FMHbe3s4UV2IskkKelEH949m+abiHziVMtGLdkOzdqJwXzL6AmM8acVpgBs1TusJK7snIBO4dQT
-        o=
-X-Google-Smtp-Source: APXvYqw/XciF/wt63YDVoL1Jtf61U+HYneFII6RukZGjq5FfUKVrdl8BiBFZBR4/xCnzvjveFzbrGC0YSkJ34g==
-X-Received: by 2002:a37:8f02:: with SMTP id r2mr9282685qkd.197.1570183073090;
- Fri, 04 Oct 2019 02:57:53 -0700 (PDT)
-Date:   Fri,  4 Oct 2019 10:57:48 +0100
-In-Reply-To: <20190917231031.81341-1-maennich@google.com>
-Message-Id: <20191004095748.223119-1-maennich@google.com>
-Mime-Version: 1.0
-References: <20190917231031.81341-1-maennich@google.com>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [PATCH] depmod: create and use System.map.no_namespaces
-From:   Matthias Maennich <maennich@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, maennich@google.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Martijn Coenen <maco@android.com>,
+        Fri, 4 Oct 2019 05:59:29 -0400
+Received: from 79.184.253.225.ipv4.supernova.orange.pl (79.184.253.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id d2f42940dd6adecb; Fri, 4 Oct 2019 11:59:26 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Tejun Heo <tj@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org
+Subject: Re: System hangs if NVMe/SSD is removed during suspend
+Date:   Fri, 04 Oct 2019 11:59:26 +0200
+Message-ID: <2367934.HCQFgJ56tP@kreacher>
+In-Reply-To: <20191004080340.GB2819@lahna.fi.intel.com>
+References: <20191002122136.GD2819@lahna.fi.intel.com> <20191003165033.GC3247445@devbig004.ftw2.facebook.com> <20191004080340.GB2819@lahna.fi.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-depmod in its current version is not aware of symbol namespace in
-ksymtab entries introduced with 8651ec01daed ("module: add support for
-symbol namespaces."). They have the form
+On Friday, October 4, 2019 10:03:40 AM CEST Mika Westerberg wrote:
+> On Thu, Oct 03, 2019 at 09:50:33AM -0700, Tejun Heo wrote:
+> > Hello, Mika.
+> > 
+> > On Wed, Oct 02, 2019 at 03:21:36PM +0300, Mika Westerberg wrote:
+> > > but from that discussion I don't see more generic solution to be
+> > > implemented.
+> > > 
+> > > Any ideas we should fix this properly?
+> > 
+> > Yeah, the only fix I can think of is not using freezable wq.  It's
+> > just not a good idea and not all that difficult to avoid using.
+> 
+> OK, thanks.
+> 
+> In that case I will just make a patch that removes WQ_FREEZABLE from
+> bdi_wq and see what people think about it :)
 
-  __ksymtab_NAMESPACE.symbol_name
+I guess that depends on why WQ_FREEZABLE was added to it in the first place. :-)
 
-A fix for kmod's depmod has been proposed [1]. In order to support older
-versions of depmod as well, create a System.map.no_namespaces during
-scripts/depmod.sh that has the pre-namespaces format. That way users do
-not immediately upgrade the userspace tool.
+The reason might be to avoid writes to persistent storage after creating an
+image during hibernation, since wqs remain frozen throughout the entire
+hibernation including the image saving phase.
 
-[1] https://lore.kernel.org/linux-modules/20191004094136.166621-1-maennich@google.com/
+Arguably, making the wq freezable is kind of a sledgehammer approach to that
+particular issue, but in principle it may prevent data corruption from
+occurring, so be careful there.
 
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Lucas De Marchi <lucas.de.marchi@gmail.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Martijn Coenen <maco@android.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-modules@vger.kernel.org
-Signed-off-by: Matthias Maennich <maennich@google.com>
----
 
-Please note this depends on the new ksymtab entry format proposed in
-https://lore.kernel.org/lkml/20191003075826.7478-2-yamada.masahiro@socionext.com/
-
-That is likely to be merged soon as well as it fixes problems in 5.4-rc*, hence
-this patch depends on it.
-
-Cheers,
-Matthias
-
- .gitignore        | 1 +
- scripts/depmod.sh | 8 +++++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/.gitignore b/.gitignore
-index 70580bdd352c..5ed58a7cb433 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -59,6 +59,7 @@ modules.order
- /vmlinux-gdb.py
- /vmlinuz
- /System.map
-+/System.map.no_namespaces
- /Module.markers
- /modules.builtin.modinfo
- 
-diff --git a/scripts/depmod.sh b/scripts/depmod.sh
-index e083bcae343f..602e1af072c7 100755
---- a/scripts/depmod.sh
-+++ b/scripts/depmod.sh
-@@ -39,7 +39,13 @@ if $depmod_hack_needed; then
- 	KERNELRELEASE=99.98.$KERNELRELEASE
- fi
- 
--set -- -ae -F System.map
-+# Older versions of depmod do not support symbol namespaces in ksymtab entries,
-+# hence create an alternative System.map with namespace patched out to use for
-+# depmod. I.e. transform entries as follows:
-+#    __ksymtab_NAMESPACE.symbol_name -> __ksymtab_symbol_name
-+sed 's/__ksymtab_.*\./__ksymtab_/' System.map > System.map.no_namespaces
-+
-+set -- -ae -F System.map.no_namespaces
- if test -n "$INSTALL_MOD_PATH"; then
- 	set -- "$@" -b "$INSTALL_MOD_PATH"
- fi
--- 
-2.23.0.581.g78d2f28ef7-goog
 
