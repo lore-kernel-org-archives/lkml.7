@@ -2,248 +2,125 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C81C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B363C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CDD20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217D3222C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iNoBCSQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388932AbfJDOFZ (ORCPT
+        id S2389007AbfJDOFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:05:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47413 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388657AbfJDOFY (ORCPT
+        Fri, 4 Oct 2019 10:05:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28648 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388149AbfJDOFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:05:24 -0400
-Received: from [213.220.153.21] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iGOCv-0002p9-PZ; Fri, 04 Oct 2019 14:05:21 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Varad Gautam <vrd@amazon.de>, stable@vger.kernel.org,
-        Jan Glauber <jglauber@marvell.com>
-Subject: [PATCH] devpts: Fix NULL pointer dereference in dcache_readdir()
-Date:   Fri,  4 Oct 2019 16:05:03 +0200
-Message-Id: <20191004140503.9817-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 4 Oct 2019 10:05:35 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94DphSn032172;
+        Fri, 4 Oct 2019 16:05:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
+ : from : message-id : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=+37tYreV7tZjGivq3lYs5eVtMuF7z9GI89L7hwCaTGg=;
+ b=iNoBCSQJEHje/AKpfU6DnVH4WWKPpMLuUGe+FMd39vrZpwjkqwwkNejC4Oid9Qrtxjaq
+ yu0omMn5fEoKMTDtmOupHUciiVQj8JjZPFGMlhv69BkyTrYKg1hwnwjeMTPche3a3TBp
+ 7+LLr7BnPXhX3L9hH4yUTndhi/mU/IfFq++ooPvI2rzxrwPmV2ryj1pn2qeNA5jN4+fT
+ OKD0wVZqEuRGOoyS0HlJcqlrj+ZwctTYFwLSRX5/TukG97SBhhdQr4Z5sKYkVAVgTnus
+ CUWbaZe7XOk80jsqqDzKAs974owrhRJvITHj86GuaePbnwrEMtaFLHC+Y9lFBV2SH+Qb 8w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w9wbd3b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 16:05:16 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50B7E10002A;
+        Fri,  4 Oct 2019 16:05:15 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2B7C32C6CED;
+        Fri,  4 Oct 2019 16:05:15 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 4 Oct
+ 2019 16:05:14 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: add focaltech touchscreen on
+ stm32mp157c-dk2 board
+To:     =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <1570195022-23327-1-git-send-email-yannick.fertre@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <c834748b-17f3-39ca-041b-1be86ad61d76@st.com>
+Date:   Fri, 4 Oct 2019 16:05:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1570195022-23327-1-git-send-email-yannick.fertre@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_07:2019-10-03,2019-10-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+Hi yannick
 
-Closing /dev/pts/ptmx removes the corresponding pty under /dev/pts/
-without synchronizing against concurrent path walkers. This can lead to
-'dcache_readdir()' tripping over a 'struct dentry' with a NULL 'd_inode'
-field:
+On 10/4/19 3:17 PM, Yannick Fertré wrote:
+> Enable focaltech ft6236 touchscreen on STM32MP157C-DK2 board.
+> 
+> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> index 20ea601..d44a7c6 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> @@ -61,6 +61,19 @@
+>   	};
+>   };
+>   
+> +&i2c1 {
+> +	touchscreen@38 {
+> +		compatible = "focaltech,ft6236";
+> +		reg = <0x38>;
+> +		interrupts = <2 2>;
+> +		interrupt-parent = <&gpiof>;
+> +		interrupt-controller;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		status = "okay";
+> +	};
+> +};
+> +
+>   &ltdc {
+>   	status = "okay";
+>   
+> 
 
-  | BUG: kernel NULL pointer dereference, address: 0000000000000000
-  | #PF: supervisor read access in kernel mode
-  | #PF: error_code(0x0000) - not-present page
-  | PGD 0 P4D 0
-  | SMP PTI
-  | CPU: 9 PID: 179 Comm: ptmx Not tainted 5.4.0-rc1+ #5
-  | RIP: 0010:dcache_readdir+0xe1/0x150
-  | Code: 48 83 f8 01 74 a2 48 83 f8 02 74 eb 4d 8d a7 90 00 00 00 45 31 f6 eb 42 48 8b 43 30 48 8b 4d 08 48 89 ef 8b 53 24 48 8b 73 28 <44> 0f b7 08 4c 8b 55 00 4c 8b 40 40 66 41 c1 e9 0c 41 83 e1 0f e8
-  | RSP: 0018:ffffa7df8044be58 EFLAGS: 00010286
-  | RAX: 0000000000000000 RBX: ffff9511c78f3ec0 RCX: 0000000000000002
-  | RDX: 0000000000000001 RSI: ffff9511c78f3ef8 RDI: ffffa7df8044bed0
-  | RBP: ffffa7df8044bed0 R08: 0000000000000000 R09: 00000000004bc478
-  | R10: ffff9511c877c6a8 R11: ffff9511c8dde600 R12: ffff9511c878c460
-  | R13: ffff9511c878c3c0 R14: 0000000000000000 R15: ffff9511c9442cc0
-  | FS:  00007fc5ea2e1700(0000) GS:ffff9511ca280000(0000) knlGS:0000000000000000
-  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  | CR2: 0000000000000000 CR3: 0000000047d68002 CR4: 0000000000760ea0
-  | DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  | DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  | PKRU: 55555554
-  | Call Trace:
-  |  iterate_dir+0x137/0x190
-  |  ksys_getdents64+0x97/0x130
-  |  ? iterate_dir+0x190/0x190
-  |  __x64_sys_getdents64+0x11/0x20
-  |  do_syscall_64+0x43/0x110
-  |  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+For the next time, please don't forget to add "PATCH-v2" as it is a 
+second version of this patch.
 
-In this case, one CPU is deleting the dentry and clearing the inode
-pointer via:
+Applied on stm32-next.
 
-	 devpts_pty_kill()
-		-> dput()
-			-> dentry_kill()
-				-> __dentry_kill()
-					-> dentry_unlink_inode()
-
-whilst the other is traversing the directory an obtaining a reference
-to the dentry being deleted via:
-
-	sys_getdents64()
-		-> iterate_dir()
-			-> dcache_readdir()
-				-> next_positive()
-
-Prevent the race by acquiring the inode lock of the parent in
-'devpts_pty_kill()' so that path walkers are held off until the dentry
-has been completely torn down.
-
-Will's fix didn't link to the commit it fixes so I tracked it down.
-devpts_pty_kill() used to take inode_lock() before removing a pts
-device. The inode_lock() got removed in
-8ead9dd54716 ("devpts: more pty driver interface cleanups"). The
-reasoning behind the removal seemed to be that the inode_lock() was only
-needed because d_find_alias(inode) had to be called before that commit
-to find the dentry that was supposed to be removed. Linus then changed
-the pty driver to stash away the dentry and subsequently got rid of the
-inode_lock(). However, it seems that the inode_lock() is needed to
-protect against the race outlined above. So add it back.
-
-Note that this bug had been brought up before in November 2018 before
-(cf. [1]). But a fix never got merged because a proper commit wasn't
-sent. The issue came back up when Will and I talked about it at Kernel
-Recipes in Paris. So here is a fix which prevents the issue. I very much
-vote we get this merged asap, since as an unprivileged user I can do:
-
-unshare -U --map-root --mount
-mount -t devpts devpts
-./<run_reproducer_below
-
-/* Reproducer */
-Note that the reproducer will take a little while. Will reported usually
-around 10s. For me it took a few minutes.
-
- #ifndef _GNU_SOURCE
- #define _GNU_SOURCE 1
- #endif
- #include <dirent.h>
- #include <errno.h>
- #include <fcntl.h>
- #include <pthread.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <unistd.h>
-
- static void *readdir_thread(void *arg)
- {
- 	DIR *d = arg;
- 	struct dirent *dent;
-
- 	for (;;) {
- 		errno = 0;
- 		dent = readdir(d);
- 		if (!dent) {
- 			if (errno)
- 				perror("readdir");
- 			break;
- 		}
- 		rewinddir(d);
- 	}
-
- 	return NULL;
- }
-
- int main(void)
- {
- 	DIR *d;
- 	pthread_t t;
- 	int ret = 0;
-
- 	d = opendir("/dev/pts");
- 	if (!d) {
- 		ret = errno;
- 		perror("opendir");
- 		exit(EXIT_FAILURE);
- 	}
-
- 	ret = pthread_create(&t, NULL, readdir_thread, d);
- 	if (ret) {
- 		errno = ret;
- 		perror("pthread_create");
- 		exit(EXIT_FAILURE);
- 	}
-
- 	for (;;) {
- 		int dfd;
- 		int fd;
-
- 		dfd = dirfd(d);
- 		if (dfd < 0) {
- 			perror("dirfd");
- 			break;
- 		}
-
- 		fd = openat(dirfd(d), "ptmx", O_RDONLY | O_NONBLOCK | O_CLOEXEC);
- 		if (fd < 0) {
- 			perror("openat");
- 			break;
- 		}
- 		close(fd);
- 	}
-
- 	pthread_join(t, NULL);
- 	closedir(d);
- 	exit(EXIT_SUCCESS);
- }
-
-/* References */
-[1]: https://lore.kernel.org/r/20181109143744.GA12128@hc
-
-Fixes: 8ead9dd54716 ("devpts: more pty driver interface cleanups")
-Cc: <stable@vger.kernel.org>
-Cc: Jan Glauber <jglauber@marvell.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
-[christian.brauner@ubuntu.com: dig into history and add context and reproducer to commit message]
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- fs/devpts/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
-index 42e5a766d33c..4b4546347aac 100644
---- a/fs/devpts/inode.c
-+++ b/fs/devpts/inode.c
-@@ -617,13 +617,18 @@ void *devpts_get_priv(struct dentry *dentry)
-  */
- void devpts_pty_kill(struct dentry *dentry)
- {
--	WARN_ON_ONCE(dentry->d_sb->s_magic != DEVPTS_SUPER_MAGIC);
-+	struct super_block *sb = dentry->d_sb;
-+	struct dentry *parent = sb->s_root;
- 
-+	WARN_ON_ONCE(sb->s_magic != DEVPTS_SUPER_MAGIC);
-+
-+	inode_lock(parent->d_inode);
- 	dentry->d_fsdata = NULL;
- 	drop_nlink(dentry->d_inode);
- 	fsnotify_unlink(d_inode(dentry->d_parent), dentry);
- 	d_drop(dentry);
- 	dput(dentry);	/* d_alloc_name() in devpts_pty_new() */
-+	inode_unlock(parent->d_inode);
- }
- 
- static int __init init_devpts_fs(void)
--- 
-2.23.0
-
+Thanks.
+Alex
