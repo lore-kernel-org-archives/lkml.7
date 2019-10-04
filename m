@@ -2,107 +2,66 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2197C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55ABC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F8321D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:17:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKzyOkdw"
+	by mail.kernel.org (Postfix) with ESMTP id C07BA21D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbfJDURA (ORCPT
+        id S1731410AbfJDUSX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 16:17:00 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38177 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfJDUQ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 16:16:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id u8so16270784iom.5;
-        Fri, 04 Oct 2019 13:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hT/oExY7ats1AqepuNnxgrg+W5xUde0ZFah/AwhjxeA=;
-        b=eKzyOkdwTVgDQ2K7yVdvbQpQ2Y5o9gQHjf1ZLs/0TtknuoSEf88gRE3B/VgSXRe2nM
-         MaPWiP+DFmtmMOa4V+/fIXuzmU7h0LfbH92QwqYCh6xpzlPF6Y4etarqtYGFwcN8YIFh
-         KTbhy9t0/3m87L4UKRDIPV+aiyoEDLA1YrY+pxytqsh/8wTp82JG4WTVt4pgwk2YsDFT
-         TYQK7y3xY2D8O2nwUROYE+zlwF6oua9EA/ixXRVx4CRlh/lRFc124Qw5TlMD2GZdMIPJ
-         3GHq32K5Z1F8XMQnUSU6+WxybmUN18B736DtQMDHjjnt70M8oCb/qgoMbH3Bx6xDBx4t
-         mwIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hT/oExY7ats1AqepuNnxgrg+W5xUde0ZFah/AwhjxeA=;
-        b=OCKRhcqw7kz4tZ/5U2VB84zj0RK/HtQHQ0/BUR0GLJMYOM7HJ1WBdSXnPtJs7UfIX1
-         +C4Eq7PaUUpYg+OTWL+BOB7HpPh2AWvmoN/pElS49IYwKCcF9gUb/yfz1ZPSZBZrILg5
-         pLgkiiBqoKOaUgVMzBGUs53mAhE7h0RuUDK3i3lptARoQDhVnRCk3HW6uz9G1pjCG6+m
-         nOC9rnGsphMQZ30AbdG6u8z1oVH+F63nWumldsiz4sNMs++qwDXS5a9ho2EjS9cZwCnL
-         c3V0vn5HgDqWWVwakE75xEnYAmApdEOC+BtAw6/zMFPMGWoDI98gN1u2ej7Ig6VZ3sDY
-         GmXA==
-X-Gm-Message-State: APjAAAUvXc/AEaa09LdQbBGOHXwA82YLzxvRaRqZB1BY9YQoSNU4yJRa
-        7zybbZ/DYfKfmszLK0NP4Vs=
-X-Google-Smtp-Source: APXvYqzNrXPxTps0mq67LtrgFhdE+kz3sXZyk7jqXZoSLFBjfwzONVFvHnNSmdK/pmDZR02HMuSgCw==
-X-Received: by 2002:a6b:6e02:: with SMTP id d2mr5637516ioh.8.1570220218662;
-        Fri, 04 Oct 2019 13:16:58 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id o5sm2830180ilc.68.2019.10.04.13.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 13:16:58 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
-Date:   Fri,  4 Oct 2019 15:16:48 -0500
-Message-Id: <20191004201649.25087-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 4 Oct 2019 16:18:23 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37538 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727978AbfJDUSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 16:18:22 -0400
+Received: from 94.112.246.102.static.b2b.upcbusiness.cz ([94.112.246.102] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iGU1o-0006Z3-VO; Fri, 04 Oct 2019 22:18:17 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Soeren Moch <smoch@web.de>
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: fix RockPro64 sdmmc =?UTF-8?B?c2V0dGluZ3PjgJDor7fms6jmhI/vvIzpgq7ku7bnlLFsaW51eC1yb2NrY2hpcC1ib3VuY2VzK3NoYXduLmxpbj1yb2NrLWNoaXBzLmNvbUBsaXN0cy5pbmZyYWRlYWQub3Jn5Luj5Y+R44CR?=
+Date:   Fri, 04 Oct 2019 22:18:16 +0200
+Message-ID: <2162187.GalWoky0CO@phil>
+In-Reply-To: <c180ec58-083b-5730-a188-58eb6100b7b6@web.de>
+References: <20191003215036.15023-1-smoch@web.de> <e4aaddc2-441b-b835-380e-374a3d935474@web.de> <c180ec58-083b-5730-a188-58eb6100b7b6@web.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
-released if mwifiex_map_pci_memory() fails. The release for skb and
-card->evtbd_ring_vbase is added.
+Hi Sören,
 
-Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Am Freitag, 4. Oktober 2019, 22:15:45 CEST schrieb Soeren Moch:
+> Heiko,
+> 
+> since you started to apply the first 2 Patches of this series (thanks
+> for that!), now after all the discussions here (and the heads-up for the
+> implemented mode detection) I think we should leave the vcc_sdio
+> regulator settings unmodified.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index eff06d59e9df..096334e941a1 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -687,8 +687,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
- 		skb_put(skb, MAX_EVENT_SIZE);
- 
- 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
--					   PCI_DMA_FROMDEVICE))
-+					   PCI_DMA_FROMDEVICE)) {
-+			kfree_skb(skb);
-+			kfree(card->evtbd_ring_vbase);
- 			return -1;
-+		}
- 
- 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
- 
--- 
-2.17.1
+I was composing a mail about me holding off on this patch due to the
+ongoing discussion when your mail came ;-)
+
+> It still could make sense to remove the cap-mmc-highspeed property. Are
+> you OK with a V2 patch for that?
+
+Sure, go ahead.
+
+Heiko
+
+
 
