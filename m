@@ -2,96 +2,126 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD470C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217AAC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC47021848
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B31215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570172721;
+	bh=EjRNR4eRniZcSYrm5e4VBrDZH9+iTf12cEb32bKYfqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bry7IQCLG7fZPFXPHGh68dKLO4N0muJWdXDXXlS3Lz8wrwnzl75ylHoA9LUWAv7iy
+	 vH1XaGTpKlEBbFMvKCbgsb3UOj1QWhnWg+Q+PLXb6lVox8BgOC/fl5YVmS82HSs5Oe
+	 yss4SjDejx5hn1NLDHcLv+BgCQKX9e4iZqSP7ONs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388523AbfJDHDK (ORCPT
+        id S2388169AbfJDHFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 03:03:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60386 "EHLO mx1.redhat.com"
+        Fri, 4 Oct 2019 03:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387420AbfJDHDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 03:03:09 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726523AbfJDHFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 03:05:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 781B920F0;
-        Fri,  4 Oct 2019 07:03:09 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F32B5D9DC;
-        Fri,  4 Oct 2019 07:03:03 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 09:03:01 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 05/10] KVM: arm64: Support stolen time reporting via
- shared structure
-Message-ID: <20191004070301.d7ari5rjlu3uuara@kamzik.brq.redhat.com>
-References: <20191002145037.51630-1-steven.price@arm.com>
- <20191002145037.51630-6-steven.price@arm.com>
- <20191003132235.ruanyfmdim5s6npj@kamzik.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 227882133F;
+        Fri,  4 Oct 2019 07:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570172718;
+        bh=EjRNR4eRniZcSYrm5e4VBrDZH9+iTf12cEb32bKYfqg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b6eJ2Wc4XpGdHfkBkVkiimZDdG2d3CVEPwSVgLHow7S4fB6vVxS84o2WN4uJY2qp3
+         QBX1xvBiuAiWgUufXuQImrUH09Segx6uAJ2PQUxmPmhrHJJOFSHmMiokZAE/Xft//H
+         DcySNG75Gwg5saGyEzZVuU5XqiVlxMMPQG9ATPB8=
+Date:   Fri, 4 Oct 2019 09:05:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Murali Nalajala <mnalajal@codeaurora.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] base: soc: Handle custom soc information sysfs entries
+Message-ID: <20191004070516.GA6371@kroah.com>
+References: <1570146710-13503-1-git-send-email-mnalajal@codeaurora.org>
+ <5d96daca.1c69fb81.fe5e4.e623@mx.google.com>
+ <20191004055057.GH63675@minitux>
+ <5d96e40a.1c69fb81.5a60f.fd3a@mx.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003132235.ruanyfmdim5s6npj@kamzik.brq.redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 04 Oct 2019 07:03:09 +0000 (UTC)
+In-Reply-To: <5d96e40a.1c69fb81.5a60f.fd3a@mx.google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 03:22:35PM +0200, Andrew Jones wrote:
-> On Wed, Oct 02, 2019 at 03:50:32PM +0100, Steven Price wrote:
-> > +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
-> > +{
-> > +	struct kvm *kvm = vcpu->kvm;
-> > +	u64 steal;
-> > +	u64 steal_le;
-> > +	u64 offset;
-> > +	int idx;
-> > +	u64 base = vcpu->arch.steal.base;
-> > +
-> > +	if (base == GPA_INVALID)
-> > +		return -ENOTSUPP;
-> > +
-> > +	/* Let's do the local bookkeeping */
-> > +	steal = vcpu->arch.steal.steal;
-> > +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
-> > +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
-> > +	vcpu->arch.steal.steal = steal;
-> > +
-> > +	steal_le = cpu_to_le64(steal);
+On Thu, Oct 03, 2019 at 11:17:45PM -0700, Stephen Boyd wrote:
+> Quoting Bjorn Andersson (2019-10-03 22:50:57)
+> > On Thu 03 Oct 22:38 PDT 2019, Stephen Boyd wrote:
+> > 
+> > > Quoting Murali Nalajala (2019-10-03 16:51:50)
+> > > > @@ -151,14 +156,16 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
+> > > >  
+> > > >         ret = device_register(&soc_dev->dev);
+> > > >         if (ret)
+> > > > -               goto out3;
+> > > > +               goto out4;
+> > > >  
+> > > >         return soc_dev;
+> > > >  
+> > > > -out3:
+> > > > +out4:
+> > > >         ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+> > > >         put_device(&soc_dev->dev);
+> > > >         soc_dev = NULL;
+> > > > +out3:
+> > > > +       kfree(soc_attr_groups);
+> > > 
+> > > This code is tricky. put_device(&soc_dev->dev) will call soc_release()
+> > > so we set soc_dev to NULL before calling kfree() on the error path. This
+> > > way we don't doubly free a pointer that the release function will take
+> > > care of. I wonder if the release function could free the ida as well,
+> > > and then we could just make the device_register() failure path call
+> > > put_device() and return ERR_PTR(ret) directly. Then the error path is
+> > > simpler because we can avoid changing two pointers to NULL to avoid the
+> > > double free twice. Or just inline the ida remove and put_device() call
+> > > in the if and then goto out1 to consolidate the error pointer
+> > > conversion.
+> > > 
+> > 
+> > But if we instead allocates the ida before the soc_dev, wouldn't the
+> > error path be something like?:
+> > 
+> > foo:
+> >         put_device(&soc_dev->dev);
+> > bar:
+> >         ida_simple_remove(&soc_ida, soc_num);
+> >         return err;
+> > 
+> > 
+> > I think we still need two exit paths from soc_device_register()
+> > regardless of moving the ida_simple_remove() into the release, but we
+> > could drop it from the unregister(). So not sure if this is cleaner...
+> > 
 > 
-> Agreeing on a byte order for this interface makes sense, but I don't see
-> it documented anywhere. Is this an SMCCC thing? Because I skimmed some
-> of those specs and other users too but didn't see anything obvious. Anyway
-> even if everybody but me knows that all data returned from SMCCC calls
-> should be LE, it might be nice to document that in the pvtime doc.
->
+> It doesn't seem "safe" to let the number be reused before the device is
+> destroyed by put_device(). It would be clearer to do all the cleanup
+> from the release function so that the soc_device_unregister() path isn't
+> racy with another device being registered and reusing the same ID.
+> 
+> Of course this probably doesn't matter because the race I'm talking
+> about is extremely unlikely given there's only ever one soc device.
+> Reordering the put and remove would be fine too.
 
-I have another [potentially dumb] SMCCC byte order question. If we need
-to worry about using LE for the members of this structure, then why don't
-we need to worry about the actual return values of the SMCCC calls? Like
-the IPA of the structure?
+As the number is "owned" by the device, yes, it should just be removed
+in the release function that frees the device memory, making this all
+much simpler overall.
 
-Thanks,
-drew
+thanks,
+
+greg k-h
