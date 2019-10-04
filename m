@@ -2,133 +2,135 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9506C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25821C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9184320700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3F720700
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:38:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FsAZndhB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qQon2e2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbfJDOhZ (ORCPT
+        id S2389184AbfJDOij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:37:25 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56226 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389154AbfJDOhX (ORCPT
+        Fri, 4 Oct 2019 10:38:39 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34386 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388724AbfJDOii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:37:23 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a6so6076243wma.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:37:21 -0700 (PDT)
+        Fri, 4 Oct 2019 10:38:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 3so8885473qta.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=M/bUMMwqhNt3Ns3PLD9fJksR9IwlrBLW7LrP5HWQF+c=;
-        b=FsAZndhBRWOshUk2HtpFWBNhf8XA3iFaT+XxTApJiTi4sWWDA8mEi4lEWRyTonYxLE
-         ZydU83dqlBb8DOGRZ22Vay1pRKjZ4Q54J3PwVxVrEm5b22dhcyv+niYmuPHtnpPA+gtF
-         Ne3c/iFvOSgGU4NrDjQM2qM4RqbJWDijBpfuM6Irnohrlp5mf+h6XHoAkq7RB/bH06jG
-         YVkfy/4F+0esR4D1tsBSWe3OI+GV/pvuOQf8JYjyDLCkrZqjuSQOqUCrqtbqS6hl29kf
-         IL35Xa2IkpfLN6XzneIEOQCivUmEthM3mZQ4KH2A9fJ7srdvawl557EFAr/n1HJRYmsD
-         NbRA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KaBcbsZKrfdWjmFP/gRXTF99ALN/AFLTaqqW3Y6Opp8=;
+        b=qQon2e2iI77vMjetm1uaf26z5GQ1Ipsrbnq0ZSdT8Vqc+zieAbPnBugAwgG0KTHfD/
+         74kzE2xPcLxXHx/PV784cqUiF7YqjYeMTv+/ubsDNPk1UGuW71MPX5iXj4ega+iRTrfX
+         PRL/dTJoMvhCRStdbh5BLjwkUe/CfjNRabos2EKhiXv42Ams9mu72qPjNtJPkBuxuImR
+         iNJ+uNIVCJmlAUBVN7arj39XW4lLjdJ7wEKDkK3NuJVDiXne0sIo/33JoPVVbaFnMpjy
+         Paw6RbNW60GWi3e5QKIrdgG+ki2vbdayHCJOdkWpVnZlx74vCE3OQhMqocPHz9CYZYYC
+         H6Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=M/bUMMwqhNt3Ns3PLD9fJksR9IwlrBLW7LrP5HWQF+c=;
-        b=fOW4brRiGVJ2e9dVb9ZRn6dBNkdmlJ5RLZqVBewgvEKQQcMcSgfoIc8vfkLc/TcfMy
-         +sQbGAneq3w93+IofrBwk6I3E9YlgO6nMBx+9dIfVCt5Afs3mFVLsPuXV9limRgvKSX7
-         VCPI0ReXRhYUa09aLhWyDaZPi1uAD6o7SyjkTAjgaukp6HWXcDap2DC+umVdLU+pLSQd
-         d4LGzDlmnlKwbe3vdI+mIWfp/F/47XrzGE7bk9fWLlTHffQcD+51/B8bpYL7498AnCEi
-         lwzXr5SbntFuJylXXRAxChhWdbQigR3SqXdPMb28FpltAx4jfwOWD0nCjro+pG8saa5U
-         zaDQ==
-X-Gm-Message-State: APjAAAV7vcOaHF83TrAaW5VL4T//TcJckT+6LOQkSXkL7ufpngnZ/P53
-        /U4rGZ9P5PIIyQM5KMTQNsjqYw==
-X-Google-Smtp-Source: APXvYqxHRyx7yuiTH9IFzXeP2ivnk2BBRSV88nnMFiXyc7Dc5BayI1lrnlB/z2mqvBmn5UbH1qOKKw==
-X-Received: by 2002:a1c:5942:: with SMTP id n63mr11413363wmb.65.1570199841070;
-        Fri, 04 Oct 2019 07:37:21 -0700 (PDT)
-Received: from dell ([2.27.167.122])
-        by smtp.gmail.com with ESMTPSA id u25sm5195823wml.4.2019.10.04.07.37.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 07:37:20 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 15:37:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>, kbuild-all@01.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-ID: <20191004143718.GM18429@dell>
-References: <20190923114636.6748-4-tbogendoerfer@suse.de>
- <201909232145.eyOJqt2k%lkp@intel.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KaBcbsZKrfdWjmFP/gRXTF99ALN/AFLTaqqW3Y6Opp8=;
+        b=RyQfFwR4Xkw2/P/blMgHNx6zTpMxTe3bFkuSfG/OO7nzf3bNcaMObbgi8MLi2Yl77+
+         4+mN8ORYh1vOq3MzrzQN9+DzIf631Rjib2WRrVMbPP1T/MJDpFd+4uUZNT4PYgNrqcWo
+         TrUBh+5YzSFSYu7NxELcc6BVlf1YrHVxQJMHUZvWrgK/b1MXMZ05B+PesJQv++QN/jcu
+         gO+xGcs0e/gLfLTLchSRTqv7xt5xR3rjGvPrmAt8PEvIgH5ehgQ45MribipOCpbswGSD
+         5P5XWACegxfMMRh7BRs7PKeqdMWMfeUvJ4OLmG83jx6rmEswvKwnlKyITIaEW9Yewog4
+         +puw==
+X-Gm-Message-State: APjAAAUEpXOaRXqj5uroePbW58uLuruZrJAYxDBF5lLcCZgTjh/JHx1X
+        syGhvksLZGKq/ninfOvUtnC+5Ztm
+X-Google-Smtp-Source: APXvYqzOvWbnCv2ms9URpH+bcwPLvqya/V2pECUq0buh6DpnmOtPGrwnc2vYy0Ua9hPxsjZj18sMGw==
+X-Received: by 2002:ad4:5604:: with SMTP id ca4mr2025146qvb.50.1570199917891;
+        Fri, 04 Oct 2019 07:38:37 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id c201sm3151327qke.128.2019.10.04.07.38.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 07:38:37 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7358B40DD3; Fri,  4 Oct 2019 11:38:35 -0300 (-03)
+Date:   Fri, 4 Oct 2019 11:38:35 -0300
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, will@kernel.org, mark.rutland@arm.com,
+        zhangshaokun@hisilicon.com
+Subject: Re: [PATCH 0/4] HiSilicon hip08 uncore PMU events additions
+Message-ID: <20191004143835.GB17687@kernel.org>
+References: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
+ <27e693fd-124e-1aa8-3b8a-62301a5a1d10@huawei.com>
+ <20191004143658.GA17687@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <201909232145.eyOJqt2k%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191004143658.GA17687@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019, kbuild test robot wrote:
+Em Fri, Oct 04, 2019 at 11:36:58AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Oct 04, 2019 at 03:30:07PM +0100, John Garry escreveu:
+> > On 04/09/2019 16:54, John Garry wrote:
+> > > This patchset adds some missing uncore PMU events for the hip08 arm64
+> > > platform.
+> > > 
+> > > The missing events were originally mentioned in
+> > > https://lkml.org/lkml/2019/6/14/645, when upstreaming the JSONs initially.
+> > > 
+> > > It also includes a fix for a DDRC eventname.
+> > 
+> > Hi guys,
+> > 
+> > Could I get these JSON updates picked up please? Maybe they were missed
+> > earlier. Let me know if I should re-post.
+> 
+> Looking at them now.
 
-> Hi Thomas,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on linus/master]
-> [cannot apply to v5.3 next-20190920]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Thomas-Bogendoerfer/Use-MFD-framework-for-SGI-IOC3-drivers/20190923-194903
-> config: mips-allmodconfig (attached as .config)
-> compiler: mips-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=mips 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers//mfd/ioc3.c: In function 'ioc3_eth_setup':
-> >> drivers//mfd/ioc3.c:281:54: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t {aka unsigned int}' [-Wformat=]
->        sizeof(ioc3_w1_platform_data.dev_id), "ioc3-%012llx",
->                                                    ~~~~~~^
->                                                    %012x
->        ipd->pdev->resource->start);
->        ~~~~~~~~~~~~~~~~~~~~~~~~~~                         
+It would be really good if somehow we managed to have someone from the
+ARM community to check and provide a Reviewed-by for those, i.e. someone
+else than the poster to look at it and check that its ok, would that be
+possible?
 
-I assume you plan on fixing this Thomas?
-
+- Arnaldo
+ 
+> - Arnaldo
+>  
+> > Thanks in advance,
+> > John
+> > 
+> > > 
+> > > John Garry (4):
+> > >   perf jevents: Fix Hisi hip08 DDRC PMU eventname
+> > >   perf jevents: Add some missing events for Hisi hip08 DDRC PMU
+> > >   perf jevents: Add some missing events for Hisi hip08 L3C PMU
+> > >   perf jevents: Add some missing events for Hisi hip08 HHA PMU
+> > > 
+> > >  .../arm64/hisilicon/hip08/uncore-ddrc.json    | 16 +++++-
+> > >  .../arm64/hisilicon/hip08/uncore-hha.json     | 23 +++++++-
+> > >  .../arm64/hisilicon/hip08/uncore-l3c.json     | 56 +++++++++++++++++++
+> > >  3 files changed, 93 insertions(+), 2 deletions(-)
+> > > 
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+- Arnaldo
