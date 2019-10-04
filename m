@@ -2,91 +2,88 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AB4C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9569B222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1497B222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d/kc/+0A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qbrJI1nS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbfJDWMb (ORCPT
+        id S1731525AbfJDWO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 18:12:31 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36826 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730367AbfJDWMa (ORCPT
+        Fri, 4 Oct 2019 18:14:28 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46826 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbfJDWO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:12:30 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x80so5507093lff.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:12:29 -0700 (PDT)
+        Fri, 4 Oct 2019 18:14:27 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so5456464lfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cPIZ+fnAlaRxQz6OBsn+7HePWQmLD0l/EqVuqSsBiGQ=;
-        b=d/kc/+0AAPxHyj4k4cAv6qruF/pAxg2HxprKzH0JR59Lx5sxBCBEC8rcJEu8sb67zz
-         uMohNjleIG119dLXR/yy589+cZcnQz+3hVsksxSlYtx9S4DNZNXXAfC1oebjlduvsXZq
-         grVEKCW17JrM9rgWTh9vwlSUpftMuTZLBZZQ3F/GKWAtf5hCpw0aymvKGn6HO1khtNS+
-         EfJ7vhCsCaFQUiJtsJBJ0nUQ55SmpX6bIpGRKgll4lUWxJYuejqcbrZNLP8BXj7784ao
-         KdJFvysBjaFAWIsofJIrgJfvekaXoAV8L9JeDcxLetjHkpi2vI5ys3disBPoP+ybTEFw
-         dfiw==
+        bh=S8mPVffMcLGte/wHbtTKmdFyoHNnsyDaHZetmGYETyI=;
+        b=qbrJI1nS7K2Rd321FJnk6g/mCczAUiwrknzRclj4Ij1aTcpmviFEYrfD0bKA/tr6F+
+         92kQ3oj4e6DANBZ1g4S+Z2SaNunY0/B0+WMh6sjxkeKvdI9ZL7BYHLqC+xf6ahRkbkHC
+         Y4kOqhN6PadJfxjDZY2BVnZSbJ6q8Zk5/1eDJZ60H8AvaTlzhRXkd6WBMfkyCJIZCF4I
+         sj0HLAoUoAmgwfy1odnZQalxEUZnfZUZotctVciJcG0IYdkDAAUUDVPPEA0+lVOqk08s
+         nHpbsoTlSwvca3bjTfZox6FD74uthGrjxcHRB9+ACZ7D6Re8IuqZy0lyim9cAug6FoMg
+         nZrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cPIZ+fnAlaRxQz6OBsn+7HePWQmLD0l/EqVuqSsBiGQ=;
-        b=rbPg5kGoEDeDp44rz4lw+MDyUu2CfXmTZXtx2HNbUTL3Cy72p2rU8jdB+lhJjdyO9Q
-         dLP8JY2jRbUC9Eius0BEA8/OmgxbfxBY8EVOLTaMDQoK6MRFHL4FtElg0HhKi2UyH2G/
-         Kdc+Novs+wM0hmpt/mG6Rs6oPDb2mv1fQyEyq1bX9p44rsju7CBhYbDpqik37rgaIy0w
-         dzTupZfeP0EV3yC/09B2AaUlocbFC4F5BeKF2D+hXMX23O609T3yLZ3EPNLWRt82UnUT
-         ErXiUJDoqCwdfDV+3gyCF04PX3EsP3MYbjx3kYrBbJ3lPM2vIfD8+fXUxIgMGh8+gK6L
-         hysA==
-X-Gm-Message-State: APjAAAW2nCvTA6gRxMSK87h+NtQ54WskPoxFKwJR629momiV4SLyufr4
-        MTSPKtj1+qmGOPqExGVgV3UJqO61dy4ttg56HawJtw==
-X-Google-Smtp-Source: APXvYqza0oEk98S7EffaHqeKg0F1DfdTRYKAD3oRj+0+f3G+JoJId+R/3P3jR0kEIrJu2sD12zU3NtPZzFtzmkJCAow=
-X-Received: by 2002:a05:6512:419:: with SMTP id u25mr9802400lfk.165.1570227148706;
- Fri, 04 Oct 2019 15:12:28 -0700 (PDT)
+        bh=S8mPVffMcLGte/wHbtTKmdFyoHNnsyDaHZetmGYETyI=;
+        b=Hf/bBW6ENba2/Ii3dNFm2onCRVxD4MBFZ4gsGf4+GPf28Rqa3SyV4fXwUO7Th23E9z
+         LJ9ykcEOtm91jGi4RclfVHettpvnIpnbf5155vRCODe7GoJUDmUGQAfuX1eBLz5+kN1o
+         AZ4uCaniYDTmC6gcweoSrFxffi2Sp1Tz3NVcr0o5XS4NRcsp0OxqSe/CY/sJbVsTGQF9
+         RrjK/wCR2e8vp7sbXuPkFSKfNOPcfeVh+GRqGOuRkvmlBWKpxSOGo++O8LKs+aRq1SME
+         4JYsoANCrv1hZQxTUUhdKakEr13LcVMsmTSRzIBCQTE6o52hJnbuoV7galOFShrVe7OS
+         ELJg==
+X-Gm-Message-State: APjAAAV9XoO+xgIpBBP0SRgox9nTyqtr68CYQU4pn7ydwHs0A+xkY1WG
+        DzxxdcucKBMbdM/58s+3lbL6ZZlKyOMQb6r7x3JE0w==
+X-Google-Smtp-Source: APXvYqw6p3u0Nbk4EtKVZWVGxvJpwkNNralIapsPdyvTLc9k8feinsifqMxclwSQkxsfBTi9SQax5JQ1oEWvQP3L9ng=
+X-Received: by 2002:a19:14f:: with SMTP id 76mr9883809lfb.92.1570227265893;
+ Fri, 04 Oct 2019 15:14:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002170249.17366-1-brgl@bgdev.pl>
-In-Reply-To: <20191002170249.17366-1-brgl@bgdev.pl>
+References: <20190926081426.GB2332@mwanda>
+In-Reply-To: <20190926081426.GB2332@mwanda>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Oct 2019 00:12:17 +0200
-Message-ID: <CACRpkdbUb-x1nSZS5f-jK5mtWKzODeihxxWxym3vc0UKiyQEcw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] gpio: replace nocache ioremap functions with devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alban Bedel <albeu@free.fr>,
+Date:   Sat, 5 Oct 2019 00:14:14 +0200
+Message-ID: <CACRpkdY6f5MX16cJL--D3O=_4us=vXEF6vWfRpd+ju8T_JsE0Q@mail.gmail.com>
+Subject: Re: [PATCH] ns2: Fix off by one bugs in ns2_pinmux_enable()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Ray Jui <rjui@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 7:02 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Sep 26, 2019 at 10:14 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 
-> This series converts all users of nocache ioremap variants that aren't
-> ia64-specific to using devm_platform_ioremap_resource().
-
-Do we have an ia64 gpio driver even?
-
-> Most of these don't call request_mem_region() currently, which
-> devm_platform_ioremap_resource() does implicitly, so testing would
-> be appreciated.
+> The pinctrl->functions[] array has pinctrl->num_functions elements and
+> the pinctrl->groups[] array is the same way.  These are set in
+> ns2_pinmux_probe().  So the > comparisons should be >= so that we don't
+> read one element beyond the end of the array.
 >
-> Included are two minor fixes for xgene and htc-egpio.
+> Fixes: b5aa1006e4a9 ("pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-All the patches:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied with Scott's ACK.
 
-Send me a pull request at your earliest convenience!
-
-Thanks,
+Yours,
 Linus Walleij
