@@ -2,95 +2,95 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24009C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D877C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20AD2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51F121D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AbAsisv3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iClBElnd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388450AbfJDR4h (ORCPT
+        id S2388272AbfJDSCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:56:37 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45652 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730116AbfJDR4h (ORCPT
+        Fri, 4 Oct 2019 14:02:25 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38555 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729291AbfJDSCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:56:37 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z67so6562432qkb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:56:36 -0700 (PDT)
+        Fri, 4 Oct 2019 14:02:24 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w8so3477444plq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3LFbYySXRieLEJyyVRoIwjcY2D+c5wrknoXBmUitFnw=;
-        b=AbAsisv3FHbRR0lsJYZ9oQG43Vu+7dGo274iB1Il7P+bxD8//2SZo4NQJKmvbyDONX
-         hLBljjQfUtX+VGpYJqlDB3qo/BFX8464PuxpPmPAC9Q5piAgoqhFHm8vXdYt29uOaq77
-         6ho4tyTYKnzYnzd0mmaWuu4iTQW+hYNOPdd0rYAeAEiu+i5EbFGnPIRfUCZKAt91GNl6
-         mHD4M9OjlZ2Mbno8eLQ5IjW3VTvWMCwwf/Cvt/s2NpQPjTS4I++SMU0qs4L49LgpcKFL
-         ieOXrSsOw5ba9ES2Ng2Ql8FcqLZgf3Gd/C6Z7TJ1TL7rM9VtS/ysFBRzU/cwrMXDhNzH
-         DMLQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Ql3anKlqLg5yve0WzNzTsdKXFFYYc4UNlV1/EYA3gp0=;
+        b=iClBElndd2SzblF0cS82SmIvLJioWTl5+Vthgw3JYiwkTwrOOHYh6jXgQag+vW+HMA
+         DNInR6Po+RGC7qI28kCUHIexnqXtjH1huvR0toNJn8wlxTm/Ty0leX+8frcQBjCdstOH
+         BhPf9RVfes0+8Le3uSQ3XAkfW7ZmGV3tIcEulfqcr/mh4iD4jxVy99Ywtps2Iu721rgk
+         crR5WAQ9GkKKr7Q+LY3njINIZxE0cf+md/+cOxMdXMnp+FK62hb9ydQnkhSZGfU4+BgR
+         vrN7+1XUBSVIvkSqMaKxxca4osPLzG56dAuCnJAemuILmJsn4/nfOpM81M/VI9b+tXYd
+         N4tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3LFbYySXRieLEJyyVRoIwjcY2D+c5wrknoXBmUitFnw=;
-        b=KYk063sLSO2TEoM17mNRVgWwkDM3Il0KfOTDjSW7rOw3rATYORRM4nH8kRHsb7owna
-         3SbZNgo2dKPCftfNdV2/ohg7SBs+s8kcYhRVXPgNcqF3rn8XPtUcGpqRLqAlej0nk9Rx
-         mydRXadt6qrkHeVQYocNTGrdnq9GNWRJyR+saUYpZrAZO+JL2qSv0JAcE2OIhWHHm9l7
-         1FLIsM6BO0z3ROkxHZ+GD+TIlh5wlbVzz+3YdjpBanPZwTBbQEJ8Vszl/h5vYH9wR8K8
-         s3d3xH5zZLduYS/56bLofXPKwPn/7V91nwMBUTcXrCAu1erCzuLvQ5Z2Q5ADP8GCMpd6
-         tGUg==
-X-Gm-Message-State: APjAAAXZ2FyFy5yyah1lGHA9y7sMfMDnHX6HWgXhfy+Qh0QvfTjLxxv7
-        Ne3t3UyAbiBcONww4cbU1MQeAw==
-X-Google-Smtp-Source: APXvYqzBwRVA8oi/0dMXCy0A3Xz41BH+1nImbdcYUmahvkitUo5BAxwOf1g89cv3b+k0ru5UIItkYg==
-X-Received: by 2002:a37:6650:: with SMTP id a77mr11503520qkc.65.1570211795959;
-        Fri, 04 Oct 2019 10:56:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id h68sm3223165qkd.35.2019.10.04.10.56.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 10:56:35 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iGRog-0006GM-Tq; Fri, 04 Oct 2019 14:56:34 -0300
-Date:   Fri, 4 Oct 2019 14:56:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
-        majd@mellanox.com, markz@mellanox.com, swise@opengridcomputing.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/core: Fix an error handling path in
- 'res_get_common_doit()'
-Message-ID: <20191004175634.GA24049@ziepe.ca>
-References: <20190818091044.8845-1-christophe.jaillet@wanadoo.fr>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Ql3anKlqLg5yve0WzNzTsdKXFFYYc4UNlV1/EYA3gp0=;
+        b=RxvvTVAD3VQO76qUqBxTS/sP81GG9TjAfKHo+w6q5QlQoYOJ0I0+6yMKv1lu+lwFlH
+         WB14/2SXANSzPExYCW8DC4pEysZoZP4wkV2LTNFLd28rM2EYNU1K/DwcPK00F5k0JgGF
+         19lUOUA8WVY3J64ZBFYM5XnPTKpwg7jKxtzASgp+gZurnmM0n12MtlY6J6CzXkHHESg1
+         CXxsRAQw8AYD1C6Wes5k3819JyKNfjQJYsd0Vv7LA8t/UaAekmOLLLYUq89ssQ2Fnhxj
+         nO87B3J5Dw5+1GAU0KaqD1QOZAuRXy4MoJXWpqJ1UmcN7ABpxNp3pS+NXoT57gyBbaTS
+         NMtQ==
+X-Gm-Message-State: APjAAAVwB6dboi8qE/ZvLQ8J8tERhOYdmB+8RBPag2/vNcLYcZ+wUq9L
+        rs3w9xdWovtFrQKumIwJp4wm7A==
+X-Google-Smtp-Source: APXvYqyms40qiYxx6LN6MlOpABvRYxDlldwai0uQqG3a1IT31g+KvEPc+zhndCaPWohkAcVAxh0SEQ==
+X-Received: by 2002:a17:902:b10d:: with SMTP id q13mr16693850plr.109.1570212143849;
+        Fri, 04 Oct 2019 11:02:23 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id v5sm8531431pfv.76.2019.10.04.11.02.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 11:02:23 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 11:02:22 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [rfc] mm, hugetlb: allow hugepage allocations to excessively
+ reclaim
+In-Reply-To: <20191004092808.GC9578@dhcp22.suse.cz>
+Message-ID: <alpine.DEB.2.21.1910041058330.16371@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com> <d7752ddf-ccdc-9ff4-ab9f-529c2cd7f041@suse.cz> <alpine.DEB.2.21.1910031243050.88296@chino.kir.corp.google.com> <20191004092808.GC9578@dhcp22.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190818091044.8845-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 18, 2019 at 11:10:44AM +0200, Christophe JAILLET wrote:
-> According to surrounding error paths, it is likely that 'goto err_get;' is
-> expected here. Otherwise, a call to 'rdma_restrack_put(res);' would be
-> missing.
-> 
-> Fixes: c5dfe0ea6ffa ("RDMA/nldev: Add resource tracker doit callback")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/infiniband/core/nldev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, 4 Oct 2019, Michal Hocko wrote:
 
-Applied to for-rc, thanks
+> Requesting the userspace to drop _all_ page cache in order allocate a
+> number of hugetlb pages or any other affected __GFP_RETRY_MAYFAIL
+> requests is simply not reasonable IMHO.
 
-Jason
+It can be used as a fallback when writing to nr_hugepages and the amount 
+allocated did not match expectation.  Again, I'll defer all of this to 
+Mike when he returns: he expressed his preference, I suggested an 
+alternative to consider, and he can make the decision to ack or nack this 
+patch because he has a better understanding of that expectation from users 
+who use hugetlb pages.
