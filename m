@@ -2,132 +2,119 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD39C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3968DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD6120873
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ICXJkKqz"
+	by mail.kernel.org (Postfix) with ESMTP id 1251620700
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388754AbfJDNp7 (ORCPT
+        id S2388780AbfJDNqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:45:59 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:36890 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388333AbfJDNp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:45:59 -0400
-Received: by mail-ua1-f65.google.com with SMTP id w7so2051781uag.4
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 06:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OtRvtwjGRbYCsw+7d1bhF8H4AB/aClk4LmqQQW6q0qg=;
-        b=ICXJkKqzB33AhHPs+SiVfyxcEzmKVXy/oHoYiHTsT120L3kRkyQFSb5X8KQV4+yb9i
-         cTMIASlltOZMk1DOLYLMhmFT1Y81FHsJU57dUaqp65zbBPq9kN90iVEceym588zPTeFz
-         kH398/qc9hF6jakYBk1NMR9R41MuGwH3DXZSZoPEfD6Q3zIHel7h1/jVfspcOEicjLOQ
-         eVNzFiVHxCMhgtMfXUGG02QAvOoRqyF6ySkmuRkUJx3dg+Fx9yjGKXytgL6QlQ2w1oHI
-         KC8NoZ9xpiZs9ftgI/nKG5W4gbbTPhmEtU9bjGhg/aTtan+xypipZkGcnCKQFUCeyG0z
-         9C0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OtRvtwjGRbYCsw+7d1bhF8H4AB/aClk4LmqQQW6q0qg=;
-        b=ImubemK8LWIaGjSNLl9HbxKqHzBRERqxKWFdEuZYBf5RgsQlmzeiCdsaXBQRQzUym8
-         bflyD/gGQEJ4/sy6gXbE1gL9/E0sDAmvFqF7GRviwywlY7In4AGCpTyC9iwrBtOm1mLS
-         iyhXajtITPH5hzKo/5Ly0JAOsLZdnIZySrikVN23BJZm0dbigyhzMyaRvdY10UXunfH+
-         57q0qzh1XQNMd+YsUIjSB2GqaRDBg5Pu4zm6eB4Elgwvzkb7RZdP979lKMsyTJjZRiai
-         QoRaHNgc+l5K4B7OwdzvQv3FEIw8OwU+awTC+0XewBPbN5BB20QRAY3RiZ5+ZkYRXpDA
-         M6fA==
-X-Gm-Message-State: APjAAAVcoLJscKAdet5McYw8BGsoULHKcZ/dvy2DK94RixMdcuKEyw1M
-        lo6lv1rtkSor52MoBud7V5/t6O9rGZPZu0do7n5aai8r5FA=
-X-Google-Smtp-Source: APXvYqxjF0CoPuCnxZytdFRri2vGndk6w36js/uFi10vdA/1zStGf7BrhD+CZCaBm8roV77/jNgn97xelmBnOweWlBQ=
-X-Received: by 2002:ab0:14c4:: with SMTP id f4mr7966949uae.46.1570196758080;
- Fri, 04 Oct 2019 06:45:58 -0700 (PDT)
+        Fri, 4 Oct 2019 09:46:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:45510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388333AbfJDNqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:46:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6845B15A1;
+        Fri,  4 Oct 2019 06:46:29 -0700 (PDT)
+Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E22F3F739;
+        Fri,  4 Oct 2019 06:46:28 -0700 (PDT)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Marc Dionne <marc.c.dionne@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] kmemleak: Do not corrupt the object_list during clean-up
+Date:   Fri,  4 Oct 2019 14:46:24 +0100
+Message-Id: <20191004134624.46216-1-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <CAKOZuesMoBj-APjCipJmWcAgSzkbD1mvyOp0UvHLnkwR-EU4Ww@mail.gmail.com>
- <1C584B5C-E04E-4B04-A3B5-4DC8E5E67366@lca.pw> <CAKOZuesKY_=qkSXfmDO_1ALaqQtU0kz5Z+fBh05c8BR7oCDxKw@mail.gmail.com>
- <20191004123349.GB10845@dhcp22.suse.cz> <20191004132624.ctaodxaxsd7wzwlh@box>
-In-Reply-To: <20191004132624.ctaodxaxsd7wzwlh@box>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 4 Oct 2019 06:45:21 -0700
-Message-ID: <CAKOZuesqgEBSNvpsdw1QhVvYBNBUjAL0pu1x_b-C5q22Z7BZ4g@mail.gmail.com>
-Subject: Re: [PATCH] Make SPLIT_RSS_COUNTING configurable
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        Tim Murray <timmurray@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 6:26 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> On Fri, Oct 04, 2019 at 02:33:49PM +0200, Michal Hocko wrote:
-> > On Wed 02-10-19 19:08:16, Daniel Colascione wrote:
-> > > On Wed, Oct 2, 2019 at 6:56 PM Qian Cai <cai@lca.pw> wrote:
-> > > > > On Oct 2, 2019, at 4:29 PM, Daniel Colascione <dancol@google.com> wrote:
-> > > > >
-> > > > > Adding the correct linux-mm address.
-> > > > >
-> > > > >
-> > > > >> +config SPLIT_RSS_COUNTING
-> > > > >> +       bool "Per-thread mm counter caching"
-> > > > >> +       depends on MMU
-> > > > >> +       default y if NR_CPUS >= SPLIT_PTLOCK_CPUS
-> > > > >> +       help
-> > > > >> +         Cache mm counter updates in thread structures and
-> > > > >> +         flush them to visible per-process statistics in batches.
-> > > > >> +         Say Y here to slightly reduce cache contention in processes
-> > > > >> +         with many threads at the expense of decreasing the accuracy
-> > > > >> +         of memory statistics in /proc.
-> > > > >> +
-> > > > >> endmenu
-> > > >
-> > > > All those vague words are going to make developers almost impossible to decide the right selection here. It sounds like we should kill SPLIT_RSS_COUNTING at all to simplify the code as the benefit is so small vs the side-effect?
-> > >
-> > > Killing SPLIT_RSS_COUNTING would be my first choice; IME, on mobile
-> > > and a basic desktop, it doesn't make a difference. I figured making it
-> > > a knob would help allay concerns about the performance impact in more
-> > > extreme configurations.
-> >
-> > I do agree with Qian. Either it is really helpful (is it? probably on
-> > the number of cpus) and it should be auto-enabled or it should be
-> > dropped altogether. You cannot really expect people know how to enable
-> > this without a deep understanding of the MM internals. Not to mention
-> > all those users using distro kernels/configs.
-> >
-> > A config option sounds like a bad way forward.
->
-> And I don't see much point anyway. Reading RSS counters from proc is
-> inherently racy. It can just either way after the read due to process
-> behaviour.
+In case of an error (e.g. memory pool too small), kmemleak disables
+itself and cleans up the already allocated metadata objects. However, if
+this happens early before the RCU callback mechanism is available,
+put_object() skips call_rcu() and frees the object directly. This is not
+safe with the RCU list traversal in __kmemleak_do_cleanup().
 
-Split RSS accounting doesn't make reading from mm counters racy. It
-makes these counters *wrong*. We flush task mm counters to the
-mm_struct once every 64 page faults that a task incurs or when that
-task exits. That means that if a thread takes 63 page faults and then
-sleeps for a week, that thread's process's mm counters are wrong by 63
-pages *for a week*. And some processes have a lot of threads,
-compounding the error. Split RSS accounting means that memory usage
-numbers don't add up. I don't think it's unreasonable to want a mode
-where memory counters to agree with other indicators of system
-activity.
+Change the list traversal in __kmemleak_do_cleanup() to
+list_for_each_entry_safe() and remove the rcu_read_{lock,unlock} since
+the kmemleak is already disabled at this point. In addition, avoid an
+unnecessary metadata object rb-tree look-up since it already has the
+struct kmemleak_object pointer.
 
-Nobody has demonstrated that split RSS accounting actually helps in
-the real world. But I've described above, concretely, how split RSS
-accounting hurts. I've been trying for over a year to either disable
-split RSS accounting or to let people opt out of it. If you won't
-remove split RSS accounting and you won't let me add a configuration
-knob that lets people opt out of it, what will you accept?
+Fixes: c5665868183f ("mm: kmemleak: use the memory pool for early allocations")
+Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reported-by: Marc Dionne <marc.c.dionne@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ mm/kmemleak.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 03a8d84badad..244607663363 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -526,6 +526,16 @@ static struct kmemleak_object *find_and_get_object(unsigned long ptr, int alias)
+ 	return object;
+ }
+ 
++/*
++ * Remove an object from the object_tree_root and object_list. Must be called
++ * with the kmemleak_lock held _if_ kmemleak is still enabled.
++ */
++static void __remove_object(struct kmemleak_object *object)
++{
++	rb_erase(&object->rb_node, &object_tree_root);
++	list_del_rcu(&object->object_list);
++}
++
+ /*
+  * Look up an object in the object search tree and remove it from both
+  * object_tree_root and object_list. The returned object's use_count should be
+@@ -538,10 +548,8 @@ static struct kmemleak_object *find_and_remove_object(unsigned long ptr, int ali
+ 
+ 	write_lock_irqsave(&kmemleak_lock, flags);
+ 	object = lookup_object(ptr, alias);
+-	if (object) {
+-		rb_erase(&object->rb_node, &object_tree_root);
+-		list_del_rcu(&object->object_list);
+-	}
++	if (object)
++		__remove_object(object);
+ 	write_unlock_irqrestore(&kmemleak_lock, flags);
+ 
+ 	return object;
+@@ -1834,12 +1842,16 @@ static const struct file_operations kmemleak_fops = {
+ 
+ static void __kmemleak_do_cleanup(void)
+ {
+-	struct kmemleak_object *object;
++	struct kmemleak_object *object, *tmp;
+ 
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(object, &object_list, object_list)
+-		delete_object_full(object->pointer);
+-	rcu_read_unlock();
++	/*
++	 * Kmemleak has already been disabled, no need for RCU list traversal
++	 * or kmemleak_lock held.
++	 */
++	list_for_each_entry_safe(object, tmp, &object_list, object_list) {
++		__remove_object(object);
++		__delete_object(object);
++	}
+ }
+ 
+ /*
