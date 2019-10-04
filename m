@@ -2,158 +2,105 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C10C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C118CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE85222CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F4E20862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fwAJsXkn"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="AM/+rTiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfJDRBw (ORCPT
+        id S2387497AbfJDRB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:01:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41680 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDRBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:01:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d16so9461236qtq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7/+diOvmD2cdT3EOqXHZRXZjOjtDcKS88F8U+M4R9pI=;
-        b=fwAJsXknm6WXNZb7ILUKHv/lvWGosru+D2yRsKId6aGGQj2BT8G+91PVInDIt6hoiq
-         Wm3LmIZmyCZuo/L1IBopcKOmJODXPtjRWvTgQH4DYnEa83qVU0m4oXi7FsRSqKz7NKAJ
-         JAz/VqX3RTW7fcgmBOXfPSq6jzeppu9N4JzlU2ui5BAaRjP/13xcrVM2z1YlQmqMWK/V
-         LAKPdMYcvsnjRfWdO0JVRXKpckxYeoOgrGwZDPBIKKhyIK+lUVavra53geh5FpSROaCi
-         gnN3Ibv3BWO1u8fAxn2EZzVOhXeNN5Rod7cqTGXzDWBBTA7prGz5b7nSDtO7rG0c6Gi5
-         9faw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7/+diOvmD2cdT3EOqXHZRXZjOjtDcKS88F8U+M4R9pI=;
-        b=nTh6oYObzQHtcrB4nX5rkP7Kij/+q+2vSf7Nr9/xql1Sh6CEFLhwHVmSaN+Tq13JgU
-         3wtZCtqNhKsa6+K3PefYCBM3Z1wdq8Ta1lkho+KfgxwCOtptilTupjuqMVjrzsP1ha8a
-         rBW7WVpnx0ulHA2b2UPXtNKSA/BnvwkwdGtpIaPuI27CroZ1iuP6E/HfCzLvqHju92eO
-         AEwsOsIK1QhQPV+AuI6NFIYuvSYR53BXoL5mMWf0sRXRVgZKEyKvPPsObtLcfeOySr6s
-         Hy9mGETAUToaSpalh06DfvDY+Oq74Nb6nBJYCdsBaTzMkv65RXczuq3thPST/RnZpVGT
-         io7Q==
-X-Gm-Message-State: APjAAAWcGQSUjSvSNeY3YWSldcJ2bHG9d3NKYjU6xsPoQAV3K7/OHKuM
-        mGa46XCew6iTlgglwiMPKRgs7keopNznsaJbrbvz8A==
-X-Google-Smtp-Source: APXvYqxPTZprTzOLyCwwk6HciZmAHGYj4T6b7zTKO6WENw+B47UDpBsBwx4EMhLAWA6k+CB0k30FLgcp1bYJtOpAq1w=
-X-Received: by 2002:ac8:76c6:: with SMTP id q6mr16725217qtr.158.1570208508546;
- Fri, 04 Oct 2019 10:01:48 -0700 (PDT)
+        Fri, 4 Oct 2019 13:01:56 -0400
+Received: from mout.gmx.net ([212.227.15.18]:53509 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfJDRB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 13:01:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570208501;
+        bh=rMXMlquVolHdzq3iMBKYhvNEjZXTAD9wUTb0Zleuwe4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=AM/+rTiHGXkxTHTXipWBFZehlfnX39NLfa93IG8q7gWiH2wZV2sltpdEBeTDZ9pEw
+         FqaQlhIFL25iREhQ9PpRH3Lyv/1yZSLjFLd1qIuarPPLha+18pC6uDT78CiLY7330w
+         iFi9FNh8sJuYHce6epCyPhJnjyf9Jp/kb9wUv3xw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzQkE-1huUBp0tnM-00vS1g; Fri, 04
+ Oct 2019 19:01:41 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: driver-api: pti_intel_mid: Enable syntax highlighting for C code block
+Date:   Fri,  4 Oct 2019 19:01:19 +0200
+Message-Id: <20191004170124.13543-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20191001211948.GA42035@google.com> <CANpmjNNp=zVzM2iGcQwVYxzNHYjBo==_2nito4Dw=kHopy=0Sg@mail.gmail.com>
- <20191004164859.GD253167@google.com> <CACT4Y+bPZOb=h9m__Uo0feEshdGzPz0qGK7f2omsUc6-kEvwZA@mail.gmail.com>
- <20191004165736.GF253167@google.com>
-In-Reply-To: <20191004165736.GF253167@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 4 Oct 2019 19:01:37 +0200
-Message-ID: <CACT4Y+aEHmbLin_5Od++WVqgiFX7hkjARGgVK0QUj7eUpFLVeg@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Marco Elver <elver@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Will Deacon <willdeacon@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gciz2EElTa6KfXaWKUA+P3Az3klSD2od1ANJqJFKJ8B3e0BMfkt
+ eKgd9hwRLo95M3C6jcfKjXn51vXguSDl40z44+7CUQ8lAjaGfGhePBTm+daNb52T/5xW6aC
+ FKLWaMEvHC1A0N5tDvWdTQB4229ZEwYDwNUupjdzcZtf8zsWpaHd1UvREMU93JZdx7IINRd
+ 5Q7HISLEB7lhFvNPkY/6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6+AqMcmrvRM=:IFG58wDC1/JOLCHxgF/HoV
+ 7olDa2e7dZQj13GaG8UJQ8oQhDUgEHLxVFvKMhZ8etpc1ZCFCZ3LwBaz9VWFkny5ifiAfjM21
+ dgs0tSfJ73oNR9rSs5mFd7zlLIBKZ8DEy7RI9oINHWOR4I+4HNMK6xNMrAWOXdxi4wEb0czwV
+ pKH3cTB1O4iixfh7xDUHEowk7WvejWlEtlq7U7b7APne3EF3irs3tG2xqpAl3cCGY+orMq8AG
+ 5+RVdL4BdFfEs7IjcgqOlgNUUMutoeeNgNq+5gaYxkIFWgZM/M/VmstxFNhNxBnSEsC4SGTfg
+ VyIt6h59xNPs/47x4DZba6CetV1t2uUhrrfs3GGndLIduHLrGeyNd3cggAW/hUpq/8bopooIc
+ bqMVwg+r3BNm92Yt9fozfUJyYJqByyfiWk2aye5BrsJoQ9SFwL5MYi+DV8qHTmb5CAXMrQCp6
+ zxweL6v3tmD8sODxpR0TJLjM0bGYB1VKzrR/qvNxFco7pADExCMbdpkz8ZBPV+Fzw0x//Shnq
+ JmLIfne+3WbzGAPmFKEfVXqNZZcvHUBbnCNNJQ2bk063V6V/sDhQDPjJCrbsl7NHYDtgJUVsC
+ ZtI9ImfaNIloUaWsYzzNjv8oHMEIJ5TWpiRsPWYlwinLwpEkrcd0vZWVm272H5wExK1RKq1BW
+ CjwMd9XRC31OFptIsHb+hz0vJAixj4jzRjmw2BfaaXagwsS/vI1boRa+j9a2gyW9A/1PLAGOz
+ BYcfXmsa2FNx+LOKKoR+t7Hy8Mu/cUxn2+K3jXLG71bR9Tw1KtUR17Dw5tGQ2EPyDOzd8wIZg
+ OX1+mYhxEnyjQQygDF0E1sJ6QBnwDzEmW+6tyRsGZJs8QOWONhYu4Zx7lWG9vbjTnrC/I2kUP
+ BxRzzToVf1Cr020k1tM0pNksk+OSGXiw8ZOwOlLvc8+NnmtgnNfy6f1vL0wTNlWOL6OJUSm1x
+ 2ygfX90XO93ipfch47KgNKb5IqCS4ReMeC2iJlv1mmKOPCTHnxVzlJtMEpt7jJTNyPIQ67RyI
+ eWuxdmoZQzxL0o7bBC2rkNndwJcBJk7kai/CQA9VUW8q/vXmunb0eXjE0L3eeDh3aprQwsuce
+ Wrz1u366cORLVn56S5LFf5IwezmryPT43rCggEjAmjvUoP3F4rP5HKsAbp+9+V5cYF2N6oeZN
+ 9vQeWk+516a3Qr8VNIu2fY0ATa0RaJjC1r8kXN+LcjhqG9StzBMn/+YR9uXqM1o5EiD6N8JKx
+ wnQvwnTlB8bezfU9rhXbINmM7UUIdmtFKgiqzEBrzwJs0PAVu7IhOJ1782dc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 6:57 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Fri, Oct 04, 2019 at 06:52:49PM +0200, Dmitry Vyukov wrote:
-> > On Fri, Oct 4, 2019 at 6:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > >
-> > > On Wed, Oct 02, 2019 at 09:51:58PM +0200, Marco Elver wrote:
-> > > > Hi Joel,
-> > > >
-> > > > On Tue, 1 Oct 2019 at 23:19, Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > >
-> > > > > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > > > > > Hi all,
-> > > > > >
-> > > > > > We would like to share a new data-race detector for the Linux kernel:
-> > > > > > Kernel Concurrency Sanitizer (KCSAN) --
-> > > > > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > > > > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> > > > > >
-> > > > > > To those of you who we mentioned at LPC that we're working on a
-> > > > > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > > > > > renamed it to KCSAN to avoid confusion with KTSAN).
-> > > > > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
-> > > > > >
-> > > > > > In the coming weeks we're planning to:
-> > > > > > * Set up a syzkaller instance.
-> > > > > > * Share the dashboard so that you can see the races that are found.
-> > > > > > * Attempt to send fixes for some races upstream (if you find that the
-> > > > > > kcsan-with-fixes branch contains an important fix, please feel free to
-> > > > > > point it out and we'll prioritize that).
-> > > > > >
-> > > > > > There are a few open questions:
-> > > > > > * The big one: most of the reported races are due to unmarked
-> > > > > > accesses; prioritization or pruning of races to focus initial efforts
-> > > > > > to fix races might be required. Comments on how best to proceed are
-> > > > > > welcome. We're aware that these are issues that have recently received
-> > > > > > attention in the context of the LKMM
-> > > > > > (https://lwn.net/Articles/793253/).
-> > > > > > * How/when to upstream KCSAN?
-> > > > >
-> > > > > Looks exciting. I think based on our discussion at LPC, you mentioned
-> > > > > one way of pruning is if the compiler generated different code with _ONCE
-> > > > > annotations than what would have otherwise been generated. Is that still on
-> > > > > the table, for the purposing of pruning the reports?
-> > > >
-> > > > This might be interesting at first, but it's not entirely clear how
-> > > > feasible it is. It's also dangerous, because the real issue would be
-> > > > ignored. It may be that one compiler version on a particular
-> > > > architecture generates the same code, but any change in compiler or
-> > > > architecture and this would no longer be true. Let me know if you have
-> > > > any more ideas.
-> > >
-> > > My thought was this technique of looking at compiler generated code can be
-> > > used for prioritization of the reports.  Have you tested it though? I think
-> > > without testing such technique, we could not know how much of benefit (or
-> > > lack thereof) there is to the issue.
-> > >
-> > > In fact, IIRC, the compiler generating different code with _ONCE annotation
-> > > can be given as justification for patches doing such conversions.
-> >
-> >
-> > We also should not forget about "missed mutex" races (e.g. unprotected
-> > radix tree), which are much worse and higher priority than a missed
-> > atomic annotation. If we look at codegen we may discard most of them
-> > as non important.
->
-> Sure. I was not asking to look at codegen as the only signal. But to use the
-> signal for whatever it is worth.
+This makes the code snippet more readable.
 
-But then we need other, stronger signals. We don't have any.
-So if the codegen is the only one and it says "this is not important",
-then we conclude "this is not important".
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/driver-api/pti_intel_mid.rst | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/driver-api/pti_intel_mid.rst b/Documentation/dr=
+iver-api/pti_intel_mid.rst
+index 20f1cff42d5f..bacc2a4ee89f 100644
+=2D-- a/Documentation/driver-api/pti_intel_mid.rst
++++ b/Documentation/driver-api/pti_intel_mid.rst
+@@ -49,7 +49,9 @@ but is not just blindly executing as 'root'. Keep in min=
+d
+ the use of ioctl(,TIOCSETD,) is not specific to the n_tracerouter
+ and n_tracesink line discpline drivers but is a generic
+ operation for a program to use a line discpline driver
+-on a tty port other than the default n_tty::
++on a tty port other than the default n_tty:
++
++.. code-block:: c
+
+   /////////// To hook up n_tracerouter and n_tracesink /////////
+
+=2D-
+2.20.1
+
