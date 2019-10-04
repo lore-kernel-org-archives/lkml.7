@@ -2,190 +2,91 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E169C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AB4C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DEA21D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9569B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="W/qOGGD7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d/kc/+0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbfJDWLS (ORCPT
+        id S1731624AbfJDWMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 18:11:18 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:64852 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731593AbfJDWLR (ORCPT
+        Fri, 4 Oct 2019 18:12:31 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36826 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730367AbfJDWMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:11:17 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x94M92mM024853
-        for <linux-kernel@vger.kernel.org>; Fri, 4 Oct 2019 15:11:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=xKwMmV5/lRZ5KOHFX9m6ZN94W9gYSkTsv8TGeCtH98A=;
- b=W/qOGGD7uKt5aA6bFogb3ZYuR04+jvI5XkukXG/hnsmGzKcpgKdOLKxZ1L+U2b1ELNDu
- RqoXJBbfbdBhsTR0ieHdUIdn/K0SHAvJcWBGqpNK2mkeatWf9V97FzE6BuhcW6i0kCnI
- CzdslRNn2Ph4HRUa57nDbADChKbbkg2cRVY= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2ve1ud3d55-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:11:14 -0700
-Received: from 2401:db00:30:6012:face:0:17:0 (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 4 Oct 2019 15:11:09 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 5E25F1841D558; Fri,  4 Oct 2019 15:11:07 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        <tj@kernel.org>, Jan Kara <jack@suse.cz>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] cgroup, blkcg: prevent dirty inodes to pin dying memory cgroups
-Date:   Fri, 4 Oct 2019 15:11:04 -0700
-Message-ID: <20191004221104.646711-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Fri, 4 Oct 2019 18:12:30 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x80so5507093lff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cPIZ+fnAlaRxQz6OBsn+7HePWQmLD0l/EqVuqSsBiGQ=;
+        b=d/kc/+0AAPxHyj4k4cAv6qruF/pAxg2HxprKzH0JR59Lx5sxBCBEC8rcJEu8sb67zz
+         uMohNjleIG119dLXR/yy589+cZcnQz+3hVsksxSlYtx9S4DNZNXXAfC1oebjlduvsXZq
+         grVEKCW17JrM9rgWTh9vwlSUpftMuTZLBZZQ3F/GKWAtf5hCpw0aymvKGn6HO1khtNS+
+         EfJ7vhCsCaFQUiJtsJBJ0nUQ55SmpX6bIpGRKgll4lUWxJYuejqcbrZNLP8BXj7784ao
+         KdJFvysBjaFAWIsofJIrgJfvekaXoAV8L9JeDcxLetjHkpi2vI5ys3disBPoP+ybTEFw
+         dfiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cPIZ+fnAlaRxQz6OBsn+7HePWQmLD0l/EqVuqSsBiGQ=;
+        b=rbPg5kGoEDeDp44rz4lw+MDyUu2CfXmTZXtx2HNbUTL3Cy72p2rU8jdB+lhJjdyO9Q
+         dLP8JY2jRbUC9Eius0BEA8/OmgxbfxBY8EVOLTaMDQoK6MRFHL4FtElg0HhKi2UyH2G/
+         Kdc+Novs+wM0hmpt/mG6Rs6oPDb2mv1fQyEyq1bX9p44rsju7CBhYbDpqik37rgaIy0w
+         dzTupZfeP0EV3yC/09B2AaUlocbFC4F5BeKF2D+hXMX23O609T3yLZ3EPNLWRt82UnUT
+         ErXiUJDoqCwdfDV+3gyCF04PX3EsP3MYbjx3kYrBbJ3lPM2vIfD8+fXUxIgMGh8+gK6L
+         hysA==
+X-Gm-Message-State: APjAAAW2nCvTA6gRxMSK87h+NtQ54WskPoxFKwJR629momiV4SLyufr4
+        MTSPKtj1+qmGOPqExGVgV3UJqO61dy4ttg56HawJtw==
+X-Google-Smtp-Source: APXvYqza0oEk98S7EffaHqeKg0F1DfdTRYKAD3oRj+0+f3G+JoJId+R/3P3jR0kEIrJu2sD12zU3NtPZzFtzmkJCAow=
+X-Received: by 2002:a05:6512:419:: with SMTP id u25mr9802400lfk.165.1570227148706;
+ Fri, 04 Oct 2019 15:12:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-04_13:2019-10-03,2019-10-04 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- mlxlogscore=761 clxscore=1015 impostorscore=0 suspectscore=2
- priorityscore=1501 spamscore=0 bulkscore=0 adultscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910040185
-X-FB-Internal: deliver
+References: <20191002170249.17366-1-brgl@bgdev.pl>
+In-Reply-To: <20191002170249.17366-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 5 Oct 2019 00:12:17 +0200
+Message-ID: <CACRpkdbUb-x1nSZS5f-jK5mtWKzODeihxxWxym3vc0UKiyQEcw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] gpio: replace nocache ioremap functions with devm_platform_ioremap_resource()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alban Bedel <albeu@free.fr>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a RFC patch, which is not intended to be merged as is,
-but hopefully will start a discussion which can result in a good
-solution for the described problem.
+On Wed, Oct 2, 2019 at 7:02 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
---
+> This series converts all users of nocache ioremap variants that aren't
+> ia64-specific to using devm_platform_ioremap_resource().
 
-We've noticed that the number of dying cgroups on our production hosts
-tends to grow with the uptime. This time it's caused by the writeback
-code.
+Do we have an ia64 gpio driver even?
 
-An inode which is getting dirty for the first time is associated
-with the wb structure (look at __inode_attach_wb()). It can later
-be switched to another wb under some conditions (e.g. some other
-cgroup is writing a lot of data to the same inode), but generally
-stays associated up to the end of life of the inode structure.
+> Most of these don't call request_mem_region() currently, which
+> devm_platform_ioremap_resource() does implicitly, so testing would
+> be appreciated.
+>
+> Included are two minor fixes for xgene and htc-egpio.
 
-The problem is that the wb structure holds a reference to the original
-memory cgroup. So if the inode was dirty once, it has a good chance
-to pin down the original memory cgroup.
+All the patches:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-An example from the real life: some service runs periodically and
-updates rpm packages. Each time in a new memory cgroup. Installed
-.so files are heavily used by other cgroups, so corresponding inodes
-tend to stay alive for a long. So do pinned memory cgroups.
-In production I've seen many hosts with 1-2 thousands of dying
-cgroups.
+Send me a pull request at your earliest convenience!
 
-This is not the first problem with the dying memory cgroups. As
-always, the problem is with their relative size: memory cgroups
-are large objects, easily 100x-1000x larger that inodes. So keeping
-a couple of thousands of dying cgroups in memory without a good reason
-(what we easily do with inodes) is quite costly (and is measured
-in tens and hundreds of Mb).
-
-One possible approach to this problem is to switch inodes associated
-with dying wbs to the root wb. Switching is a best effort operation
-which can fail silently, so unfortunately we can't run once over a
-list of associated inodes (even if we'd have such a list). So we
-really have to scan all inodes.
-
-In the proposed patch I schedule a work on each memory cgroup
-deletion, which is probably too often. Alternatively, we can do it
-periodically under some conditions (e.g. the number of dying memory
-cgroups is larger than X). So it's basically a gc run.
-
-I wonder if there are any better ideas?
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- fs/fs-writeback.c | 29 +++++++++++++++++++++++++++++
- mm/memcontrol.c   |  5 +++++
- 2 files changed, 34 insertions(+)
-
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 542b02d170f8..4bbc9a200b2c 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -545,6 +545,35 @@ static void inode_switch_wbs(struct inode *inode, int new_wb_id)
- 	up_read(&bdi->wb_switch_rwsem);
- }
- 
-+static void reparent_dirty_inodes_one_sb(struct super_block *sb, void *arg)
-+{
-+	struct inode *inode, *next;
-+
-+	spin_lock(&sb->s_inode_list_lock);
-+	list_for_each_entry_safe(inode, next, &sb->s_inodes, i_sb_list) {
-+		spin_lock(&inode->i_lock);
-+		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
-+			spin_unlock(&inode->i_lock);
-+			continue;
-+		}
-+
-+		if (inode->i_wb && wb_dying(inode->i_wb)) {
-+			spin_unlock(&inode->i_lock);
-+			inode_switch_wbs(inode, root_mem_cgroup->css.id);
-+			continue;
-+		}
-+
-+		spin_unlock(&inode->i_lock);
-+	}
-+	spin_unlock(&sb->s_inode_list_lock);
-+
-+}
-+
-+void reparent_dirty_inodes(struct work_struct *work)
-+{
-+	iterate_supers(reparent_dirty_inodes_one_sb, NULL);
-+}
-+
- /**
-  * wbc_attach_and_unlock_inode - associate wbc with target inode and unlock it
-  * @wbc: writeback_control of interest
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 9ec5e12486a7..ea8bc8d1403b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4911,6 +4911,9 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
- 	return 0;
- }
- 
-+extern void reparent_dirty_inodes(struct work_struct *w);
-+static DECLARE_WORK(dirty_work, reparent_dirty_inodes);
-+
- static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-@@ -4934,6 +4937,8 @@ static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
- 	memcg_offline_kmem(memcg);
- 	wb_memcg_offline(memcg);
- 
-+	schedule_work(&dirty_work);
-+
- 	drain_all_stock(memcg);
- 
- 	mem_cgroup_id_put(memcg);
--- 
-2.21.0
-
+Thanks,
+Linus Walleij
