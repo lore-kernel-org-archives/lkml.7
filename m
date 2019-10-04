@@ -2,233 +2,106 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D1C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E6CC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D4D215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570166709;
-	bh=6FUTl2wd4LpbSLZQyMIKxmp2L+pBEdUGKIyHdoMmuAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M+YZPKs6ZpZ7VvB9B0Fi53gRAIuZ8QgRM7l4A48cYfzCSQNS3WWfsDwxb4mK7d5kU
-	 uZHlPRtIaIohZomyx0dRhkeE8BJ6dy7xJTBbqKWfodEGpPZlTtL8MU/Vt8kK+RQQkD
-	 cnh37ioWnD7fSB9gGAavJghVUXRQY0jgViM5quIA=
+	by mail.kernel.org (Postfix) with ESMTP id 78D732133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:38:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O9PJIu0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbfJDFZJ (ORCPT
+        id S1731372AbfJDFiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 01:25:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbfJDFZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 01:25:08 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990B720862;
-        Fri,  4 Oct 2019 05:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570166706;
-        bh=6FUTl2wd4LpbSLZQyMIKxmp2L+pBEdUGKIyHdoMmuAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JcaMrWxm5pYNFNB6tEBZh6bqrjnQZwzDT5iWbTJfEZRQjuu1AxYusnOUmtBKxjzrW
-         JyfRep6vnV1m8L78X4xrNATaXv7a/xcNNdtu32s3djvm3xrkVsuqT0EDFi8T3hNMbI
-         xw73rIG/L65LrP/jHzy2SbxcOO/hYV6wTyOtg9d0=
-Date:   Thu, 3 Oct 2019 22:25:05 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     syzbot <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com>,
-        davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
-        linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Yasevich <vyasevich@gmail.com>
-Subject: Re: memory leak in sctp_get_port_local (2)
-Message-ID: <20191004052505.GS667@sol.localdomain>
-Mail-Followup-To: Xin Long <lucien.xin@gmail.com>,
-        syzbot <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com>,
-        davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
-        linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Yasevich <vyasevich@gmail.com>
-References: <000000000000f93dd2058f9c4873@google.com>
- <CADvbK_dqTGZKWNmapcbyYVfLjuwzjSaqs0PHv687AjAvtPo3Zw@mail.gmail.com>
+        Fri, 4 Oct 2019 01:38:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42868 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730408AbfJDFiU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 01:38:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z12so3087624pgp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 22:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=SQfRKBgFCS7Kr+5S+BnplfeUt3NczTKM6BoWv0zOCcI=;
+        b=O9PJIu0GICr7g7nea8KAKuJrmqEE17mZUBrdxBF8OJO2BKa3wTGDLRui9pr8RcSIks
+         HE1Hh5HPbPxvISJcEvGh6WrG9I0RYsNBa1ExeclxjzokVpuzzkIoAjOaQ1zimnuI61eh
+         3SmGZvEeeTeINWh7Wb52qDupyKkBWLdnxgutE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=SQfRKBgFCS7Kr+5S+BnplfeUt3NczTKM6BoWv0zOCcI=;
+        b=dKwKW4DxHr9fkvzpu6bxOyIKFHMVdlJ9McOW7sSeLEZYT0RBe99gvEyBt/z8dPcb7/
+         Xp3bxGJuNz2BCYO+QLP+cfoIoyCLx184glbk8VTlmuDktQsxHBo3quqHlU8ODtf9QQyX
+         G7ZwywiVT9zoZgTRVHXLcQYGQ7aGRnoq3kyVi+V5uD2zTDvKC7pvssxh+0SuBeYaa9jN
+         ITBkEsChRoSPZmUhjDNfSm1WduHJJD1iA4pollSh0h7GeyQfRdDfqSBxEqw03kXMf+F9
+         FqRL5NDaEVWf3Zw7zOKotcy0rlHDOIEO5RQu7AGiPrbrI7joGVL7qqR2kJ932GfvHekU
+         FIig==
+X-Gm-Message-State: APjAAAXapP+Mr3xDBhBLNDvjXuVEsxySFRbEAtWKh8YYuesOxPL//xSz
+        PjqvHOGUm9LMbV5sIvD+JerEiQ==
+X-Google-Smtp-Source: APXvYqy6BwElSHd5ZVhMCLTrRU1VdGZdH6l+QcctDAUDE3FsXUNCPW3wO1iPMNQXVDf1sd8qpCPHkg==
+X-Received: by 2002:aa7:81cb:: with SMTP id c11mr15100061pfn.251.1570167499217;
+        Thu, 03 Oct 2019 22:38:19 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g6sm4250083pgk.64.2019.10.03.22.38.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 22:38:18 -0700 (PDT)
+Message-ID: <5d96daca.1c69fb81.fe5e4.e623@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADvbK_dqTGZKWNmapcbyYVfLjuwzjSaqs0PHv687AjAvtPo3Zw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1570146710-13503-1-git-send-email-mnalajal@codeaurora.org>
+References: <1570146710-13503-1-git-send-email-mnalajal@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Murali Nalajala <mnalajal@codeaurora.org>,
+        gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     mnalajal@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: Re: [PATCH v1] base: soc: Handle custom soc information sysfs entries
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 22:38:17 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:33:11PM +0800, Xin Long wrote:
-> On Thu, Aug 8, 2019 at 11:01 PM syzbot
-> <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    0eb0ce0a Merge tag 'spi-fix-v5.3-rc3' of git://git.kernel...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1234588c600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=39113f5c48aea971
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=2d7ecdf99f15689032b3
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160e1906600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140ab906600000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com
-> >
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> > BUG: memory leak
-> > unreferenced object 0xffff88810fa4b380 (size 64):
-> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 16.560s)
-> >    hex dump (first 32 bytes):
-> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-> >    backtrace:
-> >      [<00000000f1461735>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:43 [inline]
-> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
-> > net/sctp/socket.c:8121
-> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
-> > arch/x86/entry/common.c:296
-> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > BUG: memory leak
-> > unreferenced object 0xffff88810fa4b380 (size 64):
-> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 19.260s)
-> >    hex dump (first 32 bytes):
-> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-> >    backtrace:
-> >      [<00000000f1461735>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:43 [inline]
-> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
-> > net/sctp/socket.c:8121
-> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
-> > arch/x86/entry/common.c:296
-> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > BUG: memory leak
-> > unreferenced object 0xffff88810fa4b380 (size 64):
-> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 21.990s)
-> >    hex dump (first 32 bytes):
-> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-> >    backtrace:
-> >      [<00000000f1461735>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:43 [inline]
-> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
-> > net/sctp/socket.c:8121
-> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
-> > arch/x86/entry/common.c:296
-> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > BUG: memory leak
-> > unreferenced object 0xffff88810fa4b380 (size 64):
-> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 22.940s)
-> >    hex dump (first 32 bytes):
-> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-> >    backtrace:
-> >      [<00000000f1461735>] kmemleak_alloc_recursive
-> > include/linux/kmemleak.h:43 [inline]
-> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
-> > net/sctp/socket.c:8121
-> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
-> > arch/x86/entry/common.c:296
-> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > executing program
-> > executing program
-> > executing program
-> > executing program
-> should be fixed by:
-> commit 9b6c08878e23adb7cc84bdca94d8a944b03f099e
-> Author: Xin Long <lucien.xin@gmail.com>
-> Date:   Wed Jun 26 16:31:39 2019 +0800
-> 
->     sctp: not bind the socket in sctp_connect
-> 
-> was this commit included in the testing kernel?
-> 
-> >
-> >
-> > ---
+Quoting Murali Nalajala (2019-10-03 16:51:50)
+> @@ -151,14 +156,16 @@ struct soc_device *soc_device_register(struct soc_d=
+evice_attribute *soc_dev_attr
+> =20
+>         ret =3D device_register(&soc_dev->dev);
+>         if (ret)
+> -               goto out3;
+> +               goto out4;
+> =20
+>         return soc_dev;
+> =20
+> -out3:
+> +out4:
+>         ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+>         put_device(&soc_dev->dev);
+>         soc_dev =3D NULL;
+> +out3:
+> +       kfree(soc_attr_groups);
 
-I'm marking this fixed by commit 29b99f54a8e6:
+This code is tricky. put_device(&soc_dev->dev) will call soc_release()
+so we set soc_dev to NULL before calling kfree() on the error path. This
+way we don't doubly free a pointer that the release function will take
+care of. I wonder if the release function could free the ida as well,
+and then we could just make the device_register() failure path call
+put_device() and return ERR_PTR(ret) directly. Then the error path is
+simpler because we can avoid changing two pointers to NULL to avoid the
+double free twice. Or just inline the ida remove and put_device() call
+in the if and then goto out1 to consolidate the error pointer
+conversion.
 
-#syz fix: sctp: destroy bucket if failed to bind addr
-
-... as it fixed a memory leak of this same data structure.
-
-However, syzbot is still hitting this in a different way, so it will get
-reported again.  If anyone wants to fix it before then, see the C reproducer
-here: https://syzkaller.appspot.com/text?tag=ReproC&x=156ab7f3600000
-It's from the "2019/10/03 02:51" crash listed at
-https://syzkaller.appspot.com/bug?id=2d2cb27d3b4e4db041c252f09c492868885e5607
-
-- Eric
+>  out2:
+>         kfree(soc_dev);
+>  out1:
