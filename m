@@ -2,115 +2,154 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE20C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A28C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD1C2053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB8C222CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570210615;
+	bh=sISQanEjzFpY/RAhi5A98nittePx1Tfph3y8mF1LNcE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=k+lJd6mtxx7p3QOOcURX5GtA4IPpo6L0kkOrHdyi/E9UUrdH4fdlE8y2K7KOKzwRz
+	 bMmrDxgvXnEbkd1iCefIfDv4FCCfcgEmwAv6y1h9JE7u3B4DAR4icjOrNR/T3PR3F0
+	 /Dh2O8ACotlc6TrXbM4R155oSP9T9llnLihqVtXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388063AbfJDRgT convert rfc822-to-8bit (ORCPT
+        id S2388281AbfJDRgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:36:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54892 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387509AbfJDRgS (ORCPT
+        Fri, 4 Oct 2019 13:36:54 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43433 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387509AbfJDRgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:36:18 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iGRV2-0004GH-59
-        for linux-kernel@vger.kernel.org; Fri, 04 Oct 2019 17:36:16 +0000
-Received: by mail-pg1-f198.google.com with SMTP id m17so4765587pgh.21
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:36:16 -0700 (PDT)
+        Fri, 4 Oct 2019 13:36:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c3so9592484qtv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=tQp69CMduGluA1D0MZmOAUieHPqXQtBrgypg0X/UGOE=;
+        b=jKYMK0tGEB6amKtMisibuzttvgEttmiNjpp/OjgXekKWRoTXBl86ID7HNcuoLdK4nB
+         i24gwQIQPRN1LzT9h9FuyE8PSYRyLYrDRJoVqrSXkkehof0TNvZrE0H5axeePr27RBDX
+         t3yjWruJ1y9d68wjdlqnWjQ2WKS7W58wrzysgP6y7RoS2/8bGpogpCIlXbY5b9Dll4us
+         0wYYJ4Rt6GCUpyUviWgvP5HgIh8gikH8AmhAGLAZYac8a7swKGhryAgP5tImXIA/1j8Z
+         4ZIIPgpvFS9rDa3XfchZDGP0G7CfqG2Wm8vPVvZMljrgxS0/VjgdGkciLw8NCXRDq+OA
+         k8Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=L3tfumWRZEtUR1PqVEP/89/GbIPwI6NtDxX+kDFfkU8=;
-        b=nVmP5L+zOSscd4EyFktArO6n7/cMdJzxFqF42ZBOTP8Nt4WNsNhG1EJIEl6yyseXgT
-         StlPyQSiQ+QthHMK8OsY/d6Yy9nx2Su22j4ogjPKnB9G5PX5qwN4OAQ75Nb/28jdtSiX
-         iwLmjznrJPnQNQpjhWCRMolvaKjXs7Fmavk4OJ9sQ2MCRPESVlaRNcaHB9MvHGJTVCd5
-         30Fq+bCZOD6F9kZ+lCOS0HZPq70HaHMEIjA3pBDv27ShN8Y0vkKmNTxJZLd2AzY4EXwn
-         hxRLc3E7QaqG94qiDa+/mBHF7vdXvSog6X4rRFR3SBdotVQEScuFgV2oKZ1Qh1GMrRTu
-         N+aA==
-X-Gm-Message-State: APjAAAV3HS3/D/YjBhXNAhZg6aeAlnrHGFvUc26CpA/NDxVzYUxvkuzw
-        EjkJn9iF1V2oHIaxvdNt5cX5xlWC8O3/8XSLw0FzyCFX+7gpM1hJgSdUFvGIqAY4c+JJE02I9j5
-        c1suCgkEAsA4UKOn+x4zhDkosbd9Vp3/lbPm+qDC4Og==
-X-Received: by 2002:a63:ca06:: with SMTP id n6mr16259159pgi.17.1570210574801;
-        Fri, 04 Oct 2019 10:36:14 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxzmvTxnFf7austvnOxYDw8RbmtlxccNk38ggjAtesz64RktW0dvAfQaQKXsIYJPA4nZdhpfA==
-X-Received: by 2002:a63:ca06:: with SMTP id n6mr16259081pgi.17.1570210573861;
-        Fri, 04 Oct 2019 10:36:13 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-9827-fbc1-5efc-0e00.dynamic-ip6.hinet.net (2001-b011-380f-3c42-9827-fbc1-5efc-0e00.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:9827:fbc1:5efc:e00])
-        by smtp.gmail.com with ESMTPSA id 20sm5679277pgo.27.2019.10.04.10.36.11
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=tQp69CMduGluA1D0MZmOAUieHPqXQtBrgypg0X/UGOE=;
+        b=medonlcECWnIbV884W1iZb7uvFkdX/Fq/fT/vQ1Ziv/5liEhN8Q9NyVuT6WOldUlCS
+         BU9MoTakwWklyrTCF6iVfdtw6Dy002BFfg4M56a/VTC7cjYntgQHUCdlGCDUm49WUf//
+         /OjGBoOVFWh+K5r8TWheHNr/rHyHKmUtlgwbI1Uu9G9meW/w3c/mCul+ya7NsEewvAEE
+         vUUFK5rgiGpAfmgTv4316h3jzObTvNUh4yKRWpY5qGyi6IjIY+rKrAe6jJKZAjXWxhFy
+         /Jhw0CQig7KkmUzhrTA832VzMYTO4wYZoQrrVHVnPlE9Ec8k+pw1fUoA3u3HWaJHoh5T
+         u3mg==
+X-Gm-Message-State: APjAAAV6x9IUCT071U1iPWzzuAb188yXYOwLRl30LiRREvqDZWPWqn7z
+        cAu6UKHZNC1IDmiO6+odz74=
+X-Google-Smtp-Source: APXvYqwXrmxcRPcNzhrsWK9AOyiAhAeE+HPLtOkyFY7czOs0eCDpTyuIcgD8M7z8m8VFbOhTCRGxrA==
+X-Received: by 2002:a0c:8ad0:: with SMTP id 16mr15217167qvw.237.1570210611142;
+        Fri, 04 Oct 2019 10:36:51 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::91c3])
+        by smtp.gmail.com with ESMTPSA id 54sm4866213qts.75.2019.10.04.10.36.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 10:36:12 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.18\))
-Subject: Re: e1000e regression - 5.4rc1
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <171f0c61-73a2-81c2-5c8a-7c140f548803@mni.thm.de>
-Date:   Sat, 5 Oct 2019 01:36:09 +0800
-Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org, tobias.klausmann@freenet.de
-Content-Transfer-Encoding: 8BIT
-Message-Id: <56242322-D549-4E23-97AB-153CC392B107@canonical.com>
-References: <171f0c61-73a2-81c2-5c8a-7c140f548803@mni.thm.de>
-To:     Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-X-Mailer: Apple Mail (2.3594.4.18)
+        Fri, 04 Oct 2019 10:36:50 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 10:36:49 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        NeilBrown <neilb@suse.de>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>
+Subject: [PATCH wq/for-5.2-fixes] workqueue: Fix pwq ref leak in
+ rescuer_thread()
+Message-ID: <20191004173649.GB3404308@devbig004.ftw2.facebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobias
+From e66b39af00f426b3356b96433d620cb3367ba1ff Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Wed, 25 Sep 2019 06:59:15 -0700
+Subject: [PATCH 2/2] workqueue: Fix pwq ref leak in rescuer_thread()
 
-> On Oct 4, 2019, at 18:34, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
-> 
-> Hello all,
-> 
-> While testing the 5.4rc1 release, i noticed my Ethernet never coming fully up, seemingly having a timeout problem. While bisecting this i landed at the commit dee23594d587386e9fda76732aa5f5a487709510 ("e1000e: Make speed detection on hotplugging cable more reliable") as the first bad commit. And indeed just reverting the commit on top of 5.4rc1 resolves the problem. Let me know if you have further questions, or patches to test!
+008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
+the rescuer worker requeue the pwq immediately if there may be more
+work items which need rescuing instead of waiting for the next mayday
+timer expiration.  Unfortunately, it doesn't check whether the pwq is
+already on the mayday list and unconditionally gets the ref and moves
+it onto the list.  This doesn't corrupt the list but creates an
+additional reference to the pwq.  It got queued twice but will only be
+removed once.
 
-Is runtime PM enabled (i.e. "power/control" = auto)?
-Also please attach full dmesg, thanks!
+This leak later can trigger pwq refcnt warning on workqueue
+destruction and prevent freeing of the workqueue.
 
-Kai-Heng 
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
+Cc: NeilBrown <neilb@suse.de>
+Cc: stable@vger.kernel.org # v3.19+
+---
+Applying to wq/for-5.4-fixes.
 
-> 
-> Greetings,
-> 
-> Tobias
-> 
-> 
-> lspci:
-> 
-> 00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network Connection (rev 06)
->         DeviceName:  Onboard LAN
->         Subsystem: ASUSTeK Computer Inc. P8P67 Deluxe Motherboard
->         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0
->         Interrupt: pin A routed to IRQ 56
->         Region 0: Memory at fbf00000 (32-bit, non-prefetchable) [size=128K]
->         Region 1: Memory at fbf28000 (32-bit, non-prefetchable) [size=4K]
->         Region 2: I/O ports at f040 [size=32]
->         Capabilities: [c8] Power Management version 2
->                 Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=1 PME-
->         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
->                 Address: 00000000fee00698  Data: 0000
->         Capabilities: [e0] PCI Advanced Features
->                 AFCap: TP+ FLR+
->                 AFCtrl: FLR-
->                 AFStatus: TP-
->         Kernel driver in use: e1000e
->         Kernel modules: e1000e
-> 
+Thanks.
+
+ kernel/workqueue.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 4a3c30177b94..4dc8270326d7 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2533,8 +2533,14 @@ static int rescuer_thread(void *__rescuer)
+ 			 */
+ 			if (need_to_create_worker(pool)) {
+ 				spin_lock(&wq_mayday_lock);
+-				get_pwq(pwq);
+-				list_move_tail(&pwq->mayday_node, &wq->maydays);
++				/*
++				 * Queue iff we aren't racing destruction
++				 * and somebody else hasn't queued it already.
++				 */
++				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
++					get_pwq(pwq);
++					list_add_tail(&pwq->mayday_node, &wq->maydays);
++				}
+ 				spin_unlock(&wq_mayday_lock);
+ 			}
+ 		}
+@@ -4374,8 +4380,8 @@ void destroy_workqueue(struct workqueue_struct *wq)
+ 	for_each_pwq(pwq, wq) {
+ 		spin_lock_irq(&pwq->pool->lock);
+ 		if (WARN_ON(pwq_busy(pwq))) {
+-			pr_warning("%s: %s has the following busy pwq (refcnt=%d)\n",
+-				   __func__, wq->name, pwq->refcnt);
++			pr_warning("%s: %s has the following busy pwq\n",
++				   __func__, wq->name);
+ 			show_pwq(pwq);
+ 			spin_unlock_irq(&pwq->pool->lock);
+ 			mutex_unlock(&wq->mutex);
+@@ -4670,7 +4676,8 @@ static void show_pwq(struct pool_workqueue *pwq)
+ 	pr_info("  pwq %d:", pool->id);
+ 	pr_cont_pool_info(pool);
+ 
+-	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
++	pr_cont(" active=%d/%d refcnt=%d%s\n",
++		pwq->nr_active, pwq->max_active, pwq->refcnt,
+ 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+ 
+ 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
+-- 
+2.17.1
 
