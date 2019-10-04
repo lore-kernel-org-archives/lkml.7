@@ -2,205 +2,147 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2492C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB34C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A16C222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBDD222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtGE/maS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yx4qOeKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbfJDQvk (ORCPT
+        id S1729542AbfJDQxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:51:40 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33930 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDQvj (ORCPT
+        Fri, 4 Oct 2019 12:53:03 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42447 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJDQxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:51:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id q1so15067208ion.1;
-        Fri, 04 Oct 2019 09:51:38 -0700 (PDT)
+        Fri, 4 Oct 2019 12:53:02 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f16so6397906qkl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:53:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1m5jMl+j0wFCdGUDGZKKaL6nviatVJQaN7YzAwj3ZUs=;
-        b=rtGE/maStH7QAtH/Tydy2qxQVsveofu5bu6sC5eRUZYx9ILOFtWaXSSpEFFf2iHYF2
-         5RIK5U43/6p/zgoe7l3fvcpLHWE1il4GxscoIR+p/PS1bSNc2dmu2g+PVfpK5/rQBGck
-         LictbWaY7Dav8baespzhw7QubnIvI09sguG/VFRmSmK/jZ84YvIV6U4SNWxWpUJq3lBd
-         K46xH3c7BoYCZavKfwV28ETdeh+MgDs1c4yaxshWpB7fc3dc4Q9qaYaDE5DWUBiKDTIj
-         AmczBSiM0UKf8FAa2WFLSIdrFmHcv+WBlZ/J+rUS8ySyBG9/yFHcYYyN1NuN5PBq2Fel
-         LLKg==
+        bh=szbrEQ+44GjFscMv1BfBPhkqI0C+sNQmLHo22e0JAFc=;
+        b=Yx4qOeKmD0XWNid+LHX1bDDL6SZHVT2FZ1d+Lk1LZsJp3YgCRrxVe0NoV1WUz/PwLU
+         VM750Iuos8cQz6GTDnquCwvSVGHgK+fV7O+ZYK8ha/zvjamwmK+0LqOjujQ6Xl1Reisl
+         YFUlshXN68dyg3oU8t/UNexrAgauxC3gLdLLxNreI7fDa004Kb1x5Ggd7qDiDo0kmYtq
+         cfYxEgQdQz5TrJo9UnJKNFB+1tEA04/qFIRkB4zzHsJEPEmCuFE9Cznpl8ClP9V4Ioji
+         KkDvcE8KsUSSPdZgXqb2zlAkFedUwOdDVXHx16J9pxNDDXNFDCbN3F45KyOUm8wiQ28Q
+         FKlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1m5jMl+j0wFCdGUDGZKKaL6nviatVJQaN7YzAwj3ZUs=;
-        b=pPiQCR+Y2d3uaYdWxdNRlu5mapuS3tMq90i3j8OYo03ktUr/bqL7PijFJAziQCi88V
-         OWnLYS8kqO90uPZ8Gwb6sJ5YE96H6Ayu7FfRdkVEwYoEWQXctYlHnVagsHVboEiYXT/A
-         NOP0xw1d+i1gObV9qsmqxlSNV4QdysLfzXA+ZREukECU8H1ut7bxEkHbqb7pDqxXJMaP
-         YmO6hpPUNgyswDplE9etb1YPDe/NznYFYUqHvF3tRqCsEoKDxelE+5YJhdnX9Pujfjl9
-         Y6H9Fq54FYagR5Qz0rcpvr1FShkwB8ZW/7lAf+8B707Vi5fVfWpGBOtcmyinvN1+6lKJ
-         Y5OQ==
-X-Gm-Message-State: APjAAAVcaOptkwxsqNxzjf6GATVpT+Fo8wHiwyWFSz+1FN++Zl9kFjNr
-        sNSfzoEBzfNIgD44h0r7Bpkm1tdNyPOfPRZlr1Q=
-X-Google-Smtp-Source: APXvYqxjbUkl/PPycJs0mioIVrdWJpeRRCmnG8ST8fukbge6BCLJArIZwITPrFFWqLG9P9I6pPOilOofsMdWyBXaoOg=
-X-Received: by 2002:a92:3314:: with SMTP id a20mr16052072ilf.276.1570207898037;
- Fri, 04 Oct 2019 09:51:38 -0700 (PDT)
+        bh=szbrEQ+44GjFscMv1BfBPhkqI0C+sNQmLHo22e0JAFc=;
+        b=GnvwWCf/MVtAUUf8tvrvH5egkJKG5OqNss+eU0PEWpItsvTsQLOpccbfsC75s+MFn/
+         6V45xF3sL/eTiYoNlRKr5okTEUAnKjbTBaLdMKimlfLgkydMfAnBDouT5zS0yArVq2SN
+         CZ9fRkmUK1+upzw4tJXknTzblxvXuXoq72+8/cSn3gXeHbI2MJ02I3xFb0014IXtEF1Z
+         PJKMFAP/bEflxFR894fXBm/rPekauAfOvf2QGRsYjKyoy6XKZ+X71ceW2Xgqt99Wm0NL
+         k+sDGHPhtFg9sAGFwnj8bYzm/MfOqk9VaVNLEoB8Gxfv+BqiTjWMz2WRCgjbBd1t2O9U
+         YlUw==
+X-Gm-Message-State: APjAAAX8phNfyV7Rll1MvUCEmdRrsrxeVo9tfZ3fYNwCRD/GqrUqxGJC
+        RBpv/dEA5+fTmLByYNxNVhItmwRxXzOcgb6idnRG8A==
+X-Google-Smtp-Source: APXvYqzWIGhS5eddfBw1HGeHlIg5Y4jipnTwAaE+Wn20faNnBKw1aq7vtNfqOuReDvRLYOr6H2CtEBWUnjhuxzQi6TY=
+X-Received: by 2002:a37:d84:: with SMTP id 126mr10177395qkn.407.1570207980784;
+ Fri, 04 Oct 2019 09:53:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
- <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
- <CAGm1_kv6RMUDppu6ZjY9Dq7QL=hS=D+e3KS37+V0ncbwoXE6mQ@mail.gmail.com> <CAHCN7xKsGz4UA4gfM5jpS9UE-V7_k265G_hB=wQ5Ueh3T5kaNQ@mail.gmail.com>
-In-Reply-To: <CAHCN7xKsGz4UA4gfM5jpS9UE-V7_k265G_hB=wQ5Ueh3T5kaNQ@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 4 Oct 2019 11:51:27 -0500
-Message-ID: <CAHCN7xKirqyj3un1k+QNeoKc0DvOt4g8ScFScG02pZF=OX+GZg@mail.gmail.com>
-Subject: Re: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP
- vs SERIAL_OMAP
-To:     Yegor Yefremov <yegorslists@googlemail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Vignesh R <vigneshr@ti.com>
+References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
+ <20191001211948.GA42035@google.com> <CANpmjNNp=zVzM2iGcQwVYxzNHYjBo==_2nito4Dw=kHopy=0Sg@mail.gmail.com>
+ <20191004164859.GD253167@google.com>
+In-Reply-To: <20191004164859.GD253167@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 4 Oct 2019 18:52:49 +0200
+Message-ID: <CACT4Y+bPZOb=h9m__Uo0feEshdGzPz0qGK7f2omsUc6-kEvwZA@mail.gmail.com>
+Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Marco Elver <elver@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
+        Anatol Pomazau <anatol@google.com>,
+        Will Deacon <willdeacon@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 9:08 AM Adam Ford <aford173@gmail.com> wrote:
+On Fri, Oct 4, 2019 at 6:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> On Fri, Oct 4, 2019 at 7:27 AM Yegor Yefremov
-> <yegorslists@googlemail.com> wrote:
+> On Wed, Oct 02, 2019 at 09:51:58PM +0200, Marco Elver wrote:
+> > Hi Joel,
 > >
-> > Hi Adam,
+> > On Tue, 1 Oct 2019 at 23:19, Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
+> > > > Hi all,
+> > > >
+> > > > We would like to share a new data-race detector for the Linux kernel:
+> > > > Kernel Concurrency Sanitizer (KCSAN) --
+> > > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
+> > > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
+> > > >
+> > > > To those of you who we mentioned at LPC that we're working on a
+> > > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
+> > > > renamed it to KCSAN to avoid confusion with KTSAN).
+> > > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
+> > > >
+> > > > In the coming weeks we're planning to:
+> > > > * Set up a syzkaller instance.
+> > > > * Share the dashboard so that you can see the races that are found.
+> > > > * Attempt to send fixes for some races upstream (if you find that the
+> > > > kcsan-with-fixes branch contains an important fix, please feel free to
+> > > > point it out and we'll prioritize that).
+> > > >
+> > > > There are a few open questions:
+> > > > * The big one: most of the reported races are due to unmarked
+> > > > accesses; prioritization or pruning of races to focus initial efforts
+> > > > to fix races might be required. Comments on how best to proceed are
+> > > > welcome. We're aware that these are issues that have recently received
+> > > > attention in the context of the LKMM
+> > > > (https://lwn.net/Articles/793253/).
+> > > > * How/when to upstream KCSAN?
+> > >
+> > > Looks exciting. I think based on our discussion at LPC, you mentioned
+> > > one way of pruning is if the compiler generated different code with _ONCE
+> > > annotations than what would have otherwise been generated. Is that still on
+> > > the table, for the purposing of pruning the reports?
 > >
-> > On Fri, Oct 4, 2019 at 12:39 PM Adam Ford <aford173@gmail.com> wrote:
-> > >
-> > > On Fri, Oct 4, 2019 at 5:02 AM Adam Ford <aford173@gmail.com> wrote:
-> > > >
-> > > > I am running Kernel 5.3.2 trying to troubleshoot some intermittent
-> > > > Bluetooth issues, and I think I have narrowed it down to the serial
-> > > > driver in use.
-> > >
-> > > I should have also noted that it's using UART2 with CTS and RTS on the
-> > > DM3730 (omap3630) and its configured with a baud rate of 3M.
-> > > I tried slowing it to 115200, but that didn't help.  I tried disabling
-> > > the DMA hooks from the device tree, and that didn't help.
-> > >
-> > > > By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
-> > > > SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
-> > > > appears fine.  When I enable Bluetooth, however, I get intermittent
-> > > > errors on an DM3730 / OMAP3630.
-> > > >
-> > > > Using the 8250 driver for Blueotooth I get intermittent frame errors
-> > > > and data loss.
-> > > >
-> > > > Scanning ...
-> > > > [   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
-> > > > [   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
-> > > >         F4:4E:FC:C9:2F:57       BluJax
-> > > > # l2ping F4:4E:FC:C9:2F:57
-> > > > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-> > > > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
-> > > > no response from F4:4E:FC:C9:2F:57: id 1
-> > > > ^C2 sent, 1 received, 50% loss
-> > > >
-> > > > (after a fairly long hang, I hit control-c)
-> > > >
-> > > > However, disabling the 8250 driver and using the only SERIAL_OMAP and
-> > > > the console routed to ttyO0, the Bluetooth works well, so I believe it
-> > > > to be a serial driver issue and not a Bluetooth error.
-> > > >
-> > > > # hcitool scan
-> > > > Scanning ...
-> > > >         F4:4E:FC:C9:2F:57       BluJax
-> > > > ^C
-> > > > # l2ping F4:4E:FC:C9:2F:57
-> > > > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-> > > > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
-> > > > ...
-> > > > 44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
-> > > > ^C15 sent, 15 received, 0% loss
-> > > > #
-> > > >
-> > > > 0% loss and regular, repeatable communication without any Frame
-> > > > reassembly errors.
-> > > >
-> > >
-> > > I tried disabling SERIAL_OMAP and using only SERIAL_8250_OMAP, but
-> > > that didn't help.  Because the issue goes away when I disable
-> > > SERIAL_8250_OMAP, I am wondering if something is either being
-> > > misconfigured or some IRQ or DMA integration is missing that may be
-> > > present with the older SERIAL_OMAP driver.
-> > >
-> > > > Any suggestions on how to troubleshoot or what might cause the
-> > > > difference between the two drivers?
-> >
-> > Can it be related to this issue [1]? Can you confirm that 5.2 is
-> > working as expected with the 8250 driver?
-> >
-> > [1] https://marc.info/?l=linux-serial&m=156965039008649&w=2
+> > This might be interesting at first, but it's not entirely clear how
+> > feasible it is. It's also dangerous, because the real issue would be
+> > ignored. It may be that one compiler version on a particular
+> > architecture generates the same code, but any change in compiler or
+> > architecture and this would no longer be true. Let me know if you have
+> > any more ideas.
 >
-> I reverted the whole 8250 directory to d99482673f95 ("serial:
-> mctrl_gpio: Check if GPIO property exisits before requesting it") and
-> it is somewhat better, but it's not as good as the stock OMAP serial
-> driver.  I get some frame errors and eventually, I get some timeouts,
-> but it's not as bad.  I'll try to implement the RTS and CTS as gpio
-> pins and change the device tree accordingly.  It might shed some light
-> on the situation.
-
-I tried to manually setup RTS and CTS pins as GPIO, but that didn't
-work, so I changed it back.
-
-It looks like the clocking is correct.  I don't know enough about the
-DMA or the IRQ to know if it's working correctly.
-
-I was wondering if the problem is in the handshaking or not.
-I added " uart-has-rtscts;" to by uart node thinking it might help,
-but it did not.
-
+> My thought was this technique of looking at compiler generated code can be
+> used for prioritization of the reports.  Have you tested it though? I think
+> without testing such technique, we could not know how much of benefit (or
+> lack thereof) there is to the issue.
 >
-8250_omap.c has some checks to see if we can enable autoRTS:
-
-if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
-    !up->gpios) {
-     /* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
-     ...
-}
-
-Based on this, I would expect up->gpios to always be zero if we want
-auto RTS CTS.
-
-I threw some debug code into the serial driver to look at the status
-of the various flags that go into setting up auto RTS/CTS.
-
-[   13.837005] termios->c_cflag & CRTSCTS = 80000000
-[   13.841888] up->port.flags & UPF_HARD_FLOW = 300000
-[   13.846801] up->gpios = ce3f3cc0
-[   17.166595] termios->c_cflag & CRTSCTS = 0
-[   17.170745] up->port.flags & UPF_HARD_FLOW = 300000
-[   17.175781] up->gpios = ce3f3d40
-
-I don't know which port is which, but I only have two active uarts
-(console and Bluetooth)
-The Bluetooth port should use handshaking and the console should not.
-
-From the look of the dump, up->gpios is never 0, so the last
-evaluation would always be false unless I am misinterpreting
-something.
-
-I tried to modify the check to remove !up->gpios check, but that
-didn't help either, but it made it a little better.
+> In fact, IIRC, the compiler generating different code with _ONCE annotation
+> can be given as justification for patches doing such conversions.
 
 
-> adam
-> >
-> > Cheers,
-> > Yegor
+We also should not forget about "missed mutex" races (e.g. unprotected
+radix tree), which are much worse and higher priority than a missed
+atomic annotation. If we look at codegen we may discard most of them
+as non important.
