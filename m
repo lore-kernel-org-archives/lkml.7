@@ -2,98 +2,150 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C3DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246B5C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B113215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A9D222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NriUHG6V"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dW0P/B3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730707AbfJDMGe (ORCPT
+        id S1730803AbfJDMH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:06:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34515 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfJDMGe (ORCPT
+        Fri, 4 Oct 2019 08:07:28 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1967 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbfJDMH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:06:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j11so1086644wrp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 05:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=We68HJxGgO15qFx9UZUNDGh7sk7bT+Kwug0ALzuQsgY=;
-        b=NriUHG6VukNQjGu8MNskrjCSxEZSffrlfYToRknIpZeqtR0c55oRRc+ol3gEWrRo1P
-         7dvfIkwMUt2fzCwRZcIV4HqrRqFSvgsPPq0YV9NHuKfzoIqkZVrzcOTLjnBpty1d51JK
-         WagYC6pI2Iu1aYkUPLhSt2Y0qiuZ5hgZCDDLGmJyd3QlcHo8C6Q6yl5ZbCowhn9nSDyD
-         YZQau8nus69zchLlrcbI6rbCYMCHD2XYXzlHtKvo132ZHGG4WpSu6oU504ERhlIUUK7x
-         G3xWYa4MQO40ioao2YQ8a7aA5Rvl/P/mP8XR1d7tNs1nEwgMQOXVT2/KOLNycDyAlrCm
-         8NFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=We68HJxGgO15qFx9UZUNDGh7sk7bT+Kwug0ALzuQsgY=;
-        b=q7M7W/GEqVd38OJTJ4jFRO0JO9G9DHqqmCuC/ToMZr6aN7lDBqhu33/HNszPx3X1dw
-         DPe6xEhMEPgVxDLooEvCHePTPbpIlT9jkvVhSxg7eOIJ128c1A2ypYBrtXLjnByLs1Xb
-         C10BXAxnn5mLr2Vv0rmgPbgYolvBKi/Y82ez96Fjyt+0dQ8/Pxhn6XMMSu2SJ3RmHm1u
-         RuORWBjznts6X7o8zle7w8oY5G0PUaJ1nzrTwZLjk6uJTj5eJKTgknrSIkPFds9Ens03
-         1orYj4AGhE4eg0TBT0RqluTxR69AZeGrMk2DIuvM58hT/23cWi5EAhM/pDT37Fn1+piV
-         jyjg==
-X-Gm-Message-State: APjAAAXKQsf1lfcZNMqbiIlxKXsBGTBINEg2PkYfRG1eg4id7v7OJBMm
-        JMIK/r2+iJ5rIf7Ui1YawunT4Q==
-X-Google-Smtp-Source: APXvYqwbVDl1j0TzxmmaS06SyhmcA22vQ72irFyeh55DhDFBpntHYV03Kg10QTCZ99RU2Jv4m0MTww==
-X-Received: by 2002:adf:fb11:: with SMTP id c17mr12069368wrr.0.1570190790922;
-        Fri, 04 Oct 2019 05:06:30 -0700 (PDT)
-Received: from dell ([2.27.167.122])
-        by smtp.gmail.com with ESMTPSA id f83sm6585666wmf.43.2019.10.04.05.06.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 05:06:30 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 13:06:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-kernel@vger.kernel.org, d.schultz@phytec.de,
-        linux-rockchip@lists.infradead.org,
-        christoph.muellner@theobroma-systems.com, tony.xie@rock-chips.com
-Subject: Re: [PATCH 4/4] mfd: rk808: use DEFINE_RES_IRQ for rk808 rtc alarm
- irq
-Message-ID: <20191004120628.GC18429@dell>
-References: <20190917081256.24919-1-heiko@sntech.de>
- <20190917081256.24919-4-heiko@sntech.de>
+        Fri, 4 Oct 2019 08:07:28 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94C6bWt002807;
+        Fri, 4 Oct 2019 14:07:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=9m5QvHje7gSHUoKFWE+CtI72E0kPziiwi8tkIKmKGKQ=;
+ b=dW0P/B3penQ+z5oVNoqmsOKp2Wxu6VlxtknN6/ZmuvxadCL69o84FhvPyynWiDrxRVYq
+ boFpiWHq8RvkVwcJgmmG3fMIZDnZDF2tETu+GCwsNpH2TiVVRFbzA9ebbHaIBabp9N1l
+ mHpW0jV2v8g03YMHmIXguGWFHgTZnKGcp46EcsqXPnCQCMKZWhN4RDlfLgvmKSYZ+D9X
+ fblMHZAwjE+a2dhhGVQOmojEStyHFecI0nPkTXtx/QuOQ+RT5ny+kBkdVhUzzn69NvVU
+ dzwcAOesEVA/z5XUAAG4+/gvZ1QOlbGsJjIf+Y28JrJ9plVYx9nPOf+YVxWdrPVhwP6A iQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w9watb7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 14:07:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5BFD7100038;
+        Fri,  4 Oct 2019 14:07:15 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 45CBA2BDA6E;
+        Fri,  4 Oct 2019 14:07:15 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 4 Oct
+ 2019 14:07:14 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 4 Oct 2019 14:07:14 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "Yannick FERTRE" <yannick.fertre@st.com>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: media: Convert stm32 cec bindings to
+ json-schema
+Thread-Topic: [PATCH] dt-bindings: media: Convert stm32 cec bindings to
+ json-schema
+Thread-Index: AQHVeTQQzAxXsEKUOU6CWUsiOtV7DKdKRJUA
+Date:   Fri, 4 Oct 2019 12:07:14 +0000
+Message-ID: <c74bae8a-e043-1484-2cd1-a644ad9b164d@st.com>
+References: <20191002151410.15306-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191002151410.15306-1-benjamin.gaignard@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <16574661833B034C85DD4354A28F4483@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190917081256.24919-4-heiko@sntech.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_06:2019-10-03,2019-10-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019, Heiko Stuebner wrote:
-
-> Do not open code the definition, instead use the nice DEFINE_RES_IRQ
-> macro for it.
-> 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
->  drivers/mfd/rk808.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+KyBIYW5zDQoNCk9uIDEwLzIvMTkgNToxNCBQTSwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6DQo+
+IENvbnZlcnQgdGhlIFNUTTMyIGNlYyBiaW5kaW5nIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcg
+anNvbi1zY2hlbWENCj4NCj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmph
+bWluLmdhaWduYXJkQHN0LmNvbT4NCj4gLS0tDQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWVkaWEvc3Qsc3RtMzItY2VjLnR4dCAgICAgfCAxOSAtLS0tLS0tLQ0KPiAgIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sICAgIHwgNTcgKysrKysrKysrKysr
+KysrKysrKysrKw0KPiAgIDIgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0aW9ucygrKSwgMTkgZGVs
+ZXRpb25zKC0pDQo+ICAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZWRpYS9zdCxzdG0zMi1jZWMudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zdCxzdG0zMi1jZWMueWFt
+bA0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
+ZGlhL3N0LHN0bTMyLWNlYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWVkaWEvc3Qsc3RtMzItY2VjLnR4dA0KPiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5k
+ZXggNmJlMjM4MWMxODBkLi4wMDAwMDAwMDAwMDANCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy50eHQNCj4gKysrIC9kZXYvbnVsbA0K
+PiBAQCAtMSwxOSArMCwwIEBADQo+IC1TVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgQ0VDIGRyaXZl
+cg0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAtIC0gY29tcGF0aWJsZSA6IHZhbHVl
+IHNob3VsZCBiZSAic3Qsc3RtMzItY2VjIg0KPiAtIC0gcmVnIDogUGh5c2ljYWwgYmFzZSBhZGRy
+ZXNzIG9mIHRoZSBJUCByZWdpc3RlcnMgYW5kIGxlbmd0aCBvZiBtZW1vcnkNCj4gLQkgbWFwcGVk
+IHJlZ2lvbi4NCj4gLSAtIGNsb2NrcyA6IGZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmc6IGhhbmRs
+ZSB0byBDRUMgY2xvY2tzDQo+IC0gLSBjbG9jay1uYW1lcyA6IGZyb20gY29tbW9uIGNsb2NrIGJp
+bmRpbmc6IG11c3QgYmUgImNlYyIgYW5kICJoZG1pLWNlYyIuDQo+IC0gLSBpbnRlcnJ1cHRzIDog
+Q0VDIGludGVycnVwdCBudW1iZXIgdG8gdGhlIENQVS4NCj4gLQ0KPiAtRXhhbXBsZSBmb3Igc3Rt
+MzJmNzQ2Og0KPiAtDQo+IC1jZWM6IGNlY0A0MDAwNmMwMCB7DQo+IC0JY29tcGF0aWJsZSA9ICJz
+dCxzdG0zMi1jZWMiOw0KPiAtCXJlZyA9IDwweDQwMDA2QzAwIDB4NDAwPjsNCj4gLQlpbnRlcnJ1
+cHRzID0gPDk0PjsNCj4gLQljbG9ja3MgPSA8JnJjYyAwIFNUTTMyRjdfQVBCMV9DTE9DSyhDRUMp
+PiwgPCZyY2MgMSBDTEtfSERNSV9DRUM+Ow0KPiAtCWNsb2NrLW5hbWVzID0gImNlYyIsICJoZG1p
+LWNlYyI7DQo+IC19Ow0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYzk5MTQ0MTA3MTg1DQo+IC0tLSAvZGV2L251bGwNCj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNl
+Yy55YW1sDQo+IEBAIC0wLDAgKzEsNTcgQEANCj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
+IEdQTC0yLjANCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVl
+Lm9yZy9zY2hlbWFzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sIw0KPiArJHNjaGVtYTogaHR0cDov
+L2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ICsNCj4gK3RpdGxlOiBT
+VE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgQ0VDIGJpbmRpbmdzDQo+ICsNCj4gK21haW50YWluZXJz
+Og0KPiArICAtIEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+
+ICsgIC0gWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4gKw0KPiArcHJv
+cGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBjb25zdDogc3Qsc3RtMzItY2VjDQo+
+ICsNCj4gKyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAgaW50ZXJydXB0czoN
+Cj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIGNsb2NrczoNCj4gKyAgICBpdGVtczoNCj4g
+KyAgICAgIC0gZGVzY3JpcHRpb246IE1vZHVsZSBDbG9jaw0KPiArICAgICAgLSBkZXNjcmlwdGlv
+bjogQnVzIENsb2NrDQo+ICsNCj4gKyAgY2xvY2stbmFtZXM6DQo+ICsgICAgaXRlbXM6DQo+ICsg
+ICAgICAtIGNvbnN0OiBjZWMNCj4gKyAgICAgIC0gY29uc3Q6IGhkbWktY2VjDQo+ICsNCj4gKyAg
+cGluY3RybC1uYW1lczogdHJ1ZQ0KPiArDQo+ICtwYXR0ZXJuUHJvcGVydGllczoNCj4gKyAgIl5w
+aW5jdHJsLVswLTldKyQiOiB0cnVlDQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGli
+bGUNCj4gKyAgLSByZWcNCj4gKyAgLSBpbnRlcnJ1cHRzDQo+ICsgIC0gY2xvY2tzDQo+ICsgIC0g
+Y2xvY2stbmFtZXMNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgICNpbmNsdWRl
+IDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+ICsgICAgI2lu
+Y2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL3N0bTMybXAxLWNsa3MuaD4NCj4gKyAgICBjZWM6IGNl
+Y0A0MDAwNmMwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAic3Qsc3RtMzItY2VjIjsNCj4g
+KyAgICAgICAgcmVnID0gPDB4NDAwMDZjMDAgMHg0MDA+Ow0KPiArICAgICAgICBpbnRlcnJ1cHRz
+ID0gPEdJQ19TUEkgOTQgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsgICAgICAgIGNsb2NrcyA9
+IDwmcmNjIENFQ19LPiwgPCZjbGtfbHNlPjsNCj4gKyAgICAgICAgY2xvY2stbmFtZXMgPSAiY2Vj
+IiwgImhkbWktY2VjIjsNCj4gKyAgICB9Ow0KPiArDQo+ICsuLi4=
