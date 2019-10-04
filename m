@@ -2,120 +2,118 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C09C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94EAC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C6B222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tkv5tyzs"
+	by mail.kernel.org (Postfix) with ESMTP id 81C03215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570194753;
+	bh=K2m1EGYN9uMDiNdq/y8NN8jU/t4QnkUN7ZtdGsM+bo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XCQgQaTOkUVUHKyuNI+lj4hrD+p7wH1NtfMeTg5yKOXQH49YsPq0/p/tvMqQMk7GQ
+	 o8QW/ecIb5jL2ALKQOuPwzOu4qw8P7iepiIv24PnSgbpHxZbkoZ6YSO+u9Aa3W5/w1
+	 iM6GJ42Tu/EsJUFY9Ptt3Y9Yv+YGhXryHmibaDcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388217AbfJDNMY (ORCPT
+        id S2388270AbfJDNMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:12:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45464 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387917AbfJDNMX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:12:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so3856015pfb.12;
-        Fri, 04 Oct 2019 06:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZUiox1R0hROdY9yZCRzopfRKb7Hpw5iaEBfomVYH688=;
-        b=Tkv5tyzstWxtAX48sv4MmTvBh/2aoOmbHQ4GWe3DDeEUh50Mu+CVc0XZnkyvxPeyZT
-         cv6SYzd1IkCbX5mhcjecpCkMXi3KAcWXx7iNZs0iX5qWTsmcYjIJe9MZeEg8LY2bFYEq
-         bqLR286u7JXrKHuteFWWBKTXqNtVnFmGWTPtZmvOLXs2uFZSrLuiIaGjShhdvVNZGAwc
-         Qj6+nqlrOc/NCWXMAaiVnNvg9mSr+c7vzl2D7rEjigosye6r5rITcHsQvMcoIr2NJ3dK
-         x+hP2Ce6iQ9h3gZV5DGObP4VZG09W9zJXvUz5CdSLIadPaFmag5HwtSfIFs5lS/LzmYy
-         RpKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZUiox1R0hROdY9yZCRzopfRKb7Hpw5iaEBfomVYH688=;
-        b=BVjk3zNiU4gYFTNnpS/CduQS9HFQVUpVTjGgoBpwwigt+Z0DRGvTUudPDQRXMvg1Uu
-         7vb3JlzUvgRJrunSCL2l6DBYHmigp7/kf/7pKjmozY8N2UsjDFKNX8DB0ag8VxgvOWk5
-         K9nUnmb+frw26ryPmRx0h5+j6rUSFNzR5j3B1icLUFHtHCfEQmDThgdba6/KqRNHv5OA
-         61I3FPbvwDNXMHOGk1HI6dLSLfy9qcsYbUx3KZZV2c8GCxFGGH6cRZx6ksPpFr1Flu1C
-         ebOAp7neJhEMLGZsb+DACICQx80leVQArlLIbmhdUBnn74gbSw5kYsWSpL50hqtKsD6T
-         sucw==
-X-Gm-Message-State: APjAAAWgBrVMSkykea1UY2Lgbmz7eveYscpEWEbd1gKi42vXKsAXSqCX
-        A/gkMyD/+jFAtbOr3NNe0Ic=
-X-Google-Smtp-Source: APXvYqzlaXM5fjESQSK7RC4J4zjj6oZfbuc5mLrgPIL+rCnBhELyYRT4+WOBbnOQG2sxTANj+gZfnA==
-X-Received: by 2002:a17:90b:946:: with SMTP id dw6mr16904660pjb.48.1570194742398;
-        Fri, 04 Oct 2019 06:12:22 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k15sm6194435pfa.65.2019.10.04.06.12.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 06:12:21 -0700 (PDT)
-Subject: Re: [PATCH 1/7] dt-bindings: watchdog: renesas-wdt: Document r8a774b1
- support
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <eabf732e-33ba-8011-2cbc-f1df1f6dadb3@roeck-us.net>
-Date:   Fri, 4 Oct 2019 06:12:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 09:12:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53936 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387545AbfJDNMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:12:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DF4EBB192;
+        Fri,  4 Oct 2019 13:12:30 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 15:12:30 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2] mm/swap: piggyback lru_add_drain_all() calls
+Message-ID: <20191004131230.GL9578@dhcp22.suse.cz>
+References: <157019456205.3142.3369423180908482020.stgit@buzz>
 MIME-Version: 1.0
-In-Reply-To: <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157019456205.3142.3369423180908482020.stgit@buzz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 1:35 AM, Fabrizio Castro wrote:
-> RZ/G2N (a.k.a. R8A774B1) watchdog implementation is compatible
-> with R-Car Gen3, therefore add the relevant documentation.
+On Fri 04-10-19 16:09:22, Konstantin Khlebnikov wrote:
+> This is very slow operation. There is no reason to do it again if somebody
+> else already drained all per-cpu vectors while we waited for lock.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Piggyback on drain started and finished while we waited for lock:
+> all pages pended at the time of our enter were drained from vectors.
+> 
+> Callers like POSIX_FADV_DONTNEED retry their operations once after
+> draining per-cpu vectors when pages have unexpected references.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+This describes why we need to wait for preexisted pages on the pvecs but
+the changelog doesn't say anything about improvements this leads to.
+In other words what kind of workloads benefit from it?
 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 > ---
->   Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
->   1 file changed, 1 insertion(+)
+>  mm/swap.c |   16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> index 9f365c1..a5bf04d 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
-> @@ -10,6 +10,7 @@ Required properties:
->   		 - "renesas,r8a7745-wdt" (RZ/G1E)
->   		 - "renesas,r8a77470-wdt" (RZ/G1C)
->   		 - "renesas,r8a774a1-wdt" (RZ/G2M)
-> +		 - "renesas,r8a774b1-wdt" (RZ/G2N)
->   		 - "renesas,r8a774c0-wdt" (RZ/G2E)
->   	         - "renesas,r8a7790-wdt" (R-Car H2)
->   	         - "renesas,r8a7791-wdt" (R-Car M2-W)
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 38c3fa4308e2..5ba948a9d82a 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -708,9 +708,10 @@ static void lru_add_drain_per_cpu(struct work_struct *dummy)
+>   */
+>  void lru_add_drain_all(void)
+>  {
+> +	static seqcount_t seqcount = SEQCNT_ZERO(seqcount);
+>  	static DEFINE_MUTEX(lock);
+>  	static struct cpumask has_work;
+> -	int cpu;
+> +	int cpu, seq;
+>  
+>  	/*
+>  	 * Make sure nobody triggers this path before mm_percpu_wq is fully
+> @@ -719,7 +720,19 @@ void lru_add_drain_all(void)
+>  	if (WARN_ON(!mm_percpu_wq))
+>  		return;
+>  
+> +	seq = raw_read_seqcount_latch(&seqcount);
+> +
+>  	mutex_lock(&lock);
+> +
+> +	/*
+> +	 * Piggyback on drain started and finished while we waited for lock:
+> +	 * all pages pended at the time of our enter were drained from vectors.
+> +	 */
+> +	if (__read_seqcount_retry(&seqcount, seq))
+> +		goto done;
+> +
+> +	raw_write_seqcount_latch(&seqcount);
+> +
+>  	cpumask_clear(&has_work);
+>  
+>  	for_each_online_cpu(cpu) {
+> @@ -740,6 +753,7 @@ void lru_add_drain_all(void)
+>  	for_each_cpu(cpu, &has_work)
+>  		flush_work(&per_cpu(lru_add_drain_work, cpu));
+>  
+> +done:
+>  	mutex_unlock(&lock);
+>  }
+>  #else
 > 
 
+-- 
+Michal Hocko
+SUSE Labs
