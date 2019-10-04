@@ -2,84 +2,111 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6523FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF26C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30ECE207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:52:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fZyGQE2W"
+	by mail.kernel.org (Postfix) with ESMTP id B3167222CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390095AbfJDPwU (ORCPT
+        id S2390132AbfJDPwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:52:20 -0400
-Received: from mout.gmx.net ([212.227.17.22]:36271 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389954AbfJDPwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570204319;
-        bh=tlXNezk2klm36a8BgtQ7aWv6+faM2dhbJvCXCdCOFZA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=fZyGQE2WrjZW8em4J6qE/CMX+qaoDkrb4cfayYSFuSsC6XNDBbfJABOmngKV3z7bM
-         Rjhi3KD+3Xk3kjAeigEITXt/JHUykRRXfsNPBQfG3CWFZxUNiKjhniJULcmVBJeold
-         YWu7xOUqeX3JdNjf2KwccTcd5yZ4d/k8In2n3Xq8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [80.208.214.220] ([80.208.214.220]) by web-mail.gmx.net
- (3c-app-gmx-bap10.server.lan [172.19.172.80]) (via HTTP); Fri, 4 Oct 2019
- 17:51:59 +0200
+        Fri, 4 Oct 2019 11:52:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60432 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390089AbfJDPwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:52:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA9D7B1AE;
+        Fri,  4 Oct 2019 15:52:42 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     wahrenst@gmx.net, f.fainelli@gmail.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] ARM: dt: check MPIDR on MP devices built without SMP
+Date:   Fri,  4 Oct 2019 17:52:33 +0200
+Message-Id: <20191004155232.17209-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Message-ID: <trinity-c33ab112-57a5-47d6-80e5-13c96442e302-1570204319219@3c-app-gmx-bap10>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Lee Jones" <lee.jones@linaro.org>,
-        "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>
-Cc:     "Matthias Brugger" <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Aw: Re: [PATCH] mfd: mt6397: fix probe after changing mt6397-core
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 4 Oct 2019 17:51:59 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20191004152001.GS18429@dell>
-References: <20191003185323.24646-1-frank-w@public-files.de>
- <20191004152001.GS18429@dell>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:SA0Gglr+Lfvr4Iz1kF2/P2ycdFCnYWrl8HCghLFJOGQq5gM3NRxGEevpstbEN1hpyf6vT
- gz5mldmbYfbpYp5LpYr9QI3wk1cMPPitFC1DNLKkBoO8tQtsFYq9xE/KlcvGlxJl7oEL4Q7JWYfW
- 4CvIDXImNJfBcEtvO797AERoqtx98dg7+AG5jVr+T+bPFeeNZ5aRXEpypWUszXHF/Nq4JeQY+RqP
- qKkOZsZiI6DZrbfXZXQuTqV4WjRs03JliKYKhehpbkhSpfdyjpbz2/KnPCjTUOEHb8fhE9qLUKdH
- sQ=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DUEgJZ4YN2A=:bc/n0OX5WsUSC0c2k100q8
- RE27yEX1VHwQKm6UTogrAHMF/rdsYW9bauE+46Z52liDodog/Rl/VO/+35Nh7DIXaRMy0KWJ7
- 6eK1Mu1KpuKcCCN0tozF7AOJbzd6OHbwR8iHXs9KeuiBLW6+E83+AFY9pyyt4hIK70cU6r/m8
- /4Satde9MAiA03ExOtsqjd9lvrvWDYVKmtbqAAPFp+BO7+Ax/mTav0h5kfpxajq4nCIXSMPB7
- hEyAnXHdKv1b7hOOpBQm55zzaH0xwEk/vkjLfo4U3hiLXu9TceAOIHOxnLzLGym6jLedKTqAB
- ljkXEnCBsGUMEJgv1m/yCrFNC1OIKjZzcrXY672EthDNOGtwabqYIy3Jfcq+60Z/Qbra/tHrF
- fEA4XmuA/2o6Wx2FauqPRoO4KeWOMmYU738wsN6xLD1uD1TQIgVwN1lsfQYkp+IE0Pj2eUol3
- oK2K2qBcVWUhvs+lJuL6PudkSeCSXNvL1IeB/i0emE52jHNkVCbA1+44bqa/CVy++iDroL/NU
- Y9K3IiIuh3+/cbGMTaqiQA/Zmo9ThE0O2bcSAzz+NuVWY0Xofz3QNGogkCESzkRxmXRGPFMCI
- 8o+YZ9xrnFevRPf3Hvzt3JXLuQXZzWxuYuZfzyZKNQzJJVZ72TV55+TYHtM+Rj9YUv6SUMpv0
- D25m6Yp9BMqijAMuruku/k4oEnWSc6OpAGwhhxhwxM7Al+xYHdK3+D+Xt5dQb5l5u7Ec=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This Question goes to Hsin-Hsiung Wang ;)
+On SMP builds, in order to properly link CPU devices with their
+respective DT nodes we start by matching the boot CPU. This is achieved
+by comparing the 'reg' property on each of the CPU DT nodes with the
+MPIDR. The association is necessary as to validate the whole CPU logical
+map, which ultimately links CPU devices and their DT nodes.
 
-i only took his code (and splitted the 3rd part) to get mt6323 working again without reverting the other 2 Patches
+On setups built without SMP, no MPIDR read is performed. The only thing
+expected is for the 'reg' property in the CPU DT node to contain the
+value 0x0.
 
-regards Frank
+This causes problems on MP setups built without SMP. As their boot CPU
+DT node contains the relevant MPIDR as opposed to 0x0. No match is then
+possible. This causes troubles further down the line as drivers are
+unable to get the CPU's DT node.
 
+Change the way we choose whether to get the MPIDR or not. On builds
+without SMP check the number of CPUs defined in DT. Anything > 1 means
+the MPIDR should be available and matched accordingly.
 
-> Gesendet: Freitag, 04. Oktober 2019 um 17:20 Uhr
-> Von: "Lee Jones" <lee.jones@linaro.org>
+Note that if there was a rogue UP device exposing multiple active CPUs
+in its DT the possible outcomes depend on the ARM series. For example
+Cortex-A9 specifies that the MPIDR is returns 0x0 on UP devices. On the
+other hand ARM1176JZ's TRM doesn't define a MPIDR register and specifies
+that any unwarranted register access will raise an undefined exception.
+Overall, given the bogus DT, a reasonable outcome.
 
-> Will there be other devices which have a !0 CID shift?
+This was originally seen on a Raspberry Pi 2 built with bcm2835_defconfig.
+
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Stefan Wahren <wahrenst@gmx.net>
+
+---
+
+Changes since v1:
+  - Rewrite patch description
+  - Use of_get_available_child_count()
+
+Note: kept Setfan's Tested-by as the changes only affect a corner case.
+
+ arch/arm/kernel/devtree.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index 39c978698406..cd11742d9bc2 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -74,7 +74,7 @@ void __init arm_dt_init_cpu_maps(void)
+ 	struct device_node *cpu, *cpus;
+ 	int found_method = 0;
+ 	u32 i, j, cpuidx = 1;
+-	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
++	u32 mpidr = 0;
+ 
+ 	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
+ 	bool bootcpu_valid = false;
+@@ -83,6 +83,9 @@ void __init arm_dt_init_cpu_maps(void)
+ 	if (!cpus)
+ 		return;
+ 
++	if (is_smp() || of_get_available_child_count(cpus) > 1)
++		mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
++
+ 	for_each_of_cpu_node(cpu) {
+ 		const __be32 *cell;
+ 		int prop_bytes;
+-- 
+2.23.0
 
