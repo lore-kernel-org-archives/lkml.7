@@ -3,112 +3,275 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB0DC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82013C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A12222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50115215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aIp4N3A5"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GfJc5hEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbfJDQmC (ORCPT
+        id S1729670AbfJDQmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:42:02 -0400
-Received: from mout.gmx.net ([212.227.15.18]:40273 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfJDQmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:42:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570207301;
-        bh=4HspV+6W3NFfVmne4PrY7CTozrj72fiaMF7UaAeII1w=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=aIp4N3A5sb4H5/cejWs+0rE76KAoU0kt2gU1Eo/MOoJIOqYiPNqh/10xAY1vMZRsp
-         5e4yTIhyOk4qHU4EGlAYBheqE3UbX5CaHA04nhtSeYXIZmnaySkCVRnmkeTTDhzRaL
-         9YnWvbEAzJn1wra98Th1gQt+1AQuEa9z8eIveGEU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKuA-1iivro3jJo-00SeT1; Fri, 04
- Oct 2019 18:41:40 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org
-Cc:     Michael Buesch <m@bues.ch>, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] docs: driver-api: bt8xxgpio: Revive dead link
-Date:   Fri,  4 Oct 2019 18:40:56 +0200
-Message-Id: <20191004164059.10397-2-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191004164059.10397-1-j.neuschaefer@gmx.net>
-References: <20191004164059.10397-1-j.neuschaefer@gmx.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3JFFSC4Zuno7sL5Pk2Yo5U3ohyyM+uvYk9DboeDsNf8LHCqzw9u
- e9z0lzcshiGk1HcHfPSGgrP7b8ssbGPrqN+ViUb0z+fflralRDCD0LX4WFUHGZ9nkO66f0m
- WwAuU/470MFXu5cETsDdtqWa6jyA1v56W+eEcK8i11/z1QUmnqkk6RVJyA+OO4w1uFOlmbS
- OobqD9ZCKIKgo0kOeZawg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:R+t44nuZ3xA=:poygZZRM2FWFOypik0GESg
- wYH6jQvLcYTI7ot+7P96b7Wqc4Ko0s47PzYhsP5uwc8IghZvN/+HSi/GKhpfus7hdPFYoH/hw
- 2SUI6rPrepF8Z6XC7oDrPXirxc0SkuXaTqAebWmzEN8bgoMkl/OX/WUEebHlHGU9x4q/bZNN/
- tvmj87W4v1ejqHqbG0jb44Kmll2wYv5WPHqJBbtwhjvMB1xlnbVY4pignk2/dpO4jllCMRcj0
- 97S+/KlHBAsrniY2WupqYJXL5Vgt4aiIJMrmTIm/e1lFFBdo3jjwE3fNlhO8qfTp5BQ2i+yCs
- ergipiphQAtUkWg2SSAiXgPd6BW/pIr4vENvSv3pFPpTgdnH5EI/sWGUEwRvhnMo1X7yI8U5l
- kbVFHNgV+gsFcVAfHnaFBPngKzUXRnLh81yJOG1MiitPGPSW9pRgbA5WCrpAdW5NAqppTDfWn
- i6MxpkOYjRmtxi697CS4k+ya7qBa/4Ngjg1suI2iOD8MIHiM8AAyKwsg1+s7XUcp3XsUNbIXl
- BSQGK0GpQevKmqf+7z18PDIAgHLn9cavmKRREpdHUUR/regu+0ecwgIsBjUfYcanDMXUo00rq
- 0sL+tt6v3q286ueCN74SH+OFZWXksWfn1naSyOkgU7t8JPEQ0SrcnwX968u9y6UcErFBNyoG9
- WCI9bGQvrN77i7d87qMPy3KQqzXgGpmpZPg7TJmLHNZIcSy30x+hdNAic6tJIDNqRlAI8sHTF
- iDF150CDhE63Cw52Ma/KoHHgtxiEPPXp9nbshNqjucZWnEi0P6zKSGQxvgQO9EJXF0FfP1z5M
- paQDQaA59oaFAkioJXJsc7Rvp5PiI9B+AMGeDmf4DhyWfvfgaNIpR5hTmZolvGDWjedBpKywl
- +vB0k8pxjV0DtI0sAfELUgpJn2uydms8kQBg6APjLcMceYe0U2GJsCZs2Xp1IpeAZAvVUmdvK
- xUG+fK5DvVTnXnjkD1Th+z78W1p0v9riU2l5w2DNTuq68RBVe2h3EcviCVo+11JsT0IwVWtDC
- GvAj3E+ro4g8+3HPKPooxpquz6HtQs3yBIG/92GP/lzP6NyzQ7V1QW5LhQcJurO+s8T68NYMa
- CC1oob8QnfMDUuSpg+EpvD8JBc/DxOTD5ThlhZ70Dqquw4mFowPvXpfrU7wtjVuG+6AH9/Ota
- 7rjntJFddeUaUgZ02VCk2gGwF4XuFDA4mqX46bogIxYUQPj9p30GdgNvwWXea/ruY3XAlF/3x
- y0UbzzSIF1uRPQjFO2D3K0nbu8K/8O0upGgRf2d3t6T6J8cpc1AIm4f8hGzc=
+        Fri, 4 Oct 2019 12:42:52 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44126 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJDQmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:42:52 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u22so6357888qkk.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=unSFjTLbf9GQT7sy0kNzX1d4U0PWNRJ2KKIBperdV9c=;
+        b=GfJc5hEogfHv3dvtWQmwNQdiYbSLo2AgOZOIoAxWno6ebkUjo/B+FmXJRydZNbRNKW
+         skICGP9GJCLqaEHK4Bd0SwtAYsWZ5HZniR7jiOefPED2Kl3TJWrfPNBrPyoxSSBkZolF
+         aCfIN/OZHmkA9r2Uo+xUEIeJ2MDOKM80pX5jtnEPLSU5VySgZrcgMPLGKmCaI466l1mL
+         uYpTVpz4pps1R3ww3/9ofYhyIK6v/PZ/S8og7Ytd+6i1RD0JUrqnlCVpwq5rcWUkehyi
+         erSFeXxaJ5rdo0b9IGNaK5fEr7uTW0ZB2g52Az9wqX5LlEO5D824cM9hkbIO1DscHqdi
+         FYYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=unSFjTLbf9GQT7sy0kNzX1d4U0PWNRJ2KKIBperdV9c=;
+        b=bsyrPHzyDtzOVzqVq0YEXXfqnLf4+kjof1DmcaBE7+/mq3E9KZkmq+p3J5NRNtx/6J
+         igd5pbcmPSqMatkIuLJreM7LI4dm+Yj1IgsFWZ6oovOnnsquWBIieepWQ/V4vFAnwoPo
+         IHp8xXLDS+W48wKV5ADMN6TV9tVKGR1BAhqZBC2qkK9OC+1TJ7fiSnNMFZcZK409ivxx
+         GPeNO6HSl6XJ8jIlqRNP51DQ9Ij+MwvIt0rhHO3p5WDL4WTZta1AIUE5CjNnmkdqkPol
+         dSxHHoEH+gDsJvDBk1z5X86dxSYvFiQhMvwrM2iHXtx+ryL4BuG3xhocqHVj+7lpveGn
+         p9PQ==
+X-Gm-Message-State: APjAAAXfpb3Xtos+DLzdhPdMgxGO+TjDnyJD4FsDrgJcVYk2QCqqhA2u
+        390Wj0rqSHFs4jOm4vhedu2TKQ==
+X-Google-Smtp-Source: APXvYqythj5h0hXoBiFZ+aqb2E82KtTnWBQy/T+8LXD87nNU4JmLrbWPfJCfaGag/bQueQjJllywmA==
+X-Received: by 2002:a37:a083:: with SMTP id j125mr11495979qke.329.1570207369611;
+        Fri, 04 Oct 2019 09:42:49 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 29sm3344748qkp.86.2019.10.04.09.42.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 09:42:48 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, sergey.senozhatsky.work@gmail.com,
+        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/page_isolation: fix a deadlock with printk()
+Date:   Fri,  4 Oct 2019 12:42:26 -0400
+Message-Id: <1570207346-30477-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-www.bu3sch.de has been unusable for several years, but the same
-information is available on bues.ch.
+It is unsafe to call printk() while zone->lock was held, i.e.,
 
-Cc: Michael Buesch <m@bues.ch>
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/driver-api/gpio/bt8xxgpio.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+zone->lock --> console_sem
 
-diff --git a/Documentation/driver-api/gpio/bt8xxgpio.rst b/Documentation/d=
-river-api/gpio/bt8xxgpio.rst
-index a845feb074de..d7e75f1234e7 100644
-=2D-- a/Documentation/driver-api/gpio/bt8xxgpio.rst
-+++ b/Documentation/driver-api/gpio/bt8xxgpio.rst
-@@ -2,7 +2,7 @@
- A driver for a selfmade cheap BT8xx based PCI GPIO-card (bt8xxgpio)
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+because the console could always allocate some memory in different code
+paths and form locking chains in an opposite order,
 
--For advanced documentation, see http://www.bu3sch.de/btgpio.php
-+For advanced documentation, see https://bues.ch/cms/unmaintained/btgpio.h=
-tml
+console_sem --> * --> zone->lock
 
- A generic digital 24-port PCI GPIO card can be built out of an ordinary
- Brooktree bt848, bt849, bt878 or bt879 based analog TV tuner card. The
-=2D-
-2.20.1
+As the result, it triggers lockdep splats like below and in [1]. It is
+fine to take zone->lock after has_unmovable_pages() (which has
+dump_stack()) in set_migratetype_isolate(). While at it, remove a
+problematic printk() in __offline_isolated_pages() only for debugging as
+well which will always disable lockdep on debug kernels.
+
+The problem is probably there forever, but neither many developers will
+run memory offline with the lockdep enabled nor admins in the field are
+lucky enough yet to hit a perfect timing which required to trigger a
+real deadlock. In addition, there aren't many places that call printk()
+while zone->lock was held.
+
+WARNING: possible circular locking dependency detected
+------------------------------------------------------
+test.sh/1724 is trying to acquire lock:
+0000000052059ec0 (console_owner){-...}, at: console_unlock+0x
+01: 328/0xa30
+
+but task is already holding lock:
+000000006ffd89c8 (&(&zone->lock)->rlock){-.-.}, at: start_iso
+01: late_page_range+0x216/0x538
+
+which lock already depends on the new lock.
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&(&zone->lock)->rlock){-.-.}:
+       lock_acquire+0x21a/0x468
+       _raw_spin_lock+0x54/0x68
+       get_page_from_freelist+0x8b6/0x2d28
+       __alloc_pages_nodemask+0x246/0x658
+       __get_free_pages+0x34/0x78
+       sclp_init+0x106/0x690
+       sclp_register+0x2e/0x248
+       sclp_rw_init+0x4a/0x70
+       sclp_console_init+0x4a/0x1b8
+       console_init+0x2c8/0x410
+       start_kernel+0x530/0x6a0
+       startup_continue+0x70/0xd0
+
+-> #1 (sclp_lock){-.-.}:
+       lock_acquire+0x21a/0x468
+       _raw_spin_lock_irqsave+0xcc/0xe8
+       sclp_add_request+0x34/0x308
+       sclp_conbuf_emit+0x100/0x138
+       sclp_console_write+0x96/0x3b8
+       console_unlock+0x6dc/0xa30
+       vprintk_emit+0x184/0x3c8
+       vprintk_default+0x44/0x50
+       printk+0xa8/0xc0
+       iommu_debugfs_setup+0xf2/0x108
+       iommu_init+0x6c/0x78
+       do_one_initcall+0x162/0x680
+       kernel_init_freeable+0x4e8/0x5a8
+       kernel_init+0x2a/0x188
+       ret_from_fork+0x30/0x34
+       kernel_thread_starter+0x0/0xc
+
+-> #0 (console_owner){-...}:
+       check_noncircular+0x338/0x3e0
+       __lock_acquire+0x1e66/0x2d88
+       lock_acquire+0x21a/0x468
+       console_unlock+0x3a6/0xa30
+       vprintk_emit+0x184/0x3c8
+       vprintk_default+0x44/0x50
+       printk+0xa8/0xc0
+       __dump_page+0x1dc/0x710
+       dump_page+0x2e/0x58
+       has_unmovable_pages+0x2e8/0x470
+       start_isolate_page_range+0x404/0x538
+       __offline_pages+0x22c/0x1338
+       memory_subsys_offline+0xa6/0xe8
+       device_offline+0xe6/0x118
+       state_store+0xf0/0x110
+       kernfs_fop_write+0x1bc/0x270
+       vfs_write+0xce/0x220
+       ksys_write+0xea/0x190
+       system_call+0xd8/0x2b4
+
+other info that might help us debug this:
+
+Chain exists of:
+  console_owner --> sclp_lock --> &(&zone->lock)->rlock
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&(&zone->lock)->rlock);
+                               lock(sclp_lock);
+                               lock(&(&zone->lock)->rlock);
+  lock(console_owner);
+
+ *** DEADLOCK ***
+
+9 locks held by test.sh/1724:
+ #0: 000000000e925408 (sb_writers#4){.+.+}, at: vfs_write+0x201:
+ #1: 0000000050aa4280 (&of->mutex){+.+.}, at: kernfs_fop_write:
+ #2: 0000000062e5c628 (kn->count#198){.+.+}, at: kernfs_fop_write
+ #3: 00000000523236a0 (device_hotplug_lock){+.+.}, at:
+lock_device_hotplug_sysfs+0x30/0x80
+ #4: 0000000062e70990 (&dev->mutex){....}, at: device_offline
+ #5: 0000000051fd36b0 (cpu_hotplug_lock.rw_sem){++++}, at:
+__offline_pages+0xec/0x1338
+ #6: 00000000521ca470 (mem_hotplug_lock.rw_sem){++++}, at:
+percpu_down_write+0x38/0x210
+ #7: 000000006ffd89c8 (&(&zone->lock)->rlock){-.-.}, at:
+start_isolate_page_range+0x216/0x538
+ #8: 000000005205a100 (console_lock){+.+.}, at: vprintk_emit
+
+stack backtrace:
+Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+Call Trace:
+([<00000000512ae218>] show_stack+0x110/0x1b0)
+ [<0000000051b6d506>] dump_stack+0x126/0x178
+ [<00000000513a4b08>] check_noncircular+0x338/0x3e0
+ [<00000000513aaaf6>] __lock_acquire+0x1e66/0x2d88
+ [<00000000513a7e12>] lock_acquire+0x21a/0x468
+ [<00000000513bb2fe>] console_unlock+0x3a6/0xa30
+ [<00000000513bde2c>] vprintk_emit+0x184/0x3c8
+ [<00000000513be0b4>] vprintk_default+0x44/0x50
+ [<00000000513beb60>] printk+0xa8/0xc0
+ [<000000005158c364>] __dump_page+0x1dc/0x710
+ [<000000005158c8c6>] dump_page+0x2e/0x58
+ [<00000000515d87c8>] has_unmovable_pages+0x2e8/0x470
+ [<000000005167072c>] start_isolate_page_range+0x404/0x538
+ [<0000000051b96de4>] __offline_pages+0x22c/0x1338
+ [<0000000051908586>] memory_subsys_offline+0xa6/0xe8
+ [<00000000518e561e>] device_offline+0xe6/0x118
+ [<0000000051908170>] state_store+0xf0/0x110
+ [<0000000051796384>] kernfs_fop_write+0x1bc/0x270
+ [<000000005168972e>] vfs_write+0xce/0x220
+ [<0000000051689b9a>] ksys_write+0xea/0x190
+ [<0000000051ba9990>] system_call+0xd8/0x2b4
+INFO: lockdep is turned off.
+
+[1] https://lore.kernel.org/lkml/1568817579.5576.172.camel@lca.pw/
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/page_alloc.c     |  4 ----
+ mm/page_isolation.c | 10 +++++-----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 15c2050c629b..232bbb1dc521 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8588,10 +8588,6 @@ void zone_pcp_reset(struct zone *zone)
+ 		BUG_ON(!PageBuddy(page));
+ 		order = page_order(page);
+ 		offlined_pages += 1 << order;
+-#ifdef CONFIG_DEBUG_VM
+-		pr_info("remove from free list %lx %d %lx\n",
+-			pfn, 1 << order, end_pfn);
+-#endif
+ 		del_page_from_free_area(page, &zone->free_area[order]);
+ 		for (i = 0; i < (1 << order); i++)
+ 			SetPageReserved((page+i));
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index 89c19c0feadb..8682ccb5fbd1 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -25,8 +25,6 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 
+ 	zone = page_zone(page);
+ 
+-	spin_lock_irqsave(&zone->lock, flags);
+-
+ 	/*
+ 	 * We assume the caller intended to SET migrate type to isolate.
+ 	 * If it is already set, then someone else must have raced and
+@@ -74,16 +72,18 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 		int mt = get_pageblock_migratetype(page);
+ 
+ 		set_pageblock_migratetype(page, MIGRATE_ISOLATE);
++
++		spin_lock_irqsave(&zone->lock, flags);
+ 		zone->nr_isolate_pageblock++;
+ 		nr_pages = move_freepages_block(zone, page, MIGRATE_ISOLATE,
+ 									NULL);
+ 
+ 		__mod_zone_freepage_state(zone, -nr_pages, mt);
+-	}
++		spin_unlock_irqrestore(&zone->lock, flags);
+ 
+-	spin_unlock_irqrestore(&zone->lock, flags);
+-	if (!ret)
+ 		drain_all_pages(zone);
++	}
++
+ 	return ret;
+ }
+ 
+-- 
+1.8.3.1
 
