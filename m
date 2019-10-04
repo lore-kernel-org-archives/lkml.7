@@ -2,298 +2,112 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4828AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E0AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153512133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IoZfhr09";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ifaQvjwZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5CB6F215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbfJDKvZ (ORCPT
+        id S1730176AbfJDKw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:51:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37778 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfJDKvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:51:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 284D661A24; Fri,  4 Oct 2019 10:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570186283;
-        bh=okwnO27NbFYjjfsCFRbJqJqJfz8rw0aIBzpv6lhT0QM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IoZfhr09hGtOLzgdJOOGs1xFEa7mMb1td4MQNkMcIBF6e5Y8GbMs7PMC/RaK14kYf
-         i4bTfPAbJQTY40GWAHe4pAZNUOh5UbcgO+O2RDcgw83Ay0QY7Y4JaH6L4Lqc3FIYzf
-         7m2W4DOgHXkEHWcp5LOZo/TKAQ5ly6Al2ZIt/lTE=
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 487A061A17;
-        Fri,  4 Oct 2019 10:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570186282;
-        bh=okwnO27NbFYjjfsCFRbJqJqJfz8rw0aIBzpv6lhT0QM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifaQvjwZaWjj9sJNvSN0QwrJWHIBviYJ+ci7wQyiaIJ8oWU9olTKKCsUG7bK9NGuo
-         zYN5xQ8qxieFBqNyKkiSwQYUnpMfkj3oS7fFysl9Hc+/x/TW2hlVfELJU35u4IIEae
-         z7wel7eQWaf5nXL4LhiFv2OmOQ02B9t9NQ7w34D4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 487A061A17
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V1 2/2] ARM: dts: qcom: sc7180-regulator: Add RPMh regulators for SC7180
-Date:   Fri,  4 Oct 2019 16:20:57 +0530
-Message-Id: <1570186257-10254-3-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1570186257-10254-1-git-send-email-kgunda@codeaurora.org>
-References: <1570186257-10254-1-git-send-email-kgunda@codeaurora.org>
+        Fri, 4 Oct 2019 06:52:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:41692 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfJDKw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:52:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1F6915A1;
+        Fri,  4 Oct 2019 03:52:25 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C78EC3F706;
+        Fri,  4 Oct 2019 03:52:24 -0700 (PDT)
+Subject: Re: [PATCH] arm64/mm: Poison initmem while freeing with
+ free_reserved_area()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+References: <1570163038-32067-1-git-send-email-anshuman.khandual@arm.com>
+ <600676fd-1b39-74f4-49a7-3c807ee24cff@arm.com>
+ <50d88564-c645-62f4-b5b3-3ce7a4425b0a@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <5d771515-e630-bc6e-b81b-8fd208c21011@arm.com>
+Date:   Fri, 4 Oct 2019 11:52:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <50d88564-c645-62f4-b5b3-3ce7a4425b0a@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add regulator devices for SC7180 as RPMh regulators. This ensures
-that consumers are able to modify the physical state of PMIC
-regulators.
+On 04/10/2019 11:48, Anshuman Khandual wrote:
+> 
+> 
+> On 10/04/2019 03:49 PM, Steven Price wrote:
+>> On 04/10/2019 05:23, Anshuman Khandual wrote:
+>>> Platform implementation for free_initmem() should poison the memory while
+>>> freeing it up. Hence pass across POISON_FREE_INITMEM while calling into
+>>> free_reserved_area(). The same is being followed in the generic fallback
+>>> for free_initmem() and some other platforms overriding it.
+>>>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will@kernel.org>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>
+>> Is there a good reason you haven't made a similar change to
+>> free_initrd_mem() - the same logic seems to apply. However this change
+>> looks fine to me.
+> 
+> We will use generic free_initrd_mem() going forward as proposed in a recent
+> patch which does call free_reserved_area() with POISON_FREE_INITMEM.
+> 
+> https://patchwork.kernel.org/patch/11165379/
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-regulator.dtsi | 210 +++++++++++++++++++++++++
- 1 file changed, 210 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sc7180-regulator.dtsi
+Great - that sounds like a very good reason!
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-regulator.dtsi b/arch/arm64/boot/dts/qcom/sc7180-regulator.dtsi
-new file mode 100644
-index 0000000..50a675b
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sc7180-regulator.dtsi
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+
-+&apps_rsc {
-+	pm6150-rpmh-regulators {
-+		compatible = "qcom,pm6150-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_s1a_1p1: smps1 {
-+			regulator-min-microvolt = <1128000>;
-+			regulator-max-microvolt = <1128000>;
-+		};
-+
-+		vreg_s4a_1p0: smps4 {
-+			regulator-min-microvolt = <824000>;
-+			regulator-max-microvolt = <1120000>;
-+		};
-+
-+		vreg_s5a_2p0: smps5 {
-+			regulator-min-microvolt = <1744000>;
-+			regulator-max-microvolt = <2040000>;
-+		};
-+
-+		vreg_l1a_1p2: ldo1 {
-+			regulator-min-microvolt = <1178000>;
-+			regulator-max-microvolt = <1256000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l2a_1p0: ldo2 {
-+			regulator-min-microvolt = <944000>;
-+			regulator-max-microvolt = <1056000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l3a_1p0: ldo3 {
-+			regulator-min-microvolt = <968000>;
-+			regulator-max-microvolt = <1064000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l4a_0p8: ldo4 {
-+			regulator-min-microvolt = <824000>;
-+			regulator-max-microvolt = <928000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l5a_2p7: ldo5 {
-+			regulator-min-microvolt = <2496000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l6a_0p6: ldo6 {
-+			regulator-min-microvolt = <568000>;
-+			regulator-max-microvolt = <648000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l9a_0p6: ldo9 {
-+			regulator-min-microvolt = <488000>;
-+			regulator-max-microvolt = <800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l10a_1p8: ldo10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1832000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l11a_1p8: ldo11 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1952000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l13a_1p8: ldo13 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l14a_1p8: ldo14 {
-+			regulator-min-microvolt = <1728000>;
-+			regulator-max-microvolt = <1832000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l15a_1p8: ldo15 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l16a_2p7: ldo16 {
-+			regulator-min-microvolt = <2496000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l17a_3p0: ldo17 {
-+			regulator-min-microvolt = <2920000>;
-+			regulator-max-microvolt = <3232000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l18a_2p8: ldo18 {
-+			regulator-min-microvolt = <2496000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l19a_2p9: ldo19 {
-+			regulator-min-microvolt = <2696000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+	};
-+
-+	pm6150l-rpmh-regulators {
-+		compatible = "qcom,pm6150l-rpmh-regulators";
-+		qcom,pmic-id = "c";
-+
-+		vreg_s8c_1p3: smps8 {
-+			regulator-min-microvolt = <1120000>;
-+			regulator-max-microvolt = <1408000>;
-+		};
-+
-+		vreg_l1c_1p8: ldo1 {
-+			regulator-min-microvolt = <1616000>;
-+			regulator-max-microvolt = <1984000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l2c_1p3: ldo2 {
-+			regulator-min-microvolt = <1168000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l3c_1p2: ldo3 {
-+			regulator-min-microvolt = <1144000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l4c_1p8: ldo4 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l5c_1p8: ldo5 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l6c_2p9: ldo6 {
-+			regulator-min-microvolt = <2696000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l7c_3p0: ldo7 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l8c_1p8: ldo8 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l9c_2p9: ldo9 {
-+			regulator-min-microvolt = <2952000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l10c_3p3: ldo10 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3400000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l11c_3p3: ldo11 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3400000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_bob: bob {
-+			regulator-min-microvolt = <3008000>;
-+			regulator-max-microvolt = <3960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
-+		};
-+	};
-+};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+Thanks,
+
+Steve
+
+>>
+>> Reviewed-by: Steven Price <steven.price@arm.com>
+>>
+>>> ---
+>>>  arch/arm64/mm/init.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>> index 45c00a54909c..ea7d38011e83 100644
+>>> --- a/arch/arm64/mm/init.c
+>>> +++ b/arch/arm64/mm/init.c
+>>> @@ -571,7 +571,7 @@ void free_initmem(void)
+>>>  {
+>>>  	free_reserved_area(lm_alias(__init_begin),
+>>>  			   lm_alias(__init_end),
+>>> -			   0, "unused kernel");
+>>> +			   POISON_FREE_INITMEM, "unused kernel");
+>>>  	/*
+>>>  	 * Unmap the __init region but leave the VM area in place. This
+>>>  	 * prevents the region from being reused for kernel modules, which
+>>>
+>>
+>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
