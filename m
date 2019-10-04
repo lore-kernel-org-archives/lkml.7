@@ -2,106 +2,125 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB23C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A400C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C0121D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570194036;
-	bh=5Q/iWTgymOppj9DeDqpQWfy6Ic9FHuGC0vgACNbYbd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Chr1p8yPR3DJ8INMCiR4t6C8PKZwwcS7xfzdl5AAFkfWnp461qeaYc8b24RwK8hK8
-	 mzzhhbTMJ1upMBbSEmaDjrGi8BB/H4c5lBDkrmiUVX9rT+t91oo2t3UfhozvVWhFYf
-	 PywXao3ke05m7SHpjeBtpSQeHqJ/9JKL+hwZd1AQ=
+	by mail.kernel.org (Postfix) with ESMTP id E33A6222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:04:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="hpoO5wzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388020AbfJDNAf (ORCPT
+        id S2387874AbfJDNEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387593AbfJDNAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:00:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B73207FF;
-        Fri,  4 Oct 2019 13:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570194033;
-        bh=5Q/iWTgymOppj9DeDqpQWfy6Ic9FHuGC0vgACNbYbd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jeWNxAVjM4M9jRnwjBw1GFUCfukHqXGsDW5rJu7N0l04+zMSDtyZVPUWlR7BmlWPW
-         Pf8rFwhCg6vy/1UMQMas0rybf6WEZzSjEubo9xj49BqcCMo8veo/EBye4ja8KOnHZd
-         iPIwswtomqveq0U9KIpbFVNiWnUPXYYEX4JVu/C8=
-Date:   Fri, 4 Oct 2019 15:00:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 0/2] drivers: make early_platform code SuperH-specific
-Message-ID: <20191004130031.GA596158@kroah.com>
-References: <20191003092913.10731-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003092913.10731-1-brgl@bgdev.pl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 4 Oct 2019 09:04:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39671 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387764AbfJDNEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:04:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v17so5777303wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 06:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=6cIhPqLGXV0mIo22OdHVVmjhEt+X44Ftc/dasgZTMCs=;
+        b=hpoO5wzoB7KyTA/SQfRaeG7/oLKsQ58wZ42OaVoyWiIuaNrP3ojQCLTM6Qi1Os8oVU
+         gno3cKeIwu3sgjAYBg0U5SUthfJc5wm17kx7XBXK6QfQIrBE+FqdPaBXiNQhPgwLLcYY
+         nrPfVJuOP48R51bTr642p3RTh9H13FhJUlQipT32PF+iMqUGbDI+CDxyaHhij0AOEbNJ
+         yL64ZXuPRZOJKQt66P/bglx8xcRhhDzF0sHLPp2AXmg0Cyfv9a6BF+CJB1xn9qi830D4
+         CE4hzw9bv7ykYTO2yGyM/CuDTsRdodyZMwo94BD6Dsw/NdfGtKB93TJxJS4M6i0TEUNZ
+         b5lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=6cIhPqLGXV0mIo22OdHVVmjhEt+X44Ftc/dasgZTMCs=;
+        b=IX9QpfZ6aQs2DTp1RNl+wbVayhWb9Z5APMNA32s3KQnMKX/aKPAauUV3XeHm976EeC
+         G/LeGIljCklrpmoFUUeyf8hWlm8E6vS6EXpqFCtV1b3NnIu9uhbJit+Imj6h5YdTbPNp
+         AxCWIgXid3Vhi3qD6V83rWBvlTTPBh/55E4qYgS0Fzl4R4vcaKKxNRBymrBu++Q4feZ+
+         oE+EsoK1ioKIfYNka0upHYliBY0PI97H/Mqb9o0O4FC5wl/perL57vXUCgfXhQBQQJor
+         abbB537DV5u9dpDPUvjjsLvxd3MM2YB+R1Lcn7aP94LhdabDMY+ezE2FhGgypxswjOPQ
+         4rHw==
+X-Gm-Message-State: APjAAAWzqQgeQI41dTNzemmXo/RLfKVPcJWexY1yXtB14QwkZxwc0YgA
+        KWnT6Nu8AW7AiHWcfwnLWqgV2Pa73uypag==
+X-Google-Smtp-Source: APXvYqxPR021c5nzAa3KiGUN5im5Lql/MqfwT4I/CSWRooJDFbWaUR+S79zSEnZdyii+AYqY+9npIw==
+X-Received: by 2002:a7b:c088:: with SMTP id r8mr11524493wmh.44.1570194257479;
+        Fri, 04 Oct 2019 06:04:17 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id v16sm5662064wrt.12.2019.10.04.06.04.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Oct 2019 06:04:16 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com,
+        Paul Thomas <pthomas8589@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Subject: [PATCH v2] serial: uartps: Fix uartps_major handling
+Date:   Fri,  4 Oct 2019 15:04:11 +0200
+Message-Id: <d2652cda992833315c4f96f06953eb547f928918.1570194248.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:29:11AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Some time ago I started a discussion about the need for a proper early device
-> probing mechanism[1]. One that would be based on real platform drivers and
-> support both platform data and device tree.
-> 
-> While we're far from reaching any consensus on the implementation, Arnd
-> suggested that I start off by moving the SuperH-specific early platform
-> drivers implementation to arch/sh[2].
-> 
-> This series is the first attempt at making way for a new, less hacky
-> implementation.
-> 
-> The first patch moves all the early_platform code to arch/sh.
-> 
-> The second patch prefixes all early_platform symbols with 'sh_'.
-> 
-> [1] https://lkml.org/lkml/2018/4/26/657
-> [2] https://lkml.org/lkml/2018/4/27/239
-> 
-> v1 -> v2:
-> - certain drivers are compiled for arm/mach-shmobile too - we need to
->   add ifdefs for CONFIG_SUPERH around early_platform calls
-> 
-> v2 -> v3:
-> - added a stub for is_early_platform_device() which always returns false
->   on non-SuperH architectures
-> 
-> v3 -> v4:
-> - rebased on top of v5.4-rc1
-> - removed patches that are already upstream from the series
-> 
-> Bartosz Golaszewski (2):
->   drivers: move the early platform device support to arch/sh
->   sh: add the sh_ prefix to early platform symbols
+There are two parts which should be fixed. The first one is to assigned
+uartps_major at the end of probe() to avoid complicated logic when
+something fails.
+The second part is initialized uartps_major number to 0 when last device is
+removed. This will ensure that on next probe driver will ask for new
+dynamic major number.
 
-I like this, any objection from anyone if I take this in my driver-core
-tree for 5.5-rc1?
+Fixes: ab262666018d ("serial: uartps: Use the same dynamic major number for all ports")
+Reported-by: Paul Thomas <pthomas8589@gmail.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-thanks,
+Changes in v2:
+- Use sha1 from Linus tree not stable tree
 
-greg k-h
+ drivers/tty/serial/xilinx_uartps.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index da4563aaaf5c..4e55bc327a54 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1550,7 +1550,6 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ 		goto err_out_id;
+ 	}
+ 
+-	uartps_major = cdns_uart_uart_driver->tty_driver->major;
+ 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
+ 
+ 	/*
+@@ -1680,6 +1679,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ 		console_port = NULL;
+ #endif
+ 
++	uartps_major = cdns_uart_uart_driver->tty_driver->major;
+ 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
+ 							     "cts-override");
+ 	return 0;
+@@ -1741,6 +1741,12 @@ static int cdns_uart_remove(struct platform_device *pdev)
+ 		console_port = NULL;
+ #endif
+ 
++	/* If this is last instance major number should be initialized */
++	mutex_lock(&bitmap_lock);
++	if (bitmap_empty(bitmap, MAX_UART_INSTANCES))
++		uartps_major = 0;
++	mutex_unlock(&bitmap_lock);
++
+ 	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
+ 	return rc;
+ }
+-- 
+2.17.1
+
