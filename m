@@ -2,186 +2,112 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38219C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEF2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0879320830
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570203478;
-	bh=YcIlppU4Lt9lhX27/S/eEJPaKSNRVLdTeNKE4mdQLkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2sMCGQ6Y1qc6rfdzBqGcgYzbjuItc/XxbHMmTaVwNgRgLvqqx+NyE0BcUl7WHcF3I
-	 +LnBE+SikU8UnkoWU6knQPrcZUTQTDuObxfhR59eC8UDU0M4SjpfagPBZZmzorkdT2
-	 jkfnj39ZXo5PYv1LfBFaqE91BT0+yi2aKnkzuQ/0=
+	by mail.kernel.org (Postfix) with ESMTP id E413120830
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SbincJkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389959AbfJDPh5 (ORCPT
+        id S2389976AbfJDPiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389586AbfJDPh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:37:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFB3420830;
-        Fri,  4 Oct 2019 15:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570203474;
-        bh=YcIlppU4Lt9lhX27/S/eEJPaKSNRVLdTeNKE4mdQLkI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XloKBE/pX20WzoK42eZ5i4VSzF0G8YyFlBDBEYnoiPhjatOgMsUkxeq5tQGpbtQqq
-         wJLE2W6ukOgQtoxm7QXyZmrft6OnOGyoBItq0MISLpf5f7FaUetBaGjtDVpubnMDeW
-         rhJSHJT9NH5V35mKhf14YUw/DGFHOem+uRP+t7hA=
-Date:   Fri, 4 Oct 2019 17:37:50 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        David Collins <collinsd@codeaurora.org>,
-        kernel-team@android.com, kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v11 3/6] of: property: Add functional dependency link
- from DT bindings
-Message-ID: <20191004153750.GB823823@kroah.com>
-References: <20190904211126.47518-1-saravanak@google.com>
- <20190904211126.47518-4-saravanak@google.com>
- <20190911102926.A9F8D2082C@mail.kernel.org>
+        Fri, 4 Oct 2019 11:38:03 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:32050 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389700AbfJDPiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:38:02 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94FXxfH009052;
+        Fri, 4 Oct 2019 10:37:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=SSXcsjs5T/Ho7TGSsqHt8nDV+AuMkJ07Gr9/E1wJO1M=;
+ b=SbincJkHlDTy5CSOzXAfnrVcbiVOmacyiXPbZV8wMWLpi0+DRxYbXtb5ExUWMCC9MMVl
+ p0A2Lato9985gwRE2sjM91HOr/g3e1bvm/ggRHXncZgZjaQSRXUgrryw5wAWDb7YVsm/
+ HNS2gkyLyNlcsJZVJJRrHbYAEc0iTrhRq8xGkMlR7XZOU4lHpHJ/G6PGRgY6/81NYWSx
+ EjOKpIM2JTeSc7BiHwVkC7HtqrkVSZPM0kMOzZYqDLG/4LkUxpqrVw051zc5UPFzj5rm
+ R+Ttzcf/9X/1HrGfmSEebCez1fgztu5WjFAgiQDDebj1IWQ+oQkOEdvFl0+SDAP/x1J4 sA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2va4x4t8r0-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 04 Oct 2019 10:37:57 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 4 Oct
+ 2019 16:37:54 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Fri, 4 Oct 2019 16:37:54 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 19C4B2D4;
+        Fri,  4 Oct 2019 15:37:54 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <lee.jones@linaro.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH v4 2/3] mfd: madera: Update DT binding document to support clock supplies
+Date:   Fri, 4 Oct 2019 16:37:52 +0100
+Message-ID: <20191004153753.8369-2-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191004153753.8369-1-ckeepax@opensource.cirrus.com>
+References: <20191004153753.8369-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911102926.A9F8D2082C@mail.kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 suspectscore=1 bulkscore=0 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910040138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 03:29:25AM -0700, Stephen Boyd wrote:
-> Quoting Saravana Kannan (2019-09-04 14:11:22)
-> > Add device links after the devices are created (but before they are
-> > probed) by looking at common DT bindings like clocks and
-> > interconnects.
-> > 
-> > Automatically adding device links for functional dependencies at the
-> > framework level provides the following benefits:
-> > 
-> > - Optimizes device probe order and avoids the useless work of
-> >   attempting probes of devices that will not probe successfully
-> >   (because their suppliers aren't present or haven't probed yet).
-> > 
-> >   For example, in a commonly available mobile SoC, registering just
-> >   one consumer device's driver at an initcall level earlier than the
-> >   supplier device's driver causes 11 failed probe attempts before the
-> >   consumer device probes successfully. This was with a kernel with all
-> >   the drivers statically compiled in. This problem gets a lot worse if
-> >   all the drivers are loaded as modules without direct symbol
-> >   dependencies.
-> > 
-> > - Supplier devices like clock providers, interconnect providers, etc
-> >   need to keep the resources they provide active and at a particular
-> >   state(s) during boot up even if their current set of consumers don't
-> >   request the resource to be active. This is because the rest of the
-> >   consumers might not have probed yet and turning off the resource
-> >   before all the consumers have probed could lead to a hang or
-> >   undesired user experience.
-> > 
-> >   Some frameworks (Eg: regulator) handle this today by turning off
-> >   "unused" resources at late_initcall_sync and hoping all the devices
-> >   have probed by then. This is not a valid assumption for systems with
-> >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> >   this due to the lack of a clear signal for when they can turn off
-> >   resources.
-> 
-> The clk framework disables unused clks at late_initcall_sync. What do
-> you mean clk framework doesn't turn them off because of a clear signal?
+Add the 3 input clock sources for the chip into the device tree binding
+document.
 
-There's a number of minor things you pointed out in this review.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
-Saravana, can you send a follow-on patch for the minor code cleanups
-like formatting and the like that was found here?
+No changes since v3.
 
-> > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
-> > +{
-> > +       struct device *sup_dev;
-> > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> 
-> Is it really a u32 instead of an unsigned int or unsigned long?
-> 
-> > +       int ret = 0;
-> > +       struct device_node *tmp_np = sup_np;
-> > +
-> > +       of_node_get(sup_np);
-> > +       /*
-> > +        * Find the device node that contains the supplier phandle.  It may be
-> > +        * @sup_np or it may be an ancestor of @sup_np.
-> > +        */
-> > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> > +               sup_np = of_get_next_parent(sup_np);
-> 
-> I don't get this. This is assuming that drivers are only probed for
-> device nodes that have a compatible string? What about drivers that make
-> sub-devices for clk support that have drivers in drivers/clk/ that then
-> attach at runtime later? This happens sometimes for MFDs that want to
-> split the functionality across the driver tree to the respective
-> subsystems.
+ Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-For that, the link would not be there, correct?
+diff --git a/Documentation/devicetree/bindings/mfd/madera.txt b/Documentation/devicetree/bindings/mfd/madera.txt
+index cad0f28005027..47e2b8bc60519 100644
+--- a/Documentation/devicetree/bindings/mfd/madera.txt
++++ b/Documentation/devicetree/bindings/mfd/madera.txt
+@@ -67,6 +67,14 @@ Optional properties:
+     As defined in bindings/gpio.txt.
+     Although optional, it is strongly recommended to use a hardware reset
+ 
++  - clocks: Should reference the clocks supplied on MCLK1, MCLK2 and MCLK3
++  - clock-names: May contain up to three strings:
++      "mclk1" for the clock supplied on MCLK1, recommended to be a high
++      quality audio reference clock
++      "mclk2" for the clock supplied on MCLK2, required to be an always on
++      32k clock
++      "mclk3" for the clock supplied on MCLK3
++
+   - MICBIASx : Initial data for the MICBIAS regulators, as covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt.
+     One for each MICBIAS generator (MICBIAS1, MICBIAS2, ...)
+-- 
+2.11.0
 
-> > +static int of_link_property(struct device *dev, struct device_node *con_np,
-> > +                            const char *prop_name)
-> > +{
-> > +       struct device_node *phandle;
-> > +       const struct supplier_bindings *s = bindings;
-> > +       unsigned int i = 0;
-> > +       bool matched = false;
-> > +       int ret = 0;
-> > +
-> > +       /* Do not stop at first failed link, link all available suppliers. */
-> > +       while (!matched && s->parse_prop) {
-> > +               while ((phandle = s->parse_prop(con_np, prop_name, i))) {
-> > +                       matched = true;
-> > +                       i++;
-> > +                       if (of_link_to_phandle(dev, phandle) == -EAGAIN)
-> > +                               ret = -EAGAIN;
-> 
-> And don't break?
-
-There was comments before about how this is not needed.  Frank asked
-that the comment be removed.  And now you point it out again :)
-
-Look at the comment a few lines up, we have to go through all of the
-suppliers.
-
-> > +static int __of_link_to_suppliers(struct device *dev,
-> 
-> Why the double underscore?
-> 
-> > +                                 struct device_node *con_np)
-> > +{
-> > +       struct device_node *child;
-> > +       struct property *p;
-> > +       int ret = 0;
-> > +
-> > +       for_each_property_of_node(con_np, p)
-> > +               if (of_link_property(dev, con_np, p->name))
-> > +                       ret = -EAGAIN;
-> 
-> Same comment.
-
-Same response as above :)
-
-thanks,
-
-greg k-h
