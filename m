@@ -2,109 +2,68 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF582ECE58B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304CDC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA947215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QcXELgzH";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QcXELgzH"
+	by mail.kernel.org (Postfix) with ESMTP id 02F0E222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570213518;
+	bh=hCJV6Cb9k1a8OM+r+Tfan49CvsXCBba1CExk57vZePQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=CstMYT1mfiYcvUKz6Ki6vna/5830TXWryRL4i2dtCL30CI7KuecJUNc8etVijpBQ7
+	 lMYh81g7WYq0Icg9CtV7ARmIqbj400y/5a/Apw/a9hhrQGIaTp7h2MllqrMdMyDqv/
+	 zgqjSzSyZA6lWXbcCjhgU17/YFPzXxB7IsDF5MiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfJDSYy (ORCPT
+        id S1729880AbfJDSZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:24:54 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:60076 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726119AbfJDSYy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:24:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B22188EE21D;
-        Fri,  4 Oct 2019 11:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1570213493;
-        bh=/VB1bb02VRoGzsxa3bQ2KZhbDSoDn6Srll/+xl5neA8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QcXELgzHbk38MyKmJ6CtAsd+RrsfxQsYoxaYYaiGAvEXNHX7vDfuKK9RbSb82MRhU
-         Ld66foaw2tNyHkfz4xWbnTi6D3ivYtfpPLMxoQzsY0M1FQ7ngNmgG2OLjUQk8DHOYG
-         cZy6la9E0CPJekL76C2pgcPgDqDTLV2YK/EMqccM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 36MTGzdnQWFj; Fri,  4 Oct 2019 11:24:53 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id F30AD8EE0EE;
-        Fri,  4 Oct 2019 11:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1570213493;
-        bh=/VB1bb02VRoGzsxa3bQ2KZhbDSoDn6Srll/+xl5neA8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QcXELgzHbk38MyKmJ6CtAsd+RrsfxQsYoxaYYaiGAvEXNHX7vDfuKK9RbSb82MRhU
-         Ld66foaw2tNyHkfz4xWbnTi6D3ivYtfpPLMxoQzsY0M1FQ7ngNmgG2OLjUQk8DHOYG
-         cZy6la9E0CPJekL76C2pgcPgDqDTLV2YK/EMqccM=
-Message-ID: <1570213491.3563.27.camel@HansenPartnership.com>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        David Safford <david.safford@ge.com>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 04 Oct 2019 11:24:51 -0700
-In-Reply-To: <20191004182216.GB6945@linux.intel.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
-         <1570024819.4999.119.camel@linux.ibm.com>
-         <20191003114119.GF8933@linux.intel.com>
-         <1570107752.4421.183.camel@linux.ibm.com>
-         <20191003175854.GB19679@linux.intel.com>
-         <1570128827.5046.19.camel@linux.ibm.com>
-         <20191003215125.GA30511@linux.intel.com>
-         <20191003215743.GB30511@linux.intel.com>
-         <1570140491.5046.33.camel@linux.ibm.com>
-         <1570147177.10818.11.camel@HansenPartnership.com>
-         <20191004182216.GB6945@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Oct 2019 14:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbfJDSZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 14:25:17 -0400
+Subject: Re: [GIT PULL] xen: fixes and cleanups for 5.4-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570213516;
+        bh=hCJV6Cb9k1a8OM+r+Tfan49CvsXCBba1CExk57vZePQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Daas7tnC03wHKKLBfYuMzjQrox/zIgjqmFzy8fq2OzEsTFzoYO+ABgnLR1T+KQbeB
+         2l1cI0L/CZk24VIdjmIkWorsPHj+ykN5SDQUfYPueFthXtfhI5zsI3uoA6+RDLdeIl
+         GakbnvZPF9XGmqnO7c+XSdLQYd7DnGvs56jooeOk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191004050520.7270-1-jgross@suse.com>
+References: <20191004050520.7270-1-jgross@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191004050520.7270-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
+ for-linus-5.4-rc2-tag
+X-PR-Tracked-Commit-Id: a8fabb38525c51a094607768bac3ba46b3f4a9d5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 50dfd03d9579cde9150679e90f8f244c626b7a09
+Message-Id: <157021351644.30669.7701403465634234565.pr-tracker-bot@kernel.org>
+Date:   Fri, 04 Oct 2019 18:25:16 +0000
+To:     Juergen Gross <jgross@suse.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-04 at 21:22 +0300, Jarkko Sakkinen wrote:
-> On Thu, Oct 03, 2019 at 04:59:37PM -0700, James Bottomley wrote:
-> > I think the principle of using multiple RNG sources for strong keys
-> > is a sound one, so could I propose a compromise:  We have a tpm
-> > subsystem random number generator that, when asked for <n> random
-> > bytes first extracts <n> bytes from the TPM RNG and places it into
-> > the kernel entropy pool and then asks for <n> random bytes from the
-> > kernel RNG? That way, it will always have the entropy to satisfy
-> > the request and in the worst case, where the kernel has picked up
-> > no other entropy sources at all it will be equivalent to what we
-> > have now (single entropy source) but usually it will be a much
-> > better mixed entropy source.
-> 
-> I think we should rely the existing architecture where TPM is
-> contributing to the entropy pool as hwrng.
+The pull request you sent on Fri,  4 Oct 2019 07:05:20 +0200:
 
-That doesn't seem to work: when I trace what happens I see us inject 32
-bytes of entropy at boot time, but never again.  I think the problem is
-the kernel entropy pool is push not pull and we have no triggering
-event in the TPM to get us to push.  I suppose we could set a timer to
-do this or perhaps there is a pull hook and we haven't wired it up
-correctly?
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.4-rc2-tag
 
-James
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/50dfd03d9579cde9150679e90f8f244c626b7a09
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
