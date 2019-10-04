@@ -2,125 +2,92 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC2EC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CAAC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED77222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2KIa1h3"
+	by mail.kernel.org (Postfix) with ESMTP id BB459215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570231223;
+	bh=A5i8cqapG27X5CHR55uoln6f4Z8Ed6VwY+A+u+ziJww=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=iXDHbDYJDAl7XqrmFj36eeF14TjYSUMcd/Q8CAi3bYx2xz9uCgvxmaLm8KBTiYQre
+	 PyZmvvwWmdjcuPSe5zxfx0+QdBbIBHPXhM7fKT6L9jZgkdjw9wap+KF9TBkFreo/bR
+	 gN7tCvSGr75BSQkELySa0NMdlPS0dzTKAbncqR0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731625AbfJDXRi (ORCPT
+        id S1731682AbfJDXUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:17:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37040 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729976AbfJDXRh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:17:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so2812149pgi.4;
-        Fri, 04 Oct 2019 16:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N6lld3QVqJ8v+1IBZTT7yl5zFiTihenHGMLoJcSj8pc=;
-        b=M2KIa1h3cLctN2IUIjhYHR3D5/YPSUOLWsOO+ubugv/OGi5dURuk/tPs38woAwqL+a
-         R8WFcDve8wRIPrygkMRObUTaD5m/YF2oMtpoRH3Brtl8S2kCuGOQQpwCQBCCi2S8qyXO
-         TKfcDOsQr522/TIKefYh8Jx0EG9dlYQqaLr9KJ59nBFuH7Gj1i3zRVCfToVQOUrlfLN8
-         m2UJiITUfRxFfGP4hxMPeEVQL9QicvoeRtkW+WIFGZYD54Vr2WmwZaY94dDa+WfNj81M
-         oIdtUeIvJuj/5WkpeUG4Ec56EyLle2fHaOeVdNqDXTSxMdF6GaXGoP8jeXr/ZQMw294Y
-         IeeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N6lld3QVqJ8v+1IBZTT7yl5zFiTihenHGMLoJcSj8pc=;
-        b=IJipXFazBFQ8bCkWNJreoiglBbDqVl6yjrTg1y8ZLJZv/xaVjaHdUAY8uMj9/2T/hF
-         8HQPP5bVujbqZSsSJp06EKEs4aHpfIhpiTFTjGqLmRJ8DRhs5vZ8rzogySUFUxUepxUk
-         nxdYfGzMG92lXtpFyUacWHBgeawtk2d0Qtn6SyArv51UeKeQ/+3/L2qMDf9dGuDB32NW
-         6cCV9hjthiH8Bdqsptn2j5R6duA897nmaEOteXCHPkoNWeWpNO+43XQXzJeLbWKcjTVb
-         yYQk+NGty1mApNbfT+hnBrov94SxU6013/NBd97XGUtTqeET+hIsXjtFK2e/8pSNVkiQ
-         1cKQ==
-X-Gm-Message-State: APjAAAXrNe1ty8wBdtW49/85GC3Eu0Ftku7gKOR41/bmNBNAXGDTh6P5
-        3EgSnRjzaT/WAKN+1lramJY=
-X-Google-Smtp-Source: APXvYqzfju1b5POi3rNfttLsKtoz2qe/HVmRXl91wV/sbwVNPo/D9T4qmwes+Mp3fb1tIwUmmqiR4Q==
-X-Received: by 2002:a17:90a:9a1:: with SMTP id 30mr20259144pjo.71.1570231056558;
-        Fri, 04 Oct 2019 16:17:36 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id p88sm8055120pjp.22.2019.10.04.16.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 16:17:35 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 16:17:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 4/8] firmware: Add new platform fallback mechanism and
- firmware_request_platform()
-Message-ID: <20191004231733.GF22365@dtor-ws>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-5-hdegoede@redhat.com>
+        Fri, 4 Oct 2019 19:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729968AbfJDXUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 19:20:22 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062A1215EA;
+        Fri,  4 Oct 2019 23:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570231222;
+        bh=A5i8cqapG27X5CHR55uoln6f4Z8Ed6VwY+A+u+ziJww=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=givZ0GXYjhduIcQxPjQTRzJcSnxBRYpsC/B5MkadCkE1HVWkvQxfiOIxTdzVvHC3D
+         8Bu2sVKod2Oz2nj6WjjNHVNSHUlnP5qmyCtfckh9yyb2qRWGfsBVox6FXxHw5UlDBF
+         XDVSkcKstVMokIOdRZgg9aE3ouqiDQecDJOkTMF4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004145056.43267-5-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org> <20190925130346.42E0820640@mail.kernel.org> <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org> <20191001143825.CD3212054F@mail.kernel.org> <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org> <20191003160130.5A19B222D0@mail.kernel.org> <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+User-Agent: alot/0.8.1
+Date:   Fri, 04 Oct 2019 16:20:21 -0700
+Message-Id: <20191004232022.062A1215EA@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+Quoting Taniya Das (2019-10-04 10:39:31)
+> Hi Stephen,
+>=20
+> On 10/3/2019 9:31 PM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-10-03 03:31:15)
+> >> Hi Stephen,
+> >>
+> >> On 10/1/2019 8:08 PM, Stephen Boyd wrote:
+> >>>
+> >>> Why do you want to keep them critical and registered? I'm suggesting
+> >>> that any clk that is marked critical and doesn't have a parent should
+> >>> instead become a register write in probe to turn the clk on.
+> >>>
+> >> Sure, let me do a one-time enable from probe for the clocks which
+> >> doesn't have a parent.
+> >> But I would now have to educate the clients of these clocks to remove
+> >> using them.
+> >>
+> >=20
+> > If anyone is using these clks we can return NULL from the provider for
+> > the specifier so that we indicate there isn't support for them in the
+> > kernel. At least I hope that code path still works given all the recent
+> > changes to clk_get().
+> >=20
+>=20
+> Could you please confirm if you are referring to update the below?
 
-On Fri, Oct 04, 2019 at 04:50:52PM +0200, Hans de Goede wrote:
-> In some cases the platform's main firmware (e.g. the UEFI fw) may contain
-> an embedded copy of device firmware which needs to be (re)loaded into the
-> peripheral. Normally such firmware would be part of linux-firmware, but in
-> some cases this is not feasible, for 2 reasons:
-> 
-> 1) The firmware is customized for a specific use-case of the chipset / use
-> with a specific hardware model, so we cannot have a single firmware file
-> for the chipset. E.g. touchscreen controller firmwares are compiled
-> specifically for the hardware model they are used with, as they are
-> calibrated for a specific model digitizer.
-> 
-> 2) Despite repeated attempts we have failed to get permission to
-> redistribute the firmware. This is especially a problem with customized
-> firmwares, these get created by the chip vendor for a specific ODM and the
-> copyright may partially belong with the ODM, so the chip vendor cannot
-> give a blanket permission to distribute these.
-> 
-> This commit adds a new platform fallback mechanism to the firmware loader
-> which will try to lookup a device fw copy embedded in the platform's main
-> firmware if direct filesystem lookup fails.
-> 
-> Drivers which need such embedded fw copies can enable this fallback
-> mechanism by using the new firmware_request_platform() function.
+I wasn't suggesting that explicitly but sure. Something like this would
+be necessary to make clk_get() pass back a NULL pointer to the caller.
+Does everything keep working with this change?
 
-Why would drivers not want to fetch firmware from system firmware if it
-is not present on disk? I would say let driver to opt-out of this
-fallback, but default request_firmware() should do it by default.
-
-Thanks.
-
--- 
-Dmitry
