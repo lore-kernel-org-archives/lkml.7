@@ -2,88 +2,120 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C703C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7582AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF13222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F83D222CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZL7TYe6Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F5uG1Agm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388028AbfJDW1L (ORCPT
+        id S2388406AbfJDW1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 18:27:11 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43714 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJDW1K (ORCPT
+        Fri, 4 Oct 2019 18:27:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42662 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729728AbfJDW1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:27:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v27so4511906pgk.10
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:27:09 -0700 (PDT)
+        Fri, 4 Oct 2019 18:27:12 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so3765711pls.9
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=MdgTtpJ3Fb1crDWamPJ2nMkskfT7oSxSe5O6OdgdxZ4=;
-        b=ZL7TYe6ZIkKRam213eUarR6XVUZ9Z2pHkS0ETE0nwysjqnhcx4HvOaIh+KMQn6YsLq
-         mKjtX2s1h3GN9lPCu75hOOIGG2YwV1kcO/oG3NM0MAGjNs6z5fuRscsGNynGgq4zk3aV
-         2VBnpXHocWNZNNfgr8YUWQAm7VnCZLzKa0jC0DYYOquebKlujr4X4Jzy3pYoXyy6+oqG
-         6EoXtVug7wgGjGw8Khr+CZvWQ0DT77ILwk4rvg8GREyipXETKPvkdepKtOurm3ynl8aC
-         nnyazBw+l7iJro52OaxOnd+RknOcZ3lkI6PxLDL232PF6dH04WcfEnnThwiQ4qKsLcsh
-         7FhA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=DB10pg/WIJaO+aJTgK4OR+kGpHxX86yfhLw/UszwpCo=;
+        b=F5uG1Agmj1h9uJUlUsYaVzT9Nk4sqGpyY9EGmbmREWfkyCLX2Jypf/Vry8EYBqlg6y
+         +5mmeuhecQk1H+/FUJ58m8WKZSUIoDROJ8cXuO1cXJvn/DtQTX99y99UNqV/CUfGWq8C
+         SLXTxvc6qPmiBMbAvEABZWldwZ1/NsRYGGkdCpPAC6bXZkrlGLpbaVIa2KJrd/ryeSUT
+         XXIocsOg0tgXtlaZzEHywwXICMIe9YedFnHjO/H7IocH1cuUcRViUrK4sRCS4QF4iFGg
+         WyQKekfWYrwKHwUU39tkpVTyLDxjY9zrGkI6vCGtwxbHZyG1TjIYCAIyJ/jk6sDNyRf9
+         mTiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MdgTtpJ3Fb1crDWamPJ2nMkskfT7oSxSe5O6OdgdxZ4=;
-        b=ZLyGvsxj9A1CAb+ZwSoZbseDWaFzO/3U8VRYTZ1a2IlSuFVamQeJDd52L9Fc+8T97R
-         iNclV3x9oWwd1xoarfyYve7PHn8+WQFT4B4GQPMUi1iJCcS9IZmrvo43djT05rMUnTVi
-         V+kd8QaR52bHPeVUZE0q5LOzgy1MDJCg6UPIHIx6w6zxFc35T2501LTpiIDB6lDInyyI
-         KntsHy4z76Domhhy3bBpxU+n26PhM25V197lgprI1pgjKI7Vbyj1uZ9CMY30PNP0p9nn
-         wmdLFWEBBVWd1hVYm7V82c9maQOIW3Rc5o9D7G0dHoX5Silot4JvKqKlEBWAfWztduMg
-         wFWg==
-X-Gm-Message-State: APjAAAUoBVyKc1vKb7yIUBJNNA8ta1YMvqh7tv8UcJC/XdzxmMrrlSh0
-        pqSXJGTtsXLeGfJmgQvJCjXoNaATxps=
-X-Google-Smtp-Source: APXvYqy8P355fDdWZ7Bjd78TA0Rif1EjY23uAZcQptugi3FT1XaYfKGFi0ye/CSlumDYU5zIu9qqMg==
-X-Received: by 2002:a65:500d:: with SMTP id f13mr17876281pgo.359.1570228028355;
-        Fri, 04 Oct 2019 15:27:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=DB10pg/WIJaO+aJTgK4OR+kGpHxX86yfhLw/UszwpCo=;
+        b=A9QICf/oqn2u5AqVJ7abjWQlrmjV2u2Dbj60L6HEo52O4o/f9OOFwCqbF8CUhdWzvh
+         FAclkEvBMLR5WKdKmur/GcdfqVZUGI5TZWhEVbZC1EVzISBPN8jpt53Bb9zL9XLjcXVM
+         ou/PPRF8LUt4j0zoDvJDdwfx2DzZiQsAv/fDvRBAYhWm2ju/LCQLzIFnCkMTn4ccMYsx
+         ou1KlnbH6IcdnyJ9CRXJjFxBqSGSQ8im9jdcf/zGiSj3XfFOibq/WPh3PSh2y/FVMk5b
+         s1vy1ScNt+meYQjeYetx/FH+jq0rUNc4g+fnvaBFJ1L9szQmw+JkJV4YkY5+TTZ94Zvx
+         VBDQ==
+X-Gm-Message-State: APjAAAU9A1iAS1vrFE0PrkPQP+dYeBZtojGc9k17a6qynIAPqa8+DWYt
+        ua4pnKEXhU1T0WbNa4ShXIbOSw==
+X-Google-Smtp-Source: APXvYqzCVLSpk4OE/L2LUrTXd1xxgCf0fxLXYqqbD9oR0XvRr6RzlVdImC6SxgRlG2DIsUN1EbXjmQ==
+X-Received: by 2002:a17:902:aa08:: with SMTP id be8mr3333013plb.317.1570228029737;
+        Fri, 04 Oct 2019 15:27:09 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x37sm6328136pgl.18.2019.10.04.15.27.07
+        by smtp.gmail.com with ESMTPSA id x37sm6328136pgl.18.2019.10.04.15.27.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 15:27:07 -0700 (PDT)
+        Fri, 04 Oct 2019 15:27:08 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] rpmsg: glink stability fixes
-Date:   Fri,  4 Oct 2019 15:26:56 -0700
-Message-Id: <20191004222702.8632-1-bjorn.andersson@linaro.org>
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v2 1/6] rpmsg: glink: Fix reuse intents memory leak issue
+Date:   Fri,  4 Oct 2019 15:26:57 -0700
+Message-Id: <20191004222702.8632-2-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191004222702.8632-1-bjorn.andersson@linaro.org>
+References: <20191004222702.8632-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes for issues found in GLINK during reboot testing of a remoteproc.
+From: Arun Kumar Neelakantam <aneela@codeaurora.org>
 
-Arun Kumar Neelakantam (2):
-  rpmsg: glink: Fix reuse intents memory leak issue
-  rpmsg: glink: Fix use after free in open_ack TIMEOUT case
+Memory allocated for re-usable intents are not freed during channel
+cleanup which causes memory leak in system.
 
-Bjorn Andersson (2):
-  rpmsg: glink: Don't send pending rx_done during remove
-  rpmsg: glink: Free pending deferred work on remove
+Check and free all re-usable memory to avoid memory leak.
 
-Chris Lew (2):
-  rpmsg: glink: Put an extra reference during cleanup
-  rpmsg: glink: Fix rpmsg_register_device err handling
+Fixes: 933b45da5d1d ("rpmsg: glink: Add support for TX intents")
+Cc: stable@vger.kernel.org
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
- drivers/rpmsg/qcom_glink_native.c | 52 +++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 10 deletions(-)
+Changes since v1:
+- None
 
+ drivers/rpmsg/qcom_glink_native.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index 621f1afd4d6b..9355ce26fd98 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -241,10 +241,19 @@ static void qcom_glink_channel_release(struct kref *ref)
+ {
+ 	struct glink_channel *channel = container_of(ref, struct glink_channel,
+ 						     refcount);
++	struct glink_core_rx_intent *tmp;
+ 	unsigned long flags;
++	int iid;
+ 
+ 	spin_lock_irqsave(&channel->intent_lock, flags);
++	idr_for_each_entry(&channel->liids, tmp, iid) {
++		kfree(tmp->data);
++		kfree(tmp);
++	}
+ 	idr_destroy(&channel->liids);
++
++	idr_for_each_entry(&channel->riids, tmp, iid)
++		kfree(tmp);
+ 	idr_destroy(&channel->riids);
+ 	spin_unlock_irqrestore(&channel->intent_lock, flags);
+ 
 -- 
 2.18.0
 
