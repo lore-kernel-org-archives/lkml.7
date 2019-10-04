@@ -2,179 +2,133 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB741C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB231C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C0C222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35FD222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="PbMZgn+B"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xm/cy/ZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388609AbfJDNdD (ORCPT
+        id S2388783AbfJDNdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:33:03 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35920 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388558AbfJDNdC (ORCPT
+        Fri, 4 Oct 2019 09:33:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46378 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388743AbfJDNdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:33:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x80so4510925lff.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 06:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1OQAE57/CgK569gxX6I56M38ksMNygkjEmF6P3qjzis=;
-        b=PbMZgn+B0Hr1ICWKuBiRjOj8UTS2Y+vMUyvS6z4bjDoc+6BlUbcFkmaZ36miTfWRij
-         CAZ+zhVUI7ZF8Bilvydqep8UJoFtdGbRhxshN+PZASkatEMrVKqHEPzoFvxC5+Eu7C8L
-         gkcIP07xJoVkwqZ1+SrYYKVfmpaWoTn1ulcag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1OQAE57/CgK569gxX6I56M38ksMNygkjEmF6P3qjzis=;
-        b=BkvKXkF5VeeRCM6Rd5pRERGY+4rDEPY1+TNo4icEzhvETu8b2VVVL8oAP8ZEX+ojWx
-         VzulLFxj9gIA+/nMEmSsKexJ5TIGTX1eNSyPCS9ouSnEREQYIcMA8uE21AMIyGWWDlfq
-         nDW3pE5e1nsUKeyFSyLWGTA7CmtWWLru3CbcGjPDhUTSvIXWOz6d47QHQKoI1bRsdoca
-         NbI+5miAfNC9o53gw76+VBN7M9sLVfSwtPJzQesfPNKDz7EjZ1xf6nst8Ai54r8z1N49
-         oVQFpzijWXLnMh5im96S362fBpt5NC4i7kI5rXDYl8LLa3xPjJR+nfXFs4igPaWOfWGC
-         8cGA==
-X-Gm-Message-State: APjAAAXhh3EEQqpH5LeeS29ImPiKJ98t8Hos9X9gCGFP4pq1SjNRFkXr
-        AHjTLjdw1qgNYYE+dpW6rUe9YA==
-X-Google-Smtp-Source: APXvYqzE/7G06PEqAijCPxhGp3iO3G3UFBOnYRhZM+k3WGz1SKXbxv6e+QegMQXJuE7Pq/qA8KX19A==
-X-Received: by 2002:ac2:5326:: with SMTP id f6mr9224821lfh.33.1570195980792;
-        Fri, 04 Oct 2019 06:33:00 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id y26sm1534991ljj.90.2019.10.04.06.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 06:33:00 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] pwm: mxs: remove legacy methods
-Date:   Fri,  4 Oct 2019 15:32:03 +0200
-Message-Id: <20191004133207.6663-3-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
-References: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
+        Fri, 4 Oct 2019 09:33:31 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94DXHsZ011535;
+        Fri, 4 Oct 2019 08:33:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570195997;
+        bh=ICdFi7+va2YgW8u1kII9BM7D1dGZnBwB8N4tj2oyY6U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xm/cy/ZDQpxKlKJ+HJJJn6+nRj73V0KAzK9nRnc0pENSQCLduGunQFABQaxTHDLQ5
+         JT0h7F76kq0dqVtFEUOaAn6n/gFylvUXKmrEV2mFDC1s2RsMcb2nyJFz9JE0DZ+Kpq
+         MiFZCdf1n0DNgc0LfeHX1pmv3lY45z+x6k1YN1gI=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94DXHfK086791
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 4 Oct 2019 08:33:17 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
+ 2019 08:33:15 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 4 Oct 2019 08:33:15 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94DXDQw076936;
+        Fri, 4 Oct 2019 08:33:14 -0500
+Subject: Re: Should regulator core support parsing OF based fwnode?
+To:     Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, <dmurphy@ti.com>,
+        <linux-leds@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+References: <20191003082812.28491-1-jjhiblot@ti.com>
+ <20191003082812.28491-3-jjhiblot@ti.com>
+ <20191003104228.c5nho6eimwzqwxpt@earth.universe>
+ <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
+ <62591735-9082-1fd7-d791-07929ddaa223@gmail.com>
+ <20191003183554.GA37096@sirena.co.uk>
+ <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
+ <20191003194140.GE6090@sirena.co.uk>
+ <a9f668f9-ad26-4e18-178a-8403b8b3b1db@gmail.com>
+ <20191004113942.GB4866@sirena.co.uk>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <b6318ba5-e76e-dc1c-6921-a702abf6749c@ti.com>
+Date:   Fri, 4 Oct 2019 15:33:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191004113942.GB4866@sirena.co.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we now have ->apply, these are no longer relevant.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- drivers/pwm/pwm-mxs.c | 77 -------------------------------------------
- 1 file changed, 77 deletions(-)
+On 04/10/2019 13:39, Mark Brown wrote:
+> On Thu, Oct 03, 2019 at 10:27:26PM +0200, Jacek Anaszewski wrote:
+>> On 10/3/19 9:41 PM, Mark Brown wrote:
+>>> Why would we want to do that?  We'd continue to support only DT systems,
+>>> just with code that's less obviously DT only and would need to put
+>>> checks in.  I'm not seeing an upside here.
+>> For instance few weeks ago we had a patch [0] in the LED core switching
+>> from using struct device's of_node property to fwnode for conveying
+>> device property data. And this transition to fwnode property API can be
+>> observed as a frequent pattern across subsystems.
+> For most subsystems the intent is to reuse DT bindings on embedded ACPI
+> systems via _DSD.
+>
+>> Recently there is an ongoing effort aiming to add generic support for
+>> handling regulators in the LED core [1], but it turns out to require
+>> bringing back initialization of of_node property for
+>> devm_regulator_get_optional() to work properly.
+> Consumers should just be able to request a regulator without having to
+> worry about how that's being provided - they should have no knowledge at
+> all of firmware bindings or platform data for defining this.  If they
+> do that suggests there's an abstraction issue somewhere, what makes you
+> think that doing something with of_node is required?
 
-diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
-index 10efd3de0bb3..5a6835e18fc6 100644
---- a/drivers/pwm/pwm-mxs.c
-+++ b/drivers/pwm/pwm-mxs.c
-@@ -110,85 +110,8 @@ static int mxs_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return 0;
- }
- 
--static int mxs_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			  int duty_ns, int period_ns)
--{
--	struct mxs_pwm_chip *mxs = to_mxs_pwm_chip(chip);
--	int ret, div = 0;
--	unsigned int period_cycles, duty_cycles;
--	unsigned long rate;
--	unsigned long long c;
--
--	rate = clk_get_rate(mxs->clk);
--	while (1) {
--		c = rate / cdiv[div];
--		c = c * period_ns;
--		do_div(c, 1000000000);
--		if (c < PERIOD_PERIOD_MAX)
--			break;
--		div++;
--		if (div >= PERIOD_CDIV_MAX)
--			return -EINVAL;
--	}
--
--	period_cycles = c;
--	c *= duty_ns;
--	do_div(c, period_ns);
--	duty_cycles = c;
--
--	/*
--	 * If the PWM channel is disabled, make sure to turn on the clock
--	 * before writing the register. Otherwise, keep it enabled.
--	 */
--	if (!pwm_is_enabled(pwm)) {
--		ret = clk_prepare_enable(mxs->clk);
--		if (ret)
--			return ret;
--	}
--
--	writel(duty_cycles << 16,
--			mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
--	writel(PERIOD_PERIOD(period_cycles) | PERIOD_ACTIVE_HIGH |
--	       PERIOD_INACTIVE_LOW | PERIOD_CDIV(div),
--			mxs->base + PWM_PERIOD0 + pwm->hwpwm * 0x20);
--
--	/*
--	 * If the PWM is not enabled, turn the clock off again to save power.
--	 */
--	if (!pwm_is_enabled(pwm))
--		clk_disable_unprepare(mxs->clk);
--
--	return 0;
--}
--
--static int mxs_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct mxs_pwm_chip *mxs = to_mxs_pwm_chip(chip);
--	int ret;
--
--	ret = clk_prepare_enable(mxs->clk);
--	if (ret)
--		return ret;
--
--	writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + SET);
--
--	return 0;
--}
--
--static void mxs_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct mxs_pwm_chip *mxs = to_mxs_pwm_chip(chip);
--
--	writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + CLR);
--
--	clk_disable_unprepare(mxs->clk);
--}
--
- static const struct pwm_ops mxs_pwm_ops = {
- 	.apply = mxs_pwm_apply,
--	.config = mxs_pwm_config,
--	.enable = mxs_pwm_enable,
--	.disable = mxs_pwm_disable,
- 	.owner = THIS_MODULE,
- };
- 
--- 
-2.20.1
+The regulator core accesses consumer->of_node to get a phandle to a 
+regulator's node. The trouble arises from the fact that the LED core 
+does not populate of_node anymore, instead it populates fwnode. This 
+allows the LED core to be agnostic of ACPI or OF to get the properties 
+of a LED.
+
+IMO it is better to populate both of_node and fwnode in the LED core at 
+the moment. It has already been fixed this way for the platform driver 
+[0], MTD [1] and PCI-OF [2].
+
+>
+> Further, unless you have LEDs that work without power you probably
+> shouldn't be using _get_optional() for their supply.  That interface is
+> intended only for supplies that may be physically absent.
+
+Not all LEDs have a regulator to provide the power. The power can be 
+supplied by the LED controller for example.
+
+
+[0] f94277af03ead0d3bf2 of/platform: Initialise dev->fwnode appropriately
+
+[1] c176c6d7e932662668 mfd: core: Set fwnode for created devices
+
+[2] 9b099a6c75e4ddceea PCI: OF: Initialize dev->fwnode appropriately
 
