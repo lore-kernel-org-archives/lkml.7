@@ -2,73 +2,137 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62BBC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98037C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC11222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C5521D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:11:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjSLjRjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389623AbfJDPLC (ORCPT
+        id S2389776AbfJDPLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:11:02 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46942 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389086AbfJDPLB (ORCPT
+        Fri, 4 Oct 2019 11:11:16 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44896 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389086AbfJDPLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:11:01 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGPEQ-0004dA-83; Fri, 04 Oct 2019 15:10:58 +0000
-Date:   Fri, 4 Oct 2019 16:10:58 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Varad Gautam <vrd@amazon.de>, stable@vger.kernel.org,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH] devpts: Fix NULL pointer dereference in dcache_readdir()
-Message-ID: <20191004151058.GH26530@ZenIV.linux.org.uk>
-References: <20191004140503.9817-1-christian.brauner@ubuntu.com>
- <20191004142748.GG26530@ZenIV.linux.org.uk>
- <20191004143301.kfzcut6a6z5owfee@wittgenstein>
+        Fri, 4 Oct 2019 11:11:16 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u40so8975066qth.11;
+        Fri, 04 Oct 2019 08:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LaVRRMK9qu3AK/IDimN49Clff2cxJBO8xmfUwWCrdGI=;
+        b=tjSLjRjBQ/Xb2EqjJJ+ELbHOAgSrTFA+9NuNuwVMn3f3zUpKLba1tmgGG7J3PqGWpL
+         YojUhXkcYDU2KT72YIx57K67hJyb3+qHTD97X1wsw+NT+8PIvHMY0vE/yoLlEk8zUXZY
+         bm9smuVFB7rUNUdyca3xT3LTMoNVt9nQj9LEQQ1lTbHf61rh9Uu273MLj6UHCI6XqhS+
+         oO4drxzBQzXLuMTeuWQPT6Npshp1oHDiNwq//3S2OzzJldXhEqiEdWmDuvDNLXNCJg9w
+         L5vG2Bvw9m9cabO2En6WYF7Ootl6qsBuZJGMHdACd7b+4QSR0JvGsZ57KAPq1UUXtS3J
+         /rOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LaVRRMK9qu3AK/IDimN49Clff2cxJBO8xmfUwWCrdGI=;
+        b=E1iH6ccYBkF8eE7a6FJr0g174k20IMcoPz2Hdd4DjdFeKt7XjjOGS7AUwfrqJ7J/9p
+         OaCva6MJLWBrrS4tH728YgdI7oE3vYU7vRUj+POpefeyDRd7X59EE0tvo9tGRgBzoFY9
+         DkbgBZ33SQGGiwS25mGjC2ojamPGi0cv4bsM1f8tFS4yaPaIqTpe081O0PoxDTypYjM+
+         nJloBLaBrqFt2q6ogoiSTk0M0jpoEC7Xe63uE8b8bnDV2Rm8QbTHjcd0Rot646EpsH8u
+         Vvq5YDN1/rfX7iSZlWQ78+RfNqRo8glT8hUXsYTn4tXSNaGWeEabQV3U3DXi4VvmAWt9
+         A3vg==
+X-Gm-Message-State: APjAAAXwON33sHRtQmbONOYu5PmyOsrOF1XLOGR7q5Iv1pf4pA5N92u+
+        /yEmreBgWT1jBma3hFIDsTA=
+X-Google-Smtp-Source: APXvYqzS2WPllmpeWzWMvLD7ans2wlPHGenq0xVVA5BS1uVMyNVlrgiV+KuHd5KyDDonyc0Im9VzRQ==
+X-Received: by 2002:ac8:5554:: with SMTP id o20mr16339768qtr.282.1570201874942;
+        Fri, 04 Oct 2019 08:11:14 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a3:10fb:a464:42a6:e226:d387? ([2620:10d:c091:500::2:9b70])
+        by smtp.gmail.com with ESMTPSA id 139sm3317840qkf.14.2019.10.04.08.11.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Oct 2019 08:11:14 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH v2] rtl8xxxu: add bluetooth co-existence support for
+ single antenna
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+References: <20190911025045.20918-1-chiu@endlessm.com>
+ <0c049f46-fb15-693e-affe-a84ea759b5d7@gmail.com>
+ <CAB4CAweXfhLc8ATWg87ydadCKVqj3SnG37O5Hyz8uP8EkPrg9w@mail.gmail.com>
+Message-ID: <5dad1fd1-ef0b-b5d9-02ea-7fc3bf7f8576@gmail.com>
+Date:   Fri, 4 Oct 2019 11:11:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004143301.kfzcut6a6z5owfee@wittgenstein>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAB4CAweXfhLc8ATWg87ydadCKVqj3SnG37O5Hyz8uP8EkPrg9w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:33:02PM +0200, Christian Brauner wrote:
-> On Fri, Oct 04, 2019 at 03:27:48PM +0100, Al Viro wrote:
-> > On Fri, Oct 04, 2019 at 04:05:03PM +0200, Christian Brauner wrote:
-> > > From: Will Deacon <will@kernel.org>
-> > > 
-> > > Closing /dev/pts/ptmx removes the corresponding pty under /dev/pts/
-> > > without synchronizing against concurrent path walkers. This can lead to
-> > > 'dcache_readdir()' tripping over a 'struct dentry' with a NULL 'd_inode'
-> > > field:
-> > 
-> > FWIW, vfs.git#fixes (or #next.dcache) ought to deal with that one.
+On 10/2/19 9:19 PM, Chris Chiu wrote:
+> On Wed, Oct 2, 2019 at 11:04 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
+>>
+>>
+>> In general I think it looks good! One nit below:
+>>
+>> Sorry I have been traveling for the last three weeks, so just catching up.
+>>
+>>
+>>> +void rtl8723bu_set_coex_with_type(struct rtl8xxxu_priv *priv, u8 type)
+>>> +{
+>>> +     switch (type) {
+>>> +     case 0:
+>>> +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE1, 0x55555555);
+>>> +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE2, 0x55555555);
+>>> +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE3, 0x00ffffff);
+>>> +             rtl8xxxu_write8(priv, REG_BT_COEX_TABLE4, 0x03);
+>>> +             break;
+>>> +     case 1:
+>>> +     case 3:
+>>
+>> The one item here, I would prefer introducing some defined types to
+>> avoid the hard coded type numbers. It's much easier to read and debug
+>> when named.
+>>
+> Honestly, I also thought of that but there's no meaningful description for these
+> numbers in the vendor driver. Even based on where they're invoked, I can merely
+> give a rough definition on 0. So I left it as it is for the covenience
+> if I have to do
+> cross-comparison with vendor driver in the future for some possible
+> unknown bugs.
 > 
-> Is it feasible to backport your changes? Or do we want to merge the one
-> here first and backport?
+>> If you shortened the name of the function to rtl8723bu_set_coex() you
+>> won't have problems with line lengths at the calling point.
+>>
+> I think the rtl8723bu_set_ps_tdma() function would cause the line length problem
+> more than rtl8723bu_set_coex_with_type() at the calling point. But as the same
+> debug reason as mentioned, I may like to keep it because I don't know how to
+> categorize the 5 magic parameters. I also reference the latest rtw88
+> driver code,
+> it seems no better solution so far. I'll keep watching if there's any
+> better idea.
 
-I'm not sure.  The whole pile is backportable, all right (and the first commit
-alone should take care of devpts problem).  However, there's a performance
-regression on some loads; it *is* possible to get the thing reasonably lockless
-without fucking it up (as the original conversion had been).  Still not
-in the series, since cifs (ab)use of dcache_readdir() needs to be clarified
-to figure out the right way to do it.  Asked CIFS folks, got no reaction
-whatsoever, will ask again...
+Personally I would still prefer to name it COEX_TYPE_1 etc. but I can 
+live with this. Would you mind at least adding some comments in the code 
+about it?
 
-	Al, mostly back after flu, digging through the piles of mail
+Cheers,
+Jes
+
+
