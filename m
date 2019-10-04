@@ -2,87 +2,100 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE1CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6382C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528D6215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570191806;
-	bh=ar2kC7rdtySGPENEprKl86d8tIFKKkGoZVS904bdgRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ynh/1m/X3yyxoO4WTod0au9TeVJWd/mwOxXi4g/ANUTrcdHsrCPMI9FdOwEqNw288
-	 yzLlWJ2tz9RLn7bBo1r3e5YvjyEqWGIQJdB727MLjpSMKAMJHWr/yEtOYZIJXMR1yJ
-	 0vP+5utcOrB9duLbKcKhzVjg5RMnsjGMiotSrDgk=
+	by mail.kernel.org (Postfix) with ESMTP id 7D95E21D71
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:23:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="a9JaEf0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbfJDMXZ (ORCPT
+        id S2387412AbfJDMX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbfJDMXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:23:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F5CB20867;
-        Fri,  4 Oct 2019 12:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570191804;
-        bh=ar2kC7rdtySGPENEprKl86d8tIFKKkGoZVS904bdgRo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hwmr8URfsWBbEZDx1sk4G2/yfJq1YWgLu5qnllnyhYQ9OpaosHy3eO6qbhE+ZQufY
-         D8mRl5pd95qUKDkhQ2B4FXq/xbcx4OFlPfeghlyuEVH/UEoUG5ULhr3xYG6ghpQbas
-         op0gwHyiPvawUvcWpIm2sXppYKXisZmw7PzEUmcU=
-Date:   Fri, 4 Oct 2019 14:23:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     JC Kuo <jckuo@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        nkristam@nvidia.com, skomatineni@nvidia.com
-Subject: Re: [PATCH v2 0/7] add Tegra194 XUSB host and pad controller support
-Message-ID: <20191004122322.GB422178@kroah.com>
-References: <20191004081941.4831-1-jckuo@nvidia.com>
+        Fri, 4 Oct 2019 08:23:57 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49565 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727451AbfJDMX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:23:57 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94C6SFo002761;
+        Fri, 4 Oct 2019 14:23:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=dn3SRm7He6o8fWRPcG/dCMdLktN0g0uPy1Ih8W/R/RU=;
+ b=a9JaEf0MxZAwzo7nMA07qKyXGlCaouKJWTW1SdXRMtGGb5c3DraiCdErBx5WnRO2/Vdr
+ 6EPZxkiv/fnc4yNIFYvC5V9IrEvYTMy1eiW5YZka3zp/0fkWKarRpTz8ekF+zqY2Hbr5
+ hmKR9tKpwvCFbBxH3hWj0aLRWyJQI5+mYZqaLM6YhpWWBEnj4/3wdeuwoargiqKHuCHe
+ kzzMhKILnnM3MYbOFpBF+/pDaLHyZp7s7Vn16CMOE2J0R84uY7xPePyaXSaiacQO+qCx
+ lgydOt80+ekIZ4N0XS83b2iZVOyZ2zUEGa64QCYufvhjleCqZUiKayh2wc/jL/wBU815 9A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w9wavvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 14:23:45 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2AD4A10002A;
+        Fri,  4 Oct 2019 14:23:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D9D62BDA9A;
+        Fri,  4 Oct 2019 14:23:45 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
+ 14:23:45 +0200
+Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 14:23:43
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 1/1] pinctrl: stmfx: fix null pointer on remove
+Date:   Fri, 4 Oct 2019 14:23:42 +0200
+Message-ID: <20191004122342.22018-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004081941.4831-1-jckuo@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.141]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_06:2019-10-03,2019-10-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:19:34PM +0800, JC Kuo wrote:
-> Hi,
-> 
-> This series introduces support for Tegra194 XUSB host and pad
-> controller. Tegra194 XUSB host and pad controller are highly
-> similar to the controllers found on Tegra186. Therefore, it's
-> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
-> 
-> JC Kuo (7):
->   xhci: tegra: Parameterize mailbox register addresses
->   usb: host: xhci-tegra: Add Tegra194 XHCI support
->   phy: tegra: xusb: Protect Tegra186 soc with config
->   phy: tegra: xusb: Add Tegra194 support
->   dt-bindings: phy: tegra: Add Tegra194 support
->   arm64: tegra: Add XUSB and pad controller on Tegra194
->   arm64: tegra: Enable XUSB host in P2972-0000 board
+dev_get_platdata(&pdev->dev) returns a pointer on struct stmfx_pinctrl,
+not on struct stmfx (platform_set_drvdata(pdev, pctl); in probe).
+Pointer on struct stmfx is stored in driver data of pdev parent (in probe:
+struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);).
 
-What changed from v1?  You need to put that somewhere, usually in the
-patches themselves, below the --- line.
+Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Or at the very least, in the cover letter.
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 974973777395..564660028fcc 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -705,7 +705,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 
+ static int stmfx_pinctrl_remove(struct platform_device *pdev)
+ {
+-	struct stmfx *stmfx = dev_get_platdata(&pdev->dev);
++	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+ 
+ 	return stmfx_function_disable(stmfx,
+ 				      STMFX_FUNC_GPIO |
+-- 
+2.17.1
 
-Given that I can't find it anywhere here, I'll expect a v3 with that
-information to be sent soon :(
-
-thanks,
-
-greg k-h
