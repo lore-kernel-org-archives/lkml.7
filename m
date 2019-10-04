@@ -2,145 +2,134 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32238C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55B5C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05056222C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD42A20867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KtOZZQLW"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oMGxvVkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbfJDM14 (ORCPT
+        id S1730769AbfJDM3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:27:56 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:43697 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730606AbfJDM1x (ORCPT
+        Fri, 4 Oct 2019 08:29:33 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22040 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730009AbfJDM3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:27:53 -0400
-Received: by mail-ua1-f65.google.com with SMTP id k24so1962929uag.10;
-        Fri, 04 Oct 2019 05:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wSaY7W6VdgweKOp9jTYZreYJLfH4I8nv1hwYNYCfNYk=;
-        b=KtOZZQLWCS4cSkTOhxNhKpVdlgScCqqd1k9O1sOLLv3yWqmzDmWQCdv8SbIdZBoMW1
-         p+XTPTLA1kfle7EHLlKSnLYcUlzSuqJptOPqafa3svn7Hf80RAA2Cx71KzunAZVY5CKI
-         8ojxRA8Gp9JZxvfYXIFcqiBo5VkICsvGOOLms+dAmKNc2Gyb1ABs5C4J6QthrMsOZNdB
-         mA5kWsr4Hs0Zx6aJQedGIHQBYMfbbCdUocr8j9BalA5nxZKpqtZiAC0qFj6rsGSkNaVO
-         NBFkJf8d9O/ZSW6P4AaWH+j1E+rTmA4hXSMSg0moPcRF/G6BePZfF5CN15CA+rHi0N3V
-         MILQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wSaY7W6VdgweKOp9jTYZreYJLfH4I8nv1hwYNYCfNYk=;
-        b=mtlLCuTCcBLd05SOXYG8dYN1SnnX2nuGNWkEGT8e9CSLzbeyAO5hFA5xIlha4VUN+L
-         ox0TwflDvulY3lwc5omUCkWW+yg6HpwYdZPdyQHocYSPmHL2Xz2vePYQWu9JdevbPG/k
-         J3If6Pkrnx4kopnrYSdbJpCY2kdKtNRpPc0SCjHkk+DllXhALIDHpCzhmpgcsLTe2ifv
-         I+Ur6SxmXqcwiZPtE5Vp8HUbcXq8qb0cOfYAwOd1oiaq1YbDUvVM+B3dBA63EzGVAyyl
-         OAqHDIXthDflIOk2AmdbvBqXLOxO6PNYxzWF/pjRXFOihDDTxI20tiz+oq62csuIcxEa
-         jSCQ==
-X-Gm-Message-State: APjAAAV/TQbYXSW9CD0HgYtFdK0/dskZBuvQApVkhOp4jGCOvYfNtZwq
-        02/RaAtxq3HJq/Vff5EvI6kySIr7U3T/BJpZ3vQ=
-X-Google-Smtp-Source: APXvYqyUkWxXFI6t/ssjecMpUlOsdFzkDM1l5GdegvctcVigKJWMkEH5L7iuW0BTIlwrQde45JWQ1TaHnD69ETrLuPE=
-X-Received: by 2002:ab0:2397:: with SMTP id b23mr317737uan.91.1570192072150;
- Fri, 04 Oct 2019 05:27:52 -0700 (PDT)
+        Fri, 4 Oct 2019 08:29:32 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94CQIm1006703;
+        Fri, 4 Oct 2019 14:29:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=9A+NHcV5pb4nSM8hQ4ARvkipxNSadOGVLrTQhB3YT70=;
+ b=oMGxvVkBNHBhNXKCunTAcmhMuDMMaKR/pka5cAnOKWUJIFOPBsEqnHp4jXOplWml6oR1
+ IO0yL3cy6uzUmgfeqo79i7p+z7963pKcr1+enDnBFhmtwsl/0B234U2Iopl2xh6SCrZV
+ JDeh9J7sme+7dM4XXrY9Bsuee55CfuDdOpnliPczu1icFws6IKg9YgEGS0HWodO2Uaym
+ GeLXjMUNVBANR/rV2nFZmdEYYaYxqwg5snc/fqwYluTa6uxxW7HuEfROfbdnMD2zlhhN
+ kL305zUnZ/qjetGpzJe3DUdzPmkHArsaWOzRdhB+DGpUdDjgEzcghpFHIm7HISWJTgx+ qg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v9vnatyht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 14:29:24 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7383A10002A;
+        Fri,  4 Oct 2019 14:29:24 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 655832BE231;
+        Fri,  4 Oct 2019 14:29:24 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
+ 14:29:24 +0200
+Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 14:29:23
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 1/1] pinctrl: stmfx: add irq_request/release_resources callbacks
+Date:   Fri, 4 Oct 2019 14:29:23 +0200
+Message-ID: <20191004122923.22674-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
- <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
-In-Reply-To: <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
-From:   Yegor Yefremov <yegorslists@googlemail.com>
-Date:   Fri, 4 Oct 2019 14:27:39 +0200
-Message-ID: <CAGm1_kv6RMUDppu6ZjY9Dq7QL=hS=D+e3KS37+V0ncbwoXE6mQ@mail.gmail.com>
-Subject: Re: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP
- vs SERIAL_OMAP
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Vignesh R <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.141]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_06:2019-10-03,2019-10-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+When an STMFX IO is used as interrupt through the interrupt-controller
+binding, the STMFX driver should configure this IO as input. Default
+value of STMFX IO direction is input, but if the IO is used as output
+before the interrupt use, it will not work without these callbacks.
 
-On Fri, Oct 4, 2019 at 12:39 PM Adam Ford <aford173@gmail.com> wrote:
->
-> On Fri, Oct 4, 2019 at 5:02 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > I am running Kernel 5.3.2 trying to troubleshoot some intermittent
-> > Bluetooth issues, and I think I have narrowed it down to the serial
-> > driver in use.
->
-> I should have also noted that it's using UART2 with CTS and RTS on the
-> DM3730 (omap3630) and its configured with a baud rate of 3M.
-> I tried slowing it to 115200, but that didn't help.  I tried disabling
-> the DMA hooks from the device tree, and that didn't help.
->
-> > By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
-> > SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
-> > appears fine.  When I enable Bluetooth, however, I get intermittent
-> > errors on an DM3730 / OMAP3630.
-> >
-> > Using the 8250 driver for Blueotooth I get intermittent frame errors
-> > and data loss.
-> >
-> > Scanning ...
-> > [   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
-> > [   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
-> >         F4:4E:FC:C9:2F:57       BluJax
-> > # l2ping F4:4E:FC:C9:2F:57
-> > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-> > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
-> > no response from F4:4E:FC:C9:2F:57: id 1
-> > ^C2 sent, 1 received, 50% loss
-> >
-> > (after a fairly long hang, I hit control-c)
-> >
-> > However, disabling the 8250 driver and using the only SERIAL_OMAP and
-> > the console routed to ttyO0, the Bluetooth works well, so I believe it
-> > to be a serial driver issue and not a Bluetooth error.
-> >
-> > # hcitool scan
-> > Scanning ...
-> >         F4:4E:FC:C9:2F:57       BluJax
-> > ^C
-> > # l2ping F4:4E:FC:C9:2F:57
-> > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
-> > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
-> > ...
-> > 44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
-> > ^C15 sent, 15 received, 0% loss
-> > #
-> >
-> > 0% loss and regular, repeatable communication without any Frame
-> > reassembly errors.
-> >
->
-> I tried disabling SERIAL_OMAP and using only SERIAL_8250_OMAP, but
-> that didn't help.  Because the issue goes away when I disable
-> SERIAL_8250_OMAP, I am wondering if something is either being
-> misconfigured or some IRQ or DMA integration is missing that may be
-> present with the older SERIAL_OMAP driver.
->
-> > Any suggestions on how to troubleshoot or what might cause the
-> > difference between the two drivers?
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Can it be related to this issue [1]? Can you confirm that 5.2 is
-working as expected with the 8250 driver?
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 564660028fcc..e3a3dcc145b4 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -505,6 +505,34 @@ static void stmfx_pinctrl_irq_bus_sync_unlock(struct irq_data *data)
+ 	mutex_unlock(&pctl->lock);
+ }
+ 
++static int stmfx_gpio_irq_request_resources(struct irq_data *data)
++{
++	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
++	struct stmfx_pinctrl *pctl = gpiochip_get_data(gpio_chip);
++	int ret;
++
++	ret = stmfx_gpio_direction_input(&pctl->gpio_chip, data->hwirq);
++	if (ret)
++		return ret;
++
++	ret = gpiochip_lock_as_irq(&pctl->gpio_chip, data->hwirq);
++	if (ret) {
++		dev_err(pctl->dev, "Unable to lock gpio %lu as IRQ: %d\n",
++			data->hwirq, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void stmfx_gpio_irq_release_resources(struct irq_data *data)
++{
++	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
++	struct stmfx_pinctrl *pctl = gpiochip_get_data(gpio_chip);
++
++	gpiochip_unlock_as_irq(&pctl->gpio_chip, data->hwirq);
++}
++
+ static void stmfx_pinctrl_irq_toggle_trigger(struct stmfx_pinctrl *pctl,
+ 					     unsigned int offset)
+ {
+@@ -678,6 +706,8 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->irq_chip.irq_set_type = stmfx_pinctrl_irq_set_type;
+ 	pctl->irq_chip.irq_bus_lock = stmfx_pinctrl_irq_bus_lock;
+ 	pctl->irq_chip.irq_bus_sync_unlock = stmfx_pinctrl_irq_bus_sync_unlock;
++	pctl->irq_chip.irq_request_resources = stmfx_gpio_irq_request_resources;
++	pctl->irq_chip.irq_release_resources = stmfx_gpio_irq_release_resources;
+ 
+ 	ret = gpiochip_irqchip_add_nested(&pctl->gpio_chip, &pctl->irq_chip,
+ 					  0, handle_bad_irq, IRQ_TYPE_NONE);
+-- 
+2.17.1
 
-[1] https://marc.info/?l=linux-serial&m=156965039008649&w=2
-
-Cheers,
-Yegor
