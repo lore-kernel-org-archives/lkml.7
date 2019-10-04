@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9581C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC05C32792
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0CE208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849C020865
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLpQ7mt3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGvh8u7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732769AbfJDBUy (ORCPT
+        id S1732787AbfJDBU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 21:20:54 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46752 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732698AbfJDBUu (ORCPT
+        Thu, 3 Oct 2019 21:20:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35482 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732736AbfJDBUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 21:20:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o18so4888376wrv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 18:20:49 -0700 (PDT)
+        Thu, 3 Oct 2019 21:20:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y21so4040369wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 18:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nUAonWj+crtkdXG/WWKIValoecqHVHH6udCzw0FtFkA=;
-        b=vLpQ7mt3ThQb0VSxXv49DD4KXlBDUNrlQmJp0dM20xHrM7td1QN4D7E3RNX0OHcRlu
-         8V37WKkj94esobZIItKhQneuIdxzi7hufucFjV0REHpXBKZtK0uGqClaCBwXTNZoZta8
-         uhJfuyA/alk6gF5CzPBB4KFu04OdtcBs8d098NlgITGIxeclz6dz2LwPgX5243ogjbsG
-         T4/OeqMAzLf6x2kqOcpdLjSAXcVHWmWOt//XIZjfPauEzvjg7RLVIC2hVvfNP5QSxs/j
-         B1j2tc04vGHjdpZvxe9J/ThuInnQB4gkSwxdiOSI+ZCHGPC7tbawnJAZ1dI7O2IiMmbU
-         46pg==
+        bh=8iUxscWVzYKCJ6EmdYRKBXpJWznBbiucsnTojLR55Zo=;
+        b=ZGvh8u7e/KG83ysu8hxkekIUxpluUZwj15OzFONVw0XKrxcv+tl3c8UiemHFgRJnvZ
+         rsBZW91eazMr8vQx5EOeiKYXGYAZLr/4kqViUNb+fraquDg7VQOZQb6oBKcjzcXdDfEJ
+         z5YJCE6ry1gAYcVTsnGA0H91EHD70ZkGXD6vKe0P6OBeSqJcSvOVX4oag/jzWNk9Q4jP
+         f7HEmIJEadzI2vLzDvm4xfWQrf0mk/mpHeAbE/pIbycmakvaWWaePSjJB+5zjlI3wsMd
+         llO4euW/CnMSNf6gmLCaxCi15A8s116vflnIgoIeHRtw4sYv2UDim2Cal/63C4gUEQ0N
+         mlLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nUAonWj+crtkdXG/WWKIValoecqHVHH6udCzw0FtFkA=;
-        b=W3L6wW+b8cD/XRO0JNbjVH6GOBszZrvOtC3K4/aT45jIv7d1NvPTVox202YAG770k9
-         8yAit2whaw3aOX5TIa5lQTt9c24z+4/VsXL2SpNfyvlsUE5C/DrDk050cTdopExA6W1d
-         n2LF8rw9ij+AuSFE2rt5HXq9hvXTctzktbc+PQoHCHTCDqbBD96r3eOSuDJAA2fBIBpt
-         1ikHJFp3rHQ6ZMFKKifxsx35/IKGu62rMjxEeS6NxSS9xC6ZF7IvDP7ROi3nNTv3BtZK
-         kvUWjfMH0bgPsnYUgohyh2FQ4vixMUUY7UIE46auW7leV/HC0Mtomuc/ki3Cv5aLUsei
-         55HA==
-X-Gm-Message-State: APjAAAWl49HWQ9dQHyzuXY+hqMf7PzgpMtbltVrrQnF0VE7NXa+ANAJq
-        JL/fpSnNY6ZIjU7zG8ZLtZAT4NB+dANqYQ==
-X-Google-Smtp-Source: APXvYqzmE/7+G/TNlgdVxbF34gURdIGzZm+D6rwY1er+oIdfx5HC05wpQ+Q2xajsIvx0B2hYjNEpXw==
-X-Received: by 2002:adf:eec5:: with SMTP id a5mr5127263wrp.191.1570152048538;
-        Thu, 03 Oct 2019 18:20:48 -0700 (PDT)
+        bh=8iUxscWVzYKCJ6EmdYRKBXpJWznBbiucsnTojLR55Zo=;
+        b=Ook+YnCNJ5cCuy2m8EPkFyKKbCMLjufzY83jzIzJih6CctUPWjsSMeM+EFOp3coUBj
+         lj5eFWu/Da6ejYMhVlCBYuMmhAcHzhrko2sDM9k/gZ3ZM4tfxm6cFXLlIGnkIi0o+XsE
+         oppNIsi5LvaEahs68twsWR9RK4SEmr95kLPKSnNZH+vZgwHuBy30P8wK3Bmi5Ak4fTX+
+         MQKMGZjKIfUzdRp79poR/yZiJnsTKvZ8TNxMVP38SHRhDiIPOotFBVkQB0VNm8dXgoAy
+         1XmDtPtOHENhaN01/zMK9Jm44Tb8HVjQ2WT02yymybEapZlpdeYEIb5E9ox3W6Lmrpim
+         s0rw==
+X-Gm-Message-State: APjAAAWDsAfG5w5mYTKtDJTq1DW/OmM7LvqBk3SdnVDGFdXyjyXjNEtd
+        j3eOIFUOdd4B5sC8J/CDs5/+ZP3deFQTKQ==
+X-Google-Smtp-Source: APXvYqwUNSkOaE0y04oXXX0RtSS2KCx76xNBoIKY19qdCVF/c8gpH92t890vo4LQb09YyYMc0SqsSA==
+X-Received: by 2002:a05:600c:2412:: with SMTP id 18mr8525376wmp.128.1570152052324;
+        Thu, 03 Oct 2019 18:20:52 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id a4sm4097404wmm.10.2019.10.03.18.20.45
+        by smtp.gmail.com with ESMTPSA id a4sm4097404wmm.10.2019.10.03.18.20.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 18:20:47 -0700 (PDT)
+        Thu, 03 Oct 2019 18:20:51 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [RESEND PATCH v3 6/9] hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
-Date:   Fri,  4 Oct 2019 09:20:07 +0800
-Message-Id: <20191004012010.11287-7-changbin.du@gmail.com>
+Subject: [RESEND PATCH v3 7/9] hacking: Create a submenu for scheduler debugging options
+Date:   Fri,  4 Oct 2019 09:20:08 +0800
+Message-Id: <20191004012010.11287-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191004012010.11287-1-changbin.du@gmail.com>
 References: <20191004012010.11287-1-changbin.du@gmail.com>
@@ -76,54 +76,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are both memory debug options to debug kernel stack issues.
+Create a submenu 'Scheduler Debugging' for scheduler debugging options.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Acked-by: Randy Dunlap <rdunlap@infradead.org>
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 ---
- lib/Kconfig.debug | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ lib/Kconfig.debug | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 389876ee49d8..2cf52b3b5726 100644
+index 2cf52b3b5726..6db178071743 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
-@@ -634,6 +634,18 @@ config DEBUG_STACK_USAGE
+@@ -973,6 +973,8 @@ config WQ_WATCHDOG
  
- 	  This option will slow down process creation somewhat.
+ endmenu # "Debug lockups and hangs"
  
-+config SCHED_STACK_END_CHECK
-+	bool "Detect stack corruption on calls to schedule()"
-+	depends on DEBUG_KERNEL
-+	default n
-+	help
-+	  This option checks for a stack overrun on calls to schedule().
-+	  If the stack end location is found to be over written always panic as
-+	  the content of the corrupted region can no longer be trusted.
-+	  This is to ensure no erroneous behaviour occurs which could result in
-+	  data corruption or a sporadic crash at a later stage once the region
-+	  is examined. The runtime overhead introduced is minimal.
++menu "Scheduler Debugging"
 +
- config DEBUG_VM
- 	bool "Debug VM"
- 	depends on DEBUG_KERNEL
-@@ -987,18 +999,6 @@ config SCHEDSTATS
+ config SCHED_DEBUG
+ 	bool "Collect scheduler debugging info"
+ 	depends on DEBUG_KERNEL && PROC_FS
+@@ -999,6 +1001,8 @@ config SCHEDSTATS
  	  application, you can say N to avoid the very slight overhead
  	  this adds.
  
--config SCHED_STACK_END_CHECK
--	bool "Detect stack corruption on calls to schedule()"
--	depends on DEBUG_KERNEL
--	default n
--	help
--	  This option checks for a stack overrun on calls to schedule().
--	  If the stack end location is found to be over written always panic as
--	  the content of the corrupted region can no longer be trusted.
--	  This is to ensure no erroneous behaviour occurs which could result in
--	  data corruption or a sporadic crash at a later stage once the region
--	  is examined. The runtime overhead introduced is minimal.
--
++endmenu
++
  config DEBUG_TIMEKEEPING
  	bool "Enable extra timekeeping sanity checking"
  	help
