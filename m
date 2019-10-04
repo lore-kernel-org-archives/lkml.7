@@ -5,120 +5,122 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F43C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAC0C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059A820873
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537B2222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="YfMx+/ht"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMYufGuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfJDVyu (ORCPT
+        id S1731328AbfJDVzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:54:50 -0400
-Received: from mout.gmx.net ([212.227.17.21]:49969 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfJDVyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 17:54:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570226048;
-        bh=B8UvUYEF9Jx7mfHiXjKQ9ieRk6WlKja4/H0KNgjq6/g=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=YfMx+/htXJeNvW4HQApwMRKi1SmpF+HT43N1rI1Jnrcb5EliKWCQgVZKd/SG04BwY
-         ilRNpJuq9rtKbIGR8CoFRSX+j2sLfPbjsScwIHU4XtFxaqFtaoxySpafySyaFENSfT
-         4VX118N2C7nMvS1+uO2Qxz9CDPoGPhCapUYZGUaI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRmjq-1iiZwz2wR8-00TFzL; Fri, 04
- Oct 2019 23:54:08 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     rcu@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rculist: Describe variadic macro argument in a Sphinx-compatible way
-Date:   Fri,  4 Oct 2019 23:54:02 +0200
-Message-Id: <20191004215402.28008-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Fri, 4 Oct 2019 17:55:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44440 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfJDVzu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 17:55:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i14so4467658pgt.11;
+        Fri, 04 Oct 2019 14:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vkZt0GXM6qo82WWXoUdTiYWmectwUJ8fNOCzw+vFaZA=;
+        b=TMYufGuSnVoxWfOa8/Z/yRVBCyCrAwDmi57il930HlXUOWstAn1VqNgqDpxG1/s6FO
+         jVzxb47Maw5QTKV6BdRdm2QHqkXXajXuMft5uydWJ99ug99ePO0JfKZ7Yzs3AUFszp4z
+         oNO2bNEo5kVLPtTCaUmeaoeLPIFKW7K5j2s9Fuvd4oV86SZ9BhW+YIDKpSPrhj7Pzr5A
+         EQcZ5Y0bvs+1S/4dvq7NnL0CQLhxkGBTzgg6WUuRT2qhJlxsogGuTPP+NKpQ1/OdALTq
+         O0ToFvndKTQat/q1uNOZrmIfItPPQ8GhI9SnH5APlRoQS97Uu1BT7ZfL7paW94ySCiPj
+         CbYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vkZt0GXM6qo82WWXoUdTiYWmectwUJ8fNOCzw+vFaZA=;
+        b=c2GQDB9SWaEzFF6cFO25N7vNut0AAaQLW0WQWVHoTAEG6ySsrRyjl7iIdyCQUg6mWn
+         fZ2G0AHiV44p1StiYOMyvbrPSF4Qagq2DlRnyZWP6T5NOa/OuGmPQShFMiK2zsP0mj1o
+         kiDMxFhkDdwQ1VWVW9Ugw/zFQZFyqLZ+eptwb74XR57MSEwJGV5SPdbyN5XkUo8mZHjP
+         hvCxoK+b5gPwA8aW7Rc5tQC4J54e5Tk8vZoDN5lWgre3ECo3p7emIHocfsqtxshXsdpt
+         HxEetOW+fgFjScTXxHYxKqnRZbf16JqD0+mgKgF3F/cLuUmKdGuwSENhyUjC69+3TaUu
+         nljg==
+X-Gm-Message-State: APjAAAW9sgnutfhSI90DCXX+3HDRlKsIDxzhLcoZKxvK0UXe4XOY1O8Z
+        WBtDF3AO9H3eVlUknsRao8g=
+X-Google-Smtp-Source: APXvYqwx/LQCYgX/lCyiMKyiW7/oppBn2dDWhtxoXzCzqXC9DuFsGT8gP6S4+j+MAh1N3GHx0oTurA==
+X-Received: by 2002:a17:90a:1609:: with SMTP id n9mr19150165pja.64.1570226149687;
+        Fri, 04 Oct 2019 14:55:49 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id 207sm8094732pfu.129.2019.10.04.14.55.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 14:55:48 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: serial: fsl_lpuart: Fix lpuart_flush_buffer()
+Date:   Fri,  4 Oct 2019 14:55:37 -0700
+Message-Id: <20191004215537.5308-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZOzJWGD9fboKlyMdu8wnj0mmctk3XOAzMJRgM4mcdAMsFhSuMF8
- ysTGR2ppxjuWp0YIsO6Azpt2lDG23KEEOLUTiR1sFtapuxmQu6/ZTSEJl/2o0Bw00J64KN6
- 36Zg+IU1257/5WeOTfkfqwArM5rLa3+ZJo1U3FqNzBcYF+ceGPG1r579V3Pu74fI9H8/ZDq
- dsL/oQv4bia782lCYCVcA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1zmG1LY4qBg=:fk+3hZ31jwadfwSSUPYqU2
- YcazqouEJRJe5ADQmpltwO2iXf1/IY2OBBYvY22m6YDkKtzzm6O59oR8LLjdbCmITfikCMSuG
- crg6duW8HpuwZ9v/7Iz5jpgmlLs2fezN3vZfngTJSRnxH9SNq1ZyX2EkcvtZr/9KyxCEIged8
- 8FO2DMDKSiBu5/+bXWC3QpFQNPV3KjqXbVOFkalKlWDCIzZEtKpLslGjNqhP8hc0usp0VF+S9
- Q3VMXk7C6DFnzbHEUsWWOviNfF3+f77kdszbx1QwG0xpvFvPHXQKv6j2ClhCseJogAKjU3R+L
- NWjKHWHxHTRjpJ22xfxshdFJ6JYNdTvYenMbt0esrU9Q1lJ+qqNgHFNr31enNb9qLcdePGeNa
- 4oYM1+45EfB1elDnDG8EavuK2ukz/G9HnDAj1fof7+laOldU1I2wtqbepo/Sysma7IrntKoVP
- upT8GGABgxfBp5MSdeRgyZwIY8F6gyH4L6Ik2sWiyHTFhnfK4Cs1LRNMFBpieMsIJdbnlaciq
- a0hoSEPqj4pBTQh3tsn3KDodRRR78+F6tePGo8rXRmlnbIvLr8Z4y4eYXrZUBAquoeYCCuFSd
- P4VDLC1ArCpFbreqmZVOmNxGUPHsrcDSieLItTTLtCLfdfWiARb9L+XJh7Ol9gt8Cn6cTISao
- 4A2o9Q2ccfDtX2CMwN151iwcDLzEdGwlEqSWGY8bFWLRpS2wBRT3/0d7X6ovlzizlpVAudiUb
- m5KVb9ekl/V+Nnfr59pu4cMok/23nalILfpBOBXT+t28nIdoBVoDxNZ7w1fr1H5ZrZrpM+V3K
- 4di6fBZaCYCSeLIkZs/hxxVyeDkX0pgz7F/CK+BN0c8qSCO3E8beKM/64bUqEKYiHG/L1pO9v
- kWTmMdrlFvguQ3zhu1XYS6AFaUouilfshjQNS6+jX5QSX/7ScbdBxS6hfTrkgFLnp2es6Ump5
- OK3bHpf5DCSUWqdeYW/jOy2OCG3hLftj3rixq8KFwAWDwAgyrfnpKijMMA5edNX0qOQkjgsYv
- PKr6r/qM1sqyJTcz/6QhsF+V26fbhE1HwopvUips3Ak5HLMAXliH0XWOKk0tcGUOSXS+dKcUI
- zimXkcr7EX4G2L4TCk9llgHKFVeXxejRvpqtX3To2PjZSDHBRD4M4AuekW1L1sMIaKZR9bMhj
- XvkwkkqZUH+l38l2+tOO2Nej4HwqwShNQOQ9wLt70IbJPzed2lveu0pBwKvTEZAbdfYj0mly5
- +Rx++BKCtNdr1Hj7pqu4QvLtVJpdZeSrb7sqzk8dXC7bmEoWgL/so21yrSfg=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this patch, Sphinx shows "variable arguments" as the description
-of the cond argument, rather than the intended description, and prints
-the following warnings:
+Fix incorrect read-modify-write sequence in lpuart_flush_buffer() that
+was reading from UARTPFIFO and writing to UARTCFIFO instead of
+operating solely on the latter.
 
-./include/linux/rculist.h:374: warning: Excess function parameter 'cond' d=
-escription in 'list_for_each_entry_rcu'
-./include/linux/rculist.h:651: warning: Excess function parameter 'cond' d=
-escription in 'hlist_for_each_entry_rcu'
+Fixes: 9bc19af9dacb ("tty: serial: fsl_lpuart: Flush HW FIFOs in .flush_buffer")
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Vivien Didelot <vivien.didelot@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-imx@nxp.com
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- include/linux/rculist.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Greg:
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 4158b7212936..61c6728a71f7 100644
-=2D-- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -361,7 +361,7 @@ static inline void list_splice_tail_init_rcu(struct li=
-st_head *list,
-  * @pos:	the type * to use as a loop cursor.
-  * @head:	the head for your list.
-  * @member:	the name of the list_head within the struct.
-- * @cond:	optional lockdep expression if called from non-RCU protection.
-+ * @cond...:	optional lockdep expression if called from non-RCU protectio=
-n.
-  *
-  * This list-traversal primitive may safely run concurrently with
-  * the _rcu list-mutation primitives such as list_add_rcu()
-@@ -636,7 +636,7 @@ static inline void hlist_add_behind_rcu(struct hlist_n=
-ode *n,
-  * @pos:	the type * to use as a loop cursor.
-  * @head:	the head for your list.
-  * @member:	the name of the hlist_node within the struct.
-- * @cond:	optional lockdep expression if called from non-RCU protection.
-+ * @cond...:	optional lockdep expression if called from non-RCU protectio=
-n.
-  *
-  * This list-traversal primitive may safely run concurrently with
-  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-=2D-
-2.20.1
+This bug causes occasional boot hang on 5.4-rc1 on Vybrid, so it might
+be good to push that for 5.4-rc2.
+
+Thanks,
+Andrey Sirnov
+
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 3e17bb8a0b16..537896c4d887 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -548,7 +548,7 @@ static void lpuart_flush_buffer(struct uart_port *port)
+ 		val |= UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH;
+ 		lpuart32_write(&sport->port, val, UARTFIFO);
+ 	} else {
+-		val = readb(sport->port.membase + UARTPFIFO);
++		val = readb(sport->port.membase + UARTCFIFO);
+ 		val |= UARTCFIFO_TXFLUSH | UARTCFIFO_RXFLUSH;
+ 		writeb(val, sport->port.membase + UARTCFIFO);
+ 	}
+-- 
+2.21.0
 
