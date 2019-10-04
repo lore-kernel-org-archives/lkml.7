@@ -2,96 +2,78 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971C8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC0EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A042084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE99222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KQAWFSXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbfJDTGw (ORCPT
+        id S1730340AbfJDTHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:06:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:40977 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730018AbfJDTGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:06:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 12:06:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="367474761"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga005.jf.intel.com with ESMTP; 04 Oct 2019 12:06:49 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 4 Oct 2019 12:06:49 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.161]) by
- ORSMSX111.amr.corp.intel.com ([169.254.12.70]) with mapi id 14.03.0439.000;
- Fri, 4 Oct 2019 12:06:49 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-CC:     "kristen@linux.intel.com" <kristen@linux.intel.com>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>,
-        "yu.c.zhang@linux.intel.com" <yu.c.zhang@linux.intel.com>
-Subject: Re: [RFC PATCH 03/13] kvm: Add XO memslot type
-Thread-Topic: [RFC PATCH 03/13] kvm: Add XO memslot type
-Thread-Index: AQHVejL5N5jO3Ib8wEKh4Roo4WuQGadKizWAgADDeoA=
-Date:   Fri, 4 Oct 2019 19:06:49 +0000
-Message-ID: <9b885e65c3ec0ab8b4de0d38f2f20686a7afe0d0.camel@intel.com>
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-         <20191003212400.31130-4-rick.p.edgecombe@intel.com>
-         <5201724e-bded-1af1-7f46-0f3e1763c797@redhat.com>
-In-Reply-To: <5201724e-bded-1af1-7f46-0f3e1763c797@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0A851DFD33B8F24CADA4E2173004C47F@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 4 Oct 2019 15:07:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59748 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfJDTHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:07:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7gattgm+JvBkKytQq1U5t6bSLwzlmt3/1F4dY6lkecs=; b=KQAWFSXenFYeworaI57NHtkR8
+        HF8/ZTI2KYgmwCwj6wTesPxAb56ku2VXonNWWuFtuPWklADPs5fYVPxcw3IrLQWSxFlEtc9+7LFFE
+        dmpjCwm66SxM46bTzg6Be9eN481ynzQLVmWKDfq/UnC+JXIVYi3GxB56gGoTaqF/vPitr5DHSVklR
+        q3HnJhbT8UvP7gKeF6PmxceI+yKY1hTWusaHcLtDlE0GpAqN5K8JhZniEqryJKC0T5AhsXI+hq5Ql
+        5I5tExSqI7ok2POseN8ZlviSxTcfzAtqFd2+XkbEoyxn6Qkmn+6/sDjKeMI/wlantNw90K6ZGpFs9
+        6VVQ+v8eg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGSvD-0004t7-V0; Fri, 04 Oct 2019 19:07:23 +0000
+Date:   Fri, 4 Oct 2019 12:07:23 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] docs: remove :c:func: from genericirq.rst
+Message-ID: <20191004190723.GJ32665@bombadil.infradead.org>
+References: <20191004163955.14419-1-corbet@lwn.net>
+ <20191004163955.14419-2-corbet@lwn.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004163955.14419-2-corbet@lwn.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEwLTA0IGF0IDA5OjI3ICswMjAwLCBQYW9sbyBCb256aW5pIHdyb3RlOg0K
-PiBPbiAwMy8xMC8xOSAyMzoyMywgUmljayBFZGdlY29tYmUgd3JvdGU6DQo+ID4gQWRkIFhPIG1l
-bXNsb3QgdHlwZSB0byBjcmVhdGUgZXhlY3V0ZS1vbmx5IGd1ZXN0IHBoeXNpY2FsIG1lbW9yeSBi
-YXNlZCBvbg0KPiA+IHRoZSBSTyBtZW1zbG90LiBMaWtlIHRoZSBSTyBtZW1zbG90LCBkaXNhbGxv
-dyBjaGFuZ2luZyB0aGUgbWVtc2xvdCB0eXBlDQo+ID4gdG8vZnJvbSBYTy4NCj4gPiANCj4gPiBJ
-biB0aGUgRVBUIGNhc2UgQUNDX1VTRVJfTUFTSyByZXByZXNlbnRzIHRoZSByZWFkYWJsZSBiaXQs
-IHNvIGFkZCB0aGUNCj4gPiBhYmlsaXR5IGZvciBzZXRfc3B0ZSgpIHRvIHVuc2V0IHRoaXMuDQo+
-ID4gDQo+ID4gVGhpcyBpcyBiYXNlZCBpbiBwYXJ0IG9uIGEgcGF0Y2ggYnkgWXUgWmhhbmcuDQo+
-ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWXUgWmhhbmcgPHl1LmMuemhhbmdAbGludXguaW50ZWwu
-Y29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2sgRWRnZWNvbWJlIDxyaWNrLnAuZWRnZWNvbWJl
-QGludGVsLmNvbT4NCj4gDQo+IEluc3RlYWQgb2YgdGhpcywgd2h5IG5vdCBjaGVjayB0aGUgZXhp
-dCBxdWFsaWZpY2F0aW9uIGdwYSBhbmQsIGlmIGl0IGhhcw0KPiB0aGUgWE8gYml0IHNldCwgbWFz
-ayBhd2F5IGJvdGggdGhlIFhPIGJpdCBhbmQgdGhlIFIgYml0PyAgSXQgY2FuIGJlIGRvbmUNCj4g
-dW5jb25kaXRpb25hbGx5IGZvciBhbGwgbWVtc2xvdHMuICBUaGlzIHNob3VsZCByZXF1aXJlIG5v
-IGNoYW5nZSB0bw0KPiB1c2Vyc3BhY2UuDQo+IA0KPiBQYW9sbw0KPiANClRoZSByZWFzb25pbmcg
-d2FzIHRoYXQgaXQgc2VlbXMgbGlrZSBLVk0gbGVhdmVzIGl0IHRvIHVzZXJzcGFjZSB0byBjb250
-cm9sIHRoZQ0KcGh5c2ljYWwgYWRkcmVzcyBzcGFjZSBsYXlvdXQgc2luY2UgdXNlcnNwYWNlIGRl
-Y2lkZXMgdGhlIHN1cHBvcnRlZCBwaHlzaWNhbA0KYWRkcmVzcyBiaXRzIGFuZCBsYXlzIG91dCBt
-ZW1vcnkgaW4gdGhlIHBoeXNpY2FsIGFkZHJlc3Mgc3BhY2UuIFNvIGR1cGxpY2F0aW9uDQp3aXRo
-IFhPIG1lbXNsb3RzIHdhcyBhbiBhdHRlbXB0IHdhcyB0byBrZWVwIHRoZSBsb2dpYyBhcm91bmQg
-dGhhdCB0b2dldGhlci4NCg0KSSdsbCB0YWtlIGFub3RoZXIgbG9vayBhdCBkb2luZyBpdCB0aGlz
-IHdheSB0aG91Z2guIEkgdGhpbmsgdXNlcnNwYWNlIG1heSBzdGlsbA0KbmVlZCB0byBhZGp1c3Qg
-dGhlIE1BWFBIWUFERFIgYW5kIGJlIGF3YXJlIGl0IGNhbid0IGxheW91dCBtZW1vcnkgaW4gdGhl
-IFhPDQpyYW5nZS4NCg0KVGhhbmtzLA0KDQpSaWNrDQo=
+On Fri, Oct 04, 2019 at 10:39:54AM -0600, Jonathan Corbet wrote:
+>  To make the transition to the new model easier and prevent the breakage
+> -of existing implementations, the :c:func:`__do_IRQ` super-handler is still
+> +of existing implementations, the __do_IRQ() super-handler is still
+>  available. This leads to a kind of duality for the time being. Over time
+>  the new model should be used in more and more architectures, as it
+>  enables smaller and cleaner IRQ subsystems. It's deprecated for three
+
+...
+
+> @@ -369,7 +369,7 @@ handler(s) to use these basic units of low-level functionality.
+>  __do_IRQ entry point
+>  ====================
+>  
+> -The original implementation :c:func:`__do_IRQ` was an alternative entry point
+> +The original implementation __do_IRQ() was an alternative entry point
+>  for all types of interrupts. It no longer exists.
+
+I think someone needs to rationalise these two paragraphs ;-)
+
+__do_IRQ indeed no longer exists (since 2011).  It should probably be
+removed from the documentation too.
