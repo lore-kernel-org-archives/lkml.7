@@ -2,123 +2,102 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699BFC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A92C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FA120659
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:45:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lz3bQE9F"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF1820659
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570200352;
+	bh=CcEMd2zrAC7dSg1yN4pQ2s8bWxDo6bsUeX4SBbwWCHY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qb+9wBbsr7yPIZOZsBiaR5tWf65HUEJkPSbszv8V6HiunfRD9QLvIh/AOJe/zATJd
+	 FTN9Ta6DGJfwhzCI1O6XNXvrfhBfjx8NYtzg/zi0Y3ow2gDIlJRUB80s5fYhP7FdoE
+	 fk0NAqC6s2CuOwVXk4sw1HLcloVt6U03p0oTZgmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389347AbfJDOpM (ORCPT
+        id S2389360AbfJDOpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:45:12 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20988 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389042AbfJDOpL (ORCPT
+        Fri, 4 Oct 2019 10:45:52 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39005 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389042AbfJDOpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:45:11 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94EQRSD026290;
-        Fri, 4 Oct 2019 16:44:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=HxhsqEtkW1PE2z4wk42+db/HcFNDBDuEG576vdtW3hQ=;
- b=lz3bQE9FMHBJXTy5bdUQVmIumhJB17Ko0EuiGplii7OiPoGukqDMKJTud5FPeT4YSq1K
- DK2Eoob4x790WcB5cRq0XuBcWtE+g7pNPdtXN6spExZQligbvWskxkdZZirloHOdjoR6
- PhB1FQRb/jHmWAt9aXyv330fAyNFlkA93AObx+S4Wh/iPrqWNmrgWLfqtaIGMQcOKgOq
- HEQ4EOx7mN70pDaPcmUuZ5gANZjO7qyTHcTTZJmMB4uSU8Z07dHcsICvpst2nz0f/AUs
- 2jkHCaZKboflDJrkl30G3HQJloLd4sg0RI6RtwdqE90zyVs2DAaJFFGVSWGtwxvG4NC+ 5Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v9vnaundv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Oct 2019 16:44:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4351110002A;
-        Fri,  4 Oct 2019 16:44:54 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2A2702B8FFA;
-        Fri,  4 Oct 2019 16:44:54 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019
- 16:44:54 +0200
-Received: from localhost (10.201.23.73) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 4 Oct 2019 16:44:53
- +0200
-From:   <patrice.chotard@st.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>
-CC:     <mcoquelin.stm32@gmail.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>
-Subject: ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157
-Date:   Fri, 4 Oct 2019 16:44:21 +0200
-Message-ID: <20191004144421.21069-1-patrice.chotard@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Oct 2019 10:45:51 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 72so4671189lfh.6;
+        Fri, 04 Oct 2019 07:45:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f8QTZK9sCzxaP06E0HfF24SaxLLLX/pXiHs6qGwe+XA=;
+        b=knPkFB1BlXD+Rt06m2gkaWqTL9SJSHAPwwadA/850KPlweLkfdlHUWw/f0hCHZycYt
+         aD1VBqMPVcOneJomeJc53o96jwXMm1/sba/oBBXz4gIR+lgHScbExWA5Edcmbqq2P+j6
+         RJZCIy0qnkm0r1aBFF2gtw01RYr5ZnMMSKPFgFt/mV24Fal8aPJK+wXDxBSEjyNDBA+b
+         jiqP/9vFg3xk5rk3UKareaJ4MFa6CmYQBt7tDMmEEeE0jHuX08MzLNeQGDLclJ919+lS
+         KBYXwkCrtO8OtHHbCaYQYh6yjXq6dDXpSYh1FDa89Y+hCDtP1d1kwz8Od1VLhq5VzeI+
+         Moog==
+X-Gm-Message-State: APjAAAUsOcjMq8uzQ2aWtwdox6RMnEMHxnQecAYL0yspC/cEV3122jke
+        dEZHMcWhOWrs+cpRCwm8ir0=
+X-Google-Smtp-Source: APXvYqwGCfJTSnB86hgdZ4Gku6DN0lA1FH5FrFessynFlbJyPs2FZbz/5S5l2tTYzg1E3Bxvh7XS/Q==
+X-Received: by 2002:a05:6512:14c:: with SMTP id m12mr9029400lfo.27.1570200349145;
+        Fri, 04 Oct 2019 07:45:49 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id v1sm1198536lfa.87.2019.10.04.07.45.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 07:45:48 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iGOqG-0005V4-5l; Fri, 04 Oct 2019 16:46:00 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Denis Efremov <efremov@linux.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 2/2] rsi: drop bogus device-id checks from probe
+Date:   Fri,  4 Oct 2019 16:44:22 +0200
+Message-Id: <20191004144422.13003-2-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191004144422.13003-1-johan@kernel.org>
+References: <20191004144422.13003-1-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.73]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-04_07:2019-10-03,2019-10-04 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+USB core will never call a USB-driver probe function with a NULL
+device-id pointer.
 
-Relax qspi pins slew-rate to minimize peak currents.
-
-Fixes: 844030057339 ("ARM: dts: stm32: add flash nor support on stm32mp157c eval board")
-
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_usb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index e4a0d51ec3a8..0a3a7d66737b 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -609,13 +609,13 @@
- 						 <STM32_PINMUX('F', 6, AF9)>; /* QSPI_BK1_IO3 */
- 					bias-disable;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 				pins2 {
- 					pinmux = <STM32_PINMUX('B', 6, AF10)>; /* QSPI_BK1_NCS */
- 					bias-pull-up;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 			};
+diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+index 760eaffeebd6..53f41fc2cadf 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -785,10 +785,10 @@ static int rsi_probe(struct usb_interface *pfunction,
  
-@@ -637,13 +637,13 @@
- 						 <STM32_PINMUX('G', 7, AF11)>; /* QSPI_BK2_IO3 */
- 					bias-disable;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 				pins2 {
- 					pinmux = <STM32_PINMUX('C', 0, AF10)>; /* QSPI_BK2_NCS */
- 					bias-pull-up;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 			};
+ 	rsi_dbg(ERR_ZONE, "%s: Initialized os intf ops\n", __func__);
  
+-	if (id && id->idProduct == RSI_USB_PID_9113) {
++	if (id->idProduct == RSI_USB_PID_9113) {
+ 		rsi_dbg(INIT_ZONE, "%s: 9113 module detected\n", __func__);
+ 		adapter->device_model = RSI_DEV_9113;
+-	} else if (id && id->idProduct == RSI_USB_PID_9116) {
++	} else if (id->idProduct == RSI_USB_PID_9116) {
+ 		rsi_dbg(INIT_ZONE, "%s: 9116 module detected\n", __func__);
+ 		adapter->device_model = RSI_DEV_9116;
+ 	} else {
 -- 
-2.17.1
+2.23.0
 
