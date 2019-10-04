@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CCAC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71669C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B672133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48AF82133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wxHouhG/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aKPAd8JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387877AbfJDQ2i (ORCPT
+        id S1731174AbfJDQ2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:28:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40546 "EHLO
+        Fri, 4 Oct 2019 12:28:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40520 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731021AbfJDQ2E (ORCPT
+        with ESMTP id S1730968AbfJDQ16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:28:04 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94GS3wX076928;
-        Fri, 4 Oct 2019 11:28:03 -0500
+        Fri, 4 Oct 2019 12:27:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94GRv6o076890;
+        Fri, 4 Oct 2019 11:27:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570206483;
-        bh=FSYboD3JqHG1wzgmeZLkIKXYQEnzeuEpUNa4uQ9WH1Q=;
+        s=ti-com-17Q1; t=1570206477;
+        bh=Wl9WKWiVjz3COoBDC8m081M/+rt6QZlNL6nsfzMtwNE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wxHouhG/00xWwnzGrlTJBscj27IBLmCTWvbo90ZswHlcpMZJT1EvTI8lqYpYymT5I
-         ep23icFt2nj5b04m6dUwGYgotwSqJdtVC2hh7j97D+U7xjbJehqHEbbwNbfCx7jE1I
-         uljjeJQOQnHmYkEs563Hfrq7J30ROLbtS22JpBy8=
+        b=aKPAd8JQ7qljBAGxkIM510/jTztm60gyUJV39XRWvII+azaj+EkL935gh+HGeT4Y/
+         fjpdtL73lgmXlLGny1Mv2ocwU6e8X8vjB6iQIOwEHRzPWsI0Ow28wuVlg/fFAJ+MVV
+         gPJqFDu4nd0xEn25Dfww81VJREhheyrepRzVR45Y=
 Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94GS3ok056192
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94GRvC6065033
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Oct 2019 11:28:03 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+        Fri, 4 Oct 2019 11:27:57 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
  (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
- 2019 11:28:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 11:27:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 4 Oct 2019 11:28:02 -0500
+ Frontend Transport; Fri, 4 Oct 2019 11:27:55 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94GRgAH028904;
-        Fri, 4 Oct 2019 11:28:03 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94GRgAC028904;
+        Fri, 4 Oct 2019 11:27:56 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 15/21] media: ti-vpe: Set the DMA mask and coherent mask
-Date:   Fri, 4 Oct 2019 11:29:46 -0500
-Message-ID: <20191004162952.4963-16-bparrot@ti.com>
+Subject: [Patch v2 10/21] media: ti-vpe: vpe: Make sure YUYV is set as default format
+Date:   Fri, 4 Oct 2019 11:29:41 -0500
+Message-ID: <20191004162952.4963-11-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191004162952.4963-1-bparrot@ti.com>
 References: <20191004162952.4963-1-bparrot@ti.com>
@@ -66,33 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VPE uses VPDMA (built-in dma engine) to transfer data to and from the IP
-and memory. VPDMA expect 32 bits addresses. To make sure that is always
-the case set the DMA mask and coherent mask for the device.
+v4l2-compliance fails with this message:
+
+   fail: v4l2-test-formats.cpp(672): \
+	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
+   fail: v4l2-test-formats.cpp(672): \
+	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
+	...
+   test VIDIOC_TRY_FMT: FAIL
+
+Fixes: 94ed726e8e01 ("media: ti-vpe: Add support for NV21 format")
+
+The default pixel format was setup as pointing to a specific offset in
+the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
+entry. This became false after the addition on the NV21 format (see
+above commid-id)
+
+So instead of hard-coding an offset which might change over time we need
+to use a lookup helper instead so we know the default will always be what
+we intended.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index ad9d8b559cad..d7f8eb901475 100644
+index d3f1ae8b72fa..7aa83026fb6c 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2517,6 +2517,13 @@ static int vpe_probe(struct platform_device *pdev)
- 	struct vpe_dev *dev;
- 	int ret, irq, func;
+@@ -2321,7 +2321,7 @@ static int vpe_open(struct file *file)
+ 	v4l2_ctrl_handler_setup(hdl);
  
-+	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"32-bit consistent DMA enable failed\n");
-+		return ret;
-+	}
-+
- 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
+ 	s_q_data = &ctx->q_data[Q_DATA_SRC];
+-	s_q_data->fmt = &vpe_formats[2];
++	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	s_q_data->width = 1920;
+ 	s_q_data->height = 1080;
+ 	s_q_data->nplanes = 1;
 -- 
 2.17.1
 
