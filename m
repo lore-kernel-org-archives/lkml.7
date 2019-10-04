@@ -4,105 +4,217 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14167C32792
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6458FC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A2B2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356312086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 00:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732047AbfJDABR (ORCPT
+        id S1732273AbfJDACa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 20:01:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:59354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbfJDABQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 20:01:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 144A915A1;
-        Thu,  3 Oct 2019 17:01:16 -0700 (PDT)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49D153F534;
-        Thu,  3 Oct 2019 17:01:15 -0700 (PDT)
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: fix RockPro64 sdmmc settings
-To:     Soeren Moch <smoch@web.de>, Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191003215036.15023-1-smoch@web.de>
- <20191003215036.15023-3-smoch@web.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <31181f3c-20ec-e717-1f7e-8b35cd54d96d@arm.com>
-Date:   Fri, 4 Oct 2019 01:01:01 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191003215036.15023-3-smoch@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+        Thu, 3 Oct 2019 20:02:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17984 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729684AbfJDACa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 20:02:30 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93NqUhx026681;
+        Thu, 3 Oct 2019 20:02:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdm17cdxc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 20:02:19 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x93NqXN1026785;
+        Thu, 3 Oct 2019 20:02:19 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdm17cdwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 20:02:19 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x93NxsQa031791;
+        Fri, 4 Oct 2019 00:02:17 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma03dal.us.ibm.com with ESMTP id 2v9y58vcka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 00:02:17 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9402GjZ49414478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Oct 2019 00:02:16 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 234B76A058;
+        Fri,  4 Oct 2019 00:02:16 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6BBC6A04F;
+        Fri,  4 Oct 2019 00:02:15 +0000 (GMT)
+Received: from [9.53.179.215] (unknown [9.53.179.215])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  4 Oct 2019 00:02:15 +0000 (GMT)
+Subject: Re: [v1] e1000e: EEH on e1000e adapter detects io perm failure can
+ trigger crash
+From:   "David Z. Dai" <zdai@linux.vnet.ibm.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        David Miller <davem@davemloft.net>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, zdai@us.ibm.com
+In-Reply-To: <CAKgT0UcHvAQoChS1bkV8LsxaJcyRrTSPru+qsYXBsxHgr+aJmg@mail.gmail.com>
+References: <1570121672-12172-1-git-send-email-zdai@linux.vnet.ibm.com>
+         <CAKgT0Udz7vt5C=+6vpFPbys4sODAZtCjrkSvOdgP80rX7Ww+Ng@mail.gmail.com>
+         <1570128658.1250.8.camel@oc5348122405>
+         <CAKgT0UcHvAQoChS1bkV8LsxaJcyRrTSPru+qsYXBsxHgr+aJmg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Thu, 03 Oct 2019 19:02:15 -0500
+Message-ID: <1570147335.1250.46.camel@oc5348122405>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.3 (2.32.3-36.el6) 
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910030194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-03 10:50 pm, Soeren Moch wrote:
-> According to the RockPro64 schematic [1] the rk3399 sdmmc controller is
-> connected to a microSD (TF card) slot, which cannot be switched to 1.8V.
+On Thu, 2019-10-03 at 13:39 -0700, Alexander Duyck wrote:
+> On Thu, Oct 3, 2019 at 11:51 AM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
+> >
+> > On Thu, 2019-10-03 at 10:39 -0700, Alexander Duyck wrote:
+> > > On Thu, Oct 3, 2019 at 9:59 AM David Dai <zdai@linux.vnet.ibm.com> wrote:
+> > > >
+> > > > We see the behavior when EEH e1000e adapter detects io permanent failure,
+> > > > it will crash kernel with this stack:
+> > > > EEH: Beginning: 'error_detected(permanent failure)'
+> > > > EEH: PE#900000 (PCI 0115:90:00.1): Invoking e1000e->error_detected(permanent failure)
+> > > > EEH: PE#900000 (PCI 0115:90:00.1): e1000e driver reports: 'disconnect'
+> > > > EEH: PE#900000 (PCI 0115:90:00.0): Invoking e1000e->error_detected(permanent failure)
+> > > > EEH: PE#900000 (PCI 0115:90:00.0): e1000e driver reports: 'disconnect'
+> > > > EEH: Finished:'error_detected(permanent failure)'
+> > > > Oops: Exception in kernel mode, sig: 5 [#1]
+> > > > NIP [c0000000007b1be0] free_msi_irqs+0xa0/0x280
+> > > >  LR [c0000000007b1bd0] free_msi_irqs+0x90/0x280
+> > > > Call Trace:
+> > > > [c0000004f491ba10] [c0000000007b1bd0] free_msi_irqs+0x90/0x280 (unreliable)
+> > > > [c0000004f491ba70] [c0000000007b260c] pci_disable_msi+0x13c/0x180
+> > > > [c0000004f491bab0] [d0000000046381ac] e1000_remove+0x234/0x2a0 [e1000e]
+> > > > [c0000004f491baf0] [c000000000783cec] pci_device_remove+0x6c/0x120
+> > > > [c0000004f491bb30] [c00000000088da6c] device_release_driver_internal+0x2bc/0x3f0
+> > > > [c0000004f491bb80] [c00000000076f5a8] pci_stop_and_remove_bus_device+0xb8/0x110
+> > > > [c0000004f491bbc0] [c00000000006e890] pci_hp_remove_devices+0x90/0x130
+> > > > [c0000004f491bc50] [c00000000004ad34] eeh_handle_normal_event+0x1d4/0x660
+> > > > [c0000004f491bd10] [c00000000004bf10] eeh_event_handler+0x1c0/0x1e0
+> > > > [c0000004f491bdc0] [c00000000017c4ac] kthread+0x1ac/0x1c0
+> > > > [c0000004f491be30] [c00000000000b75c] ret_from_kernel_thread+0x5c/0x80
+> > > >
+> > > > Basically the e1000e irqs haven't been freed at the time eeh is trying to
+> > > > remove the the e1000e device.
+> > > > Need to make sure when e1000e_close is called to bring down the NIC,
+> > > > if adapter error_state is pci_channel_io_perm_failure, it should also
+> > > > bring down the link and free irqs.
+> > > >
+> > > > Reported-by: Morumuri Srivalli  <smorumu1@in.ibm.com>
+> > > > Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
+> > > > ---
+> > > >  drivers/net/ethernet/intel/e1000e/netdev.c |    3 ++-
+> > > >  1 files changed, 2 insertions(+), 1 deletions(-)
+> > > >
+> > > > diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> > > > index d7d56e4..cf618e1 100644
+> > > > --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> > > > +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> > > > @@ -4715,7 +4715,8 @@ int e1000e_close(struct net_device *netdev)
+> > > >
+> > > >         pm_runtime_get_sync(&pdev->dev);
+> > > >
+> > > > -       if (!test_bit(__E1000_DOWN, &adapter->state)) {
+> > > > +       if (!test_bit(__E1000_DOWN, &adapter->state) ||
+> > > > +           (adapter->pdev->error_state == pci_channel_io_perm_failure)) {
+> > > >                 e1000e_down(adapter, true);
+> > > >                 e1000_free_irq(adapter);
+> > >
+> > > It seems like the issue is the fact that e1000_io_error_detected is
+> > > calling e1000e_down without the e1000_free_irq() bit. Instead of doing
+> > > this couldn't you simply add the following to e1000_is_slot_reset in
+> > > the "result = PCI_ERS_RESULT_DISCONNECT" case:
+> > >     if (netif_running(netdev)
+> > >         e1000_free_irq(adapter);
+> > >
+> > > Alternatively we could look at freeing and reallocating the IRQs in
+> > > the event of an error like we do for the e1000e_pm_freeze and
+> > > e1000e_pm_thaw cases. That might make more sense since we are dealing
+> > > with an error we might want to free and reallocate the IRQ resources
+> > > assigned to the device.
+> > >
+> > > Thanks.
+> > >
+> > > - Alex
+> >
+> > Thanks for the quick reply and comment!
+> > Looked the e1000_io_slot_reset() routine:
+> >         err = pci_enable_device_mem(pdev);
+> >         if (err) {
+> >                 dev_err(&pdev->dev,
+> >                         "Cannot re-enable PCI device after reset.\n");
+> >                 result = PCI_ERS_RESULT_DISCONNECT;
+> >         } else {
+> > I didn't see log message "Cannot re-enable PCI device after reset" at
+> > the time of crash.
+> >
+> > I can still apply the same logic in e1000_io_error_detected() routine:
+> >     if (state == pci_channel_io_perm_failure) {
+> > +       if (netif_running(netdev))
+> > +           e1000_free_irq(adapter);
+> >         return PCI_ERS_RESULT_DISCONNECT;
+> >     }
+> > Will test this once the test hardware is available again.
+> 
+> Are you sure this is the path you are hitting? Things aren't adding up.
+> 
+> I thought the issue was that the interface for the error handling was
+> calling e1000e_down() but not freeing the IRQs? In the path where you
+> are adding your code I don't see how the __E1000_DOWN would have been
+> set?
+> 
+> - Alex
+We see the same stack every time the crash is triggered.
 
-Really? AFAICS the SDMMC0 wiring looks pretty much identical to the 
-NanoPC-T4 schematic (it's the same reference design, after all), and I 
-know that board can happily drive a UHS-I microSD card with 1.8v I/Os, 
-because mine's doing so right now.
+My understanding is not that the interface for the error handling was
+calling e1000e_down() but not freeing IRQs.
 
-Robin.
+In our case, on powerpc , if injecting eeh errors to reach preset
+threshold value, it will be forced to be offline permanently.
 
-> So also configure the vcc_sdio regulator, which drives the i/o voltage
-> of the sdmmc controller, accordingly.
-> 
-> While at it, also remove the cap-mmc-highspeed property of the sdmmc
-> controller, since no mmc card can be connected here.
-> 
-> [1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-> 
-> Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-> Signed-off-by: Soeren Moch <smoch@web.de>
-> ---
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> index 2e44dae4865a..084f1d994a50 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> @@ -353,7 +353,7 @@
->   				regulator-name = "vcc_sdio";
->   				regulator-always-on;
->   				regulator-boot-on;
-> -				regulator-min-microvolt = <1800000>;
-> +				regulator-min-microvolt = <3000000>;
->   				regulator-max-microvolt = <3000000>;
->   				regulator-state-mem {
->   					regulator-on-in-suspend;
-> @@ -624,7 +624,6 @@
-> 
->   &sdmmc {
->   	bus-width = <4>;
-> -	cap-mmc-highspeed;
->   	cap-sd-highspeed;
->   	cd-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
->   	disable-wp;
-> --
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+In e1000e_close() to bring down link, the check: "if (!
+test_bit(__E1000_DOWN, &adapter->state))" is false, so e1000e_down() and
+e1000_free_irq() are both not called. IRQs are not freed.
+
+When e1000_remove() is called, it sees IRQs are not free, hence crash
+the kernel.
+
+This is the reason I have the original proposed patch to add an extra
+check in e1000e_close().
+
+For the 2nd change in e1000_io_error_detected() routine, I haven't
+tested it yet.
+
+Pardon me if causing any confusion, and Thanks for your time again! 
+
+- David
+
+
+
+
+
+
+
