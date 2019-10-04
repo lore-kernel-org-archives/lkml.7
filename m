@@ -2,95 +2,95 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F7DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F2FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EC02133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6D42133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570202365;
-	bh=M5+OP0C7bH8g4alRKHkF9BOu2CIDNCLVySSeuKwcpOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HQ/t9jiBJZOKGskcqM9Yr/yDxEGA5pDLgx9gv7p19nztfG+sbGkKWY4kPsJcGDGe4
-	 ZzpSmzemDuV0+K3Ev9YKz27lohBAokbpN7uUJZeSELZL9PMHNKGX2WkBhToKVG9tP5
-	 XrXBMnRxedTFInOcaLWSO0tWMilm8qBTNjyDTHNU=
+	s=default; t=1570202384;
+	bh=Pq6hbDsQZxwre7MzFt398+CEXy84MFC3LjumafQCV4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jjh+0unMB+y4MmANvKtwEcsE5skck8Jux1U0qt7POEgnPBeLM9ZDWvfSshssAU6qM
+	 rLYyst0AymPTJOJu5fwwihYGza6XP1y08FHUmr0l7WXMyH2SS6HAeRA+CdqyEE4hyB
+	 5tQADLaiwFRTTa+bFplZp3AqlvjlOz9RUIBf6yos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389839AbfJDPTY (ORCPT
+        id S2389853AbfJDPTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        Fri, 4 Oct 2019 11:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389461AbfJDPTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:19:24 -0400
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2389643AbfJDPTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:19:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A482133F;
-        Fri,  4 Oct 2019 15:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEF5B222C2;
+        Fri,  4 Oct 2019 15:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570202363;
-        bh=M5+OP0C7bH8g4alRKHkF9BOu2CIDNCLVySSeuKwcpOw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b6/jzAnDjb6xpzkFpwbf9jb1gAfI7h+uV/bCk3yqqWvPCCOHFv98o3z/O+2VQoetR
-         1SBzvZekcGRpybjr/NOZ4N+WGFQQpHOaS3QkgPyjU/ZW9Q+LSkJnzwiImDPJaiW/IX
-         fQk720EuOH3wQLQ+wFzMMFljxxegoUD3qgLIyWKg=
-Received: by mail-lf1-f48.google.com with SMTP id r22so4777009lfm.1;
-        Fri, 04 Oct 2019 08:19:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAUoG8c+HHj9rPpoWQU71ozEDAFCktslcb3K+i6h1rEURgV4uflT
-        S5ZMAd8g9r6q2GY54cIBkYAS1d+V7RFQmrCFJos=
-X-Google-Smtp-Source: APXvYqzsMWLRJ8Xp3xwwJCUFKB9iLKSsHQhlyh9TGJTJDW+xLrwe2s6/G9RAIUq1kyCNWedZWpQzahnVXH+EAatAAak=
-X-Received: by 2002:a19:7d55:: with SMTP id y82mr9289884lfc.106.1570202361022;
- Fri, 04 Oct 2019 08:19:21 -0700 (PDT)
+        s=default; t=1570202382;
+        bh=Pq6hbDsQZxwre7MzFt398+CEXy84MFC3LjumafQCV4M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gCYK3lgUboe3FuKPEs2rc8lxU0t0/iNDy4oVyz2VV094/Q1KyzMTC1aKQReJ3rB8m
+         ipkK78pody2hXsi8W0iGDS8g6l/kRI1MFJHYsNnOEoBvPs+vb+cvTa8PhDQFRfK/jC
+         Dm5oZ7phqNtUUhFHwPust2e877Z581WnBLC3lb9c=
+Date:   Fri, 4 Oct 2019 17:19:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc:     devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        GR-Linux-NIC-Dev@marvell.com, linux-kernel@vger.kernel.org,
+        Manish Chopra <manishc@marvell.com>
+Subject: Re: [PATCH v2 0/17] staging: qlge: Fix rx stall in case of
+ allocation failures
+Message-ID: <20191004151916.GA776553@kroah.com>
+References: <20190927101210.23856-1-bpoirier@suse.com>
+ <20191004081931.GA67764@kroah.com>
+ <20191004091545.GA29467@f1>
 MIME-Version: 1.0
-References: <20191004145016.3970-1-krzk@kernel.org> <20191004151448.GA19056@nautica>
-In-Reply-To: <20191004151448.GA19056@nautica>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 4 Oct 2019 17:19:09 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdn4j2vNcsBZOOZeO3_c4f--eJvoUzsf_1nY7LK4-uubA@mail.gmail.com>
-Message-ID: <CAJKOXPdn4j2vNcsBZOOZeO3_c4f--eJvoUzsf_1nY7LK4-uubA@mail.gmail.com>
-Subject: Re: [RESEND TRIVIAL] fs: Fix Kconfig indentation
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Jiri Kosina <trivial@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        v9fs-developer@lists.sourceforge.net,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004091545.GA29467@f1>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Oct 2019 at 17:17, Dominique Martinet <asmadeus@codewreck.org> wrote:
->
-> Krzysztof Kozlowski wrote on Fri, Oct 04, 2019:
-> > Adjust indentation from spaces to tab (+optional two spaces) as in
-> > coding style with command like:
-> >     $ sed -e 's/^        /\t/' -i */Kconfig
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Send this to kernel-janitors@vger.kernel.org ?
->
-> I can't pick this up as a 9p maintainer and most probably everyone else
-> in copy feel similar, this is stuff where they might be able to handle
-> this smoothly.
->
-> (I have no problem with the 9p part of the patch, so add my ack or
-> whatever if you feel that is useful, but it's honestly trivial as you
-> wrote yourself)
+On Fri, Oct 04, 2019 at 06:15:45PM +0900, Benjamin Poirier wrote:
+> On 2019/10/04 10:19, Greg Kroah-Hartman wrote:
+> > On Fri, Sep 27, 2019 at 07:11:54PM +0900, Benjamin Poirier wrote:
+> [...]
+> > 
+> > As this code got moved to staging with the goal to drop it from the
+> > tree, why are you working on fixing it up?  Do you want it moved back
+> > out of staging into the "real" part of the tree, or are you just fixing
+> > things that you find in order to make it cleaner before we delete it?
+> > 
+> > confused,
+> > 
+> 
+> I expected one of two possible outcomes after moving the qlge driver to
+> staging:
+> 1) it gets the attention of people looking for something to work on and
+> the driver is improved and submitted for normal inclusion in the future
+> 2) it doesn't get enough attention and the driver is removed
+> 
+> I don't plan to do further work on it and I'm admittedly not holding my
+> breath for others to rush in but I already had those patches; it wasn't
+> a big effort to submit them as a first step towards outcome #1.
+> 
+> If #2 is a foregone conclusion, then there's little point in applying
+> the patches. The only benefit I can think of that if the complete
+> removal is reverted in the future, this specific problem will at least
+> be fixed.
 
-Thanks, indeed I forgot about kernel-janitors. I sent it only to Jiri
-Kosina who is mentioned as handler of trivial patches.
+That makes more sense, I'll go queue these up now, as I don't want to
+waste the work you did on this.
 
-Best regards,
-Krzysztof
+thanks,
+
+greg k-h
