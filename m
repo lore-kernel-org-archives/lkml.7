@@ -2,160 +2,316 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35552C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148E7C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C01B20867
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="UR+sv2ez"
+	by mail.kernel.org (Postfix) with ESMTP id D71652133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbfJDJaA (ORCPT
+        id S2387862AbfJDJdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:30:00 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:56834 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbfJDJaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:30:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZEdwlRRe1fVpI8NPcZkdPrA+bC9um4BHLFic4u3Xoik=; b=UR+sv2ezd8u/E+Tvqz/RcNpFw
-        dYh3NcUoGQTp76X2H4k3D36vQh5Jwx/caflzs54YpfrhSL4HWE0fMBDNUMtp1mCXlGxJpE41Fnv52
-        2KRXKS3DTvkd7sjhd3RzOao+ykKuKjIHJ6G7MRay4ZtYi5fDlvK7e638qKVRPdC+gu2Xf/5i3EYor
-        2g3yTWCttiVCSMMOWAiEX+vpuXjUL2BWQascUpnCwky9s5q86RrlCrZrhG49s6gbylf2NnrnJogPS
-        b6FiFZ+0HObf3ldbOTSWqLn/3BwZWQASaQVqQm8OM93MLQlv509VN1r3zUf2oyevI0KTU24ZJc2yI
-        J2MDSoodg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:47430)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iGJtp-0003La-TX; Fri, 04 Oct 2019 10:29:22 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iGJtl-0002ez-RQ; Fri, 04 Oct 2019 10:29:17 +0100
-Date:   Fri, 4 Oct 2019 10:29:17 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
+        Fri, 4 Oct 2019 05:33:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50239 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387406AbfJDJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:33:04 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D9FBC309BDA3;
+        Fri,  4 Oct 2019 09:33:03 +0000 (UTC)
+Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DAF2F19C5B;
+        Fri,  4 Oct 2019 09:33:00 +0000 (UTC)
+Subject: Re: [PATCH v5 01/10] mm/memunmap: Use the correct start and end pfn
+ when removing pages from zone
+From:   David Hildenbrand <david@redhat.com>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, contact@xogium.me
-Subject: Re: [PATCH] panic: Ensure preemption is disabled during panic()
-Message-ID: <20191004092917.GY25745@shell.armlinux.org.uk>
-References: <20191002123538.22609-1-will@kernel.org>
- <201910021355.E578D2FFAF@keescook>
- <20191003205633.w26geqhq67u4ysit@willie-the-truck>
- <20191004091142.57iylai22aqpu6lu@pathway.suse.cz>
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Pankaj Gupta <pagupta@redhat.com>
+References: <20191001144011.3801-1-david@redhat.com>
+ <20191001144011.3801-2-david@redhat.com>
+ <933f9cd8-9a32-8566-bd97-7e475a009275@redhat.com>
+ <09b61ab1-6099-d825-8e04-fbfb43abe4d2@redhat.com>
+ <cb6807a4-93c8-3964-bd65-e7087a0c7bf1@linux.ibm.com>
+ <6e71cd24-7696-e7ca-15a1-8f126b0860ee@redhat.com>
+ <25a72fa3-9859-3fdb-ffd3-deb7bf154fe0@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <fea623a4-4c6a-c5f2-753b-41188ecccc0a@redhat.com>
+Date:   Fri, 4 Oct 2019 11:33:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004091142.57iylai22aqpu6lu@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <25a72fa3-9859-3fdb-ffd3-deb7bf154fe0@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 04 Oct 2019 09:33:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 11:11:42AM +0200, Petr Mladek wrote:
-> On Thu 2019-10-03 21:56:34, Will Deacon wrote:
-> > Hi Kees,
-> > 
-> > On Wed, Oct 02, 2019 at 01:58:46PM -0700, Kees Cook wrote:
-> > > On Wed, Oct 02, 2019 at 01:35:38PM +0100, Will Deacon wrote:
-> > > > Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
-> > > > calling CPU in an infinite loop, but with interrupts and preemption
-> > > > enabled. From this state, userspace can continue to be scheduled,
-> > > > despite the system being "dead" as far as the kernel is concerned. This
-> > > > is easily reproducible on arm64 when booting with "nosmp" on the command
-> > > > line; a couple of shell scripts print out a periodic "Ping" message
-> > > > whilst another triggers a crash by writing to /proc/sysrq-trigger:
-> > > > 
-> > > >   | sysrq: Trigger a crash
-> > > >   | Kernel panic - not syncing: sysrq triggered crash
-> > > >   | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
-> > > >   | Hardware name: linux,dummy-virt (DT)
-> > > >   | Call trace:
-> > > >   |  dump_backtrace+0x0/0x148
-> > > >   |  show_stack+0x14/0x20
-> > > >   |  dump_stack+0xa0/0xc4
-> > > >   |  panic+0x140/0x32c
-> > > >   |  sysrq_handle_reboot+0x0/0x20
-> > > >   |  __handle_sysrq+0x124/0x190
-> > > >   |  write_sysrq_trigger+0x64/0x88
-> > > >   |  proc_reg_write+0x60/0xa8
-> > > >   |  __vfs_write+0x18/0x40
-> > > >   |  vfs_write+0xa4/0x1b8
-> > > >   |  ksys_write+0x64/0xf0
-> > > >   |  __arm64_sys_write+0x14/0x20
-> > > >   |  el0_svc_common.constprop.0+0xb0/0x168
-> > > >   |  el0_svc_handler+0x28/0x78
-> > > >   |  el0_svc+0x8/0xc
-> > > >   | Kernel Offset: disabled
-> > > >   | CPU features: 0x0002,24002004
-> > > >   | Memory Limit: none
-> > > >   | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
-> > > >   |  Ping 2!
-> > > >   |  Ping 1!
-> > > >   |  Ping 1!
-> > > >   |  Ping 2!
-> > > > 
-> > > > The issue can also be triggered on x86 kernels if CONFIG_SMP=n, otherwise
-> > > > local interrupts are disabled in 'smp_send_stop()'.
-> > > > 
-> > > > Disable preemption in 'panic()' before re-enabling interrupts.
-> > > 
-> > > Is this perhaps the correct solution for what commit c39ea0b9dd24 ("panic:
-> > > avoid the extra noise dmesg") was trying to fix?
-> > 
-> > Hmm, maybe, although that looks like it's focussed more on irq handling
-> > than preemption.
+On 04.10.19 11:03, David Hildenbrand wrote:
+> On 04.10.19 11:00, David Hildenbrand wrote:
+>> On 03.10.19 18:48, Aneesh Kumar K.V wrote:
+>>> On 10/1/19 8:33 PM, David Hildenbrand wrote:
+>>>> On 01.10.19 16:57, David Hildenbrand wrote:
+>>>>> On 01.10.19 16:40, David Hildenbrand wrote:
+>>>>>> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+>>>>>>
+>>>>>> With altmap, all the resource pfns are not initialized. While initializing
+>>>>>> pfn, altmap reserve space is skipped. Hence when removing pfn from zone
+>>>>>> skip pfns that were never initialized.
+>>>>>>
+>>>>>> Update memunmap_pages to calculate start and end pfn based on altmap
+>>>>>> values. This fixes a kernel crash that is observed when destroying
+>>>>>> a namespace.
+>>>>>>
+>>>>>> [   81.356173] kernel BUG at include/linux/mm.h:1107!
+>>>>>> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+>>>>>>      pc: c0000000004b9728: memunmap_pages+0x238/0x340
+>>>>>>      lr: c0000000004b9724: memunmap_pages+0x234/0x340
+>>>>>> ...
+>>>>>>      pid   = 3669, comm = ndctl
+>>>>>> kernel BUG at include/linux/mm.h:1107!
+>>>>>> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+>>>>>> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+>>>>>> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+>>>>>> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+>>>>>> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+>>>>>> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+>>>>>> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+>>>>>> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+>>>>>> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+>>>>>> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+>>>>>> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
+>>>>>>
+>>>>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>>>>>> Cc: Logan Gunthorpe <logang@deltatee.com>
+>>>>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>>>>> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
+>>>>>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>>>>> [ move all pfn-realted declarations into a single line ]
+>>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>>> ---
+>>>>>>   mm/memremap.c | 13 ++++++++-----
+>>>>>>   1 file changed, 8 insertions(+), 5 deletions(-)
+>>>>>>
+>>>>>> diff --git a/mm/memremap.c b/mm/memremap.c
+>>>>>> index 557e53c6fb46..026788b2ac69 100644
+>>>>>> --- a/mm/memremap.c
+>>>>>> +++ b/mm/memremap.c
+>>>>>> @@ -123,7 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+>>>>>>   void memunmap_pages(struct dev_pagemap *pgmap)
+>>>>>>   {
+>>>>>>   	struct resource *res = &pgmap->res;
+>>>>>> -	unsigned long pfn;
+>>>>>> +	unsigned long pfn, nr_pages, start_pfn, end_pfn;
+>>>>>>   	int nid;
+>>>>>>   
+>>>>>>   	dev_pagemap_kill(pgmap);
+>>>>>> @@ -131,14 +131,17 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+>>>>>>   		put_page(pfn_to_page(pfn));
+>>>>>>   	dev_pagemap_cleanup(pgmap);
+>>>>>>   
+>>>>>> +	start_pfn = pfn_first(pgmap);
+>>>>>> +	end_pfn = pfn_end(pgmap);
+>>>>>> +	nr_pages = end_pfn - start_pfn;
+>>>>>> +
+>>>>>>   	/* pages are dead and unused, undo the arch mapping */
+>>>>>> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+>>>>>> +	nid = page_to_nid(pfn_to_page(start_pfn));
+>>>>>>   
+>>>>>>   	mem_hotplug_begin();
+>>>>>>   	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+>>>>>> -		pfn = PHYS_PFN(res->start);
+>>>>>> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+>>>>>> -				 PHYS_PFN(resource_size(res)), NULL);
+>>>>>> +		__remove_pages(page_zone(pfn_to_page(start_pfn)), start_pfn,
+>>>>>> +			       nr_pages, NULL);
+>>>>>>   	} else {
+>>>>>>   		arch_remove_memory(nid, res->start, resource_size(res),
+>>>>>>   				pgmap_altmap(pgmap));
+>>>>>>
+>>>>>
+>>>>> Aneesh, I was wondering why the use of "res->start" is correct (and we
+>>>>> shouldn't also witch to start_pfn/nr_pages here. It would be good if Dan
+>>>>> could review.
+>>>>>
+>>>>
+>>>> To be more precise, I wonder if it should actually be
+>>>>
+>>>> __remove_pages(page_zone(pfn_to_page(start_pfn)), res->start,
+>>>>                 resource_size(res))
+>>>>
+>>>
+>>> yes, that would be make it much clear.
+>>>
+>>> But for MEMORY_DEVICE_PRIVATE start_pfn and pfn should be same?
+>>
+>> Okay, let's recap. We should call add_pages()/__remove_pages()
+>> and arch_add_memory()/arch_remove_memory() with the exact same ranges.
+>>
+>> So with PHYS_PFN(res->start) and PHYS_PFN(resource_size(res)
+>>
+>> Now, only a subset of the pages gets actually initialized,
+>> meaning the NID and the ZONE we read could be stale.
+>> That, we have to fix.
+>>
+>> What about something like this (am I missing something?):
+>>
+>> From d77b5c50f86570819a437517a897cc40ed29eefb Mon Sep 17 00:00:00 2001
+>> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+>> Date: Fri, 27 Sep 2019 16:02:24 +0530
+>> Subject: [PATCH] mm/memunmap: Don't access uninitialized memmap in
+>>  memunmap_pages()
+>>
+>> With an altmap, the memmap falling into the reserved altmap space are
+>> not initialized and, therefore, contain a garbage NID and a garbage
+>> zone. Make sure to read the NID/zone from a memmap that was initialzed.
+>>
+>> This fixes a kernel crash that is observed when destroying a namespace:
+>>
+>> [   81.356173] kernel BUG at include/linux/mm.h:1107!
+>> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+>>     pc: c0000000004b9728: memunmap_pages+0x238/0x340
+>>     lr: c0000000004b9724: memunmap_pages+0x234/0x340
+>> ...
+>>     pid   = 3669, comm = ndctl
+>> kernel BUG at include/linux/mm.h:1107!
+>> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+>> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+>> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+>> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+>> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+>> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+>> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+>> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+>> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+>> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+>> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
+>>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> Cc: Logan Gunthorpe <logang@deltatee.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> [ minimze code changes, rephrase description ]
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  mm/memremap.c | 11 +++++++----
+>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/memremap.c b/mm/memremap.c
+>> index 557e53c6fb46..8b11c0da345c 100644
+>> --- a/mm/memremap.c
+>> +++ b/mm/memremap.c
+>> @@ -123,6 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+>>  void memunmap_pages(struct dev_pagemap *pgmap)
+>>  {
+>>  	struct resource *res = &pgmap->res;
+>> +	struct page *first_page;
+>>  	unsigned long pfn;
+>>  	int nid;
+>>  
+>> @@ -131,14 +132,16 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+>>  		put_page(pfn_to_page(pfn));
+>>  	dev_pagemap_cleanup(pgmap);
+>>  
+>> +	/* make sure to access a memmap that was actually initialized */
+>> +	first_page = pfn_to_page(pfn_first(pgmap));
+>> +
+>>  	/* pages are dead and unused, undo the arch mapping */
+>> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+>> +	nid = page_to_nid(first_page);
+>>  
+>>  	mem_hotplug_begin();
+>>  	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+>> -		pfn = PHYS_PFN(res->start);
+>> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+>> -				 PHYS_PFN(resource_size(res)), NULL);
+>> +		__remove_pages(page_zone(first_page), res->start,
+>> +			       resource_size(res), NULL);
 > 
-> Exactly, the backtrace mentioned in commit c39ea0b9dd24 ("panic: avoid
-> the extra noise dmesg") is printed by wake_up() called from
-> wake_up_klogd_work_func(). It is irq_work. Therefore disabling
-> preemption would not prevent this.
+> Keeping the PHYS_PFN() calls of course ...
+> 
+>>  	} else {
+>>  		arch_remove_memory(nid, res->start, resource_size(res),
+>>  				pgmap_altmap(pgmap));
+>>
 > 
 > 
-> > I've deliberately left the irq part alone, since I think
-> > having magic sysrq work via the keyboard interrupt is desirable from the
-> > panic loop.
-> 
-> I agree that we should keep sysrq working.
-> 
-> One pity thing is that led_panic_blink() in
-> leds/drivers/trigger/ledtrig-panic.c uses workqueues:
-> 
->   + led_panic_blink()
->     + led_trigger_event()
->       + led_set_brightness()
-> 	+ schedule_work()
-> 
-> It means that it depends on the scheduler. I guess that it
-> does not work in many panic situations. But this patch
-> will always block it.
-> 
-> I agree that it is strange that userspace still works at
-> this stage. But does it cause any real problems?
 
-Yes, there are watchdog drivers that continue to pat their watchdog
-after the kernel has panic'd.  It makes watchdogs useless (which is
-exactly how this problem was discovered.)
+The current state (with the modified patch) can be found at:
+	https://github.com/davidhildenbrand/linux/tree/zone_offline
+
+@Aneesh, It would be great if you could test the namespace removal
+thingy and tell me if we are still missing something :)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+
+Thanks,
+
+David / dhildenb
