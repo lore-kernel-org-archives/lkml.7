@@ -2,78 +2,74 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0914C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E23C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA85215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570206100;
-	bh=Zj3ZXkyCt1r4hMw2T6c5tTxTaIk9C9fs5VAJF+At57s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uuN2tRAnJeYCUIkN4cDqyRm6TBnis4I4nqsqDRgor5jCZeMInFne/Jn6xMw/pOLI+
-	 yJMXo/Hg/92ce9VcRk2kO4TPT9mtybbcLCnqWHddWfmvC0X4Qabd/VfV263F8Lxn5i
-	 5A04ZTthnku//MPdo/2vD3hvHdNDOif2S2VFDRP8=
+	by mail.kernel.org (Postfix) with ESMTP id 428E7222C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390262AbfJDQVk (ORCPT
+        id S2390311AbfJDQWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390201AbfJDQVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:21:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CB5420873;
-        Fri,  4 Oct 2019 16:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570206099;
-        bh=Zj3ZXkyCt1r4hMw2T6c5tTxTaIk9C9fs5VAJF+At57s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D8jQnJAgxftHCj/az0ZPGhHaBYbPBTQWIjVsKQ13ADZRhRTwhVx48T6nobs0ILxoP
-         QT385sl1fU7XvW+44S76edWSy+ewcnEBgA2an2vsD0XA/AP4C6DoKwA9gUDnS+Ek+f
-         LCurdFSFQuzXo+K/9831+Qi6YrGgoX40sXvl/DIc=
-Date:   Fri, 4 Oct 2019 18:21:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     arnd@arndb.de, srinivas.kandagatla@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] misc: fastrpc: add mmap/unmap support
-Message-ID: <20191004162136.GC854302@kroah.com>
-References: <20190916122451.12546-1-jorge.ramirez-ortiz@linaro.org>
+        Fri, 4 Oct 2019 12:22:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53603 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390164AbfJDQV7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:21:59 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iGQL7-0007LQ-13; Fri, 04 Oct 2019 16:21:57 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     James Wang <james.qian.wang@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/komeda: remove redundant assignment to pointer disable_done
+Date:   Fri,  4 Oct 2019 17:21:56 +0100
+Message-Id: <20191004162156.325-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916122451.12546-1-jorge.ramirez-ortiz@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 02:24:51PM +0200, Jorge Ramirez-Ortiz wrote:
-> Support the allocation/deallocation of buffers mapped to the DSP.
-> 
-> When the memory mapped to the DSP at process creation is not enough,
-> the fastrpc library can extend it at runtime. This avoids having to do
-> large preallocations by default.
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> 
->  v2: fixes kbuild warning
->      cast from pointer to integer of different size
+From: Colin Ian King <colin.king@canonical.com>
 
-Please resend the whole series, only doing it for one patch is a pain to
-try to keep in sync and figure out.
+The pointer disable_done is being initialized with a value that
+is never read and is being re-assigned a little later on. The
+assignment is redundant and hence can be removed.
 
-thanks,
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+index 75263d8cd0bd..9beeda04818b 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+@@ -296,7 +296,7 @@ komeda_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	struct komeda_crtc_state *old_st = to_kcrtc_st(old);
+ 	struct komeda_pipeline *master = kcrtc->master;
+ 	struct komeda_pipeline *slave  = kcrtc->slave;
+-	struct completion *disable_done = &crtc->state->commit->flip_done;
++	struct completion *disable_done;
+ 	bool needs_phase2 = false;
+ 
+ 	DRM_DEBUG_ATOMIC("CRTC%d_DISABLE: active_pipes: 0x%x, affected: 0x%x\n",
+-- 
+2.20.1
+
