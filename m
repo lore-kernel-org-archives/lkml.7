@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2DDC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF4EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF162215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B2D20867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfJDK6G (ORCPT
+        id S1730507AbfJDK6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:58:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55138 "EHLO mx1.suse.de"
+        Fri, 4 Oct 2019 06:58:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55162 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725730AbfJDK6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:58:05 -0400
+        id S1729065AbfJDK6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:58:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E917EABC6;
-        Fri,  4 Oct 2019 10:58:02 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 56368AD12;
+        Fri,  4 Oct 2019 10:58:04 +0000 (UTC)
 From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 To:     cgroups@vger.kernel.org
 Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
         Li Zefan <lizefan@huawei.com>,
         Johannes Weiner <hannes@cmpxchg.org>
-Subject: [PATCH 1/5] cgroup: Update comments about task exit path
-Date:   Fri,  4 Oct 2019 12:57:39 +0200
-Message-Id: <20191004105743.363-2-mkoutny@suse.com>
+Subject: [PATCH 3/5] selftests: cgroup: Simplify task self migration
+Date:   Fri,  4 Oct 2019 12:57:41 +0200
+Message-Id: <20191004105743.363-4-mkoutny@suse.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191004105743.363-1-mkoutny@suse.com>
 References: <20191004105743.363-1-mkoutny@suse.com>
@@ -42,91 +42,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We no longer take cgroup_mutex in cgroup_exit and the exiting tasks are
-not moved to init_css_set, reflect that in several comments to prevent
-confusion.
+Simplify task migration by being oblivious about its PID during
+migration. This allows to easily migrate individual threads as well.
+This change brings no functional change and prepares grounds for thread
+granularity migrating tests.
 
 Signed-off-by: Michal Koutný <mkoutny@suse.com>
 ---
- kernel/cgroup/cgroup.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ tools/testing/selftests/cgroup/cgroup_util.c  | 16 +++++++++++-----
+ tools/testing/selftests/cgroup/cgroup_util.h  |  4 +++-
+ tools/testing/selftests/cgroup/test_freezer.c |  2 +-
+ 3 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 753afbca549f..1488bb732902 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -899,8 +899,7 @@ static void css_set_move_task(struct task_struct *task,
- 		/*
- 		 * We are synchronized through cgroup_threadgroup_rwsem
- 		 * against PF_EXITING setting such that we can't race
--		 * against cgroup_exit() changing the css_set to
--		 * init_css_set and dropping the old one.
-+		 * against cgroup_exit()/cgroup_free() dropping the css_set.
- 		 */
- 		WARN_ON_ONCE(task->flags & PF_EXITING);
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
+index bdb69599c4bd..f6573eac1365 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -282,10 +282,12 @@ int cg_enter(const char *cgroup, int pid)
  
-@@ -1430,9 +1429,8 @@ struct cgroup *task_cgroup_from_root(struct task_struct *task,
- 				     struct cgroup_root *root)
+ int cg_enter_current(const char *cgroup)
  {
- 	/*
--	 * No need to lock the task - since we hold cgroup_mutex the
--	 * task can't change groups, so the only thing that can happen
--	 * is that it exits and its css is set back to init_css_set.
-+	 * No need to lock the task - since we hold css_set_lock the
-+	 * task can't change groups.
- 	 */
- 	return cset_cgroup_from_root(task_css_set(task), root);
+-	char pidbuf[64];
++	return cg_write(cgroup, "cgroup.procs", "0");
++}
+ 
+-	snprintf(pidbuf, sizeof(pidbuf), "%d", getpid());
+-	return cg_write(cgroup, "cgroup.procs", pidbuf);
++int cg_enter_current_thread(const char *cgroup)
++{
++	return cg_write(cgroup, "cgroup.threads", "0");
  }
-@@ -6020,7 +6018,7 @@ void cgroup_post_fork(struct task_struct *child)
- 		struct css_set *cset;
  
- 		spin_lock_irq(&css_set_lock);
--		cset = task_css_set(current);
-+		cset = task_css_set(current); /* current is @child's parent */
- 		if (list_empty(&child->cg_list)) {
- 			get_css_set(cset);
- 			cset->nr_tasks++;
-@@ -6063,20 +6061,8 @@ void cgroup_post_fork(struct task_struct *child)
-  * cgroup_exit - detach cgroup from exiting task
-  * @tsk: pointer to task_struct of exiting process
-  *
-- * Description: Detach cgroup from @tsk and release it.
-- *
-- * Note that cgroups marked notify_on_release force every task in
-- * them to take the global cgroup_mutex mutex when exiting.
-- * This could impact scaling on very large systems.  Be reluctant to
-- * use notify_on_release cgroups where very high task exit scaling
-- * is required on large systems.
-+ * Description: Detach cgroup from @tsk.
-  *
-- * We set the exiting tasks cgroup to the root cgroup (top_cgroup).  We
-- * call cgroup_exit() while the task is still competent to handle
-- * notify_on_release(), then leave the task attached to the root cgroup in
-- * each hierarchy for the remainder of its exit.  No need to bother with
-- * init_css_set refcnting.  init_css_set never goes away and we can't race
-- * with migration path - PF_EXITING is visible to migration path.
-  */
- void cgroup_exit(struct task_struct *tsk)
+ int cg_run(const char *cgroup,
+@@ -410,11 +412,15 @@ int set_oom_adj_score(int pid, int score)
+ 	return 0;
+ }
+ 
+-char proc_read_text(int pid, const char *item, char *buf, size_t size)
++ssize_t proc_read_text(int pid, bool thread, const char *item, char *buf, size_t size)
  {
-@@ -6086,7 +6072,8 @@ void cgroup_exit(struct task_struct *tsk)
+ 	char path[PATH_MAX];
  
- 	/*
- 	 * Unlink from @tsk from its css_set.  As migration path can't race
--	 * with us, we can check css_set and cg_list without synchronization.
-+	 * with us (thanks to cgroup_threadgroup_rwsem), we can check css_set
-+	 * and cg_list without synchronization.
- 	 */
- 	cset = task_css_set(tsk);
+-	snprintf(path, sizeof(path), "/proc/%d/%s", pid, item);
++	if (!pid)
++		snprintf(path, sizeof(path), "/proc/%s/%s",
++			 thread ? "thread-self" : "self", item);
++	else
++		snprintf(path, sizeof(path), "/proc/%d/%s", pid, item);
  
-@@ -6102,6 +6089,8 @@ void cgroup_exit(struct task_struct *tsk)
+ 	return read_text(path, buf, size);
+ }
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.h b/tools/testing/selftests/cgroup/cgroup_util.h
+index c72f28046bfa..27ff21d82af1 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.h
++++ b/tools/testing/selftests/cgroup/cgroup_util.h
+@@ -1,4 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#include <stdbool.h>
+ #include <stdlib.h>
  
- 		spin_unlock_irq(&css_set_lock);
- 	} else {
-+		/* Take reference to avoid freeing init_css_set in cgroup_free,
-+		 * see cgroup_fork(). */
- 		get_css_set(cset);
- 	}
+ #define PAGE_SIZE 4096
+@@ -35,6 +36,7 @@ extern int cg_run(const char *cgroup,
+ 		  void *arg);
+ extern int cg_enter(const char *cgroup, int pid);
+ extern int cg_enter_current(const char *cgroup);
++extern int cg_enter_current_thread(const char *cgroup);
+ extern int cg_run_nowait(const char *cgroup,
+ 			 int (*fn)(const char *cgroup, void *arg),
+ 			 void *arg);
+@@ -45,4 +47,4 @@ extern int is_swap_enabled(void);
+ extern int set_oom_adj_score(int pid, int score);
+ extern int cg_wait_for_proc_count(const char *cgroup, int count);
+ extern int cg_killall(const char *cgroup);
+-extern char proc_read_text(int pid, const char *item, char *buf, size_t size);
++extern ssize_t proc_read_text(int pid, bool thread, const char *item, char *buf, size_t size);
+diff --git a/tools/testing/selftests/cgroup/test_freezer.c b/tools/testing/selftests/cgroup/test_freezer.c
+index 8219a30853d2..5896e35168cd 100644
+--- a/tools/testing/selftests/cgroup/test_freezer.c
++++ b/tools/testing/selftests/cgroup/test_freezer.c
+@@ -648,7 +648,7 @@ static int proc_check_stopped(int pid)
+ 	char buf[PAGE_SIZE];
+ 	int len;
  
+-	len = proc_read_text(pid, "stat", buf, sizeof(buf));
++	len = proc_read_text(pid, 0, "stat", buf, sizeof(buf));
+ 	if (len == -1) {
+ 		debug("Can't get %d stat\n", pid);
+ 		return -1;
 -- 
 2.21.0
 
