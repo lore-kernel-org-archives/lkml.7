@@ -2,232 +2,105 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70692C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6922CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FCA207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570200630;
-	bh=wzG2zl1ghSK1OwbPID3sQYVBbITXZvGHKVGtVFvr5hg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=VxZ4z+w1JR4elFljhe3OMUPmQ3/CB0ZzkONWNiUiBqEZxj61LgHm9SfQCW5OJChZm
-	 YFbCxlWG8skav9ma+1IjZlDp7iHUQbVHOYDqpqyhJHzDSl68hNMLo7P+5kTXx7iOGU
-	 KSn8PPhJt5kGeZel8vRT5ORLgQlhmVgmCgE9q9H0=
+	by mail.kernel.org (Postfix) with ESMTP id 4A79E222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbfJDOu3 (ORCPT
+        id S2389345AbfJDOvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:50:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Fri, 4 Oct 2019 10:51:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36844 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388870AbfJDOu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:50:29 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2388870AbfJDOvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:51:09 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9538D20659;
-        Fri,  4 Oct 2019 14:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570200627;
-        bh=wzG2zl1ghSK1OwbPID3sQYVBbITXZvGHKVGtVFvr5hg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1js7/1u4/OcbkHpv/MO04Vb0nWW8zvD42bZUpOKRdcDQ0BCZ3NQEvLDUDgOHtH7k7
-         gfhBbcjLKq/1HKewFO2QvJICvxMYQlgxh+gXfOGDNBFtmcRefER+9ZXtC4O6b6E/55
-         2PGr5wHyl1u7enyrxEgwNvX1mhUKQ5+2M5FwC+Hg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Jiri Kosina <trivial@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 942E2C028323;
+        Fri,  4 Oct 2019 14:51:08 +0000 (UTC)
+Received: from dhcp-44-196.space.revspace.nl (ovpn-112-43.ams2.redhat.com [10.36.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD01C5C22F;
+        Fri,  4 Oct 2019 14:51:01 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND TRIVIAL] fs: Fix Kconfig indentation
-Date:   Fri,  4 Oct 2019 16:50:16 +0200
-Message-Id: <20191004145016.3970-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw support
+Date:   Fri,  4 Oct 2019 16:50:48 +0200
+Message-Id: <20191004145056.43267-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 04 Oct 2019 14:51:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-    $ sed -e 's/^        /\t/' -i */Kconfig
+Hi All,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- fs/9p/Kconfig     | 20 ++++++++++----------
- fs/Kconfig        |  4 ++--
- fs/Kconfig.binfmt |  4 ++--
- fs/fuse/Kconfig   |  4 ++--
- fs/nfs/Kconfig    |  6 +++---
- fs/proc/Kconfig   |  8 ++++----
- fs/qnx6/Kconfig   |  2 +-
- fs/ufs/Kconfig    |  4 ++--
- 8 files changed, 26 insertions(+), 26 deletions(-)
+Here is v7 of my patch-set to add support for EFI embedded fw to the kernel.
 
-diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
-index ac2ec4543fe1..09fd4a185fd2 100644
---- a/fs/9p/Kconfig
-+++ b/fs/9p/Kconfig
-@@ -32,13 +32,13 @@ endif
- 
- 
- config 9P_FS_SECURITY
--        bool "9P Security Labels"
--        depends on 9P_FS
--        help
--          Security labels support alternative access control models
--          implemented by security modules like SELinux.  This option
--          enables an extended attribute handler for file security
--          labels in the 9P filesystem.
--
--          If you are not using a security module that requires using
--          extended attributes for file security labels, say N.
-+	bool "9P Security Labels"
-+	depends on 9P_FS
-+	help
-+	  Security labels support alternative access control models
-+	  implemented by security modules like SELinux.  This option
-+	  enables an extended attribute handler for file security
-+	  labels in the 9P filesystem.
-+
-+	  If you are not using a security module that requires using
-+	  extended attributes for file security labels, say N.
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 2501e6f1f965..e65289487732 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -97,8 +97,8 @@ config FILE_LOCKING
- 	default y
- 	help
- 	  This option enables standard file locking support, required
--          for filesystems like NFS and for the flock() system
--          call. Disabling this option saves about 11k.
-+	  for filesystems like NFS and for the flock() system
-+	  call. Disabling this option saves about 11k.
- 
- config MANDATORY_FILE_LOCKING
- 	bool "Enable Mandatory file locking"
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index 62dc4f577ba1..8d0d16b90039 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -191,9 +191,9 @@ config BINFMT_MISC
- 	  <file:Documentation/admin-guide/binfmt-misc.rst> to learn how to use this
- 	  feature, <file:Documentation/admin-guide/java.rst> for information about how
- 	  to include Java support. and <file:Documentation/admin-guide/mono.rst> for
--          information about how to include Mono-based .NET support.
-+	  information about how to include Mono-based .NET support.
- 
--          To use binfmt_misc, you will need to mount it:
-+	  To use binfmt_misc, you will need to mount it:
- 		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
- 
- 	  You may say M here for module support and later load the module when
-diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
-index 0635cba19971..eb2a585572dc 100644
---- a/fs/fuse/Kconfig
-+++ b/fs/fuse/Kconfig
-@@ -34,7 +34,7 @@ config VIRTIO_FS
- 	select VIRTIO
- 	help
- 	  The Virtio Filesystem allows guests to mount file systems from the
--          host.
-+	  host.
- 
- 	  If you want to share files between guests or with the host, answer Y
--          or M.
-+	  or M.
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 295a7a21b774..3edf122b8044 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
- 	default n
- 	help
- 	  This option makes the NFS client advertise to NFSv4.1 servers that
--          it can support NFSv4 migration.
-+	  it can support NFSv4 migration.
- 
--          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
--          still experimental.  If you are not an NFSv4 developer, say N here.
-+	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
-+	  still experimental.  If you are not an NFSv4 developer, say N here.
- 
- config NFS_V4_SECURITY_LABEL
- 	bool
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index cb5629bd5fff..af2c0af60269 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -42,8 +42,8 @@ config PROC_VMCORE
- 	bool "/proc/vmcore support"
- 	depends on PROC_FS && CRASH_DUMP
- 	default y
--        help
--        Exports the dump image of crashed kernel in ELF format.
-+	help
-+	Exports the dump image of crashed kernel in ELF format.
- 
- config PROC_VMCORE_DEVICE_DUMP
- 	bool "Device Hardware/Firmware Log Collection"
-@@ -72,7 +72,7 @@ config PROC_SYSCTL
- 	  a recompile of the kernel or reboot of the system.  The primary
- 	  interface is through /proc/sys.  If you say Y here a tree of
- 	  modifiable sysctl entries will be generated beneath the
--          /proc/sys directory. They are explained in the files
-+	  /proc/sys directory. They are explained in the files
- 	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
- 	  option will enlarge the kernel by at least 8 KB.
- 
-@@ -88,7 +88,7 @@ config PROC_PAGE_MONITOR
- 	  Various /proc files exist to monitor process memory utilization:
- 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
- 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
--          interfaces will reduce the size of the kernel by approximately 4kb.
-+	  interfaces will reduce the size of the kernel by approximately 4kb.
- 
- config PROC_CHILDREN
- 	bool "Include /proc/<pid>/task/<tid>/children file"
-diff --git a/fs/qnx6/Kconfig b/fs/qnx6/Kconfig
-index 6a9d6bce1586..5ef679e51ba1 100644
---- a/fs/qnx6/Kconfig
-+++ b/fs/qnx6/Kconfig
-@@ -7,7 +7,7 @@ config QNX6FS_FS
- 	  QNX 6 (also called QNX RTP).
- 	  Further information is available at <http://www.qnx.com/>.
- 	  Say Y if you intend to mount QNX hard disks or floppies formatted
--          with a mkqnx6fs.
-+	  with a mkqnx6fs.
- 	  However, keep in mind that this currently is a readonly driver!
- 
- 	  To compile this file system support as a module, choose M here: the
-diff --git a/fs/ufs/Kconfig b/fs/ufs/Kconfig
-index 6d30adb6b890..f1f725c5a28c 100644
---- a/fs/ufs/Kconfig
-+++ b/fs/ufs/Kconfig
-@@ -11,8 +11,8 @@ config UFS_FS
- 	  experimental "UFS file system write support", below. Please read the
- 	  file <file:Documentation/admin-guide/ufs.rst> for more information.
- 
--          The recently released UFS2 variant (used in FreeBSD 5.x) is
--          READ-ONLY supported.
-+	  The recently released UFS2 variant (used in FreeBSD 5.x) is
-+	  READ-ONLY supported.
- 
- 	  Note that this option is generally not needed for floppies, since a
- 	  good portable way to transport files and directories between unixes
--- 
-2.17.1
+v6 was posted a long time ago, around the 4.18 days. The long wait was for
+a suitable secure-hash for checking the firmware we find embedded in the EFI
+is the one we expect.
+
+With 5.4-rc1 we finally have a standalone sha256 lib, so that hurdle for
+this patch-set is now gone.
+
+I've tried to address all review-remarks against v6 in this new version:
+
+Changes in v7:
+- Split drivers/firmware/efi and drivers/base/firmware_loader changes into
+  2 patches
+- Use new, standalone, lib/crypto/sha256.c code
+- Address kdoc comments from Randy Dunlap
+- Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+  _request_firmware() wrapper, as requested by Luis R. Rodriguez
+- Stop using "efi-embedded-firmware" device-property, now that drivers need to
+  use the new firmware_request_platform() to enable fallback to a device fw
+  copy embedded in the platform's main firmware, we no longer need a property
+  on the device to trigger this behavior
+- Use security_kernel_load_data instead of calling
+  security_kernel_read_file with a NULL file pointer argument
+- Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rst
+- Document the new firmware_request_platform() function in
+  Documentation/driver-api/firmware/request_firmware.rst
+- Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
+  to use the new firmware_request_platform() method
+- Rebased on top of 5.4-rc1
+
+I guess this will probably need another round (ot two) of review + fixing,
+but eventually this can hopefully be merged. Since this touches a bunch
+of different subsystems the question is how to merge this? Most of the
+touched files outside of the firmware-loader code do not see a lot of
+churn, so my proposal would be to merge patches 1-6 through the tree
+which carries firmware-loader changes; and then provide an immutable
+branch for the platform/x86 maintainers to merge and then they can merge
+the last 2 patches (as the touchscreen_dmi.c file does see quite a bit
+of changes every release).
+
+Regards,
+
+Hans
 
