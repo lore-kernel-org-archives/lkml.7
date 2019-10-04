@@ -2,105 +2,132 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A01C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C6C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032DF222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:09:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWRjsMO7"
+	by mail.kernel.org (Postfix) with ESMTP id CC2EB2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbfJDUJE (ORCPT
+        id S1731354AbfJDUJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 16:09:04 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42107 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfJDUJD (ORCPT
+        Fri, 4 Oct 2019 16:09:34 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:5642 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730746AbfJDUJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 16:09:03 -0400
-Received: by mail-io1-f68.google.com with SMTP id n197so16151518iod.9;
-        Fri, 04 Oct 2019 13:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TzGHd63YhhSYgCiRZ9tl0C+QqBhc3B9t1YurdXMHHEk=;
-        b=kWRjsMO7kWGMm/IT1zcaML7wX7Qq9Yq8WRm+RABc1yvFRuSkg1MJFKvuhIADpR86Sk
-         vk1W0Z5v0fSKpGUd8/OWzfGGYUmUKyVV0GCdL13GMMOSK9DpPSyvyt77eG5WmY3ZmctQ
-         TGC8Cmmzyp9qWwicYV847MUo/KmeyE8yz2h7Smb7WOcrkh2TV9S23hinrXd+nv5M0ZyF
-         ASEYU02I8rRxFXPCLp8D/KgP4shuTzi8Fg2/Hk1WrnV7b+j7LB2iDWk/cyp1qilFIKMU
-         ZBR7mheI1uaHirJEtlL1lGs5B+v25rI82daNM0pAfgJ1uilLnWPeFNCSgjxJjo/1l4rp
-         Y9qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TzGHd63YhhSYgCiRZ9tl0C+QqBhc3B9t1YurdXMHHEk=;
-        b=i14dfaCVcowVdtunic+1Wp2wGV+1ZNLuoXJwp7E15v+1eEJZwFN3kPpygTaLhCxUcK
-         GwKISgBQGzHrbHDnyg1HwrLXM02Ldx63K+ocW92bWoiabvGepNaNkKLLjh1Cc9Z5Udr5
-         FaRfo4jqaLUlKwSETn1kU+GSCbHc7OjVJMEAosWc4bRRpy2Z+vcoUwHuCG5OaNg6EQsh
-         rYclOJRJfMAu448q1becWoBHIpImXDm50NiWfQtEoUOj5o22/QPRUwaUeIC5LrB/sOiI
-         ZDVFoRHgEjTok93ZXTlcDfOXok4PcETTA6aDez2v7cwSd2y9Z9PI3Ng1mnPK/vmvqmXW
-         iQZw==
-X-Gm-Message-State: APjAAAXV8P3/lHsEKg8iHeiLr3dvIg5sDmZQ5/1qeeMO2VMTctGtUgtN
-        UfU23ad10Ce+u/Moful94ba6TP6V/uo=
-X-Google-Smtp-Source: APXvYqzID3S043QvcjXSlnz2Lfed2XSsv1r0x047tSPe8/gvBVD1NyJxtMQ/ZV89X4qzhOAjTbC2WA==
-X-Received: by 2002:a92:603:: with SMTP id x3mr17481056ilg.295.1570219742776;
-        Fri, 04 Oct 2019 13:09:02 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id i67sm4267112ilf.84.2019.10.04.13.09.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 13:09:02 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: pcie: Fix memory leak in mwifiex_pcie_alloc_cmdrsp_buf
-Date:   Fri,  4 Oct 2019 15:08:52 -0500
-Message-Id: <20191004200853.23353-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 4 Oct 2019 16:09:33 -0400
+IronPort-SDR: WtWD0dH1xMN+UplfngyNpN/C38lbkJt3erNRrTzIR8EgOh7dPfdwjjGgodLmIJzd1HQZfj3PrF
+ QrZ67QEkrWIrQzTyX0hn9OzJDg6duu0DO0f8IfhUJ2WUqS9G+kilBvLLpfghZweYZvD33aC7kt
+ lMFAs+faYa9p1odtWoI/YoLcNpVnkyg0rcDuIXTsZmINcmvcvo7tPqMy/GaC+7QmVZN83cp3F6
+ AX++zy7duimka8Q2DpjNiQtX5I5EmBuPay7S030O/t6NqgTY68lhjTNFOytRqWlASYrFsONxkx
+ /vc=
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 04 Oct 2019 13:09:33 -0700
+IronPort-SDR: 9ICUc+DTTiKGzKi7aA/r2a/HESwclO9tdbuGxTkbxe//az0DxpLsnrb3uRQTxUswipVMRy6NbD
+ BT9jvXy4HfA/wNg2q+uCs1NkhkC+bhlnfSx4OsAI8fo6RbkxsDnF7QmjYEFx4Eb51vkf5BEVSf
+ XqF6Aes6rX9ROK2vQhGCdhRpHZsGej7NCdPACGAdumKIWZBO4hU4yrhOGJ7HaeI/3KutLA0R1D
+ MQynlOX0eOur0aPAJwgl1uEnKuEEisnMedjYJ17sv5lvFE81IEkTqYp8OQ1PFOrz3TMTfNqYzA
+ z+YjHig81E4eKzeip5QeTBAB
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 04 Oct 2019 13:09:32 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 808BF46E8; Fri,  4 Oct 2019 13:09:32 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 13:09:32 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
+Message-ID: <20191004200932.GA28140@codeaurora.org>
+References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
+ <20190810071322.GA13760@amd>
+ <20190930133902.GA2249614@kroah.com>
+ <20190930172239.GA26107@amd>
+ <20190930172743.GA2409822@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930172743.GA2409822@kroah.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mwifiex_pcie_alloc_cmdrsp_buf, a new skb is allocated which should be
-released if mwifiex_map_pci_memory() fails. The release is added.
+On Mon, Sep 30, 2019 at 07:27:43PM +0200, Greg KH wrote:
+> On Mon, Sep 30, 2019 at 07:22:39PM +0200, Pavel Machek wrote:
+> > On Mon 2019-09-30 15:39:02, Greg KH wrote:
+> > > On Sat, Aug 10, 2019 at 09:13:22AM +0200, Pavel Machek wrote:
+> > > > On Fri 2019-08-09 17:52:46, Guru Das Srinagesh wrote:
+> > > > > From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> > > > > 
+> > > > > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 ("leds: disable triggers
+> > > > > on brightness set") removes the trigger on an LED class device when
+> > > > > brightness is set to 0. However, there are some LED class devices which
+> > > > > need the trigger not to be removed. In a use case like camera flash,
+> > > > > camera flash driver passes in a trigger device to LED class driver. If
+> > > > > the trigger is removed when the brightness is set to 0, this will affect
+> > > > > the clients using those triggers. Hence add a flag to always keep the
+> > > > > trigger even when brightness is set to 0.
+> > > > 
+> > > > No.
+> > > > 
+> > > > Yes, it would affect those clients. Don't do it, then. It is
+> > > > root-only operation.
+> > > 
+> > > I don't understand.  The original commit broke userspace operations.
+> > > Shouldn't it be reverted, or fixed this way in order to have userspace
+> > > work properly again?
+> > 
+> > So, what it is exactly that is not working? :-). Yes, root can
+> > disconnect LED from v4l2 interface; he can also connect it
+> > back. Documentation says that happens.
+> > 
+> > Yes, root can do stupid things.
+> > 
+> > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 is from 2008. I'd
+> > prefer we did not apply it in 2008, but...
+> 
+> Ah, my fault, I thought this was a new commit.
+> 
+> Guru, what are you doing here that this is required all of a sudden?  No
+> other kernel seems to need these changes, what is different in your
+> Android userspace that requires this patch series?
+> 
+> thanks,
+> 
+> greg k-h
 
-Fixes: fc3314609047 ("mwifiex: use pci_alloc/free_consistent APIs for PCIe")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/wireless/marvell/mwifiex/pcie.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hi Greg,
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index eff06d59e9df..1578eaa071bd 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -1029,8 +1029,10 @@ static int mwifiex_pcie_alloc_cmdrsp_buf(struct mwifiex_adapter *adapter)
- 	}
- 	skb_put(skb, MWIFIEX_UPLD_SIZE);
- 	if (mwifiex_map_pci_memory(adapter, skb, MWIFIEX_UPLD_SIZE,
--				   PCI_DMA_FROMDEVICE))
-+				   PCI_DMA_FROMDEVICE)) {
-+		kfree_skb(skb);
- 		return -1;
-+	}
- 
- 	card->cmdrsp_buf = skb;
- 
--- 
-2.17.1
+Our camera flash driver first requests the available current from the
+flash LED before setting its brightness. It passes a trigger as argument
+to the function that determines the available current. This function
+uses trigger_to_lcdev() to look up the led_classdev associated with that
+trigger as a first step. This lookup will fail if the trigger has been
+dissociated from its led_classdev as a result of a user setting that
+led_classdev's brightness to zero manually through sysfs. 
 
+Why would the user set the brightness to zero? The user does this as
+part of camera and LED testing activities which include, amongst other
+things, visual inspection of the operation of various onboard LEDs. The
+user uses sysfs to manually turn on and off the LEDs by setting their
+brightness to max and then to zero in order to verify that they are
+working as expected. 
+
+So what happens if the user, having turned off the flash LED after an
+inspection, wishes to move on to testing the userspace camera app? The
+userspace camera app will not be able to utilize the flash LED for any
+of its functions due to the led_classdev lookup failure. The user has no
+choice but to reboot the device to continue with his testing.
+
+Therefore, to summarize, this patch is being utilized in our downstream
+kernel (for a few years now) to support aforementioned testing
+activities, and so we thought it might be a good idea to upstream this
+patch now.
