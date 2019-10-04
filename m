@@ -6,85 +6,87 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203ECC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9E3C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E306920873
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D87A222C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vAKh3MuB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSTGaQxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfJDWyP (ORCPT
+        id S1730497AbfJDWzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 18:54:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51888 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDWyO (ORCPT
+        Fri, 4 Oct 2019 18:55:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35499 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJDWzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:54:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=q7cFanO1yPrAL0Ms2pu/t8f2IKPxaooYId2nsISMS/k=; b=vAKh3MuBDu9WH0S4ok4rWz4Mc
-        WJgGGH+MGNElCRQKgPVju9QFa7vg+wOsrxqM25Hx+XM4UogePcfrY+TYALAt4t7WjKXq1GIrJEnxa
-        p0DOb9O579qZ6mMlfZAUs62HYlXtzLkR9i/ufr/XuN5wpHNC8NMxlK1Wi1aj2qPIJ1fLLj/FooCkH
-        IL/+nZUcBfm+3ZmKMdIvnqC2AsQY1TeGJv2efBlXiXiH8HbhO5B5DXz8BlRPtbBBedZne8APQrhpJ
-        BHMbXxY1x5VSGJY8hdzmJOISRdNWGcZ7U0aCBgfgcobXV0yGDVh2EMiwwAnGpGV4ekS+EdtkbIBwD
-        lfMXu01+Q==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGWSa-0007mw-Gi; Fri, 04 Oct 2019 22:54:04 +0000
-Subject: Re: [PATCH v9 17/17] Documentation/x86/64: Add documentation for
- GS/FS addressing mode
-To:     "Chang S. Bae" <chang.seok.bae@intel.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        luto@kernel.org
-Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ak@linux.intel.com, ravi.v.shankar@intel.com,
-        Jonathan Corbet <corbet@lwn.net>
-References: <1570212969-21888-1-git-send-email-chang.seok.bae@intel.com>
- <1570212969-21888-18-git-send-email-chang.seok.bae@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fa9aca20-fef7-4ef4-7ab7-b5bb55679e24@infradead.org>
-Date:   Fri, 4 Oct 2019 15:54:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 18:55:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so2487181pgl.2;
+        Fri, 04 Oct 2019 15:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VARRNUXc9LQzSaAVK1UNlZ8Q8MkB326pw9HgvIqlYEc=;
+        b=XSTGaQxatGOa0rgS5/fwDLaxdrW1UP50i7JjVQ9E4bltl+qYI55Uz2x039C7ThvG9W
+         ugMrDd6iNia9nFMm6hlCgE03li1KLGskLzvLUI2BuRZfS/HHhiEn5jVGWYNkH2EhQdk+
+         7QIeKWtnGJLZYIHNm0WuvSgbcn6bdxfOWvw6ryZvGr/ovjwyaCvhK2Uzcs7RNwt7Fdog
+         j3PL6PsHDmJU7v+qeroYbcwyY00D0MZQX+1qeDT6S3w/B3Q72/ysxed7DFDt6vmepow3
+         s+Q8MVAMCs98fxeF51+X/Jibx9/GD4HOtKHpqp9AcGo5NttaGAXAOVp9oJ2b1+a0buzT
+         +0Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VARRNUXc9LQzSaAVK1UNlZ8Q8MkB326pw9HgvIqlYEc=;
+        b=OZWRs25Uw3M15w1k3BtjlqbHp8tlMmioi4+D8fFng1M0imUuUrwgKsriFKCg3BievK
+         /MkDwBzpY4kj1jMkmlnvODOLJ3WQWqDJhTVOSdZhw+gbi2dQ4kp+Jn5rBhZVXaEpoceJ
+         Ka/NTcGiF9NdeRwCsQjSpUvk1xvK3Xsgdggc0x/0UxlcMt9iMMUKAQ4crCT7ZGTJgNg1
+         ZTxW3kH2RMfezAAtC+CN5xI4j09kgmkpwpUHWXPBGx5rSip1gYvUk25N16t+KSFgx4sr
+         dq8l3fEh3mqnQveWYjKUcMHvub2pqwhkRgmPbM5zAxP0Cj15JdCDFUgE7FZdwgbRU+E1
+         RHWw==
+X-Gm-Message-State: APjAAAWlJ937/xVfjuUJd3ul5MgproiMnBj5xlSWjmmieu90TsOFseHI
+        l1kvJR1uKo6guENiod1w0NY=
+X-Google-Smtp-Source: APXvYqxuK++llOq76jfvYL4JeCUoP7uNtCXKMqhnxl+rTaD7dXyNpTSPWwQJWZj2kuSq8HLa1SgGWA==
+X-Received: by 2002:a17:90a:9301:: with SMTP id p1mr19967440pjo.31.1570229751615;
+        Fri, 04 Oct 2019 15:55:51 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z5sm6690314pgi.19.2019.10.04.15.55.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Oct 2019 15:55:50 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 15:55:49 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/99] 4.4.195-stable review
+Message-ID: <20191004225549.GA14687@roeck-us.net>
+References: <20191003154252.297991283@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <1570212969-21888-18-git-send-email-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 11:16 AM, Chang S. Bae wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Oct 03, 2019 at 05:52:23PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.195 release.
+> There are 99 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> ---
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
+> Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Changes from v8:
-> * Fixed typos (Randy Dunlap)
-> * Massaged a few sentences that were previously edited by Thomas.
-> 
-> Changes from v7:
-> * Rewritten the documentation and changelog by Thomas
-> * Included compiler version info additionally
-> ---
->  Documentation/x86/x86_64/fsgs.rst  | 199 +++++++++++++++++++++++++++++++++++++
->  Documentation/x86/x86_64/index.rst |   1 +
->  2 files changed, 200 insertions(+)
->  create mode 100644 Documentation/x86/x86_64/fsgs.rst
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 324 pass: 324 fail: 0
 
-
--- 
-~Randy
+Guenter
