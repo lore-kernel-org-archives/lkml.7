@@ -2,131 +2,67 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FA1C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89390C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A9E2077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A342133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbfJDT4J convert rfc822-to-8bit (ORCPT
+        id S1731078AbfJDT7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:56:09 -0400
-Received: from mx0a-00176a03.pphosted.com ([67.231.149.52]:53736 "EHLO
-        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730836AbfJDT4I (ORCPT
+        Fri, 4 Oct 2019 15:59:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57104 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbfJDT7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:56:08 -0400
-Received: from pps.filterd (m0047962.ppops.net [127.0.0.1])
-        by m0047962.ppops.net-00176a03. (8.16.0.42/8.16.0.42) with SMTP id x94JsTeF011265;
-        Fri, 4 Oct 2019 15:56:07 -0400
-From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-CC:     Mimi Zohar <zohar@linux.ibm.com>,
-        "Wiseman, Monty (GE Global Research, US)" <monty.wiseman@ge.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Thread-Topic: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Thread-Index: AQHVdI4g9L3xPAeMJki3mq4fpV79C6dHrWSAgAFrf4CAABaxAIAAUs4AgAAPVoCAAOxxAIAAnnWA///LRNA=
-Date:   Fri, 4 Oct 2019 19:56:01 +0000
-Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
- <1570024819.4999.119.camel@linux.ibm.com>
- <20191003114119.GF8933@linux.intel.com>
- <1570107752.4421.183.camel@linux.ibm.com>
- <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
-In-Reply-To: <20191004182711.GC6945@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMjEyNDczOTUw?=
- =?us-ascii?Q?XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0?=
- =?us-ascii?Q?YmEyOWUzNWJcbXNnc1xtc2ctZmM1ZWJkODctZTZlMC0xMWU5LThlNWMtYTRj?=
- =?us-ascii?Q?M2YwYjU5OGE2XGFtZS10ZXN0XGZjNWViZDg5LWU2ZTAtMTFlOS04ZTVjLWE0?=
- =?us-ascii?Q?YzNmMGI1OThhNmJvZHkudHh0IiBzej0iMTkzMSIgdD0iMTMyMTQ2OTI1NjAy?=
- =?us-ascii?Q?OTY5NzY4IiBoPSJJb1M3U21NaU54OWR1V0xqclpiM1c5a2d5YUU9IiBpZD0i?=
- =?us-ascii?Q?IiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFFb0NB?=
- =?us-ascii?Q?QUNvbUxtKzdYclZBYnV1SzdTSmoxQmZ1NjRydEltUFVGOERBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBSEFBQUFEYUFRQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBRUFBUUFCQUFBQUZ0R2VRd0FBQUFBQUFBQUFBQUFBQUo0QUFBQm5BR1VB?=
- =?us-ascii?Q?WHdCakFHOEFiZ0JtQUdrQVpBQmxBRzRBZEFCcEFHRUFiQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdjQVpRQmZBR2dBYVFCbkFHZ0Fi?=
- =?us-ascii?Q?QUI1QUdNQWJ3QnVBR1lBYVFCa0FHVUFiZ0IwQUdrQVlRQnNBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFad0JsQUY4QWJnQnZBRzRBY0FCMUFHSUFiQUJwQUdNQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9t?=
- =?us-ascii?Q?ZXRhPg=3D=3D?=
-x-dg-rorf: 
-x-originating-ip: [3.159.19.191]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 4 Oct 2019 15:59:51 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iGTjx-0005cl-Le; Fri, 04 Oct 2019 19:59:49 +0000
+Date:   Fri, 4 Oct 2019 21:59:48 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] usercopy structs for v5.4-rc2
+Message-ID: <20191004195947.lkq5lkyj5zvlyxaw@wittgenstein>
+References: <20191004104116.20418-1-christian.brauner@ubuntu.com>
+ <CAHk-=whxf5HVdaXqL6RgHCLzb2LNn3U2n_x4GWQZroCC+evRoA@mail.gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-04_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910040163
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whxf5HVdaXqL6RgHCLzb2LNn3U2n_x4GWQZroCC+evRoA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 04, 2019 at 10:53:41AM -0700, Linus Torvalds wrote:
+> On Fri, Oct 4, 2019 at 3:42 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> >            The only separate fix we we had to apply
+> > was for a warning by clang when building the tests for using the result of
+> > an assignment as a condition without parantheses.
 
-> From: linux-integrity-owner@vger.kernel.org <linux-integrity-
-> owner@vger.kernel.org> On Behalf Of Jarkko Sakkinen
-> Sent: Friday, October 4, 2019 2:27 PM
-> Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+<snip>
+
 > 
-> If you are able to call tpm_get_random(), the driver has already registered
-> TPN as hwrng. With this solution you fail to follow the principle of defense in
-> depth. If the TPM random number generator is compromissed (has a bug)
-> using the entropy pool will decrease the collateral damage.
+> I've pulled this, since it's not in core kernel code anyway, but I
+> wish I had never had to see that ugly construct.
 
-And if the entropy pool has a bug or is misconfigured, you lose everything.
-That does not sound like defense in depth to me. In the real world
-I am not aware of a single instance of RNG vulnerability on a TPM.
-I am directly aware of several published vulnerabilities in embedded systems 
-due to a badly ported version of the kernel random pool. In addition, 
-the random generator in a TPM is hardware isolated, and less likely to be
-vulnerable to side channel or memory manipulation errors. The TPM
-RNG is typically FIPS certified.  The use of the TPM RNG was a deliberate
-design choice in trusted keys.
+I admit that I'm _less_ anal about other people's code in _tests_ as for
+example in this case.
+For core kernel code I obviously would not have taken this into the
+tree.
+Honestly, my main concern currently is to get people to add tests at all
+- at least if they want to go through my tree - and if they adhere to
+that request I'm more lenient.
 
-> > Third, as Mimi states, using a TPM is not a "regression". It would be
-> > a regression to change trusted keys _not_ to use the TPM, because that
-> > is what trusted keys are documented to provide to user space.
-> 
-> For asym-tpm.c it is without a question a regression because of the evolution
-> that has happened after trusted keys. For trusted keys using kernel rng
-> would be improvement.
-
-Perhaps this is a language issue, but you are not using "regression" correctly.
-Changing to the kernel pool would not only be a debatable  "improvement", 
-but also would certainly be a change to the documented trusted key  
-behavior, which I thought was frowned upon.
-
-dave
+Christian
