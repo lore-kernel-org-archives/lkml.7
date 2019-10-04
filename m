@@ -2,192 +2,142 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1FEC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE21ECE58B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E12222C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="j9zIfxgq"
+	by mail.kernel.org (Postfix) with ESMTP id D27A5222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbfJDUGM (ORCPT
+        id S1731255AbfJDUHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 16:06:12 -0400
-Received: from mail-eopbgr710138.outbound.protection.outlook.com ([40.107.71.138]:31609
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727978AbfJDUGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 16:06:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bKQcfmsTIigocE/V+AY/75XWKX8RkrcrWzGBI/9TXh0yiqu7T9ucpQFppQDArXLVTOyU2hJTblrAUf5xQxRMAFkl8PKKZQYp0C2yjnw0mhVjhTVCVSE4MmBKsc5JWNFEIhakAqV0j0jVq8PRQwFS1wbH2W1Ox0EuGnVcntiLHqqluU3cbXPCAEatPaMkn77VQ/P0kbclVSAJychFfTFLzOLM10PW8TMATAmxwL+2G+gzrWq2C0QxII13xDNZoz7r3oUWUM3FoQD1KHTmT0uPgZyvZYdIdJn9g5AY7GXg8fkUaj25ifP3bvUZkSl+H/Nq04hGqUiEO/dv1lu32/IPMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pDUrR1yuxVXQzI9OGCetGTRT+Mfb2LxYeigou7U9xxI=;
- b=M+msJYWd7ZJsCeqCgTMTCGms/LEJbDnftGXcDdH1OkilZ3OLV4xh2vMTDTU1RgcxllipVIZeXKcdTsiVBDQhbPxjM2lpbC05iMC/BvS499n1dc7O70a+yEte8bVkrRQ9D7BcVjOylHtEOqgRzGb40hleRebIGdoJz/X435ORmkxCSUCOTpUPoyvNvA13CnymGu/ogzMOY3HUKftsGw+LlV3xLkSoFui/2OmEdxEVWNuhSbRD59x4k39f81lkiIIGBKwX0R7QdIMegczqDPlGUYumYy+POdmTCmDqGBguemj7rt0FnXBhB2Xbn9Dpv1uJ63fefjuMgzaoOY5EqHCuUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pDUrR1yuxVXQzI9OGCetGTRT+Mfb2LxYeigou7U9xxI=;
- b=j9zIfxgq+C2GMBszUic7jmhs7gUP8xTgT4sXulEJnm7kmPnVPqaJieyzES0I28zEjEKK8n5XyAATKeKBNlATjP+ZHt9uNYIUkOnQyuLsr6bf8q+FSfJVSnAOre2eJGc7rm5rlknBRV6pOZU2mlL4jTSDKVqq/fU7Go55I0tovjc=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1647.namprd22.prod.outlook.com (10.174.167.36) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Fri, 4 Oct 2019 20:05:29 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::3050:9a38:9d8e:8033]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::3050:9a38:9d8e:8033%5]) with mapi id 15.20.2327.023; Fri, 4 Oct 2019
- 20:05:29 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] MIPS fixes
-Thread-Topic: [GIT PULL] MIPS fixes
-Thread-Index: AQHVeu8ROpr+ARU380KtMuRwpTpwlw==
-Date:   Fri, 4 Oct 2019 20:05:28 +0000
-Message-ID: <20191004200527.7ydsrszuqim6h645@pburton-laptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR06CA0036.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::49) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 79093c86-f772-4eb6-047e-08d7490633f8
-x-ms-traffictypediagnostic: MWHPR2201MB1647:
-x-microsoft-antispam-prvs: <MWHPR2201MB164706B4A83370AA37219E25C19E0@MWHPR2201MB1647.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 018093A9B5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(376002)(346002)(39840400004)(396003)(366004)(189003)(199004)(64756008)(316002)(14454004)(1076003)(66446008)(99936001)(66556008)(66946007)(33716001)(25786009)(66476007)(66616009)(5660300002)(54906003)(44832011)(6916009)(478600001)(66066001)(81166006)(99286004)(8936002)(305945005)(7736002)(8676002)(81156014)(4326008)(6116002)(52116002)(486006)(6436002)(476003)(58126008)(102836004)(3846002)(71190400001)(71200400001)(26005)(42882007)(6486002)(386003)(6506007)(186003)(6512007)(256004)(9686003)(14444005)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1647;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GTU8VFPQwN04yiwcn0MpSAOcK9it+Y1Ws2i4T7Dd4XnIWS++DawlAUkeS13BxkjInI9KCANvZYWw+lW/y4GTbgNE7kCZmbhLTnDx0xrdLuoG4oYDPivQUX8BqhG0I6ry5dVl4kkpiit+fI+lLnCDgCv8dg2SYltejdoizwCbDCs64dIc+w07mXYmBg5OL2wHeY7K2pKpLm/FOzbZuypIegKnY+BQbgdDXGW8nzy3dNzbJnXfFT0af60dI0Vv+d+uVMcqOzNurtN333Xtu3xzOpVZRBjsmXm/dVyxC6dboCwANRfqZr1kEr7RbS64WDVaaZSJPRT2oETDxBVQbXx3DKZeBxp4pjA0yJJVUKMeW2AUuMa3DX0pDNv2WwNOEls7TLwMJ4NAxoEGcbIpct4km96lzZ+CAHivsLdAWGszhkk=
-x-ms-exchange-transport-forked: True
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jpjyvsev7vx7ioyi"
+        Fri, 4 Oct 2019 16:07:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47354 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729079AbfJDUHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 16:07:32 -0400
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 033C3B62C
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 20:07:32 +0000 (UTC)
+Received: by mail-io1-f70.google.com with SMTP id g126so13981853iof.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 13:07:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=YQkPCdZHoSj6NvroC4Ee1AB26jF4gvzQTiWkamm8ZZQ=;
+        b=JtA4v4ft2trBq9jM9bUqiTmQm6TsmdRZwLk2FMyP7GcDNpaCH5AWj2MpjCYUTralh+
+         uz6ycdSmv7NjAN9OqryVPK4znR4L3iRiRmcFj5snRulgQpir7FeKptR8tYX9HLZ7+VFH
+         /s/qVoNNyquPPEkxvV/tR19dBHW2kYLIGQOj7qeKlMGbpmABxVXcF6r1o21dbhQN8YQH
+         qR52VVhNjemXg7SDXkRpZ/2pnBXWyuU+/HtQb1IoCGtzkAnpTLEGw3tOa85tqxSuWGQ5
+         jn7GL2+bFpkJE/2k6bSG9U4pkFdV4pOFtiHvs3bCU+BS6rwB0yFjedQbaDWdhxbDHxFV
+         VTow==
+X-Gm-Message-State: APjAAAWk6LpOKBHcHPgC0MYlCrmkFr+MpjVfFYHTWHUU/0pXkM1E26l6
+        A21T60BFD3L93zztexy/3RCyxz8xtpLkUL5BGL6WOsdiY6KGA+9SPbxsX8XOM6wYKR5/JcdU8oo
+        xegnYqBecwD6ekI0cxKd5CbAr
+X-Received: by 2002:a02:3786:: with SMTP id r128mr16553375jar.76.1570219651263;
+        Fri, 04 Oct 2019 13:07:31 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxArhHxm0Nstx7C4ZP+pXUNPuCNDxE4yPahY8Po8tmCh9X9YYrdtdBzGg9wsxS84j6KFUUzNg==
+X-Received: by 2002:a02:3786:: with SMTP id r128mr16553338jar.76.1570219650932;
+        Fri, 04 Oct 2019 13:07:30 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id d21sm2454373iom.29.2019.10.04.13.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 13:07:30 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 13:07:28 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Safford <david.safford@ge.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191004200728.xoj6jlgbhv57gepc@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Safford <david.safford@ge.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <20191003215125.GA30511@linux.intel.com>
+ <20191003215743.GB30511@linux.intel.com>
+ <1570140491.5046.33.camel@linux.ibm.com>
+ <1570147177.10818.11.camel@HansenPartnership.com>
+ <20191004182216.GB6945@linux.intel.com>
+ <1570213491.3563.27.camel@HansenPartnership.com>
+ <20191004183342.y63qdvspojyf3m55@cantor>
+ <1570214574.3563.32.camel@HansenPartnership.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79093c86-f772-4eb6-047e-08d7490633f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 20:05:28.8657
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nvGq93kXjhrF0/jb8SUi+l6TMD5Gk+A4x0HKXXZTMaTGWj0jUVMTOtL/pjEy9qmWjLzLf4KmRkw/d1SwnUIilA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1647
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1570214574.3563.32.camel@HansenPartnership.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---jpjyvsev7vx7ioyi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri Oct 04 19, James Bottomley wrote:
+>On Fri, 2019-10-04 at 11:33 -0700, Jerry Snitselaar wrote:
+>> On Fri Oct 04 19, James Bottomley wrote:
+>> > On Fri, 2019-10-04 at 21:22 +0300, Jarkko Sakkinen wrote:
+>> > > On Thu, Oct 03, 2019 at 04:59:37PM -0700, James Bottomley wrote:
+>> > > > I think the principle of using multiple RNG sources for strong
+>> > > > keys is a sound one, so could I propose a compromise:  We have
+>> > > > a tpm subsystem random number generator that, when asked for
+>> > > > <n> random bytes first extracts <n> bytes from the TPM RNG and
+>> > > > places it into the kernel entropy pool and then asks for <n>
+>> > > > random bytes from the kernel RNG? That way, it will always have
+>> > > > the entropy to satisfy the request and in the worst case, where
+>> > > > the kernel has picked up no other entropy sources at all it
+>> > > > will be equivalent to what we have now (single entropy source)
+>> > > > but usually it will be a much better mixed entropy source.
+>> > >
+>> > > I think we should rely the existing architecture where TPM is
+>> > > contributing to the entropy pool as hwrng.
+>> >
+>> > That doesn't seem to work: when I trace what happens I see us
+>> > inject 32 bytes of entropy at boot time, but never again.  I think
+>> > the problem is the kernel entropy pool is push not pull and we have
+>> > no triggering event in the TPM to get us to push.  I suppose we
+>> > could set a timer to do this or perhaps there is a pull hook and we
+>> > haven't wired it up correctly?
+>> >
+>> > James
+>> >
+>>
+>> Shouldn't hwrng_fillfn be pulling from it?
+>
+>It should, but the problem seems to be it only polls the "current" hw
+>rng ... it doesn't seem to have a concept that there may be more than
+>one.  What happens, according to a brief reading of the code, is when
+>multiple are registered, it determines what the "best" one is and then
+>only pulls from that.  What I think it should be doing is filling from
+>all of them using the entropy quality to adjust how many bits we get.
+>
+>James
+>
 
-Hi Linus,
-
-Here is a selection of fixes for arch/mips, mostly handling regressions
-introduced during the v5.4 merge window; please pull.
-
-Thanks,
-    Paul
-
-
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.4_1
-
-for you to fetch changes up to 6822c29ddbbdeafd8d1b79ebe6c51b83efd55ae1:
-
-  MIPS: fw/arc: Remove unused addr variable (2019-10-04 11:46:22 -0700)
-
-----------------------------------------------------------------
-Some MIPS fixes for the 5.4 cycle:
-
-- Build fixes for Cavium Octeon & PMC-Sierra MSP systems, as well as
-  all pre-MIPSr6 configurations built with binutils < 2.25.
-
-- Boot fixes for 64-bit Loongson systems & SGI IP28 systems.
-
-- Wire up the new clone3 syscall.
-
-- Clean ups for a few build-time warnings.
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      mips: Loongson: Fix the link time qualifier of 'serial_exit()'
-
-Huacai Chen (1):
-      MIPS: Loongson64: Fix boot failure after dropping boot_mem_map
-
-Jiaxun Yang (1):
-      MIPS: cpu-bugs64: Mark inline functions as __always_inline
-
-Oleksij Rempel (1):
-      MIPS: dts: ar9331: fix interrupt-controller size
-
-Paul Burton (7):
-      MIPS: octeon: Include required header; fix octeon ethernet build
-      MIPS: Wire up clone3 syscall
-      MIPS: VDSO: Remove unused gettimeofday.c
-      MIPS: VDSO: Fix build for binutils < 2.25
-      MIPS: pmcs-msp71xx: Add missing MAX_PROM_MEM definition
-      MIPS: pmcs-msp71xx: Remove unused addr variable
-      MIPS: fw/arc: Remove unused addr variable
-
-Thomas Bogendoerfer (2):
-      MIPS: init: Fix reservation of memory between PHYS_OFFSET and mem start
-      MIPS: init: Prevent adding memory before PHYS_OFFSET
-
- arch/mips/boot/dts/qca/ar9331.dtsi        |   2 +-
- arch/mips/fw/arc/memory.c                 |   1 -
- arch/mips/include/asm/octeon/cvmx-ipd.h   |   1 +
- arch/mips/include/asm/unistd.h            |   1 +
- arch/mips/kernel/cpu-bugs64.c             |  14 +-
- arch/mips/kernel/setup.c                  |   5 +-
- arch/mips/kernel/syscall.c                |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl |   2 +-
- arch/mips/kernel/syscalls/syscall_n64.tbl |   2 +-
- arch/mips/kernel/syscalls/syscall_o32.tbl |   2 +-
- arch/mips/loongson64/common/mem.c         |  35 ++--
- arch/mips/loongson64/common/serial.c      |   2 +-
- arch/mips/loongson64/loongson-3/numa.c    |  11 +-
- arch/mips/pmcs-msp71xx/msp_prom.c         |   4 +-
- arch/mips/vdso/Makefile                   |   2 +-
- arch/mips/vdso/gettimeofday.c             | 269 ------------------------------
- 16 files changed, 41 insertions(+), 313 deletions(-)
- delete mode 100644 arch/mips/vdso/gettimeofday.c
-
---jpjyvsev7vx7ioyi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXZemBwAKCRA+p5+stXUA
-3a+TAQCd6ndikkJ36LU9iRMdegakrRKxeK8AeDrNDYGPkGSY/AD/e5DuGeRCJJg5
-X3mCgcPbCaQHZc8aeZPHxc9IMLC3qg8=
-=h1cF
------END PGP SIGNATURE-----
-
---jpjyvsev7vx7ioyi--
+Most of them don't even set quality, including the tpm, so they end up
+at the end of the list. For the ones that do I'm not sure how they determined
+the value. For example virtio-rng sets quality to 1000.
