@@ -6,73 +6,129 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A506C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532CAC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E589C222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F456222CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbfJDQar (ORCPT
+        id S1729683AbfJDQbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:30:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37365 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDQaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:30:46 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iGQTa-0007bq-JS; Fri, 04 Oct 2019 18:30:42 +0200
-Date:   Fri, 4 Oct 2019 18:30:42 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Daniel Wagner <dwagner@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
- ne_fit_preload_node
-Message-ID: <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
-References: <20191003090906.1261-1-dwagner@suse.de>
- <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
- <20191004162041.GA30806@pc636>
+        Fri, 4 Oct 2019 12:31:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46268 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728600AbfJDQbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:31:14 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7D9AFF4F25F2F0353BAC;
+        Sat,  5 Oct 2019 00:31:08 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 5 Oct 2019
+ 00:30:53 +0800
+Subject: Re: [PATCH 0/4] HiSilicon hip08 uncore PMU events additions
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+References: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
+ <27e693fd-124e-1aa8-3b8a-62301a5a1d10@huawei.com>
+ <20191004143658.GA17687@kernel.org> <20191004143835.GB17687@kernel.org>
+ <969729ce-6246-6fa7-45c9-3dd9cb07059d@huawei.com>
+ <20191004151853.GC17687@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+        <zhangshaokun@hisilicon.com>, James Clark <James.Clark@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <0492ebd9-f867-423d-034c-9fe1c74902e7@huawei.com>
+Date:   Fri, 4 Oct 2019 17:30:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191004162041.GA30806@pc636>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191004151853.GC17687@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-04 18:20:41 [+0200], Uladzislau Rezki wrote:
-> On Fri, Oct 04, 2019 at 05:37:28PM +0200, Sebastian Andrzej Siewior wrote:
-> > If you post something that is related to PREEMPT_RT please keep tglx and
-> > me in Cc.
-> > 
-> > On 2019-10-03 11:09:06 [+0200], Daniel Wagner wrote:
-> > > Replace preempt_enable() and preempt_disable() with the vmap_area_lock
-> > > spin_lock instead. Calling spin_lock() with preempt disabled is
-> > > illegal for -rt. Furthermore, enabling preemption inside the
-> > 
-> > Looking at it again, I have reasonable doubt that this
-> > preempt_disable() is needed.
-> > 
-> The intention was to preload a current CPU with one extra object in
-> non-atomic context, thus to use GFP_KERNEL permissive parameters. I.e.
-> that allows us to avoid any allocation(if we stay on the same CPU)
-> when we are in atomic context do splitting.
+>
+>>>>>> The missing events were originally mentioned in
+>>>>>> https://lkml.org/lkml/2019/6/14/645, when upstreaming the JSONs initially.
+>
+>>>>>> It also includes a fix for a DDRC eventname.
+>
+>>>>> Could I get these JSON updates picked up please? Maybe they were missed
+>>>>> earlier. Let me know if I should re-post.
+>
+>>>> Looking at them now.
+>
+>>> It would be really good if somehow we managed to have someone from the
+>>> ARM community to check and provide a Reviewed-by for those, i.e. someone
+>>> else than the poster to look at it and check that its ok, would that be
+>>> possible?
+>
+>> For this specific case, I'm not sure how much traction or value there would
+>> be since we're just adding some missing events for custom IP.
+>
+> Someone else inside your organization?
 
-You could have been migrated to another CPU before the first
-preempt_disable(). You could have been migrated to another CPU while
-memory has been allocated.
-I don't really see the point of that preempt_disable() besides keeping
-debug code quiet.
+For this, sure. Colleague Shaokun (cc'ed) provided me the metadata for 
+these JSON additions, so when he returns from national vacation I can 
+ask him to provide necessary tags.
 
-> If we have migrate_disable/enable, then, i think preempt_enable/disable
-> should be replaced by it and not the way how it has been proposed
-> in the patch.
+  If nobody is available, then so
+> be it, let that be clear in the JSON file (see below) and then I
+> wouldn't be waiting for acks/reviewed-by messages for such cases.
+>
+>> But I do agree that more review of JSONs from the community is required - as
+>> I brought up here regarding a recent addition:
+>> https://lore.kernel.org/lkml/749a0b8e-2bfd-28f6-b34d-dc72ef3d3a74@huawei.com/
+>>
+>> Can we enforce that at least linux-arm-kernel@lists.infradead.org and/or
+>> get_maintainer.pl results is cc'ed on anything ARM specific as a start?
+>
+> I think this should be the case, would you be willing to add a note to
+> that effect at the top of the JSON files?
 
-I don't think this patch is appropriate for upstream.
+Adding notes to JSONs would be painful unless the parser is updated to 
+to filter them out. And, as I understand, the x86 JSONs are 
+autogenerated, so that tooling would need to handle this also.
 
-Sebastian
+>
+> And an extra note at tools/perf/pmu-events/README telling users to look
+> at the json files to figure out what Reviewed-by tags are required for
+> something to get merged? One extra Reviewed-by would be ok?Who would be
+> the reviewers for each arch? Would that be at the top of the JSON file?
+
+There is no per-arch JSON, and, in addition, I think that would be hard 
+to formulate such formal rules.
+
+As an alternative, how about just add a maintainers entry for reviewers 
+per arch? As a start, I don't mind being added there for arm64:
+
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12767,6 +12767,10 @@ F:     arch/*/events/*
+  F:     arch/*/events/*/*
+  F:     tools/perf/
+
++PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
++R:     John Garry <john.garry@huawei.com>
++F:     tools/perf/pmu-events/arch/arm64
++
+
+Patches per-arch should have some nod/tag from a member of the 
+respective list. Or at very least be cc'ed :)
+
+Thanks,
+John
+
+>
+> - Arnaldo
+>
+> .
+>
+
+
