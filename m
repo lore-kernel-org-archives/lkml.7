@@ -2,120 +2,113 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C272C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFC8C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB0B215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02241215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:02:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMWp6/G+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388507AbfJDKAd (ORCPT
+        id S1730744AbfJDKCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:00:33 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26012 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbfJDKA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:00:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 03:00:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
-   d="scan'208";a="392246706"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Oct 2019 03:00:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 646BC14E; Fri,  4 Oct 2019 13:00:25 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Pavel Machek <pavel@ucw.cz>, Jan Kara <jack@suse.cz>,
-        Tejun Heo <tj@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] Revert "libata, freezer: avoid block device removal while system is frozen"
-Date:   Fri,  4 Oct 2019 13:00:25 +0300
-Message-Id: <20191004100025.70798-2-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191004100025.70798-1-mika.westerberg@linux.intel.com>
-References: <20191004100025.70798-1-mika.westerberg@linux.intel.com>
+        Fri, 4 Oct 2019 06:02:19 -0400
+Received: from mail-io1-f51.google.com ([209.85.166.51]:36262 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfJDKCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:02:18 -0400
+Received: by mail-io1-f51.google.com with SMTP id b136so12272048iof.3;
+        Fri, 04 Oct 2019 03:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=zVzaL13aBMw0U8JG2NOEmJnjPxX8zMVFzGvL8Tcw4zE=;
+        b=QMWp6/G+6FQ1g1EQynFBy9qWtAZZvbEl3vOY2ZedehHYyxKZxM/Eonl4lW4ykcXIC9
+         3kiJdmKWs3Q8Z/0PPZNV7FfF+lkzhC7tyZp5I3lgBnlk2/dx0jCtyxFuUP4Kq3q+UaV9
+         j2zrTEBpydXkC24ZBOnRVqg8olG2y1m5ntg+ouIBV18wnKLvdHTJ1aSe0LOrqXlPBRMg
+         foVktVWwiAPyFKX202xdxFE1O3kdUG2v59sGkmod4c92aICgMbdfr3t/6fwCY/60fxD/
+         XUFu2W2PvCyn4JFcZUizrR5n4vGtTn3UgiVAkGHeJMU2jVoSr8F2M0+F6HsBwLf42ngb
+         vg8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=zVzaL13aBMw0U8JG2NOEmJnjPxX8zMVFzGvL8Tcw4zE=;
+        b=Pa8Iea1+rBsZKbGTf2sy8N82+lgIjLJVCeZQ6SpiG2DyyDZrua0XQS3pXYN+xhIGBW
+         anSqK1hTFzrgH6XOYqdOLzxor+T+G4MMfdLj3NLmNrUzNUaDmaGJXJ2HBOi8nkCphU8M
+         lkkkLrGy98NSEMelfwqdTWg0gNQuCYPAv26BERjsV0Qe365BuEpI5glcfkYG5faA4jty
+         j/9MxbNtnUygAr7nC726icOXNZn4Ghvf3FnrK7GFKteLE570gDcs4vYMgr1K4XuWk+ib
+         poh+u1biin+Pd3/Jys4dbtXvmLcgidH8OJ5ex5F6tZD8Uv+pmChLO/I2mE9R5ToGZCKc
+         bSLw==
+X-Gm-Message-State: APjAAAWGzyOPD1jUVqhW0ofvcmcKB1kW7uRiPc68mekQ8+LUUI7G6bot
+        3Ery/jKeKLEoGyO2Vx69AgUV+s3lR6/zoGjwXIY=
+X-Google-Smtp-Source: APXvYqzMrdeHLGJcpBa6sb2EAlzKy/w8w1xOVCGpGNdUkhtzyFrrOpSnqNRE8cnlYFCtBJxxnh89exYjDJhjAyKlo4M=
+X-Received: by 2002:a05:6638:3a5:: with SMTP id z5mr13854093jap.95.1570183337214;
+ Fri, 04 Oct 2019 03:02:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 4 Oct 2019 05:02:05 -0500
+Message-ID: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
+Subject: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP vs SERIAL_OMAP
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 85fbd722ad0f5d64d1ad15888cd1eb2188bfb557.
+I am running Kernel 5.3.2 trying to troubleshoot some intermittent
+Bluetooth issues, and I think I have narrowed it down to the serial
+driver in use.
+By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
+SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
+appears fine.  When I enable Bluetooth, however, I get intermittent
+errors on an DM3730 / OMAP3630.
 
-The commit was added as a quick band-aid for a hang that happened when a
-block device was removed during system suspend. Now that bdi_wq is not
-freezable anymore the hang should not be possible and we can get rid of
-this hack by reverting it.
+Using the 8250 driver for Blueotooth I get intermittent frame errors
+and data loss.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/ata/libata-scsi.c | 21 ---------------------
- kernel/freezer.c          |  6 ------
- 2 files changed, 27 deletions(-)
+Scanning ...
+[   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
+[   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
+        F4:4E:FC:C9:2F:57       BluJax
+# l2ping F4:4E:FC:C9:2F:57
+Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
+no response from F4:4E:FC:C9:2F:57: id 1
+^C2 sent, 1 received, 50% loss
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 76d0f9de767b..58e09ffe8b9c 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4791,27 +4791,6 @@ void ata_scsi_hotplug(struct work_struct *work)
- 		return;
- 	}
- 
--	/*
--	 * XXX - UGLY HACK
--	 *
--	 * The block layer suspend/resume path is fundamentally broken due
--	 * to freezable kthreads and workqueue and may deadlock if a block
--	 * device gets removed while resume is in progress.  I don't know
--	 * what the solution is short of removing freezable kthreads and
--	 * workqueues altogether.
--	 *
--	 * The following is an ugly hack to avoid kicking off device
--	 * removal while freezer is active.  This is a joke but does avoid
--	 * this particular deadlock scenario.
--	 *
--	 * https://bugzilla.kernel.org/show_bug.cgi?id=62801
--	 * http://marc.info/?l=linux-kernel&m=138695698516487
--	 */
--#ifdef CONFIG_FREEZER
--	while (pm_freezing)
--		msleep(10);
--#endif
--
- 	DPRINTK("ENTER\n");
- 	mutex_lock(&ap->scsi_scan_mutex);
- 
-diff --git a/kernel/freezer.c b/kernel/freezer.c
-index c0738424bb43..dc520f01f99d 100644
---- a/kernel/freezer.c
-+++ b/kernel/freezer.c
-@@ -22,12 +22,6 @@ EXPORT_SYMBOL(system_freezing_cnt);
- bool pm_freezing;
- bool pm_nosig_freezing;
- 
--/*
-- * Temporary export for the deadlock workaround in ata_scsi_hotplug().
-- * Remove once the hack becomes unnecessary.
-- */
--EXPORT_SYMBOL_GPL(pm_freezing);
--
- /* protects freezing and frozen transitions */
- static DEFINE_SPINLOCK(freezer_lock);
- 
--- 
-2.23.0
+(after a fairly long hang, I hit control-c)
 
+However, disabling the 8250 driver and using the only SERIAL_OMAP and
+the console routed to ttyO0, the Bluetooth works well, so I believe it
+to be a serial driver issue and not a Bluetooth error.
+
+# hcitool scan
+Scanning ...
+        F4:4E:FC:C9:2F:57       BluJax
+^C
+# l2ping F4:4E:FC:C9:2F:57
+Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
+...
+44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
+^C15 sent, 15 received, 0% loss
+#
+
+0% loss and regular, repeatable communication without any Frame
+reassembly errors.
+
+Any suggestions on how to troubleshoot or what might cause the
+difference between the two drivers?
+
+adam
