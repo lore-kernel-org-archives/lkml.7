@@ -2,109 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB81CC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0704AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A49620659
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0145207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570200114;
+	bh=zIi82dwWf7Wo0W0nWjF6puWkbQwFXY9WzVldNVPdEN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bbqcWSgmXPNMEqEC5P2EjzmNLrbCIuUViOfLhQSj8wJFMA3ziDmh0fpDgGBuMBq7X
+	 TR0Kq/+BzGamqK6u43/sX8DBHDIYOEMd2vQlkCLaXpCpV5RmZqkazMV1CVf9ucPTK4
+	 95KGsau/mdAIBn0Lizk5bW7exVn6kGLYW50TbOE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389345AbfJDOkz (ORCPT
+        id S2389146AbfJDOly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:40:55 -0400
-Received: from mail.bitwise.fi ([109.204.228.163]:44302 "EHLO mail.bitwise.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389119AbfJDOkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:40:53 -0400
-X-Greylist: delayed 476 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Oct 2019 10:40:52 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.bitwise.fi (Postfix) with ESMTP id A3E8260027;
-        Fri,  4 Oct 2019 17:32:55 +0300 (EEST)
-X-Virus-Scanned: Debian amavisd-new at mail.bitwise.fi
-Received: from mail.bitwise.fi ([127.0.0.1])
-        by localhost (mail.bitwise.fi [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1_nSWJbb_H5q; Fri,  4 Oct 2019 17:32:52 +0300 (EEST)
-Received: from [192.168.5.238] (fw1.dmz.bitwise.fi [192.168.69.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: anssiha)
-        by mail.bitwise.fi (Postfix) with ESMTPSA id C99FB60064;
-        Fri,  4 Oct 2019 17:32:52 +0300 (EEST)
-Subject: Re: [PATCH 2/6] net: can: xilinx_can: Fix flags field initialization
- for axi can and canps
-To:     Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        michal.simek@xilinx.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-can@vger.kernel.org
-References: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
- <1552908766-26753-3-git-send-email-appana.durga.rao@xilinx.com>
-From:   Anssi Hannula <anssi.hannula@bitwise.fi>
-Message-ID: <d1bedb13-f66f-b0fd-bd6d-9f95b64fc405@bitwise.fi>
-Date:   Fri, 4 Oct 2019 17:32:52 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 4 Oct 2019 10:41:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48480 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388733AbfJDOlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:41:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D7730AC69;
+        Fri,  4 Oct 2019 14:41:51 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 16:41:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+Message-ID: <20191004144150.GO9578@dhcp22.suse.cz>
+References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
+ <20191004105824.GD9578@dhcp22.suse.cz>
+ <91128b73-9a47-100b-d3de-e83f0b941e9f@arm.com>
+ <1570193776.5576.270.camel@lca.pw>
+ <20191004130713.GK9578@dhcp22.suse.cz>
+ <1570195839.5576.273.camel@lca.pw>
+ <20191004133814.GM9578@dhcp22.suse.cz>
+ <1570197360.5576.275.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <1552908766-26753-3-git-send-email-appana.durga.rao@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570197360.5576.275.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.3.2019 13.32, Appana Durga Kedareswara rao wrote:
-> AXI CAN IP and CANPS IP supports tx fifo empty feature, this patch updates
-> the flags field for the same.
->
-> Signed-off-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-> ---
->  drivers/net/can/xilinx_can.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-> index 2de51ac..22569ef 100644
-> --- a/drivers/net/can/xilinx_can.c
-> +++ b/drivers/net/can/xilinx_can.c
-> @@ -1428,6 +1428,7 @@ static const struct dev_pm_ops xcan_dev_pm_ops = {
->  };
->  
->  static const struct xcan_devtype_data xcan_zynq_data = {
-> +	.flags = XCAN_FLAG_TXFEMP,
->  	.bittiming_const = &xcan_bittiming_const,
->  	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT,
->  	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT,
+On Fri 04-10-19 09:56:00, Qian Cai wrote:
+> On Fri, 2019-10-04 at 15:38 +0200, Michal Hocko wrote:
+> > On Fri 04-10-19 09:30:39, Qian Cai wrote:
+> > > On Fri, 2019-10-04 at 15:07 +0200, Michal Hocko wrote:
+> > > > On Fri 04-10-19 08:56:16, Qian Cai wrote:
+> > > > [...]
+> > > > > It might be a good time to rethink if it is really a good idea to dump_page()
+> > > > > at all inside has_unmovable_pages(). As it is right now, it is a a potential
+> > > > > deadlock between console vs memory offline. More details are in this thread,
+> > > > > 
+> > > > > https://lore.kernel.org/lkml/1568817579.5576.172.camel@lca.pw/
+> > > > 
+> > > > Huh. That would imply we cannot do any printk from that path, no?
+> > > 
+> > > Yes, or use something like printk_deferred()
+> > 
+> > This is just insane. The hotplug code is in no way special wrt printk.
+> > It is never called from the printk code AFAIK and thus there is no real
+> > reason why this particular code should be any special. Not to mention
+> > it calls printk indirectly from a code that is shared with other code
+> > paths.
+> 
+> Basically, printk() while holding the zone_lock will be problematic as console
+> is doing the opposite as it always needs to allocate some memory. Then, it will
+> always find some way to form this chain,
+> 
+> console_lock -> * -> zone_lock.
 
-Thanks for catching this, this line seemed to have been incorrectly
-removed by my 9e5f1b273e ("can: xilinx_can: add support for Xilinx CAN
-FD core").
-
-But:
-
-> @@ -1435,6 +1436,7 @@ static const struct xcan_devtype_data xcan_zynq_data = {
->  };
->  
->  static const struct xcan_devtype_data xcan_axi_data = {
-> +	.flags = XCAN_FLAG_TXFEMP,
->  	.bittiming_const = &xcan_bittiming_const,
->  	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT,
->  	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT,
-
-
-Are you sure this is right?
-In the documentation [1] there does not seem to be any TXFEMP interrupt,
-it would be interrupt bit 14 but AXI CAN 5.0 seems to only go up to 11.
-
-Or maybe it is undocumented or there is a newer version somewhere?
-
-[1]
-https://www.xilinx.com/support/documentation/ip_documentation/can/v5_0/pg096-can.pdf
-
+So this is not as much a hotplug specific problem but zone->lock ->
+printk -> alloc chain that is a problem, right? Who is doing an
+allocation from this atomic context? I do not see any atomic allocation
+in kernel/printk/printk.c.
 -- 
-Anssi Hannula / Bitwise Oy
-+358 503803997
-
+Michal Hocko
+SUSE Labs
