@@ -2,103 +2,73 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A25C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C50C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47510215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3C3215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390194AbfJDQCY (ORCPT
+        id S2390217AbfJDQCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:02:24 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:47784 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389131AbfJDQCY (ORCPT
+        Fri, 4 Oct 2019 12:02:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52970 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389131AbfJDQCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:02:24 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGQ27-0006Xd-Tl; Fri, 04 Oct 2019 16:02:20 +0000
-Date:   Fri, 4 Oct 2019 17:02:19 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Varad Gautam <vrd@amazon.de>, stable@vger.kernel.org,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH] devpts: Fix NULL pointer dereference in dcache_readdir()
-Message-ID: <20191004160219.GI26530@ZenIV.linux.org.uk>
-References: <20191004140503.9817-1-christian.brauner@ubuntu.com>
- <20191004142748.GG26530@ZenIV.linux.org.uk>
- <20191004143301.kfzcut6a6z5owfee@wittgenstein>
- <20191004151058.GH26530@ZenIV.linux.org.uk>
- <20191004152526.adgg3a7u7jylfk4a@wittgenstein>
+        Fri, 4 Oct 2019 12:02:32 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iGQ2F-0005CI-A4; Fri, 04 Oct 2019 16:02:27 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ath10k: fix null dereference on pointer crash_data
+Date:   Fri,  4 Oct 2019 17:02:27 +0100
+Message-Id: <20191004160227.31577-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004152526.adgg3a7u7jylfk4a@wittgenstein>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 05:25:28PM +0200, Christian Brauner wrote:
-> On Fri, Oct 04, 2019 at 04:10:58PM +0100, Al Viro wrote:
-> > On Fri, Oct 04, 2019 at 04:33:02PM +0200, Christian Brauner wrote:
-> > > On Fri, Oct 04, 2019 at 03:27:48PM +0100, Al Viro wrote:
-> > > > On Fri, Oct 04, 2019 at 04:05:03PM +0200, Christian Brauner wrote:
-> > > > > From: Will Deacon <will@kernel.org>
-> > > > > 
-> > > > > Closing /dev/pts/ptmx removes the corresponding pty under /dev/pts/
-> > > > > without synchronizing against concurrent path walkers. This can lead to
-> > > > > 'dcache_readdir()' tripping over a 'struct dentry' with a NULL 'd_inode'
-> > > > > field:
-> > > > 
-> > > > FWIW, vfs.git#fixes (or #next.dcache) ought to deal with that one.
-> > > 
-> > > Is it feasible to backport your changes? Or do we want to merge the one
-> > > here first and backport?
-> > 
-> > I'm not sure.  The whole pile is backportable, all right (and the first commit
-> 
-> Ok. So here's what I propose: we'll merge this one as it seems an
-> obvious fix to the problem and can easily be backported to stable
-> kernels.
-> Then you'll land your generic workaround alleviating callers from
-> holding inode_lock(). Then I'll send a patch to remove the inode_lock()
-> from devpts for master.
-> If we see that your fix is fine to backport and has no performance
-> impacts that you find unacceptable we backport it.
+From: Colin Ian King <colin.king@canonical.com>
 
-There's more than one bug here.
-	* fucked up lockless traversals.  Affect anything that uses dcache_readdir()
-	* devpts (and selinuxfs, while we are at it) running afoul of (implicit)
-assumption by dcache_readdir() - that stuff won't get removed from under it
-	* (possibly) cifs hitting the same on eviction by memory pressure alone
-(no locked inodes anywhere in sight).  Possibly == if cifs IPC$ share happens to
-show up non-empty (e.g. due to server playing silly buggers).
-	* (possibly) cifs hitting *another* lovely issue - lookup in one subdirectory
-of IPC$ root finding an alias for another subdirectory of said root, triggering
-d_move() of dentry of the latter.  IF the name happens to be long enough to be
-externally allocated and if dcache_readdir() on root is currently copying it to
-userland, Bad Things(tm) will happen.  That one almost certainly depends upon the
-server playing silly buggers and might or might not be possible.  I'm not familiar
-enough with CIFS to tell.
+Currently when pointer crash_data is null the present null check
+will also check that crash_data->ramdump_buf is null and will cause
+a null pointer dereference on crash_data. Fix this by using the ||
+operator instead of &&.
 
-The first 3 are dealt with by the first commit in that pile; the last one is
-not.  devpts patch of yours would deal with a part of the second bug.
-Performance regression comes with fixing the first one, which is also
-quite real.  There might be a way to avoid that performance hit,
-but it will be harder to backport.
+Fixes: 3f14b73c3843 ("ath10k: Enable MSA region dump support for WCN3990")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-FWIW, some discussion of that fun went in a thread shortly before the merge
-window - look for "Possible FS race condition between iterate_dir and
-d_alloc_parallel" on fsdevel.  Some of that went off-list, though...
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index cd22c8654aa9..16177497bba7 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1400,7 +1400,7 @@ static void ath10k_msa_dump_memory(struct ath10k *ar,
+ 	size_t buf_len;
+ 	u8 *buf;
+ 
+-	if (!crash_data && !crash_data->ramdump_buf)
++	if (!crash_data || !crash_data->ramdump_buf)
+ 		return;
+ 
+ 	mem_layout = ath10k_coredump_get_mem_layout(ar);
+-- 
+2.20.1
+
