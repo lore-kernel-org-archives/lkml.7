@@ -2,161 +2,91 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A192C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9E4C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDAD0215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="poGgqbX6"
+	by mail.kernel.org (Postfix) with ESMTP id 33506215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbfJDQkL (ORCPT
+        id S1730080AbfJDQkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:40:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47658 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJDQkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:40:08 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94GOKIT145942;
-        Fri, 4 Oct 2019 16:37:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=51ThAHTVRLLrLX7DDUUketK1Xn5udBHC8gklOuQw7w4=;
- b=poGgqbX6JCl/NL0NREIW4P9+l8QLaal32Xkto+/gKm9KzGXG36J3t9Y97IxbfC79abuc
- HIhJcvwgU73VKa+HhUYWIpCN14vCfAWcuykFg8ecFCTacZSd9CNbsvDrj5/EnIrO7zZd
- SnwCs6AysNBsPxEQu+OM86HU/KXoTrvfvgl0uFeMuiL/Urusogu37yaibi7r7bw1mRXl
- P+U7Do6b28k22LsC3kulgYBA2XxWdLTCodBCIzLu9N6fRpGQGYkQF1JQyrUaoEKGwtaN
- b6g/DpZETiiQ7cEIsMCUf+7h0vD9o3h4LFWUFwJWWR3f41akUitzgfesOp1b6XbHzdK6 ew== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2va05sckk2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Oct 2019 16:37:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94GNGmV029717;
-        Fri, 4 Oct 2019 16:35:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2vdk0uxdww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Oct 2019 16:35:33 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x94GZUL7027727;
-        Fri, 4 Oct 2019 16:35:31 GMT
-Received: from [10.209.227.25] (/10.209.227.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 04 Oct 2019 09:35:30 -0700
-Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA
- support
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org,
-        robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
-Date:   Fri, 4 Oct 2019 09:35:29 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Fri, 4 Oct 2019 12:40:12 -0400
+Received: from ms.lwn.net ([45.79.88.28]:40210 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbfJDQkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:40:07 -0400
+Received: from meer.lwn.net (localhost [127.0.0.1])
+        by ms.lwn.net (Postfix) with ESMTPA id 0660C7C0;
+        Fri,  4 Oct 2019 16:40:06 +0000 (UTC)
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 2/2] docs: Add request_irq() documentation
+Date:   Fri,  4 Oct 2019 10:39:55 -0600
+Message-Id: <20191004163955.14419-3-corbet@lwn.net>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191004163955.14419-1-corbet@lwn.net>
+References: <20191004163955.14419-1-corbet@lwn.net>
 MIME-Version: 1.0
-In-Reply-To: <20191001061704.2399-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910040145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910040145
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 11:16 PM, Peter Ujfalusi wrote:
-> Hi,
-> 
-> Changes since v2
-> )https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
-> - Based on 5.4-rc1
-> - Support for Flow only data transfer for the glue layer
-> 
+While checking the results of the :c:func: removal, I noticed that there
+was no documentation for request_irq(), and request_threaded_irq() was not
+mentioned at all.  Add a kerneldoc comment for request_irq() and add
+request_threaded_irq() to the list of functions.
 
-> 
-> Grygorii Strashko (3):
->    bindings: soc: ti: add documentation for k3 ringacc
->    soc: ti: k3: add navss ringacc driver
->    dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
-> 
-> Peter Ujfalusi (11):
->    dmaengine: doc: Add sections for per descriptor metadata support
->    dmaengine: Add metadata_ops for dma_async_tx_descriptor
->    dmaengine: Add support for reporting DMA cached data amount
->    dmaengine: ti: Add cppi5 header for UDMA
->    dt-bindings: dma: ti: Add document for K3 UDMA
->    dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
->      func
->    dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
->      and filter_fn
->    dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
->      chan_resources
->    dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
->      1
->    dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
->      2
->    dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
-> 
->   .../devicetree/bindings/dma/ti/k3-udma.txt    |  185 +
->   .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
->   Documentation/driver-api/dmaengine/client.rst |   75 +
->   .../driver-api/dmaengine/provider.rst         |   46 +
->   drivers/dma/dmaengine.c                       |   73 +
->   drivers/dma/dmaengine.h                       |    8 +
->   drivers/dma/ti/Kconfig                        |   22 +
->   drivers/dma/ti/Makefile                       |    2 +
->   drivers/dma/ti/k3-udma-glue.c                 | 1225 ++++++
->   drivers/dma/ti/k3-udma-private.c              |  141 +
->   drivers/dma/ti/k3-udma.c                      | 3525 +++++++++++++++++
->   drivers/dma/ti/k3-udma.h                      |  161 +
->   drivers/soc/ti/Kconfig                        |   12 +
->   drivers/soc/ti/Makefile                       |    1 +
->   drivers/soc/ti/k3-ringacc.c                   | 1165 ++++++
->   include/dt-bindings/dma/k3-udma.h             |   10 +
->   include/linux/dma/k3-udma-glue.h              |  134 +
->   include/linux/dma/ti-cppi5.h                  | 1049 +++++
->   include/linux/dmaengine.h                     |  110 +
->   include/linux/soc/ti/k3-ringacc.h             |  245 ++
->   20 files changed, 8248 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
->   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
->   create mode 100644 drivers/dma/ti/k3-udma-glue.c
->   create mode 100644 drivers/dma/ti/k3-udma-private.c
->   create mode 100644 drivers/dma/ti/k3-udma.c
->   create mode 100644 drivers/dma/ti/k3-udma.h
->   create mode 100644 drivers/soc/ti/k3-ringacc.c
->   create mode 100644 include/dt-bindings/dma/k3-udma.h
->   create mode 100644 include/linux/dma/k3-udma-glue.h
->   create mode 100644 include/linux/dma/ti-cppi5.h
->   create mode 100644 include/linux/soc/ti/k3-ringacc.h
-> 
-Can you please split this series and post drivers/soc/* bits
-separately ?  If its ready, I can apply k3-ringacc.c changes.
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+---
+ Documentation/core-api/genericirq.rst |  2 ++
+ include/linux/interrupt.h             | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
 
-Regards,
-Santosh
+diff --git a/Documentation/core-api/genericirq.rst b/Documentation/core-api/genericirq.rst
+index 2e6c99e3ce3b..8f06d885c310 100644
+--- a/Documentation/core-api/genericirq.rst
++++ b/Documentation/core-api/genericirq.rst
+@@ -127,6 +127,8 @@ The high-level Driver API consists of following functions:
+ 
+ -  request_irq()
+ 
++-  request_threaded_irq()
++
+ -  free_irq()
+ 
+ -  disable_irq()
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 89fc59dab57d..ba873ec7e09d 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -140,6 +140,19 @@ request_threaded_irq(unsigned int irq, irq_handler_t handler,
+ 		     irq_handler_t thread_fn,
+ 		     unsigned long flags, const char *name, void *dev);
+ 
++/**
++ * request_irq - Add a handler for an interrupt line
++ * @irq:	The interrupt line to allocate
++ * @handler:	Function to be called when the IRQ occurs.
++ *		Primary handler for threaded interrupts
++ *		If NULL, the default primary handler is installed
++ * @flags:	Handling flags
++ * @name:	Name of the device generating this interrupt
++ * @dev:	A cookie passed to the handler function
++ *
++ * This call allocates an interrupt and establishes a handler; see
++ * the documentation for request_threaded_irq() for details.
++ */
+ static inline int __must_check
+ request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags,
+ 	    const char *name, void *dev)
+-- 
+2.21.0
+
