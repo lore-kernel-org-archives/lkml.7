@@ -2,117 +2,177 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE64C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1AFC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9113C215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68F6215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570180672;
+	bh=0rDUGhIrv1YxuRgnXZ2UUc5KgIIQnyxPjYF37yecgFU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dvrFkNz/CF6nuKgwAxzFWxHa6GiqQYuVdfgs4KU4w70RVmSbD0Yio1RRf7Ikvdvoh
+	 FTg7dJDTLDOiSFWqFEFVQUI2CS/MXXROr2/1ilJ74YGXfXkeWl8CFj366a7Y/DZKe8
+	 pnrDY1412BkMYSYMUNoYjYXG2sM95togEGB1t1kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbfJDJQL (ORCPT
+        id S1731362AbfJDJRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:16:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59866 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730179AbfJDJQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:16:10 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2279619D335
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 09:16:10 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id z1so2407348wrw.21
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 02:16:10 -0700 (PDT)
+        Fri, 4 Oct 2019 05:17:52 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41583 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729379AbfJDJRw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:17:52 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so4728573otp.8;
+        Fri, 04 Oct 2019 02:17:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hhPEpgLhkjexE7wGXfmiyqeRzNcW/U3S79ip8ewXhIg=;
-        b=lSfI3CFHUqE09oGBAvvfmgnhc1EmU5IB+D//P63BTMY2JMKotTEMTpywV5QNDieNgY
-         Nyya6IbX19U0MKGoAHcu5g3QnRynu/3kHRcekNo2mKtZG7QFglp7ahXUIYGhWWXfNc1w
-         SrEE8fvGg5mzTCeAQjm83RlWlqyXoaPB9geEAo+w1JPM6QjWr0nNPPDXw91x4b7NjIhd
-         frCEVWXhCPjMic7oucqfYZCnz5BbdW90WBRoWS4RB6V5tAItExrjFblM/9G1IkCOp6PP
-         f9CIUzILob9zWhOqDUz3zky5PfwSN4HHEouXqNTrUYrUXjCzdbrqwm/HeoUD9M1fkAtq
-         UH/A==
-X-Gm-Message-State: APjAAAX3fQ9ZIySHpvFFT4Y60UI9Na8UH7iIexYVsWOnpywhSXyPdCAD
-        ++aWb1765osKkYAWNw2plzopD777CNdHF622ZLmjgwWKCFFRg0UDmBjuQ3pIEe8RDDEhy/TROhd
-        L76RBzNtfKUmuEfM4WoHWA2Co
-X-Received: by 2002:a1c:9d15:: with SMTP id g21mr10287386wme.96.1570180568813;
-        Fri, 04 Oct 2019 02:16:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwYyFXc0psA9cM79xGyuf3QCE7kgh2CziA2e0KZxOqK4U+Rh82+kx6tnfpcYC/+KSgegIYtMA==
-X-Received: by 2002:a1c:9d15:: with SMTP id g21mr10287358wme.96.1570180568530;
-        Fri, 04 Oct 2019 02:16:08 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id q192sm7660110wme.23.2019.10.04.02.16.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 02:16:07 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 11:16:05 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 00/13] vsock: add multi-transports support
-Message-ID: <20191004091605.ayed7iqjhurzrdap@steredhat>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <PU1P153MB0169970A7DD4383F06CDAB60BF9E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4sHQIu94xzWF2HMMw8MZrhePhhdBNh3YDiLHJCJfguY=;
+        b=KSeTqCuXbqeSLk1s8GJTWYTZ70G+jwb+TMUoJJxTB58fITgs7/nRJEmd88UIWA7Swl
+         DNeGi7xpYaNKVYvunvzFitbxtYY/VQ/JHam7Pw247nJ22y0TU90WQAeve1KbmoekP7ML
+         f69Nm9M90NBnhJb0w997h2m2olmGLAi/DegQpPiIJYYKlkd69/dKtbEDsadi9brk7FC6
+         qP8N6kFNIKbky9X28huHy5LdRoRKoaj8G3nZH5+kamAcMyOw3TOMxpq3YUQbiTuoZV/b
+         0eCKo8yENBKQjA+PLWCDQ5ometnPqoNSJZvvBISNLOzAzBQ+379ZzL0z6B3L84TSKf3x
+         Q5GQ==
+X-Gm-Message-State: APjAAAVTVXz9TpkdSNmrbQ/w/n2mGsw5iRfmiSuhPVy16c80vmYs54nX
+        DQqkNdGD6E7hbukZqF0NqUxusT0mZO7okXierO8=
+X-Google-Smtp-Source: APXvYqzsjdaEQCbotxJo3CPT06zTKV3UI+cRyYBGDFf8EipAF4/3oIPKNRxNbLhtw1cNOSiaD+IM5tbuM1m2GyyIKMY=
+X-Received: by 2002:a9d:6301:: with SMTP id q1mr9881718otk.262.1570180668950;
+ Fri, 04 Oct 2019 02:17:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169970A7DD4383F06CDAB60BF9E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20180716
+References: <20191002122926.385-1-ggherdovich@suse.cz> <20191002122926.385-3-ggherdovich@suse.cz>
+ <13106850.QMtCbivBLn@kreacher> <5d6d601d2647644238fc51621407061e1c29320d.camel@linux.intel.com>
+ <1570177786.30086.1.camel@suse.cz> <CAJZ5v0jK1kMjQ3gu8KhQmp2Paq9Rb74NPjMQ1HsVRCD3Fct5TQ@mail.gmail.com>
+ <1570179472.30086.4.camel@suse.cz>
+In-Reply-To: <1570179472.30086.4.camel@suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 4 Oct 2019 11:17:37 +0200
+Message-ID: <CAJZ5v0gAsd4=LOd0BBJGZgwg2TYUuQP_-FzYXS4k+XK1vfM_3g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: intel_pstate: Conditional frequency
+ invariant accounting
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 12:04:46AM +0000, Dexuan Cui wrote:
-> > From: Stefano Garzarella <sgarzare@redhat.com>
-> > Sent: Friday, September 27, 2019 4:27 AM
-> >  ...
-> > Patch 9 changes the hvs_remote_addr_init(). setting the
-> > VMADDR_CID_HOST as remote CID instead of VMADDR_CID_ANY to make
-> > the choice of transport to be used work properly.
-> > @Dexuan Could this change break anything?
-> 
-> This patch looks good to me.
-> 
+On Fri, Oct 4, 2019 at 10:52 AM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+>
+> On Fri, 2019-10-04 at 10:29 +0200, Rafael J. Wysocki wrote:
+> > On Fri, Oct 4, 2019 at 10:24 AM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+> > >
+> > > On Thu, 2019-10-03 at 20:31 -0700, Srinivas Pandruvada wrote:
+> > > > On Thu, 2019-10-03 at 20:05 +0200, Rafael J. Wysocki wrote:
+> > > > > On Wednesday, October 2, 2019 2:29:26 PM CEST Giovanni Gherdovich
+> > > > > wrote:
+> > > > > > From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > > > > >
+> > > > > > intel_pstate has two operating modes: active and passive. In "active"
+> > > > > > mode, the in-built scaling governor is used and in "passive" mode, the
+> > > > > > driver can be used with any governor like "schedutil". In "active" mode
+> > > > > > the utilization values from schedutil is not used and there is a
+> > > > > > requirement from high performance computing use cases, not to readas
+> > > > > > well any APERF/MPERF MSRs.
+> > > > >
+> > > > > Well, this isn't quite convincing.
+> > > > >
+> > > > > In particular, I don't see why the "don't read APERF/MPERF MSRs" argument
+> > > > > applies *only* to intel_pstate in the "active" mode.  What about
+> > > > > intel_pstate in the "passive" mode combined with the "performance"
+> > > > > governor?  Or any other governor different from "schedutil" for that
+> > > > > matter?
+> > > > >
+> > > > > And what about acpi_cpufreq combined with any governor different from
+> > > > > "schedutil"?
+> > > > >
+> > > > > Scale invariance is not really needed in all of those cases right now
+> > > > > AFAICS, or is it?
+> > > >
+> > > > Correct. This is just part of the patch to disable in active mode
+> > > > (particularly in HWP and performance mode).
+> > > >
+> > > > But this patch is 2 years old. The folks who wanted this, disable
+> > > > intel-pstate and use userspace governor with acpi-cpufreq. So may be
+> > > > better to address those cases too.
+> > >
+> > > I disagree with "scale invariance is needed only by the schedutil governor";
+> > > the two other users are the CPU's estimated utilization in the wakeup path,
+> > > via cpu_util_without(), as well as the load-balance path, via cpu_util() which
+> > > is used by update_sg_lb_stats().
+> >
+> > OK, so there are reasons to run the scale invariance code which are
+> > not related to the cpufreq governor in use.
+> >
+> > I wonder then why those reasons are not relevant for intel_pstate in
+> > the "active" mode.
+> >
+> > > Also remember that scale invariance is applied to both PELT signals util_avg
+> > > and load_avg; schedutil uses the former but not the latter.
+> > >
+> > > I understand Srinivas patch to disable MSR accesses during the tick as a
+> > > band-aid solution to address a specific use case he cares about, but I don't
+> > > think that extending this approach to any non-schedutil governor is a good
+> > > idea -- you'd be killing load balancing in the process.
+> >
+> > But that is also the case for intel_pstate in the "active" mode, isn't it?
+>
+> Sure it is.
+>
+> Now, what's the performance impact of loosing scale-invariance in PELT signals?
 
-Thank you very much for your reviews!
+That needs to be measured.
 
-> > @Dexuan please can you test on HyperV that I didn't break anything
-> > even without nested VMs?
-> 
-> I did some quick tests with the 13 patches in a Linux VM (this is not
-> a nested VM) on Hyper-V and it looks nothing is broken. :-)
-> 
+> And what's the performance impact of accessing two MSRs at the scheduler tick
+> on each CPU?
 
-Great :-)
+That would be the MSR access latency times two and I don't remember
+the exact numbers from the top of my head.  It would also depend on
+how much time it takes to run the tick without those two MSR accesses,
+on average.
 
-> > I'll try to setup a Windows host where to test the nested VMs
-> 
-> I suppose you're going to run a Linux VM on a Hyper-V host,
-> and the Linux VM itself runs KVM/VmWare so it can create its own child 
-> VMs. IMO this is similar to the test "nested KVM ( ..., virtio-transport[L1,L2]"
-> you have done.
+The question I have, however, is whether or not it really is necessary
+to update arch_cpu_freq on every tick.  Maybe it would be sufficient
+to do that every 10 ms, say (in case the tick is more frequent than
+that), or similar?
 
-Yes, I think so. If the Hyper-V transport works well without nested VM,
-it should work the same with a nested KVM/VMware.
+> I am sporting Srinivas' patch because he expressed the concern that the losses
+> don't justify the gains for a specific class of users (supercomputing),
+> although I don't fully like the idea (and arguably that should be measured).
 
-Thanks,
-Stefano
+My point is that this patch doesn't even cover the entire case in
+question, because the HPC people may very well be using cpufreq
+driver/governor configurations different from intel_pstate in the
+"active" mode.  Moreover, given the lack of data, it is even hard to
+say what the potential impact is, if any.
+
+I guess it should be a fairly straightforward exercise to compare the
+results of the various benchmarks using intel_pstate in the "passive"
+mode and the "performance" governor with and without patch [1/2] from
+this series. If you see any perf regressions after applying the patch,
+that's what the others will probably see as well.
