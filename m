@@ -2,77 +2,101 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45055C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D752C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CF921D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696E721D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jv4aGSdj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfPgoQZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfJDTeT (ORCPT
+        id S1730579AbfJDTfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:34:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36048 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDTeT (ORCPT
+        Fri, 4 Oct 2019 15:35:04 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36406 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJDTfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:34:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=39rzJJ0pdXke/IjdtbOOLtjMx1KRjEjgc91/jPrJdjE=; b=Jv4aGSdj/INomnpjZjbcPzSF2
-        jQFL6+DwaKYE3GYNY4BJ/wFAdZqFc55EkTtjTpJQPc+CVVKEU2evXOqAl8tQQPHh8T8ktui+93Y4s
-        ztyOAT1p1Hz00vjM7dV2i+ZK1ePjleXmBeVpg7ZG3pv2I9YNvqbz61mmZMJ06aPXkjxnq1+1Pd1t6
-        aWpH0QFRZBjubmfzXMUryWLXWidFtfy3WMVtiBseWMuzNJeaDJdt+1nKLScDJM98xq7D1hDB+KNKj
-        hYbV+XFIykk/efdsO33Z+621sCIPh0wXhYWecp7p1b27vWslz6ktQwFpqOoxIQRtDK8Aj2wl5kMRg
-        0/ftWBi3g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGTLG-0006AG-8z; Fri, 04 Oct 2019 19:34:18 +0000
-Date:   Fri, 4 Oct 2019 12:34:18 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/15] iomap: Support large pages
-Message-ID: <20191004193418.GM32665@bombadil.infradead.org>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20191002133211.15696-1-hdanton@sina.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002133211.15696-1-hdanton@sina.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 4 Oct 2019 15:35:04 -0400
+Received: by mail-io1-f66.google.com with SMTP id b136so16026274iof.3;
+        Fri, 04 Oct 2019 12:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YUxdWoMjBc3fq7ZEjHVbfnvWMNYpsAW2uL8SUTPJJOk=;
+        b=KfPgoQZiuCc2H7qvFQGzN/Y3EGPnFsu/TLq9CSR8tecMTpa9YL5eWsqgES34oDbm/Z
+         tBCmz9oK9X/m4/+VrPKpX573tizGffhrsfpuA+Fq69Y2qLjGgld9HOjAHd01oZ83u+Oe
+         IfpTdiUjqLS2q1WMSLKP4SYO6lGOL2hAK3fuICIkeFaCYYGEBCZ2DyuGyNv2KTqUkk7I
+         KQb1aZ8FaukkgvjqFvRKzmxBX1EAfsP/eODyKd0CEqnIZdQbkd0Y6geyteNUOKSTNqcn
+         /XpZgD+IsGXz2qWx9KTOw6csMacDX9jweaZEo3BHAZO4XGnVw+LP8rKJvYE92arFNI4q
+         +LLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YUxdWoMjBc3fq7ZEjHVbfnvWMNYpsAW2uL8SUTPJJOk=;
+        b=MZTiefsa/zD0rlKyJnXaNkjhKxyXM1RPbiOfRsBzjAXppzdpVXEsMuoNuMbb7UL0XD
+         StXE1INBYwfkI73zbAuORpk1uc3QBCg0KUc6/FT8QWdwM6pVw3g0pWbwPcnA3YhdqbTk
+         0XWZReG3dHpnGJ+HjFibx9C5K2a5pTK2zAXRfXgJvSLWuhLdI26dNRjOdqmwW02tAThC
+         Z86x/deIZhaQiRbpDadvJVNEx7tRQ0TT1d27Rf93LQStQ5vJW01jA5g//b8D5aB1Q4md
+         mqI61eE+ughOjC7Ef3gIldPML4dtt/zOjR45rFV078yk8vaefDXDqdVnXIL309NOfiRj
+         iGPg==
+X-Gm-Message-State: APjAAAWuXZ3QkwcdijV+oJ20x5WQPqQsko2OjLI/I2ZE5tL5mXtDiZ9P
+        Kn6oGyHFRVspaJiNUH3WmBs=
+X-Google-Smtp-Source: APXvYqxdxqTqNQ2D2g2hs/N3xw+sie1sFybvZM7Bv8s50eW0Wl4EA5uLHeMeKaifDlU11aRt9jEhKg==
+X-Received: by 2002:a5d:88d1:: with SMTP id i17mr14654011iol.235.1570217702565;
+        Fri, 04 Oct 2019 12:35:02 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id t8sm3372621ild.7.2019.10.04.12.35.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 12:35:01 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: user - fix memory leak in crypto_reportstat
+Date:   Fri,  4 Oct 2019 14:34:54 -0500
+Message-Id: <20191004193455.18348-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 09:32:11PM +0800, Hillf Danton wrote:
-> 
-> On Tue, 24 Sep 2019 17:52:02 -0700 From: Matthew Wilcox (Oracle)
-> > 
-> > @@ -1415,6 +1415,8 @@ static inline void clear_page_pfmemalloc(struct page *page)
-> >  extern void pagefault_out_of_memory(void);
-> >  
-> >  #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
-> 
-> With the above define, the page_offset function is not named as badly
-> as 03/15 claims.
+In crypto_reportstat, a new skb is created by nlmsg_new(). This skb is
+leaked if crypto_reportstat_alg() fails. Required release for skb is
+added.
 
-Just because there exists a function that does the job, does not mean that
-the other function is correctly named.
+Fixes: cac5818c25d0 ("crypto: user - Implement a generic crypto statistics")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ crypto/crypto_user_stat.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > +#define offset_in_this_page(page, p)	\
-> > +	((unsigned long)(p) & (page_size(page) - 1))
-> 
-> What if Ted will post a rfc with offset_in_that_page defined next week?
+diff --git a/crypto/crypto_user_stat.c b/crypto/crypto_user_stat.c
+index 8bad88413de1..1be95432fa23 100644
+--- a/crypto/crypto_user_stat.c
++++ b/crypto/crypto_user_stat.c
+@@ -328,8 +328,10 @@ int crypto_reportstat(struct sk_buff *in_skb, struct nlmsghdr *in_nlh,
+ drop_alg:
+ 	crypto_mod_put(alg);
+ 
+-	if (err)
++	if (err) {
++		kfree_skb(skb);
+ 		return err;
++	}
+ 
+ 	return nlmsg_unicast(net->crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
+ }
+-- 
+2.17.1
 
-Are you trying to be funny?
