@@ -4,169 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADF4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92169C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F12222CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E36720867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfJDM1a (ORCPT
+        id S1730618AbfJDM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:27:30 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:46962 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729950AbfJDM13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:27:29 -0400
-Received: from cpe-2606-a000-111b-43ee-0-0-0-115f.dyn6.twc.com ([2606:a000:111b:43ee::115f] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1iGMg0-0001aX-1z; Fri, 04 Oct 2019 08:27:22 -0400
-Date:   Fri, 4 Oct 2019 08:27:11 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Subject: Re: [PATCH] lib/generic-radix-tree.c: add kmemleak annotations
-Message-ID: <20191004122711.GA14248@hmswarspite.think-freely.org>
-References: <CACT4Y+aGjg_JTL-OPMSi1wS4=Zy4xFAizWW5fa8_KMOFpfMeXg@mail.gmail.com>
- <20191004065039.727564-1-ebiggers@kernel.org>
+        Fri, 4 Oct 2019 08:27:52 -0400
+Received: from mga03.intel.com ([134.134.136.65]:12125 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729364AbfJDM1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:27:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 05:27:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
+   d="scan'208";a="205842974"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga001.fm.intel.com with SMTP; 04 Oct 2019 05:27:47 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 04 Oct 2019 15:27:47 +0300
+Date:   Fri, 4 Oct 2019 15:27:47 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
+Message-ID: <20191004122747.GT1208@intel.com>
+References: <20190909135205.10277-1-benjamin.gaignard@st.com>
+ <20190909135205.10277-2-benjamin.gaignard@st.com>
+ <20191003142738.GM1208@intel.com>
+ <CA+M3ks4FBAgCRDDHZ=x7kvQ1Y=0dBdj4+KLO2djh__hW+L=3gQ@mail.gmail.com>
+ <20191003150526.GN1208@intel.com>
+ <CA+M3ks7-SNusVJsiHqrmy4AN+_OO5e1X=ZRN16Hj6f-V3GnVow@mail.gmail.com>
+ <20191003154627.GQ1208@intel.com>
+ <CA+M3ks4gpDdZTPdBYRd=CrwgEYiSWJbXqvtPb-0KpW1BhzvmEQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191004065039.727564-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+M3ks4gpDdZTPdBYRd=CrwgEYiSWJbXqvtPb-0KpW1BhzvmEQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:50:39PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Fri, Oct 04, 2019 at 12:48:02PM +0200, Benjamin Gaignard wrote:
+> Le jeu. 3 oct. 2019 à 17:46, Ville Syrjälä
+> <ville.syrjala@linux.intel.com> a écrit :
+> >
+> > On Thu, Oct 03, 2019 at 05:37:15PM +0200, Benjamin Gaignard wrote:
+> > > Le jeu. 3 oct. 2019 à 17:05, Ville Syrjälä
+> > > <ville.syrjala@linux.intel.com> a écrit :
+> > > >
+> > > > On Thu, Oct 03, 2019 at 04:46:54PM +0200, Benjamin Gaignard wrote:
+> > > > > Le jeu. 3 oct. 2019 à 16:27, Ville Syrjälä
+> > > > > <ville.syrjala@linux.intel.com> a écrit :
+> > > > > >
+> > > > > > On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote:
+> > > > > > > Fix warnings with W=1.
+> > > > > > > Few for_each macro set variables that are never used later.
+> > > > > > > Prevent warning by marking these variables as __maybe_unused.
+> > > > > > >
+> > > > > > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++------------------
+> > > > > > >  1 file changed, 18 insertions(+), 18 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> > > > > > > index aa16ea17ff9b..b69d17b0b9bd 100644
+> > > > > > > --- a/drivers/gpu/drm/drm_atomic_helper.c
+> > > > > > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> > > > > > > @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
+> > > > > > >             struct drm_encoder *encoder)
+> > > > > > >  {
+> > > > > > >       struct drm_crtc_state *crtc_state;
+> > > > > > > -     struct drm_connector *connector;
+> > > > > > > +     struct drm_connector __maybe_unused *connector;
+> > > > > >
+> > > > > > Rather ugly. IMO would be nicer if we could hide something inside
+> > > > > > the iterator macros to suppress the warning.
+> > > > >
+> > > > > Ok but how ?
+> > > > > connector is assigned in the macros but not used later and we can't
+> > > > > set "__maybe_unused"
+> > > > > in the macro.
+> > > > > Does another keyword exist for that ?
+> > > >
+> > > > Stick a (void)(connector) into the macro?
+> > >
+> > > That could work but it will look strange inside the macro.
+> > >
+> > > >
+> > > > Another (arguably cleaner) idea would be to remove the connector/crtc/plane
+> > > > argument from the iterators entirely since it's redundant, and instead just
+> > > > extract it from the appropriate new/old state as needed.
+> > > >
+> > > > We could then also add a for_each_connector_in_state()/etc. which omit
+> > > > s the state arguments and just has the connector argument, for cases where
+> > > > you don't care about the states when iterating.
+> > >
+> > > That may lead to get a macro for each possible combination of used variables.
+> >
+> > We already have new/old/oldnew, so would "just" add one more.
 > 
-> Kmemleak is falsely reporting a leak of the slab allocation in
-> sctp_stream_init_ext():
-> 
-> BUG: memory leak
-> unreferenced object 0xffff8881114f5d80 (size 96):
->    comm "syz-executor934", pid 7160, jiffies 4294993058 (age 31.950s)
->    hex dump (first 32 bytes):
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    backtrace:
->      [<00000000ce7a1326>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
->      [<00000000ce7a1326>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<00000000ce7a1326>] slab_alloc mm/slab.c:3326 [inline]
->      [<00000000ce7a1326>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
->      [<000000007abb7ac9>] kmalloc include/linux/slab.h:547 [inline]
->      [<000000007abb7ac9>] kzalloc include/linux/slab.h:742 [inline]
->      [<000000007abb7ac9>] sctp_stream_init_ext+0x2b/0xa0  net/sctp/stream.c:157
->      [<0000000048ecb9c1>] sctp_sendmsg_to_asoc+0x946/0xa00  net/sctp/socket.c:1882
->      [<000000004483ca2b>] sctp_sendmsg+0x2a8/0x990 net/sctp/socket.c:2102
->      [...]
-> 
-> But it's freed later.  Kmemleak misses the allocation because its
-> pointer is stored in the generic radix tree sctp_stream::out, and the
-> generic radix tree uses raw pages which aren't tracked by kmemleak.
-> 
-> Fix this by adding the kmemleak hooks to the generic radix tree code.
-> 
-> Reported-by: syzbot+7f3b6b106be8dcdcdeec@syzkaller.appspotmail.com
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  lib/generic-radix-tree.c | 32 ++++++++++++++++++++++++++------
->  1 file changed, 26 insertions(+), 6 deletions(-)
-> 
-> diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
-> index ae25e2fa2187..f25eb111c051 100644
-> --- a/lib/generic-radix-tree.c
-> +++ b/lib/generic-radix-tree.c
-> @@ -2,6 +2,7 @@
->  #include <linux/export.h>
->  #include <linux/generic-radix-tree.h>
->  #include <linux/gfp.h>
-> +#include <linux/kmemleak.h>
->  
->  #define GENRADIX_ARY		(PAGE_SIZE / sizeof(struct genradix_node *))
->  #define GENRADIX_ARY_SHIFT	ilog2(GENRADIX_ARY)
-> @@ -75,6 +76,27 @@ void *__genradix_ptr(struct __genradix *radix, size_t offset)
->  }
->  EXPORT_SYMBOL(__genradix_ptr);
->  
-> +static inline struct genradix_node *genradix_alloc_node(gfp_t gfp_mask)
-> +{
-> +	struct genradix_node *node;
-> +
-> +	node = (struct genradix_node *)__get_free_page(gfp_mask|__GFP_ZERO);
-> +
-> +	/*
-> +	 * We're using pages (not slab allocations) directly for kernel data
-> +	 * structures, so we need to explicitly inform kmemleak of them in order
-> +	 * to avoid false positive memory leak reports.
-> +	 */
-> +	kmemleak_alloc(node, PAGE_SIZE, 1, gfp_mask);
-> +	return node;
-> +}
-> +
-> +static inline void genradix_free_node(struct genradix_node *node)
-> +{
-> +	kmemleak_free(node);
-> +	free_page((unsigned long)node);
-> +}
-> +
->  /*
->   * Returns pointer to the specified byte @offset within @radix, allocating it if
->   * necessary - newly allocated slots are always zeroed out:
-> @@ -97,8 +119,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
->  			break;
->  
->  		if (!new_node) {
-> -			new_node = (void *)
-> -				__get_free_page(gfp_mask|__GFP_ZERO);
-> +			new_node = genradix_alloc_node(gfp_mask);
->  			if (!new_node)
->  				return NULL;
->  		}
-> @@ -121,8 +142,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
->  		n = READ_ONCE(*p);
->  		if (!n) {
->  			if (!new_node) {
-> -				new_node = (void *)
-> -					__get_free_page(gfp_mask|__GFP_ZERO);
-> +				new_node = genradix_alloc_node(gfp_mask);
->  				if (!new_node)
->  					return NULL;
->  			}
-> @@ -133,7 +153,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
->  	}
->  
->  	if (new_node)
-> -		free_page((unsigned long) new_node);
-> +		genradix_free_node(new_node);
->  
->  	return &n->data[offset];
->  }
-> @@ -191,7 +211,7 @@ static void genradix_free_recurse(struct genradix_node *n, unsigned level)
->  				genradix_free_recurse(n->children[i], level - 1);
->  	}
->  
-> -	free_page((unsigned long) n);
-> +	genradix_free_node(n);
->  }
->  
->  int __genradix_prealloc(struct __genradix *radix, size_t size,
-> -- 
-> 2.23.0
-> 
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> Not just one, it will be one each new/old/oldnew macro to be able to distinguish
+> when connector is used or not.
 
+What I'm suggesting is this:
+for_each_connector_in_state(state, connector, i)
+for_each_old_connector_in_state(state, old_conn_state, i)
+for_each_new_connector_in_state(state, new_conn_state, i)
+for_each_oldnew_connector_in_state(state, old_conn_state, new_conn_state, i)
+
+So only four in total for each object type, instead of the current
+three.
+
+-- 
+Ville Syrjälä
+Intel
