@@ -6,121 +6,144 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71EDC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C57C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88AC20700
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77C520700
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388773AbfJDNt1 (ORCPT
+        id S2388806AbfJDNuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:49:27 -0400
-Received: from mga05.intel.com ([192.55.52.43]:51321 "EHLO mga05.intel.com"
+        Fri, 4 Oct 2019 09:50:20 -0400
+Received: from jpvw.nl ([80.127.100.2]:35914 "EHLO jpvw.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388625AbfJDNt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:49:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 06:49:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
-   d="scan'208";a="198860595"
-Received: from feng-iot.sh.intel.com (HELO localhost) ([10.239.13.115])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Oct 2019 06:49:19 -0700
-Date:   Fri, 4 Oct 2019 21:51:48 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, contact@xogium.me
-Subject: Re: [PATCH] panic: Ensure preemption is disabled during panic()
-Message-ID: <20191004135148.GB25371@feng-iot>
-References: <20191002123538.22609-1-will@kernel.org>
- <201910021355.E578D2FFAF@keescook>
- <20191003205633.w26geqhq67u4ysit@willie-the-truck>
- <20191004091142.57iylai22aqpu6lu@pathway.suse.cz>
- <20191004092917.GY25745@shell.armlinux.org.uk>
- <20191004104947.vbxe5kv3nbjxqs55@willie-the-truck>
- <20191004111521.y6iera4eico6ezfq@pathway.suse.cz>
+        id S2388625AbfJDNuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:50:20 -0400
+Received: from localhost ([127.0.0.1] helo=jpvw.nl)
+        by jpvw.nl with esmtp (Exim 4.92)
+        (envelope-from <jp@jpvw.nl>)
+        id 1iGNyM-0006gq-SM; Fri, 04 Oct 2019 15:50:18 +0200
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Gonsolo <gonsolo@gmail.com>, crope@iki.fi,
+        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+ <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan>
+ <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
+ <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone>
+ <20191003144225.0137bf6c@coco.lan> <20191003183200.GA2631@Limone>
+ <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
+ <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
+ <20191003163914.7c384d36@coco.lan> <20191003164426.6da8538f@coco.lan>
+ <CANL0fFRSNbUhcik7rnhjZ0qUe-tZyzcjY+M1J_iGzUa5jNc9_A@mail.gmail.com>
+ <20191003170329.3624f7f2@coco.lan>
+ <23d9856c-cc12-7212-9126-90d80f67abfb@jpvw.nl>
+ <20191004090855.14e418ed@coco.lan>
+From:   JP <jp@jpvw.nl>
+Message-ID: <4c7ed533-55dc-534d-7fc0-0acc766daa27@jpvw.nl>
+Date:   Fri, 4 Oct 2019 15:50:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004111521.y6iera4eico6ezfq@pathway.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191004090855.14e418ed@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 01:15:21PM +0200, Petr Mladek wrote:
-> On Fri 2019-10-04 11:49:48, Will Deacon wrote:
-> > On Fri, Oct 04, 2019 at 10:29:17AM +0100, Russell King - ARM Linux admin wrote:
-> > > On Fri, Oct 04, 2019 at 11:11:42AM +0200, Petr Mladek wrote:
-> > > > On Thu 2019-10-03 21:56:34, Will Deacon wrote:
-> > > > > I've deliberately left the irq part alone, since I think
-> > > > > having magic sysrq work via the keyboard interrupt is desirable from the
-> > > > > panic loop.
-> > > > 
-> > > > I agree that we should keep sysrq working.
-> > > > 
-> > > > One pity thing is that led_panic_blink() in
-> > > > leds/drivers/trigger/ledtrig-panic.c uses workqueues:
-> > > > 
-> > > >   + led_panic_blink()
-> > > >     + led_trigger_event()
-> > > >       + led_set_brightness()
-> > > > 	+ schedule_work()
-> > > > 
-> > > > It means that it depends on the scheduler. I guess that it
-> > > > does not work in many panic situations. But this patch
-> > > > will always block it.
-> > > > 
-> > > > I agree that it is strange that userspace still works at
-> > > > this stage. But does it cause any real problems?
-> > > 
-> > > Yes, there are watchdog drivers that continue to pat their watchdog
-> > > after the kernel has panic'd.  It makes watchdogs useless (which is
-> > > exactly how this problem was discovered.)
-> > 
-> > Indeed, and I think the LED blinking is already unreliable if the
-> > brightness operation needs to sleep. For example, if the kernel isn't
-> > preemptible or the work gets queued up on a different CPU which is
-> > sitting in panic_smp_self_stop().
-> 
-> To make it clear. I do not want to block this patch. I just wanted
-> to point out the problem. I am not sure how the blinking is important
-> these days. Well, I could imagine that it might be useful on some
-> embedded devices.
 
-When reviewing the c39ea0b9dd24 ("panic: avoid the extra noise dmesg"),
-there was similar discussion about what's the expectation for kernel
-when panic happens, as the earlier version patch is simply keeping the
-the local irq disabled, which may break the sysrq and the panic blink
-code, so we turned to handling it together with printk.
 
-> 
-> Another question is how many people want to end up with dead system
-> these days. The watchdogs are likely used in data centers. I guess
-> that automatic reboot in panic() is a better choice there.
-> 
-> Anyway, it might make sense to remove the panic blinking code when
-> it will not have a chance to work.
+On 10/4/19 2:08 PM, Mauro Carvalho Chehab wrote:
+> Em Fri, 4 Oct 2019 13:50:43 +0200
+> JP <jp@jpvw.nl> escreveu:
+>
+>> On 10/3/19 10:03 PM, Mauro Carvalho Chehab wrote:
+>>> Em Thu, 3 Oct 2019 21:51:35 +0200
+>>> Gonsolo <gonsolo@gmail.com> escreveu:
+>>>   
+>>>>> 1) The firmware file is likely at the Windows driver for this device
+>>>>> (probably using a different format). It should be possible to get
+>>>>> it from there.
+>>>> If you tell me how I'm willing to do this. :)
+>>> I don't know. I was not the one that extracted the firmware. I guess
+>>> Antti did it.
+>>>
+>>> I suspect that there are some comments about that in the past at the
+>>> ML. seek at lore.kernel.org.
+>>>   
+>>>>> 2) Another possibility would be to add a way to tell the si2168 driver
+>>>>> to not try to load a firmware, using the original one. That would
+>>>>> require adding a field at si2168_config to allow signalizing to it
+>>>>> that it should not try to load a firmware file, and add a quirk at
+>>>>> the af9035 that would set such flag for Logilink VG0022A.
+>>>> I don't get this. Which firmware, si2168 or si2157?
+>>> The one that it is causing the problem. If I understood well, the
+>>> culprit was the si2168 firmware.
+>>>   
+>>>> I'm still for option 3: If there is a bogus chip revision number it's
+>>>> likely the VG0022A and we can safely set fw to NULL, in which case
+>>>> everything works.
+>>>> All already working devices will continue to work as before.
+>>>> With a low probability there are other devices that will return 0xffff
+>>>> but a) they didn't work until now and b) they receive a clear message
+>>>> that they return bogus numbers and this works just for the VG0022A, in
+>>>> which case this hardware can be tested.
+>>>> At last, *my* VG0022A will work without a custom kernel which I'm a
+>>>> big fan of. :))
+>>>>
+>>>> Are there any counterarguments except that it is not the cleanest
+>>>> solution in the universe? ;)
+>>> That's a really bad solution. Returning 0xff is what happens when
+>>> things go wrong during I2C transfers. Several problems can cause it,
+>>> including device misfunction. Every time someone comes with a patch
+>>> trying to ignore it, things go sideways for other devices (existing
+>>> or future ones).
+>>>
+>>> Ignoring errors is always a bad idea.
+>> add module param say 'gonso_hack_vg0022a'
+>> if true, act on error by setting a flag
+>> if this flag is set don't load firmware
+> Adding a module param should be the last resort, only when there's
+> no way for the driver to autodetect.
+Remember the guy reported the hw fix? Could be that
+only some receiver units are affected. Therefore  the
+module param.
 
-I was also wondering if the panic blinking code still really works
-on any platforms.
+The hw fix was original 4k7 and 10k added. That looks
+like 3k3 total and all 3 chips on the bus work. 10k per
+chip. Now Gon reported that said bus works with 2 chips
+active on a faulty device with 4k7 resistor, which is 2
+times 10k. It looks same hw error to me.
+> Making af9035 to detect vg0022a is quite simple.
+>
+> Considering this device's entry:
+>
+> 	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
+> 		&it930x_props, "Logilink VG0022A", NULL) },
+>
+> the check, at af9035 would be:
+>
+> 	if (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK &&
+> 	    le16_to_cpu(d->udev->descriptor.idProduct) == 0x0100)
+> 		/* do something to disable firmware load */
+>
+> So, no need to add any load time parameter.
+>
+> It should be noticed that a change just at af9035 won't work, as the
+> firmware is updated by si2168 driver. So, the caller code needs to
+> pass a config parameter to si2168 driver.
+If it is a failing pull-up resistor on only some individual receiver
+units, this seems overkill to me. In my proposal I did not realized
+this change in the demod driver was needed.
 
-Thanks,
-Feng
-
-> 
-> Best Regards,
-> Petr
+> Thanks,
+> Mauro
+>
+Thank you.
