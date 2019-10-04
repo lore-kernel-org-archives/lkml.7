@@ -2,112 +2,98 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E0AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FACCC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB6F215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7177420867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfJDKw0 (ORCPT
+        id S2387555AbfJDKw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:52:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:41692 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfJDKw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:52:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1F6915A1;
-        Fri,  4 Oct 2019 03:52:25 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C78EC3F706;
-        Fri,  4 Oct 2019 03:52:24 -0700 (PDT)
-Subject: Re: [PATCH] arm64/mm: Poison initmem while freeing with
- free_reserved_area()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-References: <1570163038-32067-1-git-send-email-anshuman.khandual@arm.com>
- <600676fd-1b39-74f4-49a7-3c807ee24cff@arm.com>
- <50d88564-c645-62f4-b5b3-3ce7a4425b0a@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <5d771515-e630-bc6e-b81b-8fd208c21011@arm.com>
-Date:   Fri, 4 Oct 2019 11:52:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 4 Oct 2019 06:52:28 -0400
+Received: from mout1.fh-giessen.de ([212.201.18.42]:50006 "EHLO
+        mout1.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfJDKw1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:52:27 -0400
+X-Greylist: delayed 1068 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Oct 2019 06:52:26 EDT
+Received: from mx3.fh-giessen.de ([212.201.18.28])
+        by mout1.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
+        id 1iGKuw-0000Qg-10; Fri, 04 Oct 2019 12:34:34 +0200
+Received: from mailgate-2.its.fh-giessen.de ([212.201.18.14])
+        by mx3.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
+        id 1iGKuv-00F8NC-UG; Fri, 04 Oct 2019 12:34:33 +0200
+Received: from p549d322d.dip0.t-ipconnect.de ([84.157.50.45] helo=zwei.fritz.box)
+        by mailgate-2.its.fh-giessen.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
+        id 1iGKuv-0000cY-Om; Fri, 04 Oct 2019 12:34:33 +0200
+To:     kai.heng.feng@canonical.com, jeffrey.t.kirsher@intel.com,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
+From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
+Subject: e1000e regression - 5.4rc1
+Cc:     tobias.klausmann@freenet.de
+Message-ID: <171f0c61-73a2-81c2-5c8a-7c140f548803@mni.thm.de>
+Date:   Fri, 4 Oct 2019 12:34:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:71.0) Gecko/20100101
+ Thunderbird/71.0a1
 MIME-Version: 1.0
-In-Reply-To: <50d88564-c645-62f4-b5b3-3ce7a4425b0a@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 11:48, Anshuman Khandual wrote:
-> 
-> 
-> On 10/04/2019 03:49 PM, Steven Price wrote:
->> On 04/10/2019 05:23, Anshuman Khandual wrote:
->>> Platform implementation for free_initmem() should poison the memory while
->>> freeing it up. Hence pass across POISON_FREE_INITMEM while calling into
->>> free_reserved_area(). The same is being followed in the generic fallback
->>> for free_initmem() and some other platforms overriding it.
->>>
->>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>> Cc: Will Deacon <will@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: linux-kernel@vger.kernel.org
->>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>
->> Is there a good reason you haven't made a similar change to
->> free_initrd_mem() - the same logic seems to apply. However this change
->> looks fine to me.
-> 
-> We will use generic free_initrd_mem() going forward as proposed in a recent
-> patch which does call free_reserved_area() with POISON_FREE_INITMEM.
-> 
-> https://patchwork.kernel.org/patch/11165379/
+Hello all,
 
-Great - that sounds like a very good reason!
+While testing the 5.4rc1 release, i noticed my Ethernet never coming 
+fully up, seemingly having a timeout problem. While bisecting this i 
+landed at the commit dee23594d587386e9fda76732aa5f5a487709510 ("e1000e: 
+Make speed detection on hotplugging cable more reliable") as the first 
+bad commit. And indeed just reverting the commit on top of 5.4rc1 
+resolves the problem. Let me know if you have further questions, or 
+patches to test!
 
-Thanks,
+Greetings,
 
-Steve
+Tobias
 
->>
->> Reviewed-by: Steven Price <steven.price@arm.com>
->>
->>> ---
->>>  arch/arm64/mm/init.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>> index 45c00a54909c..ea7d38011e83 100644
->>> --- a/arch/arm64/mm/init.c
->>> +++ b/arch/arm64/mm/init.c
->>> @@ -571,7 +571,7 @@ void free_initmem(void)
->>>  {
->>>  	free_reserved_area(lm_alias(__init_begin),
->>>  			   lm_alias(__init_end),
->>> -			   0, "unused kernel");
->>> +			   POISON_FREE_INITMEM, "unused kernel");
->>>  	/*
->>>  	 * Unmap the __init region but leave the VM area in place. This
->>>  	 * prevents the region from being reused for kernel modules, which
->>>
->>
->>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+
+lspci:
+
+00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network 
+Connection (rev 06)
+         DeviceName:  Onboard LAN
+         Subsystem: ASUSTeK Computer Inc. P8P67 Deluxe Motherboard
+         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Latency: 0
+         Interrupt: pin A routed to IRQ 56
+         Region 0: Memory at fbf00000 (32-bit, non-prefetchable) [size=128K]
+         Region 1: Memory at fbf28000 (32-bit, non-prefetchable) [size=4K]
+         Region 2: I/O ports at f040 [size=32]
+         Capabilities: [c8] Power Management version 2
+                 Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA 
+PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=1 PME-
+         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+                 Address: 00000000fee00698  Data: 0000
+         Capabilities: [e0] PCI Advanced Features
+                 AFCap: TP+ FLR+
+                 AFCtrl: FLR-
+                 AFStatus: TP-
+         Kernel driver in use: e1000e
+         Kernel modules: e1000e
 
