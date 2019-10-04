@@ -2,111 +2,88 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9E0C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C703C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BF2222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570227882;
-	bh=/1rNu8CVWv+a4qh8uRDvMq0gED61r/4CcMH8+ga6R/Q=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=fhCc4vxQA4OhYKHRjydKlLiNZZVB7pY0QNmev8pdCARXOycwpdKKnR4W5hiWtL5m+
-	 PIYbvr2kOEIYZR8M1lWWAKiWtgGWZQb0n64+D88YwsrghKdc41Q+3S50vDTelq1bBJ
-	 dJQUWj4vqNEUJwsnRBYYaHfg3Gr5HBQQy1p/iU3A=
+	by mail.kernel.org (Postfix) with ESMTP id DBF13222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:27:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZL7TYe6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbfJDWYl (ORCPT
+        id S2388028AbfJDW1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 18:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfJDWYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:24:41 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B11FD222C0;
-        Fri,  4 Oct 2019 22:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570227880;
-        bh=/1rNu8CVWv+a4qh8uRDvMq0gED61r/4CcMH8+ga6R/Q=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sb9wMcnuaX+/3taBbhX2+xIXYHwcnlKDeARYNZX7cc+BS0HUEjs0bUCOf6hm2v1pE
-         Sn+THIehdjES5UsvPDjhBRGQ0ujQYI05nH+WBVgzmK8Mp9/HV5EglcFjmpLc+aHS1z
-         CRWtmRkk122ecVMohuxORrBJA8UYrLoH3AEc2Gek=
-Date:   Fri, 4 Oct 2019 15:24:39 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
+        Fri, 4 Oct 2019 18:27:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43714 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbfJDW1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 18:27:10 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v27so4511906pgk.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=MdgTtpJ3Fb1crDWamPJ2nMkskfT7oSxSe5O6OdgdxZ4=;
+        b=ZL7TYe6ZIkKRam213eUarR6XVUZ9Z2pHkS0ETE0nwysjqnhcx4HvOaIh+KMQn6YsLq
+         mKjtX2s1h3GN9lPCu75hOOIGG2YwV1kcO/oG3NM0MAGjNs6z5fuRscsGNynGgq4zk3aV
+         2VBnpXHocWNZNNfgr8YUWQAm7VnCZLzKa0jC0DYYOquebKlujr4X4Jzy3pYoXyy6+oqG
+         6EoXtVug7wgGjGw8Khr+CZvWQ0DT77ILwk4rvg8GREyipXETKPvkdepKtOurm3ynl8aC
+         nnyazBw+l7iJro52OaxOnd+RknOcZ3lkI6PxLDL232PF6dH04WcfEnnThwiQ4qKsLcsh
+         7FhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MdgTtpJ3Fb1crDWamPJ2nMkskfT7oSxSe5O6OdgdxZ4=;
+        b=ZLyGvsxj9A1CAb+ZwSoZbseDWaFzO/3U8VRYTZ1a2IlSuFVamQeJDd52L9Fc+8T97R
+         iNclV3x9oWwd1xoarfyYve7PHn8+WQFT4B4GQPMUi1iJCcS9IZmrvo43djT05rMUnTVi
+         V+kd8QaR52bHPeVUZE0q5LOzgy1MDJCg6UPIHIx6w6zxFc35T2501LTpiIDB6lDInyyI
+         KntsHy4z76Domhhy3bBpxU+n26PhM25V197lgprI1pgjKI7Vbyj1uZ9CMY30PNP0p9nn
+         wmdLFWEBBVWd1hVYm7V82c9maQOIW3Rc5o9D7G0dHoX5Silot4JvKqKlEBWAfWztduMg
+         wFWg==
+X-Gm-Message-State: APjAAAUoBVyKc1vKb7yIUBJNNA8ta1YMvqh7tv8UcJC/XdzxmMrrlSh0
+        pqSXJGTtsXLeGfJmgQvJCjXoNaATxps=
+X-Google-Smtp-Source: APXvYqy8P355fDdWZ7Bjd78TA0Rif1EjY23uAZcQptugi3FT1XaYfKGFi0ye/CSlumDYU5zIu9qqMg==
+X-Received: by 2002:a65:500d:: with SMTP id f13mr17876281pgo.359.1570228028355;
+        Fri, 04 Oct 2019 15:27:08 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x37sm6328136pgl.18.2019.10.04.15.27.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 15:27:07 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rculist: Describe variadic macro argument in a
- Sphinx-compatible way
-Message-ID: <20191004222439.GR2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191004215402.28008-1-j.neuschaefer@gmx.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191004215402.28008-1-j.neuschaefer@gmx.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Subject: [PATCH v2 0/6] rpmsg: glink stability fixes
+Date:   Fri,  4 Oct 2019 15:26:56 -0700
+Message-Id: <20191004222702.8632-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 11:54:02PM +0200, Jonathan Neuschäfer wrote:
-> Without this patch, Sphinx shows "variable arguments" as the description
-> of the cond argument, rather than the intended description, and prints
-> the following warnings:
-> 
-> ./include/linux/rculist.h:374: warning: Excess function parameter 'cond' description in 'list_for_each_entry_rcu'
-> ./include/linux/rculist.h:651: warning: Excess function parameter 'cond' description in 'hlist_for_each_entry_rcu'
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Fixes for issues found in GLINK during reboot testing of a remoteproc.
 
-Applied for testing and review, thank you!
+Arun Kumar Neelakantam (2):
+  rpmsg: glink: Fix reuse intents memory leak issue
+  rpmsg: glink: Fix use after free in open_ack TIMEOUT case
 
-Joel, does this look sane to you?
+Bjorn Andersson (2):
+  rpmsg: glink: Don't send pending rx_done during remove
+  rpmsg: glink: Free pending deferred work on remove
 
-							Thanx, Paul
+Chris Lew (2):
+  rpmsg: glink: Put an extra reference during cleanup
+  rpmsg: glink: Fix rpmsg_register_device err handling
 
-> ---
->  include/linux/rculist.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index 4158b7212936..61c6728a71f7 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -361,7 +361,7 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
->   * @pos:	the type * to use as a loop cursor.
->   * @head:	the head for your list.
->   * @member:	the name of the list_head within the struct.
-> - * @cond:	optional lockdep expression if called from non-RCU protection.
-> + * @cond...:	optional lockdep expression if called from non-RCU protection.
->   *
->   * This list-traversal primitive may safely run concurrently with
->   * the _rcu list-mutation primitives such as list_add_rcu()
-> @@ -636,7 +636,7 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
->   * @pos:	the type * to use as a loop cursor.
->   * @head:	the head for your list.
->   * @member:	the name of the hlist_node within the struct.
-> - * @cond:	optional lockdep expression if called from non-RCU protection.
-> + * @cond...:	optional lockdep expression if called from non-RCU protection.
->   *
->   * This list-traversal primitive may safely run concurrently with
->   * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> --
-> 2.20.1
-> 
+ drivers/rpmsg/qcom_glink_native.c | 52 +++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 10 deletions(-)
+
+-- 
+2.18.0
+
