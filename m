@@ -2,167 +2,98 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8A4C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24252C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0E8222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF06F207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="e8IRDuL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388462AbfJDN1L (ORCPT
+        id S2388433AbfJDNap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:27:11 -0400
-Received: from mx0a-00176a03.pphosted.com ([67.231.149.52]:43390 "EHLO
-        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388197AbfJDN1K (ORCPT
+        Fri, 4 Oct 2019 09:30:45 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33402 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387917AbfJDNao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:27:10 -0400
-Received: from pps.filterd (m0047961.ppops.net [127.0.0.1])
-        by m0047961.ppops.net-00176a03. (8.16.0.42/8.16.0.42) with SMTP id x94DQiO1000518;
-        Fri, 4 Oct 2019 09:27:09 -0400
-From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "Wiseman, Monty (GE Global Research, US)" <monty.wiseman@ge.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Thread-Topic: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Thread-Index: AQHVdI4g9L3xPAeMJki3mq4fpV79C6dHrWSAgAFrf4CAABaxAIAAUs4AgAAPVoCAAOxxAA==
-Date:   Fri, 4 Oct 2019 13:26:58 +0000
-Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
-         <1570024819.4999.119.camel@linux.ibm.com>
-         <20191003114119.GF8933@linux.intel.com>
-         <1570107752.4421.183.camel@linux.ibm.com>
-         <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
-In-Reply-To: <1570128827.5046.19.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jTWpFeU5EY3pPVFV3WEdGd2NHUmhkR0ZjY205aGJXbHVaMXd3T1dRNE5E?=
- =?utf-8?B?bGlOaTB6TW1RekxUUmhOREF0T0RWbFpTMDJZamcwWW1FeU9XVXpOV0pjYlhO?=
- =?utf-8?B?bmMxeHRjMmN0WVRKa05qTTFOV1l0WlRaaFlTMHhNV1U1TFRobE5XTXRZVFJq?=
- =?utf-8?B?TTJZd1lqVTVPR0UyWEdGdFpTMTBaWE4wWEdFeVpEWXpOVFl3TFdVMllXRXRN?=
- =?utf-8?B?VEZsT1MwNFpUVmpMV0UwWXpObU1HSTFPVGhoTm1KdlpIa3VkSGgwSWlCemVq?=
- =?utf-8?B?MGlNemN6TlNJZ2REMGlNVE15TVRRMk5qa3lNVGMxT0RVME9ESTRJaUJvUFNK?=
- =?utf-8?B?dloyZDVXalpCVldVelVFNWpNekZyYUdsak9YRmFOMU5vZVc4OUlpQnBaRDBp?=
- =?utf-8?B?SWlCaWJEMGlNQ0lnWW04OUlqRWlJR05wUFNKalFVRkJRVVZTU0ZVeFVsTlNW?=
- =?utf-8?B?VVpPUTJkVlFVRkZiME5CUVVSelprZEtiSFF6Y2xaQldqWTNlSHB6WmtwTWNV?=
- =?utf-8?B?bHVjblpJVDNnNGEzVnZaMFJCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJTRUZCUVVGRVlVRlJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJVVUZDUVVGQlFVWjBSMlZSZDBGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VW8wUVVGQlFtNUJSMVZCV0hkQ2FrRkhPRUZpWjBKdFFVZHJRVnBCUW14QlJ6?=
- =?utf-8?B?UkJaRUZDY0VGSFJVRmlRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFXZEJRVUZCUVVGdVowRkJRVWRqUVZwUlFtWkJSMmRCWVZGQ2JrRkhaMEZp?=
- =?utf-8?B?UVVJMVFVZE5RV0ozUW5WQlIxbEJZVkZDYTBGSFZVRmlaMEl3UVVkclFWbFJR?=
- =?utf-8?B?bk5CUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJV?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVU5CUVVGQlFVRkRaVUZCUVVGYWQwSnNRVVk0UVdKblFu?=
- =?utf-8?B?WkJSelJCWTBGQ01VRkhTVUZpUVVKd1FVZE5RVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUWtGQlFVRkJRVUZCUVVGSlFVRkJRVUZCUVQwOUlpOCtQQzl0?=
- =?utf-8?B?WlhSaFBnPT0=?=
-x-dg-rorf: 
-x-originating-ip: [3.159.19.191]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Subject: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910040125
+        Fri, 4 Oct 2019 09:30:44 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r5so8581111qtd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 06:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=B5vnSSCIcbplBcWNA19HtmeOraO3xHVwUmiEjyji+dc=;
+        b=e8IRDuL5YyKeZPPnATe7X4oE8SALc3CKjZg+DyKSbhJqyrlr+9MFiRisQJfTHCFGUN
+         I1v3KWVu3KlqiHLDMEgkPLKD7QK7oWnmxeciqctHX3o80NnUmRSbjoP/M5GZ+a3r/v4w
+         0qpwZGqBg2SqYUYhO+S6AqTU4vMxa9zfsBzjRH8i3sRB2gw747U5qDthrVlBCGck6c09
+         rAr8Xx2waDW6mV+hJs5aJvyEjUK2dpAkyz5rtJXkuCs5PVJndm9xm8HQ9TYQgp9ImdtL
+         JTNezfq/awagUkCVuzXYghiyNmwjngYkcfH7Dsp7ZVo3JVY41hIPxnzaLxJQYpBFS1fH
+         aNlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B5vnSSCIcbplBcWNA19HtmeOraO3xHVwUmiEjyji+dc=;
+        b=PRRFULch4qa9e5i8M613V2yid3RWW2k9Q0YEkRxAEmjN8ePpYQGaz19+A1EwnkD3yd
+         cuFkKf7wrivvbvnktgW/IFVfgy+NKL/KkK7SEgk65JvBJ3WFUwuHKVC4Cu1qSjyvO8nM
+         cl9dynnsseLzrh+pRwpFlHOpgmzXNbwW9zD8A8PXYAeKg3MYmc5fTHbYtXK9fD8u4ACD
+         i0dF6VKEdtpzh233O4F+PWupbfN1AwYaVuSKy3q20rhN2U1NP70ErlOuAFGJg1cMfFe3
+         DZwdYUP5/iSWUWcBXC8+vTBaV8faA3q0+QM6kuzVmBPVqrdwBNs9QrS/GwOhbrpOVirU
+         p8Ug==
+X-Gm-Message-State: APjAAAXp51CGFruu93Q1INMmKd+3T8OJFCxr6q15lR/gDmctEW7oBnSR
+        I6R7PIa44HFFePWK6DrTB9R5Aw==
+X-Google-Smtp-Source: APXvYqyifeRTX7SmGTGjjWVD0NCxVG8ZiHqtUI/fVbaztaXVCrdZ2DBwCZvtleHH5tDQUjLVjdAEtw==
+X-Received: by 2002:a0c:f3c1:: with SMTP id f1mr1163664qvm.165.1570195842396;
+        Fri, 04 Oct 2019 06:30:42 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id i66sm3176454qkb.105.2019.10.04.06.30.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 06:30:41 -0700 (PDT)
+Message-ID: <1570195839.5576.273.camel@lca.pw>
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 04 Oct 2019 09:30:39 -0400
+In-Reply-To: <20191004130713.GK9578@dhcp22.suse.cz>
+References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
+         <20191004105824.GD9578@dhcp22.suse.cz>
+         <91128b73-9a47-100b-d3de-e83f0b941e9f@arm.com>
+         <1570193776.5576.270.camel@lca.pw> <20191004130713.GK9578@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPg0KPiBTZW50OiBUaHVyc2Rh
-eSwgT2N0b2JlciAzLCAyMDE5IDI6NTQgUE0NCj4gVG86IEphcmtrbyBTYWtraW5lbiA8amFya2tv
-LnNha2tpbmVuQGxpbnV4LmludGVsLmNvbT47IFNhZmZvcmQsIERhdmlkIChHRQ0KPiBTdWJqZWN0
-OiBFWFQ6IFJlOiBbUEFUQ0hdIEtFWVM6IGFzeW1fdHBtOiBTd2l0Y2ggdG8gZ2V0X3JhbmRvbV9i
-eXRlcygpDQo+IA0KPiBbQ2MnaW5nIERhdmlkIFNhZmZvcmRdDQo+IA0KPiBPbiBUaHUsIDIwMTkt
-MTAtMDMgYXQgMjA6NTggKzAzMDAsIEphcmtrbyBTYWtraW5lbiB3cm90ZToNCj4gPiBPbiBUaHUs
-IE9jdCAwMywgMjAxOSBhdCAwOTowMjozMkFNIC0wNDAwLCBNaW1pIFpvaGFyIHdyb3RlOg0KPiA+
-ID4gT24gVGh1LCAyMDE5LTEwLTAzIGF0IDE0OjQxICswMzAwLCBKYXJra28gU2Fra2luZW4gd3Jv
-dGU6DQo+ID4gPiA+IE9uIFdlZCwgT2N0IDAyLCAyMDE5IGF0IDEwOjAwOjE5QU0gLTA0MDAsIE1p
-bWkgWm9oYXIgd3JvdGU6DQo+ID4gPiA+ID4gT24gVGh1LCAyMDE5LTA5LTI2IGF0IDIwOjE2ICsw
-MzAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6DQo+ID4gPiA+ID4gPiBPbmx5IHRoZSBrZXJuZWwg
-cmFuZG9tIHBvb2wgc2hvdWxkIGJlIHVzZWQgZm9yIGdlbmVyYXRpbmcgcmFuZG9tDQo+IG51bWJl
-cnMuDQo+ID4gPiA+ID4gPiBUUE0gY29udHJpYnV0ZXMgdG8gdGhhdCBwb29sIGFtb25nIHRoZSBv
-dGhlciBzb3VyY2VzIG9mDQo+ID4gPiA+ID4gPiBlbnRyb3B5LiBJbiBoZXJlIGl0IGlzIG5vdCwg
-YWdyZWVkLCBhYnNvbHV0ZWx5IGNyaXRpY2FsDQo+ID4gPiA+ID4gPiBiZWNhdXNlIFRQTSBpcyB3
-aGF0IGlzIHRydXN0ZWQgYW55d2F5IGJ1dCBpbiBvcmRlciB0byByZW1vdmUNCj4gPiA+ID4gPiA+
-IHRwbV9nZXRfcmFuZG9tKCkgd2UgbmVlZCB0byBmaXJzdCByZW1vdmUgYWxsIHRoZSBjYWxsIHNp
-dGVzLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gQXQgd2hhdCBwb2ludCBkdXJpbmcgYm9vdCBpcyB0
-aGUga2VybmVsIHJhbmRvbSBwb29sIGF2YWlsYWJsZT8NCj4gPiA+ID4gPiBEb2VzIHRoaXMgaW1w
-bHkgdGhhdCB5b3UncmUgcGxhbm5pbmcgb24gY2hhbmdpbmcgdHJ1c3RlZCBrZXlzIGFzIHdlbGw/
-DQo+ID4gPiA+DQo+ID4gPiA+IFdlbGwgdHJ1c3RlZCBrZXlzICptdXN0KiBiZSBjaGFuZ2VkIHRv
-IHVzZSBpdC4gSXQgaXMgbm90IGEgY2hvaWNlDQo+ID4gPiA+IGJlY2F1c2UgdXNpbmcgYSBwcm9w
-cmlldGFyeSByYW5kb20gbnVtYmVyIGdlbmVyYXRvciBpbnN0ZWFkIG9mDQo+ID4gPiA+IGRlZmFj
-dG8gb25lIGluIHRoZSBrZXJuZWwgY2FuIGJlIGNhdGVnb3JpemVkIGFzIGEgKnJlZ3Jlc3Npb24q
-Lg0KPiA+ID4NCj4gPiA+IEkgcmVhbGx5IGRvbid0IHNlZSBob3cgdXNpbmcgdGhlIFRQTSByYW5k
-b20gbnVtYmVyIGZvciBUUE0gdHJ1c3RlZA0KPiA+ID4ga2V5cyB3b3VsZCBiZSBjb25zaWRlcmVk
-IGEgcmVncmVzc2lvbi4gwqBUaGF0IGJ5IGRlZmluaXRpb24gaXMgYQ0KPiA+ID4gdHJ1c3RlZCBr
-ZXkuIMKgSWYgYW55dGhpbmcsIGNoYW5naW5nIHdoYXQgaXMgY3VycmVudGx5IGJlaW5nIGRvbmUN
-Cj4gPiA+IHdvdWxkIGJlIHRoZSByZWdyZXNzaW9uLg0KPiA+DQo+ID4gSXQgaXMgcmVhbGx5IG5v
-dCBhIFRQTSB0cnVzdGVkIGtleS4gSXQgdHJ1c3RlZCBrZXkgdGhhdCBnZXRzIHNlYWxlZA0KPiA+
-IHdpdGggdGhlIFRQTS4gVGhlIGtleSBpdHNlbGYgaXMgdXNlZCBpbiBjbGVhciBieSBrZXJuZWwu
-IFRoZSByYW5kb20NCj4gPiBudW1iZXIgZ2VuZXJhdG9yIGV4aXN0cyBpbiB0aGUga2VybmVsIHRv
-IGZvciBhIHJlYXNvbi4NCj4gPg0KPiA+IEl0IGlzIHdpdGhvdXQgZG91YnQgYSByZWdyZXNzaW9u
-Lg0KPiANCj4gWW91J3JlIG1pc3VzaW5nIHRoZSB0ZXJtICJyZWdyZXNzaW9uIiBoZXJlLiDCoEEg
-cmVncmVzc2lvbiBpcyBzb21ldGhpbmcgdGhhdA0KPiBwcmV2aW91c2x5IHdvcmtlZCBhbmQgaGFz
-IHN0b3BwZWQgd29ya2luZy4gwqBJbiB0aGlzIGNhc2UsIHRydXN0ZWQga2V5cyBoYXMNCj4gYWx3
-YXlzIGJlZW4gYmFzZWQgb24gdGhlIFRQTSByYW5kb20gbnVtYmVyIGdlbmVyYXRvci4gwqBCZWZv
-cmUgY2hhbmdpbmcNCj4gdGhpcywgdGhlcmUgbmVlZHMgdG8gYmUgc29tZSBndWFyYW50ZWVzIHRo
-YXQgdGhlIGtlcm5lbCByYW5kb20gbnVtYmVyDQo+IGdlbmVyYXRvciBoYXMgYSBwb29sIG9mIHJh
-bmRvbSBudW1iZXJzIGVhcmx5LCBvbiBhbGwgc3lzdGVtcyBpbmNsdWRpbmcNCj4gZW1iZWRkZWQg
-ZGV2aWNlcywgbm90IGp1c3Qgc2VydmVycy4NCj4gDQo+IE1pbWkNCg0KQXMgdGhlIG9yaWdpbmFs
-IGF1dGhvciBvZiB0cnVzdGVkIGtleXMsIGxldCBtZSBtYWtlIGEgZmV3IGNvbW1lbnRzLg0KRmly
-c3QsIHRydXN0ZWQga2V5cyB3ZXJlIHNwZWNpZmljYWxseSBpbXBsZW1lbnRlZCBhbmQgKmRvY3Vt
-ZW50ZWQqIHRvDQp1c2UgdGhlIFRQTSB0byBib3RoIGdlbmVyYXRlIGFuZCBzZWFsIGtleXMuIEl0
-cyBrZXJuZWwgZG9jdW1lbnRhdGlvbg0Kc3BlY2lmaWNhbGx5IHN0YXRlcyB0aGlzIGFzIGEgcHJv
-bWlzZSB0byB1c2VyIHNwYWNlLiBJZiB5b3Ugd2FudCB0byBoYXZlIA0KYSBkaWZmZXJlbnQga2V5
-IHN5c3RlbSB0aGF0IHVzZXMgdGhlIHJhbmRvbSBwb29sIHRvIGdlbmVyYXRlIHRoZSBrZXlzLA0K
-ZmluZSwgYnV0IGRvbid0IGNoYW5nZSB0cnVzdGVkIGtleXMsIGFzIHRoYXQgY2hhbmdlcyB0aGUg
-ZXhpc3RpbmcgcHJvbWlzZQ0KdG8gdXNlciBzcGFjZS4gDQoNClRoZXJlIGFyZSBtYW55IGdvb2Qg
-cmVhc29ucyBmb3Igd2FudGluZyB0aGUga2V5cyB0byBiZSBiYXNlZCBvbiB0aGUNClRQTSBnZW5l
-cmF0b3IuICBBcyB0aGUgc291cmNlIGZvciB0aGUga2VybmVsIHJhbmRvbSBudW1iZXIgZ2VuZXJh
-dG9yDQppdHNlbGYgc2F5cywgc29tZSBzeXN0ZW1zIGxhY2sgZ29vZCByYW5kb21uZXNzIGF0IHN0
-YXJ0dXAsIGFuZCBzeXN0ZW1zDQpzaG91bGQgcHJlc2VydmUgYW5kIHJlbG9hZCB0aGUgcG9vbCBh
-Y3Jvc3Mgc2h1dGRvd24gYW5kIHN0YXJ0dXAuDQpUaGVyZSBhcmUgdXNlIGNhc2VzIGZvciB0cnVz
-dGVkIGtleXMgd2hpY2ggbmVlZCB0byBnZW5lcmF0ZSBrZXlzIA0KYmVmb3JlIHN1Y2ggc2NyaXB0
-cyBoYXZlIHJ1bi4gQWxzbywgaW4gc29tZSB1c2UgY2FzZXMsIHdlIG5lZWQgdG8gc2hvdw0KdGhh
-dCB0cnVzdGVkIGtleXMgYXJlIEZJUFMgY29tcGxpYW50LCB3aGljaCBpcyBwb3NzaWJsZSB3aXRo
-IFRQTQ0KZ2VuZXJhdGVkIGtleXMuDQoNClNlY29uZCwgdGhlIFRQTSBpcyBoYXJkbHkgYSAicHJv
-cHJpZXRhcnkgcmFuZG9tIG51bWJlciBnZW5lcmF0b3IiLg0KSXQgaXMgYW4gb3BlbiBzdGFuZGFy
-ZCB3aXRoIG11bHRpcGxlIGltcGxlbWVudGF0aW9ucywgbWFueSBvZiB3aGljaCBhcmUNCkZJUFMg
-Y2VydGlmaWVkLg0KDQpUaGlyZCwgYXMgTWltaSBzdGF0ZXMsIHVzaW5nIGEgVFBNIGlzIG5vdCBh
-ICJyZWdyZXNzaW9uIi4gSXQgd291bGQgYmUgYQ0KcmVncmVzc2lvbiB0byBjaGFuZ2UgdHJ1c3Rl
-ZCBrZXlzIF9ub3RfIHRvIHVzZSB0aGUgVFBNLCBiZWNhdXNlIHRoYXQNCmlzIHdoYXQgdHJ1c3Rl
-ZCBrZXlzIGFyZSBkb2N1bWVudGVkIHRvIHByb3ZpZGUgdG8gdXNlciBzcGFjZS4NCg0KZGF2ZQ0K
-DQo=
+On Fri, 2019-10-04 at 15:07 +0200, Michal Hocko wrote:
+> On Fri 04-10-19 08:56:16, Qian Cai wrote:
+> [...]
+> > It might be a good time to rethink if it is really a good idea to dump_page()
+> > at all inside has_unmovable_pages(). As it is right now, it is a a potential
+> > deadlock between console vs memory offline. More details are in this thread,
+> > 
+> > https://lore.kernel.org/lkml/1568817579.5576.172.camel@lca.pw/
+> 
+> Huh. That would imply we cannot do any printk from that path, no?
+
+Yes, or use something like printk_deferred() or it needs to rework of the
+current console locking which I have no clue yet.
