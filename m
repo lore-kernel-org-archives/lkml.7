@@ -2,105 +2,111 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C118CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176DCC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F4E20862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C5A20862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="AM/+rTiH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSfJK+az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387497AbfJDRB4 (ORCPT
+        id S2387555AbfJDREW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:01:56 -0400
-Received: from mout.gmx.net ([212.227.15.18]:53509 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfJDRB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:01:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570208501;
-        bh=rMXMlquVolHdzq3iMBKYhvNEjZXTAD9wUTb0Zleuwe4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=AM/+rTiHGXkxTHTXipWBFZehlfnX39NLfa93IG8q7gWiH2wZV2sltpdEBeTDZ9pEw
-         FqaQlhIFL25iREhQ9PpRH3Lyv/1yZSLjFLd1qIuarPPLha+18pC6uDT78CiLY7330w
-         iFi9FNh8sJuYHce6epCyPhJnjyf9Jp/kb9wUv3xw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzQkE-1huUBp0tnM-00vS1g; Fri, 04
- Oct 2019 19:01:41 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: driver-api: pti_intel_mid: Enable syntax highlighting for C code block
-Date:   Fri,  4 Oct 2019 19:01:19 +0200
-Message-Id: <20191004170124.13543-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Fri, 4 Oct 2019 13:04:22 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45047 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJDREW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 13:04:22 -0400
+Received: by mail-lf1-f67.google.com with SMTP id q12so27271lfc.11;
+        Fri, 04 Oct 2019 10:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sKmO7SSGs5Cj3Low4MPSsnNOVRF1CxTmZDKDuQzI3fM=;
+        b=lSfJK+azzJRqFzTecF/yotk8HmWx/8su3AWMiN03qdPOl9to1345PPk0ASWd8IKFOD
+         oPYoKgkESWbvzNMbHJzcxLGZ1Sgpi1psKEOPpjPQcW9qcOzh17P+UB84I53/b92Y2d7E
+         VvonxTSEJ9yP8KkInJkGHpaaraEs5MIsqQXD/h08VFVokD5cKwqYlf0VFrKCpFlcjXqz
+         g1x8noZF0SAqqHzHMaoG6c5iXUoafIe6nkoB1n/4EqMSz4aK1+3wSpehSWupPp7Iyzc5
+         iXdaKjoAhXpdjhuwq8HTvVCoXnRVEgqBqHcuRPxCMI91SYM5apZIAqOP3e3TEnU2FSu5
+         brlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sKmO7SSGs5Cj3Low4MPSsnNOVRF1CxTmZDKDuQzI3fM=;
+        b=ONhYb325ZIJK8SuBEadmKXzuVNONC9RyUHq9Vx0sR0FXJSjgHRyq0Khay2hBIfTiwJ
+         nOrngUejK0PRyKyKgjUpxbQw7yxC4lazODrrlGoK0dpZo9Gojqr3whEg74CY1uykLjpL
+         qm9pBCX915/Z/4axp0kL1mTM8hPK6Yd0EuNpuVaD1QSCD2TB7OjnV6RhLf58kFGnm2Dh
+         nASDnQ+7U6jwWqUzMrpcN/PklPEAdgSccCmfG4sDSTCigxGT+nQdFqMU87w9Dm+16Sy9
+         V71Lagtu1wXbs4/faI72HGEGmO21347QpU70KizTZptdKZv3YujUeicq7K5/zed8yPTw
+         j2SA==
+X-Gm-Message-State: APjAAAU6Ow+fwKis7mLWkVrjdtRRm6nhyjbfwRJk/DYR1OnAu7J7QTj5
+        56VL0Ia8UShKJ7urWKe/nAXUJf5p9Jk=
+X-Google-Smtp-Source: APXvYqx7EtofMP0XWGkulzAk/7zhZa0zIkQhvEck8McSJ/pwIH5lI0GleoBMmt4sJQ2AsuBZiW3wtA==
+X-Received: by 2002:ac2:5504:: with SMTP id j4mr1448951lfk.186.1570208660337;
+        Fri, 04 Oct 2019 10:04:20 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id v22sm1373111ljh.56.2019.10.04.10.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 10:04:19 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 4 Oct 2019 19:04:11 +0200
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Daniel Wagner <dwagner@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
+ ne_fit_preload_node
+Message-ID: <20191004170411.GA31114@pc636>
+References: <20191003090906.1261-1-dwagner@suse.de>
+ <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
+ <20191004162041.GA30806@pc636>
+ <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gciz2EElTa6KfXaWKUA+P3Az3klSD2od1ANJqJFKJ8B3e0BMfkt
- eKgd9hwRLo95M3C6jcfKjXn51vXguSDl40z44+7CUQ8lAjaGfGhePBTm+daNb52T/5xW6aC
- FKLWaMEvHC1A0N5tDvWdTQB4229ZEwYDwNUupjdzcZtf8zsWpaHd1UvREMU93JZdx7IINRd
- 5Q7HISLEB7lhFvNPkY/6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6+AqMcmrvRM=:IFG58wDC1/JOLCHxgF/HoV
- 7olDa2e7dZQj13GaG8UJQ8oQhDUgEHLxVFvKMhZ8etpc1ZCFCZ3LwBaz9VWFkny5ifiAfjM21
- dgs0tSfJ73oNR9rSs5mFd7zlLIBKZ8DEy7RI9oINHWOR4I+4HNMK6xNMrAWOXdxi4wEb0czwV
- pKH3cTB1O4iixfh7xDUHEowk7WvejWlEtlq7U7b7APne3EF3irs3tG2xqpAl3cCGY+orMq8AG
- 5+RVdL4BdFfEs7IjcgqOlgNUUMutoeeNgNq+5gaYxkIFWgZM/M/VmstxFNhNxBnSEsC4SGTfg
- VyIt6h59xNPs/47x4DZba6CetV1t2uUhrrfs3GGndLIduHLrGeyNd3cggAW/hUpq/8bopooIc
- bqMVwg+r3BNm92Yt9fozfUJyYJqByyfiWk2aye5BrsJoQ9SFwL5MYi+DV8qHTmb5CAXMrQCp6
- zxweL6v3tmD8sODxpR0TJLjM0bGYB1VKzrR/qvNxFco7pADExCMbdpkz8ZBPV+Fzw0x//Shnq
- JmLIfne+3WbzGAPmFKEfVXqNZZcvHUBbnCNNJQ2bk063V6V/sDhQDPjJCrbsl7NHYDtgJUVsC
- ZtI9ImfaNIloUaWsYzzNjv8oHMEIJ5TWpiRsPWYlwinLwpEkrcd0vZWVm272H5wExK1RKq1BW
- CjwMd9XRC31OFptIsHb+hz0vJAixj4jzRjmw2BfaaXagwsS/vI1boRa+j9a2gyW9A/1PLAGOz
- BYcfXmsa2FNx+LOKKoR+t7Hy8Mu/cUxn2+K3jXLG71bR9Tw1KtUR17Dw5tGQ2EPyDOzd8wIZg
- OX1+mYhxEnyjQQygDF0E1sJ6QBnwDzEmW+6tyRsGZJs8QOWONhYu4Zx7lWG9vbjTnrC/I2kUP
- BxRzzToVf1Cr020k1tM0pNksk+OSGXiw8ZOwOlLvc8+NnmtgnNfy6f1vL0wTNlWOL6OJUSm1x
- 2ygfX90XO93ipfch47KgNKb5IqCS4ReMeC2iJlv1mmKOPCTHnxVzlJtMEpt7jJTNyPIQ67RyI
- eWuxdmoZQzxL0o7bBC2rkNndwJcBJk7kai/CQA9VUW8q/vXmunb0eXjE0L3eeDh3aprQwsuce
- Wrz1u366cORLVn56S5LFf5IwezmryPT43rCggEjAmjvUoP3F4rP5HKsAbp+9+V5cYF2N6oeZN
- 9vQeWk+516a3Qr8VNIu2fY0ATa0RaJjC1r8kXN+LcjhqG9StzBMn/+YR9uXqM1o5EiD6N8JKx
- wnQvwnTlB8bezfU9rhXbINmM7UUIdmtFKgiqzEBrzwJs0PAVu7IhOJ1782dc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the code snippet more readable.
+>
+> You could have been migrated to another CPU while
+> memory has been allocated.
+> 
+That is true that we can migrate since we allow preemption
+when allocate. But it does not really matter on which CPU an
+allocation occurs and whether we migrate or not.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/driver-api/pti_intel_mid.rst | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+If we land on another CPU or still stay on the same, we will
+check anyway one more time if it(another/same CPU) is preloaded
+or not:
 
-diff --git a/Documentation/driver-api/pti_intel_mid.rst b/Documentation/dr=
-iver-api/pti_intel_mid.rst
-index 20f1cff42d5f..bacc2a4ee89f 100644
-=2D-- a/Documentation/driver-api/pti_intel_mid.rst
-+++ b/Documentation/driver-api/pti_intel_mid.rst
-@@ -49,7 +49,9 @@ but is not just blindly executing as 'root'. Keep in min=
-d
- the use of ioctl(,TIOCSETD,) is not specific to the n_tracerouter
- and n_tracesink line discpline drivers but is a generic
- operation for a program to use a line discpline driver
--on a tty port other than the default n_tty::
-+on a tty port other than the default n_tty:
-+
-+.. code-block:: c
+<snip>
+    preempt_disable();
+    if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)
+<snip>
 
-   /////////// To hook up n_tracerouter and n_tracesink /////////
+if another, we can free the object allocated on previous step if
+it already has it. If another CPU does not have it, save it in 
+ne_fit_preload_node for another current CPU to reuse later. Further
+we can not migrate because of:
 
-=2D-
-2.20.1
+<snip>
+    spin_lock(&vmap_area_lock);
+    preempt_enable();
+<snip>
 
+--
+Vlad Rezki
