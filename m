@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F483C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC258C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFA8222C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994E3222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="dMLyKgxh"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VHCChoz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbfJDSxf (ORCPT
+        id S1731310AbfJDSxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:53:35 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35985 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730942AbfJDSwt (ORCPT
+        Fri, 4 Oct 2019 14:53:40 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37788 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730928AbfJDSwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 14:52:49 -0400
-Received: by mail-qt1-f196.google.com with SMTP id o12so9970202qtf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:52:49 -0700 (PDT)
+Received: by mail-qt1-f194.google.com with SMTP id l3so9974344qtr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=O0CBEozBtTGW2pERGsJgZuZ1bw9J0cp5B10jh4ayzug=;
-        b=dMLyKgxhiHHOM9Jl5LyXO1zGCa+0TVkQV3LMuLICjYCIJ6sVu0L4lyfe8lM4h1jX+e
-         SzauJW6dRSZeci1id4vb0RHcZVXzaRyXfDiltuA7HuWYsphUyKsDdzPAn2golwmOY21k
-         WGyFeH+QKwpEYrAn6BIVQAPYMV00OwgRBSVwxE4axE+ui0udvdxZ7psPWGSvLvkBvAwY
-         8+cmLln8YlmKYexAVIX3uMAWBOF9rb4vCxmxDgetMJk32dFFNj3qmVp6L0Hd59p6+b/U
-         HqTIdSF7PalHzjYJvT5tofuJbYa4T5EdcERQQ2mxOQtwtcoc9C4Fo9YXL+T+OL380VYM
-         xKvw==
+        bh=nna15T41FBOo8C0ScgrwWvHxD4xBB4A7rtr2LOcD0mg=;
+        b=VHCChoz0fROYiFF3E2hiGeINxfvJE7JQlXXzOJLd54akzbItA1+2rUzr4DI2djJ9O5
+         Hyca0gHi/BmtqWzaux8ehDmfQ1GQp6qxgoGtldtG8PBTLXRXEw1mFAwqJcbvoPQ/L/MV
+         b4QlOJB3QwU6EgG1nTI/SDmgwYuIGf0zvGu+jUWUpxSEFWz/Lo4IuyDOCCbcPAqreAzp
+         rUhodhHLR+4SY72e+9jzUO7EZbvvOu+iqjKQe/fIzZE9uwz0R13jwGpyOKt8BvQ5FjZ3
+         lKVmqELSCurVOwUZEKX5HmoOjjr1q/nYg8Cg0T6S+5qXTBzGv8rqKY71guAQ73XZA4U7
+         73CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=O0CBEozBtTGW2pERGsJgZuZ1bw9J0cp5B10jh4ayzug=;
-        b=PYwWkGi9MPa+DK1zk/zJ+l3xTwe9G10TZ0ConHvmfznLQH4t/HW6tqHx4b0m0U1Hcu
-         b9mrhH6+ALE0WxuQNkHfl0yhm9/5SQ6YcwaaJqhcC92mtsXvz3qCjbGHwTCrOSvB4vsC
-         6VhJtoq9KPaeIXvWAHqVJGyNPdF1yYnIydeH/1MIRhfHjIvHduAyWMvlEszRlwhir66Q
-         f7oeH6sMs7x4R9I2mYXwDGrIyOhunIXvJRONmqV4siwtY6Wxke2V88mw7MWvssE1MT3A
-         IzLO2jQY4VVJs12fUX3taHIlcteGCrgDqDKbnkvLuUTvB0775kyH81bVxSb+y9xNBJml
-         GyoA==
-X-Gm-Message-State: APjAAAVUQ2TOIrqWjqrjpccJ+ZP3emMDw6gWJeGDRRHgOt5NKQexr/+X
-        8xtpeBEBbzHzENuD3O+d8SlpNA==
-X-Google-Smtp-Source: APXvYqxXhDwS8p9Q78xI+9V+vIJfUvep9QSLBQt+3nGM+M7w73/jXJx6kNv+/7UkSIPjTzUyh/yNnw==
-X-Received: by 2002:ac8:444f:: with SMTP id m15mr17621211qtn.110.1570215168607;
-        Fri, 04 Oct 2019 11:52:48 -0700 (PDT)
+        bh=nna15T41FBOo8C0ScgrwWvHxD4xBB4A7rtr2LOcD0mg=;
+        b=n+w2jDKhfeP1sZE80mmecatIFHbozkIymr8kX1LxIuE16sW9n7rWGN4xMpmv+MzDTa
+         yneN9Dyj1RpeMDWWg1ffAh3emzgJO77JABPLP0F/Vm/4xE1FwP7GL2SNGhRZ56t2BpnW
+         gBOt6aRG6bTxMrE0tb7RZiSkpqcKVz6proCWSn3L8qr6xKaJbY+ser7TCtF8P4PIg1Nz
+         PGi3RIDux+/fl+ZBQptv/dGBkgbO1ki3HcJvQyF3+SOonVZbzwbMiwiX85KJVBojeAml
+         PbYUkIG46t2DMZ65pIipDuGs1t2GA+l2bKj56nMvsw3xbtiU/gP5Ka3Eq5XJmrwuypSd
+         9RAg==
+X-Gm-Message-State: APjAAAVoE0imod96VfGVCMkX1h9MufWM2gpKL/SsKjNIgWps7d2QoIyi
+        Cx59mUP21C8FwtSza0K7vn3Cnw==
+X-Google-Smtp-Source: APXvYqyNbFmYvCagLzsifj1RuTq8tuyaOwA4jFplBgyym0KPw1b7isWuxXmSyyHyKvb+tYw7MVrpqg==
+X-Received: by 2002:ad4:418c:: with SMTP id e12mr15569947qvp.70.1570215167250;
+        Fri, 04 Oct 2019 11:52:47 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id p77sm4042514qke.6.2019.10.04.11.52.47
+        by smtp.gmail.com with ESMTPSA id p77sm4042514qke.6.2019.10.04.11.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 11:52:48 -0700 (PDT)
+        Fri, 04 Oct 2019 11:52:46 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -65,9 +65,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         james.morse@arm.com, vladimir.murzin@arm.com,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com
-Subject: [PATCH v6 08/17] arm64: hibernate: add trans_pgd public functions
-Date:   Fri,  4 Oct 2019 14:52:25 -0400
-Message-Id: <20191004185234.31471-9-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 07/17] arm64: hibernate: add PUD_SECT_RDONLY
+Date:   Fri,  4 Oct 2019 14:52:24 -0400
+Message-Id: <20191004185234.31471-8-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
@@ -78,143 +78,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-trans_pgd_create_copy() and trans_pgd_map_page() are going to be
-the basis for new shared code that handles page tables for cases
-which are between kernels: kexec, and hibernate.
-
-Note: Eventually, get_safe_page() will be moved into a function pointer
-passed via argument, but for now keep it as is.
+There is PMD_SECT_RDONLY that is used in pud_* function which is confusing.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Acked-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/kernel/hibernate.c | 88 ++++++++++++++++++++++++-----------
- 1 file changed, 60 insertions(+), 28 deletions(-)
+ arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+ arch/arm64/kernel/hibernate.c          | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+index 3df60f97da1f..756a1dfb4f55 100644
+--- a/arch/arm64/include/asm/pgtable-hwdef.h
++++ b/arch/arm64/include/asm/pgtable-hwdef.h
+@@ -110,6 +110,7 @@
+ #define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
+ #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
+ #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
++#define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
+ 
+ /*
+  * Level 2 descriptor (PMD).
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index ce60bceed357..ded9034b9d39 100644
+index 1ca8af685e96..ce60bceed357 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -182,39 +182,15 @@ int arch_hibernation_header_restore(void *addr)
- }
- EXPORT_SYMBOL(arch_hibernation_header_restore);
- 
--/*
-- * Copies length bytes, starting at src_start into an new page,
-- * perform cache maintentance, then maps it at the specified address low
-- * address as executable.
-- *
-- * This is used by hibernate to copy the code it needs to execute when
-- * overwriting the kernel text. This function generates a new set of page
-- * tables, which it loads into ttbr0.
-- *
-- * Length is provided as we probably only want 4K of data, even on a 64K
-- * page system.
-- */
--static int create_safe_exec_page(void *src_start, size_t length,
--				 unsigned long dst_addr,
--				 phys_addr_t *phys_dst_addr)
-+int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
-+		       unsigned long dst_addr,
-+		       pgprot_t pgprot)
- {
--	void *page = (void *)get_safe_page(GFP_ATOMIC);
--	pgd_t *trans_pgd;
- 	pgd_t *pgdp;
- 	pud_t *pudp;
- 	pmd_t *pmdp;
- 	pte_t *ptep;
- 
--	if (!page)
--		return -ENOMEM;
--
--	memcpy(page, src_start, length);
--	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
--
--	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
--	if (!trans_pgd)
--		return -ENOMEM;
--
- 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
- 		pudp = (void *)get_safe_page(GFP_ATOMIC);
-@@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	ptep = pte_offset_kernel(pmdp, dst_addr);
- 	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
- 
-+	return 0;
-+}
-+
-+/*
-+ * Copies length bytes, starting at src_start into an new page,
-+ * perform cache maintenance, then maps it at the specified address low
-+ * address as executable.
-+ *
-+ * This is used by hibernate to copy the code it needs to execute when
-+ * overwriting the kernel text. This function generates a new set of page
-+ * tables, which it loads into ttbr0.
-+ *
-+ * Length is provided as we probably only want 4K of data, even on a 64K
-+ * page system.
-+ */
-+static int create_safe_exec_page(void *src_start, size_t length,
-+				 unsigned long dst_addr,
-+				 phys_addr_t *phys_dst_addr)
-+{
-+	void *page = (void *)get_safe_page(GFP_ATOMIC);
-+	pgd_t *trans_pgd;
-+	int rc;
-+
-+	if (!page)
-+		return -ENOMEM;
-+
-+	memcpy(page, src_start, length);
-+	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
-+
-+	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
-+	if (!trans_pgd)
-+		return -ENOMEM;
-+
-+	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-+				PAGE_KERNEL_EXEC);
-+	if (rc)
-+		return rc;
-+
- 	/*
- 	 * Load our new page tables. A strict BBM approach requires that we
- 	 * ensure that TLBs are free of any entries that may overlap with the
-@@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
- 	return 0;
- }
- 
-+int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+			  unsigned long end)
-+{
-+	int rc;
-+	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-+
-+	if (!trans_pgd) {
-+		pr_err("Failed to allocate memory for temporary page tables.\n");
-+		return -ENOMEM;
-+	}
-+
-+	rc = copy_page_tables(trans_pgd, start, end);
-+	if (!rc)
-+		*dst_pgdp = trans_pgd;
-+
-+	return rc;
-+}
-+
- /*
-  * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
-  *
-@@ -488,7 +520,7 @@ int swsusp_arch_resume(void)
- 		pr_err("Failed to allocate memory for temporary page tables.\n");
- 		return -ENOMEM;
- 	}
--	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
-+	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, PAGE_END);
- 	if (rc)
- 		return rc;
+@@ -436,7 +436,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+ 				return -ENOMEM;
+ 		} else {
+ 			set_pud(dst_pudp,
+-				__pud(pud_val(pud) & ~PMD_SECT_RDONLY));
++				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
+ 		}
+ 	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
  
 -- 
 2.23.0
