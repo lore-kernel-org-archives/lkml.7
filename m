@@ -2,167 +2,115 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC95C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3C4222CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD07C2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:19:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEuWIAjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387935AbfJDRS5 (ORCPT
+        id S2388004AbfJDRTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:18:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50938 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387458AbfJDRS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:18:57 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0935910DCCA6;
-        Fri,  4 Oct 2019 17:18:57 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BB3419C69;
-        Fri,  4 Oct 2019 17:18:56 +0000 (UTC)
-Subject: Re: [PATCH v2 3/7] intel-speed-select: Add check for CascadeLake-N
- models
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-References: <20191003121112.25870-1-prarit@redhat.com>
- <20191003121112.25870-4-prarit@redhat.com>
- <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <8c831fa0-bb42-76bf-a624-12b063cf8e8b@redhat.com>
-Date:   Fri, 4 Oct 2019 13:18:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 04 Oct 2019 17:18:57 +0000 (UTC)
+        Fri, 4 Oct 2019 13:19:24 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44896 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387635AbfJDRTY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 13:19:24 -0400
+Received: by mail-io1-f65.google.com with SMTP id w12so15093214iol.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=jtoSVXtrhkJf1hDDCpHF8eGDYq27zVP1O774BwN2yFA=;
+        b=uEuWIAjmWZC2lobpMCOJTDjl/s5815lvaflCenIocA8vV0nW425V5dnH+6mZPkd4Vz
+         XUxuSFBxRAoNyjtPDEthhP3MdPmPJ+j+UF7q+diD1gOch5U0gI3ACLE2oU+Fs+XJ/23g
+         0eClghImRh8A2lRcvMd+dTegBcIb4mymqkub+xittk11wLhax/0+iubbD6YGCPhlJUpe
+         +A9FZUJQ0gynepj89NG85hfqV5egfEp0SQ02NeHJMqqH3bmzHuDSEVSFeeBXxkNQ/2o3
+         9HNqPQwaklpxPDsSiEHhQGmCCQslyyD6KgD33YfUubmNugxfGji7IorwH3hvzJQmA0k5
+         bIQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=jtoSVXtrhkJf1hDDCpHF8eGDYq27zVP1O774BwN2yFA=;
+        b=q8NGuBjTQv6evrBfjeVw+Qwcd1WRQKUYXhf3TLrHIwDxetYRyMTd/8qrwYqAhFbc8K
+         n4tEm1fY9WI54OeVCaei9kZKbqO/RXm1zTeTRvkToWhtVQE+AvP9dEwo7MdR4aK84sgC
+         7jqs5GscvMhiH5siZx6gz1ijb0wchi4EleeN0LfGo8EeFUGrXsG12JlTAdE6Ke3yqah5
+         vao62Hez1UxBMhf5U6ouZUnJEp0GA2WResxiTAAo6SRTSl0FSFpCvs/76FCHaFLEnHq/
+         oUPTwd02lAktUK5OlSVsEkwbq2Hz+kBchZJKVHEh/N3OuSAem5BGV36O8egHxlUQnZdE
+         HQQA==
+X-Gm-Message-State: APjAAAV3uISPb4c+A005t3ZyQaOS2U5boi3w9X5kN0Pz/RLSqFSHbkGp
+        D1X/PJI1GAWKi3+tCHAJF5g=
+X-Google-Smtp-Source: APXvYqxF0fH1FHeLeb/+4F7Sw9KcP3cCcMmpy0s8scdkUAgLYnFwYQd2ajU1J1M/tSF1hZskuCrn2g==
+X-Received: by 2002:a02:b782:: with SMTP id f2mr15929972jam.48.1570209562004;
+        Fri, 04 Oct 2019 10:19:22 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id i67sm4018502ilf.84.2019.10.04.10.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 10:19:21 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     miquel.raynal@bootlin.com
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mtd: onenand: prevent memory leak in onenand_scan
+Date:   Fri,  4 Oct 2019 12:19:05 -0500
+Message-Id: <20191004171909.6378-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191004175740.5dd84c38@xps13>
+References: <20191004175740.5dd84c38@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In onenand_scan if scan_bbt fails the allocated buffers for oob_buf,
+verify_buf, and page_buf should be released.
 
+Fixes: 5988af231978 ("mtd: Flex-OneNAND support")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	-- added release for this->verify_buf (thanks to Miquel Raynal
+for the hint).
+---
+ drivers/mtd/nand/onenand/onenand_base.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-On 10/4/19 1:15 PM, Srinivas Pandruvada wrote:
-> On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
->> Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF
->> support.
->>
->> Return an error if the CascadeLake processor is not one of these
->> specific
->> models.
->>
-> This patch sigfaults immediately on CLX.>
->> v2: Add is_clx_n_platform()
->>
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> ---
->>  .../x86/intel-speed-select/isst-config.c      | 44
->> ++++++++++++++++++-
->>  1 file changed, 42 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
->> b/tools/power/x86/intel-speed-select/isst-config.c
->> index f4a23678416e..734a7960458c 100644
->> --- a/tools/power/x86/intel-speed-select/isst-config.c
->> +++ b/tools/power/x86/intel-speed-select/isst-config.c
->> @@ -23,6 +23,7 @@ static int debug_flag;
->>  static FILE *outf;
->>  
->>  static int cpu_model;
->> +static int cpu_stepping;
->>  
->>  #define MAX_CPUS_IN_ONE_REQ 64
->>  static short max_target_cpus;
->> @@ -72,7 +73,16 @@ void debug_printf(const char *format, ...)
->>  	va_end(args);
->>  }
->>  
->> -static void update_cpu_model(void)
->> +
->> +int is_clx_n_platform(void)
->> +{
->> +	if (cpu_model == 0x55)
->> +		if (cpu_stepping == 0x6 || cpu_stepping == 0x7)
->> +			return 1;
->> +	return 0;
->> +}
->> +
->> +static int update_cpu_model(void)
->>  {
->>  	unsigned int ebx, ecx, edx;
->>  	unsigned int fms, family;
->> @@ -82,6 +92,34 @@ static void update_cpu_model(void)
->>  	cpu_model = (fms >> 4) & 0xf;
->>  	if (family == 6 || family == 0xf)
->>  		cpu_model += ((fms >> 16) & 0xf) << 4;
->> +
->> +	cpu_stepping = fms & 0xf;
->> +
->> +	/* only three CascadeLake-N models are supported */
->> +	if (is_clx_n_platform()) {
->> +		FILE *fp;
->> +		size_t n;
->> +		char *line;
-> Need n = 0 and *line = NULL here as getline() will require if it has to
-> allocate.
+diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
+index 77bd32a683e1..6329ada3f15c 100644
+--- a/drivers/mtd/nand/onenand/onenand_base.c
++++ b/drivers/mtd/nand/onenand/onenand_base.c
+@@ -3977,8 +3977,14 @@ int onenand_scan(struct mtd_info *mtd, int maxchips)
+ 	this->badblockpos = ONENAND_BADBLOCK_POS;
+ 
+ 	ret = this->scan_bbt(mtd);
+-	if ((!FLEXONENAND(this)) || ret)
++	if ((!FLEXONENAND(this)) || ret) {
++		kfree(this->oob_buf);
++#ifdef CONFIG_MTD_ONENAND_VERIFY_WRITE
++		kfree(this->verify_buf);
++#endif
++		kfree(this->page_buf);
+ 		return ret;
++	}
+ 
+ 	/* Change Flex-OneNAND boundaries if required */
+ 	for (i = 0; i < MAX_DIES; i++)
+-- 
+2.17.1
 
-Odd, I ran multiple tests and never hit the segfault :(.  Thanks for fixing.
-
-P.
-
-> 
-> Anyway I will update the patchset and post after test.
-> 
-
-> Thanks,
-> Srinivas
->> +		int ret = 1;
->> +
->> +		fp = fopen("/proc/cpuinfo", "r");
->> +		if (!fp)
->> +			err(-1, "cannot open /proc/cpuinfo\n");
->> +
->> +		while (getline(&line, &n, fp) > 0) {
->> +			if (strstr(line, "model name")) {
->> +				if (strstr(line, "6252N") ||
->> +				    strstr(line, "6230N") ||
->> +				    strstr(line, "5218N"))
->> +					ret = 0;
->> +				break;
->> +			}
->> +		}
->> +		free(line);
->> +		fclose(fp);
->> +		return ret;
->> +	}
->> +	return 0;
->>  }
->>  
->>  /* Open a file, and exit on failure */
->> @@ -1889,7 +1927,9 @@ static void cmdline(int argc, char **argv)
->>  		fprintf(stderr, "Feature name and|or command not
->> specified\n");
->>  		exit(0);
->>  	}
->> -	update_cpu_model();
->> +	ret = update_cpu_model();
->> +	if (ret)
->> +		err(-1, "Invalid CPU model (%d)\n", cpu_model);
->>  	printf("Intel(R) Speed Select Technology\n");
->>  	printf("Executing on CPU model:%d[0x%x]\n", cpu_model,
->> cpu_model);
->>  	set_max_cpu_num();
-> 
