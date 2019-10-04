@@ -2,135 +2,179 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497EDC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 06:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F278EC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 06:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2110621A4C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 06:41:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="PkbTo/6U"
+	by mail.kernel.org (Postfix) with ESMTP id C9F7D215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 06:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570171971;
+	bh=KjLCSWbNFxhPI0um9Zf+8VBwxs6pN5wnIQdyYL09PKs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=firNM6UcPREng1jtEqenZXOJn2GSYgHQX7XdTO3Y5WayosK0yX3qXtsq0sZ7/s8IH
+	 vM8usBVsgmqS9elNLXZcoDM0/AZubGKRUU8mcUJJD0OzPkwr14QbpfTIa/KazjK47E
+	 lTll2XrcsVlEJMiw6IGvZv2XI84VSqufpB8eYqng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbfJDGlF (ORCPT
+        id S2388358AbfJDGwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 02:41:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55285 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388326AbfJDGlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 02:41:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p7so4502022wmp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 23:41:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=rKDZNQHbI3yhJDQcPVxUjNjc9rSkeH/oY75z6ZC22no=;
-        b=PkbTo/6UtBJ7pn8rWMyMPfAXT9NrdSo94XhKMlUPDeVS9VV2hcu2Aa86XP3rj5/+Cb
-         b4gW66RasjK953AN3MQcZj9kfWoOaQlcXGLQZt13zN5M5QJIc92zq+n7yIfbLdX2V2AD
-         dCwhujbMwyb3kJY+uc5LVGfmZogaui0qas0XyYgM+EYVHsYkfxKd0hu0HcEbe6n2iF9v
-         zb0CANi2inhWoUufzxJJ7i6r9hPW0ICQEooiHG94VxqjAF9V43HnpuzTLVk016+aW26C
-         psKxix5dXydliPrC5i3nDKT1KEEEhmKCxDBt8sQBxU3IrCHwkcSFJLOtmxwZJBUGfp7y
-         kmjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=rKDZNQHbI3yhJDQcPVxUjNjc9rSkeH/oY75z6ZC22no=;
-        b=HgGmksDyVRlrGYxikPe1jhPKgVBZvDmS7iceb3Um2kbPNsY9HDQ72oGxBAIumdP0EF
-         DrCdku6JywnFL+jP4yDVicHRRax7NVsGqsgSrXlSOeJ/NjAhD6XnARY3/lfVeJu/ZmR5
-         yt/NkAfffcAse6XydnedEpmMG2b9JOi8nIzTQKY2LJvaxkB7/GZq4A379jSOWlPFgDHO
-         czVKWzNQLFj5bVdOVQAq6mtadbzOQ7b035+h8+TcXS6MTWbOwjyGIKQqIe3QS2j32N0b
-         aAFvAPfBwq2kv7EjE7rHKeTh1WsWy4+qfvGkCS14VRXLMZVVm7BZA6itUMe1wFHhKs7h
-         cOYQ==
-X-Gm-Message-State: APjAAAW4L0Kz/8mG0HAT9uP0EvVnxJPCODmJvyb7p4TNULJahXkNqiLA
-        DU5akaQGnhh1mTRsde7b1+dNtCId4J/MGQ==
-X-Google-Smtp-Source: APXvYqy5hABhQ/36xrN7snaT5BUf2z8IqZUnEezNbkuPG2887a8BXxj4Y+W3d1Yu9tw62LQZ/qIbzA==
-X-Received: by 2002:a7b:cc91:: with SMTP id p17mr9226505wma.43.1570171261257;
-        Thu, 03 Oct 2019 23:41:01 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id 143sm5259045wmb.33.2019.10.03.23.41.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 23:41:00 -0700 (PDT)
-Message-ID: <5d96e97c.1c69fb81.c1579.7521@mx.google.com>
-Date:   Thu, 03 Oct 2019 23:41:00 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 4 Oct 2019 02:52:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728935AbfJDGwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 02:52:50 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEB2E20862;
+        Fri,  4 Oct 2019 06:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570171969;
+        bh=KjLCSWbNFxhPI0um9Zf+8VBwxs6pN5wnIQdyYL09PKs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S2fe1c982Qfk2EPIEelIL45x8L+g2a5shLEP1fdVNxHEsYBk3NHOeNIAlwe1oq6rP
+         tuCAwhCBbBvY3bFadYh6ADBrOSLn3yP3xix97xY4a/R45OXU9mj+6/AlLUUQ+MdPKZ
+         OAeM6mBxfMBTegWjQxadbXj5XVYjTJhymJYz59J4=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-sctp@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Subject: [PATCH] lib/generic-radix-tree.c: add kmemleak annotations
+Date:   Thu,  3 Oct 2019 23:50:39 -0700
+Message-Id: <20191004065039.727564-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <CACT4Y+aGjg_JTL-OPMSi1wS4=Zy4xFAizWW5fa8_KMOFpfMeXg@mail.gmail.com>
+References: <CACT4Y+aGjg_JTL-OPMSi1wS4=Zy4xFAizWW5fa8_KMOFpfMeXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.4.194-100-g9a8d8139a7e5
-X-Kernelci-Branch: linux-4.4.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
-Subject: Re: [PATCH 4.4 00/99] 4.4.195-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.4.y boot: 90 boots: 1 failed, 80 passed with 8 offline, 1=
- untried/unknown (v4.4.194-100-g9a8d8139a7e5)
+From: Eric Biggers <ebiggers@google.com>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.4.y/kernel/v4.4.194-100-g9a8d8139a7e5/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
-/kernel/v4.4.194-100-g9a8d8139a7e5/
+Kmemleak is falsely reporting a leak of the slab allocation in
+sctp_stream_init_ext():
 
-Tree: stable-rc
-Branch: linux-4.4.y
-Git Describe: v4.4.194-100-g9a8d8139a7e5
-Git Commit: 9a8d8139a7e557ce81c19f467a2a873371e3deba
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 45 unique boards, 17 SoC families, 12 builds out of 190
+BUG: memory leak
+unreferenced object 0xffff8881114f5d80 (size 96):
+   comm "syz-executor934", pid 7160, jiffies 4294993058 (age 31.950s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000ce7a1326>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+     [<00000000ce7a1326>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000ce7a1326>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000ce7a1326>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<000000007abb7ac9>] kmalloc include/linux/slab.h:547 [inline]
+     [<000000007abb7ac9>] kzalloc include/linux/slab.h:742 [inline]
+     [<000000007abb7ac9>] sctp_stream_init_ext+0x2b/0xa0  net/sctp/stream.c:157
+     [<0000000048ecb9c1>] sctp_sendmsg_to_asoc+0x946/0xa00  net/sctp/socket.c:1882
+     [<000000004483ca2b>] sctp_sendmsg+0x2a8/0x990 net/sctp/socket.c:2102
+     [...]
 
-Boot Failure Detected:
+But it's freed later.  Kmemleak misses the allocation because its
+pointer is stored in the generic radix tree sctp_stream::out, and the
+generic radix tree uses raw pages which aren't tracked by kmemleak.
 
-arm64:
-    defconfig:
-        gcc-8:
-            qcom-qdf2400: 1 failed lab
+Fix this by adding the kmemleak hooks to the generic radix tree code.
 
-Offline Platforms:
-
-arm:
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-
+Reported-by: syzbot+7f3b6b106be8dcdcdeec@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
-For more info write to <info@kernelci.org>
+ lib/generic-radix-tree.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
+index ae25e2fa2187..f25eb111c051 100644
+--- a/lib/generic-radix-tree.c
++++ b/lib/generic-radix-tree.c
+@@ -2,6 +2,7 @@
+ #include <linux/export.h>
+ #include <linux/generic-radix-tree.h>
+ #include <linux/gfp.h>
++#include <linux/kmemleak.h>
+ 
+ #define GENRADIX_ARY		(PAGE_SIZE / sizeof(struct genradix_node *))
+ #define GENRADIX_ARY_SHIFT	ilog2(GENRADIX_ARY)
+@@ -75,6 +76,27 @@ void *__genradix_ptr(struct __genradix *radix, size_t offset)
+ }
+ EXPORT_SYMBOL(__genradix_ptr);
+ 
++static inline struct genradix_node *genradix_alloc_node(gfp_t gfp_mask)
++{
++	struct genradix_node *node;
++
++	node = (struct genradix_node *)__get_free_page(gfp_mask|__GFP_ZERO);
++
++	/*
++	 * We're using pages (not slab allocations) directly for kernel data
++	 * structures, so we need to explicitly inform kmemleak of them in order
++	 * to avoid false positive memory leak reports.
++	 */
++	kmemleak_alloc(node, PAGE_SIZE, 1, gfp_mask);
++	return node;
++}
++
++static inline void genradix_free_node(struct genradix_node *node)
++{
++	kmemleak_free(node);
++	free_page((unsigned long)node);
++}
++
+ /*
+  * Returns pointer to the specified byte @offset within @radix, allocating it if
+  * necessary - newly allocated slots are always zeroed out:
+@@ -97,8 +119,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+ 			break;
+ 
+ 		if (!new_node) {
+-			new_node = (void *)
+-				__get_free_page(gfp_mask|__GFP_ZERO);
++			new_node = genradix_alloc_node(gfp_mask);
+ 			if (!new_node)
+ 				return NULL;
+ 		}
+@@ -121,8 +142,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+ 		n = READ_ONCE(*p);
+ 		if (!n) {
+ 			if (!new_node) {
+-				new_node = (void *)
+-					__get_free_page(gfp_mask|__GFP_ZERO);
++				new_node = genradix_alloc_node(gfp_mask);
+ 				if (!new_node)
+ 					return NULL;
+ 			}
+@@ -133,7 +153,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+ 	}
+ 
+ 	if (new_node)
+-		free_page((unsigned long) new_node);
++		genradix_free_node(new_node);
+ 
+ 	return &n->data[offset];
+ }
+@@ -191,7 +211,7 @@ static void genradix_free_recurse(struct genradix_node *n, unsigned level)
+ 				genradix_free_recurse(n->children[i], level - 1);
+ 	}
+ 
+-	free_page((unsigned long) n);
++	genradix_free_node(n);
+ }
+ 
+ int __genradix_prealloc(struct __genradix *radix, size_t size,
+-- 
+2.23.0
+
