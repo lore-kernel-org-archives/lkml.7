@@ -7,65 +7,66 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A1C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50273C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2502084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108E9215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NbrR9cDX"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VwHl/+4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730629AbfJDS0S (ORCPT
+        id S1730655AbfJDS0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:26:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42262 "EHLO
+        Fri, 4 Oct 2019 14:26:37 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46763 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfJDS0R (ORCPT
+        with ESMTP id S1728663AbfJDS0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:26:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id n197so15539296iod.9
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:26:17 -0700 (PDT)
+        Fri, 4 Oct 2019 14:26:36 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so15496772ioo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=zZ6KISfo14kOEL5Ieq+NQ6dxv0EXjT7PvLg26kcxeKI=;
-        b=NbrR9cDXdXXj8NLCbdZebA/XHymI2ZV8JNrZi82vyS6yNX64HDkBmL3dHU2O9pMZXd
-         3LLoGfU/NkijXnsJuEROqNWsrS/DXjNbrPh0ZxItTdN7JNiCTJIdvi6yQJWxD7lgKLga
-         3cIEYvmCSebCu1xfIcZiWmgbyh3AEYy58zrQyurM5PTA1ZLsgMRD6tp7BY9nKy0RLb3g
-         kBLxjv8BEFrmpOqqIkoLo+D/2i3QRiYMtiUQQt1z0baBpLuXXgSGHnr4ZH9wX88BzFiV
-         fRME8q8VKZRI8oi8yZ2MvvHHV6itWhxAVqUh5+bqWGjxTx1xeOvNVUKF1eSv2otoL4LS
-         G2xA==
+        bh=t8xd02zwYHFR1ug6Lij1NLvXJ514TyN1QMbUlSxJFp0=;
+        b=VwHl/+4fKaaoT18gaA2dUh9WuS55xSFNwQIk7B6CLpOS0MlU/jrzqwld7gUOK+i+0V
+         HBgZMsMLNgy6AooThDGrQ6+Kj3qP89muwCvmBepqtwruQwi38NqihJ0a6BNfbmo3zS4I
+         q77DTbCddQ5FaiPNELBaw3+MWJTTiWmZLObKL/0kvwcnvD6nBamAigdfsUqCW5C6d0DM
+         HpDjfoACTEgMWNLe0drc1TQ68Ov+HVBBkdNks2nPqY9GTFGdwJYROmso6i6SPUVIrFUP
+         6W21rrj49NcOiYjVseux4Y4HwXDYTPCUmP2k2ipY/kU93RXkj64OxkXzyaJWOGeJoql9
+         z/zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=zZ6KISfo14kOEL5Ieq+NQ6dxv0EXjT7PvLg26kcxeKI=;
-        b=uMurLV5FXwIf5fX3ayz5YFQIbmYuYyFZzzO8XLH6pjCgpfxjqCKpOzftwvPprAtAc8
-         L94uFV7DdLY0Zez3VFGoQu4XyBXjqpYaKkRthfetgHdcNBZA1pVeH5ybPRwg6FTXl8zf
-         Fl8qUOSiKN+LNdYm1dWPYr78E8LWaaDcOsMQO1al8JL5LvM67fTExYlak8CUpBC0otF4
-         mrdqKwdu+quaRKsoC4VgAGeokd8krcK4xh07VZy95qFa3P14IpGw0+48iBEvpZFoYIge
-         WDd6WzBqm4yH0wsHja30KCLsHWBdHCyzFvTNYUUctwjzmkfKMIkdVSTFHlxpM0nNSSzf
-         /IVw==
-X-Gm-Message-State: APjAAAU604LIM7whTmdo+Ge9yHGICsx3AMR7Qegfzax25d+0hZXVtIZN
-        OcEx9V1Z8VY+MxLz/ji+4aqLLA==
-X-Google-Smtp-Source: APXvYqzlMOzXdKo6exiuWQJn4vxBDEZZE+59ZX+HRMzh5GgIqvHwN308u9wUqqNwO23xAYGepTM41Q==
-X-Received: by 2002:a02:93e5:: with SMTP id z92mr16325106jah.8.1570213576916;
-        Fri, 04 Oct 2019 11:26:16 -0700 (PDT)
+        bh=t8xd02zwYHFR1ug6Lij1NLvXJ514TyN1QMbUlSxJFp0=;
+        b=XDJUpTS+2z4mbaPrrMIUKVhAduiMjp4YIXg2GXUtPmgzp7sKzTNBe/momREr5xIvS+
+         CWHnl+6zxpVUgO8TeYSZk1bXYuqST/75+lujbIf2p3OX6sTNafUqNJtTicYxLddGB2A2
+         v5MBDGmQp1oafrdmC4aWxOs8IcCg7pQIKOQG1Ae9oJiQKbNc4xsnymrSY4OTYhWPyR3q
+         aWA9W+1ZZSI7XaF+i/DtrMLaZUCySRRZotlUpjv1gJUF8B5KJvPRt+qGHxJMPeX4QsRe
+         sz0mKr6Jo67LOSZC/PsPT4GrfoHhlNHdujmheYR5/ftGjtxFkXXW2z+iNA0TqM9g+VQM
+         wWJw==
+X-Gm-Message-State: APjAAAUGEbmg4G3y1WKkNyK1t83kY33BtiLAihGi1HXWWriLhXieqxF+
+        LMJSVcgAY7MJBtER1jyk9o1wdw==
+X-Google-Smtp-Source: APXvYqyzR0J5thuev/aaZSAW6LUCDh4I7Z/+jk8Q170nxQE+KqajfQzX0PhTAamMU6fO0fFmqLEmeA==
+X-Received: by 2002:a92:4050:: with SMTP id n77mr16315409ila.219.1570213596150;
+        Fri, 04 Oct 2019 11:26:36 -0700 (PDT)
 Received: from localhost (67-0-10-3.albq.qwest.net. [67.0.10.3])
-        by smtp.gmail.com with ESMTPSA id i18sm3602473ilc.34.2019.10.04.11.26.16
+        by smtp.gmail.com with ESMTPSA id 13sm2839063ilz.54.2019.10.04.11.26.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 11:26:16 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 11:26:15 -0700 (PDT)
+        Fri, 04 Oct 2019 11:26:35 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 11:26:34 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
 To:     Vincent Chen <vincent.chen@sifive.com>
 cc:     linux-riscv@lists.infradead.org, palmer@sifive.com,
         aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] riscv: avoid kernel hangs when trapped in BUG()
-In-Reply-To: <1569199517-5884-2-git-send-email-vincent.chen@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1910041126030.15827@viisi.sifive.com>
-References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com> <1569199517-5884-2-git-send-email-vincent.chen@sifive.com>
+Subject: Re: [PATCH 2/4] rsicv: avoid sending a SIGTRAP to a user thread
+ trapped in WARN()
+In-Reply-To: <1569199517-5884-3-git-send-email-vincent.chen@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1910041126220.15827@viisi.sifive.com>
+References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com> <1569199517-5884-3-git-send-email-vincent.chen@sifive.com>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -76,12 +77,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 23 Sep 2019, Vincent Chen wrote:
 
-> When the CONFIG_GENERIC_BUG is disabled by disabling CONFIG_BUG, if a
-> kernel thread is trapped by BUG(), the whole system will be in the
-> loop that infinitely handles the ebreak exception instead of entering the
-> die function. To fix this problem, the do_trap_break() will always call
-> the die() to deal with the break exception as the type of break is
-> BUG_TRAP_TYPE_BUG.
+> On RISC-V, when the kernel runs code on behalf of a user thread, and the
+> kernel executes a WARN() or WARN_ON(), the user thread will be sent
+> a bogus SIGTRAP.  Fix the RISC-V kernel code to not send a SIGTRAP when
+> a WARN()/WARN_ON() is executed.
 > 
 > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
 
