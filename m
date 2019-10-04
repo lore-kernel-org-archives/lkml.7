@@ -2,107 +2,113 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E25C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA9FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51C0222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545982084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enBXaEXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfJDRQg (ORCPT
+        id S2387900AbfJDRSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:16:36 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:45382 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387534AbfJDRQf (ORCPT
+        Fri, 4 Oct 2019 13:18:40 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38541 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387458AbfJDRSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:16:35 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Cristian.Birsan@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Cristian.Birsan@microchip.com";
-  x-sender="Cristian.Birsan@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Cristian.Birsan@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Cristian.Birsan@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: d0aGSb/7YfeQDRGpZ7qzkTUS57vxpPVB6jYd3meyu/pZo8VLdozIGUweKW5KZWVZyssXSDeit2
- EYPsBzzdb6xtBxWdGjr4H/5cciq4G9UBq4c8AHnd8MTGVuGdDj2bMF4MZOPwm95WqTyNBzfD8x
- PU9uOmFyBrxEd11g2qB/i1Mm6pcdv/r6iGTrj8WEgB7O1uKVPuKD3m+XYNkWtJlwstjGJ5zgI/
- L8SlIHo1VUgNSRGrJ+LU+MY51d7cRpE6JTQP2UHWIe7tf6SmXuTsTiXdo1RJAW1cCKp8N00wyp
- JXY=
-X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="50474067"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2019 10:16:34 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 4 Oct 2019 10:16:34 -0700
-Received: from cristi-W530.mchp-main.com (10.10.85.251) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 4 Oct 2019 10:16:30 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Cristian Birsan <cristian.birsan@microchip.com>
-Subject: [PATCH] usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
-Date:   Fri, 4 Oct 2019 20:10:54 +0300
-Message-ID: <20191004171054.19453-1-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Oct 2019 13:18:40 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l21so6628187edr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P6ILDe87atoSpFhr4YLtT8v1Dvs0XN+7b56hhQlsV+s=;
+        b=enBXaEXpHjow9+Pz4mdlFTKzl3G3RGqsECSmVPyToON6sDWTvSqWHSCx3aJP7zHb8m
+         c5uclc8HWH8hKvhXKNL0V66ONtWbEHwLYEKfdDFvB2KSdfzcCscgixU48XqCxakcz/FZ
+         +qIWnSiT09Tf9EyszAAZicDPeHJ5BrbR8rjE7aaiuwurLJA1u9SBnHjmsCMQJKhElirg
+         3Qhh9ao8k5amjIpmewf2qbDCXbwfHZ4YoESlQVwSlJiqcB76aEbrl7hu5ITYQIiY+qyI
+         Czo3TxSQRSd/4RyxPrqJtpyVh/yUh1/W7htb9LUJ+WVZaB22qdnYAd4q5YLPc3FHkbz6
+         G+6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P6ILDe87atoSpFhr4YLtT8v1Dvs0XN+7b56hhQlsV+s=;
+        b=Q16ze2IaqyWWvSm9+5w4ie6M14GQs288k5jPPqNd8/PKxPB1bbLNBEiZKXUQa/ejzw
+         3DDo5ksHxy0k8u5UAWl8prsswJLOT/1wrRlD7UDKQ06CXcUyO5Msr2/Gai1JLS9vqrzR
+         tQwTYfnx0VNE/KtWGI7i/Jtkt+gDQfQJTeXpoA/bHoJjMTs5NG1LBSRH22gFsxA5UKjT
+         KyZYm3RcJM+jJBuOJqcX0rW1SvIF07uHLRgCC+d/KAxFOKXBrQXj0Q00/qeKM8gZlGg2
+         M7WR+Pqp3nDtQ4+yrlsydymFom3g5ik9nCvB8Rh6cTkW55wM+E9Co1hZOwS6kGpqEbs+
+         ogjA==
+X-Gm-Message-State: APjAAAUz/gOlSmWNEyjLp9imzyyAQIDPVMaUGJ6ujyWzHgbeYqPKUZtP
+        40wcVfqWIT6S0WtkPhDdQ6EftA==
+X-Google-Smtp-Source: APXvYqzwBvrnmFzZsa1Mpgi+XTXje83ZYwyx65gwJfmNiNPb0bxR4U6+rzPdd2I0VzhmJVaxNcWfaQ==
+X-Received: by 2002:a17:906:b30b:: with SMTP id n11mr13772893ejz.35.1570209518810;
+        Fri, 04 Oct 2019 10:18:38 -0700 (PDT)
+Received: from lophozonia ([85.195.192.192])
+        by smtp.gmail.com with ESMTPSA id s42sm1230595edm.57.2019.10.04.10.18.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 10:18:37 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 19:18:35 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+Subject: Re: [PATCH v4 3/4] iommu/ioasid: Add custom allocators
+Message-ID: <20191004171835.GB1180125@lophozonia>
+References: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1570045363-24856-4-git-send-email-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570045363-24856-4-git-send-email-jacob.jun.pan@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+On Wed, Oct 02, 2019 at 12:42:42PM -0700, Jacob Pan wrote:
+> IOASID allocation may rely on platform specific methods. One use case is
+> that when running in the guest, in order to obtain system wide global
+> IOASIDs, emulated allocation interface is needed to communicate with the
+> host. Here we call these platform specific allocators custom allocators.
+> 
+> Custom IOASID allocators can be registered at runtime and take precedence
+> over the default XArray allocator. They have these attributes:
+> 
+> - provides platform specific alloc()/free() functions with private data.
+> - allocation results lookup are not provided by the allocator, lookup
+>   request must be done by the IOASID framework by its own XArray.
+> - allocators can be unregistered at runtime, either fallback to the next
+>   custom allocator or to the default allocator.
+> - custom allocators can share the same set of alloc()/free() helpers, in
+>   this case they also share the same IOASID space, thus the same XArray.
+> - switching between allocators requires all outstanding IOASIDs to be
+>   freed unless the two allocators share the same alloc()/free() helpers.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Link: https://lkml.org/lkml/2019/4/26/462
 
-Fix interrupt storm generated by endpoints when working in FIFO mode.
-The TX_COMPLETE interrupt is used only by control endpoints processing.
-Do not enable it for other types of endpoints.
-
-Fixes: 914a3f3b3754 ("USB: add atmel_usba_udc driver")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
----
- drivers/usb/gadget/udc/atmel_usba_udc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 86ffc8307864..1d0d8952a74b 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -449,9 +449,11 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
- 		next_fifo_transaction(ep, req);
- 		if (req->last_transaction) {
- 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
--			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
-+			if (ep_is_control(ep))
-+				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
- 		} else {
--			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
-+			if (ep_is_control(ep))
-+				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
- 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
- 		}
- 	}
--- 
-2.17.1
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
