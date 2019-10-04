@@ -2,184 +2,263 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9A0C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D03BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405AD215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308CE21D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CtKslxz+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SmxHhPti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388462AbfJDRvO (ORCPT
+        id S2388621AbfJDRw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:51:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36450 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388197AbfJDRvO (ORCPT
+        Fri, 4 Oct 2019 13:52:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36657 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388513AbfJDRw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:51:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id b136so15390533iof.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:51:13 -0700 (PDT)
+        Fri, 4 Oct 2019 13:52:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so8254894wrd.3;
+        Fri, 04 Oct 2019 10:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=t/5LvydB/9xiYrPTtx28So261ri5H7GhB96fZQX0xSk=;
-        b=CtKslxz+C1oTEwWYf8uaYwhkIa5v8rvZ02D7hyyUcjyXHtPIlWOKrhtLnWCAnXLW6p
-         xMgbQ7BuDmxwmI1VuxYZ6fOSpBEu/OyyzUsn61IyXoi5IhkJW1A1U/XekU8wh+vy2ujD
-         QZe7xO8Els0gXy9OgjAaM4nvK5+pBbXa5go5Mvs5r/tt+yq3mYydfrAt4TiXBBU8YCS9
-         879BKhob1bfdE7P5ojctaKythp4z15olVqJ98ukULzrpWQ3sySlIzBA9AcMjKgYIQ1RV
-         egMlneWX+BEPm2BBesTwGrZrBr3ttzXg1AXVrFwhs5iQIJD4ExwzCp0qU+PGZn6ROrjI
-         LZaQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sFYbP+lwubqARXBpAaF4zcAm2S+7R8TyH0tAYLHpuSw=;
+        b=SmxHhPtiS4HE+frxFMiA5OGhOlwdwsxbR3iaBCD2kV6eT9DtYjlFHI8Fi5D6clbRwh
+         Nxh1rKkKxEruG3/W0r0y879a64kVB8lNpcfdt8BI6FT26/dmmvz4ufqdpX6vAqNtGGu7
+         LrOVIYHjz/dUiik26uG1DX1uvj4RtRSO0G7DljiKkIO9FmGSxNg7GjhRpWixtgVPvEB8
+         Z4gy9XNWnT83rVMNFxFplTis5Roe/e+4hn+nkfeie/7AY6W/7zlPuqRMjiVJ1/j4JHgW
+         woYqWZk+VtzsVXuB8m82bKW7R2n8T1A0dGRkIR1p13bYn7Prt5sis7E4sfx/QQdSTbHY
+         AUNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=t/5LvydB/9xiYrPTtx28So261ri5H7GhB96fZQX0xSk=;
-        b=K3VD4DxnaY2w3AfNbpmecbkxdvadxmOU8B2ZKN4oBo2ZwuGQaTs4zM/SnVlSwbJTsS
-         /+18LjjW8OW308GWgTCMkUhOjwfDVBe9PC9xHP0R6JyMPJpmN3RfKOG/FiW3+ZT2YnUP
-         DFxKuANIgiauDmXgzKTYSNAC7ktyIcqQ53zEr2vBAFsQ1O8sG9dawXIrwjKLDBI5gYPO
-         OEhhCSf2gd7G7pVsk/Hbqf5FOQUVJm2AIqFuDbrCcbClVBQ7PoB6J4F5UZ6vd4Tsjzdw
-         4TOX/4lpFK/eDNFsIpVNgTiXx4HDNdQEKobHj8SI+NGydOkSPR1wo2RipEJV7IIi12vj
-         F/AA==
-X-Gm-Message-State: APjAAAXT4L51MRsej6OXUNm39ufzPkszq2buHKd/sFEt/arElb/fH4px
-        CmU+75dbBw4fy8I80UxvZrUboA==
-X-Google-Smtp-Source: APXvYqyBk0lISp4cVtDmgk4GMmqtcC6j5ZroXBpltvKkivQQq5TrNSZDPwBACfs5ApOdmGvk+qw4Cw==
-X-Received: by 2002:a92:844b:: with SMTP id l72mr1137706ild.275.1570211473074;
-        Fri, 04 Oct 2019 10:51:13 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id b11sm3041379ilr.87.2019.10.04.10.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 10:51:11 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 12:51:11 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        linux@roeck-us.net
-Subject: Re: [PATCH 4.14 000/185] 4.14.147-stable review
-Message-ID: <20191004175111.434wgtyscv647mql@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        linux@roeck-us.net
-References: <20191003154437.541662648@linuxfoundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sFYbP+lwubqARXBpAaF4zcAm2S+7R8TyH0tAYLHpuSw=;
+        b=jsSEcfFLtaX0UGWmsthp0pQfaQfbD4r/Aki/8mSLX9YDXzfM4PvDzbRCUoA/OQZa6J
+         A7Krw4599RPDOCtliVUvdZV49Y8ZaSsavrFlgbZq+OHMWw7KbeDt7DB14m5rCa4zI7H6
+         NgW4t/38flBLt/yDywchsXuCDHa/cO2IMpPAba1jtdHt/xxyogCnTfMy5V5Wil3Kvokx
+         ou4S9OxYeKlMJMEnZ/hd0gIb/hbq7az70cvPPsVhELIJ7uHaDHvT9O3Z4YPmx9vUjW7O
+         cVJtBOizMbH4WQH2f3KmIA9YnAPR0hgF0eR7PYbA+8UhLk5fQSuXaqH67d1Fzu10MPXc
+         16jQ==
+X-Gm-Message-State: APjAAAXx/A4gEgaWgJFh+6IONAV9a5pWZtFmHm5lRW1CHU8vqulnuhnE
+        nNwwcqv9KBNladTzsD2NKQs=
+X-Google-Smtp-Source: APXvYqxKktEBgCwY1UMUOGZ6XIxTAYM3I6bm5m3tonPbhiuAyeIqRpA6wiGOA/Vmhw7etSBN48lcaA==
+X-Received: by 2002:adf:c7cf:: with SMTP id y15mr12982295wrg.54.1570211543488;
+        Fri, 04 Oct 2019 10:52:23 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id 59sm9181066wrc.23.2019.10.04.10.52.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 10:52:22 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 19:52:18 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        will@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 02/11] crypto: Add Allwinner sun8i-ce Crypto Engine
+Message-ID: <20191004175218.GA11208@Red>
+References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
+ <20191001184141.27956-3-clabbe.montjoie@gmail.com>
+ <20191002103506.zdoyhhzmroa6smwl@gilmour>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191002103506.zdoyhhzmroa6smwl@gilmour>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:51:18PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.147 release.
-> There are 185 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Oct 02, 2019 at 12:35:06PM +0200, Maxime Ripard wrote:
+> Hi,
 > 
-> Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
-> Anything received after that time might be too late.
+> On Tue, Oct 01, 2019 at 08:41:32PM +0200, Corentin Labbe wrote:
+> > +	/* CTS and recent CE (H6) need length in bytes, in word otherwise */
+> > +	if (ce->variant->model == CE_v2)
+> > +		cet->t_dlen = areq->cryptlen;
+> 
+> It's entirely redundant withe the compatible.
+> 
+> How about using something like has_t_dlen or whatever name you find
+> best in the variant structure?
+> 
 
-There's a regression listed below that happened while running 'modprobe
-vivid' on db410c. We've investigated it and are unable to reliably
-reproduce it. It happens less than 1% of the time, so it is very
-unlikely to be a regression. The detailed log can be found at
-https://lkft.validation.linaro.org/scheduler/job/950199#L1545 and we
-will continue to investigate and try to narrow down the problem so that
-we can report it coherently.
+Hello
 
+I will fix that, I started with has_t_dlen_in_bytes
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> > +static int sun8i_ce_probe(struct platform_device *pdev)
+> > +{
+> > +	struct resource *res;
+> > +	u32 v;
+> > +	int err, i, ce_method, id, irq;
+> > +	unsigned long cr;
+> > +	struct sun8i_ce_dev *ce;
+> > +
+> > +	ce = devm_kzalloc(&pdev->dev, sizeof(*ce), GFP_KERNEL);
+> > +	if (!ce)
+> > +		return -ENOMEM;
+> > +
+> > +	ce->dev = &pdev->dev;
+> > +	platform_set_drvdata(pdev, ce);
+> > +
+> > +	ce->variant = of_device_get_match_data(&pdev->dev);
+> > +	if (!ce->variant) {
+> > +		dev_err(&pdev->dev, "Missing Crypto Engine variant\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	ce->base = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(ce->base))
+> > +		return PTR_ERR(ce->base);
+> > +
+> > +	for (i = 0; i < CE_MAX_CLOCKS; i++) {
+> > +		if (!ce->variant->ce_clks[i].name)
+> > +			continue;
+> > +		ce->ceclks[i] = devm_clk_get(&pdev->dev, ce->variant->ce_clks[i].name);
+> > +		if (IS_ERR(ce->ceclks[i])) {
+> > +			err = PTR_ERR(ce->ceclks[i]);
+> > +			dev_err(&pdev->dev, "Cannot get %s CE clock err=%d\n",
+> > +				ce->variant->ce_clks[i].name, err);
+> > +			return err;
+> > +		}
+> > +		cr = clk_get_rate(ce->ceclks[i]);
+> > +		if (!cr)
+> > +			return -EINVAL;
+> > +		if (ce->variant->ce_clks[i].freq > 0 &&
+> > +		    cr != ce->variant->ce_clks[i].freq) {
+> > +			dev_info(&pdev->dev, "Set %s clock to %lu (%lu Mhz) from %lu (%lu Mhz)\n",
+> > +				 ce->variant->ce_clks[i].name,
+> > +				 ce->variant->ce_clks[i].freq,
+> > +				 ce->variant->ce_clks[i].freq / 1000000,
+> > +				 cr, cr / 1000000);
+> > +			err = clk_set_rate(ce->ceclks[i], ce->variant->ce_clks[i].freq);
+> > +			if (err)
+> > +				dev_err(&pdev->dev, "Fail to set %s clk speed to %lu hz\n",
+> > +					ce->variant->ce_clks[i].name,
+> > +					ce->variant->ce_clks[i].freq);
+> > +		}
+> > +		if (ce->variant->ce_clks[i].max_freq > 0 &&
+> > +		    cr > ce->variant->ce_clks[i].max_freq)
+> > +			dev_warn(&pdev->dev, "Frequency for %s (%lu hz) is higher than datasheet's recommandation (%lu hz)",
+> > +				 ce->variant->ce_clks[i].name, cr,
+> > +				 ce->variant->ce_clks[i].max_freq);
+> > +	}
+> > +
+> > +	/* Get Non Secure IRQ */
+> > +	irq = platform_get_irq(pdev, 0);
+> > +	if (irq < 0) {
+> > +		dev_err(ce->dev, "Cannot get CryptoEngine Non-secure IRQ\n");
+> > +		return irq;
+> > +	}
+> > +
+> > +	ce->reset = devm_reset_control_get_optional(&pdev->dev, "bus");
+> > +	if (IS_ERR(ce->reset)) {
+> > +		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
+> > +			return PTR_ERR(ce->reset);
+> > +		dev_err(&pdev->dev, "No reset control found\n");
+> > +		return PTR_ERR(ce->reset);
+> > +	}
+> > +
+> > +	mutex_init(&ce->mlock);
+> > +
+> > +	err = allocate_chanlist(ce);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	err = sun8i_ce_pm_init(ce);
+> > +	if (err)
+> > +		goto error_pm;
+> > +
+> > +	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0,
+> > +			       "sun8i-ce-ns", ce);
+> > +	if (err) {
+> > +		dev_err(ce->dev, "Cannot request CryptoEngine Non-secure IRQ (err=%d)\n", err);
+> > +		goto error_irq;
+> > +	}
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(ce_algs); i++) {
+> > +		ce_algs[i].ce = ce;
+> > +		switch (ce_algs[i].type) {
+> > +		case CRYPTO_ALG_TYPE_SKCIPHER:
+> > +			id = ce_algs[i].ce_algo_id;
+> > +			ce_method = ce->variant->alg_cipher[id];
+> > +			if (ce_method == CE_ID_NOTSUPP) {
+> > +				dev_info(ce->dev,
+> > +					 "DEBUG: Algo of %s not supported\n",
+> > +					 ce_algs[i].alg.skcipher.base.cra_name);
+> > +				ce_algs[i].ce = NULL;
+> > +				break;
+> > +			}
+> > +			id = ce_algs[i].ce_blockmode;
+> > +			ce_method = ce->variant->op_mode[id];
+> > +			if (ce_method == CE_ID_NOTSUPP) {
+> > +				dev_info(ce->dev, "DEBUG: Blockmode of %s not supported\n",
+> > +					 ce_algs[i].alg.skcipher.base.cra_name);
+> > +				ce_algs[i].ce = NULL;
+> > +				break;
+> > +			}
+> > +			dev_info(ce->dev, "DEBUG: Register %s\n",
+> > +				 ce_algs[i].alg.skcipher.base.cra_name);
+> > +			err = crypto_register_skcipher(&ce_algs[i].alg.skcipher);
+> > +			if (err) {
+> > +				dev_err(ce->dev, "Fail to register %s\n",
+> > +					ce_algs[i].alg.skcipher.base.cra_name);
+> > +				ce_algs[i].ce = NULL;
+> > +				goto error_alg;
+> > +			}
+> > +			break;
+> > +		default:
+> > +			ce_algs[i].ce = NULL;
+> > +			dev_err(ce->dev, "ERROR: tryed to register an unknown algo\n");
+> > +		}
+> > +	}
+> > +
+> > +	err = pm_runtime_get_sync(ce->dev);
+> > +	if (err < 0)
+> > +		goto error_alg;
+> > +
+> > +	v = readl(ce->base + CE_CTR);
+> > +	v >>= CE_DIE_ID_SHIFT;
+> > +	v &= CE_DIE_ID_MASK;
+> > +	dev_info(&pdev->dev, "CryptoEngine Die ID %x\n", v);
+> > +
+> > +	pm_runtime_put_sync(ce->dev);
+> > +
+> > +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+> > +	/* Ignore error of debugfs */
+> > +	ce->dbgfs_dir = debugfs_create_dir("sun8i-ce", NULL);
+> > +	ce->dbgfs_stats = debugfs_create_file("stats", 0444,
+> > +					      ce->dbgfs_dir, ce,
+> > +					      &sun8i_ce_debugfs_fops);
+> > +#endif
+> > +	return 0;
+> > +error_alg:
+> > +	unregister_algs(ce);
+> > +	i = MAXFLOW;
+> > +error_irq:
+> > +	sun8i_ce_pm_exit(ce);
+> > +error_pm:
+> > +	free_chanlist(ce, i);
+> > +	return err;
+> > +}
+> 
+> It's still pretty long. Can you move the clocks, algo initialisation
+> (and debugfs maybe?) to a function of their own?
+> 
 
-Summary
-------------------------------------------------------------------------
+It is much cleaner with clock and algo init in functions, thanks!
 
-kernel: 4.14.147-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-4.14.y
-git commit: b99061374089a66c2dd55bbea3299a602a4f0891
-git describe: v4.14.146-186-gb99061374089
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/build/v4.14.146-186-gb99061374089
-
-Regressions (compared to build v4.14.146-18-gf0e4f7af6713)
-------------------------------------------------------------------------
-
-dragonboard-410c - arm64:
-  v4l2-compliance:
-    * modprobe-vivid
-
-No fixes (compared to build v4.14.146-18-gf0e4f7af6713)
-
-Ran 22696 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+Regards
