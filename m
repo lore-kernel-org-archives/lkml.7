@@ -2,171 +2,179 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64127C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E695CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D4C20873
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:35:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gc5dmIpC"
+	by mail.kernel.org (Postfix) with ESMTP id C6E032133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389898AbfJDPfu (ORCPT
+        id S2389910AbfJDPfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:35:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38503 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389884AbfJDPfu (ORCPT
+        Fri, 4 Oct 2019 11:35:54 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:36052 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389320AbfJDPfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:35:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so14474909iom.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 08:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=dROkjRhuJBueSR+dDq1NoT4P1fIz/YTzmwLwTy/DezM=;
-        b=Gc5dmIpC08P2H+lwgac88JMU2dPhythpOQCpcuiCzCtd9a9VKfD/odxhiT2p7kgicq
-         gOH2BfK0YV+NVQwVYgVlQYFLxXZ1pdIoYNK3u061GLn037F9XhLbxOpy7IG+t2+AIu3X
-         RwHn0MBy/z02qkNoV+gMHTpiRE5T43dZd12aV2Rw59ygnpT1MMwkjhr5oKZDsPa5U6in
-         x/MhOyTGPZut/CpthoBp+iu96Ee25EH7UoquLn55HuOHatF0VyPWuR2r9ypN4Dx1KuKZ
-         dev8pg+0Fq+pCAnuRb//VQrK/5C1XolzsCLZil0HzMDRmA2WFYTl63nLeoSxnj/AgjLc
-         LrmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=dROkjRhuJBueSR+dDq1NoT4P1fIz/YTzmwLwTy/DezM=;
-        b=UPDgftfdtyqi1rslzp6gUEMeBi839J5RqNOr34EqKAWXkQt8Dj9xwmiOQpFPq/FrPY
-         FFWsfE11tBqvD/dVTQ9dZiUaLz9LvEJ2RNQNZtoQeC2RBzzAoIRckSZMLu1KOGQ7WxEu
-         vU2oxiqYEBYiZXtz7855t8dS2q1AyGtidqU8EbYYDoLzsRd8XhW5M+fgb3DnkyFPY4Yb
-         cpboH8T5Z2+CL+k9Yfl7xCdx7uQpdc6ebswFCjKGQqLiq0UBBOIajCucv995rRUVJWRK
-         FC7Hta8YjYmf+M47X4xNShVkCnms7TIyE1msZLRudEBz4JUuP+i6BP11lnWJsttrDO6B
-         M1lg==
-X-Gm-Message-State: APjAAAU5sBvUIHoMZagHJnffyR7plC4tjUcOYFj0KP78RAkI1AX9TI6T
-        ZyvNjDPoPdFB3aoorv12ltKW7pjc6Co=
-X-Google-Smtp-Source: APXvYqxT9dLwW/IsgbIqQruWVLrIRJuQcWSKVe1jRBBbxUJtKDMZKHkYVRVJgClWB6dE3tX5oT0c7g==
-X-Received: by 2002:a92:d789:: with SMTP id d9mr12547406iln.144.1570203347723;
-        Fri, 04 Oct 2019 08:35:47 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id 17sm2217420ioo.21.2019.10.04.08.35.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 08:35:46 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 10:35:46 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        linux@roeck-us.net
-Subject: Re: [PATCH 5.2 000/313] 5.2.19-stable review
-Message-ID: <20191004153546.fnyclkhmkzjzllii@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        linux@roeck-us.net
-References: <20191003154533.590915454@linuxfoundation.org>
+        Fri, 4 Oct 2019 11:35:53 -0400
+Received: from localhost (unknown [192.168.167.159])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 789145D238;
+        Fri,  4 Oct 2019 23:35:07 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.1.105] (unknown [220.200.58.210])
+        by smtp.263.net (postfix) whith ESMTP id P1804T140286170752768S1570203303468576_;
+        Fri, 04 Oct 2019 23:35:04 +0800 (CST)
+X-UNIQUE-TAG: <6cb28cb4058574c829144504cfbbc6dd>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: linux-arm-kernel@lists.infradead.org
+X-SENDER-IP: 220.200.58.210
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Cc:     shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_3/3=5d_arm64=3a_dts=3a_rockchip=3a_fix_Roc?=
+ =?UTF-8?B?a1BybzY0IHNkbW1jIHNldHRpbmdz44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGlu?=
+ =?UTF-8?Q?ux-rockchip-bounces+shawn=2elin=3drock-chips=2ecom=40lists=2einfr?=
+ =?UTF-8?B?YWRlYWQub3Jn5Luj5Y+R44CR?=
+To:     Robin Murphy <robin.murphy@arm.com>, Soeren Moch <smoch@web.de>,
+        Heiko Stuebner <heiko@sntech.de>
+References: <20191003215036.15023-1-smoch@web.de>
+ <20191003215036.15023-3-smoch@web.de>
+ <31181f3c-20ec-e717-1f7e-8b35cd54d96d@arm.com>
+ <a8b20c45-0426-ee42-4efc-52e56ea6bb20@web.de>
+ <120e2dbc-55eb-2205-b00f-7e50928ec706@rock-chips.com>
+ <1c452b8b-853f-8f58-5f3a-0bbecbe20557@web.de>
+ <fc7dce53-ad39-26e3-7c19-ab60ff4cc332@arm.com>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <0c6fdb65-be2a-68e3-a686-14ce9b0a00a4@rock-chips.com>
+Date:   Fri, 4 Oct 2019 23:33:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <fc7dce53-ad39-26e3-7c19-ab60ff4cc332@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:49:38PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.19 release.
-> There are 313 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2019/10/4 22:20, Robin Murphy wrote:
+> On 04/10/2019 04:39, Soeren Moch wrote:
+>>
+>>
+>> On 04.10.19 04:13, Shawn Lin wrote:
+>>> On 2019/10/4 8:53, Soeren Moch wrote:
+>>>>
+>>>>
+>>>> On 04.10.19 02:01, Robin Murphy wrote:
+>>>>> On 2019-10-03 10:50 pm, Soeren Moch wrote:
+>>>>>> According to the RockPro64 schematic [1] the rk3399 sdmmc
+>>>>>> controller is
+>>>>>> connected to a microSD (TF card) slot, which cannot be switched to
+>>>>>> 1.8V.
+>>>>>
+>>>>> Really? AFAICS the SDMMC0 wiring looks pretty much identical to the
+>>>>> NanoPC-T4 schematic (it's the same reference design, after all), and I
+>>>>> know that board can happily drive a UHS-I microSD card with 1.8v I/Os,
+>>>>> because mine's doing so right now.
+>>>>>
+>>>>> Robin.
+>>>> OK, the RockPro64 does not allow a card reset (power cycle) since
+>>>> VCC3V0_SD is directly connected to VCC3V3_SYS (via R89555), the
+>>>> SDMMC0_PWH_H signal is not connected. So the card fails to identify
+>>>> itself after suspend or reboot when switched to 1.8V operation.
 > 
-> Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
-> Anything received after that time might be too late.
+> Ah, thanks for clarifying - I did overlook the subtlety that U12 and 
+> friends have "NC" as alternative part numbers, even though they aren't 
+> actually marked as DNP. So it's still not so much "cannot be switched" 
+> as "switching can lead to other problems".
+> 
+>>>
+>>> I believe we addressed this issue long time ago, please check:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6a11fc47f175c8d87018e89cb58e2d36c66534cb 
+>>>
+>>>
+>> Thanks for the pointer.
+>> In this case I guess I should use following patch instead:
+>>
+>> --- rk3399-rockpro64.dts.bak    2019-10-03 22:14:00.067745799 +0200
+>> +++ rk3399-rockpro64.dts    2019-10-04 00:02:50.047892366 +0200
+>> @@ -619,6 +619,8 @@
+>>       max-frequency = <150000000>;
+>>       pinctrl-names = "default";
+>>       pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
+>> +    sd-uhs-sdr104;
+>> +    vqmmc-supply = <&vcc_sdio>;
+>>       status = "okay";
+>>   };
+>> When I do so, the sd card is detected as SDR104, but a reboot hangs:
+>>
+>> Boot1: 2018-06-26, version: 1.14
+>> CPUId = 0x0
+>> ChipType = 0x10, 286
+>> Spi_ChipId = c84018
+>> no find rkpartition
+>> SpiBootInit:ffffffff
+>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+>> mmc: ERROR: Card did not respond to voltage select!
+>> emmc reinit
+>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+>> mmc: ERROR: Card did not respond to voltage select!
+>> emmc reinit
+>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+>> mmc: ERROR: Card did not respond to voltage select!
+>> SdmmcInit=2 1
+>> mmc0:cmd5,32
+>> mmc0:cmd7,32
+>> mmc0:cmd5,32
+>> mmc0:cmd7,32
+>> mmc0:cmd5,32
+>> mmc0:cmd7,32
+>> SdmmcInit=0 1
+>>
+>> So I guess I should use a different miniloader for this reboot to work!?
+>> Or what else could be wrong here?
+> 
+> Hmm, I guess this is "the Tinkerboard problem" again - the patch above 
+> would be OK if we could get as far as the kernel, but can't help if the 
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I didn't realize that SD was used as boot medium for RockPro64, but I
+did patch the vendor tree to solve the issue for Tinkerboard, see
+https://github.com/rockchip-linux/kernel/commit/a4ccde21f5a9f04f996fb02479cb9f16d3dc8dc0
 
-Summary
-------------------------------------------------------------------------
+My initial plan was to patching upstream kernel by adding ->shutdown,but
+never finish it.
 
-kernel: 5.2.19-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-5.2.y
-git commit: 2c8369f13ff8c1375690964c79ffdc0e41ab4f97
-git describe: v5.2.18-314-g2c8369f13ff8
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/build/v5.2.18-314-g2c8369f13ff8
+> offending card is itself the boot medium. There was a proposal here:
+> 
+> https://patchwork.kernel.org/patch/10817217/
 
-No regressions (compared to build v5.2.18)
+This RFC also looks good to me, but seems it needs volunteers
+to push it again.
 
-No fixes (compared to build v5.2.18)
+> 
+> although I'm not sure what if any progress has been made since then.
+> 
+> Robin.
+> 
+> 
+> 
 
-Ran 24453 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+Best Regards
+Shawn Lin
+
+
