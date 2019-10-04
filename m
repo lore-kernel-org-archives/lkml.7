@@ -2,107 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9679C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECBCC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BC1222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA30E222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+fbZVxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbfJDTmW (ORCPT
+        id S1730873AbfJDTma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:42:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50378 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727978AbfJDTmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:42:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AF892AD4F;
-        Fri,  4 Oct 2019 19:42:20 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 12:41:11 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     akpm@linux-foundation.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 05/11] IB/hfi1: convert __mmu_int_rb to half closed
- intervals
-Message-ID: <20191004194111.2ntsr5kus5dgnnt4@linux-p48b>
-Mail-Followup-To: Michel Lespinasse <walken@google.com>,
-        akpm@linux-foundation.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Davidlohr Bueso <dbueso@suse.de>
-References: <20191003201858.11666-1-dave@stgolabs.net>
- <20191003201858.11666-6-dave@stgolabs.net>
- <20191004115057.GA2371@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191004115057.GA2371@google.com>
-User-Agent: NeoMutt/20180716
+        Fri, 4 Oct 2019 15:42:30 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34092 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfJDTm3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:42:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id q1so16130919ion.1;
+        Fri, 04 Oct 2019 12:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6BXYfSwt6S2bUCRJ7kdKcLjYfKsE5OTiBqsT8oWEIdk=;
+        b=Z+fbZVxeP1BB9h3aBY5Vc8ABBOQxPOQSDHr68Bj2NCOV/Yco6n4WR+H+PyOjRpVR0l
+         W8UMqQK3aTsDmpvC0oQgybcWw/OR8QY0D5jCJoBRXEyyE7MAabJRAX+PL15VlNxpQWNX
+         7QqYiKVavN9RZqC62dZLLaDCDNGCUOh79LH0oEtIjOSJU2xqHn4GzcG4OjjdY4c75Ske
+         AshyucaJYg6uBjcXZ2vYpgBQ4A578gA3cUC3n6JowKvJkBjQBCc6x9FgQCoWZf64GpKk
+         xuOFui0U22GNKVuIl92m5jRO5TSUVc1UvhNQF1RNCIz4JQckcS5wz9MWpTFbNN+WH3pz
+         d4kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6BXYfSwt6S2bUCRJ7kdKcLjYfKsE5OTiBqsT8oWEIdk=;
+        b=O39cNC4B2daowrL+rmU7sDH3e2vudZo8Pa9Mt/aBHhxH/XvEA63BtqSa1VInNjEwb7
+         B+MN0jdOIDyW8TawS1+25QPWK8rZl4V/cMAiLMma1st+/GKETvQCwT4tc0Lewat5WSEB
+         bbOiSj9ir8H2nRRAEGIuTK3u02U/x1kQp27yi86V57Ak21Q9I4zMUBlyQYsk45+GsH1J
+         2TjkSbdKpH3hvBGyHnIKhV63Tkjy8DvR8CkXdGvEFbK2Krj6/69YXaA9G/LxjJ04qgEE
+         Sn5hBK8dO97w43qw/jT+Z2/WCeI4x1LmagXO3hr0egRn3TN7Lroh0qbEFw+EuVw0E46V
+         w8Ng==
+X-Gm-Message-State: APjAAAXaLIwo3UbzfunZrkI06lR479VbNn9sclUoI2nTNhI/+Sd753k2
+        6J6vcL4YY7m3BQWku/qYk5mT9Uou43M=
+X-Google-Smtp-Source: APXvYqwIqPqUaUtZkxGmJFCcYz2Kv1eMF8I2/gMKXeYv75IkMbeSZCgbZUJY49EEiRw7gNQQZaytFg==
+X-Received: by 2002:a92:8fda:: with SMTP id r87mr17155295ilk.210.1570218148669;
+        Fri, 04 Oct 2019 12:42:28 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id d9sm2458243ioq.9.2019.10.04.12.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 12:42:28 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nl80211: fix memory leak in nl80211_get_ftm_responder_stats
+Date:   Fri,  4 Oct 2019 14:42:19 -0500
+Message-Id: <20191004194220.19412-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 04 Oct 2019, Michel Lespinasse wrote:
+In nl80211_get_ftm_responder_stats, a new skb is created via nlmsg_new
+named msg. If nl80211hdr_put() fails, then msg should be released. The
+return statement should be replace by goto to error handling code.
 
->On Thu, Oct 03, 2019 at 01:18:52PM -0700, Davidlohr Bueso wrote:
->> diff --git a/drivers/infiniband/hw/hfi1/mmu_rb.c b/drivers/infiniband/hw/hfi1/mmu_rb.c
->> index 14d2a90964c3..fb6382b2d44e 100644
->> --- a/drivers/infiniband/hw/hfi1/mmu_rb.c
->> +++ b/drivers/infiniband/hw/hfi1/mmu_rb.c
->> @@ -47,7 +47,7 @@
->>  #include <linux/list.h>
->>  #include <linux/rculist.h>
->>  #include <linux/mmu_notifier.h>
->> -#include <linux/interval_tree_generic.h>
->> +#include <linux/interval_tree_gen.h>
->>
->>  #include "mmu_rb.h"
->>  #include "trace.h"
->> @@ -89,7 +89,7 @@ static unsigned long mmu_node_start(struct mmu_rb_node *node)
->>
->>  static unsigned long mmu_node_last(struct mmu_rb_node *node)
->>  {
->> -	return PAGE_ALIGN(node->addr + node->len) - 1;
->> +	return PAGE_ALIGN(node->addr + node->len);
->>  }
->
->May as well rename the function mmu_node_end(). I was worried if it
->was used anywhere else, but it turned out it's only used when defining
->the interval tree.
+Fixes: 81e54d08d9d8 ("cfg80211: support FTM responder configuration/statistics")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ net/wireless/nl80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right.
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index d21b1581a665..cecd3bf101f8 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -13644,7 +13644,7 @@ static int nl80211_get_ftm_responder_stats(struct sk_buff *skb,
+ 	hdr = nl80211hdr_put(msg, info->snd_portid, info->snd_seq, 0,
+ 			     NL80211_CMD_GET_FTM_RESPONDER_STATS);
+ 	if (!hdr)
+-		return -ENOBUFS;
++		goto nla_put_failure;
+ 
+ 	if (nla_put_u32(msg, NL80211_ATTR_IFINDEX, dev->ifindex))
+ 		goto nla_put_failure;
+-- 
+2.17.1
 
-In general I tried not to rename everything to end because I wanted to
-avoid bloating the diffstat, albeit having naming discrepancies within
-the code (which isn't new either fwiw).
-
->
->I would also suggest moving this function (as well as mmu_node_first)
->right before its use, rather than just after, which would allow you to
->also remove the function prototype a few lines earlier.
-
-Indeed, but again I don't want to unnecessarily grow the patch. I have
-several notes to come back to once/if this series is settled.
-
->
->Looks good to me otherwise.
->
->Reviewed-by: Michel Lespinasse <walken@google.com>
-
-Thanks,
-Davidlohr
