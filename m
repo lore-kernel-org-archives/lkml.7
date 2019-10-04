@@ -2,123 +2,89 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CFC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2441C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5853222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570226369;
-	bh=W73YLXhXs87A3g1korb/FdZux/uM+XbdVy58joNqtAw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=wPqYKWvSqZybCCLRZHKiUl8JVdYUEJB1Ce+huZlCYtRrSFCNaGJve7oH3Q5pkDm9b
-	 b8LhAZK9jzUJjxnOvuWMqnuE3KM9j9T3eb4gRMId94irnZ+5eNQK6nW0+U07m7qVf7
-	 jRveohnXMubipiP2RLUmcVL8J8L0o1+xPj3g39qc=
+	by mail.kernel.org (Postfix) with ESMTP id BAD96222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 22:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="puzCLjwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388342AbfJDV72 (ORCPT
+        id S1731405AbfJDWBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:59:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbfJDV71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 17:59:27 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D2021D81;
-        Fri,  4 Oct 2019 21:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570226366;
-        bh=W73YLXhXs87A3g1korb/FdZux/uM+XbdVy58joNqtAw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c7fOk7RUHivPSo4Br+sR7Ulb8toFXC/ZDyjo7M4McI2vK/fU2u5yUL6sgZqCG9/0N
-         ojFH2VfZcCuNDqHBacwdU9j3hm2X7p3FAwv0T6qBCIoIakX+ukDWwwzuMnkOhquBaJ
-         BRLuBCpyg/Pa+cLfW2XKs0phXp09dZr4S7bAKusM=
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        kieran.bingham@ideasonboard.com,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, robh@kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>, Tim.Bird@sony.com,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, jdike@addtoit.com,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        shuah <shuah@kernel.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
-Date:   Fri, 4 Oct 2019 15:59:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 18:01:17 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42899 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729534AbfJDWBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 18:01:16 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y23so7924676lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 15:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y1bY0KVOLdqaxZzHXVxRASkDbZHI1Jwst64oZBnjbtM=;
+        b=puzCLjwO6cuw6xl5Zku8gTUDkG390dIuF7x+3qmfnKTkAIdbGIACO39OXw2l5D3Twv
+         fOXpikjHgcdocfNe81UmjYmoyoQsUcvB+luFxSuKQGfNkVM9FUzG40Tqcyz2pBK0AsHm
+         lebwFE9FPQcyQByeHaU8f6vaS/J76x+/ghDVg5WLj7ItcDHc9VJsePYNHe0+xc0PdZuN
+         7vWDXa6qAOMHNQuXn6rupJkd7MVKoRDhlR3iFR1GEvCf2jCLYICoai7n048mZs3RxAHB
+         u37YuDykgMZVc5BEmv+J251rLcSqZQb+9lQ2AlExh12zpdtusPNQBB3Hg3WfvZY920Kl
+         ZwuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y1bY0KVOLdqaxZzHXVxRASkDbZHI1Jwst64oZBnjbtM=;
+        b=r3foqFqpL/Fs5IR6tBLsvF6HEMxrdAza5Chw+BUl0Gb0KE8kY9cVs5D1ICioocPN4F
+         dd11hr1r9lpGeffM2qXVIc9Zq/RHsvdpl+FhNu/uKOEv32TRGfbj+oh5uqbgc/DU7pBZ
+         UpRyw8vekIFyQA8sGJPuuTKWPNZb3khP29aWeyQCccpn7K3klH5aktJunFNe157trO1Y
+         5qJnZ1mSZLsl4o2x4PpvBXxysKauCxbhx4K2LKDfL0DszCRJtkwXPvpo1TynDwuO07+r
+         C71E3na8ubedRsYgAsx0HvJW385s91LFq2Jy9MDr5+IXdfFLULeFAHwHKmWG2car3JEV
+         w0Yw==
+X-Gm-Message-State: APjAAAVxTzMLvuh6TfLcopdZ+zGVXmDC6pdTwA1mSFOm+AA+6tyEGOsX
+        MN/dEIEGHkBeKtZTNXb/4PbyNtEmjSQMCvOUgHXV8g==
+X-Google-Smtp-Source: APXvYqzhZymHpUQVGfeDr5rGaewTboWRXad6eeZ/g+OizIgaKqgd2vXP+EpQoQMWDer74/NYUzOmh59PU8dmZNq/vYw=
+X-Received: by 2002:a2e:6e04:: with SMTP id j4mr9429352ljc.99.1570226474469;
+ Fri, 04 Oct 2019 15:01:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191002122825.3948322-1-thierry.reding@gmail.com> <20191002122825.3948322-2-thierry.reding@gmail.com>
+In-Reply-To: <20191002122825.3948322-2-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 5 Oct 2019 00:01:03 +0200
+Message-ID: <CACRpkdafEeMKDqmqoxk-6FcNBYoJtfUCD4QzTdCR_5hxzHz_OQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: max77620: Do not allocate IRQs upfront
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Timo Alho <talho@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 3:42 PM, Linus Torvalds wrote:
-> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->>
->> This question is primarily directed at Shuah and Linus....
->>
->> What's the current status of the kunit series now that Brendan has
->> moved it out of the top-level kunit directory as Linus has requested?
-> 
+On Wed, Oct 2, 2019 at 2:28 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-The move happened smack in the middle of merge window and landed in
-linux-next towards the end of the merge window.
+> From: Thierry Reding <treding@nvidia.com>
+>
+> regmap_add_irq_chip() will try to allocate all of the IRQ descriptors
+> upfront if passed a non-zero irq_base parameter. However, the intention
+> is to allocate IRQ descriptors on an as-needed basis if possible. Pass 0
+> instead of -1 to fix that use-case.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-> We seemed to decide to just wait for 5.5, but there is nothing that
-> looks to block that. And I encouraged Shuah to find more kunit cases
-> for when it _does_ get merged.
-> 
+Patch applied.
 
-Right. I communicated that to Brendan that we could work on adding more
-kunit based tests which would help get more mileage on the kunit.
+Yours,
+Linus Walleij
 
-> So if the kunit branch is stable, and people want to start using it
-> for their unit tests, then I think that would be a good idea, and then
-> during the 5.5 merge window we'll not just get the infrastructure,
-> we'll get a few more users too and not just examples.
-> 
-thanks,
--- Shuah
+Yours,
+Linus Walleij
