@@ -2,98 +2,215 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6F8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F16C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2790207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B34207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aR+KCZ9i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4QFkSbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731593AbfJDXfy (ORCPT
+        id S1731673AbfJDXgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:35:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42470 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729976AbfJDXfy (ORCPT
+        Fri, 4 Oct 2019 19:36:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46561 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730258AbfJDXga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:35:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id n197so17040617iod.9
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:35:54 -0700 (PDT)
+        Fri, 4 Oct 2019 19:36:30 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so4773988pfg.13;
+        Fri, 04 Oct 2019 16:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+T7DRRD+UBJWxQqae2a5KokUy893Q+Fh/NFyFQWVL5c=;
-        b=aR+KCZ9iMZp71ShYHM33WPPJZLgnz4zsUdnjqJr8GHFuHLR7FyxN/fle/WUHQd2S1g
-         OfLnAhfjfVGHzOaJK0w0TC11rXg1X4dvELPEblK609VJWdmUv3sZEwya23vmrWxc9DIG
-         vIwRS1tb3jC35O1UM0jW9C+Ii5AJiQBiaQ1Ur7s/C07BnQkMOVZ4W9F3sPzf++A2KGb7
-         xR6BJ5NeINKOa0O4NpITK3QSA5A4hBhi6JPVSDWobx9wowRsCSuZB6NQRnkdoOs+Z2W2
-         osQu5NuuvxVuUBBBHYMDims/a/amUqM21/mCbGDA6dx/4nzkkCX+H13qHMc6NbHauO0N
-         1cfg==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=uq5dLXCgT8nJTGVExdBj8Luqw5LRTYqv/HDSGnL/8bQ=;
+        b=C4QFkSbdL80M+PyNr5WjJ+pNwZAuWdXCHac6uCU82O9qb+50g2pJTgu1iK3Rjfnpyy
+         16wY0CfxUtWVqhJI8sHmGvFaYD26juIQ1MHMlbCAdslJ9qUKwXSyU3UPJVDitkBOeRAm
+         Trf5ZR4rSffI9S1RYClsS5zx+XAhAgo4VsvMMWVk1TgVJ0UPXoz1FTOWXlul06suhnF/
+         wJW8gH73t6AxOi/164gd/TW9DM04ayTz02ry+tiZuFU8BlPnaUUrRl6+0cW4cPONdDF0
+         4ax5mkwk8m17CGUM1x6ojljGAaLax3fbIIC3U0Z/ffPGOfj2dZQum4xst0TOz6/uq8Sd
+         1ZfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+T7DRRD+UBJWxQqae2a5KokUy893Q+Fh/NFyFQWVL5c=;
-        b=ZSQ1M50Jy7oLYYe55n+zMxm+UzX4VqKZt3XtkjFOFS6C9Tey8vLvnwA1cosYlexfE0
-         T5H5sJr9zO9Tk2vm1QT0CK5TcqWu1xqBlMhGaTbO32125uuvMHSO8YSiVXJigHlN+Cjt
-         1+3xjaJDN/NdKD/0liEIVAuWe1AD9VXqS1LJdQQw5oiz8uy7PCmoecDHairo+/0rNAdC
-         FpglDp/eSWCpl23FIAwFomNfqTeLtwge06I2G4P5N3o0ZjGR68tbhyWRUni/7mrMnLhz
-         bOQ7aeBEb03JZWg2uSgFL2UR1HkcZYBHSS0y8uz6rBGpwOFsDBizTemJNZAJCsBv6bSW
-         ieHQ==
-X-Gm-Message-State: APjAAAU15fusUYXZl5szGuT4N7H0zijI9FSGUUQd0m2jfTk3WYJjsKr+
-        6a9x1hxnqXWgkxwGnzvTio0uaS5Q+1d9hFaTsMh88g==
-X-Google-Smtp-Source: APXvYqx43jSstCJvk+2c6AUFzK14t9HPWx/edmJdJr8SoFrOND4p+DMir84DYAG2WVlbh9N6FdgDkbxAOENqDWPCqg4=
-X-Received: by 2002:a92:5a10:: with SMTP id o16mr19118181ilb.296.1570232153408;
- Fri, 04 Oct 2019 16:35:53 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=uq5dLXCgT8nJTGVExdBj8Luqw5LRTYqv/HDSGnL/8bQ=;
+        b=Atmc1pP+okYvaMmwF3QgHuJkJNfUjea+WIH+JaLBoADiAfA/CsevsGVKOCiQWMeLh+
+         EiOmCuYblcGqfbzvPWNcIMPqSFd0h/VF0H+Ci+Bw+K1WvYT2vI1I+pjRMEScvLHJDp74
+         rH58bDBOitRDux2+2fuf3pT2W3bIQ+FMCLkOCf2OeyV8AFlt9ZgJfGlAiR9JPmqYl1Pz
+         QVeIi3NHVAIVTB5vZvMPxQwtaoun7/1SHisWNC3gfD9S0BgHBu2y6wIDHkdimkg1jIJo
+         BRJkVVPcNJxHtWulgDPa9ERS52hXI/6GsBnt8kPEBY1nCTsgnbgGvjIjJuM7FOUOILxX
+         Ln8Q==
+X-Gm-Message-State: APjAAAUgfX2DWtrjg8Cl2Hu+wK4tU/d9lOkdFd3sFpzfq7StBBoKT5cY
+        3gI09hrQN91su8vLXYSVaW8=
+X-Google-Smtp-Source: APXvYqxkTKd7qSSmhsjfIIXj9NqcVmR19wGr95pMepA+eZ5L+dtWv0zuz/vq5r6xBZ9M64jkBZMukA==
+X-Received: by 2002:a17:90a:3847:: with SMTP id l7mr19970718pjf.118.1570232189510;
+        Fri, 04 Oct 2019 16:36:29 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id y80sm8012493pfc.30.2019.10.04.16.36.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 16:36:28 -0700 (PDT)
+Subject: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
+ between net and pci/pm
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     zdai@linux.vnet.ibm.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexander.duyck@gmail.com, intel-wired-lan@lists.osuosl.org,
+        jeffrey.t.kirsher@intel.com, zdai@us.ibm.com, davem@davemloft.net
+Date:   Fri, 04 Oct 2019 16:36:28 -0700
+Message-ID: <20191004233052.28865.1609.stgit@localhost.localdomain>
+In-Reply-To: <1570208647.1250.55.camel@oc5348122405>
+References: <1570208647.1250.55.camel@oc5348122405>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20191004215615.5479-1-sean.j.christopherson@intel.com> <20191004215615.5479-9-sean.j.christopherson@intel.com>
-In-Reply-To: <20191004215615.5479-9-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 4 Oct 2019 16:35:42 -0700
-Message-ID: <CALMp9eSEF-MKxF1+ApTe9-2fJbRBt2svHiCdX=4jP25Ed2LqBg@mail.gmail.com>
-Subject: Re: [PATCH 08/16] KVM: VMX: Check for full VMX support when verifying
- CPU compatibility
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:56 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Explicitly check the current CPU's VMX feature flag when verifying
-> compatibility across physical CPUs.  This effectively adds a check on
-> IA32_FEATURE_CONTROL to ensure that VMX is fully enabled on all CPUs.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+This patch is meant to address possible race conditions that can exist
+between network configuration and power management. A similar issue was
+fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
+netif_device_detach").
+
+In addition it consolidates the code so that the PCI error handling code
+will essentially perform the power management freeze on the device prior to
+attempting a reset, and will thaw the device afterwards if that is what it
+is planning to do. Otherwise when we call close on the interface it should
+see it is detached and not attempt to call the logic to down the interface
+and free the IRQs again.
+
+>From what I can tell the check that was adding the check for __E1000_DOWN
+in e1000e_close was added when runtime power management was added. However
+it should not be relevant for us as we perform a call to
+pm_runtime_get_sync before we call e1000_down/free_irq so it should always
+be back up before we call into this anyway.
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+
+I'm putting this out as an RFC for now. I haven't had a chance to do much
+testing yet, but I have verified no build issues, and the driver appears
+to load, link, and pass traffic without problems.
+
+This should address issues seen with either double freeing or never freeing
+IRQs that have been seen on this and similar drivers in the past.
+
+I'll submit this formally after testing it over the weekend assuming there
+are no issues.
+
+ drivers/net/ethernet/intel/e1000e/netdev.c |   33 ++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index d7d56e42a6aa..182a2c8f12d8 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -4715,12 +4715,12 @@ int e1000e_close(struct net_device *netdev)
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 
+-	if (!test_bit(__E1000_DOWN, &adapter->state)) {
++	if (netif_device_present(netdev)) {
+ 		e1000e_down(adapter, true);
+ 		e1000_free_irq(adapter);
+ 
+ 		/* Link status message must follow this format */
+-		pr_info("%s NIC Link is Down\n", adapter->netdev->name);
++		pr_info("%s NIC Link is Down\n", netdev->name);
+ 	}
+ 
+ 	napi_disable(&adapter->napi);
+@@ -6299,6 +6299,7 @@ static int e1000e_pm_freeze(struct device *dev)
+ 	struct net_device *netdev = dev_get_drvdata(dev);
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
+ 
++	rtnl_lock();
+ 	netif_device_detach(netdev);
+ 
+ 	if (netif_running(netdev)) {
+@@ -6313,6 +6314,8 @@ static int e1000e_pm_freeze(struct device *dev)
+ 		e1000e_down(adapter, false);
+ 		e1000_free_irq(adapter);
+ 	}
++	rtnl_unlock();
++
+ 	e1000e_reset_interrupt_capability(adapter);
+ 
+ 	/* Allow time for pending master requests to run */
+@@ -6626,27 +6629,30 @@ static int __e1000_resume(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+ static int e1000e_pm_thaw(struct device *dev)
+ {
+ 	struct net_device *netdev = dev_get_drvdata(dev);
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
++	int rc = 0;
+ 
+ 	e1000e_set_interrupt_capability(adapter);
+-	if (netif_running(netdev)) {
+-		u32 err = e1000_request_irq(adapter);
+ 
+-		if (err)
+-			return err;
++	rtnl_lock();
++	if (netif_running(netdev)) {
++		rc = e1000_request_irq(adapter);
++		if (rc)
++			goto err_irq;
+ 
+ 		e1000e_up(adapter);
+ 	}
+ 
+ 	netif_device_attach(netdev);
+-
+-	return 0;
++	rtnl_unlock();
++err_irq:
++	return rc;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
+ static int e1000e_pm_suspend(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+@@ -6821,13 +6827,11 @@ static pci_ers_result_t e1000_io_error_detected(struct pci_dev *pdev,
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
+ 
+-	netif_device_detach(netdev);
++	e1000e_pm_freeze(&pdev->dev);
+ 
+ 	if (state == pci_channel_io_perm_failure)
+ 		return PCI_ERS_RESULT_DISCONNECT;
+ 
+-	if (netif_running(netdev))
+-		e1000e_down(adapter, true);
+ 	pci_disable_device(pdev);
+ 
+ 	/* Request a slot slot reset. */
+@@ -6893,10 +6897,7 @@ static void e1000_io_resume(struct pci_dev *pdev)
+ 
+ 	e1000_init_manageability_pt(adapter);
+ 
+-	if (netif_running(netdev))
+-		e1000e_up(adapter);
+-
+-	netif_device_attach(netdev);
++	e1000e_pm_thaw(&pdev->dev);
+ 
+ 	/* If the controller has AMT, do not set DRV_LOAD until the interface
+ 	 * is up.  For all other cases, let the f/w know that the h/w is now
+
