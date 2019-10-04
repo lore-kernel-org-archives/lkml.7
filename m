@@ -2,169 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76594C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15AEC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5822021D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E74215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:30:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RizUr5If"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfJDMad (ORCPT
+        id S1730882AbfJDMat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:30:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45768 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfJDMad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:30:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 05:30:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
-   d="scan'208";a="204292357"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 04 Oct 2019 05:30:27 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 04 Oct 2019 15:30:26 +0300
-Date:   Fri, 4 Oct 2019 15:30:26 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] cpufreq: Fix RCU reboot regression on x86 PIC machines
-Message-ID: <20191004123026.GU1208@intel.com>
-References: <20191003140828.14801-1-ville.syrjala@linux.intel.com>
- <2393023.mJgu6cDs6C@kreacher>
+        Fri, 4 Oct 2019 08:30:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37894 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729364AbfJDMas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:30:48 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h195so3828867pfe.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 05:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3h7sOSA5jjR1emcH5dOd6H8xcJkobT200k6X8W+3UrY=;
+        b=RizUr5Ifv1Bz8eqstV0Ksj9u7iT3BnODSB9UF+fHMQWB6OJQT7drjZhpvl+9z5fgF2
+         saLhn7S19fMY3bByCWvEiDR1zYH0oLs8BXfRNmgdfvGXfz6AIkny2X4q15DuAdRI/ljH
+         d8suc9q/fgiLkaQjRaqqA17Ywqz0XgkG6x9XOFMqr4/Zm4mi1j1dXX/39RO+SNJ+CWhd
+         rAo0bZ5e1ID09f6zmDJ+YvdcLhiSwz/NPyopNmDZAAdhG5nEweJj5/zSexE7mND/m8Wb
+         McPyrdp106HPZnZX4jD8PI5wsew95R4kZjqXT7w1Ty9EEr52H6Zado1HrHQjXf7bDkAC
+         rU3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3h7sOSA5jjR1emcH5dOd6H8xcJkobT200k6X8W+3UrY=;
+        b=DwIqzKoIKxIiKgLdYKIwEZy2SAKZu8CotcBOsdjDFBKv8HDJpm8J509ZEhTi0HRIQj
+         biq+Wp5RSxwITYnvKThNQrm766NaJACxwIIz+MIJ4tYRdEkSLmgHYek7VCW1UvAtluo6
+         1lsJS/7ggoBGBE5npTvoEA+NRPSSnkD5ZVYEUu4BWdICJ+NiuoXQ+ZLtG82xc2V3JLJK
+         xqiIIi+OQ8HNCtQjVHUjWTj/rfUtLQen7MowbhM/OaKNCN+8ycCjlUPtOvRvveiM58Uc
+         6Hd+wDf/FHaNCPR3z/ZLHUiMJ1zqzCtNgZZu0sBxWBLdZs2QINNnKgnAzoLHEre28XsV
+         +x8w==
+X-Gm-Message-State: APjAAAVY2QO/juZBeK2YgMFpqMGkUvJ6wTgbHixEFAcpdh7Rs57fj/C9
+        Pap+KrxRzTVOcYUbssYeGF+WLIuSOng=
+X-Google-Smtp-Source: APXvYqwvpIBZbvlF/CMNVlUL2gBE3HIrXIodkeeSqCAg05vZLgI6flJWYprqy5/q7UrKNdq6z1Qbyw==
+X-Received: by 2002:a62:5485:: with SMTP id i127mr16750418pfb.260.1570192247465;
+        Fri, 04 Oct 2019 05:30:47 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:202:668d:6035:b425:3a3a])
+        by smtp.gmail.com with ESMTPSA id p1sm8907022pfb.112.2019.10.04.05.30.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 05:30:46 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 05:30:44 -0700
+From:   Michel Lespinasse <walken@google.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     akpm@linux-foundation.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 08/11] mm: convert vma_interval_tree to half closed
+ intervals
+Message-ID: <20191004123044.GA11046@google.com>
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191003201858.11666-9-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2393023.mJgu6cDs6C@kreacher>
+In-Reply-To: <20191003201858.11666-9-dave@stgolabs.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:05:28PM +0200, Rafael J. Wysocki wrote:
-> On Thursday, October 3, 2019 4:08:28 PM CEST Ville Syrjala wrote:
-> > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > 
-> > Since 4.20-rc1 my PIC machines no longer reboot/shutdown.
-> > I bisected this down to commit 45975c7d21a1 ("rcu: Define RCU-sched
-> > API in terms of RCU for Tree RCU PREEMPT builds").
-> > 
-> > I traced the hang into
-> > -> cpufreq_suspend()
-> >  -> cpufreq_stop_governor()
-> >   -> cpufreq_dbs_governor_stop()
-> >    -> gov_clear_update_util()
-> >     -> synchronize_sched()
-> >      -> synchronize_rcu()
-> > 
-> > Only PREEMPT=y is affected for obvious reasons. The problem
-> > is limited to PIC machines since they mask off interrupts
-> > in i8259A_shutdown() (syscore_ops.shutdown() registered
-> > from device_initcall()).
-> 
-> Let me treat this as a fresh bug report. :-)
-> 
-> > I reported this long ago but no better fix has surfaced,
-> 
-> So I don't recall seeing the original report or if I did, I had not understood
-> the problem then.
-> 
-> > hence sending out my initial workaround which I've been
-> > carrying around ever since. I just move cpufreq_core_init()
-> > to late_initcall() so the syscore_ops get registered in the
-> > oppsite order and thus the .shutdown() hooks get executed
-> > in the opposite order as well. Not 100% convinced this is
-> > safe (especially moving the cpufreq_global_kobject creation
-> > to late_initcall()) but I've not had any problems with it
-> > at least.
-> 
-> The problem is a bug in cpufreq that shouldn't point its syscore shutdown
-> callback pointer to cpufreq_suspend(), because the syscore stage is generally
-> too lat to call that function and I'm not sure why this has not been causing
-> any other issues to trigger (or maybe it did, but they were not reported).
-> 
-> Does the patch below work for you?
+On Thu, Oct 03, 2019 at 01:18:55PM -0700, Davidlohr Bueso wrote:
+> The vma and anon vma interval tree really wants [a, b) intervals,
+> not fully closed. As such convert it to use the new
+> interval_tree_gen.h. Because of vma_last_pgoff(), the conversion
+> is quite straightforward.
 
-It does. Thanks.
+I am not certain if we need to worry about integer overflow here.
+The problem case would be accessing the last block of a file that is
+exactly 16TB long, on an arch where long (and thus pgoff_t) is 32-bit.
+Maybe FS folks can tell us whether that case is currently supported,
+or if we can just not worry about it ?
 
-Feel free to slap on
-Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
-if you want to go with that.
-
-> 
-> ---
->  drivers/base/core.c       |    3 +++
->  drivers/cpufreq/cpufreq.c |   10 ----------
->  2 files changed, 3 insertions(+), 10 deletions(-)
-> 
-> Index: linux-pm/drivers/cpufreq/cpufreq.c
-> ===================================================================
-> --- linux-pm.orig/drivers/cpufreq/cpufreq.c
-> +++ linux-pm/drivers/cpufreq/cpufreq.c
-> @@ -2737,14 +2737,6 @@ int cpufreq_unregister_driver(struct cpu
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
->  
-> -/*
-> - * Stop cpufreq at shutdown to make sure it isn't holding any locks
-> - * or mutexes when secondary CPUs are halted.
-> - */
-> -static struct syscore_ops cpufreq_syscore_ops = {
-> -	.shutdown = cpufreq_suspend,
-> -};
-> -
->  struct kobject *cpufreq_global_kobject;
->  EXPORT_SYMBOL(cpufreq_global_kobject);
->  
-> @@ -2756,8 +2748,6 @@ static int __init cpufreq_core_init(void
->  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
->  	BUG_ON(!cpufreq_global_kobject);
->  
-> -	register_syscore_ops(&cpufreq_syscore_ops);
-> -
->  	return 0;
->  }
->  module_param(off, int, 0444);
-> Index: linux-pm/drivers/base/core.c
-> ===================================================================
-> --- linux-pm.orig/drivers/base/core.c
-> +++ linux-pm/drivers/base/core.c
-> @@ -9,6 +9,7 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/cpufreq.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
->  #include <linux/fwnode.h>
-> @@ -3179,6 +3180,8 @@ void device_shutdown(void)
->  	wait_for_device_probe();
->  	device_block_probing();
->  
-> +	cpufreq_suspend();
-> +
->  	spin_lock(&devices_kset->list_lock);
->  	/*
->  	 * Walk the devices list backward, shutting down each in turn.
-> 
-> 
+I would also want to rename the fields in struct zap_details into
+start_index and end_index so we can verify we don't leave any
+off-by-one uses.
 
 -- 
-Ville Syrjälä
-Intel
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
