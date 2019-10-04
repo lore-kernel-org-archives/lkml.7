@@ -2,100 +2,134 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FD7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE414C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58221222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A65215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJpW+xhT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJmgbSUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388654AbfJDKR5 (ORCPT
+        id S2388675AbfJDKSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:17:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51426 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388630AbfJDKR5 (ORCPT
+        Fri, 4 Oct 2019 06:18:10 -0400
+Received: from mail-vs1-f45.google.com ([209.85.217.45]:42735 "EHLO
+        mail-vs1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388656AbfJDKSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:17:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so5229080wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 03:17:54 -0700 (PDT)
+        Fri, 4 Oct 2019 06:18:09 -0400
+Received: by mail-vs1-f45.google.com with SMTP id m22so3746636vsl.9;
+        Fri, 04 Oct 2019 03:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5Vcf+UVY2rqjJRPiANDeBRpXqOSdb6/jb+sfnhdp7MM=;
-        b=vJpW+xhTbLcgoLYjISojp3oyFM70IqtJPOBBYFcbZkhWynU5Z8bYhxHuN7YednMisa
-         64/5PGDK2NwVv58w7wEsVJGBRp8laLhuJYKH2nt+XqCq3wUhz2H/OLJndPRKfsSQuPDd
-         UcntM3z55GL+5uq6zUXU8jJoSpiE30YqO0ZKM7OqWmjjUAeaPM1NDym8yrA7sDqV5iPW
-         FwjWE5AXVOY96r7uZiBk2d++9CiPErENN8vW7L7HEb9z30mUzpJ4lgSaBoj5Kb0a5g1u
-         KxccvAuu0IsMCrV55yKKERr53DTtwpTgijWlFx/ViRu+WKjMyjgJMTrtRYOCrqVDRRxT
-         ORew==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=FR8/a0jMod/hGsojz+LGnIr8+PyKD68xBHORYzblMNk=;
+        b=RJmgbSUmpYIPMnsXW4fiFNIs/nVsdpLxuh/2Jl/WgsZA02vC1tEOopTRcwbYPHM5L0
+         r2vkElO9koITv+QRvcZ7eWPw4X/99IQsFa1qglm8P6X6HCy8xXv5WsVfamS72xN5rYMw
+         TzISRhXTwgV1pJXSjocdgc8XLqm8jZ0owy4hJmRMYenI8QXCmerUwPEafvg9lM1tQ8rU
+         Qk/XRRYHCoYpI+Ufi5B0LMqpNs4TCnVpdD8rYcqHCS6I24R+H1Y9wCVsoXmceg1+1g3L
+         r8ijid7u8AvvOR9BsWsNr/+nlo7QPKNheFq4GAPHjhDsRX06CmrmT9PEi5YQJ+EeCMzQ
+         wUmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5Vcf+UVY2rqjJRPiANDeBRpXqOSdb6/jb+sfnhdp7MM=;
-        b=RYFx7HPLm0Z7hXb/IBHOgtdtzoIwFGEOBJ8Zyvp+1+Xp6GjGbIm7tWVnCZ/Y/e31fz
-         2PvM72w9Z5jWaz6/TNpYUuXML98OXSUm+XKqoULo4+1wLC/o8oJ7unh5ccyP/12MtzAH
-         aK6COJIB6aToBSBr9tEcpNFU3Dp4V79CspaF+gd8zk/mbc/7nYtUH+Amt5se2JtZD5EY
-         TCLySXJaq2Knpvt2k7ZEuXJAws01OCEhb6vYQ5Xlwj8NJOIrsECHGhDZZJZYoKSKfgmQ
-         iwtQxrNDmhNw6gD/mAYhdIRnVcvymvJjN70IF9KsPRa8kI1sGx6fREelQQ/ElRXuSoio
-         D2pw==
-X-Gm-Message-State: APjAAAXeEcjxG5RCeYJvfN/mVjeHWC579HviCS91VIrrPkaSTvaBMNwD
-        7lnXlC5eqxyvF37QW6apZ8o=
-X-Google-Smtp-Source: APXvYqyOe3FXbS45/9CxnBvy82+J1R+6Ye4lJbdrFwXRJC0rYLNRsJ1HE34LHIbyZYreSgkDWSBc+A==
-X-Received: by 2002:a7b:caaa:: with SMTP id r10mr10829469wml.100.1570184274042;
-        Fri, 04 Oct 2019 03:17:54 -0700 (PDT)
-Received: from brihaspati.fritz.box (p5DE53CC9.dip0.t-ipconnect.de. [93.229.60.201])
-        by smtp.gmail.com with ESMTPSA id t18sm5278823wmi.44.2019.10.04.03.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 03:17:53 -0700 (PDT)
-From:   Nirmoy Das <nirmoy.aiemd@gmail.com>
-X-Google-Original-From: Nirmoy Das <nirmoy.das@amd.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com
-Cc:     airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, nirmoy.das@amd.com
-Subject: [PATCH] drm/amdgpu: fix memory leak
-Date:   Fri,  4 Oct 2019 12:17:46 +0200
-Message-Id: <20191004101746.19574-1-nirmoy.das@amd.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=FR8/a0jMod/hGsojz+LGnIr8+PyKD68xBHORYzblMNk=;
+        b=CXRUz/JmjRamDIHitGw1pwg+vQIjLFV0KEFC+Q5OcaKS6TUY0Fk9fuWDgb+TK/BUN4
+         i5jACOVKdcRgYLcunTZXtfOq8ZpdORgpO3g9NhbJp90hxvXXcMIS+RgqfCv8tXHqCSPr
+         3Y/Xy1OykoE+Jp4pTTDKpvagaALxkZj8s/ltgjhK667SP9giqVvRGdKqUW9xrXBncdWC
+         HAwKREzsx32j8siDms2Psh0F1P0kuSSEjxkAkcSJqDrmd0+iU4BVeYY51sBKnbAg559L
+         9gSSjvVYGqV0AAzpmPjAdpcFkbtzFOT678BB2g4rqbVfRk3qnmz9o/K3FyYFBEhnZ7l/
+         XLTg==
+X-Gm-Message-State: APjAAAXBhVUhOKJGOsPNUva1lxv3bmU+dqRfD4spOCJxdNOY4hcFgir4
+        ZnAslo1inzUrLBPRZ1aYj86yqxRE2oFnJLa2JoY=
+X-Google-Smtp-Source: APXvYqzoJg533BuJP8X9hanZyDP0L9alk4DwLrlKbxlCtR/Dh3mBh8FRwtP02LUsZBLr2AmV84eZG7uiFXxZAQO1QWo=
+X-Received: by 2002:a67:e40a:: with SMTP id d10mr7102858vsf.196.1570184288590;
+ Fri, 04 Oct 2019 03:18:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAOuPNLgH=JQeT3=tZ_AdBsV0e-S_JNEe4CtpFW8Wj5NfYW5PsA@mail.gmail.com>
+ <CAOuPNLjqm+Dv5RARP6dzZRKSttCvqoLe7MNYOeChAGUWX1krRA@mail.gmail.com> <CAOuPNLgZ3kjBaCmXkXHZrncYqUxsNYKiXQqptoDBT_EWfjpNqg@mail.gmail.com>
+In-Reply-To: <CAOuPNLgZ3kjBaCmXkXHZrncYqUxsNYKiXQqptoDBT_EWfjpNqg@mail.gmail.com>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Fri, 4 Oct 2019 15:47:57 +0530
+Message-ID: <CAOuPNLjMFPn5WLcotG26wy_ROhJZn39iywwOYG0imzjqeQ3jeg@mail.gmail.com>
+Subject: Re: imx6: hdmi black screen issue after resume
+To:     p.zabel@pengutronix.de, bob.beckett@collabora.com,
+        dri-devel@lists.freedesktop.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In amdgpu_bo_list_ioctl when idr_alloc fails
-don't return without freeing bo list entry.
+Hi,
 
-Fixes: 964d0fbf6301d ("drm/amdgpu: Allow to create BO lists in CS ioctl v3")
+On Sun, Sep 29, 2019 at 10:24 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+>
+> >
+> > On Mon, Sep 23, 2019 at 1:28 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+> > >
+> > > Dear Philipp,
+> > >
+> > > I have a iMX6dl custom board with custom Linux Kernel 4.8.
+> > > I have both LCD and HDMI connected to the board.
+> > > And we are using weston/wayland as the display interface.
+> > > In normal boot, both LCD and HDMI display is working fine.
+> > >
+> > > But, currently, for one of the requirement, I am trying to explore and
+> > > support hibernation image booting on it.
+> > > Currently, we are able to resume the system without display.
+> > > Also, if we make the entire imx-drm as modules, and then install the
+> > > modules after resume, even LCD is also coming up.
+> > > But HDMI display is black out.
+> > >
 
-Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I just found the main root cause of the HDMI screen blackout issue
+after system resume.
+* HDMI is trying to get EDID data from the monitor using I2C interface.
+* But its seems i2c_transfer is getting timeout after 5 retries.
+* Thus EDID data is failing, and HDMI could not able to detect the monitor.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-index 7bcf86c61999..c3e5ea544857 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-@@ -284,7 +284,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		mutex_unlock(&fpriv->bo_list_lock);
- 		if (r < 0) {
- 			amdgpu_bo_list_put(list);
--			return r;
-+			goto error_free;
- 		}
- 
- 		handle = r;
--- 
-2.23.0
+This is the logs:
 
+[  441.104989] [drm:drm_helper_probe_single_connector_modes]
+[CONNECTOR:29:HDMI-A-1] status updated from unknown to connected
+[  441.116080]: drm_helper_probe_single_connector_modes - inside -
+else override_edid
+[  441.124416]: drm_helper_probe_single_connector_modes - inside -
+else - drm_load_edid_firmware: count: 0
+[  441.134546]: drm_helper_probe_single_connector_modes - calling - get_modes
+[  441.142157]: dw_hdmi_connector_get_modes : called
+[  441.147652]: dw_hdmi_connector_get_modes : called - calling -> drm_get_edid
+[  441.155346]: drm_do_probe_ddc_edid : called!
+[  441.660759]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 5
+[  442.170758]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 4
+[  442.680755]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 3
+[  443.190755]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 2
+[  443.700754]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 1
+[  443.707989]: drm_get_edid : called - drm_probe_ddc - failed
+[  443.714303] dwhdmi-imx 120000.hdmi: failed to get edid
+
+Is there any clue, how to resolve this i2c failure issue, after resume?
+This does not happen in normal booting case.
+
+These are the steps I follow:
+* Boot the system normally (without display) and install all imx-drm as modules.
+* Then uninstall the modules in reverse order.
+* Take the snapshot of the system (suspend to disk).
+* Reboot the system and boot with the image.
+* Install all the modules again.
+* Then launch the Weston.
+* During the weston launch in the beginning we observe this error.
+
+
+Regards,
+Pintu
