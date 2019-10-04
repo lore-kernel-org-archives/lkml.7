@@ -2,367 +2,149 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0F8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD9CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F9F215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C82215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVFmdVVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387454AbfJDIc4 (ORCPT
+        id S1730845AbfJDIcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 04:32:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:57519 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbfJDIcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 04:32:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 01:32:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,255,1566889200"; 
-   d="scan'208";a="204236469"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.66])
-  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 01:32:50 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] perf record: Put a copy of kcore into the perf.data directory
-Date:   Fri,  4 Oct 2019 11:31:21 +0300
-Message-Id: <20191004083121.12182-6-adrian.hunter@intel.com>
+        Fri, 4 Oct 2019 04:32:51 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36888 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730710AbfJDIct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 04:32:49 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f22so4910312wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 01:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kEN8tPAT2fA9Rfc8gxL4d7nyWjikV+WP3V/1RcMXwQA=;
+        b=oVFmdVVIc11Zlr4x2tuAKbzp/HjGfsCcy3KvaDNrBP3pQyFmahO5cujD6Dgz/X+32V
+         0AfGj9c9G9TKU7Rl18LwQ/fxFmX/eHgsWxH7xZ2s316BEkEiFDm5WY+NptQv+4UU6Xf3
+         fw8BOki+utT0NRmQbzptfCED2+w9XG5eeJTVNKnQFI22ZOgBB5STQIUHEyJQdqwK05uV
+         14XAqphVXRycHew3AAUXuU/sQGkdEOxBEEDAu4BgoN6GhnQZkN3MiGmZEPJwUYNdIZB6
+         ajCsQCjQ5tsUz9iSyLvQSwFtK9KdT/tv1O9HUg+UB+ezyG9LeaD4F5J2ULOKrQFrfs9B
+         JvBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=kEN8tPAT2fA9Rfc8gxL4d7nyWjikV+WP3V/1RcMXwQA=;
+        b=INOqQAfJ1rrqs7NYqcWODIgm663nDg6Dd6Aqo4X0NhogoFU9vddufV2GSP++8iRavR
+         SsGpkqnczRaEYFTMQns58srYsqf5pZ+mkjlJzngviDtbpr1yNRjQdA8Y0eX82ry4pZvY
+         7p+o9zm+UI6/aZdPA9AmS5Ceu4mRIHWhgQ4j+9nIqYhFMIdCZmlPC8Q0fQUP4rHbS7eb
+         7rePtLTYDykx2mV4VXH5sawKeBvaKgcU9Rf936mkzfCT/agegdiPAhXskIA68FkVUY3M
+         YXN62U0QPNVbFk783C0OL/+JYgDnMPQEIKEYqBhJqo5jzJHr9wh7zjcU6gwepFtxthvq
+         /yGQ==
+X-Gm-Message-State: APjAAAWrjDNRq0wIxOz8xCF5ogLNbh8VG6EgyT9HM3iEwAOS5MHzjexP
+        t13pryBuDRQUids5OpaBLvsmSw==
+X-Google-Smtp-Source: APXvYqzJFIWMoTzEnQVH74TDRAD+YRGy7EoLnrDhnaHEaPkYov+ye/FVp+PtuZejfYxQPWbE6476Yw==
+X-Received: by 2002:a1c:29c4:: with SMTP id p187mr10545862wmp.28.1570177967088;
+        Fri, 04 Oct 2019 01:32:47 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:15f7:68ed:c037:86e6])
+        by smtp.gmail.com with ESMTPSA id 59sm6488304wrc.23.2019.10.04.01.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 01:32:46 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rjw@rjwysocki.net
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH V4 3/3] powercap/drivers/idle_inject: Specify the idle state to inject
+Date:   Fri,  4 Oct 2019 10:32:05 +0200
+Message-Id: <20191004083205.29302-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191004083121.12182-1-adrian.hunter@intel.com>
-References: <20191004083121.12182-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191004083205.29302-1-daniel.lezcano@linaro.org>
+References: <20191004083205.29302-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new 'perf record' option '--kcore' which will put a copy of
-/proc/kcore, kallsyms and modules into a perf.data directory. Note, that
-without the --kcore option, output goes to a file as previously.
-The tools' -o and -i options work with either a file name or directory
-name.
+Currently the idle injection framework only allows to inject the
+deepest idle state available on the system.
 
-Example:
+Give the opportunity to specify which idle state we want to inject by
+adding a new function helper to set the state and use it when calling
+play_idle().
 
- $ sudo perf record --kcore uname
+There is no functional changes, the cpuidle state is the deepest one.
 
- $ sudo tree perf.data
- perf.data
- ├── kcore_dir
- │   ├── kallsyms
- │   ├── kcore
- │   └── modules
- └── data
-
- $ sudo perf script -v
- build id event received for vmlinux: 1eaa285996affce2d74d8e66dcea09a80c9941de
- build id event received for [vdso]: 8bbaf5dc62a9b644b4d4e4539737e104e4a84541
- Samples for 'cycles' event do not have CPU attribute set. Skipping 'cpu' field.
- Using CPUID GenuineIntel-6-8E-A
- Using perf.data/kcore_dir/kcore for kernel data
- Using perf.data/kcore_dir/kallsyms for symbols
-             perf 19058 506778.423729:          1 cycles:  ffffffffa2caa548 native_write_msr+0x8 (vmlinux)
-             perf 19058 506778.423733:          1 cycles:  ffffffffa2caa548 native_write_msr+0x8 (vmlinux)
-             perf 19058 506778.423734:          7 cycles:  ffffffffa2caa548 native_write_msr+0x8 (vmlinux)
-             perf 19058 506778.423736:        117 cycles:  ffffffffa2caa54a native_write_msr+0xa (vmlinux)
-             perf 19058 506778.423738:       2092 cycles:  ffffffffa2c9b7b0 native_apic_msr_write+0x0 (vmlinux)
-             perf 19058 506778.423740:      37380 cycles:  ffffffffa2f121d0 perf_event_addr_filters_exec+0x0 (vmlinux)
-            uname 19058 506778.423751:     582673 cycles:  ffffffffa303a407 propagate_protected_usage+0x147 (vmlinux)
-            uname 19058 506778.423892:    2241841 cycles:  ffffffffa2cae0c9 unwind_next_frame.part.5+0x79 (vmlinux)
-            uname 19058 506778.424430:    2457397 cycles:  ffffffffa3019232 check_memory_region+0x52 (vmlinux)
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- tools/perf/Documentation/perf-record.txt      |  3 ++
- .../perf.data-directory-format.txt            | 35 +++++++++++++
- tools/perf/builtin-record.c                   | 52 +++++++++++++++++++
- tools/perf/util/data.c                        | 33 ++++++++++++
- tools/perf/util/data.h                        |  2 +
- tools/perf/util/record.h                      |  1 +
- tools/perf/util/session.c                     |  4 ++
- tools/perf/util/util.c                        | 17 ++++++
- 8 files changed, 147 insertions(+)
+ drivers/powercap/idle_inject.c | 14 +++++++++++++-
+ include/linux/idle_inject.h    |  3 +++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index c6f9f31b6039..8a4506113d9f 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -571,6 +571,9 @@ config terms. For example: 'cycles/overwrite/' and 'instructions/no-overwrite/'.
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index 233c878cbf46..a612c425d74c 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -66,6 +66,7 @@ struct idle_inject_thread {
+  */
+ struct idle_inject_device {
+ 	struct hrtimer timer;
++	int state;
+ 	unsigned int idle_duration_us;
+ 	unsigned int run_duration_us;
+ 	unsigned long int cpumask[0];
+@@ -140,7 +141,7 @@ static void idle_inject_fn(unsigned int cpu)
+ 	iit->should_run = 0;
  
- Implies --tail-synthesize.
- 
-+--kcore::
-+Make a copy of /proc/kcore and place it into a directory with the perf data file.
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1]
-diff --git a/tools/perf/Documentation/perf.data-directory-format.txt b/tools/perf/Documentation/perf.data-directory-format.txt
-index 4bf08908178d..f37fbd29112e 100644
---- a/tools/perf/Documentation/perf.data-directory-format.txt
-+++ b/tools/perf/Documentation/perf.data-directory-format.txt
-@@ -26,3 +26,38 @@ The current only version value 0 means that:
- 
- Future versions are expected to describe different data files
- layout according to special needs.
-+
-+Currently the only 'perf record' option to output to a directory is
-+the --kcore option which puts a copy of /proc/kcore into the directory.
-+e.g.
-+
-+  $ sudo perf record --kcore uname
-+  Linux
-+  [ perf record: Woken up 1 times to write data ]
-+  [ perf record: Captured and wrote 0.015 MB perf.data (9 samples) ]
-+  $ sudo tree -ps perf.data
-+  perf.data
-+  ├── [-rw-------       23744]  data
-+  └── [drwx------        4096]  kcore_dir
-+      ├── [-r--------     6731125]  kallsyms
-+      ├── [-r--------    40230912]  kcore
-+      └── [-r--------        5419]  modules
-+
-+  1 directory, 4 files
-+  $ sudo perf script -v
-+  build id event received for vmlinux: 1eaa285996affce2d74d8e66dcea09a80c9941de
-+  build id event received for [vdso]: 8bbaf5dc62a9b644b4d4e4539737e104e4a84541
-+  build id event received for /lib/x86_64-linux-gnu/libc-2.28.so: 5b157f49586a3ca84d55837f97ff466767dd3445
-+  Samples for 'cycles' event do not have CPU attribute set. Skipping 'cpu' field.
-+  Using CPUID GenuineIntel-6-8E-A
-+  Using perf.data/kcore_dir/kcore for kernel data
-+  Using perf.data/kcore_dir/kallsyms for symbols
-+              perf 15316 2060795.480902:          1 cycles:  ffffffffa2caa548 native_write_msr+0x8 (vmlinux)
-+              perf 15316 2060795.480906:          1 cycles:  ffffffffa2caa548 native_write_msr+0x8 (vmlinux)
-+              perf 15316 2060795.480908:          7 cycles:  ffffffffa2caa548 native_write_msr+0x8 (vmlinux)
-+              perf 15316 2060795.480910:        119 cycles:  ffffffffa2caa54a native_write_msr+0xa (vmlinux)
-+              perf 15316 2060795.480912:       2109 cycles:  ffffffffa2c9b7b0 native_apic_msr_write+0x0 (vmlinux)
-+              perf 15316 2060795.480914:      37606 cycles:  ffffffffa2f121fe perf_event_addr_filters_exec+0x2e (vmlinux)
-+             uname 15316 2060795.480924:     588287 cycles:  ffffffffa303a56d page_counter_try_charge+0x6d (vmlinux)
-+             uname 15316 2060795.481067:    2261945 cycles:  ffffffffa301438f kmem_cache_free+0x4f (vmlinux)
-+             uname 15316 2060795.481643:    2172167 cycles:      7f1a48c393c0 _IO_un_link+0x0 (/lib/x86_64-linux-gnu/libc-2.28.so)
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index fceac9d42b4e..ca9bf249cfb2 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -55,6 +55,9 @@
- #include <signal.h>
- #include <sys/mman.h>
- #include <sys/wait.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
- #include <linux/err.h>
- #include <linux/string.h>
- #include <linux/time64.h>
-@@ -699,6 +702,37 @@ static int record__auxtrace_init(struct record *rec __maybe_unused)
- 
- #endif
- 
-+static bool record__kcore_readable(struct machine *machine)
-+{
-+	char kcore[PATH_MAX];
-+	int fd;
-+
-+	scnprintf(kcore, sizeof(kcore), "%s/proc/kcore", machine->root_dir);
-+
-+	fd = open(kcore, O_RDONLY);
-+	if (fd < 0)
-+		return false;
-+
-+	close(fd);
-+
-+	return true;
-+}
-+
-+static int record__kcore_copy(struct machine *machine, struct perf_data *data)
-+{
-+	char from_dir[PATH_MAX];
-+	char kcore_dir[PATH_MAX];
-+	int ret;
-+
-+	snprintf(from_dir, sizeof(from_dir), "%s/proc", machine->root_dir);
-+
-+	ret = perf_data__make_kcore_dir(data, kcore_dir, sizeof(kcore_dir));
-+	if (ret)
-+		return ret;
-+
-+	return kcore_copy(from_dir, kcore_dir);
-+}
-+
- static int record__mmap_evlist(struct record *rec,
- 			       struct evlist *evlist)
- {
-@@ -1383,6 +1417,12 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	session->header.env.comp_type  = PERF_COMP_ZSTD;
- 	session->header.env.comp_level = rec->opts.comp_level;
- 
-+	if (rec->opts.kcore &&
-+	    !record__kcore_readable(&session->machines.host)) {
-+		pr_err("ERROR: kcore is not readable.\n");
-+		return -1;
-+	}
-+
- 	record__init_features(rec);
- 
- 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
-@@ -1414,6 +1454,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	}
- 	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
- 
-+	if (rec->opts.kcore) {
-+		err = record__kcore_copy(&session->machines.host, data);
-+		if (err) {
-+			pr_err("ERROR: Failed to copy kcore\n");
-+			goto out_child;
-+		}
-+	}
-+
- 	err = bpf__apply_obj_config();
- 	if (err) {
- 		char errbuf[BUFSIZ];
-@@ -2184,6 +2232,7 @@ static struct option __record_options[] = {
- 		     parse_cgroups),
- 	OPT_UINTEGER('D', "delay", &record.opts.initial_delay,
- 		  "ms to wait before starting measurement after program start"),
-+	OPT_BOOLEAN(0, "kcore", &record.opts.kcore, "copy /proc/kcore"),
- 	OPT_STRING('u', "uid", &record.opts.target.uid_str, "user",
- 		   "user to profile"),
- 
-@@ -2322,6 +2371,9 @@ int cmd_record(int argc, const char **argv)
- 
- 	}
- 
-+	if (rec->opts.kcore)
-+		rec->data.is_dir = true;
-+
- 	if (rec->opts.comp_level != 0) {
- 		pr_debug("Compression enabled, disabling build id collection at the end of the session.\n");
- 		rec->no_buildid = true;
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 964ea101dba6..c47aa34fdc0a 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -424,3 +424,36 @@ unsigned long perf_data__size(struct perf_data *data)
- 
- 	return size;
- }
-+
-+int perf_data__make_kcore_dir(struct perf_data *data, char *buf, size_t buf_sz)
-+{
-+	int ret;
-+
-+	if (!data->is_dir)
-+		return -1;
-+
-+	ret = snprintf(buf, buf_sz, "%s/kcore_dir", data->path);
-+	if (ret < 0 || (size_t)ret >= buf_sz)
-+		return -1;
-+
-+	return mkdir(buf, S_IRWXU);
-+}
-+
-+char *perf_data__kallsyms_name(struct perf_data *data)
-+{
-+	char *kallsyms_name;
-+	struct stat st;
-+
-+	if (!data->is_dir)
-+		return NULL;
-+
-+	if (asprintf(&kallsyms_name, "%s/kcore_dir/kallsyms", data->path) < 0)
-+		return NULL;
-+
-+	if (stat(kallsyms_name, &st)) {
-+		free(kallsyms_name);
-+		return NULL;
-+	}
-+
-+	return kallsyms_name;
-+}
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index f68815f7e428..75947ef6bc17 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -87,4 +87,6 @@ int perf_data__open_dir(struct perf_data *data);
- void perf_data__close_dir(struct perf_data *data);
- int perf_data__update_dir(struct perf_data *data);
- unsigned long perf_data__size(struct perf_data *data);
-+int perf_data__make_kcore_dir(struct perf_data *data, char *buf, size_t buf_sz);
-+char *perf_data__kallsyms_name(struct perf_data *data);
- #endif /* __PERF_DATA_H */
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 00275afc524d..948bbcf9aef3 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -44,6 +44,7 @@ struct record_opts {
- 	bool	      strict_freq;
- 	bool	      sample_id;
- 	bool	      no_bpf_event;
-+	bool	      kcore;
- 	unsigned int  freq;
- 	unsigned int  mmap_pages;
- 	unsigned int  auxtrace_mmap_pages;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 061bb4d6a3f5..bfa80fe8d369 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -230,6 +230,10 @@ struct perf_session *perf_session__new(struct perf_data *data,
- 			if (ret)
- 				goto out_delete;
- 			}
-+
-+			if (!symbol_conf.kallsyms_name &&
-+			    !symbol_conf.vmlinux_name)
-+				symbol_conf.kallsyms_name = perf_data__kallsyms_name(data);
- 		}
- 	} else  {
- 		session->machines.host.env = &perf_env;
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 56f30ad29ca7..16f81a0a9208 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -180,6 +180,21 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
- 	return rmdir(path);
+ 	play_idle(READ_ONCE(ii_dev->idle_duration_us),
+-		  cpuidle_find_deepest_state());
++		  READ_ONCE(ii_dev->state));
  }
  
-+static int rm_rf_kcore_dir(const char *path)
-+{
-+	char kcore_dir_path[PATH_MAX];
-+	const char *pat[] = {
-+		"kcore",
-+		"kallsyms",
-+		"modules",
-+		NULL,
-+	};
-+
-+	snprintf(kcore_dir_path, sizeof(kcore_dir_path), "%s/kcore_dir", path);
-+
-+	return rm_rf_depth_pat(kcore_dir_path, 0, pat);
-+}
-+
- int rm_rf_perf_data(const char *path)
- {
- 	const char *pat[] = {
-@@ -188,6 +203,8 @@ int rm_rf_perf_data(const char *path)
- 		NULL,
- 	};
- 
-+	rm_rf_kcore_dir(path);
-+
- 	return rm_rf_depth_pat(path, 0, pat);
+ /**
+@@ -171,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
  }
  
++/**
++ * idle_inject_set_state - set the idle state to inject
++ * @state: an integer for the idle state to inject
++ */
++void idle_inject_set_state(struct idle_inject_device *ii_dev, int state)
++{
++	if (state >= CPUIDLE_STATE_NOUSE && state < CPUIDLE_STATE_MAX)
++		WRITE_ONCE(ii_dev->state, state);
++}
++
+ /**
+  * idle_inject_start - start idle injections
+  * @ii_dev: idle injection control device structure
+@@ -299,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+ 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ii_dev->timer.function = idle_inject_timer_fn;
++	ii_dev->state = cpuidle_find_deepest_state();
+ 
+ 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+ 
+diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+index a445cd1a36c5..e2b26b9ccd34 100644
+--- a/include/linux/idle_inject.h
++++ b/include/linux/idle_inject.h
+@@ -26,4 +26,7 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 				 unsigned int *run_duration_us,
+ 				 unsigned int *idle_duration_us);
++
++void idle_inject_set_state(struct idle_inject_device *ii_dev, int state);
++
+ #endif /* __IDLE_INJECT_H__ */
 -- 
 2.17.1
 
