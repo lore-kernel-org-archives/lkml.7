@@ -2,86 +2,182 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECABDC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA5EC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3893222C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D676222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MJ9Cw0wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387609AbfJDVk0 (ORCPT
+        id S1730889AbfJDVnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:40:26 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34283 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726827AbfJDVkZ (ORCPT
+        Fri, 4 Oct 2019 17:43:40 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36396 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbfJDVni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 17:40:25 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x94LcCr9027392
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 4 Oct 2019 17:38:15 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 9FA7C42088C; Fri,  4 Oct 2019 17:38:12 -0400 (EDT)
-Date:   Fri, 4 Oct 2019 17:38:12 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, yamada.masahiro@socionext.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20191004213812.GA24644@mit.edu>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
+        Fri, 4 Oct 2019 17:43:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y22so4697812pfr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=42znpoZzZjmG9yaRFQAzNvyi78UFWYqHsVeXsUAMBvM=;
+        b=MJ9Cw0wp0Mh+XkAZ37PArMbq3cXXTtMOK8MgPDNXCkP0yXajJDHPB5xaYgU0YftimM
+         IZ9Xr5C2yJosZi22FLfNZvyhDcgs9mFbobfjnE1WeFcBQ21xU74RMtcoRM+q4pMigeCm
+         sJyAZ9okOsrTu89hmigncAMqTy1HVXQqwb/PM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=42znpoZzZjmG9yaRFQAzNvyi78UFWYqHsVeXsUAMBvM=;
+        b=O+V3ycPrBMeN5GyHaCKTAO0trwuPhnJTIWshUHKHnEbrXyqlwFeVygwxtQvO9BQW1+
+         7lZsev9qh5zzGRwpiSkGGN4GTq9bXAPjmwBzJIMW56oRBcomSDoOrYmDcymbD6SuaeCc
+         Qs+U+FDla4mhfNJkEPwzARlAnIPjKOAsnFrHZn+fXzVfyuGQNu6V49qNxhEr821nQjJ1
+         juZ5KHFSQQPehGPwmNSWrQ+ukYZvRs+4Ht1V26r3ziV0UxsrtQQ9Iwfz0Nb2jqoAGRio
+         3T4BUZXaPsPQoTvACr0Zwt+knLc0ilbAiFLin7fX4dXSahT3geLyyw5Gdg8vSPPDRe83
+         9umw==
+X-Gm-Message-State: APjAAAVbiOgkdj1UTnjmKd1AYDttxOGIHIWlOskJteyPVkZibOfbiZbS
+        PBNeGkQLsAVyzJ95RyOjdX7QAu26C70=
+X-Google-Smtp-Source: APXvYqy1SG4O+l1PxmR4D+2nW3K5VMykMwaSO5DOFDZyCRsqYuEK129X6z1/RcOxIP4TfZnnBe0BMw==
+X-Received: by 2002:a17:90a:e017:: with SMTP id u23mr4003152pjy.55.1570225416541;
+        Fri, 04 Oct 2019 14:43:36 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a11sm10446799pfg.94.2019.10.04.14.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 14:43:36 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        alsa-devel@alsa-project.org, Andrew Lunn <andrew@lunn.ch>,
+        Arnd Bergmann <arnd@arndb.de>, Dan Murphy <dmurphy@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jean Delvare <jdelvare@suse.com>, Jiri Slaby <jslaby@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-hwmon@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Richard Leitner <richard.leitner@skidata.com>,
+        Riku Voipio <riku.voipio@iki.fi>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH 00/10] Stop NULLifying match pointer in of_match_device()
+Date:   Fri,  4 Oct 2019 14:43:24 -0700
+Message-Id: <20191004214334.149976-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923090249.127984-1-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 02:02:30AM -0700, Brendan Higgins wrote:
-> ## TL;DR
-> 
-> This revision addresses comments from Linus[1] and Randy[2], by moving
-> top level `kunit/` directory to `lib/kunit/` and likewise moves top
-> level Kconfig entry under lib/Kconfig.debug, so the KUnit submenu now
-> shows up under the "Kernel Hacking" menu.
+of_match_device() uses of_match_ptr() to make the match table argument
+NULL via the pre-processor when CONFIG_OF=n. This makes life harder for
+compilers who think that match tables are never used and warn about
+unused variables when CONFIG_OF=n. This series changes various callers
+to use of_device_get_match_data() instead, which doesn't have this
+problem, and removes the of_match_ptr() usage from of_match_device() so
+that the compiler can stop complaining about unused variables. It will
+do dead code elimination instead and remove the match table if it isn't
+actually used.
 
-This question is primarily directed at Shuah and Linus....
+Huge Cc list!
 
-What's the current status of the kunit series now that Brendan has
-moved it out of the top-level kunit directory as Linus has requested?
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: <alsa-devel@alsa-project.org>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Jacopo Mondi <jacopo@jmondi.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: <linux-hwmon@vger.kernel.org>
+Cc: <linux-leds@vger.kernel.org>
+Cc: <linux-media@vger.kernel.org>
+Cc: <linux-omap@vger.kernel.org>
+Cc: <linux-renesas-soc@vger.kernel.org>
+Cc: <linux-rtc@vger.kernel.org>
+Cc: <linux-serial@vger.kernel.org>
+Cc: <linux-spi@vger.kernel.org>
+Cc: <linux-usb@vger.kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Paul Cercueil <paul@crapouillou.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Richard Leitner <richard.leitner@skidata.com>
+Cc: Riku Voipio <riku.voipio@iki.fi>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.com>
 
-There doesn't appear to have been many comments or changes since since
-September 23rd, and I was very much hoping they could land before
--rc2, since I've been hoping to add unit tests for ext4.
+Stephen Boyd (10):
+  leds: pca953x: Use of_device_get_match_data()
+  media: renesas-ceu: Use of_device_get_match_data()
+  rtc: armada38x: Use of_device_get_match_data()
+  drivers: net: davinci_mdio: Use of_device_get_match_data()
+  serial: stm32: Use of_device_get_match_data()
+  usb: usb251xb: Use of_device_get_match_data()
+  ASoC: jz4740: Use of_device_get_match_data()
+  spi: gpio: Look for a device node instead of match
+  hwmon: (lm70) Avoid undefined reference to match table
+  of/device: Don't NULLify match table in of_match_device() with
+    CONFIG_OF=n
 
-Is kunit likely to be able to be landed in Linus's tree during this
-development cycle?
+ drivers/hwmon/lm70.c                   |  2 +-
+ drivers/leds/leds-pca9532.c            | 14 +----
+ drivers/media/platform/renesas-ceu.c   |  2 +-
+ drivers/net/ethernet/ti/davinci_mdio.c | 12 ++---
+ drivers/rtc/rtc-armada38x.c            | 10 ++--
+ drivers/spi/spi-gpio.c                 |  5 +-
+ drivers/tty/serial/stm32-usart.c       | 71 ++++++++++++--------------
+ drivers/tty/serial/stm32-usart.h       |  2 +-
+ drivers/usb/misc/usb251xb.c            | 12 ++---
+ include/linux/of_device.h              |  4 +-
+ sound/soc/jz4740/jz4740-i2s.c          |  5 +-
+ 11 files changed, 55 insertions(+), 84 deletions(-)
 
-Many thanks!
 
-					- Ted
+base-commit: 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c
+-- 
+Sent by a computer through tubes
