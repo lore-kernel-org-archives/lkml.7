@@ -2,156 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB5C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A4FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787B1215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6E520862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCuTIPxB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XsCW8Opn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfJDMEA (ORCPT
+        id S1730421AbfJDMFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:04:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37449 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJDMEA (ORCPT
+        Fri, 4 Oct 2019 08:05:24 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33165 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfJDMFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:04:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f22so5578586wmc.2;
-        Fri, 04 Oct 2019 05:03:57 -0700 (PDT)
+        Fri, 4 Oct 2019 08:05:24 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b9so6901597wrs.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 05:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=KVrTSfhJQkcjGUoc6/wChtJatdSgDTO1rfWfls9h3Lo=;
-        b=gCuTIPxBpH1goz7Jtyo4AdIW3vOQiGnlAioh/38P0AiDodj95Ep7QBms8Ew3szTn6H
-         z3ZyAMgJGNRgKN/pBecNOh/f/7/QpdK1uwz8VnFWQtbhsspZLn2dyxz6ELYD1MXTgmhn
-         6KwcNNuPg/qV1HdMzNChLLuxaN0MgX4w8DpqCmAz9OBcdkKx029FT70ShiSul5a2CUmR
-         YIJZ4Eq2+U6qgyu6r4JXErswh6ZiLmOcU8cW+LlpVSGTXPvyrrUlbFv59X9e9w6rbnZb
-         BaKafSsJzR2R1RRATANDjKaIn0umprbD44+wpvQzyv86ERHeQwbfMRIdLPmD/E/WtAIJ
-         Zu2g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0kiQfs8vhDdOITptnzWw+B0dDpP2AER+UC8EB8Xy3mI=;
+        b=XsCW8OpnLzjcS61aOo1Yh3fP+V59Xk+Dc0ZTrTPqN/J2nRW3e2A2aYvG1LM+ZXHVEv
+         MTU0A6zz37X/lriIY3ltpdEtQip/d7rX0/gI53f4v8YvFg0yyfvZgNCJJLh1RA2qi1m8
+         zElLoeK6+IENXsGTMukOHEiPKz0f/hWNXHpifX2gnuNT4urK/xorGBmrR1dYvzG2l+m+
+         Kz6bWHvVCGB+i1Foh1pK3S9IK/VESQCurvDOSmp2xsckr4L/JOimZtJx27zWWKTctX9I
+         WWNq8FiOSpjZdbMg4y88rQ8q/QDnzkz7g8QYmV+rgOi8A/2uF6bt/QXF6q6aLfYgTTjO
+         nlUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=KVrTSfhJQkcjGUoc6/wChtJatdSgDTO1rfWfls9h3Lo=;
-        b=sMKZjd70Jl9W1nSjXj6m6r1BTGUoVXWhMjKFsXhS0Aax7D0wDideJiPsxmml37oFoj
-         l9yAhFNO92EINE98hG0vhdUWGYlzejpuBRQ/eKpF+HjZ4LhXJQ/zIle121H3c9Uz+KPc
-         KWQUH9EBjA1eANjUSPyOlruWSmQU9/SsGPNmB2cA45CSSYaYxibCVEpZLNNyQIMr+sVm
-         5+4aBWZHi28Bkv2Cxs2TmC5bZ9yIPUN8436BIHs7hr1B6BH3E6RmMfo8B1YT6Lfq/RlY
-         Te14ivUihFCNyje8kUsllPSlNTakakM+G55uLZtgU44rSekEbo+JgqNZ6kyisKu/9gqD
-         QfzQ==
-X-Gm-Message-State: APjAAAXFw2I1MU/XqFJinvyJJoov+HrfZ9FlYapLrtzhQoR1Caicqnp2
-        OdaV9vh3xdQF8RkjJunmqmQ=
-X-Google-Smtp-Source: APXvYqy8k3bgKZ6SInwf+MtKGz30qnvpeRSYEDcISJ/9qHK4gqkYxjgovCiY5DiyZ7FrOUPil/on6Q==
-X-Received: by 2002:a1c:66c2:: with SMTP id a185mr10587954wmc.2.1570190636233;
-        Fri, 04 Oct 2019 05:03:56 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id t83sm9325709wmt.18.2019.10.04.05.03.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 05:03:55 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 5.4-rc2
-Date:   Fri,  4 Oct 2019 14:03:52 +0200
-Message-Id: <1570190632-22964-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0kiQfs8vhDdOITptnzWw+B0dDpP2AER+UC8EB8Xy3mI=;
+        b=jq+C8BUhoysluJc/sVOjW+2wyhYAe7NAvgjPbFlGKx/IcQEBxw178yp/4l7oFnOJBX
+         DUzeleYHhJRNJQojGRtdnJrhWuNtpHRAcdJYeUAfVdYOIhnAIIjdTDgPR5yfdo6CsxLi
+         dORL0U/5REjCzF1lhBCFGV/VM7WSJ2UH2X3CgHT1xKcT/HOxz/31kF0WtuMpT3g+yJce
+         a3WcVLix/GXVTgahch5xy2CsBYXcBxB6c33U5Y3q3iwXz5f+vawgAQRv48OZwSLYdYHP
+         QycRdmc70UV4HbSAb86fKYi3a7JaG7DEEY1+2vqzpZSoROhZzpO45HpC6oEt9Dmc4vz7
+         jmLQ==
+X-Gm-Message-State: APjAAAXnh4ypFA7or76OccTwmA7LXYb7vMSMUJjW925/Fcl5r6IghWCv
+        Moai5hwXK66IZlykqGUrtIs7vw==
+X-Google-Smtp-Source: APXvYqyIxodV9sCnDx2rqHYS5wQ73rGu0Kh/d8gY7PvBN4bLJIU5EqfJnKy26vrR8jiNkoPHegsHFw==
+X-Received: by 2002:adf:a1d2:: with SMTP id v18mr11336431wrv.302.1570190721062;
+        Fri, 04 Oct 2019 05:05:21 -0700 (PDT)
+Received: from dell ([2.27.167.122])
+        by smtp.gmail.com with ESMTPSA id b7sm2009455wrx.56.2019.10.04.05.05.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Oct 2019 05:05:20 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 13:05:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-kernel@vger.kernel.org, d.schultz@phytec.de,
+        linux-rockchip@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com, tony.xie@rock-chips.com
+Subject: Re: [PATCH 2/4] mfd: rk808: fix rk817 powerkey integration
+Message-ID: <20191004120519.GB18429@dell>
+References: <20190917081256.24919-1-heiko@sntech.de>
+ <20190917081256.24919-2-heiko@sntech.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190917081256.24919-2-heiko@sntech.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Tue, 17 Sep 2019, Heiko Stuebner wrote:
 
-The following changes since commit fd3edd4a9066f28de99a16685a586d68a9f551f8:
+> The pwrkey integration seems to stem from the vendor kernel, as the
+> compatible is wrong and also the order of key-irqs is swapped.
+> 
+> So fix these issues to make the pwrkey on rk817 actually work.
+> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  drivers/mfd/rk808.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
 
-  KVM: nVMX: cleanup and fix host 64-bit mode checks (2019-09-25 19:22:33 +0200)
+Applied, thanks.
 
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to cf05a67b68b8d9d6469bedb63ee461f8c7de62e6:
-
-  KVM: x86: omit "impossible" pmu MSRs from MSR list (2019-10-04 14:01:28 +0200)
-
-----------------------------------------------------------------
-ARM and x86 bugfixes of all kinds.  The most visible one is that migrating
-a nested hypervisor has always been busted on Broadwell and newer processors,
-and that has finally been fixed.
-
-----------------------------------------------------------------
-Jim Mattson (5):
-      kvm: x86: Fix a spurious -E2BIG in __do_cpuid_func
-      kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH
-      kvm: x86: Use AMD CPUID semantics for AMD vCPUs
-      kvm: x86: Enumerate support for CLZERO instruction
-      kvm: vmx: Limit guest PMCs to those supported on the host
-
-Marc Zyngier (3):
-      arm64: KVM: Drop hyp_alternate_select for checking for ARM64_WORKAROUND_834220
-      arm64: KVM: Replace hyp_alternate_select with has_vhe()
-      arm64: KVM: Kill hyp_alternate_select()
-
-Paolo Bonzini (7):
-      KVM: x86: assign two bits to track SPTE kinds
-      KVM: x86: fix nested guest live migration with PML
-      selftests: kvm: add test for dirty logging inside nested guests
-      kvm: x86, powerpc: do not allow clearing largepages debugfs entry
-      KVM: x86: omit absent pmu MSRs from MSR list
-      Merge tag 'kvmarm-fixes-5.4-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-      KVM: x86: omit "impossible" pmu MSRs from MSR list
-
-Sean Christopherson (1):
-      KVM: nVMX: Fix consistency check on injected exception error code
-
-Sebastian Andrzej Siewior (1):
-      KVM: x86: Expose XSAVEERPTR to the guest
-
-Shuah Khan (1):
-      selftests: kvm: Fix libkvm build error
-
-Vitaly Kuznetsov (1):
-      KVM: selftests: x86: clarify what is reported on KVM_GET_MSRS failure
-
-Waiman Long (1):
-      KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if !X86_BUG_L1TF
-
-Wanpeng Li (2):
-      KVM: LAPIC: Loosen filter for adaptive tuning of lapic_timer_advance_ns
-      KVM: X86: Fix userspace set invalid CR4
-
-Zenghui Yu (1):
-      KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
-
- arch/arm64/include/asm/kvm_hyp.h                   |  24 ---
- arch/arm64/kvm/hyp/switch.c                        |  17 +-
- arch/arm64/kvm/hyp/tlb.c                           |  36 ++--
- arch/powerpc/kvm/book3s.c                          |   8 +-
- arch/x86/include/asm/kvm_host.h                    |   7 -
- arch/x86/kvm/cpuid.c                               | 102 ++++++-----
- arch/x86/kvm/lapic.c                               |  13 +-
- arch/x86/kvm/mmu.c                                 |  65 +++++--
- arch/x86/kvm/vmx/nested.c                          |   2 +-
- arch/x86/kvm/vmx/pmu_intel.c                       |   7 +-
- arch/x86/kvm/vmx/vmx.c                             |  15 +-
- arch/x86/kvm/x86.c                                 |  72 ++++----
- include/linux/kvm_host.h                           |   2 +
- tools/testing/selftests/kvm/Makefile               |   3 +-
- .../selftests/kvm/include/x86_64/processor.h       |   3 +
- tools/testing/selftests/kvm/include/x86_64/vmx.h   |  14 ++
- tools/testing/selftests/kvm/lib/kvm_util.c         |   2 +-
- .../testing/selftests/kvm/lib/kvm_util_internal.h  |   3 +
- tools/testing/selftests/kvm/lib/x86_64/processor.c |   2 +-
- tools/testing/selftests/kvm/lib/x86_64/vmx.c       | 201 ++++++++++++++++++++-
- .../selftests/kvm/x86_64/vmx_dirty_log_test.c      | 156 ++++++++++++++++
- virt/kvm/arm/vgic/trace.h                          |   2 +-
- virt/kvm/kvm_main.c                                |  10 +-
- 23 files changed, 584 insertions(+), 182 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
