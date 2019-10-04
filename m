@@ -2,164 +2,100 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF933C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF931C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40FE20673
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE15E20673
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbfJDXi6 (ORCPT
+        id S1731554AbfJDXpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:38:58 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59423 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfJDXi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:38:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 16:38:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,258,1566889200"; 
-   d="scan'208";a="204469325"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 16:38:52 -0700
-Date:   Sat, 5 Oct 2019 07:38:34 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH] fs/userfaultfd.c: simplify the calculation of new_flags
-Message-ID: <20191004233834.GA8839@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20190806053859.2374-1-richardw.yang@linux.intel.com>
- <20191003004505.GE13922@redhat.com>
- <20191004224640.GC32588@richard>
- <20191004232834.GP13922@redhat.com>
+        Fri, 4 Oct 2019 19:45:30 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:59532 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJDXpa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 19:45:30 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1iGXGI-00049i-S7; Fri, 04 Oct 2019 19:45:26 -0400
+Message-ID: <9358295b1d9cc173940a58038123128b4dafc5d0.camel@surriel.com>
+Subject: Re: [PATCH] mm/rmap.c: reuse mergeable anon_vma as parent when fork
+From:   Rik van Riel <riel@surriel.com>
+To:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        jglisse@redhat.com, mike.kravetz@oracle.com,
+        khlebnikov@yandex-team.ru
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Fri, 04 Oct 2019 19:45:26 -0400
+In-Reply-To: <20191004160632.30251-1-richardw.yang@linux.intel.com>
+References: <20191004160632.30251-1-richardw.yang@linux.intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-pyM9/LzSGvdMtJgYPqRg"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004232834.GP13922@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 07:28:34PM -0400, Andrea Arcangeli wrote:
->On Sat, Oct 05, 2019 at 06:46:40AM +0800, Wei Yang wrote:
->> On Wed, Oct 02, 2019 at 08:45:05PM -0400, Andrea Arcangeli wrote:
->> >Hello,
->> >
->> >On Tue, Aug 06, 2019 at 01:38:59PM +0800, Wei Yang wrote:
->> >> Finally new_flags equals old vm_flags *OR* vm_flags.
->> >> 
->> >> It is not necessary to mask them first.
->> >> 
->> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> >> ---
->> >>  fs/userfaultfd.c | 2 +-
->> >>  1 file changed, 1 insertion(+), 1 deletion(-)
->> >> 
->> >> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
->> >> index ccbdbd62f0d8..653d8f7c453c 100644
->> >> --- a/fs/userfaultfd.c
->> >> +++ b/fs/userfaultfd.c
->> >> @@ -1457,7 +1457,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
->> >>  			start = vma->vm_start;
->> >>  		vma_end = min(end, vma->vm_end);
->> >>  
->> >> -		new_flags = (vma->vm_flags & ~vm_flags) | vm_flags;
->> >> +		new_flags = vma->vm_flags | vm_flags;
->> >>  		prev = vma_merge(mm, prev, start, vma_end, new_flags,
->> >>  				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
->> >>  				 vma_policy(vma),
->> >
->> >And then how do you clear the flags after the above?
->> >
->> >It must be possible to clear the flags (from
->> >UFFDIO_REGISTER_MODE_MISSING|UFFDIO_REGISTER_MODE_WP to only one set
->> >or invert).
->> >
->> >We have no WP support upstream yet, so maybe that's why it looks
->> >superfluous in practice, but in theory it isn't because it would then
->> >need to be reversed by Peter's (CC'ed) -wp patchset.
->> >
->> >The register code has already the right placeholder to support -wp and
->> >so it's better not to break them.
->> >
->> >I would recommend reviewing the uffd-wp support and working on testing
->> >the uffd-wp code instead of changing the above.
->> >
->> 
->> Sorry, I don't get your point. This change is valid to me even from arithmetic
->> point of view.
->> 
->>     vm_flags == VM_UFFD_MISSING | VM_UFFD_WP
->> 
->> The effect of current code is clear these two bits then add them. This equals
->> to just add these two bits.
->> 
->> I am not sure which part I lost.
->
->The cleaned removed the "& ~" and that was enough to quickly tell the
->cleaned up version was wrong.
->
->What I should have noticed right away as well is that the code was
->already wrong, sorry. That code doesn't require a noop code cleanup,
->it requires a fix and the "& ~" needs to stay.
->
->This isn't going to make any difference upstream until the uffd-wp
->support is merged so it is enough to queue it in Peter's queue, or you
->can merge it independently.
->
 
-ok, I get your point.
+--=-pyM9/LzSGvdMtJgYPqRg
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->Thanks,
->Andrea
->
->>From a0f17bef184c6bb9b99294f202eefb50b6eb43cd Mon Sep 17 00:00:00 2001
->From: Andrea Arcangeli <aarcange@redhat.com>
->Date: Fri, 4 Oct 2019 19:09:59 -0400
->Subject: [PATCH 1/1] uffd: wp: clear VM_UFFD_MISSING or VM_UFFD_WP during
-> userfaultfd_register()
->
->If the registration is repeated without VM_UFFD_MISSING or VM_UFFD_WP
->they need to be cleared. Currently setting UFFDIO_REGISTER_MODE_WP
->returns -EINVAL, so this patch is a noop until the
->UFFDIO_REGISTER_MODE_WP support is applied.
->
->Reported-by: Wei Yang <richardw.yang@linux.intel.com>
->Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+On Sat, 2019-10-05 at 00:06 +0800, Wei Yang wrote:
+> In function __anon_vma_prepare(), we will try to find anon_vma if it
+> is
+> possible to reuse it. While on fork, the logic is different.
+>=20
+> Since commit 5beb49305251 ("mm: change anon_vma linking to fix
+> multi-process server scalability issue"), function anon_vma_clone()
+> tries to allocate new anon_vma for child process. But the logic here
+> will allocate a new anon_vma for each vma, even in parent this vma
+> is mergeable and share the same anon_vma with its sibling. This may
+> do
+> better for scalability issue, while it is not necessary to do so
+> especially after interval tree is used.
+>=20
+> Commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+> hierarchy")
+> tries to reuse some anon_vma by counting child anon_vma and attached
+> vmas. While for those mergeable anon_vmas, we can just reuse it and
+> not
+> necessary to go through the logic.
+>=20
+> After this change, kernel build test reduces 20% anon_vma allocation.
+>=20
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+Acked-by: Rik van Riel <riel@surriel.com>
 
->---
-> fs/userfaultfd.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->
->diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
->index fe6d804a38dc..97596bb65dd5 100644
->--- a/fs/userfaultfd.c
->+++ b/fs/userfaultfd.c
->@@ -1458,7 +1458,8 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
-> 			start = vma->vm_start;
-> 		vma_end = min(end, vma->vm_end);
-> 
->-		new_flags = (vma->vm_flags & ~vm_flags) | vm_flags;
->+		new_flags = (vma->vm_flags &
->+			     ~(VM_UFFD_MISSING|VM_UFFD_WP)) | vm_flags;
-> 		prev = vma_merge(mm, prev, start, vma_end, new_flags,
-> 				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
-> 				 vma_policy(vma),
+--=20
+All Rights Reversed.
 
--- 
-Wei Yang
-Help you, Help me
+--=-pyM9/LzSGvdMtJgYPqRg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl2X2ZYACgkQznnekoTE
+3oPWpQf/b82uQvESfiRANm55vxx5yC3OU0qDt3+yd1D//k3lnCEADg1KLuT53P/a
+Iq9fLZ/3EnDg2pwx5Vqnm+G4knmjSgQN0JC9f1E455R4mOpF3OJfX6U2EDDrycck
+UONRE0qRMxMeTjbrxQPdyXGlrwKXekL3jvk25jqhO6F0eTR6chxrK0rZG9sfrNC/
+5Ii4VLSmhlCT6YOaCrA/CMzRgS1pRxWmigMvXLPwQpRvspAca//XTCN9fh2213dV
+8BbSasCdczPByHi2zWb4kd92jMYSSC9hAs+8NoT/jC/bvxZV9sMgwOKsrrToICJl
+3t/vk7sWhfXe3oVe+mVAbO5D2/cGNA==
+=WM9u
+-----END PGP SIGNATURE-----
+
+--=-pyM9/LzSGvdMtJgYPqRg--
+
