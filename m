@@ -2,182 +2,145 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D54C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9238BC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FDA2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqFfmPBj"
+	by mail.kernel.org (Postfix) with ESMTP id 6BA912077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570211642;
+	bh=4FIUHUvj9TvjSQswXnLXBO/mOaiern6KROVUR3NRr+o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yLP8OmAZxI78o2d/tstzkcT/0i8PXu5lxDWdlBg6BeK4G00W82DKQneYph0pHXrD4
+	 kLznzF3qO0XHMs5+zYRH8Hme1XGxuSzgkEjLXFIm2aNMXN0rpOSAFO5dbNOwH6v3Bv
+	 uNb2WcYesAwMZXnQ2HQjYUHHaJEuuuzP6e4y4Hxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389159AbfJDRxO (ORCPT
+        id S2389200AbfJDRyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:53:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37192 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388880AbfJDRxM (ORCPT
+        Fri, 4 Oct 2019 13:54:01 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40456 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387900AbfJDRyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:53:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f22so6734395wmc.2;
-        Fri, 04 Oct 2019 10:53:11 -0700 (PDT)
+        Fri, 4 Oct 2019 13:54:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 7so7372533ljw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SiYnbzF7WkjqWKJjUmGyqc1k8qogotE1jvdb1MCejmk=;
-        b=rqFfmPBjt5rNehUrfCoog3sBIjQKw8DOTHfqANDdbh6jLSdp3Jt4BHH2BqNPxDJkPf
-         X9GmB0XLf5OILRwmuglpo4UHl9sJPPoTlrXu6ADQEiAZEetGw2XgIlzniuQdX8DCAHje
-         4USGkdxGIrdT0zkJ87uc27k538trG28T3Jo3c7cZE6FYXI40/vp3QY58vrjZGd7tCFBJ
-         16gdzjIHv+UtYdOz1n2+9TbrnQfQYNT/a8cPNeyboqCehSOnkRQGg67jSRVJ3pIhxflF
-         IY8/P91g35XLJfSnbnjHsfQW0c/ML1NcmgXpv6KFcWdfqjbcKsZ5yTQioEB+YWCTH+gM
-         oWUw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+ot6MecpahXBy/XsNEnO0h9gE1GQDq0Bf9rTX+VY1c=;
+        b=RxD7rcL8Fr8GWZMypzp09r370bJefuZJwTltueP/8mQyT6b7pUuSEySIjw8cyI6MfK
+         FAvUII414LI0hPJIa3T5wjJnf1JRW8oNT4ty5NpJmJlT5F4P4bqFNzjTGWWxb9O1t2Ts
+         SF9Seg9ScG9kR+oW6CJlLSGxvzt7lFYAr4rdk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SiYnbzF7WkjqWKJjUmGyqc1k8qogotE1jvdb1MCejmk=;
-        b=LVnDQ04qMrZ5znamXsk/HkfKI5M5yN5FmBQ2m+fsvArUTyxCt5OQnnaHZzf9Y4DRpm
-         CNui/c6GqE6JaKuxHY46KK03Cfl4EYcPjfkXgnYEv0+cmTBw7bWxyeIwoIQRz4CwB3lZ
-         CVYc1TBA8DqOTqN+QajuRPH7ZZGQJaqXLhWfJILt04snSCEej4OthidIOihD10SZMI0J
-         VbGEmxcJawtsOBZLnQ+N1HYbYdZkSj95MQyDDpcS29rHjQYiLv0X77SuMyuzYkj0ZsNU
-         vcfBUxmVOmSPf1nxDo8Voz+5R3H/iERvRfJxtF2nJuzMeT3/dkKiX4lg+0nm/rXoruY/
-         SK5A==
-X-Gm-Message-State: APjAAAUZzjhueG2+H7/E3OYxfwKGPx+al/uAhDLGXTGt5FZ08w2sjQK8
-        hHdX/wmTGdLq7EtZJ0Kb2do=
-X-Google-Smtp-Source: APXvYqyyUV/AKwxAyN9TZuMCT9wd+X8T76PBdPNUsiucJS6dHYCgcxvSYkeRlQ7nwRaHVXmuaanUnw==
-X-Received: by 2002:a05:600c:2252:: with SMTP id a18mr5967972wmm.141.1570211590660;
-        Fri, 04 Oct 2019 10:53:10 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id e9sm17598865wme.3.2019.10.04.10.53.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 10:53:09 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 19:53:07 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        will@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 03/11] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ce Crypto Engine
-Message-ID: <20191004175307.GB11208@Red>
-References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
- <20191001184141.27956-4-clabbe.montjoie@gmail.com>
- <20191002055458.zo2vdbxodj3ch53g@gilmour>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+ot6MecpahXBy/XsNEnO0h9gE1GQDq0Bf9rTX+VY1c=;
+        b=RWhepwoqkKF+NA3lFFfQaB/8jv8U6aq8uhbPDQBA8bMWbDz2G2St1JuwQYoGplW0d2
+         t5c294HdMN1lfFEjJH5y2OfdA5RM15HEVLrkcdV1pBEptPAE5QdZl+RoJevDwf6L9Xl8
+         XoFKx0UpeMcYlRINvGIbUwaEtUk/HARk/gsa1hkTTdMMUVXdhuidLEHSBAm9lsOfuFjQ
+         MP4PC55xfiDR02Zh5EEJDk64Dy+Pg/pyrUAkN/x/oHkkbJxQ1A1PnrCCfaghWWpAIeGQ
+         2kc8xFLCQR5j/YZvxKAasf+eniTNbuEzxjbcJiBLdfcE6aXK6WjNCeJ7Vfn0RH1gxEMz
+         Bh8w==
+X-Gm-Message-State: APjAAAWWUxPAPGrQ34dUzGG0ebAxmLd2fni3NPfMG4vrk1rryj+vOKve
+        Thq/UQ1T/ZJGwO62jkpt1H9A1Jpdryg=
+X-Google-Smtp-Source: APXvYqyJ48sD+a7Xe7+e/bfsnIl63fWhvCVRmfLiMhUr39UVZRnNrcbUlqDRRo/xVMRnByUzZbp0LA==
+X-Received: by 2002:a2e:9a89:: with SMTP id p9mr10655023lji.131.1570211638780;
+        Fri, 04 Oct 2019 10:53:58 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id c6sm1253467lfh.65.2019.10.04.10.53.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Oct 2019 10:53:57 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id w67so5085327lff.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:53:57 -0700 (PDT)
+X-Received: by 2002:a19:f204:: with SMTP id q4mr9574170lfh.29.1570211637449;
+ Fri, 04 Oct 2019 10:53:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002055458.zo2vdbxodj3ch53g@gilmour>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191004104116.20418-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20191004104116.20418-1-christian.brauner@ubuntu.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 4 Oct 2019 10:53:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whxf5HVdaXqL6RgHCLzb2LNn3U2n_x4GWQZroCC+evRoA@mail.gmail.com>
+Message-ID: <CAHk-=whxf5HVdaXqL6RgHCLzb2LNn3U2n_x4GWQZroCC+evRoA@mail.gmail.com>
+Subject: Re: [GIT PULL] usercopy structs for v5.4-rc2
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 07:54:58AM +0200, Maxime Ripard wrote:
-> On Tue, Oct 01, 2019 at 08:41:33PM +0200, Corentin Labbe wrote:
-> > This patch adds documentation for Device-Tree bindings for the
-> > Crypto Engine cryptographic accelerator driver.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 92 +++++++++++++++++++
-> >  1 file changed, 92 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> > new file mode 100644
-> > index 000000000000..9bd26a2eff33
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> > @@ -0,0 +1,92 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ce.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Allwinner Crypto Engine driver
-> > +
-> > +maintainers:
-> > +  - Corentin Labbe <clabbe.montjoie@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - allwinner,sun8i-h3-crypto
-> > +      - allwinner,sun8i-r40-crypto
-> > +      - allwinner,sun50i-a64-crypto
-> > +      - allwinner,sun50i-h5-crypto
-> > +      - allwinner,sun50i-h6-crypto
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Bus clock
-> > +      - description: Module clock
-> > +      - description: MBus clock
-> > +    minItems: 2
-> > +    maxItems: 3
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: bus
-> > +      - const: mod
-> > +      - const: ram
-> > +    minItems: 2
-> > +    maxItems: 3
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  reset-names:
-> > +    const: bus
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      items:
-> > +        const: allwinner,sun50i-h6-crypto
-> > +then:
-> > +  properties:
-> > +      clocks:
-> > +        minItems: 3
-> > +      clock-names:
-> > +        minItems: 3
-> > +else:
-> > +  properties:
-> > +      clocks:
-> > +        maxItems: 2
-> > +      clock-names:
-> > +        maxItems: 2
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - resets
-> > +
-> > +additionalProperties: true
-> 
-> I guess you meant false here?
-> 
+On Fri, Oct 4, 2019 at 3:42 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+>            The only separate fix we we had to apply
+> was for a warning by clang when building the tests for using the result of
+> an assignment as a condition without parantheses.
 
-Yes. i wil fix that.
+Hmm. That code is ugly, both before and after the fix.
 
-Regards
+This just doesn't make sense for so many reasons:
+
+        if ((ret |= test(umem_src == NULL, "kmalloc failed")))
+
+where the insanity comes from
+
+ - why "|=" when you know that "ret" was zero before (and it had to
+be, for the test to make sense)
+
+ - why do this as a single line anyway?
+
+ - don't do the stupid "double parenthesis" to hide a warning. Make it
+use an actual comparison if you add a layer of parentheses.
+
+So
+
+        if ((x = y))
+
+is *wrong*. I know the compiler suggests that, but the compiler is
+just being stupid, and the suggestion comes from people who don't have
+any taste.
+
+If you want to test an assignment, you should just use
+
+        if ((x = y) != 0)
+
+instead, at which point it's not syntactic noise mind-games any more,
+but the parenthesis actually make sense.
+
+However, you had no reason to use an assignment in the conditional in
+the first place.
+
+IOW, the code should have just been
+
+        ret = test(umem_src == NULL, "kmalloc failed");
+        if (ret) ...
+
+instead. Which is a whole lot more legible.
+
+The alternative, of course, is to just ignore the return value of
+"test()" which is useless anyway (it's a boolean, not an error) and
+just write it as
+
+        if (test(umem_src == NULL, "kmalloc failed"))
+                goto out_free;
+
+and set ret to the error value ahead of time.
+
+Regardless, the double parentheses are _never_ the right answer. Ugly,
+broken, senseless syntax that is hard for humans to read, and doesn't
+make any sense even for computers when there's a perfectly regular
+alternative that isn't a random special case.
+
+I've pulled this, since it's not in core kernel code anyway, but I
+wish I had never had to see that ugly construct.
+
+             Linus
