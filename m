@@ -2,75 +2,77 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B577C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B792C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D26207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570193825;
-	bh=gdv/gdi2vnLybo1eNsYHcB/aLrf/i/GWdoh6hslFqOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vgjLioXjx8szFChkPpq50CdrPEMUL15U8QuLQP0Fe7ACNkaJisUML+rOpeFA3nROm
-	 2U7o6hhoQX5uoAQGyzeL8W6HgbD4DD8vgUHepk/Qg2NNDDYO0xwEMMYCBjlwwCa9Va
-	 lhPaat2OxvQcsIZV4wxYZRRN+2VZh8+AyiVwyYHg=
+	by mail.kernel.org (Postfix) with ESMTP id 5846C207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387945AbfJDM5E (ORCPT
+        id S2387948AbfJDM5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:57:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44500 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387440AbfJDM5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:57:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6794DB123;
-        Fri,  4 Oct 2019 12:57:02 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 14:57:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, tj@kernel.org, vdavydov.dev@gmail.com,
-        hannes@cmpxchg.org, guro@fb.com, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/slub: fix a deadlock in show_slab_objects()
-Message-ID: <20191004125701.GJ9578@dhcp22.suse.cz>
-References: <1570192309-10132-1-git-send-email-cai@lca.pw>
+        Fri, 4 Oct 2019 08:57:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12043 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387440AbfJDM5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:57:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 05:57:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
+   d="scan'208";a="222133152"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Oct 2019 05:57:34 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH] perf: Fix inheritance of aux_output groups
+Date:   Fri,  4 Oct 2019 15:57:29 +0300
+Message-Id: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570192309-10132-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 04-10-19 08:31:49, Qian Cai wrote:
-> Long time ago, there fixed a similar deadlock in show_slab_objects()
-> [1]. However, it is apparently due to the commits like 01fb58bcba63
-> ("slab: remove synchronous synchronize_sched() from memcg cache
-> deactivation path") and 03afc0e25f7f ("slab: get_online_mems for
-> kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
-> just reading files in /sys/kernel/slab which will generate a lockdep
-> splat below.
-> 
-> Since the "mem_hotplug_lock" here is only to obtain a stable online node
-> mask while racing with NUMA node hotplug, in the worst case, the results
-> may me miscalculated while doing NUMA node hotplug, but they shall be
-> corrected by later reads of the same files.
+Commit
 
-I think it is important to mention that this doesn't expose the
-show_slab_objects to use-after-free. There is only a single path that
-might really race here and that is the slab hotplug notifier callback
-__kmem_cache_shrink (via slab_mem_going_offline_callback) but that path
-doesn't really destroy kmem_cache_node data structures.
+  b43762ef010 ("perf: Allow normal events to output AUX data")
 
-Thanks!
+forgets to configure aux_output relation in the inherited groups, which
+results in child PEBS events forever failing to schedule.
+
+Fix this by setting up the AUX output link in the inheritance path.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ kernel/events/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f5bb2557d5f6..761995f21b30 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12024,6 +12024,10 @@ static int inherit_group(struct perf_event *parent_event,
+ 					    child, leader, child_ctx);
+ 		if (IS_ERR(child_ctr))
+ 			return PTR_ERR(child_ctr);
++
++		if (sub->aux_event == parent_event &&
++		    !perf_get_aux_event(child_ctr, leader))
++			return -EINVAL;
+ 	}
+ 	return 0;
+ }
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
