@@ -2,90 +2,108 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF9FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6511AC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CEF222C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ssUMEk0f"
+	by mail.kernel.org (Postfix) with ESMTP id 46C1720862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfJDLtJ (ORCPT
+        id S1730769AbfJDLup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:49:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36314 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfJDLtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t94arAtwMSELxUeSxpVTRDoonLVl+3+fPDniWRezYE8=; b=ssUMEk0fG4hKLEBdEcLJQEOxz
-        LFy6cOOMbYFukHC1NZ2ZG0eZfVtOZCQsPO+caJ/EQDphxs0JXz6bFbkbO3aqq7pk2KyWwJGt7PFOj
-        Rz2lQ/VBLuV11Go8JEfsvZU1zLjxol+GFuQH3ezo1ypR3Ei5l7eM4XD08fpe42VK6y+QmR/FwGj8R
-        YRs7g23kkaMKM4iVb7VUfghQIickBpaI+GT6gNzt7J6lKDKJI8U3MqzewVE2jWKq4mDUndhMWryV1
-        OmyJ7YlNnyrk71hpOXXw06WPg0N8S3CoIsDjUhr1Z8negxd01F+M8iqp20pwP+2dKzrxzLexm+Ead
-        /3zgFnZKQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGM4a-0006CC-Jk; Fri, 04 Oct 2019 11:48:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D1D430034F;
-        Fri,  4 Oct 2019 13:47:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B90C3203E50D2; Fri,  4 Oct 2019 13:48:34 +0200 (CEST)
-Date:   Fri, 4 Oct 2019 13:48:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
-Message-ID: <20191004114834.GE19463@hirez.programming.kicks-ass.net>
-References: <20191002122926.385-1-ggherdovich@suse.cz>
- <1906426.HDqaVa71mF@kreacher>
- <20191003121537.GR4536@hirez.programming.kicks-ass.net>
- <1990043.dY4KdrEkPr@kreacher>
+        Fri, 4 Oct 2019 07:50:45 -0400
+Received: from jpvw.nl ([80.127.100.2]:49920 "EHLO jpvw.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728357AbfJDLup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 07:50:45 -0400
+Received: from localhost ([127.0.0.1] helo=jpvw.nl)
+        by jpvw.nl with esmtp (Exim 4.92)
+        (envelope-from <jp@jpvw.nl>)
+        id 1iGM6d-0005JL-F7; Fri, 04 Oct 2019 13:50:43 +0200
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Gonsolo <gonsolo@gmail.com>
+Cc:     crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+ <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan>
+ <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
+ <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone>
+ <20191003144225.0137bf6c@coco.lan> <20191003183200.GA2631@Limone>
+ <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
+ <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
+ <20191003163914.7c384d36@coco.lan> <20191003164426.6da8538f@coco.lan>
+ <CANL0fFRSNbUhcik7rnhjZ0qUe-tZyzcjY+M1J_iGzUa5jNc9_A@mail.gmail.com>
+ <20191003170329.3624f7f2@coco.lan>
+From:   JP <jp@jpvw.nl>
+Message-ID: <23d9856c-cc12-7212-9126-90d80f67abfb@jpvw.nl>
+Date:   Fri, 4 Oct 2019 13:50:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1990043.dY4KdrEkPr@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191003170329.3624f7f2@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 07:53:49PM +0200, Rafael J. Wysocki wrote:
-> On Thursday, October 3, 2019 2:15:37 PM CEST Peter Zijlstra wrote:
-> > On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
-> > > > +	if (smp_processor_id() != 0)
-> > > > +		return;
 
-> Well, but the smp_processor_id() check has nothing to do with whether or not
-> this is "core" or "atom" or something else, for example.
 
-It is dodgy to begin with, it hard assumes we boot on cpu-0. A
-'initialized' state would probably be better.
+On 10/3/19 10:03 PM, Mauro Carvalho Chehab wrote:
+> Em Thu, 3 Oct 2019 21:51:35 +0200
+> Gonsolo <gonsolo@gmail.com> escreveu:
+>
+>>> 1) The firmware file is likely at the Windows driver for this device
+>>> (probably using a different format). It should be possible to get
+>>> it from there.
+>> If you tell me how I'm willing to do this. :)
+> I don't know. I was not the one that extracted the firmware. I guess
+> Antti did it.
+>
+> I suspect that there are some comments about that in the past at the
+> ML. seek at lore.kernel.org.
+>
+>>> 2) Another possibility would be to add a way to tell the si2168 driver
+>>> to not try to load a firmware, using the original one. That would
+>>> require adding a field at si2168_config to allow signalizing to it
+>>> that it should not try to load a firmware file, and add a quirk at
+>>> the af9035 that would set such flag for Logilink VG0022A.
+>> I don't get this. Which firmware, si2168 or si2157?
+> The one that it is causing the problem. If I understood well, the
+> culprit was the si2168 firmware.
+>
+>> I'm still for option 3: If there is a bogus chip revision number it's
+>> likely the VG0022A and we can safely set fw to NULL, in which case
+>> everything works.
+>> All already working devices will continue to work as before.
+>> With a low probability there are other devices that will return 0xffff
+>> but a) they didn't work until now and b) they receive a clear message
+>> that they return bogus numbers and this works just for the VG0022A, in
+>> which case this hardware can be tested.
+>> At last, *my* VG0022A will work without a custom kernel which I'm a
+>> big fan of. :))
+>>
+>> Are there any counterarguments except that it is not the cleanest
+>> solution in the universe? ;)
+> That's a really bad solution. Returning 0xff is what happens when
+> things go wrong during I2C transfers. Several problems can cause it,
+> including device misfunction. Every time someone comes with a patch
+> trying to ignore it, things go sideways for other devices (existing
+> or future ones).
+>
+> Ignoring errors is always a bad idea.
+add module param say 'gonso_hack_vg0022a'
+if true, act on error by setting a flag
+if this flag is set don't load firmware
+
+Jan Pieter.
