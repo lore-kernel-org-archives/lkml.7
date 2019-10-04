@@ -2,87 +2,141 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B87C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DF8C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0F9207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA4E207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570185318;
+	bh=lm6QI2OD7PE4Y+f59+6PY1W+uveJUbJmhBeMtYIzA1Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=df0ud9fJCe87DyJV7NcaDUejp20JjJrwWn1FK8adtaFfFLsse64afzMTgUpUSCgs9
+	 symrLD5AWS4lGJmq9AVfl5bBbCmwFA6c79ETyygTZ8AE8icGLO9X8ZtfK1CBx1qtWr
+	 HArooEqiM5j2OIXD59NBFohYe0jebcWKM85RVNKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfJDKdT (ORCPT
+        id S2387584AbfJDKfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:33:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:41204 "EHLO foss.arm.com"
+        Fri, 4 Oct 2019 06:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfJDKdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:33:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C038615AB;
-        Fri,  4 Oct 2019 03:33:17 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2130B3F706;
-        Fri,  4 Oct 2019 03:33:17 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 11:33:15 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
-Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for
- r8a774b1
-Message-ID: <20191004103315.GS42880@e119886-lin.cambridge.arm.com>
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
+        id S2387482AbfJDKfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:35:17 -0400
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85E55207FF;
+        Fri,  4 Oct 2019 10:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570185315;
+        bh=lm6QI2OD7PE4Y+f59+6PY1W+uveJUbJmhBeMtYIzA1Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pkdUK/VFbjAMiSjF7KwjVu6QWhF3ThXR5wjnSOQt3XZbh6yo+zTZvvPwnJ2ZrmeUl
+         +3hWvhUVJ9bVssB2F3+TYcQuuiplkFVHJAte6I7MGYCCPnVsmG8WsRYPPVJjEEzrZh
+         7sLCXX7vR+lr3o2EbssMiRGNFXnENi0BRwA0JPwU=
+Received: by mail-lf1-f42.google.com with SMTP id r2so4105769lfn.8;
+        Fri, 04 Oct 2019 03:35:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAW8q5PoDOUxMxZYukZfkYlbKUf6k8py35f8X4SimdSTdiqhjpDy
+        uMc9oWrJ19aloFfM8OnuewnkPD9wqpXSPB7Zybc=
+X-Google-Smtp-Source: APXvYqx0FfVj4sm3HZBluW8ovnu0fM3ne8UVt/pKLHbR55m/9NFo51yvBBzWDR+eof7CVXfVTJSfbzrF2dMLB4kzZhg=
+X-Received: by 2002:a19:f711:: with SMTP id z17mr8421781lfe.58.1570185313710;
+ Fri, 04 Oct 2019 03:35:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191001112421.2778-1-ribalda@kernel.org> <20191001112421.2778-9-ribalda@kernel.org>
+ <98d3b559-8be0-a240-c94f-3171dd543009@xs4all.nl>
+In-Reply-To: <98d3b559-8be0-a240-c94f-3171dd543009@xs4all.nl>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Fri, 4 Oct 2019 12:34:57 +0200
+X-Gmail-Original-Message-ID: <CAPybu_2nes-yNqdzq-nPQvu=T5J4EGo3bkvqif=XX39pzyLJpA@mail.gmail.com>
+Message-ID: <CAPybu_2nes-yNqdzq-nPQvu=T5J4EGo3bkvqif=XX39pzyLJpA@mail.gmail.com>
+Subject: Re: [PATCH v9 8/8] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 09:35:29AM +0100, Fabrizio Castro wrote:
-> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 45bba9f..12702c8 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
->  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
->  	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
-> +	    "renesas,pcie-r8a774b1" for the R8A774B1 SoC;
+Hi Hans
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+On Fri, Oct 4, 2019 at 12:31 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>
+> On 10/1/19 1:24 PM, Ricardo Ribalda Delgado wrote:
+> > According to the product brief, the unit cell size is 1120 nanometers^2.
+> >
+> > https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  drivers/media/i2c/imx214.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> > index 159a3a604f0e..adcaaa8c86d1 100644
+> > --- a/drivers/media/i2c/imx214.c
+> > +++ b/drivers/media/i2c/imx214.c
+> > @@ -47,6 +47,7 @@ struct imx214 {
+> >       struct v4l2_ctrl *pixel_rate;
+> >       struct v4l2_ctrl *link_freq;
+> >       struct v4l2_ctrl *exposure;
+> > +     struct v4l2_ctrl *unit_size;
+> >
+> >       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
+> >
+> > @@ -948,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
+> >       static const s64 link_freq[] = {
+> >               IMX214_DEFAULT_LINK_FREQ,
+> >       };
+> > +     static const struct v4l2_area unit_size = {
+> > +             .width = 1120,
+> > +             .height = 1120,
+> > +     };
+> >       int ret;
+> >
+> >       ret = imx214_parse_fwnode(dev);
+> > @@ -1029,6 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
+> >                                            V4L2_CID_EXPOSURE,
+> >                                            0, 3184, 1, 0x0c70);
+> >
+> > +     imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
+> > +                             NULL,
+> > +                             V4L2_CID_UNIT_CELL_SIZE,
+> > +                             v4l2_ctrl_ptr_create((void *)&unit_size));
+>
+> The imx214 supports two modes: 4096x2304 and 1920x1080. I assume that the
+> latter is using binning? So shouldn't the unit cell size be different in that
+> case?
 
->  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
->  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
->  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
-> -- 
-> 2.7.4
-> 
+To be honest I do not know if it is cropping or binning. I can try to
+turn on the sensor and figure out if the field of view changes.
+
+>
+> I'm not so sure the unit cell size should depend on binning. I'd rather have
+> the binning information exposed somehow and let userspace do the calculation.
+
+I think there are good arguments on both directions ;).
+
+The issue with considering the binning is that if there a later step
+on the pipeline that does the bining then it has to change also the
+unit_cell_size control. I would say, for now lets keep them
+independent.
+
+
+>
+> Regards,
+>
+>         Hans
+>
+> >       ret = imx214->ctrls.error;
+> >       if (ret) {
+> >               dev_err(&client->dev, "%s control init failed (%d)\n",
+> >
+>
