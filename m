@@ -2,110 +2,117 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BDAC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF05C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D312133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D192133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:09:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIZU3DOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbfJDTIb (ORCPT
+        id S1730090AbfJDTJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:08:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39662 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730393AbfJDTIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:08:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 12:08:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="196758338"
-Received: from lpindor-mobl.ger.corp.intel.com (HELO intel.com) ([10.252.17.203])
-  by orsmga006.jf.intel.com with ESMTP; 04 Oct 2019 12:08:27 -0700
-Date:   Fri, 4 Oct 2019 20:08:26 +0100
-From:   Eric Engestrom <eric.engestrom@intel.com>
-To:     Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Fri, 4 Oct 2019 15:09:53 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37812 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfJDTJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:09:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id b19so15908254iob.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 12:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7XAUCdbkHP+3qeD8IAi87BfnaeBU6yWduxm7aN24lrc=;
+        b=PIZU3DOCNHkv//gcgVRRCWke4OqJTknwSMnrMGdlNMOQk5+OAk2CU4eRA34YoyeI4i
+         gHzd0EfCXxavyvjfJn0MEx83fyTJBpGqHOYEwYVHvak3hPaPlD8CYK2VMCI3j6k8KkUO
+         4qYEotBxrvW3HOa00czkUrEfMxl0WQVCa/f+/TEFQG2xBwyaOa+0MscWPyTZOwaG6g6Q
+         Xa0RkY7Hqn/tViO/qtkRply5N8osvwqlWLW7HB5etrBY4jZGqLwS4Q1UWa1QuiSjCLqj
+         bK1scbdu/XQLmH5D4kn6Zkup5bU3uv06GghskxHr+l57gDDzh5PhGchgmewNS0NDI6Pp
+         qrbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7XAUCdbkHP+3qeD8IAi87BfnaeBU6yWduxm7aN24lrc=;
+        b=XFg8pSHz87HV1Oni3RpuT4zc0FZxKTLITQ/CMIl+f8yi8Znp/ulIxx/a4TxstlKPr1
+         zHBU/8NdFaXPUSN1D3g0Id4TJvnZiJKo6Givi6NiOmIdXDugMTBZ+pR1vShFQodKMraI
+         JnGZmVPk726bkBAyJwamJJFjCA7IRtWPCqxAXU7Ewl13ojSgZGZlLXyX6xxAoF47hYz+
+         9c2hMZjR11cvIGPAFdIwaiRYwYPLxQYZ45KJUdyuTFc5+oOcxJrDR8YySGX9yeQQBfcM
+         LC2pShsQv5MK6nUpXsdWXHxoKzRb6u/Y16AMLGG2w9UpTAEZ86ttT1tkNHAczNMLltcG
+         h6uA==
+X-Gm-Message-State: APjAAAU9Ua2S5zMAznRLcPmlrmQFmN8WPEH8zE+5xZsY5a38u//po8jR
+        s9gjMQik4NIHg0ReA3W4uFY=
+X-Google-Smtp-Source: APXvYqxEP0qwOKKETCDmhwNirLOgrLxBuE1ywrf9+wtD9KLEnWuQcbFxVGAfRcVq1nneGNqxdqVLNQ==
+X-Received: by 2002:a6b:3bc9:: with SMTP id i192mr2438459ioa.295.1570216190936;
+        Fri, 04 Oct 2019 12:09:50 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id i26sm2722087iol.84.2019.10.04.12.09.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 12:09:50 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
         dri-devel@lists.freedesktop.org,
-        Maxime Ripard <mripard@kernel.org>, kernel@collabora.com,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH] drm: Fix comment doc for format_modifiers
-Message-ID: <20191004190826.x26gb5wnurmwobej@intel.com>
-References: <20191002183011.GA29177@ravnborg.org>
- <20191003075118.6257-1-andrzej.p@collabora.com>
- <20191003135318.GH1208@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003135318.GH1208@intel.com>
-Organization: Intel Corporation (UK) Ltd. - Co. Reg. 1134945 - Pipers Way,
- Swindon SN3 1RJ
-User-Agent: NeoMutt/20180716
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/imx: fix memory leak in imx_pd_bind
+Date:   Fri,  4 Oct 2019 14:09:33 -0500
+Message-Id: <20191004190938.15353-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, 2019-10-03 16:53:18 +0300, Ville Syrjälä wrote:
-> On Thu, Oct 03, 2019 at 09:51:18AM +0200, Andrzej Pietrasiewicz wrote:
-> > To human readers
-> 
-> The commit message is always for human readers, no need to point that
-> out...
-> 
-> > 
-> > "array of struct drm_format modifiers" is almost indistinguishable from
-> > "array of struct drm_format_modifiers", especially given that
-> > struct drm_format_modifier does exist.
-> 
-> ..but this paragraph still manages to 100% confuse this particular human.
+In imx_pd_bind, the duplicated memory for imxpd->edid via kmemdup should
+be released in drm_of_find_panel_or_bridge or imx_pd_register fail.
 
-There's an underscore instead of a space on the second line
-(s/drm_format modifiers/drm_format_modifiers/).
+Fixes: ebc944613567 ("drm: convert drivers to use drm_of_find_panel_or_bridge")
+Fixes: 19022aaae677 ("staging: drm/imx: Add parallel display support")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/gpu/drm/imx/parallel-display.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-It should definitely be reworded to be much clearer.
+diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
+index e7ce17503ae1..9522d2cb0ad5 100644
+--- a/drivers/gpu/drm/imx/parallel-display.c
++++ b/drivers/gpu/drm/imx/parallel-display.c
+@@ -227,14 +227,18 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	/* port@1 is the output port */
+ 	ret = drm_of_find_panel_or_bridge(np, 1, 0, &imxpd->panel, &imxpd->bridge);
+-	if (ret && ret != -ENODEV)
++	if (ret && ret != -ENODEV) {
++		kfree(imxpd->edid);
+ 		return ret;
++	}
+ 
+ 	imxpd->dev = dev;
+ 
+ 	ret = imx_pd_register(drm, imxpd);
+-	if (ret)
++	if (ret) {
++		kfree(imxpd->edid);
+ 		return ret;
++	}
+ 
+ 	dev_set_drvdata(dev, imxpd);
+ 
+-- 
+2.17.1
 
-> 
-> The actual code changes lgtm, so with the commit message reworded
-> this patch is
-> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> 
-> > 
-> > And indeed the parameter passes an array of uint64_t rather than an array
-> > of structs, but the first words of the comment suggest that it passes
-> > 
-> > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> > ---
-> >  drivers/gpu/drm/drm_plane.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-> > index d6ad60ab0d38..0d4f9172c0dd 100644
-> > --- a/drivers/gpu/drm/drm_plane.c
-> > +++ b/drivers/gpu/drm/drm_plane.c
-> > @@ -160,7 +160,7 @@ static int create_in_format_blob(struct drm_device *dev, struct drm_plane *plane
-> >   * @funcs: callbacks for the new plane
-> >   * @formats: array of supported formats (DRM_FORMAT\_\*)
-> >   * @format_count: number of elements in @formats
-> > - * @format_modifiers: array of struct drm_format modifiers terminated by
-> > + * @format_modifiers: array of format modifiers terminated by
-> >   *                    DRM_FORMAT_MOD_INVALID
-> >   * @type: type of plane (overlay, primary, cursor)
-> >   * @name: printf style format string for the plane name, or NULL for default name
-> > -- 
-> > 2.17.1
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
