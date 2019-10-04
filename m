@@ -2,101 +2,100 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A5C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F687C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DD220830
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7E2222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570203687;
+	bh=8KzOJQ61qeCAa4RoR3AKehrhObB1Pqta11wvcDRH23M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B7zwTF5RN3dKaJCOSXWJlp0OA9sifzcSQ7lwwxc8NQBLMRUT5xbDB0E+pHy++aTmt
+	 8giLAnBPwLhIAKHJXSAe3J3guhHwnkuLkiDd6j1URzMAlg/vAef70E8JOBnW4UE3kK
+	 KWWQlmuF/+HVbzgZiOJMFTtflbViMfHwgC0sZcVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389951AbfJDPlP (ORCPT
+        id S2389974AbfJDPl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:41:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52916 "EHLO mx1.redhat.com"
+        Fri, 4 Oct 2019 11:41:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389669AbfJDPlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:41:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2389131AbfJDPl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:41:26 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 267433086E24;
-        Fri,  4 Oct 2019 15:41:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DF5E95DAAE;
-        Fri,  4 Oct 2019 15:41:04 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri,  4 Oct 2019 17:41:13 +0200 (CEST)
-Date:   Fri, 4 Oct 2019 17:41:03 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, bristot@redhat.com,
-        peterz@infradead.org, paulmck@kernel.org, rcu@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] Remove GP_REPLAY state from rcu_sync
-Message-ID: <20191004154102.GA20945@redhat.com>
-References: <20191004145741.118292-1-joel@joelfernandes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 322592133F;
+        Fri,  4 Oct 2019 15:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570203685;
+        bh=8KzOJQ61qeCAa4RoR3AKehrhObB1Pqta11wvcDRH23M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eABmywD0FEbmmJHqFTyqAMZ1NMJZZ9xGGBFogBvmSMIRldIEOX9i25SoRSHSjOpz7
+         k81USC0qebD6Hg7sAj1DShmSoAZOMpfvbQspdI/p0SnbTRVURWB8aGqqh+YNypOMaK
+         wSOpbzMjW/tTEDEuDc+MYaeKsX14dd7CrRFOxsZM=
+Date:   Fri, 4 Oct 2019 11:41:24 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Himadri Pandya <himadrispandya@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "himadri18.07" <himadri18.07@gmail.com>
+Subject: Re: [PATCH 0/2] Drivers: hv: Remove dependencies on guest page size
+Message-ID: <20191004154124.GJ17454@sasha-vm>
+References: <20190730094944.96007-1-himadri18.07@gmail.com>
+ <DM5PR21MB01377F433CD767AF5E917EA6D7B80@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191004145741.118292-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 04 Oct 2019 15:41:14 +0000 (UTC)
+In-Reply-To: <DM5PR21MB01377F433CD767AF5E917EA6D7B80@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/04, Joel Fernandes (Google) wrote:
+On Wed, Sep 04, 2019 at 11:41:43PM +0000, Michael Kelley wrote:
+>From: Himadri Pandya <himadrispandya@gmail.com>
+>>
+>> Hyper-V assumes page size to be 4KB. This might not be the case on ARM64
+>> architecture. The first patch in this patchset introduces a hyer-v
+>> specific function for allocating a zeroed page which can have a
+>> different implementation on ARM64 to address the issue of different
+>> guest and host page sizes. The second patch removes dependencies on
+>> guest page size in vmbus by using hyper-v specific page symbol and
+>> functions.
+>>
+>> Himadri Pandya (2):
+>>   x86: hv: Add function to allocate zeroed page for Hyper-V
+>>   Drivers: hv: vmbus: Remove dependencies on guest page size
+>>
+>>  arch/x86/hyperv/hv_init.c       |  8 ++++++++
+>>  arch/x86/include/asm/mshyperv.h |  1 +
+>>  drivers/hv/connection.c         | 14 +++++++-------
+>>  drivers/hv/vmbus_drv.c          |  6 +++---
+>>  4 files changed, 19 insertions(+), 10 deletions(-)
+>>
+>> --
+>> 2.17.1
 >
-> But this is not always true if you consider the following events:
+>Thomas -- can you pick up this patch in the x86/hyperv branch of your
+>tip tree along with the other patches to fix wrong page size assumptions?
 
-I'm afraid I missed your point, but...
+I'll take it through the hyper-v tree, there's a bunch of similar work
+queued up there already.
 
-> ---------------------->
-> GP num         111111     22222222222222222222222222222222233333333
-> GP state  i    e     p    x                 r              rx     i
-> CPU0 :         rse	  rsx
-> CPU1 :                         rse     rsx
-> CPU2 :                                         rse     rsx
->
-> Here, we had 3 grace periods that elapsed, 1 for the rcu_sync_enter(),
-> and 2 for the rcu_sync_exit(s).
-
-But this is fine?
-
-We only need to ensure that we have a full GP pass between the "last"
-rcu_sync_exit() and GP_XXX -> GP_IDLE transition.
-
-> However, we had 3 rcu_sync_exit()s, not 2. In other words, the
-> rcu_sync_exit() got batched.
->
-> So my point here is, rcu_sync_exit() does not really always cause a new
-> GP to happen
-
-See above, it should not.
-
-> Then what is the point of the GP_REPLAY state at all if it does not
-> always wait for a new GP?
-
-Again, I don't understand... GP_REPLAY ensures that we will have a full GP
-before rcu_sync_func() sets GP_IDLE, note that it does another "recursive"
-call_rcu() if it sees GP_REPLAY.
-
-> Taking a step back, why did we intend to have
-> to wait for a new GP if another rcu_sync_exit() comes while one is still
-> in progress?
-
-To ensure that if another CPU sees rcu_sync_is_idle() (GP_IDLE) after you
-do rcu_sync_exit(), then it must also see all memory changes you did before
-rcu_sync_exit().
-
-Oleg.
-
+--
+Thanks,
+Sasha
