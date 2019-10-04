@@ -2,90 +2,163 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=1.0 required=3.0 tests=DEAR_SOMETHING,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1560BC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F87EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE020222CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BA820700
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jNOBjg77";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ESd3wgaB"
+	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="SOKIJ0wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388886AbfJDNri (ORCPT
+        id S2388896AbfJDNrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:47:38 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51540 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388438AbfJDNrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:47:37 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2D517619F4; Fri,  4 Oct 2019 13:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570196856;
-        bh=YTbkcIOSoT6sfkliDWftlO8oLXWgzNqKOEziTUyn0HU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=jNOBjg77Md9jO1ArgJgRIulK23TEMZaqZ/JV6WLuLYPcAFqvLwYV/wrUhKsdbZa4+
-         w5LGElS3knZUK4dg6HW4O6t6a/0zSuO2ftehftqW3qQTHvWkSwaLXZ9pn86g47c82J
-         HQLKAoo1QS7TwMt4KXNd4OicHVBiI7ipjxfJor+Q=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28C4A6081C;
-        Fri,  4 Oct 2019 13:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570196855;
-        bh=YTbkcIOSoT6sfkliDWftlO8oLXWgzNqKOEziTUyn0HU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=ESd3wgaBuhMt7Vw0LAcQG80pZLg82sIGccWfnpkFvmJvHKErgvVz/Gwg7OXZMo5M+
-         2QkIUoWqLvWjT5dvTYuD+71vcJusxAhvcD6cEp3WP/XQEpGC9Nr0KI1Jot1RNOuFy3
-         7JvVAlt3hoq+UDbGBByU5Qq4YWhuDrZol0TMOWzM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28C4A6081C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 4 Oct 2019 09:47:53 -0400
+Received: from mail-eopbgr1310045.outbound.protection.outlook.com ([40.107.131.45]:63064
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388376AbfJDNrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:47:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fnbmn3Ir7u41HgvRGRGYFsKopXc6GOzmyUfiOWo9OjZeVGHYLVDeTVzxzQufp6G9hwXvyUBGceZGXye/5kPAJ3dOiTgWLcEmJ1qph4MHv0AJjuh4wWRZ2C4mGP+uSmFaRcl2l6/BmiMArGrHTcMMmbYutrVrHqF/YELMo9/V4VNgs0EZEL2WA3UQ5Z7RzZ7xilP90CH4Yg0hFij+P/+hRfMcpNzFKM05q/UF3BFOqgkByz6oX8H9TH0FISERWQsIsJPunhiq0H4cgltFwiYe+SjCbfNZ+EdPsFhMrLaNTEolqtD+YVxtT6aKJZluTzoNqGsz/fRgYOG8RwLymJ8ZCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7DNdGl30sxVajcdFqIOPcCbRV6kPsZ0V3BrrGOk6LKE=;
+ b=FMTwwZKoFLUQshSn48v8ncjcQLkRLc4z8o6heTtpOWnUAwEM4TVRw4EiWYI64P1B0IUUZihpWjLU7u1s0Pa5BNZFTl8oO2mNVjB1fTE2PBZFXBPmLayiK2QS8BLhbw3tTNO1fn+q/9sVdSHqFTcMywiaw2zj2UEmpNfP1v8bVp7naCSvlF/KQwgt2OmOUidIOIGgaO9s2rmXni1VtpadL2mz031PWG6xQRjFVuQjCn6Fe1ptof0RrvVAQ0AXQ1fP4jiqq43o5lbDiyvsowwZsAIKrd05K+T1jICTejTHzqVhLkVIbyNZG7vf+Y4woXU0jeLnq0tHBezReoenA+uROw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=teo-en-ming-corp.com; dmarc=pass action=none
+ header.from=teo-en-ming-corp.com; dkim=pass header.d=teo-en-ming-corp.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=teoenmingcorp.onmicrosoft.com; s=selector1-teoenmingcorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7DNdGl30sxVajcdFqIOPcCbRV6kPsZ0V3BrrGOk6LKE=;
+ b=SOKIJ0wo1gExyFiF8PpsywQQ/TBx+xbsZpEtwzoi99HtSg6UFdZ+uWd9XlTCpXweOnjyZYTUAHT5alIYQiNvA5Kp7yl2CQriIisyWxqu8Sr0rYoulfDid8F+yYChFn4CGKD3jD/orYtcNjnsFmPWMqzgbxZPbpYQpbkUMEHR6fg=
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
+ SG2PR01MB3488.apcprd01.prod.exchangelabs.com (52.132.235.81) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Fri, 4 Oct 2019 13:47:47 +0000
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::48a5:3998:fd15:92e8]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::48a5:3998:fd15:92e8%6]) with mapi id 15.20.2305.023; Fri, 4 Oct 2019
+ 13:47:46 +0000
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+Subject: Memo from Orthopaedic Surgeon at Singapore General Hospital for Early
+ Onset of Osteoarthritis
+Thread-Topic: Memo from Orthopaedic Surgeon at Singapore General Hospital for
+ Early Onset of Osteoarthritis
+Thread-Index: AdV6uj35cdwGVqr+T0u09hQ8FudA4Q==
+Date:   Fri, 4 Oct 2019 13:47:46 +0000
+Message-ID: <SG2PR01MB214192F460F25787EDD8B80C879E0@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ceo@teo-en-ming-corp.com; 
+x-originating-ip: [118.189.211.120]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 18165533-44db-46cf-d975-08d748d17079
+x-ms-traffictypediagnostic: SG2PR01MB3488:
+x-ms-exchange-purlcount: 6
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2PR01MB348852AD0A69B6E4E761D9C0879E0@SG2PR01MB3488.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 018093A9B5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(376002)(396003)(136003)(366004)(346002)(189003)(199004)(66476007)(2351001)(102836004)(55016002)(6306002)(66446008)(52536014)(9686003)(64756008)(81156014)(5640700003)(33656002)(7736002)(3846002)(6116002)(486006)(66556008)(5660300002)(26005)(86362001)(6916009)(6436002)(76116006)(99286004)(2906002)(966005)(107886003)(256004)(508600001)(66066001)(4326008)(8936002)(186003)(7696005)(316002)(74316002)(25786009)(8676002)(476003)(6506007)(305945005)(14454004)(71190400001)(71200400001)(81166006)(2501003)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB3488;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: e6lybmorl4FBDqvmVfjFP24/kEglQryYf1JF8f+uty7ktVjbGVaYuNLv+XNzwGInGX92BUorKq3sk5NRjCG2SQVPze+gElITgT+5FDgNW9Y1+5M87uOOD8KWNpagR2alajVAsrGqOdTiZbAnnpWbVQiscQAIPFdGk26+AL3wHCYVQb8sAdMxKKLMNvK9G+Vme605DKzp74tX8C+J7qrH3e9a5n/CBAIX8QrRK4FwPQitSsBNaWB2mP/eTwXcpG3hQG10MwdJFoqEfvi/ikI1p17k2J6iGhl3OYaTNc+gRO4kpIeN03JnLB0Z+mzsgMIquN9wvuMoe/efVXKq12fcDO86xnm9vOmZdQJN1zTIO0CnhiWxbwvuoG/r5c8tW1uvT2c1TQmmXX6YSnomnFlzkHgjiWaeatiJ9gCuAbkhVj4ZT1Jq/TKrhWWqcSzL/AkePuM8wFWCINvgDyktSQookQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rsi: fix potential null dereference in rsi_probe()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191002171811.23993-1-efremov@linux.com>
-References: <20191002171811.23993-1-efremov@linux.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-wireless@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191004134736.2D517619F4@smtp.codeaurora.org>
-Date:   Fri,  4 Oct 2019 13:47:36 +0000 (UTC)
+X-OriginatorOrg: teo-en-ming-corp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18165533-44db-46cf-d975-08d748d17079
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 13:47:46.5994
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aHmGrlXSylxVjGm3VrPt3OOhCUM/p6uI1XEKpl+X+eda5T4s4l2joxZymm1lJVi7eXycimSNXS5xVWN4n8nEM+3t4/tT9oEhNmJZ2IcZEeY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB3488
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Denis Efremov <efremov@linux.com> wrote:
+Subject: Memo from Orthopaedic Surgeon at Singapore General Hospital for Ea=
+rly Onset of Osteoarthritis
 
-> The id pointer can be NULL in rsi_probe(). It is checked everywhere except
-> for the else branch in the idProduct condition. The patch adds NULL check
-> before the id dereference in the rsi_dbg() call.
-> 
-> Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
-> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> Cc: Siva Rebbagondla <siva8118@gmail.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+Singapore General Hospital
+SingHealth
 
-Patch applied to wireless-drivers-next.git, thanks.
+2 October 2019
 
-f170d44bc4ec rsi: fix potential null dereference in rsi_probe()
+Dear Sir/Madam
 
--- 
-https://patchwork.kernel.org/patch/11171695/
+TURRITOPSIS DOHRNII TEO EN MING -ZHANG ENMING ,
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+To Whom It May Concern,
+
+This gent has early osteoarthritis.
+
+He cannot stand for long hours, can walk 15km in 1 day, have difficulty cli=
+mbing steps.
+
+Thank you.
+
+(Signature)
+
+Dr Chia Zi Yang
+MBBS, MRCSEd, MMed (Ortho), FRCS (Ortho)
+Associate Consultant Orthopaedic Surgeon
+Department of Orthopaedic Surgery
+Singapore General Hospital
+MCR 14877F
+
+For scanned image of this doctor's memo, please refer to my RAID 1 mirrorin=
+g redundant blogs at
+
+https://tdtemcerts.blogspot.com/2019/10/memo-from-orthopaedic-surgeon-at.ht=
+ml
+
+https://tdtemcerts.wordpress.com/2019/10/02/memo-from-orthopaedic-surgeon-a=
+t-singapore-general-hospital-for-osteoarthritis/
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
+e.html
+
+***************************************************************************=
+*****************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the United=
+ Nations Refugee Agency Bangkok (21 Mar 2017) and in Taiwan (5 Aug 2019):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
 
