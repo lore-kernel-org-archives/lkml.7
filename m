@@ -2,123 +2,103 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059EEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E56C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53FC222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570205909;
-	bh=UoQ1ww8PIJpk0xmOR9f8QWpU6QAti8ZQPMjess4Wl04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U1CyGMF75mR8Gl0XpzVThqzBZ9ffUntA/rLc9Cs4owUi5oax+6uQQThlbZ6YPWCOy
-	 /gW5CFtkFD309Hks9ZaZ4i5KlZ+oHgZCPBdXAAaBV8CocN7rJKnIxlj4pYJWpSRGe9
-	 wuA+hVnrN+RJZuoGekwATLhprXG0wTPKxUc3U31k=
+	by mail.kernel.org (Postfix) with ESMTP id 8C89E20873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzQxpEXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390201AbfJDQS3 (ORCPT
+        id S2390245AbfJDQUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389131AbfJDQS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:18:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7750F20873;
-        Fri,  4 Oct 2019 16:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570205908;
-        bh=UoQ1ww8PIJpk0xmOR9f8QWpU6QAti8ZQPMjess4Wl04=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QaLBSHhvmvJGsM2YN9Cx0Fsm/UWt0/IlVRYTSAHH0ckuw4hC2hL+yvN8dy5YiMdl8
-         COwQFOSU86fbSoauwCNrl+B2y/4/mfnbEKX77EvbusMCRHvLFEDLXIAPs16YU7ChzR
-         kzDPLndVv6cfzSbINKCVAfJlXAHOIac46GOLjhgA=
-Date:   Fri, 4 Oct 2019 18:18:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jolly Shah <jolly.shah@xilinx.com>
-Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
-        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
-        rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: firmware: Add bindings for Versal
- firmware
-Message-ID: <20191004161825.GB854302@kroah.com>
-References: <1569613206-20189-1-git-send-email-jolly.shah@xilinx.com>
- <1569613206-20189-2-git-send-email-jolly.shah@xilinx.com>
+        Fri, 4 Oct 2019 12:20:55 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38620 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390152AbfJDQUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:20:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id b20so7118301ljj.5;
+        Fri, 04 Oct 2019 09:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=esA6+awGjiFzCbqVXjFrVJ00nRBU2EYyMDWs4D5Bo9k=;
+        b=jzQxpEXu981x/R4lBeyi37dR9lNATiNXvQIQcX78AibLePSTwnTPgExbDqvKaaQWLq
+         LrdMMMlPpdr1jBSuzh+AirY9496WZnUkB9RFQVv/ZEo0d/FBrzRtGplxVVs/nH+Zdtht
+         fNWc7yRznWVaRwrgsAcyyqtj9YUb45VG23pbp4+8okBiworkHUejExjulGgOTeP/eQx4
+         isJnZMNNvHIriF+u5m1xgDYFE2EEG5/qLAug/AMUcMciutF5q4V4wLTwoYqRiWgw728p
+         w421te/O6o8DZMGLkiEjt5iw/hjGex7J5N+AfTHMs0Az1CatAJc0KMiSeuqAtgxRH3P3
+         xeHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=esA6+awGjiFzCbqVXjFrVJ00nRBU2EYyMDWs4D5Bo9k=;
+        b=mXBgJMhPwjvGZO6qHcX9MfvXeWiMbdbs6s0VEDvHG1LnswcyCpHgGgFlbaJZvTHdXA
+         YbOip6wHfZhPGO0KpAHzK5asjewWlkLIZ1y+4964rSgZRDF1b4VibIunZSlHB8cixA50
+         iNl2+NLFip+EueTR5/QV8TCwIhhGgWJGEos5mdv9mvZYOMj8qsY/TuL3hVIy58HeVR4y
+         q2ayE3GcKNNuuB3EDS7kcKvc7rGLoczIxL3WWwTo0RfnTC/lFfHYNgXW/y8KzlrayK3Y
+         vOdyd/jO/j5f+VTWGTw6HavaOCOur3/eexRrNB2GZ0L+oMDWvbO1cRebHO55ICzj66tJ
+         +XIA==
+X-Gm-Message-State: APjAAAVrc/UxinJhkBeENOsxI/ofn7/cLUNViQvl+RVCP9p0gfaTXWoS
+        U1/kcMpP5otJS1vMM23I5qI=
+X-Google-Smtp-Source: APXvYqx5KFDU3H6pNRjg1NQbE6teRhCUB8J57fMUlIj1AcLch3+TZ7ihEN7H5oa8mKxdRpgD6cquTw==
+X-Received: by 2002:a2e:9d44:: with SMTP id y4mr10224990ljj.115.1570206050168;
+        Fri, 04 Oct 2019 09:20:50 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id q19sm1341149ljj.73.2019.10.04.09.20.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 09:20:48 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 4 Oct 2019 18:20:41 +0200
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Daniel Wagner <dwagner@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
+ ne_fit_preload_node
+Message-ID: <20191004162041.GA30806@pc636>
+References: <20191003090906.1261-1-dwagner@suse.de>
+ <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1569613206-20189-2-git-send-email-jolly.shah@xilinx.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:40:05PM -0700, Jolly Shah wrote:
-> ZynqMP firmware driver can be used for versal also.
-> Add versal compatible string to zynqmp firmware driver
-> doc.
+On Fri, Oct 04, 2019 at 05:37:28PM +0200, Sebastian Andrzej Siewior wrote:
+> If you post something that is related to PREEMPT_RT please keep tglx and
+> me in Cc.
 > 
-> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-> ---
->  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> On 2019-10-03 11:09:06 [+0200], Daniel Wagner wrote:
+> > Replace preempt_enable() and preempt_disable() with the vmap_area_lock
+> > spin_lock instead. Calling spin_lock() with preempt disabled is
+> > illegal for -rt. Furthermore, enabling preemption inside the
 > 
-> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> index a4fe136..18c3aea 100644
-> --- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> @@ -11,7 +11,9 @@ power management service, FPGA service and other platform management
->  services.
->  
->  Required properties:
-> - - compatible:	Must contain:	"xlnx,zynqmp-firmware"
-> + - compatible:	Must contain any of below:
-> +		"xlnx,zynqmp-firmware" for Zynq Ultrascale+ MPSoC
-> +		"xlnx,versal-firmware" for Versal
->   - method:	The method of calling the PM-API firmware layer.
->  		Permitted values are:
->  		  - "smc" : SMC #0, following the SMCCC
-> @@ -21,6 +23,8 @@ Required properties:
->  Example
->  -------
->  
-> +Zynq Ultrascale+ MPSoC
-> +----------------------
->  firmware {
->  	zynqmp_firmware: zynqmp-firmware {
->  		compatible = "xlnx,zynqmp-firmware";
-> @@ -28,3 +32,13 @@ firmware {
->  		...
->  	};
->  };
-> +
-> +Versal
-> +------
-> +firmware {
-> +	versal_firmware: versal-firmware {
-> +		compatible = "xlnx,versal-firmware";
-> +		method = "smc";
-> +		...
-> +	};
-> +};
-> -- 
-> 2.7.4
+> Looking at it again, I have reasonable doubt that this
+> preempt_disable() is needed.
 > 
+The intention was to preload a current CPU with one extra object in
+non-atomic context, thus to use GFP_KERNEL permissive parameters. I.e.
+that allows us to avoid any allocation(if we stay on the same CPU)
+when we are in atomic context do splitting.
 
+If we have migrate_disable/enable, then, i think preempt_enable/disable
+should be replaced by it and not the way how it has been proposed
+in the patch.
 
-For new dt bindings, don't you have to cc: the dt maintainers and
-mailing list?  I can't take the patch until I get an ack from them.
-
-thanks,
-
-greg k-h
+--
+Vlad Rezki
