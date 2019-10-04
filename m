@@ -2,137 +2,168 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98037C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B9AC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C5521D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A4B207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjSLjRjB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f0LGMOO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389776AbfJDPLQ (ORCPT
+        id S2389686AbfJDPMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:11:16 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44896 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389086AbfJDPLQ (ORCPT
+        Fri, 4 Oct 2019 11:12:31 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45001 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389086AbfJDPMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:11:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u40so8975066qth.11;
-        Fri, 04 Oct 2019 08:11:15 -0700 (PDT)
+        Fri, 4 Oct 2019 11:12:31 -0400
+Received: by mail-io1-f66.google.com with SMTP id w12so14202212iol.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 08:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LaVRRMK9qu3AK/IDimN49Clff2cxJBO8xmfUwWCrdGI=;
-        b=tjSLjRjBQ/Xb2EqjJJ+ELbHOAgSrTFA+9NuNuwVMn3f3zUpKLba1tmgGG7J3PqGWpL
-         YojUhXkcYDU2KT72YIx57K67hJyb3+qHTD97X1wsw+NT+8PIvHMY0vE/yoLlEk8zUXZY
-         bm9smuVFB7rUNUdyca3xT3LTMoNVt9nQj9LEQQ1lTbHf61rh9Uu273MLj6UHCI6XqhS+
-         oO4drxzBQzXLuMTeuWQPT6Npshp1oHDiNwq//3S2OzzJldXhEqiEdWmDuvDNLXNCJg9w
-         L5vG2Bvw9m9cabO2En6WYF7Ootl6qsBuZJGMHdACd7b+4QSR0JvGsZ57KAPq1UUXtS3J
-         /rOw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cWRdLiwQJAJJAJeYx45YFgevjCqiCyRsVMde8/zsJ6A=;
+        b=f0LGMOO+QGwV68JTQXruh+AqnwraIvphJ9rXbYuICywU3+WNjjBoC5yX90kY20UaPG
+         oorPZEkmRyvxkFAIJVNimLUYleYdudogrG58Vz0F1YYs94ESlt4sD/JkVZRfJxZHaenT
+         NRo2seZ06B71stP4w2Tk9nLWSOCbJ0ymeQ9TdDMGU9En/VrkRmrgL/E9P5gd58qGb5dN
+         N4gLewWqvEji28X4e78L7waSh5spQL6DGGDA+lVJAzy/74nCl0K3F/nU/729hPgX+QBH
+         WxbHVGsf6mI/0G2+jeJE5JDN01gVUGzDFFf+EB3oTlgLGZjcgE9bWSjcKaE4lnhy8UWe
+         80Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LaVRRMK9qu3AK/IDimN49Clff2cxJBO8xmfUwWCrdGI=;
-        b=E1iH6ccYBkF8eE7a6FJr0g174k20IMcoPz2Hdd4DjdFeKt7XjjOGS7AUwfrqJ7J/9p
-         OaCva6MJLWBrrS4tH728YgdI7oE3vYU7vRUj+POpefeyDRd7X59EE0tvo9tGRgBzoFY9
-         DkbgBZ33SQGGiwS25mGjC2ojamPGi0cv4bsM1f8tFS4yaPaIqTpe081O0PoxDTypYjM+
-         nJloBLaBrqFt2q6ogoiSTk0M0jpoEC7Xe63uE8b8bnDV2Rm8QbTHjcd0Rot646EpsH8u
-         Vvq5YDN1/rfX7iSZlWQ78+RfNqRo8glT8hUXsYTn4tXSNaGWeEabQV3U3DXi4VvmAWt9
-         A3vg==
-X-Gm-Message-State: APjAAAXwON33sHRtQmbONOYu5PmyOsrOF1XLOGR7q5Iv1pf4pA5N92u+
-        /yEmreBgWT1jBma3hFIDsTA=
-X-Google-Smtp-Source: APXvYqzS2WPllmpeWzWMvLD7ans2wlPHGenq0xVVA5BS1uVMyNVlrgiV+KuHd5KyDDonyc0Im9VzRQ==
-X-Received: by 2002:ac8:5554:: with SMTP id o20mr16339768qtr.282.1570201874942;
-        Fri, 04 Oct 2019 08:11:14 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a3:10fb:a464:42a6:e226:d387? ([2620:10d:c091:500::2:9b70])
-        by smtp.gmail.com with ESMTPSA id 139sm3317840qkf.14.2019.10.04.08.11.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2019 08:11:14 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: add bluetooth co-existence support for
- single antenna
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-References: <20190911025045.20918-1-chiu@endlessm.com>
- <0c049f46-fb15-693e-affe-a84ea759b5d7@gmail.com>
- <CAB4CAweXfhLc8ATWg87ydadCKVqj3SnG37O5Hyz8uP8EkPrg9w@mail.gmail.com>
-Message-ID: <5dad1fd1-ef0b-b5d9-02ea-7fc3bf7f8576@gmail.com>
-Date:   Fri, 4 Oct 2019 11:11:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=cWRdLiwQJAJJAJeYx45YFgevjCqiCyRsVMde8/zsJ6A=;
+        b=l5tk5El+x9zGDxG+Jaff79Y1VE93Mp1ils5sedx8u3Un4DLY2GR8T2TFecu19DYASa
+         IekCTNZthcGgxxgAe9EOgrNaKxzjtjTir0JWG8ZPf8mpd//LI1rihTCndjBmCJZtM2Wt
+         H5j2Bl9BXwDneTztPJxgU/ySHqiQLwj+iAk7NHTncqlsQ4qmJRddJ9JssEASiPmwBAab
+         SZGukS66ci8O1n8UuGxdEUkB5syrUbxBMaT0LvQS6PzES/8meXJfyC6aWDKCc1yRHuZM
+         6+KKjONVfCRYzm+M3t5EGFjLyuCsv4HhcKUYexEm9P/lxPlOIj2rolmSXflZ9unelYft
+         YZ8A==
+X-Gm-Message-State: APjAAAV4tfHM5epR+BbkaWd2W+O3jCpn8xjhSC+xVg44D7W/QNYCmWhR
+        aNBNHzWN9/9/cOwIDNNQCTRUcg==
+X-Google-Smtp-Source: APXvYqxqIXCzfNNEjTBNMu5NySqCyk/eRVksf1vOt8+a3Fv6hjdsOkifkyV9BcOCqt/nTTJdnhh7FQ==
+X-Received: by 2002:a5e:df04:: with SMTP id f4mr13760675ioq.192.1570201950070;
+        Fri, 04 Oct 2019 08:12:30 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id l82sm4099655ilh.23.2019.10.04.08.12.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 08:12:29 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 10:12:28 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/211] 4.19.77-stable review
+Message-ID: <20191004151228.25fe3upo5jncvyme@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+References: <20191003154447.010950442@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CAB4CAweXfhLc8ATWg87ydadCKVqj3SnG37O5Hyz8uP8EkPrg9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 9:19 PM, Chris Chiu wrote:
-> On Wed, Oct 2, 2019 at 11:04 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
->>
->>
->> In general I think it looks good! One nit below:
->>
->> Sorry I have been traveling for the last three weeks, so just catching up.
->>
->>
->>> +void rtl8723bu_set_coex_with_type(struct rtl8xxxu_priv *priv, u8 type)
->>> +{
->>> +     switch (type) {
->>> +     case 0:
->>> +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE1, 0x55555555);
->>> +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE2, 0x55555555);
->>> +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE3, 0x00ffffff);
->>> +             rtl8xxxu_write8(priv, REG_BT_COEX_TABLE4, 0x03);
->>> +             break;
->>> +     case 1:
->>> +     case 3:
->>
->> The one item here, I would prefer introducing some defined types to
->> avoid the hard coded type numbers. It's much easier to read and debug
->> when named.
->>
-> Honestly, I also thought of that but there's no meaningful description for these
-> numbers in the vendor driver. Even based on where they're invoked, I can merely
-> give a rough definition on 0. So I left it as it is for the covenience
-> if I have to do
-> cross-comparison with vendor driver in the future for some possible
-> unknown bugs.
+On Thu, Oct 03, 2019 at 05:51:06PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.77 release.
+> There are 211 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
->> If you shortened the name of the function to rtl8723bu_set_coex() you
->> won't have problems with line lengths at the calling point.
->>
-> I think the rtl8723bu_set_ps_tdma() function would cause the line length problem
-> more than rtl8723bu_set_coex_with_type() at the calling point. But as the same
-> debug reason as mentioned, I may like to keep it because I don't know how to
-> categorize the 5 magic parameters. I also reference the latest rtw88
-> driver code,
-> it seems no better solution so far. I'll keep watching if there's any
-> better idea.
+> Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
+> Anything received after that time might be too late.
 
-Personally I would still prefer to name it COEX_TYPE_1 etc. but I can 
-live with this. Would you mind at least adding some comments in the code 
-about it?
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Cheers,
-Jes
+Summary
+------------------------------------------------------------------------
 
+kernel: 4.19.77-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.19.y
+git commit: 319532606385c7221dfbfba6f857bd03e97e20d0
+git describe: v4.19.76-212-g319532606385
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.76-212-g319532606385
 
+No regressions (compared to build v4.19.76)
+
+No fixes (compared to build v4.19.76)
+
+Ran 22570 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* ltp-open-posix-tests
+* network-basic-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
