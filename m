@@ -2,92 +2,208 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1175FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7465C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58D32084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570201033;
-	bh=crFelfh0Sn/O8mB2YPt3Mozpd1WcKFo0ht7BKzHX6bI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eNzVRxH9Lt5LNPnCE69Fv7x+ho7KQImopC0So5SSXo6AnhBD1VV11JPw24vD/DXDB
-	 5EqT3COWQ6JdMgg8AoY8z6zF1Oo+TsqOkKXf1KuLtuzoKFkARe1VFBjUjgtZXj3PA5
-	 gOwyLT+t9YgXzba+IlQpldLeLvXnv/HdRoJrooUs=
+	by mail.kernel.org (Postfix) with ESMTP id AE32E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rHRl2+0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389440AbfJDO5N (ORCPT
+        id S2389533AbfJDO5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:57:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389042AbfJDO5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:57:12 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2D3222C0
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 14:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570201032;
-        bh=crFelfh0Sn/O8mB2YPt3Mozpd1WcKFo0ht7BKzHX6bI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZV9Uig7IsG0spaw0caqrW3Q2fqYoIacHVBgoYU9FOb8oSapqSp1DIJ4eSjY3x7Djd
-         Y6/w8lYmZotuqGOqt2NQV+emn/oW5jSqjOMytuhXYCjGov35flVZxuxnYUaWGgU4f4
-         1EZ5D/haZRb8VRyR5cSCjjUDAva2X/lFYafJDhAs=
-Received: by mail-wr1-f47.google.com with SMTP id o18so7559886wrv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:57:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAVJEvuVueuY+/4YTiFurNQ5DW/u973n6G62HgfhHVUqk+INjC+A
-        c6H6julspKXqzU+gYs5uEwEm+4EIvhWmrx5beMETEA==
-X-Google-Smtp-Source: APXvYqwknDFkFaJzo6VOtFntrB9U7DIZ2Bs13Lu1v1o7MImeIR75HTQyzSZPi+TJSharOuJdeBuc1fee3GNxv2jxmGM=
-X-Received: by 2002:a5d:4647:: with SMTP id j7mr12415523wrs.106.1570201030525;
- Fri, 04 Oct 2019 07:57:10 -0700 (PDT)
+        Fri, 4 Oct 2019 10:57:50 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43404 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389378AbfJDO5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:57:49 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so4042973pfo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w2obvvD0YQZHLEq7fGZQtKqybBtTNFyX7qrcoUNkcuk=;
+        b=rHRl2+0WeuRHpPB43fer0wtZz/voElxZMtstXIZ3hcmNuzWRZgK4eVFDJ3Q81Z2Sqb
+         Un7WPlI4qOfGUn1c8LB+Egj32h+XnRx6kv0yULoLdwsm2mhUGZeSZ3s8B5sIR9F2lyWs
+         vhSDEQ3ns/7NluK3dqLsKxVEYMuplU/HMAET0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w2obvvD0YQZHLEq7fGZQtKqybBtTNFyX7qrcoUNkcuk=;
+        b=VJAVqBIJqrid5M+AwpYh6sI4c3wSNMd+zDn+DZUUxDxCizvcRwbfkdk7sfAmET+yfW
+         EuE14HAvX1M40v07bDCLmd3xLg/m17REAVRJP8Sw+MwWEymag7FsNVXH0ldi2Q4Jt2wj
+         hiuj0UNdftT9qRUFZDDOpZpEDNArzlsfjnXLkfZcOhrDzjg/zNTgygWJhL087BuiPCs9
+         PqrugxaFheOKZlk596zBmHv5bSqvQG76IFUXiTKPXBUNF7GWAVJ1vXssXEfT1spiIAMd
+         t8AkDbEzwuiBcTIU+VzuQvsFF1WENr9WX64ET+cE9mlqY7DS78KI6Nn+o2i90zYKXhXv
+         evww==
+X-Gm-Message-State: APjAAAVUzhXqobQUzbDmIsVpoeslO5EJI64Bl/4iew17e5HPsM6vfSpd
+        l7exGd2cfaMJg7gAn4CJPR2tWD0E5Fk=
+X-Google-Smtp-Source: APXvYqxqwEnceOEYdh5DBFB0KF+DIUkAYdTThezgyrXfVcZlONzVqeYt0nML7MKsm0YzbNjpmsYzAw==
+X-Received: by 2002:a63:1e16:: with SMTP id e22mr16011959pge.413.1570201068335;
+        Fri, 04 Oct 2019 07:57:48 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w134sm7668359pfd.4.2019.10.04.07.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 07:57:47 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Fernandes <joel@joelfernandes.org>, bristot@redhat.com,
+        peterz@infradead.org, oleg@redhat.com, paulmck@kernel.org,
+        rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] Remove GP_REPLAY state from rcu_sync
+Date:   Fri,  4 Oct 2019 10:57:41 -0400
+Message-Id: <20191004145741.118292-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-In-Reply-To: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 4 Oct 2019 07:56:58 -0700
-X-Gmail-Original-Message-ID: <CALCETrW9MEvNt+kB_65cbX9VJiLxktAFagkzSGR0VQfd4VHOiQ@mail.gmail.com>
-Message-ID: <CALCETrW9MEvNt+kB_65cbX9VJiLxktAFagkzSGR0VQfd4VHOiQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/13] XOM for KVM guest userspace
-To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 2:38 PM Rick Edgecombe
-<rick.p.edgecombe@intel.com> wrote:
->
-> This patchset enables the ability for KVM guests to create execute-only (XO)
-> memory by utilizing EPT based XO permissions. XO memory is currently supported
-> on Intel hardware natively for CPU's with PKU, but this enables it on older
-> platforms, and can support XO for kernel memory as well.
+From: Joel Fernandes <joel@joelfernandes.org>
 
-The patchset seems to sometimes call this feature "XO" and sometimes
-call it "NR".  To me, XO implies no-read and no-write, whereas NR
-implies just no-read.  Can you please clarify *exactly* what the new
-bit does and be consistent?
+Please consider this is an RFC for discussion only. Just want to discuss
+why the GP_REPLAY state is needed at all.
 
-I suggest that you make it NR, which allows for PROT_EXEC and
-PROT_EXEC|PROT_WRITE and plain PROT_WRITE.  WX is of dubious value,
-but I can imagine plain W being genuinely useful for logging and for
-JITs that could maintain a W and a separate X mapping of some code.
-In other words, with an NR bit, all 8 logical access modes are
-possible.  Also, keeping the paging bits more orthogonal seems nice --
-we already have a bit that controls write access.
+Here's the intention AFAICS:
+When rcu_sync_exit() has happened, the gp_state changes to GP_EXIT while
+we wait for a grace period before transitioning to GP_IDLE. In the
+meanwhile, if we receive another rcu_sync_exit(), then we want to wait
+for another GP to account for that.
+
+Drawing some timing diagrams, it looks like this:
+
+Legend:
+rse = rcu_sync_enter
+rsx = rcu_sync_exit
+i = GP_IDLE
+x = GP_EXIT
+r = GP_REPLAY
+e = GP_ENTER
+p = GP_PASSED
+rx = GP_REPLAY changes to GP_EXIT
+
+GP num = The GP we are one.
+
+note: A GP passes between the states:
+  e and p
+  x and i
+  x and rx
+  rx and i
+
+In a simple case, the timing and states look like:
+time
+---------------------->
+GP num         1111111    2222222
+GP state  i    e     p    x     i
+CPU0 :         rse	  rsx
+
+However we can enter the replay state like this:
+time
+---------------------->
+GP num         1111111    2222222222222222222223333333
+GP state  i    e     p    x              r     rx    i
+CPU0 :         rse	  rsx
+CPU1 :                         rse     rsx
+
+Due to the second rse + rsx, we had to wait for another GP.
+
+I believe the rationale is, if another rsx happens, another GP has to
+happen.
+
+But this is not always true if you consider the following events:
+
+time
+---------------------->
+GP num         111111     22222222222222222222222222222222233333333
+GP state  i    e     p    x                 r              rx     i
+CPU0 :         rse	  rsx
+CPU1 :                         rse     rsx
+CPU2 :                                         rse     rsx
+
+Here, we had 3 grace periods that elapsed, 1 for the rcu_sync_enter(),
+and 2 for the rcu_sync_exit(s).
+
+However, we had 3 rcu_sync_exit()s, not 2. In other words, the
+rcu_sync_exit() got batched.
+
+So my point here is, rcu_sync_exit() does not really always cause a new
+GP to happen and we can end up having the rcu_sync_exit()s as batched
+and sharing the same grace period.
+
+Then what is the point of the GP_REPLAY state at all if it does not
+always wait for a new GP?  Taking a step back, why did we intend to have
+to wait for a new GP if another rcu_sync_exit() comes while one is still
+in progress?
+
+Cc: bristot@redhat.com
+Cc: peterz@infradead.org
+Cc: oleg@redhat.com
+Cc: paulmck@kernel.org
+Cc: rcu@vger.kernel.org
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/rcu/sync.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+index d4558ab7a07d..4f3aad67992c 100644
+--- a/kernel/rcu/sync.c
++++ b/kernel/rcu/sync.c
+@@ -10,7 +10,7 @@
+ #include <linux/rcu_sync.h>
+ #include <linux/sched.h>
+ 
+-enum { GP_IDLE = 0, GP_ENTER, GP_PASSED, GP_EXIT, GP_REPLAY };
++enum { GP_IDLE = 0, GP_ENTER, GP_PASSED, GP_EXIT };
+ 
+ #define	rss_lock	gp_wait.lock
+ 
+@@ -85,13 +85,6 @@ static void rcu_sync_func(struct rcu_head *rhp)
+ 		 */
+ 		WRITE_ONCE(rsp->gp_state, GP_PASSED);
+ 		wake_up_locked(&rsp->gp_wait);
+-	} else if (rsp->gp_state == GP_REPLAY) {
+-		/*
+-		 * A new rcu_sync_exit() has happened; requeue the callback to
+-		 * catch a later GP.
+-		 */
+-		WRITE_ONCE(rsp->gp_state, GP_EXIT);
+-		rcu_sync_call(rsp);
+ 	} else {
+ 		/*
+ 		 * We're at least a GP after the last rcu_sync_exit(); eveybody
+@@ -167,16 +160,13 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+  */
+ void rcu_sync_exit(struct rcu_sync *rsp)
+ {
+-	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_IDLE);
+-	WARN_ON_ONCE(READ_ONCE(rsp->gp_count) == 0);
++	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) < GP_PASSED);
+ 
+ 	spin_lock_irq(&rsp->rss_lock);
+ 	if (!--rsp->gp_count) {
+ 		if (rsp->gp_state == GP_PASSED) {
+ 			WRITE_ONCE(rsp->gp_state, GP_EXIT);
+ 			rcu_sync_call(rsp);
+-		} else if (rsp->gp_state == GP_EXIT) {
+-			WRITE_ONCE(rsp->gp_state, GP_REPLAY);
+ 		}
+ 	}
+ 	spin_unlock_irq(&rsp->rss_lock);
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
