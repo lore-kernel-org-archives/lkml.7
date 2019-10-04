@@ -2,178 +2,145 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359B8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5295CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1949222CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211D9222CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:07:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/jhTi+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbfJDIEM (ORCPT
+        id S1731002AbfJDIHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 04:04:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5368 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730953AbfJDIEL (ORCPT
+        Fri, 4 Oct 2019 04:07:53 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46107 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbfJDIHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 04:04:11 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x947wAiL092970
-        for <linux-kernel@vger.kernel.org>; Fri, 4 Oct 2019 04:04:10 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ve1er1rqe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 04:04:10 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 4 Oct 2019 09:04:08 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 4 Oct 2019 09:04:05 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x94844Bl52756608
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Oct 2019 08:04:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9157442045;
-        Fri,  4 Oct 2019 08:04:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36C964203F;
-        Fri,  4 Oct 2019 08:04:04 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.146])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  4 Oct 2019 08:04:04 +0000 (GMT)
-Subject: Re: [PATCH v3] docs: Use make invocation's -j argument for
- parallelism
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <201909241627.CEA19509@keescook>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- mQINBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABtDRDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKElCTSkgPGJvcm50cmFlZ2VyQGRlLmlibS5jb20+iQI4BBMBAgAiBQJO
- nDz4AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRARe7yAtaYcfOYVD/9sqc6ZdYKD
- bmDIvc2/1LL0g7OgiA8pHJlYN2WHvIhUoZUIqy8Sw2EFny/nlpPVWfG290JizNS2LZ0mCeGZ
- 80yt0EpQNR8tLVzLSSr0GgoY0lwsKhAnx3p3AOrA8WXsPL6prLAu3yJI5D0ym4MJ6KlYVIjU
- ppi4NLWz7ncA2nDwiIqk8PBGxsjdc/W767zOOv7117rwhaGHgrJ2tLxoGWj0uoH3ZVhITP1z
- gqHXYaehPEELDV36WrSKidTarfThCWW0T3y4bH/mjvqi4ji9emp1/pOWs5/fmd4HpKW+44tD
- Yt4rSJRSa8lsXnZaEPaeY3nkbWPcy3vX6qafIey5d8dc8Uyaan39WslnJFNEx8cCqJrC77kI
- vcnl65HaW3y48DezrMDH34t3FsNrSVv5fRQ0mbEed8hbn4jguFAjPt4az1xawSp0YvhzwATJ
- YmZWRMa3LPx/fAxoolq9cNa0UB3D3jmikWktm+Jnp6aPeQ2Db3C0cDyxcOQY/GASYHY3KNra
- z8iwS7vULyq1lVhOXg1EeSm+lXQ1Ciz3ub3AhzE4c0ASqRrIHloVHBmh4favY4DEFN19Xw1p
- 76vBu6QjlsJGjvROW3GRKpLGogQTLslbjCdIYyp3AJq2KkoKxqdeQYm0LZXjtAwtRDbDo71C
- FxS7i/qfvWJv8ie7bE9A6Wsjn7kCDQROnDz4ARAAmPI1e8xB0k23TsEg8O1sBCTXkV8HSEq7
- JlWz7SWyM8oFkJqYAB7E1GTXV5UZcr9iurCMKGSTrSu3ermLja4+k0w71pLxws859V+3z1jr
- nhB3dGzVZEUhCr3EuN0t8eHSLSMyrlPL5qJ11JelnuhToT6535cLOzeTlECc51bp5Xf6/XSx
- SMQaIU1nDM31R13o98oRPQnvSqOeljc25aflKnVkSfqWSrZmb4b0bcWUFFUKVPfQ5Z6JEcJg
- Hp7qPXHW7+tJTgmI1iM/BIkDwQ8qe3Wz8R6rfupde+T70NiId1M9w5rdo0JJsjKAPePKOSDo
- RX1kseJsTZH88wyJ30WuqEqH9zBxif0WtPQUTjz/YgFbmZ8OkB1i+lrBCVHPdcmvathknAxS
- bXL7j37VmYNyVoXez11zPYm+7LA2rvzP9WxR8bPhJvHLhKGk2kZESiNFzP/E4r4Wo24GT4eh
- YrDo7GBHN82V4O9JxWZtjpxBBl8bH9PvGWBmOXky7/bP6h96jFu9ZYzVgIkBP3UYW+Pb1a+b
- w4A83/5ImPwtBrN324bNUxPPqUWNW0ftiR5b81ms/rOcDC/k/VoN1B+IHkXrcBf742VOLID4
- YP+CB9GXrwuF5KyQ5zEPCAjlOqZoq1fX/xGSsumfM7d6/OR8lvUPmqHfAzW3s9n4lZOW5Jfx
- bbkAEQEAAYkCHwQYAQIACQUCTpw8+AIbDAAKCRARe7yAtaYcfPzbD/9WNGVf60oXezNzSVCL
- hfS36l/zy4iy9H9rUZFmmmlBufWOATjiGAXnn0rr/Jh6Zy9NHuvpe3tyNYZLjB9pHT6mRZX7
- Z1vDxeLgMjTv983TQ2hUSlhRSc6e6kGDJyG1WnGQaqymUllCmeC/p9q5m3IRxQrd0skfdN1V
- AMttRwvipmnMduy5SdNayY2YbhWLQ2wS3XHJ39a7D7SQz+gUQfXgE3pf3FlwbwZhRtVR3z5u
- aKjxqjybS3Ojimx4NkWjidwOaUVZTqEecBV+QCzi2oDr9+XtEs0m5YGI4v+Y/kHocNBP0myd
- pF3OoXvcWdTb5atk+OKcc8t4TviKy1WCNujC+yBSq3OM8gbmk6NwCwqhHQzXCibMlVF9hq5a
- FiJb8p4QKSVyLhM8EM3HtiFqFJSV7F+h+2W0kDyzBGyE0D8z3T+L3MOj3JJJkfCwbEbTpk4f
- n8zMboekuNruDw1OADRMPlhoWb+g6exBWx/YN4AY9LbE2KuaScONqph5/HvJDsUldcRN3a5V
- RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
- oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
- syiRa+UVlsKmx1hsEg==
-Date:   Fri, 4 Oct 2019 10:04:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 04:07:52 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so3787475lfc.13;
+        Fri, 04 Oct 2019 01:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ovj8bEj4HNuJi9wzGQ8OVwnmOICDlpqX1bq8IYt67Es=;
+        b=Q/jhTi+UlwNQHM5witg0l0JXLIzEdJ/rW9srp6N2OzBLSv7mBqDjBMKvZ6v+4iy5b2
+         NLjuBqWxmHazrxWJUHwP7khFNYepJqamR7j310oIAIv8dzdxWx53TLpaDoJXyn7gAZAW
+         pSG3QMQXArJ8708Px2rvlK0GfSMc6jfNZX0vD/I82V7gSsqjIz6WQmXQnIJoEwWoC0Rb
+         xjRs1NvkZp8c/jjocrjJjdhgwL1svgoKjJWWFUYGWLuhqwJk2xPIMHFAK+0y/fCS72Cr
+         Mk7a9+NRxRvtQzqXJgLQv8jH1EHKiq/Akeua+fHoGf74MbRPyoa14/KG+6KIi+hyCYqK
+         fK9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ovj8bEj4HNuJi9wzGQ8OVwnmOICDlpqX1bq8IYt67Es=;
+        b=WaNsMaf5D1jmbCFF4Uq+aYUtrHSKGYXlXwQTksbTm0QiVFf7PP+lak4mHyU9ncDSVV
+         Jxdm2XOWOG19E/d4HrXskd17DH1se4D8jpa080Z95Qb2J+cY6jbGQAiCZFYcgP5iv6rO
+         tpyWdpDQyLLzRY+xYdtS4bC+7le6LN8cocHdxcqgSUJjndDgjmA4h8SGcv3k371/MXJL
+         DQ6qVccaQN8y2HVWlqGa2oI/xAKQSnu5ouEUlKRFPDnJ8g1PLz9EZRluYbf5Gua/IVpo
+         +k8UCsbz28SAKPhAINygISEgEj2hcRxTZVMRxqVEg8yGNIOxt7ltRMHbnB3LvP2lk/sm
+         KWKw==
+X-Gm-Message-State: APjAAAXrSdXMuJ9fvx8D674KUEJBMVBzhHrHgJsVZKkQrK4YOs8swiYs
+        8kk4E4Wm20ZId1kCNhmbmextWqB5C3xtr1LtyowcpmtKH7RwOQ==
+X-Google-Smtp-Source: APXvYqzYMszDMQ/FA4HCY2PrSn7ZJs0ldgaC21/IQl0TPQtTlaJE4mB8anVEBF4tMRUHKqRxGSeGkXTqYAojtiAns2o=
+X-Received: by 2002:ac2:5a19:: with SMTP id q25mr8215023lfn.178.1570176470277;
+ Fri, 04 Oct 2019 01:07:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <201909241627.CEA19509@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100408-0028-0000-0000-000003A5EA3F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100408-0029-0000-0000-00002467F3FB
-Message-Id: <0d2433cc-8f97-174f-4835-1fead9e7fe16@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-04_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=708 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910040074
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com> <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
+ <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
+ <20191002083913.GG2714@lahna.fi.intel.com> <767f2f97059e4e9f861080672aaa18d3@AUSX13MPC105.AMER.DELL.COM>
+ <CA+CmpXs4YsTA3QnD77SaXq3mRYX6oFwx+pm-3wEErwkF-02M+A@mail.gmail.com>
+ <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
+ <20191003080028.GK2819@lahna.fi.intel.com> <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
+ <20191004075426.GA2819@lahna.fi.intel.com>
+In-Reply-To: <20191004075426.GA2819@lahna.fi.intel.com>
+From:   Yehezkel Bernat <yehezkelshb@gmail.com>
+Date:   Fri, 4 Oct 2019 11:07:34 +0300
+Message-ID: <CA+CmpXsMkwZhCegGYPYQo2GwN6ROwDYbY3RVZTEeN+FfZ-PbMQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
+        linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        nicholas.johnson-opensource@outlook.com.au,
+        Lukas Wunner <lukas@wunner.de>, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu,
+        Anthony Wong <anthony.wong@canonical.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 4, 2019 at 10:54 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Thu, Oct 03, 2019 at 02:41:11PM +0000, Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Sent: Thursday, October 3, 2019 3:00 AM
+> > > To: Limonciello, Mario
+> > > Cc: yehezkelshb@gmail.com; linux-usb@vger.kernel.org;
+> > > andreas.noever@gmail.com; michael.jamet@intel.com;
+> > > rajmohan.mani@intel.com; nicholas.johnson-opensource@outlook.com.au;
+> > > lukas@wunner.de; gregkh@linuxfoundation.org; stern@rowland.harvard.edu;
+> > > anthony.wong@canonical.com; linux-kernel@vger.kernel.org
+> > > Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+> > >
+> > >
+> > > [EXTERNAL EMAIL]
+> > >
+> > > On Wed, Oct 02, 2019 at 04:00:55PM +0000, Mario.Limonciello@dell.com wrote:
+> > > > > It's not even "same location - another meaning", the vendor ID comes from
+> > > the
+> > > > > DROM section, so it takes a few internal jumps inside the NVM to find the
+> > > > > location. One of the "pointers" or section headers will be broken for sure.
+> > > > >
+> > > > > And after this, we need to find the NVM in LVFS and it has to pass validation
+> > > in
+> > > > > a few other locations. The chances are so low that I'd think it isn't worth
+> > > > > worrying about it.
+> > > >
+> > > > And now I remember why the back of my mind was having this thought of
+> > > wanting
+> > > > sysfs attribute in the first place.  The multiple jumps means that a lot more of
+> > > the
+> > > > NVM has to be dumped to get that data, which slows down fwupd startup
+> > > significantly.
+> > >
+> > > IIRC currently fwupd does two reads of total 128 bytes from the active
+> > > NVM. Is that really slowing down fwupd startup significantly?
+> >
+> > Yeah, I timed it with fwupd.  Here's the averages:
+> >
+> > Without doing the reads to jump to this it's 0:00.06 seconds to probe a tree of
+> > Host controller and dock plugged in.
+> >
+> > With doing the reads and just host controller:
+> > 0:04.40 seconds
+> >
+> > With doing the reads and host controller and dock plugged in:
+> > 0:10.73 seconds
+>
+> OK, it clearly takes time to read them. I wonder if this includes
+> powering up the controller?
+>
+> Also if you can get the hw_vendor_id and hw_product_id from the kernel
+> does that mean you don't need to do the two reads or you still need
+> those?
 
-On 25.09.19 01:29, Kees Cook wrote:
-> While sphinx 1.7 and later supports "-jauto" for parallelism, this
-> effectively ignores the "-j" flag used in the "make" invocation, which
-> may cause confusion for build systems. Instead, extract the available
-> parallelism from "make"'s job server (since it is not exposed in any
-> special variables) and use that for the "sphinx-build" run. Now things
-> work correctly for builds where -j is specified at the top-level:
-> 
-> 	make -j16 htmldocs
-> 
-> If -j is not specified, continue to fallback to "-jauto" if available.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v3: python2, specific exceptions, correct SPDX, blocking writer
-> v2: retain "-jauto" default behavior with top-level -j is missing.              
-[...]
-> diff --git a/scripts/jobserver-count b/scripts/jobserver-count
-> new file mode 100755
-> index 000000000000..0b482d6884d2
-> --- /dev/null
-> +++ b/scripts/jobserver-count
-> @@ -0,0 +1,58 @@
-> +#!/usr/bin/env python
+Are those the chip vendor or the OEM, in case they are different?
 
-
-This breaks our daily linux-next build for an fedora 30 rpm on s390x:
-
-+ /usr/lib/rpm/redhat/brp-mangle-shebangs
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/profile2linkerlist.pl from /usr/bin/env perl to #!/usr/bin/perl
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/headerdep.pl from /usr/bin/env perl to #!/usr/bin/perl
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/package/buildtar from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/package/builddeb from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/package/mkspec from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/package/mkdebian from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/checksyscalls.sh from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/gen_ksymdeps.sh from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/makelst from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/checkversion.pl from /usr/bin/env perl to #!/usr/bin/perl
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/gcc-plugin.sh from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/gfp-translate from /bin/bash to #!/usr/bin/bash
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/tags.sh from /bin/bash to #!/usr/bin/bash
-*** ERROR: ambiguous python shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/jobserver-count: #!/usr/bin/env python. Change it to python3 (or python2) explicitly.
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/adjust_autoksyms.sh from /bin/sh to #!/usr/bin/sh
-mangling shebang in /usr/src/kernels/5.4.0-20191004.rc1.git155.311ef88adfa3.301.fc30.s390x+next/scripts/kernel-doc from /usr/bin/env perl to #!/usr/bin/perl
-[...]
-
-
+Thinking about it again, I'd guess it shouldn't matter much, if the chip is from
+Intel, the FW supports NVM upgrade, isn't it?
