@@ -2,118 +2,106 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB46C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB23C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A89207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C0121D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570194036;
+	bh=5Q/iWTgymOppj9DeDqpQWfy6Ic9FHuGC0vgACNbYbd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Chr1p8yPR3DJ8INMCiR4t6C8PKZwwcS7xfzdl5AAFkfWnp461qeaYc8b24RwK8hK8
+	 mzzhhbTMJ1upMBbSEmaDjrGi8BB/H4c5lBDkrmiUVX9rT+t91oo2t3UfhozvVWhFYf
+	 PywXao3ke05m7SHpjeBtpSQeHqJ/9JKL+hwZd1AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbfJDM7k (ORCPT
+        id S2388020AbfJDNAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:59:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45830 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726024AbfJDM7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:59:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DFB78ABF4;
-        Fri,  4 Oct 2019 12:59:37 +0000 (UTC)
-Message-ID: <0b544f5bc31857fef2d13bd16275cf09ace58b89.camel@suse.de>
-Subject: Re: [PATCH] mmc: sdhci-iproc: fix spurious interrupts on Multiblock
- reads with bcm2711
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     wahrenst@gmx.net, Matthias Brugger <mbrugger@suse.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 04 Oct 2019 14:59:35 +0200
-In-Reply-To: <20191004125226.27037-1-nsaenzjulienne@suse.de>
-References: <20191004125226.27037-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-E7U/NXt/RvithmmAJCzu"
-User-Agent: Evolution 3.32.4 
+        Fri, 4 Oct 2019 09:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387593AbfJDNAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:00:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B73207FF;
+        Fri,  4 Oct 2019 13:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570194033;
+        bh=5Q/iWTgymOppj9DeDqpQWfy6Ic9FHuGC0vgACNbYbd0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jeWNxAVjM4M9jRnwjBw1GFUCfukHqXGsDW5rJu7N0l04+zMSDtyZVPUWlR7BmlWPW
+         Pf8rFwhCg6vy/1UMQMas0rybf6WEZzSjEubo9xj49BqcCMo8veo/EBye4ja8KOnHZd
+         iPIwswtomqveq0U9KIpbFVNiWnUPXYYEX4JVu/C8=
+Date:   Fri, 4 Oct 2019 15:00:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 0/2] drivers: make early_platform code SuperH-specific
+Message-ID: <20191004130031.GA596158@kroah.com>
+References: <20191003092913.10731-1-brgl@bgdev.pl>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003092913.10731-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 03, 2019 at 11:29:11AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Some time ago I started a discussion about the need for a proper early device
+> probing mechanism[1]. One that would be based on real platform drivers and
+> support both platform data and device tree.
+> 
+> While we're far from reaching any consensus on the implementation, Arnd
+> suggested that I start off by moving the SuperH-specific early platform
+> drivers implementation to arch/sh[2].
+> 
+> This series is the first attempt at making way for a new, less hacky
+> implementation.
+> 
+> The first patch moves all the early_platform code to arch/sh.
+> 
+> The second patch prefixes all early_platform symbols with 'sh_'.
+> 
+> [1] https://lkml.org/lkml/2018/4/26/657
+> [2] https://lkml.org/lkml/2018/4/27/239
+> 
+> v1 -> v2:
+> - certain drivers are compiled for arm/mach-shmobile too - we need to
+>   add ifdefs for CONFIG_SUPERH around early_platform calls
+> 
+> v2 -> v3:
+> - added a stub for is_early_platform_device() which always returns false
+>   on non-SuperH architectures
+> 
+> v3 -> v4:
+> - rebased on top of v5.4-rc1
+> - removed patches that are already upstream from the series
+> 
+> Bartosz Golaszewski (2):
+>   drivers: move the early platform device support to arch/sh
+>   sh: add the sh_ prefix to early platform symbols
 
---=-E7U/NXt/RvithmmAJCzu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I like this, any objection from anyone if I take this in my driver-core
+tree for 5.5-rc1?
 
-On Fri, 2019-10-04 at 14:52 +0200, Nicolas Saenz Julienne wrote:
-> The Raspberry Pi 4 SDHCI hardware seems to automatically issue CMD12
-> after multiblock reads even when ACMD12 is disabled. This triggers
-> spurious interrupts after the data transfer is done with the following
-> message:
->=20
->   mmc1: Got data interrupt 0x00000002 even though no data operation was i=
-n
-> progress.
->   mmc1: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D SDHCI REGISTER DUMP =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00001002
->   mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
->   mmc1: sdhci: Argument:  0x00000000 | Trn mode: 0x00000033
->   mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
->   mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
->   mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
->   mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000000
->   mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
->   mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
->   mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
->   mmc1: sdhci: Cmd:       0x00000c1a | Max curr: 0x00080008
->   mmc1: sdhci: Resp[0]:   0x00000b00 | Resp[1]:  0x00edc87f
->   mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
->   mmc1: sdhci: Host ctl2: 0x00000001
->   mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xf3025208
->   mmc1: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Enable SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 to enable ACMD12 on multiblock
-> reads and suppress the spurious interrupts.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Tested-by: Matthias Brugger <mbrugger@suse.com>
+thanks,
 
-Forgot to add:
-
-Fixes: f84e411c85be ("mmc: sdhci-iproc: Add support for emmc2 of the BCM271=
-1")
-
-I'll resend if needed.
-
-Regards,
-Nicolas
-
-
---=-E7U/NXt/RvithmmAJCzu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2XQjcACgkQlfZmHno8
-x/5CBQf/WvHZDFKw37mxwtwN2x5i0WFg95fBCi+6Hk6D0vDWuVUVMZBYneEUmyIt
-p42PpscEU854tHmqpqDn6/g2+O/9+g1XW3HOoOj4WjoP27d8uZPCPa0v8eWpahdI
-vGVhVjoCIuFlu3rsBW1tz/zvzVGmRICBY8ZurPqA7Pi+mepPAnWgjC99v4RDUEZc
-iqYqSupt4qyT7bhs5JOFywXm1Qu+KHQ0XoqGQdBD/vEVNuJn2bu0gOhvqKeWCWdl
-l6cHyjZjtHvtILFZyo1+Ys2DjVJnjPBY3zRBFG2C8I+2Ep3ust80fZ6SbZnMqDGx
-jjaH2rBVoZ7Ic5dAcBPXmjieSdo/Bg==
-=mtyS
------END PGP SIGNATURE-----
-
---=-E7U/NXt/RvithmmAJCzu--
-
+greg k-h
