@@ -2,160 +2,140 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3776CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FBEC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1696A20873
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B70720873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jhTqWXoq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390311AbfJDQLd (ORCPT
+        id S2390212AbfJDQNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:11:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45430 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389835AbfJDQLc (ORCPT
+        Fri, 4 Oct 2019 12:13:08 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39292 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389131AbfJDQNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:11:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q7so3984212pgi.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 09:11:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QoFlbvlBuPYoreFXSYvVJO4y1E3a8kjq+ixQvB/BlKw=;
-        b=IRAqZrn1bbZioavQPgxwiYIeM8Ixz2uVeOhc/xonEhzb21uK4HinrTLrg7anQ/kJuS
-         +qkh/UOsTOilFp0xvi33D2ZHjfGvhHhH3T/pAwNq2LQZlSRgC/MHwycz/MXnajulI+hc
-         mC1dIDESONBEGFS0jcogz7EASVfFa9cfQqI1ylZOojvdpEtQKsrnWKo4Kr54moLcrxg6
-         Uzgf4H71kdsP16gTjtvChuaYVW6m8yVkq+skh+NbtkqK7yLOTCoQDnh7dSxvgZ8eeE+1
-         +W2rkp7Ph/vt5swDmYV7fVNXS8jBxoosUEQNna296vAXZtrw4hFxmKXMivuBIBUPoBJm
-         GPrg==
-X-Gm-Message-State: APjAAAVzXU1jbpbqNZQvWrk+3pJhdlJgmxK9su7bBhRbRPFLO9ME4tkG
-        dJ525+VIbRWz9Iw59ue7OMStMO2T
-X-Google-Smtp-Source: APXvYqxxLn0aiEHMLVcVJ/0qTWDgQUXSRYx22oB3mV27nKuqtSCFBGpxei/FWcvieJBDm8fVt/oijg==
-X-Received: by 2002:aa7:9a48:: with SMTP id x8mr17403227pfj.201.1570205491660;
-        Fri, 04 Oct 2019 09:11:31 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id j24sm7080988pff.71.2019.10.04.09.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 09:11:30 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        Bart Van Assche <bvanassche@acm.org>,
-        Dave Jones <davej@redhat.com>
-Subject: [PATCH] kernfs: Improve lockdep annotation for files which implement mmap
-Date:   Fri,  4 Oct 2019 09:11:24 -0700
-Message-Id: <20191004161124.111376-1-bvanassche@acm.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        Fri, 4 Oct 2019 12:13:08 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94GCvqx072936;
+        Fri, 4 Oct 2019 11:12:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570205577;
+        bh=0PAb9wQ779A+UUuanlZ/JxOdY2JJP1B4/U8SIFI1PX4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jhTqWXoqKdfQs2prUz5qSrpTe/i+PJ068NeZP5ioQbUlnGP0ZMB40KVgT5vc9NyD0
+         DSkdXI4EFzYxyFWptINVbhDHyaOm1CAn1How2no7p+crNP/iwrIYCcFM6cDKXFuFIr
+         6D2qf0r0gKQ4vwSYjFozQChr7cunbSYZh/IaYTQk=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94GCv0L037657
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 4 Oct 2019 11:12:57 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
+ 2019 11:12:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 4 Oct 2019 11:12:55 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94GCrQZ006137;
+        Fri, 4 Oct 2019 11:12:53 -0500
+Subject: Re: Should regulator core support parsing OF based fwnode?
+To:     Mark Brown <broonie@kernel.org>
+CC:     <mark.rutland@arm.com>, <daniel.thompson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, <tomi.valkeinen@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
+        <dmurphy@ti.com>
+References: <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
+ <62591735-9082-1fd7-d791-07929ddaa223@gmail.com>
+ <20191003183554.GA37096@sirena.co.uk>
+ <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
+ <20191003194140.GE6090@sirena.co.uk>
+ <a9f668f9-ad26-4e18-178a-8403b8b3b1db@gmail.com>
+ <20191004113942.GB4866@sirena.co.uk>
+ <b6318ba5-e76e-dc1c-6921-a702abf6749c@ti.com>
+ <20191004144029.GC4866@sirena.co.uk>
+ <6df68ecb-f92e-fd9c-7f55-f66fa463263a@ti.com>
+ <20191004155838.GE4866@sirena.co.uk>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <95a43632-57d0-2705-a2d3-d64827212692@ti.com>
+Date:   Fri, 4 Oct 2019 18:12:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191004155838.GE4866@sirena.co.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using one lockdep key for files that do not implement mmap
-and another lockdep key for files that implement mmap, use a separate
-lockdep key for each file that implements mmap.
 
-This patch does not affect the size of struct kernfs_open_file if
-CONFIG_LOCKDEP=n since in that case lock_class_key has size zero.
+On 04/10/2019 17:58, Mark Brown wrote:
+> On Fri, Oct 04, 2019 at 05:13:13PM +0200, Jean-Jacques Hiblot wrote:
+>> On 04/10/2019 16:40, Mark Brown wrote:
+>>> Why is the LED core populating anything?  Is the LED core copying bits
+>>> out of the struct device for the actual device into a synthetic device
+>>> rather than passing the actual device in?  That really doesn't seem like
+>>> a good idea, it's likely to lead to things like this where you don't
+>>> copy something that's required (or worse where something directly in the
+>>> struct device that can't be copied is needed).
+>> This is not a copy of a device of parent's of_node or something like that.
+>> You can think of a LED controller as a bus. It 'enumerates' its children
+>> LED, create the children devices (one per LED) and provides the functions to
+>> interact with them.
+>> The device node we are talking about here is a per-LED thing, it is a child
+>> node of the node of the LED controller.
+>> here is an example:
+>>
+>>      tlc59108: tlc59116@40 { /* this is the node for the LED controller */
+>>          status = "okay";
+>>          #address-cells = <1>;
+>>          #size-cells = <0>;
+>>          compatible = "ti,tlc59108";
+>>          reg = <0x40>;
+>>
+>>          backlight_led: led@2 { /* this is the node of one LED attached to
+>> pin#2 of the LED controller */
+>>              power-supply = <&bkl_fixed>;
+>>              reg = <0x2>;
+>>          };
+> Regulator supplies are supposed to be defined at the chip level rather
+> than subfunctions with names corresponding to the names on the chip.
+> This ensures that all chips look similar when you're mapping the
+> schematic into a DT, you shouldn't need to know about the binding for a
+> given chip to write a DT for it and if multiple people (perhaps working
+> on different OSs) write bindings for the same chip there should be a
+> good chance that they come up with the same mapping.  The supply_alias
+> interface is there to allow mapping these through to subfunctions if
+> needed, it looks like the LED framework should be using this.
 
-This patch is an improvement for commit 027a485d12e0 ("sysfs: use a
-separate locking class for open files depending on mmap"; v3.13).
+In case of current-sink LED drivers, each LED can be powered by a 
+different regulator, because the driver is only a switch between the LED 
+cathod and the ground.
 
-Cc: Dave Jones <davej@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- fs/kernfs/file.c       | 34 +++++++++++++++++-----------------
- include/linux/kernfs.h |  1 +
- 2 files changed, 18 insertions(+), 17 deletions(-)
+>
+> That said if you are doing the above and the LEDs are appearing as
+> devices it's extremely surprising that their of_node might not be
+> initialized.
 
-diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-index e8c792b49616..a6980a8f9ffc 100644
---- a/fs/kernfs/file.c
-+++ b/fs/kernfs/file.c
-@@ -649,24 +649,17 @@ static int kernfs_fop_open(struct inode *inode, struct file *file)
- 		goto err_out;
- 
- 	/*
--	 * The following is done to give a different lockdep key to
--	 * @of->mutex for files which implement mmap.  This is a rather
--	 * crude way to avoid false positive lockdep warning around
--	 * mm->mmap_sem - mmap nests @of->mutex under mm->mmap_sem and
--	 * reading /sys/block/sda/trace/act_mask grabs sr_mutex, under
--	 * which mm->mmap_sem nests, while holding @of->mutex.  As each
--	 * open file has a separate mutex, it's okay as long as those don't
--	 * happen on the same file.  At this point, we can't easily give
--	 * each file a separate locking class.  Let's differentiate on
--	 * whether the file has mmap or not for now.
--	 *
--	 * Both paths of the branch look the same.  They're supposed to
--	 * look that way and give @of->mutex different static lockdep keys.
-+	 * Assign a unique lockdep key to @of->mutex for files which implement
-+	 * mmap. This is necessary to avoid a false positive lockdep warning
-+	 * around mm->mmap_sem - mmap nests @of->mutex under mm->mmap_sem and
-+	 * reading /sys/block/sda/trace/act_mask grabs sr_mutex, under which
-+	 * mm->mmap_sem nests, while holding @of->mutex.
- 	 */
--	if (has_mmap)
--		mutex_init(&of->mutex);
--	else
--		mutex_init(&of->mutex);
-+	mutex_init(&of->mutex);
-+	if (has_mmap) {
-+		lockdep_register_key(&of->mutex_key);
-+		lockdep_set_class(&of->mutex, &of->mutex_key);
-+	}
- 
- 	of->kn = kn;
- 	of->file = file;
-@@ -734,6 +727,9 @@ static int kernfs_fop_open(struct inode *inode, struct file *file)
- err_seq_release:
- 	seq_release(inode, file);
- err_free:
-+	mutex_destroy(&of->mutex);
-+	if (has_mmap)
-+		lockdep_unregister_key(&of->mutex_key);
- 	kfree(of->prealloc_buf);
- 	kfree(of);
- err_out:
-@@ -769,6 +765,7 @@ static int kernfs_fop_release(struct inode *inode, struct file *filp)
- {
- 	struct kernfs_node *kn = inode->i_private;
- 	struct kernfs_open_file *of = kernfs_of(filp);
-+	const bool has_mmap = kn->attr.ops->mmap != NULL;
- 
- 	if (kn->flags & KERNFS_HAS_RELEASE) {
- 		mutex_lock(&kernfs_open_file_mutex);
-@@ -778,6 +775,9 @@ static int kernfs_fop_release(struct inode *inode, struct file *filp)
- 
- 	kernfs_put_open_node(kn, of);
- 	seq_release(inode, filp);
-+	mutex_destroy(&of->mutex);
-+	if (has_mmap)
-+		lockdep_unregister_key(&of->mutex_key);
- 	kfree(of->prealloc_buf);
- 	kfree(of);
- 
-diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-index 936b61bd504e..6680fae5f0f6 100644
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -204,6 +204,7 @@ struct kernfs_open_file {
- 	void			*priv;
- 
- 	/* private fields, do not use outside kernfs proper */
-+	struct lock_class_key	mutex_key;
- 	struct mutex		mutex;
- 	struct mutex		prealloc_mutex;
- 	int			event;
--- 
-2.23.0.581.g78d2f28ef7-goog
+That is because this is usually done by the platform core which is not 
+involved here.
+
+JJ
 
