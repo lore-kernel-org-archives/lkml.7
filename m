@@ -2,115 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EB3C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC954C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0AC222CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EHastvM3"
+	by mail.kernel.org (Postfix) with ESMTP id 953522084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570201155;
+	bh=qygk6kuolBy5BE+vN0iXiRBRAGyd2GOtM73uWd/QIVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bK55ILh5EdLKsXLdskxkrSwRBHrD1lrb4UBN0bB7AA8hwPI9RQF+PPLIHoB5QlXqq
+	 zfZ3vqbUUNxVk1XzcaurDw3ksf9HQl/b1eSI/R6TdNeAx0qjhdLFXRjOrMl08oyWAm
+	 ZfoHDwQ+vxexhDITYPiNzMbmc9KNwiR5hHxaOASo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389452AbfJDO6n (ORCPT
+        id S2389545AbfJDO7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:58:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39732 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389043AbfJDO6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:58:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EebPJjW7CeMsMN24rCmsXR+EUlCGm5eTWQTWMlbNyOI=; b=EHastvM3Dx7teNQpDnI37EMHZ
-        jfh/ASOsqy2kGpoFmIfP6I2Qn4YVXVYEvmsbc8ZiYUAcJ1v1xd68LIktDTiv9r9POsdc7piBaqMaV
-        NrVt+uPa2cqe+xOoFy7donO6RGd7NfEJWjs8B43aFlN//Et0OkExQOrmyF5k6+q516T0go6IuaMEg
-        1o75bPkdB+cUuxH/b0tKo0FNB3WiyVsihijkd+XIu2z2FHihXv7Z6Mt38DT2PPsBjmSBJ+YOX+IDe
-        m4UGCmjDr6RVtySsi/0Cqzq+yrjVkkuOxXDiPTQpAZaaM6FpMZzrwwTy9U2p5N/VioyTmwtRLejYy
-        Jmc3j0MIw==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGP2X-0008Ow-T4; Fri, 04 Oct 2019 14:58:41 +0000
-Subject: Re: [PATCH] serial: move Non-standard serial drivers menu to the
- Serial drivers menu
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-References: <8e583967-4453-368b-6be5-a24df9b2b5dc@infradead.org>
- <20191004125446.GB583048@kroah.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d28e9315-a42d-fbea-e03f-1da7158d30a8@infradead.org>
-Date:   Fri, 4 Oct 2019 07:58:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 4 Oct 2019 10:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389131AbfJDO7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:59:14 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D9DD222C2
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 14:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570201153;
+        bh=qygk6kuolBy5BE+vN0iXiRBRAGyd2GOtM73uWd/QIVo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DFpBrok+h7gMPfvyWty9YFwtn8fH5NTETRQm2W4h+BRXGah0gjMkQDB3n1qaNZDqx
+         6iHyg/6Rx+49eWX8VBlUPrq86xlgX9F4Ha2Q7eAM5ODiEC3CU8N5jbkAfz2RIYlKoY
+         7v4HZKARI3/Tmyzcyn8AMZ3/pFW5qPrRomXCudr4=
+Received: by mail-wr1-f43.google.com with SMTP id o18so7568334wrv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 07:59:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAWwgVPWqpJWHDtnXVsNk/4VxrFKRt89olbkEETgpOkxUw65M4d/
+        3mXEkIYe3aKTF3HQdOT4iR3ibRqUPAtdtZlZTm1Y0Q==
+X-Google-Smtp-Source: APXvYqyR1oyfXpThmTQM82K3hhMMmFj8lDVsQsVum01xJbSYIYJ0nmdc3wjAb8UpQVAiZpTXcLpZZIqWo975x1RVkM4=
+X-Received: by 2002:adf:cc0a:: with SMTP id x10mr8206649wrh.195.1570201151831;
+ Fri, 04 Oct 2019 07:59:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191004125446.GB583048@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191004134501.30651-1-changbin.du@gmail.com>
+In-Reply-To: <20191004134501.30651-1-changbin.du@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 4 Oct 2019 07:59:00 -0700
+X-Gmail-Original-Message-ID: <CALCETrWEhNCWDz7OVpbYJceJ5eShsWWhuyuAQQSzAdKncUo7zA@mail.gmail.com>
+Message-ID: <CALCETrWEhNCWDz7OVpbYJceJ5eShsWWhuyuAQQSzAdKncUo7zA@mail.gmail.com>
+Subject: Re: [PATCH] x86/mm: determine whether the fault address is canonical
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 5:54 AM, Greg Kroah-Hartman wrote:
-> On Wed, Sep 25, 2019 at 06:16:28PM -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Since Non-standard serial port drivers are also Serial drivers,
->> move the "Non-standard serial port support" menu to be under/in
->> the "Serial drivers" menu. With this move, the "Serial drivers"
->> menu contains (a) 8250/16550 support, (b) non-8250 support, and
->> (c) non-standard serial port support.
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> ---
->>  drivers/tty/Kconfig        |  119 -----------------------------------
->>  drivers/tty/serial/Kconfig |  119 +++++++++++++++++++++++++++++++++++
->>  2 files changed, 119 insertions(+), 119 deletions(-)
->>
->> --- lnx-53.orig/drivers/tty/Kconfig
->> +++ lnx-53/drivers/tty/Kconfig
->> @@ -151,125 +151,6 @@ config LEGACY_PTY_COUNT
->>  	  When not in use, each legacy PTY occupies 12 bytes on 32-bit
->>  	  architectures and 24 bytes on 64-bit architectures.
->>  
->> -config SERIAL_NONSTANDARD
->> -	bool "Non-standard serial port support"
->> -	depends on HAS_IOMEM
->> -	---help---
->> -	  Say Y here if you have any non-standard serial boards -- boards
->> -	  which aren't supported using the standard "dumb" serial driver.
->> -	  This includes intelligent serial boards such as Cyclades,
->> -	  Digiboards, etc. These are usually used for systems that need many
->> -	  serial ports because they serve many terminals or dial-in
->> -	  connections.
->> -
->> -	  Note that the answer to this question won't directly affect the
->> -	  kernel: saying N will just cause the configurator to skip all
->> -	  the questions about non-standard serial boards.
->> -
->> -	  Most people can say N here.
->> -
->> -config ROCKETPORT
->> -	tristate "Comtrol RocketPort support"
->> -	depends on SERIAL_NONSTANDARD && (ISA || EISA || PCI)
-> 
-> I would agree with the move, but the files are not in
-> drivers/tty/serial/ for the drivers you are asking to configure in that
-> directory.
-> 
-> So unless we want to move these drivers (and it's not really worth it,
-> unless we want to create drivers/tty/serial/obsolete/ or something like
-> that), I would just leave this alone.
+On Fri, Oct 4, 2019 at 6:45 AM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> We know the answer, so don't ask the user.
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  arch/x86/mm/extable.c     |  5 ++++-
+>  arch/x86/mm/mm_internal.h | 11 +++++++++++
+>  2 files changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+> index 4d75bc656f97..5196e586756f 100644
+> --- a/arch/x86/mm/extable.c
+> +++ b/arch/x86/mm/extable.c
+> @@ -8,6 +8,8 @@
+>  #include <asm/traps.h>
+>  #include <asm/kdebug.h>
+>
+> +#include "mm_internal.h"
+> +
+>  typedef bool (*ex_handler_t)(const struct exception_table_entry *,
+>                             struct pt_regs *, int, unsigned long,
+>                             unsigned long);
+> @@ -123,7 +125,8 @@ __visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
+>                                   unsigned long error_code,
+>                                   unsigned long fault_addr)
+>  {
+> -       WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
+> +       WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault at %s address in user access.",
+> +                 is_canonical_addr(fault_addr) ? "canonical" : "non-canonical");
 
-ack that.  Thanks.
-
--- 
-~Randy
+Unless the hardware behaves rather differently from the way I think it
+does, fault_addr is garbage for anything other than #PF and sometimes
+for #DF.  (And maybe the virtualization faults?)  I don't believe that
+#GP fills in CR2.
