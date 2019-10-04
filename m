@@ -2,212 +2,148 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4599BC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49622C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCC52133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9BB208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMLRXqx3"
+	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="NobExJzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732262AbfJDCkW (ORCPT
+        id S1732421AbfJDCrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 22:40:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34508 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfJDCkV (ORCPT
+        Thu, 3 Oct 2019 22:47:02 -0400
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:55498 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730566AbfJDCrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 22:40:21 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a11so5144835wrx.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 19:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rApmcC729gUWr1isxMFLhBUaAyOq+BNm50heuR6WRh4=;
-        b=qMLRXqx3opvUpBTmCjHMTd1F11UNrELZH9VsqX6i5gwJoBmw2YIocjPs7o6phUgijN
-         Jivv4SvF/k08lPPIj9Pocr00f5/PJTm4Nfy/B7oOTY45JutQFPzjQHwvMe9o2Jb3B/dR
-         GaAim1Pru2YJeUVBp1xWjgFZPQ6+pKKNQvgCPcTLDpofFbPvZk3vgwRSmwqgBT6N9T/U
-         H9SRYrUXtFjJmFxVpj8qfrDbyR6NvaBIABSYO8YcXd1+Pli08MFwBzYLsYL8VPtM1sRm
-         1PXyw2maoIULxLRwI6lEIDNgk+faUIaTOsYn8lBTPzc1Cgm7VZZmJamCTCKB4eE4le4s
-         rVaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rApmcC729gUWr1isxMFLhBUaAyOq+BNm50heuR6WRh4=;
-        b=MZcY5mANo7q20CnRyKYMhxF17nUtpoRBc7xak/y87jtntlJmwK8r0VTOgqgMThODIg
-         M5aLnBEVudC+HwhD/qD8HhL05S4p0ml0B0UoJ9cWy/coKdSzsmVjmKE7kfgDkOGYALcq
-         Gbs6YKnjVh1Iv00xA+30lBGL5HP2XC8GDjErrjZIjFBf3ppk9JwJNLVuFn5ZkniLvW3Y
-         K2EB7lByz0E8h8Mb0xkJ9Bse8PFWveUsTOoukp4gaB0FsHUiHQwQAPbDABFzuT9ebIKo
-         So2luor+MPEw8eB+ERtFv7TW5gMTgsBL43b26zz3VzRy99NLF4GBxdPlaUonVvLTq9dc
-         cjZA==
-X-Gm-Message-State: APjAAAVa+tTsvH0AXvJp/CzbyV2pJ44bhBOpjzT1qVJLSj3LW+SQ2YvQ
-        v70Pl0S4VWB2yNeB2bf4EmySxBels34=
-X-Google-Smtp-Source: APXvYqwP6nammMtBWUMbUp5rkh5M130zrBhcu45uRGIo1N/tTnOiKjTFJh5eyBJn0ldSHSr2xcGQdQ==
-X-Received: by 2002:adf:8b13:: with SMTP id n19mr10021213wra.203.1570156818632;
-        Thu, 03 Oct 2019 19:40:18 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id o19sm7447776wmh.27.2019.10.03.19.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 19:40:18 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v3 2/2] perf: add support for logging debug messages to file
-Date:   Fri,  4 Oct 2019 10:39:54 +0800
-Message-Id: <20191004023954.1116-3-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191004023954.1116-1-changbin.du@gmail.com>
-References: <20191004023954.1116-1-changbin.du@gmail.com>
+        Thu, 3 Oct 2019 22:47:01 -0400
+Received: from [10.8.0.1] (helo=srv.home ident=heh19151)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <lists2009@fnarfbargle.com>)
+        id 1iGDZX-0001GQ-TE; Fri, 04 Oct 2019 10:43:59 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=JOyw9WqbGBm2Mu4SL6cJ20GQPUKDDNmOAM6PypbLkKg=;
+        b=NobExJzO4BKQfqxAguTeCdjv1RNo55e1U9Mit0cBCEV57xrPfG/W/vOAqS2cl7a0dGGWVf7xgf6qWj6gmfgzdn/LML1ByU7xWFXH+YmHODudfAfpu3xtA+Ketx1WpvgdpOa7k9BtRRd80z3phUigCAF7do49+VEVd4tZ2osSvSI=;
+Subject: Re: [PATCH 1/3] thunderbolt: Read DP IN adapter first two dwords in
+ one go
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org
+References: <20191001102905.21680-1-mika.westerberg@linux.intel.com>
+ <20191001102905.21680-2-mika.westerberg@linux.intel.com>
+From:   Brad Campbell <lists2009@fnarfbargle.com>
+Message-ID: <abad9eb5-ef39-5936-7d9d-bdf53a81a1c4@fnarfbargle.com>
+Date:   Fri, 4 Oct 2019 10:43:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001102905.21680-2-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When in TUI mode, it is impossible to show all the debug messages to
-console. This make it hard to debug perf issues using debug messages.
-This patch adds support for logging debug messages to file to resolve
-this problem.
+On 1/10/19 6:29 pm, Mika Westerberg wrote:
+> When we discover existing DP tunnels the code checks whether DP IN
+> adapter port is enabled by calling tb_dp_port_is_enabled() before it
+> continues the discovery process. On Light Ridge (gen 1) controller
+> reading only the first dword of the DP IN config space causes subsequent
+> access to the same DP IN port path config space to fail or return
+> invalid data as can be seen in the below splat:
+> 
+>    thunderbolt 0000:07:00.0: CFG_ERROR(0:d): Invalid config space or offset
+>    Call Trace:
+>     tb_cfg_read+0xb9/0xd0
+>     __tb_path_deactivate_hop+0x98/0x210
+>     tb_path_activate+0x228/0x7d0
+>     tb_tunnel_restart+0x95/0x200
+>     tb_handle_hotplug+0x30e/0x630
+>     process_one_work+0x1b4/0x340
+>     worker_thread+0x44/0x3d0
+>     kthread+0xeb/0x120
+>     ? process_one_work+0x340/0x340
+>     ? kthread_park+0xa0/0xa0
+>     ret_from_fork+0x1f/0x30
+> 
+> If both DP In adapter config dwords are read in one go the issue does
+> not reproduce. This is likely firmware bug but we can work it around by
+> always reading the two dwords in one go. There should be no harm for
+> other controllers either so can do it unconditionally.
+> 
+> Link: https://lkml.org/lkml/2019/8/28/160
+> Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
 
-The usage is:
-perf -debug verbose=2,file=~/perf.log COMMAND
+Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-
---
-v3: fix a segfault issue.
----
- tools/perf/Documentation/perf.txt | 15 ++++++-----
- tools/perf/util/debug.c           | 44 +++++++++++++++++++++++++++----
- 2 files changed, 48 insertions(+), 11 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-index c05a94b2488e..a6b19661e5c3 100644
---- a/tools/perf/Documentation/perf.txt
-+++ b/tools/perf/Documentation/perf.txt
-@@ -16,14 +16,17 @@ OPTIONS
- 	Setup debug variable (see list below) in value
- 	range (0, 10). Use like:
- 	  --debug verbose   # sets verbose = 1
--	  --debug verbose=2 # sets verbose = 2
-+	  --debug verbose=2,file=~/perf.log
-+	                    # sets verbose = 2 and save log to file
- 
- 	List of debug variables allowed to set:
--	  verbose=level		- general debug messages
--	  ordered-events=level	- ordered events object debug messages
--	  data-convert=level	- data convert command debug messages
--	  stderr		- write debug output (option -v) to stderr
--				  in browser mode
-+	  verbose=level         - general debug messages
-+	  ordered-events=level  - ordered events object debug messages
-+	  data-convert=level    - data convert command debug messages
-+	  stderr                - write debug output (option -v) to stderr
-+	                          in browser mode
-+	  file=path             - write debug output to log file (stderr and
-+	                          file options are exclusive)
- 
- --buildid-dir::
- 	Setup buildid cache directory. It has higher priority than
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index df82ad9cd16d..bfb0b886266f 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -6,6 +6,7 @@
- #include <stdarg.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <errno.h>
- #include <sys/wait.h>
- #include <api/debug.h>
- #include <linux/kernel.h>
-@@ -26,7 +27,7 @@
- int verbose;
- bool dump_trace = false, quiet = false;
- int debug_ordered_events;
--static bool redirect_to_stderr;
-+static FILE *log_file;
- int debug_data_convert;
- 
- int veprintf(int level, int var, const char *fmt, va_list args)
-@@ -34,10 +35,10 @@ int veprintf(int level, int var, const char *fmt, va_list args)
- 	int ret = 0;
- 
- 	if (var >= level) {
--		if (use_browser >= 1 && !redirect_to_stderr)
-+		if (use_browser >= 1 && !log_file)
- 			ui_helpline__vshow(fmt, args);
- 		else
--			ret = vfprintf(stderr, fmt, args);
-+			ret = vfprintf(log_file, fmt, args);
- 	}
- 
- 	return ret;
-@@ -197,6 +198,24 @@ static int str2loglevel(const char *vstr)
- 	return v;
- }
- 
-+static void flush_log(void)
-+{
-+	if (log_file)
-+		fflush(log_file);
-+}
-+
-+static void set_log_output(FILE *f)
-+{
-+	if (f == log_file)
-+		return;
-+
-+	if (log_file && log_file != stderr)
-+		fclose(log_file);
-+
-+	log_file = f;
-+	atexit(flush_log);
-+}
-+
- int perf_debug_option(const char *str)
- {
- 	char *sep, *vstr;
-@@ -218,8 +237,23 @@ int perf_debug_option(const char *str)
- 		else if (!strcmp(opt, "data-convert"))
- 			debug_data_convert = str2loglevel(vstr);
- 		else if (!strcmp(opt, "stderr"))
--			redirect_to_stderr = true;
--		else {
-+			set_log_output(stderr);
-+		else if (!strcmp(opt, "file")) {
-+			FILE *f;
-+
-+			if (!vstr)
-+				vstr = (char *)"perf.log";
-+
-+			f = fopen(vstr, "a");
-+			if (!f) {
-+				pr_err("Can not create log file: %s\n",
-+				       strerror(errno));
-+				free(dstr);
-+				return -1;
-+			}
-+			fprintf(f, "\n===========perf log===========\n");
-+			set_log_output(f);
-+		} else {
- 			fprintf(stderr, "unkown debug option '%s'\n", opt);
- 			free(dstr);
- 			return -1;
--- 
-2.20.1
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>   drivers/thunderbolt/switch.c | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+> index 410bf1bceeee..8e712fbf8233 100644
+> --- a/drivers/thunderbolt/switch.c
+> +++ b/drivers/thunderbolt/switch.c
+> @@ -896,12 +896,13 @@ int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
+>    */
+>   bool tb_dp_port_is_enabled(struct tb_port *port)
+>   {
+> -	u32 data;
+> +	u32 data[2];
+>   
+> -	if (tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1))
+> +	if (tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
+> +			 ARRAY_SIZE(data)))
+>   		return false;
+>   
+> -	return !!(data & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
+> +	return !!(data[0] & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
+>   }
+>   
+>   /**
+> @@ -914,19 +915,21 @@ bool tb_dp_port_is_enabled(struct tb_port *port)
+>    */
+>   int tb_dp_port_enable(struct tb_port *port, bool enable)
+>   {
+> -	u32 data;
+> +	u32 data[2];
+>   	int ret;
+>   
+> -	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1);
+> +	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
+> +			   ARRAY_SIZE(data));
+>   	if (ret)
+>   		return ret;
+>   
+>   	if (enable)
+> -		data |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
+> +		data[0] |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
+>   	else
+> -		data &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
+> +		data[0] &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
+>   
+> -	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap, 1);
+> +	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
+> +			     ARRAY_SIZE(data));
+>   }
+>   
+>   /* switch utility functions */
+> 
 
