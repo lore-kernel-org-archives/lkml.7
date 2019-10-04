@@ -2,85 +2,171 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0FAC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC1EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7727821D71
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791DC20867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbfJDLny (ORCPT
+        id S1731062AbfJDLoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:43:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:42562 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfJDLny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:43:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8873015A1;
-        Fri,  4 Oct 2019 04:43:53 -0700 (PDT)
-Received: from [10.163.1.5] (unknown [10.163.1.5])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97CAF3F706;
-        Fri,  4 Oct 2019 04:43:50 -0700 (PDT)
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
- has_unmovable_pages()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        Fri, 4 Oct 2019 07:44:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3246 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728962AbfJDLoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 07:44:07 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 05A2E588E3FAE8D78D9E;
+        Fri,  4 Oct 2019 19:44:05 +0800 (CST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 4 Oct 2019 19:43:57 +0800
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
- <20191004105824.GD9578@dhcp22.suse.cz>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <91128b73-9a47-100b-d3de-e83f0b941e9f@arm.com>
-Date:   Fri, 4 Oct 2019 17:14:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH V5 0/4] ACPI: Support Generic Initiator proximity domains
+Date:   Fri, 4 Oct 2019 19:43:26 +0800
+Message-ID: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191004105824.GD9578@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Introduces a new type of NUMA node for cases where we want to represent
+the access characteristics of a non CPU initiator of memory requests,
+as these differ from all those for existing nodes containing CPUs and/or
+memory.
 
+This patch set has been sitting around for a long time (rebases only since
+v3 in April) without significant review.
+I would appreciate it very much if anyone has time to take a look.
 
-On 10/04/2019 04:28 PM, Michal Hocko wrote:
-> On Thu 03-10-19 13:40:57, Anshuman Khandual wrote:
->> Having unmovable pages on a given pageblock should be reported correctly
->> when required with REPORT_FAILURE flag. But there can be a scenario where a
->> reserved page in the page block will get reported as a generic "unmovable"
->> reason code. Instead this should be changed to a more appropriate reason
->> code like "Reserved page".
-> 
-> Others have already pointed out this is just redundant but I will have a
+One outstanding question to highlight in this series is whether
+we should assume all ACPI supporting architectures support Generic
+Initiator domains, or whether to introduce an
+ARCH_HAS_GENERIC_INITIATOR_DOMAINS entry in Kconfig.
 
-Sure.
+Changes since V4:
 
-> more generic comment on the changelog. There is essentially no
-> information why the current state is bad/unhelpful and why the chnage is
+At Rafael's suggestion:
 
-The current state is not necessarily bad or unhelpful. I just though that it
-could be improved upon. Some how calling out explicitly only the CMA page
-failure case just felt adhoc, where as there are other reasons like HugeTLB
-immovability which might depend on other factors apart from just page flags
-(though I did not propose that originally).
+Rebase on top of Dan William's Specific Purpose Memory series as that
+moves srat.c Original patches cherry-picked fine onto mmotm with Dan's
+patches applied.
 
-> needed. All you claim is that something is a certain way and then assert
-> that it should be done differently. That is not how changelogs should
-> look like.
-> 
+Applies to mmotm-2019-09-25 +
+https://lore.kernel.org/linux-acpi/156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com/
+[PATCH v4 00/10] EFI Specific Purpose Memory Support
+(note there are some trivial conflicts to deal with when applying
+the SPM series).
 
-Okay, probably I should have explained more on why "unmovable" is less than
-adequate to capture the exact reason for specific failure cases and how
-"Reserved Page" instead would been better. But got the point, will improve.
+Change since V3.
+* Rebase.
+
+Changes since RFC V2.
+* RFC dropped as now we have x86 support, so the lack of guards in in the
+  ACPI code etc should now be fine.
+* Added x86 support.  Note this has only been tested on QEMU as I don't have
+  a convenient x86 NUMA machine to play with.  Note that this fitted together
+  rather differently from arm64 so I'm particularly interested in feedback
+  on the two solutions.
+
+Since RFC V1.
+* Fix incorrect interpretation of the ACPI entry noted by Keith Busch
+* Use the acpica headers definitions that are now in mmotm.
+
+It's worth noting that, to safely put a given device in a GI node, may
+require changes to the existing drivers as it's not unusual to assume
+you have local memory or processor core. There may be further constraints
+not yet covered by this patch.
+
+Original cover letter...
+
+ACPI 6.3 introduced a new entity that can be part of a NUMA proximity domain.
+It may share such a domain with the existing options (memory, CPU etc) but it
+may also exist on it's own.
+
+The intent is to allow the description of the NUMA properties (particularly
+via HMAT) of accelerators and other initiators of memory activity that are not
+the host processor running the operating system.
+
+This patch set introduces 'just enough' to make them work for arm64 and x86.
+It should be trivial to support other architectures, I just don't suitable
+NUMA systems readily available to test.
+
+There are a few quirks that need to be considered.
+
+1. Fall back nodes
+******************
+
+As pre ACPI 6.3 supporting operating systems do not have Generic Initiator
+Proximity Domains it is possible to specify, via _PXM in DSDT that another
+device is part of such a GI only node.  This currently blows up spectacularly.
+
+Whilst we can obviously 'now' protect against such a situation (see the related
+thread on PCI _PXM support and the  threadripper board identified there as
+also falling into the  problem of using non existent nodes
+https://patchwork.kernel.org/patch/10723311/ ), there is no way to  be sure
+we will never have legacy OSes that are not protected  against this.  It would
+also be 'non ideal' to fallback to  a default node as there may be a better
+(non GI) node to pick  if GI nodes aren't available.
+
+The work around is that we also have a new system wide OSC bit that allows
+an operating system to 'announce' that it supports Generic Initiators.  This
+allows, the firmware to us DSDT magic to 'move' devices between the nodes
+dependent on whether our new nodes are there or not.
+
+2. New ways of assigning a proximity domain for devices
+*******************************************************
+
+Until now, the only way firmware could indicate that a particular device
+(outside the 'special' set of cpus etc) was to be found in a particular
+Proximity Domain by the use of _PXM in DSDT.
+
+That is equally valid with GI domains, but we have new options. The SRAT
+affinity structure includes a handle (ACPI or PCI) to identify devices
+with the system and specify their proximity domain that way.  If both _PXM
+and this are provided, they should give the same answer.
+
+For now this patch set completely ignores that feature as we don't need
+it to start the discussion.  It will form a follow up set at some point
+(if no one else fancies doing it).
+
+Jonathan Cameron (4):
+  ACPI: Support Generic Initiator only domains
+  arm64: Support Generic Initiator only domains
+  x86: Support Generic Initiator only proximity domains
+  ACPI: Let ACPI know we support Generic Initiator Affinity Structures
+
+ arch/arm64/kernel/smp.c        |  8 +++++
+ arch/x86/include/asm/numa.h    |  2 ++
+ arch/x86/kernel/setup.c        |  1 +
+ arch/x86/mm/numa.c             | 14 ++++++++
+ drivers/acpi/bus.c             |  1 +
+ drivers/acpi/numa/srat.c       | 62 +++++++++++++++++++++++++++++++++-
+ drivers/base/node.c            |  3 ++
+ include/asm-generic/topology.h |  3 ++
+ include/linux/acpi.h           |  1 +
+ include/linux/nodemask.h       |  1 +
+ include/linux/topology.h       |  7 ++++
+ 11 files changed, 102 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
+
