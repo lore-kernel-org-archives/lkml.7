@@ -2,111 +2,220 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF26C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27355C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3167222CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20B9222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:55:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vRvPnVDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390132AbfJDPwo (ORCPT
+        id S2390139AbfJDPzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:52:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60432 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390089AbfJDPwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:52:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA9D7B1AE;
-        Fri,  4 Oct 2019 15:52:42 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     wahrenst@gmx.net, f.fainelli@gmail.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] ARM: dt: check MPIDR on MP devices built without SMP
-Date:   Fri,  4 Oct 2019 17:52:33 +0200
-Message-Id: <20191004155232.17209-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
+        Fri, 4 Oct 2019 11:55:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60232 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390031AbfJDPzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:55:36 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94FtW3e129925;
+        Fri, 4 Oct 2019 10:55:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570204532;
+        bh=8o3L4d0zeiEjLNY0+eUZ842h+8xCJbslZYAJnvNjuNE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vRvPnVDWR6OHu1+/fQsmfkvAY1eTuPVgUbm0F9kw1PTTxlw4nAA5N1bSD5iv6mUks
+         uYvuiPddCPQXPKC2dlEtLI+FHpEGNzm7hoDWVl1EKKmZN4zS4NrIpX37g6Z0i26yxs
+         TYgaUkJYdfNLyH5/zRfUpS12WQyLWou0XYs8zSlo=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94FtW35014479
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 4 Oct 2019 10:55:32 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
+ 2019 10:55:29 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 4 Oct 2019 10:55:29 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94FtRG2110014;
+        Fri, 4 Oct 2019 10:55:28 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+ <20190910115037.23539-2-peter.ujfalusi@ti.com>
+ <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
+ <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+ <CAL_JsqLZ-fNvFcgTorat=TX9Fmexrw3o3iv=Z5hTb3GX6iKgxg@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ad639d6a-a9d7-7797-310f-dc314600b52a@ti.com>
+Date:   Fri, 4 Oct 2019 18:56:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLZ-fNvFcgTorat=TX9Fmexrw3o3iv=Z5hTb3GX6iKgxg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On SMP builds, in order to properly link CPU devices with their
-respective DT nodes we start by matching the boot CPU. This is achieved
-by comparing the 'reg' property on each of the CPU DT nodes with the
-MPIDR. The association is necessary as to validate the whole CPU logical
-map, which ultimately links CPU devices and their DT nodes.
 
-On setups built without SMP, no MPIDR read is performed. The only thing
-expected is for the 'reg' property in the CPU DT node to contain the
-value 0x0.
 
-This causes problems on MP setups built without SMP. As their boot CPU
-DT node contains the relevant MPIDR as opposed to 0x0. No match is then
-possible. This causes troubles further down the line as drivers are
-unable to get the CPU's DT node.
+On 9/24/19 5:44 PM, Rob Herring wrote:
+> On Mon, Sep 16, 2019 at 6:21 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>>
+>>
+>> On 13/09/2019 17.36, Rob Herring wrote:
+>>> On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
+>>>> On systems where multiple DMA controllers available, non Slave (for example
+>>>> memcpy operation) users can not be described in DT as there is no device
+>>>> involved from the DMA controller's point of view, DMA binding is not usable.
+>>>> However in these systems still a peripheral might need to be serviced by or
+>>>> it is better to serviced by specific DMA controller.
+>>>> When a memcpy is used to/from a memory mapped region for example a DMA in the
+>>>> same domain can perform better.
+>>>> For generic software modules doing mem 2 mem operations it also matter that
+>>>> they will get a channel from a controller which is faster in DDR to DDR mode
+>>>> rather then from the first controller happen to be loaded.
+>>>>
+>>>> This property is inherited, so it may be specified in a device node or in any
+>>>> of its parent nodes.
+>>>
+>>> If a device needs mem2mem dma, I think we should just use the existing
+>>> dma binding. The provider will need a way to define cell values which
+>>> mean mem2mem.
+>>
+>> But isn't it going to be an abuse of the binding? Each DMA controller
+>> would hack this in different ways, probably using out of range DMA
+>> request/trigger number or if they have direction in the binding or some
+>> other parameter would be set to something invalid...
+> 
+> What's in the cells is defined by the provider which can define
+> whatever they want. We do standardize that in some cases.
 
-Change the way we choose whether to get the MPIDR or not. On builds
-without SMP check the number of CPUs defined in DT. Anything > 1 means
-the MPIDR should be available and matched accordingly.
+There is a substantiation difference how HW synchronized (slave)
+channels and SW triggered (non slave) channels can be described, handled.
 
-Note that if there was a rogue UP device exposing multiple active CPUs
-in its DT the possible outcomes depend on the ARM series. For example
-Cortex-A9 specifies that the MPIDR is returns 0x0 on UP devices. On the
-other hand ARM1176JZ's TRM doesn't define a MPIDR register and specifies
-that any unwarranted register access will raise an undefined exception.
-Overall, given the bogus DT, a reasonable outcome.
+For slave channels we have bindings as we can describe the DMA request
+line to be used for the DMA channel. In some cases the requests are
+locked to DMA channels (TI's EDMA for example), while in other cases any
+channel can handle any operation (TI's sDMA, UDMAP).
+For EDMA the DMA request == EDMA channel number
+For sDMA we give the DMA request number and we pick any free lchan to
+handle it.
 
-This was originally seen on a Raspberry Pi 2 built with bcm2835_defconfig.
+Non slave channels on the other hand have no identification. They are
+channels which can execute SW triggered task.
+For EDMA for example we need to mark channels which is not in use and
+tell the system that they can be used for non slave mode.
+sDMA on the other hand can just pick any free lchan.
 
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Tested-by: Stefan Wahren <wahrenst@gmx.net>
+Passing 0xffffffff as channel number or DMA request number surely be
+something which most likely invalid, but every driver needs to somehow
+figure out their invalid parameter and all of them needs to be modified,
+generic match helpers can not be used anymore as they will fail in
+random ways.
 
----
+> I think we have some cases where we set the channel priority in the
+> cells. What if someone wants to do that for mem2mem as well?
 
-Changes since v1:
-  - Rewrite patch description
-  - Use of_get_available_child_count()
+That's a valid point, but even with bindings for non slave channels
+clients from modules will need to be handled in a different way as they
+don't have presence in DT..
+But I would argue that from system point of view the non slave channels
+might be better to have the same priority as a group on the given
+controller.
 
-Note: kept Setfan's Tested-by as the changes only affect a corner case.
+> 
+>>> For generic s/w, it should be able to query the dma speed or get a
+>>> preferred one IMO. It's not a DT problem.
+>>>
+>>> We measure memcpy speeds at boot time to select the fastest
+>>> implementation for a chip, why not do that for mem2mem DMA?
+>>
+>> It would make an impact on boot time since the tests would need to be
+>> done with a large enough copy to be able to see clearly which one is faster.
+> 
+> Have you measured it? It could be done in parallel and may have little
+> to no impact.
 
- arch/arm/kernel/devtree.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Depends on the DMA controller, but for UDMAP I can say it is around 1M
+buffer which clearly tells apart the two DMAs.
 
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index 39c978698406..cd11742d9bc2 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -74,7 +74,7 @@ void __init arm_dt_init_cpu_maps(void)
- 	struct device_node *cpu, *cpus;
- 	int found_method = 0;
- 	u32 i, j, cpuidx = 1;
--	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
-+	u32 mpidr = 0;
- 
- 	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
- 	bool bootcpu_valid = false;
-@@ -83,6 +83,9 @@ void __init arm_dt_init_cpu_maps(void)
- 	if (!cpus)
- 		return;
- 
-+	if (is_smp() || of_get_available_child_count(cpus) > 1)
-+		mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
-+
- 	for_each_of_cpu_node(cpu) {
- 		const __be32 *cell;
- 		int prop_bytes;
--- 
-2.23.0
+Still, we should delay all non slave user's probe until we have all
+information on all of them and we don't know how many DMAs the HW have.
 
+How can you know that after the testing the first DMA's speed you will
+not have another one probing? Or after the second DMA controller there
+could be a third coming which can be the fastest?
+
+>> Also we should be able to handle different probing orders:
+>> client1 should have mem2mem channel from dma2.
+>>
+>> - dma1 probes
+>> - client1 probes and asks for a mem2mem channel
+>> - dma2 probes
+>>
+>> Here client1 should deffer until dma2 is probed.
+> 
+> Depending on the driver, don't make the decision in probe, but when
+> you start using the driver. For example, serial drivers decide on DMA
+> or no DMA in open().
+
+Which is causing a lot of pain as serial is really broken for deferred
+probing against DMA.
+Also note that dma channel request/release is not 'free' it might be
+something which can take time, thus making DMA use for non slave
+transfers less tempting.
+
+With adding dma-nonslave-domain (third or fourth name for this?) none of
+the DMA drivers have to be modified, the change in core is relatively
+small and backwards compatible and it describes the HW.
+
+> 
+>> Probably the property should be dma-mem2mem-domain to be more precise on
+>> it's purpose and avoid confusion?
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>> ---
+>>>>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
+>>>>  1 file changed, 88 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+>>>
+>>> Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+>>
+>> That does not do anything on my system, but git dt-doc-validate running
+>> via https://github.com/robherring/yaml-bindings.git.
+> 
+> It should do *something*... Do you have libyaml-dev installed?
+> 
+> BTW, while I still mirror to that repo, use
+> https://github.com/devicetree-org/dt-schema instead.
+
+Thanks a lot, got it working now correctly, I belive.
+
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
