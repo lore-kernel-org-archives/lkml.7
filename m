@@ -2,82 +2,155 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1569C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE21BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6562070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A762070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="go6ZaoYO"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="cmPlloEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfJDLXD (ORCPT
+        id S1730965AbfJDLXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:23:03 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36022 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbfJDLXD (ORCPT
+        Fri, 4 Oct 2019 07:23:50 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:40154 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728219AbfJDLXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:23:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ClUb0N8ehM4dBInFwJ4FzL/4e07/ILuXpFO5ux0hbh4=; b=go6ZaoYO7equ6MnpHuPKuUDxU
-        FEI2eEkkzCgiub1il9Y2L+DejhICJJwrN1BMhBVwLo4IIfZTFEuNfo4W5okzptrdQhJ0fQKWOjCn1
-        v2/yMcfN2e7H7EGGefFeuWq394rZ7wMbBakTjTEf0kFJ+tVal/aPZ5VlrcQgGH7fdiWr4N7yk/vXO
-        EC1L0NbYdgTIIJgjQKnLye3JRR35Cen5TvMdXAcQzU0Fu2Ns2F6qsHClt3BD3p7vewbD71oiN64x9
-        6d8cACK3WIyqW/YEden+IFTt5F0iwUi7ImslRY4VvSQ2BgIgg+MMYDLwic9SDwM0MLEVLNR/iscAF
-        WhCRdQlkA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGLfV-0005lo-BW; Fri, 04 Oct 2019 11:22:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4EC033013A4;
-        Fri,  4 Oct 2019 13:21:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C7F84203E50D2; Fri,  4 Oct 2019 13:22:37 +0200 (CEST)
-Date:   Fri, 4 Oct 2019 13:22:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191004112237.GA19463@hirez.programming.kicks-ass.net>
-References: <20190827180622.159326993@infradead.org>
- <20190827181147.166658077@infradead.org>
- <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
- <20191002182106.GC4643@worktop.programming.kicks-ass.net>
- <20191003181045.7fb1a5b3@gandalf.local.home>
+        Fri, 4 Oct 2019 07:23:50 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94BMwA9028255;
+        Fri, 4 Oct 2019 07:23:30 -0400
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2058.outbound.protection.outlook.com [104.47.38.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2va4e889m6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 07:23:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WSksjcmYMGye/TC5PzkAAy7n5ejBLJIkKQe039p7sVP/ML9uuHllqleDjHUez9ZX4OJjcikHB9II7lEbpn2UfL5mbT6JtRnOkyck6QTL4X0ZlCRAxkAxU1klvQ/kmYogZ03MzgamgXjNqnn3YSjl+1IxoDufKLIfVwspxuz7CZ+Ur4fRbLR8BclYq6DiOnwb4hPs5yGseJisO6O7gjj03Lxs52ieRR/uPtydn9YqcBbwndj0OADN5K8Ytf7nxtKrQDKgwE6pzzft9eReSZeV3gGrWRcuYTwDG2sXCfR4oJea0873ZBN7kvYBJhtTMHbPvKfNHqLoixtenxQ/jSqRNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w9H74wES0kKUW8O4h0YBkz2Eg3EDf8xb+eXR91DU5ZM=;
+ b=eBszWSN04XjRoHWZYAfXpaE4OMsJ/s1W74BJ9LfUD53aNibuncyGtJhz790xOxfWap3UeUWHFWu20mmilETR0mtt+t8eXJSZtunlHD3SVa0/40uMyLFDVqOTzLO78pw/fF8jf/H3maz2Yzh6mmdVQQdjY4XyvTAX1Y6Pje7MrEh8F1cFDPlBnCN9e8gEIc5r0ZeRaKAoDdQEXISmdJZUvSIo6l+66HjHtd8Sr4vtg+9LyFyrea8unyOh2NmjRkBCf/5sXX0DRtzFshaNGIOwFbs1iO1dXfLFnsm0384hi9Cgcj9d/cutjQ+ikOUjwMdBtaVV/KQC7z6uJMYqJH9FbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=samsung.com smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w9H74wES0kKUW8O4h0YBkz2Eg3EDf8xb+eXR91DU5ZM=;
+ b=cmPlloECjquJXZunSxKWlaroJTa7wtz1EDwh6qMnYUOTXm97G20hU2/IAfiHl5sunocgu3QyTgqj1T6OKqlBzZzVnPEl2/wltMizk0WLhibM8DagIgUKPcLmyVnEtAR6+3n97RvTHFm6sCkj2za2vmtLqiGvH7ybc2QUvsUrTVY=
+Received: from BYAPR03CA0034.namprd03.prod.outlook.com (2603:10b6:a02:a8::47)
+ by BYAPR03MB4056.namprd03.prod.outlook.com (2603:10b6:a03:78::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.22; Fri, 4 Oct
+ 2019 11:23:26 +0000
+Received: from BL2NAM02FT016.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by BYAPR03CA0034.outlook.office365.com
+ (2603:10b6:a02:a8::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.21 via Frontend
+ Transport; Fri, 4 Oct 2019 11:23:26 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT016.mail.protection.outlook.com (10.152.77.171) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2327.21
+ via Frontend Transport; Fri, 4 Oct 2019 11:23:26 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x94BNPtX028285
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 4 Oct 2019 04:23:25 -0700
+Received: from btogorean-pc.ad.analog.com (10.48.65.146) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 4 Oct 2019 07:23:24 -0400
+From:   Bogdan Togorean <bogdan.togorean@analog.com>
+To:     <dri-devel@lists.freedesktop.org>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <narmstrong@baylibre.com>,
+        <a.hajda@samsung.com>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <allison@lohutok.net>, <tglx@linutronix.de>,
+        <gregkh@linuxfoundation.org>, <swinslow@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>
+Subject: [PATCH 2/2] drm: bridge: adv7511: Extend list of audio sample rates
+Date:   Fri, 4 Oct 2019 14:22:56 +0300
+Message-ID: <20191004112256.31396-1-bogdan.togorean@analog.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003181045.7fb1a5b3@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(376002)(346002)(189003)(199004)(2870700001)(50226002)(7416002)(107886003)(356004)(47776003)(50466002)(8676002)(7636002)(305945005)(6916009)(246002)(2906002)(36756003)(6666004)(478600001)(2616005)(44832011)(426003)(8936002)(476003)(126002)(54906003)(186003)(2351001)(48376002)(336012)(4744005)(1076003)(106002)(316002)(70586007)(70206006)(26005)(4326008)(51416003)(86362001)(7696005)(5660300002)(486006)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4056;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 71da9436-209c-4f90-d4b6-08d748bd465d
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4056:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB40568290FC4C04AD590507DD9B9E0@BYAPR03MB4056.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:172;
+X-Forefront-PRVS: 018093A9B5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tH3Yg0itrc7NxKJFB53+Ma9FcLgwDyibPLgbK3JBNVKU4avSB7AWeVsz6PezLORZWa41azlaXUAiJ+QihYaAw2bJEjMLi6DUnkSDid02gIYtvoKmMv97E6hBp1a8IfaDNtHkx4c/XQE6a/Sj9Zi+e0pk1BhGMZE0tmvzgf9zvpHHGFVKAOKqFpCuwsmanYrS6Q2I+omez2yhhCqpIYSgVEWVvO9H84fHglHEMs2MAFYPliNOvFqr0Ee0BBpH1ESmhdHT6kxwM9+yxKUoFpwjFHpbng43iB33wFzv2I7GXB4/xSwbLJVhQEfbz6qXNcD+XQseElofssFs1t/2r05bBSxv6tHzsOn/ZfngEXVPn8xfaysBFS0NTjLBpA9XroFO0icDDIa5ymZTY7dQ6rRnNXX0QMMbScmWZp0eO546VgY=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2019 11:23:26.2267
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71da9436-209c-4f90-d4b6-08d748bd465d
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4056
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_06:2019-10-03,2019-10-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 suspectscore=1 clxscore=1011 bulkscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910040107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 06:10:45PM -0400, Steven Rostedt wrote:
-> But still, we are going from 120 to 660 IPIs for every CPU. Not saying
-> it's a problem, but something that we should note. Someone (those that
-> don't like kernel interference) may complain.
+ADV7511 support sample rates up to 192kHz. CTS and N parameters should
+be computed accordingly so this commit extend the list up to maximum
+supported sample rate.
 
-It is machine wide function tracing, interference is going to happen..
-:-)
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+---
+ drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Anyway, we can grow the batch size if sufficient benefit can be shown to
-exist.
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+index 96be7b005c50..f376ed7eb9da 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+@@ -27,6 +27,18 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
+ 	case 48000:
+ 		*n = 6144;
+ 		break;
++	case 88200:
++		*n = 12544;
++		break;
++	case 96000:
++		*n = 12288;
++		break;
++	case 176400:
++		*n = 25088;
++		break;
++	case 192000:
++		*n = 24576;
++		break;
+ 	}
+ 
+ 	*cts = ((f_tmds * *n) / (128 * fs)) * 1000;
+-- 
+2.23.0
+
