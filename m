@@ -6,52 +6,77 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B914FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C1AC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B336222C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712532070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 14:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388968AbfJDO1y (ORCPT
+        id S2389113AbfJDOaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 10:27:54 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46354 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388840AbfJDO1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:27:53 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGOYe-0003DA-Ff; Fri, 04 Oct 2019 14:27:48 +0000
-Date:   Fri, 4 Oct 2019 15:27:48 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Varad Gautam <vrd@amazon.de>, stable@vger.kernel.org,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH] devpts: Fix NULL pointer dereference in dcache_readdir()
-Message-ID: <20191004142748.GG26530@ZenIV.linux.org.uk>
-References: <20191004140503.9817-1-christian.brauner@ubuntu.com>
+        Fri, 4 Oct 2019 10:30:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33680 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389076AbfJDOaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 10:30:23 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C620B9D31335E60E74F4;
+        Fri,  4 Oct 2019 22:30:21 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 4 Oct 2019
+ 22:30:14 +0800
+Subject: Re: [PATCH 0/4] HiSilicon hip08 uncore PMU events additions
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>
+References: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <zhangshaokun@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <27e693fd-124e-1aa8-3b8a-62301a5a1d10@huawei.com>
+Date:   Fri, 4 Oct 2019 15:30:07 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004140503.9817-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:05:03PM +0200, Christian Brauner wrote:
-> From: Will Deacon <will@kernel.org>
-> 
-> Closing /dev/pts/ptmx removes the corresponding pty under /dev/pts/
-> without synchronizing against concurrent path walkers. This can lead to
-> 'dcache_readdir()' tripping over a 'struct dentry' with a NULL 'd_inode'
-> field:
+On 04/09/2019 16:54, John Garry wrote:
+> This patchset adds some missing uncore PMU events for the hip08 arm64
+> platform.
+>
+> The missing events were originally mentioned in
+> https://lkml.org/lkml/2019/6/14/645, when upstreaming the JSONs initially.
+>
+> It also includes a fix for a DDRC eventname.
 
-FWIW, vfs.git#fixes (or #next.dcache) ought to deal with that one.
+Hi guys,
+
+Could I get these JSON updates picked up please? Maybe they were missed 
+earlier. Let me know if I should re-post.
+
+Thanks in advance,
+John
+
+>
+> John Garry (4):
+>   perf jevents: Fix Hisi hip08 DDRC PMU eventname
+>   perf jevents: Add some missing events for Hisi hip08 DDRC PMU
+>   perf jevents: Add some missing events for Hisi hip08 L3C PMU
+>   perf jevents: Add some missing events for Hisi hip08 HHA PMU
+>
+>  .../arm64/hisilicon/hip08/uncore-ddrc.json    | 16 +++++-
+>  .../arm64/hisilicon/hip08/uncore-hha.json     | 23 +++++++-
+>  .../arm64/hisilicon/hip08/uncore-l3c.json     | 56 +++++++++++++++++++
+>  3 files changed, 93 insertions(+), 2 deletions(-)
+>
+
+
