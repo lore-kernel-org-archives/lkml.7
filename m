@@ -2,87 +2,100 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4ACC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A2AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B7A215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DD920862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:29:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mLsT1CQP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPzXPeLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfJDT2N (ORCPT
+        id S1730794AbfJDT3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:28:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35846 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDT2M (ORCPT
+        Fri, 4 Oct 2019 15:29:34 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34945 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJDT3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:28:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7FrKM8lwwq9BP68RfAzbEbu9ZbuQwm+28FVR9aIuo9k=; b=mLsT1CQPB6s297SOjc6whQlHh
-        7OQtfOT/7cA/t+dU8xiYVhYyHjt1oahqDByGmLf+dVbEXOy8b432BO4dERJl/TZOptiJc8C/IqfAv
-        CQ7oSGBik8lmRWnpZFqBHcpl/CypQTAlqsoPWcyjWzq/usEfouGHNgUHr2x3wQcWpxxapFEnpj63d
-        ZMKIUQ6ziTf5UPc9N1CYQuWI55zudMMEo7tkr9wTfCat1r9pkGDz50sUyJDg20HwMCHQ7q2OJMGEa
-        qXZ4wq1o4eVTqxBzMVw3s7MBpnGs2IgUAUdyj+uCExBlOQhqB7bKH8riky78QzO8yAIpCDi5QWoT/
-        ElZOX2C5g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGTFM-0003sN-Cm; Fri, 04 Oct 2019 19:28:12 +0000
-Date:   Fri, 4 Oct 2019 12:28:12 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/15] fs: Introduce i_blocks_per_page
-Message-ID: <20191004192812.GK32665@bombadil.infradead.org>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-3-willy@infradead.org>
- <20190925083650.GE804@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925083650.GE804@dread.disaster.area>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 4 Oct 2019 15:29:33 -0400
+Received: by mail-io1-f67.google.com with SMTP id q10so16033202iop.2;
+        Fri, 04 Oct 2019 12:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7pCNQCHb6KRDiY0XtxNFr6uVRkF5l7XBcVc0Vj3CfgE=;
+        b=MPzXPeLXLefPwoDusyqcFMUVdH+/dEnYOXjidD4FgXIDGgs3G/qm6aoCkPadG3WrYH
+         wTKcoajFHb3l6GK4Tv2pMKkS6WRpyg9DSMBLLqU0PRUr0Jozgicqo3x7tjfpv5Q5kN44
+         2537i5K1H/Y0hn2xaNOXFkyRHSU1u49td4V4jO6mUwDBxjmt1GkX3RMLFO9RHH1sxG9/
+         fCi71JziSLYKL45OHB7qs4GAEnKKp7znVWcIjoNbDohxhFrGY+/s0QuZxieSF09X5BXY
+         WBwM563VyAPbz5n3HHcXsj818kyKcf9jn67nQlm3NZDYUMXw2tlD1zDWoiFRN8A6QrP+
+         e/ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7pCNQCHb6KRDiY0XtxNFr6uVRkF5l7XBcVc0Vj3CfgE=;
+        b=bG4CM2MlUTzmvXzyvaqWmWVU8ThbZ/nS3V8Ah4tUfmihVGb6NK19G/m4ENRlm6tdMr
+         0Q7bV9u4dtUsVP+1lMKQd9vASH85aPQ8XR+FPZfRGaQwuNVtEOIKWcL6T4X8qEtUH7Rl
+         GenT9IAr1g0OjVKK3nfq+jMcRd5XZPNKIlIpmQ69mZ5zNqjIaPJG0sjxPyQel2rBzN2z
+         tSLSYbEQ0Ln8hn0yCW+S1GUK8V/L6M8inJ+ngxUXwl5xpLOZsh6SO+DhnxfI0oumOJ+q
+         U7nnYKgeB9ovuk6fzyZww/zhqr3xOjwTNe39gmivJtlCnFXNbC2MGZjPRRSFZkZUsk1q
+         BqoA==
+X-Gm-Message-State: APjAAAW2fMfuBZj9DDnCDlvbu5N/wlnwPfe+IZk0z7adRmDUd4iO80m+
+        +xXbyzDE/sgBbsc4U7hTBBc=
+X-Google-Smtp-Source: APXvYqxXjt48yFxM2eDQB81Cru1JZg8SDiyzxHPbR3CSFuvbjBxjqKRAWwoMDADXhP4QdAqTqk9ulw==
+X-Received: by 2002:a6b:f312:: with SMTP id m18mr1677033ioh.210.1570217372869;
+        Fri, 04 Oct 2019 12:29:32 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id r22sm3970335ilb.85.2019.10.04.12.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 12:29:32 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: user - fix memory leak in crypto_report
+Date:   Fri,  4 Oct 2019 14:29:16 -0500
+Message-Id: <20191004192923.17491-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 06:36:50PM +1000, Dave Chinner wrote:
-> I'm actually working on abstrcting this code from both block size
-> and page size via the helpers below. We ahve need to support block
-> size > page size, and so that requires touching a bunch of all the
-> same code as this patchset. I'm currently trying to combine your
-> last patch set with my patchset so I can easily test allocating 64k
-> page cache pages on a 64k block size filesystem on a 4k page size
-> machine with XFS....
+In crypto_report, a new skb is created via nlmsg_new(). This skb should
+be released if crypto_report_alg() fails.
 
-This all makes sense ...
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ crypto/crypto_user_base.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > -	if (iop || i_blocksize(inode) == PAGE_SIZE)
-> > +	if (iop || i_blocks_per_page(inode, page) <= 1)
-> >  		return iop;
-> 
-> That also means checks like these become:
-> 
-> 	if (iop || iomap_chunks_per_page(inode, page) <= 1)
-> 
-> as a single file can now have multiple pages per block, a page per
-> block and multiple blocks per page as the page size changes...
-> 
-> I'd like to only have to make one pass over this code to abstract
-> out page and block sizes, so I'm guessing we'll need to do some
-> co-ordination here....
-
-Yup.  I'm happy if you want to send your patches out; I'll keep going
-with the patches I have for the moment, and we'll figure out how to
-merge the two series in a way that makes sense.
+diff --git a/crypto/crypto_user_base.c b/crypto/crypto_user_base.c
+index 910e0b46012e..b785c476de67 100644
+--- a/crypto/crypto_user_base.c
++++ b/crypto/crypto_user_base.c
+@@ -213,8 +213,10 @@ static int crypto_report(struct sk_buff *in_skb, struct nlmsghdr *in_nlh,
+ drop_alg:
+ 	crypto_mod_put(alg);
+ 
+-	if (err)
++	if (err) {
++		kfree_skb(skb);
+ 		return err;
++	}
+ 
+ 	return nlmsg_unicast(net->crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
+ }
+-- 
+2.17.1
 
