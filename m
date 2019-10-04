@@ -4,106 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B452C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813B1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BF7222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F90321D71
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfJDKbR (ORCPT
+        id S1730028AbfJDKdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:31:17 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:50161 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725730AbfJDKbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:31:17 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id GKrfiwHVajZ8vGKrjitP8k; Fri, 04 Oct 2019 12:31:15 +0200
-Subject: Re: [PATCH v9 8/8] media: imx214: Add new control with
- V4L2_CID_UNIT_CELL_SIZE
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191001112421.2778-1-ribalda@kernel.org>
- <20191001112421.2778-9-ribalda@kernel.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <98d3b559-8be0-a240-c94f-3171dd543009@xs4all.nl>
-Date:   Fri, 4 Oct 2019 12:31:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 4 Oct 2019 06:33:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47366 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729908AbfJDKdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:33:01 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 041BCC059B7C
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 10:33:01 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id i10so2503643wrb.20
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 03:33:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r0XRItmM0feIRH6oRRHgQMeNYVcpa+lwa27e7953gw4=;
+        b=qCdhUMbRsckZ+pdMy1YGtg3/7O885/HolLxfFE3q5RpHlcwskOgcyCb6amP6pFrGsg
+         SpudbHapSWIczDPMwfZ0o9xJNSFtgk/WE3B0OL3NwCJNQcGCTDpvVFd6Fie7C8VIHtEs
+         1jH/EzhB/icHRXExpcdSTo1H7sneRhm3/5BOIO03AE480HxA3fxhM9qB22l7aZHEez4d
+         iaFnI9pzMygt/WxjwZt31DWjR3I9X/hoExfPZcJD6WotXMN66h3wyZGvDleIRTF5a8/G
+         mh50ePAH5QQt4eE7+SjWzN3aesEqmWoavToqwq4B03IPoji5w0m8iLhuOvARa9K9+ZCw
+         EGtw==
+X-Gm-Message-State: APjAAAXmc8DJNk6ECafyW59jxVsioJ39e9dhVDdADCAoYQD6K4502QB8
+        IgyDcK5szKPgq3Dz20RZGr3RTZ6owRJZaAAPV95pcUM+KbOC0th46RpmhDSAGhIVRgsRfvFHVyq
+        9q4te1UggZRvOD/0nUKgVaHwH
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr10544396wmk.138.1570185178752;
+        Fri, 04 Oct 2019 03:32:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzL47z7J01Mlc0Ny4ymOI7hWHv9YGQ8hc0ev/0gQQd41tjTfNscKpDCKG//anTrALeM9ETJwg==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr10544377wmk.138.1570185178409;
+        Fri, 04 Oct 2019 03:32:58 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.237.241])
+        by smtp.gmail.com with ESMTPSA id r12sm6225438wrq.88.2019.10.04.03.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Oct 2019 03:32:57 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 12:32:55 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Juri Lelli <jlelli@redhat.com>
+Subject: Re: [PATCH v2] lib/smp_processor_id: Don't use cpumask_equal()
+Message-ID: <20191004103255.GE19588@localhost.localdomain>
+References: <20191003203608.21881-1-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001112421.2778-9-ribalda@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMy/oL8/mlNdx7sRvyQ1IU0HZpBPMjSeYURwQwfB19Shv+jtdoHWFIxac+VpL+bM7ouH7AIQLe9HmNJudktFshuWeHrlD4eepVsMfgkWFvHq3dfV4gYw
- o68AdhF1ud81VSnbLZB63OC/MzuNgRqLNq61bD54jghpKbv9XkK+YmGPRAYPX1R93SkPrtrz4xX/XwdvD9Cfb1jUlpVvz8jC0h6j90Kb5sqdzw9vnqa3KxnM
- VDNuG/0uAr9K20Hv845ps6o7ZdUUMFhhV7J5LYH4dx5SBCv4ez9bxxmxQMKbyDR+WawqQ76ABfOoeCgy3/jYgg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003203608.21881-1-longman@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 1:24 PM, Ricardo Ribalda Delgado wrote:
-> According to the product brief, the unit cell size is 1120 nanometers^2.
+Hi,
+
+On 03/10/19 16:36, Waiman Long wrote:
+> The check_preemption_disabled() function uses cpumask_equal() to see
+> if the task is bounded to the current CPU only. cpumask_equal() calls
+> memcmp() to do the comparison. As x86 doesn't have __HAVE_ARCH_MEMCMP,
+> the slow memcmp() function in lib/string.c is used.
 > 
-> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
+> On a RT kernel that call check_preemption_disabled() very frequently,
+> below is the perf-record output of a certain microbenchmark:
 > 
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>   42.75%  2.45%  testpmd [kernel.kallsyms] [k] check_preemption_disabled
+>   40.01% 39.97%  testpmd [kernel.kallsyms] [k] memcmp
+> 
+> We should avoid calling memcmp() in performance critical path. So the
+> cpumask_equal() call is now replaced with an equivalent simpler check.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 > ---
->  drivers/media/i2c/imx214.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  lib/smp_processor_id.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 159a3a604f0e..adcaaa8c86d1 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -47,6 +47,7 @@ struct imx214 {
->  	struct v4l2_ctrl *pixel_rate;
->  	struct v4l2_ctrl *link_freq;
->  	struct v4l2_ctrl *exposure;
-> +	struct v4l2_ctrl *unit_size;
->  
->  	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
->  
-> @@ -948,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
->  	static const s64 link_freq[] = {
->  		IMX214_DEFAULT_LINK_FREQ,
->  	};
-> +	static const struct v4l2_area unit_size = {
-> +		.width = 1120,
-> +		.height = 1120,
-> +	};
->  	int ret;
->  
->  	ret = imx214_parse_fwnode(dev);
-> @@ -1029,6 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
->  					     V4L2_CID_EXPOSURE,
->  					     0, 3184, 1, 0x0c70);
->  
-> +	imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
-> +				NULL,
-> +				V4L2_CID_UNIT_CELL_SIZE,
-> +				v4l2_ctrl_ptr_create((void *)&unit_size));
+> diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
+> index 60ba93fc42ce..bd9571653288 100644
+> --- a/lib/smp_processor_id.c
+> +++ b/lib/smp_processor_id.c
+> @@ -23,7 +23,7 @@ unsigned int check_preemption_disabled(const char *what1, const char *what2)
+>  	 * Kernel threads bound to a single CPU can safely use
+>  	 * smp_processor_id():
+>  	 */
+> -	if (cpumask_equal(current->cpus_ptr, cpumask_of(this_cpu)))
+> +	if (current->nr_cpus_allowed == 1)
+>  		goto out;
 
-The imx214 supports two modes: 4096x2304 and 1920x1080. I assume that the
-latter is using binning? So shouldn't the unit cell size be different in that
-case?
+Makes sense to me.
 
-I'm not so sure the unit cell size should depend on binning. I'd rather have
-the binning information exposed somehow and let userspace do the calculation.
+Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
 
-Regards,
+Thanks,
 
-	Hans
-
->  	ret = imx214->ctrls.error;
->  	if (ret) {
->  		dev_err(&client->dev, "%s control init failed (%d)\n",
-> 
-
+Juri
