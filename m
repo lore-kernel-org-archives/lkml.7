@@ -2,99 +2,129 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECBCC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4236CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA30E222C5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156A02084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+fbZVxe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndMx+gJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbfJDTma (ORCPT
+        id S1730916AbfJDTng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:42:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34092 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfJDTm3 (ORCPT
+        Fri, 4 Oct 2019 15:43:36 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42758 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfJDTnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:42:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id q1so16130919ion.1;
-        Fri, 04 Oct 2019 12:42:29 -0700 (PDT)
+        Fri, 4 Oct 2019 15:43:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n14so8487766wrw.9
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 12:43:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6BXYfSwt6S2bUCRJ7kdKcLjYfKsE5OTiBqsT8oWEIdk=;
-        b=Z+fbZVxeP1BB9h3aBY5Vc8ABBOQxPOQSDHr68Bj2NCOV/Yco6n4WR+H+PyOjRpVR0l
-         W8UMqQK3aTsDmpvC0oQgybcWw/OR8QY0D5jCJoBRXEyyE7MAabJRAX+PL15VlNxpQWNX
-         7QqYiKVavN9RZqC62dZLLaDCDNGCUOh79LH0oEtIjOSJU2xqHn4GzcG4OjjdY4c75Ske
-         AshyucaJYg6uBjcXZ2vYpgBQ4A578gA3cUC3n6JowKvJkBjQBCc6x9FgQCoWZf64GpKk
-         xuOFui0U22GNKVuIl92m5jRO5TSUVc1UvhNQF1RNCIz4JQckcS5wz9MWpTFbNN+WH3pz
-         d4kA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fr5y/RvlB6x0gWwbCBYcM9hwB+ke8YDXuG6rntGxLCM=;
+        b=ndMx+gJgLIhohBHTBHDLgHFxGPC/IMObaTRm7UIziVbnvT2+nzCGHUbWvkLJaHL5w5
+         bnv6PF2vWG/05jWnf0S/GGapG6dIJfxzX4DrFUdM6HThT3OZUbNn2nG1mM9uTEN35wSx
+         Fv7GBHmkKda60q0rQyRcViOKp7ls7vJl5R3swI/5pH5brlj6emslmsCN3sHfCp++T97s
+         4aBnCM/zQaetMcxBIjFROotY54DiReGqyJV1jrZHx+DKJ7fClKg2/3SNwTiVF6u2wPB2
+         CtKM60aFMbanXHZ3Fo8NZNM8d2gDkqvREs6S0QU2QRk93hG8ohB3uAjBfO8vXO3m3cIO
+         7A3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6BXYfSwt6S2bUCRJ7kdKcLjYfKsE5OTiBqsT8oWEIdk=;
-        b=O39cNC4B2daowrL+rmU7sDH3e2vudZo8Pa9Mt/aBHhxH/XvEA63BtqSa1VInNjEwb7
-         B+MN0jdOIDyW8TawS1+25QPWK8rZl4V/cMAiLMma1st+/GKETvQCwT4tc0Lewat5WSEB
-         bbOiSj9ir8H2nRRAEGIuTK3u02U/x1kQp27yi86V57Ak21Q9I4zMUBlyQYsk45+GsH1J
-         2TjkSbdKpH3hvBGyHnIKhV63Tkjy8DvR8CkXdGvEFbK2Krj6/69YXaA9G/LxjJ04qgEE
-         Sn5hBK8dO97w43qw/jT+Z2/WCeI4x1LmagXO3hr0egRn3TN7Lroh0qbEFw+EuVw0E46V
-         w8Ng==
-X-Gm-Message-State: APjAAAXaLIwo3UbzfunZrkI06lR479VbNn9sclUoI2nTNhI/+Sd753k2
-        6J6vcL4YY7m3BQWku/qYk5mT9Uou43M=
-X-Google-Smtp-Source: APXvYqwIqPqUaUtZkxGmJFCcYz2Kv1eMF8I2/gMKXeYv75IkMbeSZCgbZUJY49EEiRw7gNQQZaytFg==
-X-Received: by 2002:a92:8fda:: with SMTP id r87mr17155295ilk.210.1570218148669;
-        Fri, 04 Oct 2019 12:42:28 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id d9sm2458243ioq.9.2019.10.04.12.42.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fr5y/RvlB6x0gWwbCBYcM9hwB+ke8YDXuG6rntGxLCM=;
+        b=gVuOdLtJUNRJXpPhqQEBr9NTtSW6ZqCROyZWWudlXnypGw3qg/JFtLpDGwH9GGVq61
+         Uedffvs+qxrbW0judJNeVvCZH9PHbdipqwK8X4mfH3h821jSzaLEE+No+RfVc+lRL9RV
+         qHsskiBBCKvwtB8tBhjUIQB6axWIlk6bnFLcuXJoSYpTaQysIBqycm/DtWRr/h7e5p8g
+         vlxvp1AsMB3uzVSEEQY9uadIjyIF+fKdXYeh7b/gVAKjzrLcDgskKzEyXlBn8FJV+waL
+         Y+SqxX5TqKqRzqN5F6ga3uO2Ik/zznhYD1xYEX2BeIVoU6WND72Cy1LOW9Bly8FlTgZx
+         2fjQ==
+X-Gm-Message-State: APjAAAUdLylQHUgeWASThS1nHre0Do2JxyunYYO5PGhsiDHyVsluqmH8
+        bgSS7HzmU9Apm41cnsFiChPI2Qwe
+X-Google-Smtp-Source: APXvYqzW+d+PLfKGj/zPSMxQeffxUrBaWf4c1MckZr1+EVwgl9Fn+hKgW8Lauv814+mMr35X6qLBnQ==
+X-Received: by 2002:a5d:670f:: with SMTP id o15mr12473614wru.242.1570218213334;
+        Fri, 04 Oct 2019 12:43:33 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id f143sm11289741wme.40.2019.10.04.12.43.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 12:42:28 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nl80211: fix memory leak in nl80211_get_ftm_responder_stats
-Date:   Fri,  4 Oct 2019 14:42:19 -0500
-Message-Id: <20191004194220.19412-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 04 Oct 2019 12:43:32 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 12:43:30 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] usercopy structs for v5.4-rc2
+Message-ID: <20191004194330.GA1478788@archlinux-threadripper>
+References: <20191004104116.20418-1-christian.brauner@ubuntu.com>
+ <CAHk-=whxf5HVdaXqL6RgHCLzb2LNn3U2n_x4GWQZroCC+evRoA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whxf5HVdaXqL6RgHCLzb2LNn3U2n_x4GWQZroCC+evRoA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nl80211_get_ftm_responder_stats, a new skb is created via nlmsg_new
-named msg. If nl80211hdr_put() fails, then msg should be released. The
-return statement should be replace by goto to error handling code.
+On Fri, Oct 04, 2019 at 10:53:41AM -0700, Linus Torvalds wrote:
+> On Fri, Oct 4, 2019 at 3:42 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> >            The only separate fix we we had to apply
+> > was for a warning by clang when building the tests for using the result of
+> > an assignment as a condition without parantheses.
+> 
+> Hmm. That code is ugly, both before and after the fix.
+> 
+> This just doesn't make sense for so many reasons:
+> 
+>         if ((ret |= test(umem_src == NULL, "kmalloc failed")))
+> 
+> where the insanity comes from
+> 
+>  - why "|=" when you know that "ret" was zero before (and it had to
+> be, for the test to make sense)
+> 
+>  - why do this as a single line anyway?
+> 
+>  - don't do the stupid "double parenthesis" to hide a warning. Make it
+> use an actual comparison if you add a layer of parentheses.
+> 
+> So
+> 
+>         if ((x = y))
+> 
+> is *wrong*. I know the compiler suggests that, but the compiler is
+> just being stupid, and the suggestion comes from people who don't have
+> any taste.
+> 
+> If you want to test an assignment, you should just use
+> 
+>         if ((x = y) != 0)
+> 
+> instead, at which point it's not syntactic noise mind-games any more,
+> but the parenthesis actually make sense.
+> 
+> However, you had no reason to use an assignment in the conditional in
+> the first place.
+> 
+> IOW, the code should have just been
+> 
+>         ret = test(umem_src == NULL, "kmalloc failed");
+>         if (ret) ...
 
-Fixes: 81e54d08d9d8 ("cfg80211: support FTM responder configuration/statistics")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- net/wireless/nl80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, I had this as the original fix but I tried to keep the same
+intention as the original author. I should have gone with my gut. Sorry
+for the ugliness, I'll try to be better in the future.
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index d21b1581a665..cecd3bf101f8 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -13644,7 +13644,7 @@ static int nl80211_get_ftm_responder_stats(struct sk_buff *skb,
- 	hdr = nl80211hdr_put(msg, info->snd_portid, info->snd_seq, 0,
- 			     NL80211_CMD_GET_FTM_RESPONDER_STATS);
- 	if (!hdr)
--		return -ENOBUFS;
-+		goto nla_put_failure;
- 
- 	if (nla_put_u32(msg, NL80211_ATTR_IFINDEX, dev->ifindex))
- 		goto nla_put_failure;
--- 
-2.17.1
-
+Cheers,
+Nathan
