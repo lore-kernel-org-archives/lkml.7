@@ -2,126 +2,164 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F23C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A637AC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1169D215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82099222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="uWHUWtpw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbfJDSex (ORCPT
+        id S1729932AbfJDSih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:34:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:52144 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbfJDSex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:34:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5D215A1;
-        Fri,  4 Oct 2019 11:34:52 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2143F534;
-        Fri,  4 Oct 2019 11:34:50 -0700 (PDT)
-Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
- bypass by default
-To:     Tim Harvey <tharvey@gateworks.com>,
-        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
-        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190301192017.39770-1-dianders@chromium.org>
- <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
- <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
- <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
- <1f6f7eb0-e1dc-d5a8-fb38-44c5bd839894@arm.com>
- <CAJ+vNU1Nd2p-ot2Qkj6vD9yD6gcYM-vm+snNWyt0ChgSqe4tBg@mail.gmail.com>
- <5cf9ec03-f6fb-8227-4ec5-62445038f283@arm.com>
- <CAJ+vNU28LrroW-XC4X2g3bdN171j0ieZenhYE1TrEM8yvKi=cQ@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <cb6392ff-fac6-300b-2e04-b34df8c42f28@arm.com>
-Date:   Fri, 4 Oct 2019 19:34:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 4 Oct 2019 14:38:37 -0400
+Received: from mail-eopbgr780105.outbound.protection.outlook.com ([40.107.78.105]:57568
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfJDSig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 14:38:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zpme58YAI+Kdje4mFt74Of/FkZT1+8hbxb7z1qiKBY+hB1p8pFcvK6+2VM09GYqcoudpm5JfsHchhaqhfUnaL1y5iBKMkrdN20A0pBOqBqshEtD06OAHZo7hVxVMfA9oSo2DH7q1gHfenwHdMD5znfrXCRvT9ZIukgGyrIuT2rApD5xxXSJRZg9mYsB3gU/xypKoCAwg+pa6zixeV/Hv39dWLlMtWwD24Aj/u+3vV4BEc/qR2NmnpA+vFlqzl/np4mDP6KD7drfVk4MbVsjvCXllYOMZK4EwG4x1hGOo6G3V6Iyu8PA6Ss3kd6byVapc1LRL2bnswkBsr23b71JFAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TmIxy/PjlZyB6WiPy5Y1mXP4cKe/6PSz1vCAtIda/Uc=;
+ b=S032L/Hjr5fkvdSJ1kQBkQ7kIVmoP4T3Umff+3PP9seB4Z5hukw/E4hQAjUZli5710eDtZM3emyjfd2WU40MLvVpP5vyjSKmKLI1w41rhjFO6wbEpYlC2R6Ekn2IuEueAl4DWZoefxzgbrf6zvUk8/u0TiJP4BL4vcy9TMWRp3tR9DPPzVkLI76KS/JpH5aXnbbBGanHFMghKOzcqlPUJSB31blx21rwaGUr/ZWVWouZ/ZQHec0j0LhO7Z9TrrE6+Dw+7v/+2i2qxmO18jnCp1TI3yiGzsEYvHJq/6U6p9Ph5WOBzofc5tpc+RFG6zryikmS/jgEmWvniauDolq3fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TmIxy/PjlZyB6WiPy5Y1mXP4cKe/6PSz1vCAtIda/Uc=;
+ b=uWHUWtpweCeYJcbjpcan8ciixm/0D/p5R/3BKtthZpm83itqlcbMPC0TJ3CM19abHZX/Hq3UTLrIq5bBsqtX5tN8Vo6d2M0pu4wu3AHI9OnvBijbaOvKS4MfbDs1DfsjYta25JjRJgO2XTPrLPGhFCxEr6JH/5DXveUJau+9Uic=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1646.namprd22.prod.outlook.com (10.174.167.35) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Fri, 4 Oct 2019 18:38:33 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::3050:9a38:9d8e:8033]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::3050:9a38:9d8e:8033%5]) with mapi id 15.20.2327.023; Fri, 4 Oct 2019
+ 18:38:33 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH] mtd: rawnand: au1550nd: Fix au_read_buf16() prototype
+Thread-Topic: [PATCH] mtd: rawnand: au1550nd: Fix au_read_buf16() prototype
+Thread-Index: AQHVeuLtostA17/f6UyQ8/BtivUYgw==
+Date:   Fri, 4 Oct 2019 18:38:33 +0000
+Message-ID: <20191004183706.850363-1-paul.burton@mips.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR01CA0007.prod.exchangelabs.com (2603:10b6:a02:80::20)
+ To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f04e93b6-6e42-4112-a795-08d748fa0f77
+x-ms-traffictypediagnostic: MWHPR2201MB1646:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB16462C0976DF7F6523348FBAC19E0@MWHPR2201MB1646.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:913;
+x-forefront-prvs: 018093A9B5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39840400004)(346002)(366004)(376002)(199004)(189003)(66556008)(66946007)(66446008)(66476007)(64756008)(316002)(6486002)(54906003)(4326008)(5640700003)(6116002)(3846002)(66066001)(6436002)(2906002)(1076003)(5660300002)(478600001)(14454004)(2351001)(486006)(8676002)(25786009)(6916009)(386003)(36756003)(81156014)(81166006)(44832011)(50226002)(8936002)(99286004)(71190400001)(26005)(71200400001)(7416002)(2501003)(186003)(6506007)(102836004)(52116002)(42882007)(305945005)(7736002)(256004)(14444005)(2616005)(476003)(6512007)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1646;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t3OFo/a0xq/BZZNB32zuWmCYOdnRMRaXSLVWT5nCERy3jthSJ1A2zrrdMSFfRk0Alt2cVK3tuIMd0TImVFbrhwzfEBHRnO9KuV0bzEaduNC2hBCoD6nzCN+TBR9ZC6G039PZ4apb0al+qBPEVFPgiX9QKB9thchbpKJuXhaQMG3kiPgXxKFs5rQiyug/WigQ15fkfHfSBStzPaV67oKdVfUiptZQi0dwjWLSQeW8L1cc46+ggiBc19TyAbYpIPGO71NbMdSCXrvD9ikzlZqwqyjo/X5z521whds+8nS29LZBp24o9yoybMMx2jNXhH5QaGOI628ggYtz1Z7YbPFFKm1XNYO6HCHyrKpKdhcL/3Lv+hMUD5vTfTEJq8IvixJOHD2WbwEacWVyC5aYZmfidvzwIzLzzajOgyENzLuDcWU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAJ+vNU28LrroW-XC4X2g3bdN171j0ieZenhYE1TrEM8yvKi=cQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f04e93b6-6e42-4112-a795-08d748fa0f77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 18:38:33.6717
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5eSqV3glVtPTgjt1tqDtUpAZh4HL7Y5NXH4ermDaWtItT0iwlvCn55d4sb1EjUL8QkzjXjnVdkzLrBmCDm2QFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1646
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 18:13, Tim Harvey wrote:
-[...]
->>> No difference... still need 'arm-smmu.disable_bypass=n' to boot. Are
->>> all four iommu-map props above supposed to be the same? Seems to me
->>> they all point to the same thing which looks wrong.
->>
->> Hmm... :/
->>
->> Those mappings just set Stream ID == PCI RID (strictly each one should
->> only need to cover the bus range assigned to that bridge, but it's not
->> crucial) which is the same thing the driver assumes for the mmu-masters
->> property, so either that's wrong and never could have worked anyway -
->> have you tried VFIO on this platform? - or there are other devices also
->> mastering through the SMMU that aren't described at all. Are you able to
->> capture a boot log? The SMMU faults do encode information about the
->> offending ID, and you can typically correlate their appearance
->> reasonably well with endpoint drivers probing.
->>
-> 
-> Robin,
-> 
-> VFIO is enabled in the kernel but I don't know anything about how to
-> test/use it:
-> $ grep VFIO .config
-> CONFIG_KVM_VFIO=y
-> CONFIG_VFIO_IOMMU_TYPE1=y
-> CONFIG_VFIO_VIRQFD=y
-> CONFIG_VFIO=y
-> # CONFIG_VFIO_NOIOMMU is not set
-> CONFIG_VFIO_PCI=y
-> CONFIG_VFIO_PCI_MMAP=y
-> CONFIG_VFIO_PCI_INTX=y
-> # CONFIG_VFIO_PLATFORM is not set
-> # CONFIG_VFIO_MDEV is not set
+Commit 7e534323c416 ("mtd: rawnand: Pass a nand_chip object to
+chip->read_xxx() hooks") modified the prototype of the struct nand_chip
+read_buf function pointer. In the au1550nd driver we have 2
+implementations of read_buf. The previously mentioned commit modified
+the au_read_buf() implementation to match the function pointer, but not
+au_read_buf16(). This results in a compiler warning for MIPS
+db1xxx_defconfig builds:
 
-No worries - since it's a networking-focused SoC I figured there was a 
-chance you might be using DPDK or similar userspace drivers with the NIC 
-VFs, but I was just casting around for a quick and easy baseline of 
-whether the SMMU works at all (another way would be using Qemu to run a 
-VM with one or more PCI devices assigned).
+  drivers/mtd/nand/raw/au1550nd.c:443:57:
+    warning: pointer type mismatch in conditional expression
 
-> I do have a boot console yet I'm not seeing any smmu faults at all.
-> Perhaps I've mis-diagnosed the issue completely. To be clear when I
-> boot with arm-smmu.disable_bypass=y the serial console appears to not
-> accept input in userspace and with arm-smmu.disable_bypass=n I'm fine.
-> I'm using a buildroot initramfs rootfs for simplicity. The system
-> isn't hung as I originally expected as the LED heartbeat trigger
-> continues blinking... I just can't get console to accept input.
+Fix this by updating the prototype of au_read_buf16() to take a struct
+nand_chip pointer as its first argument, as is expected after commit
+7e534323c416 ("mtd: rawnand: Pass a nand_chip object to chip->read_xxx()
+hooks").
 
-Curiouser and curiouser... I'm inclined to suspect that the interrupt 
-configuration might also be messed up, such that the SMMU is blocking 
-traffic and jammed up due to pending faults, but you're not getting the 
-IRQ delivered to find out. Does this patch help reveal anything?
+Note that this shouldn't have caused any functional issues at runtime,
+since the offset of the struct mtd_info within struct nand_chip is 0
+making mtd_to_nand() effectively a type-cast.
 
-http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=29ac3648b580920692c9b417b2fc606995826517
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: 7e534323c416 ("mtd: rawnand: Pass a nand_chip object to chip->read_x=
+xx() hooks")
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.20+
 
-(untested, but it's a direct port of the one I've used for SMMUv3 to 
-diagnose something similar)
+---
 
-That said, it's also puzzling that no other drivers are reporting DMA 
-errors or timeouts either - is there any chance that some device is set 
-running by the firmware/bootloader and not taken over by a kernel driver?
+ drivers/mtd/nand/raw/au1550nd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Robin.
+diff --git a/drivers/mtd/nand/raw/au1550nd.c b/drivers/mtd/nand/raw/au1550n=
+d.c
+index 97a97a9ccc36..2bc818dea2a8 100644
+--- a/drivers/mtd/nand/raw/au1550nd.c
++++ b/drivers/mtd/nand/raw/au1550nd.c
+@@ -140,10 +140,9 @@ static void au_write_buf16(struct nand_chip *this, con=
+st u_char *buf, int len)
+  *
+  * read function for 16bit buswidth
+  */
+-static void au_read_buf16(struct mtd_info *mtd, u_char *buf, int len)
++static void au_read_buf16(struct nand_chip *this, u_char *buf, int len)
+ {
+ 	int i;
+-	struct nand_chip *this =3D mtd_to_nand(mtd);
+ 	u16 *p =3D (u16 *) buf;
+ 	len >>=3D 1;
+=20
+--=20
+2.23.0
+
