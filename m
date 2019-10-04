@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8281C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017E4C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2656222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D167E20873
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfJDV4k (ORCPT
+        id S1731684AbfJDV4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:56:40 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6002 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731669AbfJDV4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 17:56:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:6000 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731605AbfJDV4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 17:56:37 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 14:56:38 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 14:56:37 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="191710725"
+   d="scan'208";a="191710716"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Oct 2019 14:56:37 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 04 Oct 2019 14:56:36 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -50,9 +50,9 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         kvm@vger.kernel.org, linux-edac@vger.kernel.org,
         Borislav Petkov <bp@suse.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 16/16] KVM: VMX: Allow KVM_INTEL when building for Centaur and/or Zhaoxin CPUs
-Date:   Fri,  4 Oct 2019 14:56:15 -0700
-Message-Id: <20191004215615.5479-17-sean.j.christopherson@intel.com>
+Subject: [PATCH 14/16] x86/cpufeatures: Clean up synthetic virtualization flags
+Date:   Fri,  4 Oct 2019 14:56:13 -0700
+Message-Id: <20191004215615.5479-15-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191004215615.5479-1-sean.j.christopherson@intel.com>
 References: <20191004215615.5479-1-sean.j.christopherson@intel.com>
@@ -63,37 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the dependency for KVM_INTEL, i.e. KVM w/ VMX, from Intel CPUs to
-any CPU that has IA32_FEATURE_CONTROL MSR and thus VMX functionality.
-This effectively allows building KVM_INTEL for Centaur and Zhaoxin CPUs.
+Shift the remaining synthetic virtualization flags so that the flags
+are contiguous starting from bit 0.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/Kconfig | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/cpufeatures.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 840e12583b85..42c7a23c5f28 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -60,13 +60,12 @@ config KVM
- 	  If unsure, say N.
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 76070800187a..1899ddce53f7 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -222,10 +222,10 @@
+ #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
  
- config KVM_INTEL
--	tristate "KVM for Intel processors support"
-+	tristate "KVM for Intel (and compatible) processors support"
- 	depends on KVM
--	# for perf_guest_get_msrs():
--	depends on CPU_SUP_INTEL
-+	depends on X86_FEATURE_CONTROL_MSR
- 	---help---
--	  Provides support for KVM on Intel processors equipped with the VT
--	  extensions.
-+	  Provides support for KVM on processors equipped with Intel's VT
-+	  extensions, a.k.a. Virtual Machine Extensions (VMX).
+ /* Virtualization flags: Linux defined, word 8 */
+-#define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
+-#define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
+-#define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
+-#define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
++#define X86_FEATURE_VMMCALL		( 8*32+ 0) /* Prefer VMMCALL to VMCALL */
++#define X86_FEATURE_XENPV		( 8*32+ 1) /* "" Xen paravirtual guest */
++#define X86_FEATURE_VMCALL		( 8*32+ 2) /* "" Hypervisor supports the VMCALL instruction */
++#define X86_FEATURE_VMW_VMMCALL		( 8*32+ 3) /* "" VMware prefers VMMCALL hypercall instruction */
  
- 	  To compile this as a module, choose M here: the module
- 	  will be called kvm-intel.
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
 -- 
 2.22.0
 
