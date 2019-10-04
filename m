@@ -2,148 +2,134 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49622C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E44ECE589
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9BB208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="NobExJzO"
+	by mail.kernel.org (Postfix) with ESMTP id B373321783
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 02:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbfJDCrC (ORCPT
+        id S1732494AbfJDCtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 22:47:02 -0400
-Received: from ns3.fnarfbargle.com ([103.4.19.87]:55498 "EHLO
-        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730566AbfJDCrB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 22:47:01 -0400
-Received: from [10.8.0.1] (helo=srv.home ident=heh19151)
-        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <lists2009@fnarfbargle.com>)
-        id 1iGDZX-0001GQ-TE; Fri, 04 Oct 2019 10:43:59 +0800
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=JOyw9WqbGBm2Mu4SL6cJ20GQPUKDDNmOAM6PypbLkKg=;
-        b=NobExJzO4BKQfqxAguTeCdjv1RNo55e1U9Mit0cBCEV57xrPfG/W/vOAqS2cl7a0dGGWVf7xgf6qWj6gmfgzdn/LML1ByU7xWFXH+YmHODudfAfpu3xtA+Ketx1WpvgdpOa7k9BtRRd80z3phUigCAF7do49+VEVd4tZ2osSvSI=;
-Subject: Re: [PATCH 1/3] thunderbolt: Read DP IN adapter first two dwords in
- one go
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org
-References: <20191001102905.21680-1-mika.westerberg@linux.intel.com>
- <20191001102905.21680-2-mika.westerberg@linux.intel.com>
-From:   Brad Campbell <lists2009@fnarfbargle.com>
-Message-ID: <abad9eb5-ef39-5936-7d9d-bdf53a81a1c4@fnarfbargle.com>
-Date:   Fri, 4 Oct 2019 10:43:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 3 Oct 2019 22:49:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38858 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730566AbfJDCta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 22:49:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0DAE6AFB2;
+        Fri,  4 Oct 2019 02:49:27 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 19:48:19 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     akpm@linux-foundation.org, walken@google.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH -next 00/11] lib/interval-tree: move to half closed
+ intervals
+Message-ID: <20191004024819.ux2osxcpobgnel6j@linux-p48b>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>, akpm@linux-foundation.org,
+        walken@google.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191004002609.GB1492@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20191001102905.21680-2-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191004002609.GB1492@ziepe.ca>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/19 6:29 pm, Mika Westerberg wrote:
-> When we discover existing DP tunnels the code checks whether DP IN
-> adapter port is enabled by calling tb_dp_port_is_enabled() before it
-> continues the discovery process. On Light Ridge (gen 1) controller
-> reading only the first dword of the DP IN config space causes subsequent
-> access to the same DP IN port path config space to fail or return
-> invalid data as can be seen in the below splat:
-> 
->    thunderbolt 0000:07:00.0: CFG_ERROR(0:d): Invalid config space or offset
->    Call Trace:
->     tb_cfg_read+0xb9/0xd0
->     __tb_path_deactivate_hop+0x98/0x210
->     tb_path_activate+0x228/0x7d0
->     tb_tunnel_restart+0x95/0x200
->     tb_handle_hotplug+0x30e/0x630
->     process_one_work+0x1b4/0x340
->     worker_thread+0x44/0x3d0
->     kthread+0xeb/0x120
->     ? process_one_work+0x340/0x340
->     ? kthread_park+0xa0/0xa0
->     ret_from_fork+0x1f/0x30
-> 
-> If both DP In adapter config dwords are read in one go the issue does
-> not reproduce. This is likely firmware bug but we can work it around by
-> always reading the two dwords in one go. There should be no harm for
-> other controllers either so can do it unconditionally.
-> 
-> Link: https://lkml.org/lkml/2019/8/28/160
-> Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
+On Thu, 03 Oct 2019, Jason Gunthorpe wrote:
 
-Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
+>On Thu, Oct 03, 2019 at 01:18:47PM -0700, Davidlohr Bueso wrote:
+>> Hi,
+>>
+>> It has been discussed[1,2] that almost all users of interval trees would better
+>> be served if the intervals were actually not [a,b], but instead [a, b). This
+>> series attempts to convert all callers by way of transitioning from using
+>> "interval_tree_generic.h" to "interval_tree_gen.h". Once all users are converted,
+>> we remove the former.
+>>
+>> Patch 1: adds a call that will make patch 8 easier to review by introducing stab
+>>          queries for the vma interval tree.
+>>
+>> Patch 2: adds the new interval_tree_gen.h which is the same as the old one but
+>>          uses [a,b) intervals.
+>>
+>> Patch 3-9: converts, in baby steps (as much as possible), each interval tree to
+>> 	   the new [a,b) one. It is done this way also to maintain bisectability.
+>> 	   Most conversions are pretty straightforward, however, there are some
+>> 	   creative ways in which some callers use the interval 'end' when going
+>> 	   through intersecting ranges within a tree. Ie: patch 3, 6 and 9.
+>>
+>> Patch 10: deletes the interval_tree_generic.h header; there are no longer any users.
+>>
+>> Patch 11: finally simplifies x86 pat tree to use the new interval tree machinery.
+>>
+>> This has been lightly tested, and certainly not on driver paths that do non
+>> trivial conversions. Also needs more eyeballs as conversions can be easily
+>> missed (even when I've tried mitigating this by renaming the endpoint from 'last'
+>> to 'end' in each corresponding structure).
+>>
+>> Because this touches a lot of drivers, I'm Cc'ing the whole thing to a couple of
+>> relevant lists (mm, dri, rdma); sorry if you consider this spam.
+>>
+>> Applies on top of today's linux-next tree. Please consider for v5.5.
+>>
+>> Thanks!
+>>
+>> [1] https://lore.kernel.org/lkml/CANN689HVDJXKEwB80yPAVwvRwnV4HfiucQVAho=dupKM_iKozw@mail.gmail.com/
+>
+>Hurm, this is not entirely accurate. Most users do actually want
+>overlapping and multiple ranges. I just studied this extensively:
+>
+>radeon_mn actually wants overlapping but seems to mis-understand the
+>interval_tree API and actively tries hard to prevent overlapping at
+>great cost and complexity. I have a patch to delete all of this and
+>just be overlapping.
+>
+>amdgpu_mn copied the wrongness from radeon_mn
+>
+>All the DRM drivers are basically the same here, tracking userspace
+>controlled VAs, so overlapping is essential
+>
+>hfi1/mmu_rb definitely needs overlapping as it is dealing with
+>userspace VA ranges under control of userspace. As do the other
+>infiniband users.
+>
+>vhost probably doesn't overlap in the normal case, but again userspace
+>could trigger overlap in some pathalogical case.
+>
+>The [start,last] allows the interval to cover up to ULONG_MAX. I don't
+>know if this is needed however. Many users are using userspace VAs
+>here. Is there any kernel configuration where ULONG_MAX is a valid
+>userspace pointer? Ie 32 bit 4G userspace? I don't know.
+>
+>Many users seemed to have bugs where they were taking a userspace
+>controlled start + length and converting them into a start/end for
+>interval tree without overflow protection (woops)
+>
+>Also I have a series already cooking to delete several of these
+>interval tree users, which will terribly conflict with this :\
 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->   drivers/thunderbolt/switch.c | 19 +++++++++++--------
->   1 file changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-> index 410bf1bceeee..8e712fbf8233 100644
-> --- a/drivers/thunderbolt/switch.c
-> +++ b/drivers/thunderbolt/switch.c
-> @@ -896,12 +896,13 @@ int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
->    */
->   bool tb_dp_port_is_enabled(struct tb_port *port)
->   {
-> -	u32 data;
-> +	u32 data[2];
->   
-> -	if (tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1))
-> +	if (tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
-> +			 ARRAY_SIZE(data)))
->   		return false;
->   
-> -	return !!(data & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
-> +	return !!(data[0] & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
->   }
->   
->   /**
-> @@ -914,19 +915,21 @@ bool tb_dp_port_is_enabled(struct tb_port *port)
->    */
->   int tb_dp_port_enable(struct tb_port *port, bool enable)
->   {
-> -	u32 data;
-> +	u32 data[2];
->   	int ret;
->   
-> -	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1);
-> +	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
-> +			   ARRAY_SIZE(data));
->   	if (ret)
->   		return ret;
->   
->   	if (enable)
-> -		data |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
-> +		data[0] |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
->   	else
-> -		data &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
-> +		data[0] &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
->   
-> -	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap, 1);
-> +	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
-> +			     ARRAY_SIZE(data));
->   }
->   
->   /* switch utility functions */
-> 
+I have no problem redoing after your changes; if it's worth it
+at all.
 
+>
+>Is it really necessary to make such churn for such a tiny API change?
+
+I agree, and was kind of expecting this. In general the diffstat ended
+up being larger than I initially hoped for. Maybe after your removals
+I can look into this again.
+
+Thanks,
+Davidlohr
