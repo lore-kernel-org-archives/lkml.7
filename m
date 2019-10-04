@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC258C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7C2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994E3222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956C7222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VHCChoz0"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="QBfxsXlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbfJDSxk (ORCPT
+        id S1730842AbfJDSwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:53:40 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37788 "EHLO
+        Fri, 4 Oct 2019 14:52:44 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37772 "EHLO
         mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730928AbfJDSwt (ORCPT
+        with ESMTP id S1730801AbfJDSwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:52:49 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l3so9974344qtr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:52:47 -0700 (PDT)
+        Fri, 4 Oct 2019 14:52:41 -0400
+Received: by mail-qt1-f194.google.com with SMTP id l3so9973906qtr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=nna15T41FBOo8C0ScgrwWvHxD4xBB4A7rtr2LOcD0mg=;
-        b=VHCChoz0fROYiFF3E2hiGeINxfvJE7JQlXXzOJLd54akzbItA1+2rUzr4DI2djJ9O5
-         Hyca0gHi/BmtqWzaux8ehDmfQ1GQp6qxgoGtldtG8PBTLXRXEw1mFAwqJcbvoPQ/L/MV
-         b4QlOJB3QwU6EgG1nTI/SDmgwYuIGf0zvGu+jUWUpxSEFWz/Lo4IuyDOCCbcPAqreAzp
-         rUhodhHLR+4SY72e+9jzUO7EZbvvOu+iqjKQe/fIzZE9uwz0R13jwGpyOKt8BvQ5FjZ3
-         lKVmqELSCurVOwUZEKX5HmoOjjr1q/nYg8Cg0T6S+5qXTBzGv8rqKY71guAQ73XZA4U7
-         73CQ==
+        bh=3zTijyt8B1oVtT9JT6yCKls7nJQIDBWuYolaWDAK7ic=;
+        b=QBfxsXlV7QG8qGyT7yovERfIlFzUSjbPWKWeYhz6on/h85J+eTplEGg+PnYLNe2g2V
+         5K1buQ67xs+gJJrvrxE2PnrXBiC/WKbpjDK/y05bxM9jw4pW7RhuVOwtWUQQ+KiXF7ml
+         JA751aW5xF8qW02iqVleyASrW/+TGd3dgtpvq7AFHfGO6TV+tsjdz0sbYDOTj56WsKwM
+         zDdQJgSHc3StoExrI2ytE0r7vFhhZZdhdq3IqWEzHDTYn3s/BTm/QtNy654271iMnGcu
+         mtGsbJLQWQSsE1Vg/9uQta2yjEZvs3zI6mJ3pmibJMTwXefrPnfkV4n4jpIrmPvjFu5r
+         2e9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nna15T41FBOo8C0ScgrwWvHxD4xBB4A7rtr2LOcD0mg=;
-        b=n+w2jDKhfeP1sZE80mmecatIFHbozkIymr8kX1LxIuE16sW9n7rWGN4xMpmv+MzDTa
-         yneN9Dyj1RpeMDWWg1ffAh3emzgJO77JABPLP0F/Vm/4xE1FwP7GL2SNGhRZ56t2BpnW
-         gBOt6aRG6bTxMrE0tb7RZiSkpqcKVz6proCWSn3L8qr6xKaJbY+ser7TCtF8P4PIg1Nz
-         PGi3RIDux+/fl+ZBQptv/dGBkgbO1ki3HcJvQyF3+SOonVZbzwbMiwiX85KJVBojeAml
-         PbYUkIG46t2DMZ65pIipDuGs1t2GA+l2bKj56nMvsw3xbtiU/gP5Ka3Eq5XJmrwuypSd
-         9RAg==
-X-Gm-Message-State: APjAAAVoE0imod96VfGVCMkX1h9MufWM2gpKL/SsKjNIgWps7d2QoIyi
-        Cx59mUP21C8FwtSza0K7vn3Cnw==
-X-Google-Smtp-Source: APXvYqyNbFmYvCagLzsifj1RuTq8tuyaOwA4jFplBgyym0KPw1b7isWuxXmSyyHyKvb+tYw7MVrpqg==
-X-Received: by 2002:ad4:418c:: with SMTP id e12mr15569947qvp.70.1570215167250;
-        Fri, 04 Oct 2019 11:52:47 -0700 (PDT)
+        bh=3zTijyt8B1oVtT9JT6yCKls7nJQIDBWuYolaWDAK7ic=;
+        b=o94sgHVgPhbLxy3GGw/f1bbH9WmdeLhaFPpZ3VNv9VVAiJ3N1ponAY00WHA1cPDXGY
+         7s6dITtykrObhBsUfPrLW1RiCmlD6Y+0404atHcv1J6lB9sAS/thPN/H6cVJEVgOSgAH
+         d66+V66SKS76Ih7PYbMfJ78VviU7u/b931OjNTud1FPveJ69CKBWl8omj2U6Q1bJa1y+
+         7XmSutvg2NR8utRHHjL9dAY/QdnnHDBc7Tr+/3UTc3URz1x/2XI0JLcZyswLmzlrkUjF
+         JhtoIpk4cSKY5AZroilOnADrtJ3U15FzCKiYzskyVp1hrdL2V2Y2KnOi0ZtNux/rB6Ub
+         9AUg==
+X-Gm-Message-State: APjAAAU9CrEO7G4WXzhsf65RIaq8p2UYZXuWvIlSpz1mMoNWhNRSNSFh
+        fGhMB8EsyHYVwQgGIZTiH+uLeA==
+X-Google-Smtp-Source: APXvYqz0VrEtbfOPZiQUcwn5FhaB6/JDqh7xKU3KH/BA6dVj2t/BXgqShHLdvVsoAFfqxEftxuHL5A==
+X-Received: by 2002:ac8:6bc5:: with SMTP id b5mr17605033qtt.244.1570215160265;
+        Fri, 04 Oct 2019 11:52:40 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id p77sm4042514qke.6.2019.10.04.11.52.45
+        by smtp.gmail.com with ESMTPSA id p77sm4042514qke.6.2019.10.04.11.52.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 11:52:46 -0700 (PDT)
+        Fri, 04 Oct 2019 11:52:39 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -65,9 +65,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         james.morse@arm.com, vladimir.murzin@arm.com,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com
-Subject: [PATCH v6 07/17] arm64: hibernate: add PUD_SECT_RDONLY
-Date:   Fri,  4 Oct 2019 14:52:24 -0400
-Message-Id: <20191004185234.31471-8-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 02/17] arm64: hibernate: pass the allocated pgdp to ttbr0
+Date:   Fri,  4 Oct 2019 14:52:19 -0400
+Message-Id: <20191004185234.31471-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191004185234.31471-1-pasha.tatashin@soleen.com>
 References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
@@ -78,40 +78,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is PMD_SECT_RDONLY that is used in pud_* function which is confusing.
+ttbr0 should be set to the beginning of pgdp, however, currently
+in create_safe_exec_page it is set to pgdp after pgd_offset_raw(),
+which works by accident.
+
+Fixes: 0194e760f7d2 ("arm64: hibernate: avoid potential TLB conflict")
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Acked-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/include/asm/pgtable-hwdef.h | 1 +
- arch/arm64/kernel/hibernate.c          | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/hibernate.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-index 3df60f97da1f..756a1dfb4f55 100644
---- a/arch/arm64/include/asm/pgtable-hwdef.h
-+++ b/arch/arm64/include/asm/pgtable-hwdef.h
-@@ -110,6 +110,7 @@
- #define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
- #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
- #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
-+#define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
- 
- /*
-  * Level 2 descriptor (PMD).
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 1ca8af685e96..ce60bceed357 100644
+index e0a7fce0e01c..d52f69462c8f 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -436,7 +436,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
- 				return -ENOMEM;
- 		} else {
- 			set_pud(dst_pudp,
--				__pud(pud_val(pud) & ~PMD_SECT_RDONLY));
-+				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
- 		}
- 	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
+@@ -201,6 +201,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 				 gfp_t mask)
+ {
+ 	int rc = 0;
++	pgd_t *trans_pgd;
+ 	pgd_t *pgdp;
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+@@ -215,7 +216,8 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	memcpy((void *)dst, src_start, length);
+ 	__flush_icache_range(dst, dst + length);
  
+-	pgdp = pgd_offset_raw(allocator(mask), dst_addr);
++	trans_pgd = allocator(mask);
++	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+ 		pudp = allocator(mask);
+ 		if (!pudp) {
+@@ -262,7 +264,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	 */
+ 	cpu_set_reserved_ttbr0();
+ 	local_flush_tlb_all();
+-	write_sysreg(phys_to_ttbr(virt_to_phys(pgdp)), ttbr0_el1);
++	write_sysreg(phys_to_ttbr(virt_to_phys(trans_pgd)), ttbr0_el1);
+ 	isb();
+ 
+ 	*phys_dst_addr = virt_to_phys((void *)dst);
 -- 
 2.23.0
 
