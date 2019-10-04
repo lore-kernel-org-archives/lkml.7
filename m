@@ -2,139 +2,354 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AA4C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 03:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A014C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 04:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110EA21848
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 03:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="E/xgeOAs"
+	by mail.kernel.org (Postfix) with ESMTP id DF45921783
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 04:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387689AbfJDDyO (ORCPT
+        id S1726696AbfJDEBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 23:54:14 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:37659 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387565AbfJDDyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 23:54:14 -0400
-Received: by mail-vk1-f196.google.com with SMTP id v78so1170862vke.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 20:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0gPgCpIAYJa8p/vY1UkyEnZoeMekLpn4eiArUKNY2gk=;
-        b=E/xgeOAsMphC/AV8gSRd0LsfY8+LvGdoxkgrJBnEM8B+UmyPeaF3NbcHIIpeBGc6/P
-         Tljzvp0RNW+wd31RlAuYdFOApTPiUJHnU7Ffu7OdTcHWo4XL9OQfXnRdwTK1/3LuJjEV
-         cubjToPvH6J6Gy4zKZ+BH2srchI9CoJYlHGqTtUvl+aARv1CWWsvmJ76Kqxchg59IdbC
-         6Hr+3W5VUZ8rQQJsOmE7lxEQ2eLbx1VPsYHkLhebqd76BfTZt54hCMOwIE+niV2Z+E8K
-         FmYF36qxu+7MV5unn7ljRpznvuiUPTCNF0pJyP7t00I1eDvmXGmT9p8Anz438uxoZSV2
-         HkSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0gPgCpIAYJa8p/vY1UkyEnZoeMekLpn4eiArUKNY2gk=;
-        b=DXy5VoxSyYpAGlnNE7OW7E50WvLsCIXpkGpu7UAKTW4FXEUUXJQQ+QJFS4TBNN6BNh
-         b1JgBdC2/fztjGjcPLTx1HepZTahT4iDKVtEVU7xU+F+fo+Wl+d0rt3YrHWiCnu9iwMv
-         bL/rwOTj+ZLeFjonW5wSR9F0DDy/HypMbEpXfxiSAjSHoWY6wCY2zzfqefGLUre/JVRj
-         7Oh5QUeBpXzfRQmPkwyWuYU7ckVVxh0qsFhjwgWfl80tpBHUS6/9z4K3jmAFyFLhfSnv
-         AvkP3o7UsdH3jVyCLP2sEzKNJjHw2RUvDh6F9EJrM74LAvrtkN+H3WQo2cqXfp9JLhcH
-         tRpA==
-X-Gm-Message-State: APjAAAUyvbAEQRp8/MfbcEl6de1J2SiWHC5Ue//m630FlwY4O3nGAjMe
-        lfx9K8cq7qfAw1P/6Qouzs2cxyd83nYt0DirUq82LQ==
-X-Google-Smtp-Source: APXvYqwPwuXqe3t7ih6EMNyN0uj3L4Kc/6XM37p8JU0DMEQcWc0VWxTEk5XW5aWnyxQ3ZhnPR6xPLaI1/x1x32gkMuQ=
-X-Received: by 2002:a1f:bd94:: with SMTP id n142mr7016504vkf.86.1570161252601;
- Thu, 03 Oct 2019 20:54:12 -0700 (PDT)
+        Fri, 4 Oct 2019 00:01:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33488 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725730AbfJDEBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 00:01:09 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1FA3BC8D004F644EB491;
+        Fri,  4 Oct 2019 12:01:02 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 4 Oct 2019 12:00:54 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH v3] PCI: mobiveil: Fix csr_read/write build issue
+Date:   Fri, 4 Oct 2019 12:19:25 +0800
+Message-ID: <20191004041925.8996-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190930083116.GA38576@e119886-lin.cambridge.arm.com>
+References: <20190930083116.GA38576@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20191002190756.26895-1-jeffrey.l.hugo@gmail.com>
-In-Reply-To: <20191002190756.26895-1-jeffrey.l.hugo@gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 4 Oct 2019 09:24:01 +0530
-Message-ID: <CAHLCerOTycP9++w_VPOqVkd7QGY8Jfun4fd0mZqinTPE46+T7w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998-clamshell: Remove retention
- idle state
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 12:44 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> The retention idle state does not appear to be supported by the firmware
-> present on the msm8998 laptops since the state is advertised as disabled
-> in ACPI, and attempting to enable the state in DT is observed to result
-> in boot hangs.  Therefore, remove the state from use to address the
-> observed issues.
->
-> Fixes: 2c6d2d3a580a (arm64: dts: qcom: Add Lenovo Miix 630)
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+The riscv has csr_read/write macro, see arch/riscv/include/asm/csr.h,
+the same function naming will cause build error, using such generic names
+in a driver is bad, rename csr_[read,write][l,] to mobiveil_csr_read/write
+to fix it.
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
+ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
 
-> ---
->  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> index 9682d4dd7496..1bae90705746 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> @@ -23,6 +23,43 @@
->         };
->  };
->
-> +/*
-> + * The laptop FW does not appear to support the retention state as it is
-> + * not advertised as enabled in ACPI, and enabling it in DT can cause boot
-> + * hangs.
-> + */
-> +&CPU0 {
-> +       cpu-idle-states = <&LITTLE_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU1 {
-> +       cpu-idle-states = <&LITTLE_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU2 {
-> +       cpu-idle-states = <&LITTLE_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU3 {
-> +       cpu-idle-states = <&LITTLE_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU4 {
-> +       cpu-idle-states = <&BIG_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU5 {
-> +       cpu-idle-states = <&BIG_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU6 {
-> +       cpu-idle-states = <&BIG_CPU_SLEEP_1>;
-> +};
-> +
-> +&CPU7 {
-> +       cpu-idle-states = <&BIG_CPU_SLEEP_1>;
-> +};
-> +
->  &qusb2phy {
->         status = "okay";
->
-> --
-> 2.17.1
->
+drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
+ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
+Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: Andrew Murray <andrew.murray@arm.com> 
+Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+v3:
+- reduce line lengths suggested by Andrew
+
+v2:
+- using mobiveil prefix suggested by Andrew and Christoph 
+
+ drivers/pci/controller/pcie-mobiveil.c | 119 +++++++++++++------------
+ 1 file changed, 62 insertions(+), 57 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index a45a6447b01d..32f37d08d5bc 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
+-static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
++static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+ {
+ 	void *addr;
+ 	u32 val;
+@@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+ 	return val;
+ }
+ 
+-static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
++static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
++			       size_t size)
+ {
+ 	void *addr;
+ 	int ret;
+@@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+ 		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+ }
+ 
+-static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
++static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+ {
+-	return csr_read(pcie, off, 0x4);
++	return mobiveil_csr_read(pcie, off, 0x4);
+ }
+ 
+-static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
++static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+ {
+-	csr_write(pcie, val, off, 0x4);
++	mobiveil_csr_write(pcie, val, off, 0x4);
+ }
+ 
+ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+ {
+-	return (csr_readl(pcie, LTSSM_STATUS) &
++	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
+ 		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+ }
+ 
+@@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+ 		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
+ 		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
+ 
+-	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
++	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+ 
+ 	return pcie->config_axi_slave_base + where;
+ }
+@@ -353,13 +354,14 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 
+ 	/* read INTx status */
+-	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+-	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	intr_status = val & mask;
+ 
+ 	/* Handle INTx */
+ 	if (intr_status & PAB_INTP_INTX_MASK) {
+-		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++		shifted_status = mobiveil_csr_readl(pcie,
++						    PAB_INTP_AMBA_MISC_STAT);
+ 		shifted_status &= PAB_INTP_INTX_MASK;
+ 		shifted_status >>= PAB_INTX_START;
+ 		do {
+@@ -373,12 +375,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 							    bit);
+ 
+ 				/* clear interrupt handled */
+-				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+-					   PAB_INTP_AMBA_MISC_STAT);
++				mobiveil_csr_writel(pcie,
++						    1 << (PAB_INTX_START + bit),
++						    PAB_INTP_AMBA_MISC_STAT);
+ 			}
+ 
+-			shifted_status = csr_readl(pcie,
+-						   PAB_INTP_AMBA_MISC_STAT);
++			shifted_status = mobiveil_csr_readl(pcie,
++							    PAB_INTP_AMBA_MISC_STAT);
+ 			shifted_status &= PAB_INTP_INTX_MASK;
+ 			shifted_status >>= PAB_INTX_START;
+ 		} while (shifted_status != 0);
+@@ -413,7 +416,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	}
+ 
+ 	/* Clear the interrupt status */
+-	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
++	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+ 	chained_irq_exit(chip, desc);
+ }
+ 
+@@ -474,24 +477,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 		return;
+ 	}
+ 
+-	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
++	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+ 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+ 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+-	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
++	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+ 
+-	csr_writel(pcie, upper_32_bits(size64),
+-		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(size64),
++			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(cpu_addr),
+-		   PAB_PEX_AMAP_AXI_WIN(win_num));
+-	csr_writel(pcie, upper_32_bits(cpu_addr),
+-		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
++			    PAB_PEX_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
++			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(pci_addr),
+-		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+-	csr_writel(pcie, upper_32_bits(pci_addr),
+-		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
++			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
++			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
+ 
+ 	pcie->ib_wins_configured++;
+ }
+@@ -515,27 +518,29 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
+ 	 * to 4 KB in PAB_AXI_AMAP_CTRL register
+ 	 */
+-	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
++	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+ 	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+ 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+-	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
++	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+ 
+-	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(size64),
++			    PAB_EXT_AXI_AMAP_SIZE(win_num));
+ 
+ 	/*
+ 	 * program AXI window base with appropriate value in
+ 	 * PAB_AXI_AMAP_AXI_WIN0 register
+ 	 */
+-	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+-		   PAB_AXI_AMAP_AXI_WIN(win_num));
+-	csr_writel(pcie, upper_32_bits(cpu_addr),
+-		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie,
++			    lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
++			    PAB_AXI_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
++			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(pci_addr),
+-		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
+-	csr_writel(pcie, upper_32_bits(pci_addr),
+-		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
++			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
++			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
+ 
+ 	pcie->ob_wins_configured++;
+ }
+@@ -579,42 +584,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	struct resource_entry *win;
+ 
+ 	/* setup bus numbers */
+-	value = csr_readl(pcie, PCI_PRIMARY_BUS);
++	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
+ 	value &= 0xff000000;
+ 	value |= 0x00ff0100;
+-	csr_writel(pcie, value, PCI_PRIMARY_BUS);
++	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
+ 
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
+ 	 */
+-	value = csr_readl(pcie, PCI_COMMAND);
++	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
+ 	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
+-	csr_writel(pcie, value, PCI_COMMAND);
++	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
+ 
+ 	/*
+ 	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
+ 	 * register
+ 	 */
+-	pab_ctrl = csr_readl(pcie, PAB_CTRL);
++	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
+ 	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+-	csr_writel(pcie, pab_ctrl, PAB_CTRL);
++	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
+ 
+-	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+-		   PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
++			    PAB_INTP_AMBA_MISC_ENB);
+ 
+ 	/*
+ 	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+ 	 * PAB_AXI_PIO_CTRL Register
+ 	 */
+-	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
++	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
+ 	value |= APIO_EN_MASK;
+-	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
++	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+ 
+ 	/* Enable PCIe PIO master */
+-	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
++	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
+ 	value |= 1 << PIO_ENABLE_SHIFT;
+-	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
++	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+ 
+ 	/*
+ 	 * we'll program one outbound window for config reads and
+@@ -647,10 +652,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	}
+ 
+ 	/* fixup for PCIe class register */
+-	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
++	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+ 	value &= 0xff;
+ 	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+-	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+ 
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
+@@ -668,9 +673,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+ 	pcie = irq_desc_get_chip_data(desc);
+ 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+ 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+-	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	shifted_val &= ~mask;
+-	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+ 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+ }
+ 
+@@ -684,9 +689,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
+ 	pcie = irq_desc_get_chip_data(desc);
+ 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+ 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+-	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	shifted_val |= mask;
+-	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+ 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+ }
+ 
+-- 
+2.20.1
+
