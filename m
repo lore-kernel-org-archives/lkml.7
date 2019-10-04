@@ -2,102 +2,128 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B4BC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D520BC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F05F2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D2320862
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570215958;
+	bh=u5QaZtEOp8w703VYPic+1mADXJnENUnAUyuqEHlg9Tg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aJ35xry4Y5xW72HA+/ya1GGgmWwC63tMnkS2H3t1ch6fa/3RP19h/QtRXOujVztxb
+	 63jca+rUbD0mODhzffH4tJn2wj+WaEPFD556GmsXKMtvEMDPrhiMSo3g4QJ0LFh61K
+	 ddp29jxEohtjzDbFvb9NO2jzkK1ELUJUJpZ8ZeAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbfJDTEA (ORCPT
+        id S1729551AbfJDTF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:04:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:40786 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfJDTEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:04:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 12:03:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="204406165"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 12:03:59 -0700
-Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 4 Oct 2019 12:03:59 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.161]) by
- ORSMSX162.amr.corp.intel.com ([169.254.3.170]) with mapi id 14.03.0439.000;
- Fri, 4 Oct 2019 12:03:59 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-CC:     "kristen@linux.intel.com" <kristen@linux.intel.com>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>
-Subject: Re: [RFC PATCH 00/13] XOM for KVM guest userspace
-Thread-Topic: [RFC PATCH 00/13] XOM for KVM guest userspace
-Thread-Index: AQHVejL3BY31w2dp/kGOlEfaBbHp/adKifcAgADD7AA=
-Date:   Fri, 4 Oct 2019 19:03:58 +0000
-Message-ID: <8a03afd35240c180c3bea8d613acd85f8dee86cc.camel@intel.com>
-References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
-         <bc025a4f-2128-24ed-e5b7-76802f22cd53@redhat.com>
-In-Reply-To: <bc025a4f-2128-24ed-e5b7-76802f22cd53@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7ACE2019637B784299509B87C8DEE1B5@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 4 Oct 2019 15:05:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59670 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfJDTF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:05:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QGZliJPdlDlOK0+RDUjxm98who5ohoRGUY2ZZORyQ20=; b=qNkouME7U+pyHYhrMM3I2Nag1
+        93AClDEkSBtJlN/W502nuojhXI4S7ERF7b65ZLm8kBIVDNH3GMfRHjqB50JDGPy7Z3ey2ddW5hkUk
+        aiRXq5gfNxXAc7DzZgAioYE4gwCQkkM2leNt6wWsTk0l6h9/+iXsoUI+++OpCUnmLeTxP/6aJG4vr
+        R2DI77bcMEJpb2g0iK49FwrIwL6rBZUUZPvun/8QEv1jT6MADJq+snKCty7O1kjnre1pIidqnjGMt
+        EU8NJbiGZG6K/SjKymQCy0gGLdS5hT+goIR8uWz+5jvSpm0+fqVniBmVUjEeC45Cz2QsCRaj7Xu8k
+        CSFWmHHSw==;
+Received: from 179.187.109.114.dynamic.adsl.gvt.net.br ([179.187.109.114] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGStm-0004nf-Cf; Fri, 04 Oct 2019 19:05:54 +0000
+Date:   Fri, 4 Oct 2019 16:05:48 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>,
+        linux-gpio@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] docs: driver-api: bt8xxgpio: Revive dead link
+Message-ID: <20191004160548.2250de01@coco.lan>
+In-Reply-To: <20191004191417.09088c38@wiggum>
+References: <20191004164059.10397-1-j.neuschaefer@gmx.net>
+        <20191004164059.10397-2-j.neuschaefer@gmx.net>
+        <20191004191417.09088c38@wiggum>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEwLTA0IGF0IDA5OjIyICswMjAwLCBQYW9sbyBCb256aW5pIHdyb3RlOg0K
-PiBPbiAwMy8xMC8xOSAyMzoyMywgUmljayBFZGdlY29tYmUgd3JvdGU6DQo+ID4gU2luY2Ugc29m
-dHdhcmUgd291bGQgaGF2ZSBwcmV2aW91c2x5IHJlY2VpdmVkIGEgI1BGIHdpdGggdGhlIFJTVkQg
-ZXJyb3IgY29kZQ0KPiA+IHNldCwgd2hlbiB0aGUgSFcgZW5jb3VudGVyZWQgYW55IHNldCBiaXRz
-IGluIHRoZSByZWdpb24gNTEgdG8gTSwgdGhlcmUgd2FzDQo+ID4gc29tZQ0KPiA+IGludGVybmFs
-IGRpc2N1c3Npb24gb24gd2hldGhlciB0aGlzIHNob3VsZCBoYXZlIGEgdmlydHVhbCBNU1IgZm9y
-IHRoZSBPUyB0bw0KPiA+IHR1cm4NCj4gPiBpdCBvbiBvbmx5IGlmIHRoZSBPUyBrbm93cyBpdCBp
-c24ndCByZWx5aW5nIG9uIHRoaXMgYmVoYXZpb3IgZm9yIGJpdCBNLiBUaGUNCj4gPiBhcmd1bWVu
-dCBhZ2FpbnN0IG5lZWRpbmcgYW4gTVNSIGlzIHRoaXMgYmx1cmIgZnJvbSB0aGUgSW50ZWwgU0RN
-IGFib3V0DQo+ID4gcmVzZXJ2ZWQNCj4gPiBiaXRzOg0KPiA+ICJCaXRzIHJlc2VydmVkIGluIHRo
-ZSBwYWdpbmctc3RydWN0dXJlIGVudHJpZXMgYXJlIHJlc2VydmVkIGZvciBmdXR1cmUNCj4gPiBm
-dW5jdGlvbmFsaXR5LiBTb2Z0d2FyZSBkZXZlbG9wZXJzIHNob3VsZCBiZSBhd2FyZSB0aGF0IHN1
-Y2ggYml0cyBtYXkgYmUNCj4gPiB1c2VkIGluDQo+ID4gdGhlIGZ1dHVyZSBhbmQgdGhhdCBhIHBh
-Z2luZy1zdHJ1Y3R1cmUgZW50cnkgdGhhdCBjYXVzZXMgYSBwYWdlLWZhdWx0DQo+ID4gZXhjZXB0
-aW9uDQo+ID4gb24gb25lIHByb2Nlc3NvciBtaWdodCBub3QgZG8gc28gaW4gdGhlIGZ1dHVyZS4i
-DQo+ID4gDQo+ID4gU28gaW4gdGhlIGN1cnJlbnQgcGF0Y2hzZXQgdGhlcmUgaXMgbm8gTVNSIHdy
-aXRlIHJlcXVpcmVkIGZvciB0aGUgZ3Vlc3QgdG8NCj4gPiB0dXJuDQo+ID4gb24gdGhpcyBmZWF0
-dXJlLiBJdCB3aWxsIGhhdmUgdGhpcyBiZWhhdmlvciB3aGVuZXZlciBxZW11IGlzIHJ1biB3aXRo
-DQo+ID4gIi1jcHUgK3hvIi4NCj4gDQo+IEkgdGhpbmsgdGhlIHBhcnQgb2YgdGhlIG1hbnVhbCB0
-aGF0IHlvdSBxdW90ZSBpcyBvdXQgb2YgZGF0ZS4gIFdoZW5ldmVyDQo+IEludGVsIGhhcyAidW5y
-ZXNlcnZlZCIgYml0cyBpbiB0aGUgcGFnZSB0YWJsZXMgdGhleSBoYXZlIGRvbmUgdGhhdCBvbmx5
-DQo+IGlmIHNwZWNpZmljIGJpdHMgaW4gQ1I0IG9yIEVGRVIgb3IgVk1DUyBleGVjdXRpb24gY29u
-dHJvbHMgYXJlIHNldDsgdGhpcw0KPiBpcyBhIGdvb2QgdGhpbmcsIGFuZCBJJ2QgcmVhbGx5IGxp
-a2UgaXQgdG8gYmUgY29kaWZpZWQgaW4gdGhlIFNETS4NCj4gDQo+IFRoZSBvbmx5IGJpdHMgZm9y
-IHdoaWNoIHRoaXMgZG9lcyBub3QgKGFuZCBzaG91bGQgbm90KSBhcHBseSBhcmUgaW5kZWVkDQo+
-IGJpdHMgNTE6TUFYUEhZQUREUi4gIEJ1dCB0aGUgU0RNIG1ha2VzIGl0IGNsZWFyIHRoYXQgYml0
-cyA1MTpNQVhQSFlBRERSDQo+IGFyZSByZXNlcnZlZCwgaGVuY2UgInVucmVzZXJ2aW5nIiBiaXRz
-IGJhc2VkIG9uIGp1c3QgYSBRRU1VIGNvbW1hbmQgbGluZQ0KPiBvcHRpb24gd291bGQgYmUgYWdh
-aW5zdCB0aGUgc3BlY2lmaWNhdGlvbi4gIFNvLCBwbGVhc2UgZG9uJ3QgZG8gdGhpcyBhbmQNCj4g
-aW50cm9kdWNlIGFuIE1TUiB0aGF0IGVuYWJsZXMgdGhlIGZlYXR1cmUuDQo+IA0KPiBQYW9sbw0K
-PiANCkhpIFBhb2xvLA0KDQpUaGFua3MgZm9yIHRha2luZyBhIGxvb2shDQoNCkZhaXIgZW5vdWdo
-LCBNU1IgaXQgaXMuDQoNClJpY2sNCg==
+Em Fri, 4 Oct 2019 19:14:17 +0200
+Michael B=C3=BCsch <m@bues.ch> escreveu:
+
+> On Fri,  4 Oct 2019 18:40:56 +0200
+> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+>=20
+> > www.bu3sch.de has been unusable for several years, but the same
+> > information is available on bues.ch.
+> >=20
+> > Cc: Michael Buesch <m@bues.ch>
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > ---
+> >  Documentation/driver-api/gpio/bt8xxgpio.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/driver-api/gpio/bt8xxgpio.rst b/Documentatio=
+n/driver-api/gpio/bt8xxgpio.rst
+> > index a845feb074de..d7e75f1234e7 100644
+> > --- a/Documentation/driver-api/gpio/bt8xxgpio.rst
+> > +++ b/Documentation/driver-api/gpio/bt8xxgpio.rst
+> > @@ -2,7 +2,7 @@
+> >  A driver for a selfmade cheap BT8xx based PCI GPIO-card (bt8xxgpio)
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >=20
+> > -For advanced documentation, see http://www.bu3sch.de/btgpio.php
+> > +For advanced documentation, see https://bues.ch/cms/unmaintained/btgpi=
+o.html
+> >=20
+> >  A generic digital 24-port PCI GPIO card can be built out of an ordinary
+> >  Brooktree bt848, bt849, bt878 or bt879 based analog TV tuner card. The
+> > --
+> > 2.20.1
+> >=20
+> >  =20
+>=20
+> For both patches:
+> Acked-by: Michael B=C3=BCsch <m@bues.ch>
+
+Hi Jonathan,
+
+Those drivers don't really belong to the media subsystem (although they are
+for a media device), so you don't need my ack. Yet, both patches look
+good to me, so, for both:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+>=20
+> If you want, you can use the short-URL:
+> https://bues.ch/u/btgpio
+>=20
+
+
+
+Thanks,
+Mauro
