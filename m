@@ -3,89 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1063CC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090BEC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED6221A4C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D158C21D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbfJDIsv (ORCPT
+        id S2387574AbfJDIwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 04:48:51 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:48721 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725730AbfJDIsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 04:48:50 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id GJGWivNPfjZ8vGJGZisjho; Fri, 04 Oct 2019 10:48:48 +0200
-Subject: Re: [PATCH v7 7/9] drm: tegra: use cec_notifier_conn_(un)register
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190814104520.6001-1-darekm@google.com>
- <20190814104520.6001-8-darekm@google.com>
- <f0e99db8-3329-f272-e139-a7c713f200ea@xs4all.nl> <20190828093820.GE2917@ulmo>
- <2eed5ed3-85f3-4c19-4dd2-3d8432829c2a@xs4all.nl>
- <20190828115400.GA30919@ulmo>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <3f7fe51a-8958-a425-f5fd-01df5301d6b2@xs4all.nl>
-Date:   Fri, 4 Oct 2019 10:48:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190828115400.GA30919@ulmo>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        Fri, 4 Oct 2019 04:52:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41874 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725730AbfJDIwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 04:52:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C103BAC16;
+        Fri,  4 Oct 2019 08:52:20 +0000 (UTC)
+Message-ID: <1570179472.30086.4.camel@suse.cz>
+Subject: Re: [PATCH v2 2/2] cpufreq: intel_pstate: Conditional frequency
+ invariant accounting
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Date:   Fri, 04 Oct 2019 10:57:52 +0200
+In-Reply-To: <CAJZ5v0jK1kMjQ3gu8KhQmp2Paq9Rb74NPjMQ1HsVRCD3Fct5TQ@mail.gmail.com>
+References: <20191002122926.385-1-ggherdovich@suse.cz>
+         <20191002122926.385-3-ggherdovich@suse.cz> <13106850.QMtCbivBLn@kreacher>
+         <5d6d601d2647644238fc51621407061e1c29320d.camel@linux.intel.com>
+         <1570177786.30086.1.camel@suse.cz>
+         <CAJZ5v0jK1kMjQ3gu8KhQmp2Paq9Rb74NPjMQ1HsVRCD3Fct5TQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIxtuyQfDELsyaEhapLOQeAHB7QAyJDRd8x05tHFxVJYMlGGvg5VX//j//cdR+KvdtarwKYhD4NRQrssc7yvwEN+yiyuBiFa1CRULA1iQjqwTHvN9hvg
- I3h+Lc4e/ODHchCGAjVhlQiBPgmXfPjyrxWPVPkSccYG25LXhbEas0Absg1gU4QIMKA1fToOk/oIBRS9HNPQEZGQdVoCO8h4pm2Xlz46TM5lW+FGDYiz/gtD
- Ik86LXISf6CXkM3zrizPiGxwMptBjrwicNmd0Z3bMYwDMA/En4sAM5C9qrf8xlPOgYyql4jDscGeIEd7tm4xZZmeoe2wOd8UOod3rpaxRP7/Z0ijvbz7a9zL
- 07DbcgRhu0f2J2Kt07CcgmLOZsCoErFmfK8UiqUCD9mVagvcegJYrdC8Xq4mhjrff1Gi+yt/brLuGMC54uNBvPLP55UHVBLM4NT2BmxTy6356tuWvPM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
-
-Just a reminder: this patch hasn't been merged yet for v5.5.
-
-Thanks!
-
-	Hans
-
-On 8/28/19 1:54 PM, Thierry Reding wrote:
-> On Wed, Aug 28, 2019 at 12:06:34PM +0200, Hans Verkuil wrote:
->> On 8/28/19 11:38 AM, Thierry Reding wrote:
->>> On Wed, Aug 28, 2019 at 10:09:30AM +0200, Hans Verkuil wrote:
->>>> Thierry,
->>>>
->>>> Can you review this patch?
->>>>
->>>> Thanks!
->>>>
->>>> 	Hans
->>>
->>> Did you want me to pick this up into the drm/tegra tree? Or do you want
->>> to pick it up into your tree?
->>
->> Can you pick it up for the next cycle? As you mentioned, we missed the
->> deadline for 5.4, so this feature won't be enabled in the public CEC API
->> until 5.5.
->>
->> Thanks!
+On Fri, 2019-10-04 at 10:29 +0200, Rafael J. Wysocki wrote:
+> On Fri, Oct 4, 2019 at 10:24 AM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+> > 
+> > On Thu, 2019-10-03 at 20:31 -0700, Srinivas Pandruvada wrote:
+> > > On Thu, 2019-10-03 at 20:05 +0200, Rafael J. Wysocki wrote:
+> > > > On Wednesday, October 2, 2019 2:29:26 PM CEST Giovanni Gherdovich
+> > > > wrote:
+> > > > > From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > > > > 
+> > > > > intel_pstate has two operating modes: active and passive. In "active"
+> > > > > mode, the in-built scaling governor is used and in "passive" mode, the
+> > > > > driver can be used with any governor like "schedutil". In "active" mode
+> > > > > the utilization values from schedutil is not used and there is a
+> > > > > requirement from high performance computing use cases, not to readas
+> > > > > well any APERF/MPERF MSRs.
+> > > > 
+> > > > Well, this isn't quite convincing.
+> > > > 
+> > > > In particular, I don't see why the "don't read APERF/MPERF MSRs" argument
+> > > > applies *only* to intel_pstate in the "active" mode.  What about
+> > > > intel_pstate in the "passive" mode combined with the "performance"
+> > > > governor?  Or any other governor different from "schedutil" for that
+> > > > matter?
+> > > > 
+> > > > And what about acpi_cpufreq combined with any governor different from
+> > > > "schedutil"?
+> > > > 
+> > > > Scale invariance is not really needed in all of those cases right now
+> > > > AFAICS, or is it?
+> > > 
+> > > Correct. This is just part of the patch to disable in active mode
+> > > (particularly in HWP and performance mode).
+> > > 
+> > > But this patch is 2 years old. The folks who wanted this, disable
+> > > intel-pstate and use userspace governor with acpi-cpufreq. So may be
+> > > better to address those cases too.
+> > 
+> > I disagree with "scale invariance is needed only by the schedutil governor";
+> > the two other users are the CPU's estimated utilization in the wakeup path,
+> > via cpu_util_without(), as well as the load-balance path, via cpu_util() which
+> > is used by update_sg_lb_stats().
 > 
-> Sure, will do.
+> OK, so there are reasons to run the scale invariance code which are
+> not related to the cpufreq governor in use.
 > 
-> Thierry
+> I wonder then why those reasons are not relevant for intel_pstate in
+> the "active" mode.
 > 
+> > Also remember that scale invariance is applied to both PELT signals util_avg
+> > and load_avg; schedutil uses the former but not the latter.
+> > 
+> > I understand Srinivas patch to disable MSR accesses during the tick as a
+> > band-aid solution to address a specific use case he cares about, but I don't
+> > think that extending this approach to any non-schedutil governor is a good
+> > idea -- you'd be killing load balancing in the process.
+> 
+> But that is also the case for intel_pstate in the "active" mode, isn't it?
 
+Sure it is.
+
+Now, what's the performance impact of loosing scale-invariance in PELT signals?
+And what's the performance impact of accessing two MSRs at the scheduler tick
+on each CPU?
+
+I am sporting Srinivas' patch because he expressed the concern that the losses
+don't justify the gains for a specific class of users (supercomputing),
+although I don't fully like the idea (and arguably that should be measured).
+
+
+Giovanni
