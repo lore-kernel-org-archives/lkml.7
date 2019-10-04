@@ -2,52 +2,103 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A272C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13D02084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512DA215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxQstqbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfJDTwn (ORCPT
+        id S1731068AbfJDTxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:52:43 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37340 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730579AbfJDTwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:52:43 -0400
-Received: from 94.112.246.102.static.b2b.upcbusiness.cz ([94.112.246.102] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iGTd3-0006SE-1o; Fri, 04 Oct 2019 21:52:41 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: add missing #msi-cells to rk3399
-Date:   Fri, 04 Oct 2019 21:52:40 +0200
-Message-ID: <3758829.B9nFNygdid@phil>
-In-Reply-To: <20190917083625.25818-1-heiko@sntech.de>
-References: <20190917083625.25818-1-heiko@sntech.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 4 Oct 2019 15:53:24 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40488 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730746AbfJDTxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:53:24 -0400
+Received: by mail-io1-f68.google.com with SMTP id h144so16072146iof.7;
+        Fri, 04 Oct 2019 12:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MS6KPA7Zwid+VvXpcQaJcC4Lhg7r0UTgc+r5bTRTQzQ=;
+        b=GxQstqbCOnLx126tgUZiwbsF2HdhWFfLVbG+e7xb9YbNaC6njmdUbzMzN9hS0DGF2R
+         sCdH2HCG67lanBOwPlb0dywPzS3GkIh1bQJmVjcTxJfy9IcXrGP3gydoilg6SbK1D3WU
+         fTopxDbTJUzZJOrOm43pQT6TPyanbS/pZdUjRmpaHAFag65or/YOsJ/m9nCcx7FPiFfU
+         5EZ78zQXs2t1aBxFtr3v+0Vj4gwQ5VOaA2R+0vc1ZcLUf8EqHrSK/krgcsi3Ne1wet/m
+         dD0goUMsqDttAaGSGJKTqO5zk3zwpfQg9NLaMCi7Tm6dYbWl5QPU3bH/JKcau1qQvcKN
+         INFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MS6KPA7Zwid+VvXpcQaJcC4Lhg7r0UTgc+r5bTRTQzQ=;
+        b=slJE3/amUNdhsDLKpndhZkaLmtiq+9Fj7lGj0GbJn4qH5mI/8BfmaKa2pBJ/Po9da+
+         XsJP059xy5OcCHNBOPD5GLeNMaCgfhh2tRdJ+OTY/n00Vf3H/Sn0zi6U6e+eDMytNOnA
+         a0B9OPc/euWHI6n9lrDb31dkuTf4vRrt7Q+7zakEceZsvs43SS9OBLycubjMy4Q2E0k4
+         Ba/nxv0maIWzhG2w8+YKjETokh+CmRFLHN28Tq4UzC4m044oMkFr9dNHm6tLxTdIvR7y
+         ZILwNQ61ed6I5kVc0zjXeqoOwW6wVDccdjJU2TQ1PrYB6JGtfD1WwhHZYafYqZh+treD
+         74KQ==
+X-Gm-Message-State: APjAAAXocd0F+QrGt2dZL7u7sg2b5PGrdcHM89B+AWOSmERHsgFdAt5T
+        +cHCW7KLfnOGkrJY3YwOTs6atrnaBqc=
+X-Google-Smtp-Source: APXvYqydhL1ReOzniYD5VzA4lRSsmW1hKT4R+X4IRWehJs3tidGK8O1cUqJEdOSyeOWpsRQpCOoyaQ==
+X-Received: by 2002:a92:db0c:: with SMTP id b12mr16542465iln.27.1570218803179;
+        Fri, 04 Oct 2019 12:53:23 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id t9sm2420224iop.86.2019.10.04.12.53.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 12:53:22 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rtlwifi: fix memory leak in rtl_usb_probe
+Date:   Fri,  4 Oct 2019 14:53:14 -0500
+Message-Id: <20191004195315.21168-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 17. September 2019, 10:36:25 CEST schrieb Heiko Stuebner:
-> The rk3399 gic-its was missing the #msi-cells property as found by
-> dt-schema checks, so add it.
-> 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+In rtl_usb_probe, a new hw is allocated via ieee80211_alloc_hw(). This
+allocation should be released in case of allocation failure for
+rtlpriv->usb_data.
 
-applied for 5.5
+Fixes: a7959c1394d4 ("rtlwifi: Preallocate USB read buffers and eliminate kalloc in read routine")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 4b59f3b46b28..265f95261da8 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -1021,8 +1021,10 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	rtlpriv->hw = hw;
+ 	rtlpriv->usb_data = kcalloc(RTL_USB_MAX_RX_COUNT, sizeof(u32),
+ 				    GFP_KERNEL);
+-	if (!rtlpriv->usb_data)
++	if (!rtlpriv->usb_data) {
++		ieee80211_free_hw(hw);
+ 		return -ENOMEM;
++	}
+ 
+ 	/* this spin lock must be initialized early */
+ 	spin_lock_init(&rtlpriv->locks.usb_lock);
+-- 
+2.17.1
 
