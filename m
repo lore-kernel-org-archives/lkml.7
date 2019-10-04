@@ -2,108 +2,99 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B66C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF38C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1342D215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="j2VU4nhu"
+	by mail.kernel.org (Postfix) with ESMTP id 1D76B2077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfJDRg6 (ORCPT
+        id S2388525AbfJDRhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:36:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36075 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387509AbfJDRg5 (ORCPT
+        Fri, 4 Oct 2019 13:37:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20982 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387428AbfJDRhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:36:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id b136so15302061iof.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=wY8a4I6EvPZotqzLTyscITojeAnhMbow8kNJLZSccGA=;
-        b=j2VU4nhudfCwpOV14M8+kBsDhVuSQiLUgOglDWxA9Or6YplVHi0izJ84RQ6xD5qfQY
-         Ypifmxa2jOePCXYgtHaG8m3e9xMkrYNk5TwCfsGKfC1AWobdrLtnp/2qEncRXNL+um1C
-         ti22ewBrCqeditYfBbebGBqzOzlLx8rPydAq0HyjxxnCxoNXNoX1kYl7BGiDuzc1JAYs
-         mawjrVPc/BTmgs+FOXzC3/uiX85pBulABLMNNLkbXSqT0bh+U2svnvpLf3c5DNb1arL4
-         p50k6IBbrwlShDOXZQp0sEZqxff3RMZA/sOG1bUbgR1SDmAPq1OZpOc6AIS0JFFMmS97
-         wa3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=wY8a4I6EvPZotqzLTyscITojeAnhMbow8kNJLZSccGA=;
-        b=qgLG8TDsADGw9DHkGAGMAaHyger4e6wYOOhRqUss36oEuJehGQsAnkwaT5np1WcZUZ
-         eKwRstRv4Li0OdqTn7VQ2KWGD6FEr5Tm58VECImFNV4/nY2+zGuQ4WuYGyrW/tEALpB2
-         tm66KxdpJOgPT0wJDVIX+0KCX5HOhs5sAQyiggm1icH7OE5X/UBKejHPF0WgXKoD9YtI
-         AxegC3VUEtbjly9kc8od4a/SR7Cjtf4JdnMrcoCT0sAL63mk9c7a0Ps3ECb3XP5Cy+p7
-         ipf2LYc3y4L7PQJdFBmu1V8ytcw7bQ+WCDdBQbyniY6e7FOAE5fG7l8tDp1zjeR+X4wJ
-         9/gQ==
-X-Gm-Message-State: APjAAAWXbzUF8dry83rcO0w0AWRf+7KO3RODjaZxDDMX6VC/Tja2tewr
-        EA8pLgC5LtLjlBbihCyD/+bYMw==
-X-Google-Smtp-Source: APXvYqwiiyfcO5zfpFG0B4LUXjsy02MITOscolsE3p87ClD/+IpiRYj3xKideFfLwgHqf3N/ClEFGg==
-X-Received: by 2002:a6b:7b01:: with SMTP id l1mr14101296iop.292.1570210615947;
-        Fri, 04 Oct 2019 10:36:55 -0700 (PDT)
-Received: from localhost (67-0-10-3.albq.qwest.net. [67.0.10.3])
-        by smtp.gmail.com with ESMTPSA id m14sm2634004ild.3.2019.10.04.10.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 10:36:55 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 10:36:54 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.4-rc2
-Message-ID: <alpine.DEB.2.21.9999.1910041036010.15827@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 4 Oct 2019 13:37:36 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x94HW1Ww140861
+        for <linux-kernel@vger.kernel.org>; Fri, 4 Oct 2019 13:37:36 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ve9k4te0q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 13:37:35 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 4 Oct 2019 18:37:33 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 4 Oct 2019 18:37:30 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x94HbT3f45547756
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Oct 2019 17:37:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C19645204E;
+        Fri,  4 Oct 2019 17:37:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.197.95])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7B8A752050;
+        Fri,  4 Oct 2019 17:37:28 +0000 (GMT)
+Subject: Re: [PATCH v3 2/2] tpm: Detach page allocation from tpm_buf
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Fri, 04 Oct 2019 13:37:27 -0400
+In-Reply-To: <1570207062.3563.17.camel@HansenPartnership.com>
+References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
+         <20191003185103.26347-3-jarkko.sakkinen@linux.intel.com>
+         <1570207062.3563.17.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100417-0016-0000-0000-000002B41761
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100417-0017-0000-0000-00003315282D
+Message-Id: <1570210647.5046.78.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-04_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=893 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910040148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, 2019-10-04 at 09:37 -0700, James Bottomley wrote:
+> On Thu, 2019-10-03 at 21:51 +0300, Jarkko Sakkinen wrote:
+> > As has been seen recently, binding the buffer allocation and tpm_buf
+> > together is sometimes far from optimal.
+> 
+> Can you elaborate on this a bit more?  I must have missed the
+> discussion.
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+Refer to e13cd21ffd50 ("tpm: Wrap the buffer from the caller to
+tpm_buf in tpm_send()") for the details.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+Mimi
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc2
 
-for you to fetch changes up to 922b0375fc93fb1a20c5617e37c389c26bbccb70:
-
-  riscv: Fix memblock reservation for device tree blob (2019-10-01 13:22:39 -0700)
-
-----------------------------------------------------------------
-RISC-V updates for v5.4-rc2
-
-Two RISC-V fixes for v5.4-rc2:
-
-- Ensure that exclusive-load reservations are terminated after system
-  call or exception handling.  This primarily affects QEMU, which does
-    not expire load reservations.
-
-- Fix an issue primarily affecting RV32 platforms that can cause the
-  DT header to be corrupted, causing boot failures.
-
-----------------------------------------------------------------
-Albert Ou (1):
-      riscv: Fix memblock reservation for device tree blob
-
-Palmer Dabbelt (1):
-      RISC-V: Clear load reservations while restoring hart contexts
-
- arch/riscv/include/asm/asm.h |  1 +
- arch/riscv/kernel/entry.S    | 21 ++++++++++++++++++++-
- arch/riscv/mm/init.c         | 12 +++++++++++-
- 3 files changed, 32 insertions(+), 2 deletions(-)
