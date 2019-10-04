@@ -8,66 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17FFC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B39C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77330222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC700222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfNW7ITA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkJ51fST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731593AbfJDXKd (ORCPT
+        id S1731539AbfJDXK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:10:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43467 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731542AbfJDXKa (ORCPT
+        Fri, 4 Oct 2019 19:10:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43373 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731499AbfJDXK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:10:30 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f21so3792424plj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:10:30 -0700 (PDT)
+        Fri, 4 Oct 2019 19:10:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a2so4766395pfo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ojNP7Td0CUinpeHoy78zg0GiX9Nta1E6KaAC40KDS60=;
-        b=gfNW7ITAa74FBrUtA/tqio3QLWUaA0+HAhPpjJzsneOE6vWib61lTv5MYZQiKTkKJy
-         Nmgqmwi3Dj3cqzogFQdvYxnb383TGHXYr1YFo5Qq3Mfx/vwbq4IvzKQXGdNPG214qric
-         loG9nBCVdq3VhUZuFxSJTzyZrBt8qrTuWtKzS1Go0AHk2tZwN1uiMW2ZdiWnBGVDLubO
-         ++6oqGW8DWt3+xlc/Q4GssLzHlPNhWiz7DcsxlSlEINLAlo0exkRqkkvADH9rKXJY1cJ
-         IhCLcKX/UAl8tfpe7wPIG2xmqF2+iNbY+PHEARXiPeODucowl0lq8Hiyy88qmp34W+w1
-         NFYw==
+        bh=jA8Id7H3gvB/5w4U6JX8arL8+ZxiSG8MjiEy+YBa328=;
+        b=nkJ51fSTlMtMCtbP0JNdD/fCfLz0SoZPzTOt7uTZ/qr/G1pN+r8PBe0jZERkRKa97a
+         8TL4zdjDpos3J1FpkD22Vok1U6bCLkjYYFLzSk/QucnFg0rG85uIyyk5muO80hdxUQSU
+         u1N5cSSlOljIlqYzW84TANZzgrKZxrpGXnTiakBpfs3CFZpAhOXeQuKEcbt1Bc610Ay0
+         O0rYahtLo6dzcXAklzFskmlIevjUwVrS3pwknB4E/qNl7R3uIrddDrR6q/Q04c/diafX
+         aPq5/5iB8xrDuAADWD1cNNjSra4dn/qUTVpxWw3iGMxL5bNUxUKgMssYBY+xlV0nXRQz
+         gW+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ojNP7Td0CUinpeHoy78zg0GiX9Nta1E6KaAC40KDS60=;
-        b=Z3xCuMqREMy+ESBlDeLBBrtArUyhXPGz+IWtzRVzbKMDUmk0TQjp/ohZAc07N05l4i
-         FS5rQCI2AGXUhHtHFe30Ho1/nnaLy7d1CXxMh6XkLp6a5YpwklURfrejEI1XYgfyV7Fl
-         TsdFMqwXrE6e4prdkQtbMW2e8mDPT7eeegjnVLIiePGda4MBTmYqt+7PgMZ7GLp8rNle
-         LbVEnSduo+OALaeP2wA9UztZLUgYAXsxx+EUcX81BS7egwukDwh2PdJvd7qikZ71oDNd
-         qCqoMRkEXeTg2GdvaUMpU/jx1V9ebQZu9rI10ELjFd7629cS55XGJvXaiK130IvTrf4j
-         BTcA==
-X-Gm-Message-State: APjAAAUeXrMhkZy2cqDYNFbx98pq9RwaXq8T19+91rzgWF/uH8+G2bUa
-        bMpkdPDoD/y7DRRrr3CoHlVWiENd
-X-Google-Smtp-Source: APXvYqz8zM9iw9dpSO9jg59OOS9I9qJAmNyfpDkatcyFiYbNqb+zGpkUhqItUu5DHFykSB1aCcRBpg==
-X-Received: by 2002:a17:902:24c:: with SMTP id 70mr18250148plc.41.1570230629470;
-        Fri, 04 Oct 2019 16:10:29 -0700 (PDT)
+        bh=jA8Id7H3gvB/5w4U6JX8arL8+ZxiSG8MjiEy+YBa328=;
+        b=j2eO+AxANy2P/64o5ZgSvpy93QhpdSWhZvAx0SZ3PnLhd9UJx16sFJNjEOSolAPoAv
+         E2i95HJhkmvnJiWP4MP8lYXotPgtDTCGnwwTlU3nhuWCSY7WIJzZMdHEjE/DqqGcmY7F
+         ZsHGJrbdowOUwSY2YtlS+Hzyrk8PqGrUCIZ1UxP0ArH69AFw496/hpHuqV7RjtdPk4gp
+         HrU9ik9ux9EM5LUZS5tNCTdFnhmcUfYThR6U/pLl5Pc6zlKSVOOiMSHco9IUdjb8GEpf
+         TUGFZsQW0Rb+7/etMl+VqZBXQ6S/+ABwi57c4Y/8Gk4r+7V4s8+ptfiiBLf9UMcKUp10
+         C/XQ==
+X-Gm-Message-State: APjAAAV/cAnkbxsfGY2i+bXrazBXAoPFReXWZrg2iRiHakB0GvFou2YB
+        ZuzFD9EnffEgzkmIW4S8uJ0=
+X-Google-Smtp-Source: APXvYqzo5GHBpyCIxQxXTb61QdW1ylX1LxNG552iSo9B2lmx7ukh6R97MiDqZ+fEzw8TUOzODXelyw==
+X-Received: by 2002:aa7:9486:: with SMTP id z6mr19772387pfk.118.1570230627268;
+        Fri, 04 Oct 2019 16:10:27 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o9sm7406542pfp.67.2019.10.04.16.10.28
+        by smtp.gmail.com with ESMTPSA id o9sm7406542pfp.67.2019.10.04.16.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 16:10:28 -0700 (PDT)
+        Fri, 04 Oct 2019 16:10:26 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH 7/7] regulator: max77686: switch to using fwnode_gpiod_get_index
-Date:   Fri,  4 Oct 2019 16:10:17 -0700
-Message-Id: <20191004231017.130290-8-dmitry.torokhov@gmail.com>
+        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: [PATCH 5/7] regulator: da9211: switch to using devm_fwnode_gpiod_get
+Date:   Fri,  4 Oct 2019 16:10:15 -0700
+Message-Id: <20191004231017.130290-6-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 In-Reply-To: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
 References: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
@@ -78,36 +75,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gpiod_get_from_of_node() is being retired in favor of
-fwnode_gpiod_get_index(), that behaves similar to gpiod_get_index(),
-but can work with arbitrary firmware node. It will also be able to
-support secondary software nodes.
+devm_gpiod_get_from_of_node() is being retired in favor of
+devm_fwnode_gpiod_get_index(), that behaves similar to
+devm_gpiod_get_index(), but can work with arbitrary firmware node. It
+will also be able to support secondary software nodes.
 
 Let's switch this driver over.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
 ---
 
- drivers/regulator/max77686-regulator.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/regulator/da9211-regulator.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/regulator/max77686-regulator.c b/drivers/regulator/max77686-regulator.c
-index c8e579e99316..9089ec608fcc 100644
---- a/drivers/regulator/max77686-regulator.c
-+++ b/drivers/regulator/max77686-regulator.c
-@@ -256,8 +256,9 @@ static int max77686_of_parse_cb(struct device_node *np,
- 	case MAX77686_BUCK8:
- 	case MAX77686_BUCK9:
- 	case MAX77686_LDO20 ... MAX77686_LDO22:
--		config->ena_gpiod = gpiod_get_from_of_node(np,
--				"maxim,ena-gpios",
-+		config->ena_gpiod = fwnode_gpiod_get_index(
-+				of_fwnode_handle(np),
-+				"maxim,ena",
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"max77686-regulator");
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index bf80748f1ccc..523dc1b95826 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -283,12 +283,12 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
+ 
+ 		pdata->init_data[n] = da9211_matches[i].init_data;
+ 		pdata->reg_node[n] = da9211_matches[i].of_node;
+-		pdata->gpiod_ren[n] = devm_gpiod_get_from_of_node(dev,
+-				  da9211_matches[i].of_node,
+-				  "enable-gpios",
+-				  0,
+-				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
+-				  "da9211-enable");
++		pdata->gpiod_ren[n] = devm_fwnode_gpiod_get(dev,
++					of_fwnode_handle(pdata->reg_node[n]),
++					"enable",
++					GPIOD_OUT_HIGH |
++						GPIOD_FLAGS_BIT_NONEXCLUSIVE,
++					"da9211-enable");
+ 		if (IS_ERR(pdata->gpiod_ren[n]))
+ 			pdata->gpiod_ren[n] = NULL;
+ 		n++;
 -- 
 2.23.0.581.g78d2f28ef7-goog
 
