@@ -2,98 +2,233 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424CBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597DDC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6B02133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289E9222C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ikR5ETkx"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cAaNojfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbfJDMcH (ORCPT
+        id S2387493AbfJDMcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:32:07 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:48532 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727813AbfJDMcH (ORCPT
+        Fri, 4 Oct 2019 08:32:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38328 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387448AbfJDMcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:32:07 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id B2FD82E14F4;
-        Fri,  4 Oct 2019 15:32:03 +0300 (MSK)
-Received: from sas2-62907d92d1d8.qloud-c.yandex.net (sas2-62907d92d1d8.qloud-c.yandex.net [2a02:6b8:c08:b895:0:640:6290:7d92])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id TxAVv5XQSr-W3VuDMEm;
-        Fri, 04 Oct 2019 15:32:03 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1570192323; bh=+i0jOrrLfQPrDUuheuo6YLNQK4D8UGbkmlbpUExrIVo=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=ikR5ETkxTe3SdJiX6aDCiOHtJs6PiHkBJcT7YQGhGZZGinlfS+v3drAb6EnMCdjjR
-         aTuZo3S//Yy+rv+RCEE2p/bnwcRBukXtueRV/EJcHS64g4PzjlU/3+ewksOGCi+57x
-         LBjFnNp/uMpQTKd7dYdpAncztx9m6NdSQNIdXEJA=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by sas2-62907d92d1d8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id d4v5Xzfe5F-W2IqedPq;
-        Fri, 04 Oct 2019 15:32:03 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/swap: piggyback lru_add_drain_all() calls
-To:     Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <157018386639.6110.3058050375244904201.stgit@buzz>
- <20191004121017.GG32665@bombadil.infradead.org>
- <20191004122727.GA10845@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <257f6172-971b-e0bd-0a74-30a0d143d6f9@yandex-team.ru>
-Date:   Fri, 4 Oct 2019 15:32:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191004122727.GA10845@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Oct 2019 08:32:13 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so8282197qta.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 05:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Hw1We8CfLP0SmMR5o0InXrIroKd+SFzmFpF3ivXp5LM=;
+        b=cAaNojfmryyKfKdO3SRJe1euhDCu8cW2aH/D85tNJwzQ0LfO1GhwSmT9A6tMoDzOwY
+         nz+rEpHh5tD44/XzmXf0SnVKx36KJXQK2nPjoCmjf3pgbTtiSFMlgBVAz/1WTq2UjsGu
+         4YINp2cH8G94VfSWKLocnQFxfFRMlOPyksxowbbvmfNu1fbIWDLGPmwe6DqzA8E4D+O4
+         TbVlO7131CpSQCoIDsLtv3gdwtkjYY/4Ag8+ilq+aVxtRLidvoe66Lq395JJQgERnv2l
+         lTukgnjQqN7nMFX9SADTiXhcZ0EprLeUyE2+RwAQpAe3geQ8ZCywefmNoYRDavVt+fmY
+         ohKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Hw1We8CfLP0SmMR5o0InXrIroKd+SFzmFpF3ivXp5LM=;
+        b=Ek3vgSLof49MFvVkesAkHh4Aqnky8ZCos5sFRxbS0Xl9XwsLZHrfRo3OjjKNlej+1Y
+         7YEct9Ar3hQZoOMCo7oYI3ArxaTBVnrO6RgfeUrIruRG2vX1vLKT4Eh3geEKH93MFV+F
+         vrcGw2SWU6BP20QTbIBdFt87Fl3cfF9jJyr1VnsO02m7y9g76JBLauNQXQ9UNzJmW5aw
+         gMpl9+ypQfs8pN4K59kCcgrWpQTQCptgyWEDWg6+kw0K/CJ5URPo8m0pAwbxKNZiqb1n
+         c94evrTjm9XGF0KgPbVpx2WCkdVMYR/3K5rx6uqdIP34TQvX9uxzfN8M+kXbZoFV+vNg
+         YTbg==
+X-Gm-Message-State: APjAAAWKniH4t+0zh75ezj22Ul2E/sBVk1RglJTWteaHdsFYxF1Bf2av
+        hAc7mzPQwQDjHSGyRUky8UQJXA==
+X-Google-Smtp-Source: APXvYqwbpAN5ELMp+6w5nN6jYaLLbzyMoDeH/vjPeAPPNyULlo3jYy+p9faA2ZMBfWONzOlBN2WXcA==
+X-Received: by 2002:aed:3c27:: with SMTP id t36mr15801812qte.388.1570192332198;
+        Fri, 04 Oct 2019 05:32:12 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id c131sm3352420qke.24.2019.10.04.05.32.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Oct 2019 05:32:11 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     tj@kernel.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        guro@fb.com, mhocko@suse.com, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] mm/slub: fix a deadlock in show_slab_objects()
+Date:   Fri,  4 Oct 2019 08:31:49 -0400
+Message-Id: <1570192309-10132-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Long time ago, there fixed a similar deadlock in show_slab_objects()
+[1]. However, it is apparently due to the commits like 01fb58bcba63
+("slab: remove synchronous synchronize_sched() from memcg cache
+deactivation path") and 03afc0e25f7f ("slab: get_online_mems for
+kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
+just reading files in /sys/kernel/slab which will generate a lockdep
+splat below.
 
+Since the "mem_hotplug_lock" here is only to obtain a stable online node
+mask while racing with NUMA node hotplug, in the worst case, the results
+may me miscalculated while doing NUMA node hotplug, but they shall be
+corrected by later reads of the same files.
 
-On 04/10/2019 15.27, Michal Hocko wrote:
-> On Fri 04-10-19 05:10:17, Matthew Wilcox wrote:
->> On Fri, Oct 04, 2019 at 01:11:06PM +0300, Konstantin Khlebnikov wrote:
->>> This is very slow operation. There is no reason to do it again if somebody
->>> else already drained all per-cpu vectors after we waited for lock.
->>> +	seq = raw_read_seqcount_latch(&seqcount);
->>> +
->>>   	mutex_lock(&lock);
->>> +
->>> +	/* Piggyback on drain done by somebody else. */
->>> +	if (__read_seqcount_retry(&seqcount, seq))
->>> +		goto done;
->>> +
->>> +	raw_write_seqcount_latch(&seqcount);
->>> +
->>
->> Do we really need the seqcount to do this?  Wouldn't a mutex_trylock()
->> have the same effect?
-> 
-> Yeah, this makes sense. From correctness point of view it should be ok
-> because no caller can expect that per-cpu pvecs are empty on return.
-> This might have some runtime effects that some paths might retry more -
-> e.g. offlining path drains pcp pvces before migrating the range away, if
-> there are pages still waiting for a worker to drain them then the
-> migration would fail and we would retry. But this not a correctness
-> issue.
-> 
+WARNING: possible circular locking dependency detected
+------------------------------------------------------
+cat/5224 is trying to acquire lock:
+ffff900012ac3120 (mem_hotplug_lock.rw_sem){++++}, at:
+show_slab_objects+0x94/0x3a8
 
-Caller might expect that pages added by him before are drained.
-Exiting after mutex_trylock() will not guarantee that.
+but task is already holding lock:
+b8ff009693eee398 (kn->count#45){++++}, at: kernfs_seq_start+0x44/0xf0
 
-For example POSIX_FADV_DONTNEED uses that.
+which lock already depends on the new lock.
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (kn->count#45){++++}:
+       lock_acquire+0x31c/0x360
+       __kernfs_remove+0x290/0x490
+       kernfs_remove+0x30/0x44
+       sysfs_remove_dir+0x70/0x88
+       kobject_del+0x50/0xb0
+       sysfs_slab_unlink+0x2c/0x38
+       shutdown_cache+0xa0/0xf0
+       kmemcg_cache_shutdown_fn+0x1c/0x34
+       kmemcg_workfn+0x44/0x64
+       process_one_work+0x4f4/0x950
+       worker_thread+0x390/0x4bc
+       kthread+0x1cc/0x1e8
+       ret_from_fork+0x10/0x18
+
+-> #1 (slab_mutex){+.+.}:
+       lock_acquire+0x31c/0x360
+       __mutex_lock_common+0x16c/0xf78
+       mutex_lock_nested+0x40/0x50
+       memcg_create_kmem_cache+0x38/0x16c
+       memcg_kmem_cache_create_func+0x3c/0x70
+       process_one_work+0x4f4/0x950
+       worker_thread+0x390/0x4bc
+       kthread+0x1cc/0x1e8
+       ret_from_fork+0x10/0x18
+
+-> #0 (mem_hotplug_lock.rw_sem){++++}:
+       validate_chain+0xd10/0x2bcc
+       __lock_acquire+0x7f4/0xb8c
+       lock_acquire+0x31c/0x360
+       get_online_mems+0x54/0x150
+       show_slab_objects+0x94/0x3a8
+       total_objects_show+0x28/0x34
+       slab_attr_show+0x38/0x54
+       sysfs_kf_seq_show+0x198/0x2d4
+       kernfs_seq_show+0xa4/0xcc
+       seq_read+0x30c/0x8a8
+       kernfs_fop_read+0xa8/0x314
+       __vfs_read+0x88/0x20c
+       vfs_read+0xd8/0x10c
+       ksys_read+0xb0/0x120
+       __arm64_sys_read+0x54/0x88
+       el0_svc_handler+0x170/0x240
+       el0_svc+0x8/0xc
+
+other info that might help us debug this:
+
+Chain exists of:
+  mem_hotplug_lock.rw_sem --> slab_mutex --> kn->count#45
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(kn->count#45);
+                               lock(slab_mutex);
+                               lock(kn->count#45);
+  lock(mem_hotplug_lock.rw_sem);
+
+ *** DEADLOCK ***
+
+3 locks held by cat/5224:
+ #0: 9eff00095b14b2a0 (&p->lock){+.+.}, at: seq_read+0x4c/0x8a8
+ #1: 0eff008997041480 (&of->mutex){+.+.}, at: kernfs_seq_start+0x34/0xf0
+ #2: b8ff009693eee398 (kn->count#45){++++}, at:
+kernfs_seq_start+0x44/0xf0
+
+stack backtrace:
+Call trace:
+ dump_backtrace+0x0/0x248
+ show_stack+0x20/0x2c
+ dump_stack+0xd0/0x140
+ print_circular_bug+0x368/0x380
+ check_noncircular+0x248/0x250
+ validate_chain+0xd10/0x2bcc
+ __lock_acquire+0x7f4/0xb8c
+ lock_acquire+0x31c/0x360
+ get_online_mems+0x54/0x150
+ show_slab_objects+0x94/0x3a8
+ total_objects_show+0x28/0x34
+ slab_attr_show+0x38/0x54
+ sysfs_kf_seq_show+0x198/0x2d4
+ kernfs_seq_show+0xa4/0xcc
+ seq_read+0x30c/0x8a8
+ kernfs_fop_read+0xa8/0x314
+ __vfs_read+0x88/0x20c
+ vfs_read+0xd8/0x10c
+ ksys_read+0xb0/0x120
+ __arm64_sys_read+0x54/0x88
+ el0_svc_handler+0x170/0x240
+ el0_svc+0x8/0xc
+
+[1] http://lkml.iu.edu/hypermail/linux/kernel/1101.0/02850.html
+
+Fixes: 01fb58bcba63 ("slab: remove synchronous synchronize_sched() from memcg cache deactivation path")
+Fixes: 03afc0e25f7f ("slab: get_online_mems for kmem_cache_{create,destroy,shrink}")
+Cc: stable@vger.kernel.org
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: fix the comment alignment and improve the changelog.
+
+ mm/slub.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 42c1b3af3c98..86bfd9d98af5 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4838,7 +4838,13 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
+ 		}
+ 	}
+ 
+-	get_online_mems();
++	/*
++	 * It is impossible to take "mem_hotplug_lock" here with "kernfs_mutex"
++	 * already held which will conflict with an existing lock order:
++	 *
++	 * mem_hotplug_lock->slab_mutex->kernfs_mutex
++	 */
++
+ #ifdef CONFIG_SLUB_DEBUG
+ 	if (flags & SO_ALL) {
+ 		struct kmem_cache_node *n;
+@@ -4879,7 +4885,6 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
+ 			x += sprintf(buf + x, " N%d=%lu",
+ 					node, nodes[node]);
+ #endif
+-	put_online_mems();
+ 	kfree(nodes);
+ 	return x + sprintf(buf + x, "\n");
+ }
+-- 
+1.8.3.1
+
