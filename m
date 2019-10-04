@@ -2,152 +2,192 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E32C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E502C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588B021D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570204726;
-	bh=Lbi+fQVewSD5+R7apJDp6POCUT2bNG1mCOFhX2OYZQM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HABhtOT7OQbWU4nunBYf9Q59tfdWOPqbt1sL2EzIO3BJpnLoU6aXQpeVIg6OgxyJX
-	 zk6FZv77bdtlDaBevvyUOQFSWYNQSXg2Bo31KMSjRGrkO4SHat8tBgmKj6o/4gsOlr
-	 okyY4ukRrcbxAfzXdge/Zpmroep/tiEF5hqx9xG8=
+	by mail.kernel.org (Postfix) with ESMTP id 2BA29215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390182AbfJDP6p (ORCPT
+        id S2390111AbfJDQCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:58:45 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56666 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389794AbfJDP6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:58:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sOKlWykXlh+1/D/OVbEd1hyxD1BzgK7qGyNgFtzbN8U=; b=U469b3ccy/WKsbY0yysCHSowX
-        ioxTGlZ4liWahE1r4i+sR0ALlJagyRLQv8v22lRdjSTNTDPeKRoCpdunhDypbDvr5MDbEGc82BcBG
-        Opo4hB+zxAsfW75C94nYIMP+sr0X5uqSJxRROt3ao+NEtcHcUS/lTfaECHPbpOXRFDa/A=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iGPyZ-0003TW-6m; Fri, 04 Oct 2019 15:58:39 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 52C2D2741EF0; Fri,  4 Oct 2019 16:58:38 +0100 (BST)
-Date:   Fri, 4 Oct 2019 16:58:38 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     mark.rutland@arm.com, daniel.thompson@linaro.org,
-        Liam Girdwood <lgirdwood@gmail.com>, tomi.valkeinen@ti.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org,
-        dmurphy@ti.com
-Subject: Re: Should regulator core support parsing OF based fwnode?
-Message-ID: <20191004155838.GE4866@sirena.co.uk>
-References: <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
- <62591735-9082-1fd7-d791-07929ddaa223@gmail.com>
- <20191003183554.GA37096@sirena.co.uk>
- <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
- <20191003194140.GE6090@sirena.co.uk>
- <a9f668f9-ad26-4e18-178a-8403b8b3b1db@gmail.com>
- <20191004113942.GB4866@sirena.co.uk>
- <b6318ba5-e76e-dc1c-6921-a702abf6749c@ti.com>
- <20191004144029.GC4866@sirena.co.uk>
- <6df68ecb-f92e-fd9c-7f55-f66fa463263a@ti.com>
+        Fri, 4 Oct 2019 12:02:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:49034 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389131AbfJDQCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:02:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E8C41597;
+        Fri,  4 Oct 2019 09:02:16 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D59923F68E;
+        Fri,  4 Oct 2019 09:02:14 -0700 (PDT)
+Subject: Re: drm_sched with panfrost crash on T820
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        Hillf Danton <hdanton@sina.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Erico Nunes <nunes.erico@gmail.com>
+References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
+ <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
+ <20190930145228.14000-1-hdanton@sina.com>
+ <d2888614-8644-7d04-b73b-3ab7c6623e9a@amd.com>
+ <7339b7a1-2d1c-4379-89a0-daf8b28d81c8@baylibre.com>
+ <94096e4e-0f60-79d1-69b5-c7c3e59a4d78@amd.com>
+ <f44204b4-ce5c-b26e-580d-5bb21314be1f@baylibre.com>
+ <8c4ecad8-c2e2-eec1-9132-48e126577baa@arm.com>
+ <590a1c78-5c86-92e2-01a1-92bd31397be5@amd.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <a09950d8-dba7-e359-da07-7383e7ac946e@arm.com>
+Date:   Fri, 4 Oct 2019 17:02:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jKBxcB1XkHIR0Eqt"
-Content-Disposition: inline
-In-Reply-To: <6df68ecb-f92e-fd9c-7f55-f66fa463263a@ti.com>
-X-Cookie: core error - bus dumped
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <590a1c78-5c86-92e2-01a1-92bd31397be5@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/10/2019 16:34, Koenig, Christian wrote:
+> Am 04.10.19 um 17:27 schrieb Steven Price:
+>> On 04/10/2019 16:03, Neil Armstrong wrote:
+>>> On 04/10/2019 16:53, Grodzovsky, Andrey wrote:
+>>>> On 10/3/19 4:34 AM, Neil Armstrong wrote:
+>>>>> Hi Andrey,
+>>>>>
+>>>>> Le 02/10/2019 à 16:40, Grodzovsky, Andrey a écrit :
+>>>>>> On 9/30/19 10:52 AM, Hillf Danton wrote:
+>>>>>>> On Mon, 30 Sep 2019 11:17:45 +0200 Neil Armstrong wrote:
+>>>>>>>> Did a new run from 5.3:
+>>>>>>>>
+>>>>>>>> [   35.971972] Call trace:
+>>>>>>>> [   35.974391]  drm_sched_increase_karma+0x5c/0xf0
+>>>>>>>> 			ffff000010667f38	FFFF000010667F94
+>>>>>>>> 			drivers/gpu/drm/scheduler/sched_main.c:335
+>>>>>>>>
+>>>>>>>> The crashing line is :
+>>>>>>>>                                    if (bad->s_fence->scheduled.context ==
+>>>>>>>>                                        entity->fence_context) {
+>>>>>>>>
+>>>>>>>> Doesn't seem related to guilty job.
+>>>>>>> Bail out if s_fence is no longer fresh.
+>>>>>>>
+>>>>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>>>>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>>>>>>> @@ -333,6 +333,10 @@ void drm_sched_increase_karma(struct drm
+>>>>>>>     
+>>>>>>>     			spin_lock(&rq->lock);
+>>>>>>>     			list_for_each_entry_safe(entity, tmp, &rq->entities, list) {
+>>>>>>> +				if (!smp_load_acquire(&bad->s_fence)) {
+>>>>>>> +					spin_unlock(&rq->lock);
+>>>>>>> +					return;
+>>>>>>> +				}
+>>>>>>>     				if (bad->s_fence->scheduled.context ==
+>>>>>>>     				    entity->fence_context) {
+>>>>>>>     					if (atomic_read(&bad->karma) >
+>>>>>>> @@ -543,7 +547,7 @@ EXPORT_SYMBOL(drm_sched_job_init);
+>>>>>>>     void drm_sched_job_cleanup(struct drm_sched_job *job)
+>>>>>>>     {
+>>>>>>>     	dma_fence_put(&job->s_fence->finished);
+>>>>>>> -	job->s_fence = NULL;
+>>>>>>> +	smp_store_release(&job->s_fence, 0);
+>>>>>>>     }
+>>>>>>>     EXPORT_SYMBOL(drm_sched_job_cleanup);
+>>>>> This fixed the problem on the 10 CI runs.
+>>>>>
+>>>>> Neil
+>>>>
+>>>> These are good news but I still fail to see how this fixes the problem -
+>>>> Hillf, do you mind explaining how you came up with this particular fix -
+>>>> what was the bug you saw ?
+>>> As Steven explained, seems the same job was submitted on both HW slots,
+>>> and then when timeout occurs each thread calls panfrost_job_timedout
+>>> which leads to drm_sched_stop() on the first call and on the
+>>> second call the job was already freed.
+>>>
+>>> Steven proposed a working fix, and this one does the same but on
+>>> the drm_sched side. This one looks cleaner, but panfrost should
+>>> not call drm_sched_stop() twice for the same job.
+>> I'm not sure that Hillf's fix is sufficient. In particular in
+>> drm_sched_increase_karma() I don't understand how the smp_load_acquire()
+>> call prevents bad->s_fence becoming NULL immediately afterwards (but
+>> admittedly the window is much smaller). But really this is just a
+>> Panfrost bug (calling drm_sched_stop() twice on the same job).
+>>
+>> The part of my change that I'd welcome feedback on is changing
+>> cancel_delayed_work() to cancel_delayed_work_sync() in drm_sched_stop()
+>> when called on different scheduler to the bad job. It's not clear to me
+>> exactly what the semantics of the function should be, and I haven't
+>> tested the effect of the change on drivers other than Panfrost.
+> 
+> Yeah, at least of hand that change doesn't seem to make sense to me.
 
---jKBxcB1XkHIR0Eqt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We need to ensure that any other timeouts that might have started
+processing are complete before actually resetting the hardware.
+Otherwise after the reset another thread could come along and attempt to
+reset the hardware again (and cause a double free of a job). My change
+to use the _sync() variant prevents this happening.
 
-On Fri, Oct 04, 2019 at 05:13:13PM +0200, Jean-Jacques Hiblot wrote:
-> On 04/10/2019 16:40, Mark Brown wrote:
+> Multiple timeout workers can perfectly run in parallel, Panfrost needs 
+> to make sure that they don't affect each other.
+> 
+> The simplest way of doing this is to have a mutex you trylock when 
+> starting the reset.
+> 
+> The first one grabbing it wins, all other just silently return.
 
-> > Why is the LED core populating anything?  Is the LED core copying bits
-> > out of the struct device for the actual device into a synthetic device
-> > rather than passing the actual device in?  That really doesn't seem like
-> > a good idea, it's likely to lead to things like this where you don't
-> > copy something that's required (or worse where something directly in the
-> > struct device that can't be copied is needed).
+Ah that would simplify my change removing the need for the new variable.
+I hadn't thought to use trylock. I'll give that a spin and post a new
+simpler version.
 
-> This is not a copy of a device of parent's of_node or something like that.
+Thanks,
 
-> You can think of a LED controller as a bus. It 'enumerates' its children
-> LED, create the children devices (one per LED) and provides the functions=
- to
-> interact with them.
+Steve
 
-> The device node we are talking about here is a per-LED thing, it is a chi=
-ld
-> node of the node of the LED controller.
+> Regards,
+> Christian.
+> 
+>>
+>> Steve
+>>
+>>> Neil
+>>>
+>>>> Andrey
+>>>>
+>>>>>> Does this change help the problem ? Note that drm_sched_job_cleanup is
+>>>>>> called from scheduler thread which is stopped at all times when work_tdr
+>>>>>> thread is running and anyway the 'bad' job is still in the
+>>>>>> ring_mirror_list while it's being accessed from
+>>>>>> drm_sched_increase_karma so I don't think drm_sched_job_cleanup can be
+>>>>>> called for it BEFORE or while drm_sched_increase_karma is executed.
+>>>>>>
+>>>>>> Andrey
+>>>>>>
+>>>>>>
+>>>>>>>     
+>>>>>>> --
+>>>>>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>>
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
-> here is an example:
->=20
-> =A0=A0=A0 tlc59108: tlc59116@40 { /* this is the node for the LED control=
-ler */
-> =A0=A0=A0 =A0=A0=A0 status =3D "okay";
-> =A0=A0=A0 =A0=A0=A0 #address-cells =3D <1>;
-> =A0=A0=A0 =A0=A0=A0 #size-cells =3D <0>;
-> =A0=A0=A0 =A0=A0=A0 compatible =3D "ti,tlc59108";
-> =A0=A0=A0 =A0=A0=A0 reg =3D <0x40>;
->=20
-> =A0=A0=A0 =A0=A0=A0 backlight_led: led@2 { /* this is the node of one LED=
- attached to
-> pin#2 of the LED controller */
-> =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 power-supply =3D <&bkl_fixed>;
-> =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 reg =3D <0x2>;
-> =A0=A0=A0 =A0=A0=A0 };
-
-Regulator supplies are supposed to be defined at the chip level rather
-than subfunctions with names corresponding to the names on the chip.
-This ensures that all chips look similar when you're mapping the
-schematic into a DT, you shouldn't need to know about the binding for a
-given chip to write a DT for it and if multiple people (perhaps working
-on different OSs) write bindings for the same chip there should be a
-good chance that they come up with the same mapping.  The supply_alias
-interface is there to allow mapping these through to subfunctions if
-needed, it looks like the LED framework should be using this.
-
-That said if you are doing the above and the LEDs are appearing as
-devices it's extremely surprising that their of_node might not be
-initialized.
-
---jKBxcB1XkHIR0Eqt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2XbC0ACgkQJNaLcl1U
-h9CmMwf9ECgZ2ghDJUYkumszQL7edht7aQckB9pgZYkckEmwTq38eVilMfRXG/tJ
-mRbJ2jFnduiEXOXn5qNm+bj918hFDgfAPdAVOx6ZFCz79rtrR6eqNK7lZoVnalln
-tt62hjS3w74fYHKokbcd6s59q0dV1oVSVwxLx6ZENzkhZOA8mgp+xx43Tx2NrQVN
-rO+XtTKTMsAnvEYJZYT2K9PkvPCNb6358cr/etapbLTHEje7priUojy2vRwoh1CA
-Gwm5fir1Sxr3DL9MKQZ+Z9DMPWEQWURu+Ewslbhcb0jxKzPIP9vcJTKrlRW8JBhl
-94yp9Hat1NShg+SsPvwQ3ROQmDssTQ==
-=BPJg
------END PGP SIGNATURE-----
-
---jKBxcB1XkHIR0Eqt--
