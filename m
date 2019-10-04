@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4594C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CCAC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825152133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B672133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tJynx9+4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wxHouhG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbfJDQ2J (ORCPT
+        id S2387877AbfJDQ2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:28:09 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37168 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731265AbfJDQ2G (ORCPT
+        Fri, 4 Oct 2019 12:28:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40546 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731021AbfJDQ2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:28:06 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94GS6BA059543;
-        Fri, 4 Oct 2019 11:28:06 -0500
+        Fri, 4 Oct 2019 12:28:04 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94GS3wX076928;
+        Fri, 4 Oct 2019 11:28:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570206486;
-        bh=oN8I5LkR4+QW/F4pAxU4LHL68tbhO04WPOjOJ+FTBMc=;
+        s=ti-com-17Q1; t=1570206483;
+        bh=FSYboD3JqHG1wzgmeZLkIKXYQEnzeuEpUNa4uQ9WH1Q=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=tJynx9+4yzAnsK2551nPSSVGnUUGC2ih2L3i92RoADrYVGmNCAzYL9bGuYbtEiHhm
-         I5j1eH3jj2IdR03nVarEgekR10LyNhRzSJr0Xa0lwrXJqaqdPgAHwKPSTU96HwwsEJ
-         f7IRO7VHwgHYIznJd5QzpPJ8UH4du1RyH+s/jexM=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94GS6U7050988
+        b=wxHouhG/00xWwnzGrlTJBscj27IBLmCTWvbo90ZswHlcpMZJT1EvTI8lqYpYymT5I
+         ep23icFt2nj5b04m6dUwGYgotwSqJdtVC2hh7j97D+U7xjbJehqHEbbwNbfCx7jE1I
+         uljjeJQOQnHmYkEs563Hfrq7J30ROLbtS22JpBy8=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x94GS3ok056192
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Oct 2019 11:28:06 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 4 Oct 2019 11:28:03 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
- 2019 11:28:05 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 11:28:02 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 4 Oct 2019 11:28:05 -0500
+ Frontend Transport; Fri, 4 Oct 2019 11:28:02 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94GRgAJ028904;
-        Fri, 4 Oct 2019 11:28:05 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94GRgAH028904;
+        Fri, 4 Oct 2019 11:28:03 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 17/21] media: ti-vpe: vpe: fix v4l2_compliance issue related to xfer_func
-Date:   Fri, 4 Oct 2019 11:29:48 -0500
-Message-ID: <20191004162952.4963-18-bparrot@ti.com>
+Subject: [Patch v2 15/21] media: ti-vpe: Set the DMA mask and coherent mask
+Date:   Fri, 4 Oct 2019 11:29:46 -0500
+Message-ID: <20191004162952.4963-16-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191004162952.4963-1-bparrot@ti.com>
 References: <20191004162952.4963-1-bparrot@ti.com>
@@ -66,35 +66,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All 4 of the "colorspace" components were not originally handled.
-Causing issue related to xfer_func not being initialized properly.
-
-This was found with v4l2-compliance test.
+VPE uses VPDMA (built-in dma engine) to transfer data to and from the IP
+and memory. VPDMA expect 32 bits addresses. To make sure that is always
+the case set the DMA mask and coherent mask for the device.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpe.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 5b1e9908fff2..19b027c5478a 100644
+index ad9d8b559cad..d7f8eb901475 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1578,10 +1578,13 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- 	if (!V4L2_TYPE_IS_OUTPUT(f->type)) {
- 		struct vpe_q_data *s_q_data;
+@@ -2517,6 +2517,13 @@ static int vpe_probe(struct platform_device *pdev)
+ 	struct vpe_dev *dev;
+ 	int ret, irq, func;
  
--		/* get colorspace from the source queue */
-+		/* get colorimetry from the source queue */
- 		s_q_data = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
- 
- 		pix->colorspace = s_q_data->format.fmt.pix_mp.colorspace;
-+		pix->xfer_func = s_q_data->format.fmt.pix_mp.xfer_func;
-+		pix->ycbcr_enc = s_q_data->format.fmt.pix_mp.ycbcr_enc;
-+		pix->quantization = s_q_data->format.fmt.pix_mp.quantization;
- 	}
- 
- 	return 0;
++	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (ret) {
++		dev_err(&pdev->dev,
++			"32-bit consistent DMA enable failed\n");
++		return ret;
++	}
++
+ 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
 -- 
 2.17.1
 
