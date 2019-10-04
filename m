@@ -2,116 +2,87 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371C5C352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A5EC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14871206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A3E206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfJGKQP (ORCPT
+        id S1727796AbfJGKQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:16:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:20552 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJGKQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:16:14 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 396BF18C8907;
-        Mon,  7 Oct 2019 10:16:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 635EC1001B28;
-        Mon,  7 Oct 2019 10:16:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 5/6] rxrpc: rxrpc_peer needs to hold a ref on the
- rxrpc_local record
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 07 Oct 2019 11:16:12 +0100
-Message-ID: <157044337266.32635.16355496559521893007.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157044333551.32635.10133219357337058780.stgit@warthog.procyon.org.uk>
-References: <157044333551.32635.10133219357337058780.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Mon, 7 Oct 2019 06:16:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58856 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727754AbfJGKQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:16:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 161ACB201;
+        Mon,  7 Oct 2019 10:16:17 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 13A1D1E4815; Fri,  4 Oct 2019 10:11:06 +0200 (CEST)
+Date:   Fri, 4 Oct 2019 10:11:06 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Chengguang Xu <cgxu519@zoho.com.cn>
+Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] quota: avoid increasing DQST_LOOKUPS when iterating over
+ dirty/inuse list
+Message-ID: <20191004081106.GA13650@quack2.suse.cz>
+References: <20190926083408.4269-1-cgxu519@zoho.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 07 Oct 2019 10:16:14 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926083408.4269-1-cgxu519@zoho.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rxrpc_peer record needs to hold a reference on the rxrpc_local record
-it points as the peer is used as a base to access information in the
-rxrpc_local record.
+On Thu 26-09-19 16:34:08, Chengguang Xu wrote:
+> It is meaningless to increase DQST_LOOKUPS number while iterating
+> over dirty/inuse list, so just avoid it.
+> 
+> Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
 
-This can cause problems in __rxrpc_put_peer(), where we need the network
-namespace pointer, and in rxrpc_send_keepalive(), where we need to access
-the UDP socket, leading to symptoms like:
+Yeah, makes sense. I've queued up your patch. Thanks!
 
-    BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411
-    [inline]
-    BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0
-    net/rxrpc/peer_object.c:435
-    Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
+								Honza
 
-Fix this by taking a ref on the local record for the peer record.
-
-Fixes: ace45bec6d77 ("rxrpc: Fix firewall route keepalive")
-Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
-Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- net/rxrpc/peer_object.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
-index b700b7ecaa3d..64830d8c1fdb 100644
---- a/net/rxrpc/peer_object.c
-+++ b/net/rxrpc/peer_object.c
-@@ -216,7 +216,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
- 	peer = kzalloc(sizeof(struct rxrpc_peer), gfp);
- 	if (peer) {
- 		atomic_set(&peer->usage, 1);
--		peer->local = local;
-+		peer->local = rxrpc_get_local(local);
- 		INIT_HLIST_HEAD(&peer->error_targets);
- 		peer->service_conns = RB_ROOT;
- 		seqlock_init(&peer->service_conn_lock);
-@@ -307,7 +307,6 @@ void rxrpc_new_incoming_peer(struct rxrpc_sock *rx, struct rxrpc_local *local,
- 	unsigned long hash_key;
- 
- 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
--	peer->local = local;
- 	rxrpc_init_peer(rx, peer, hash_key);
- 
- 	spin_lock(&rxnet->peer_hash_lock);
-@@ -417,6 +416,7 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
- 	list_del_init(&peer->keepalive_link);
- 	spin_unlock_bh(&rxnet->peer_hash_lock);
- 
-+	rxrpc_put_local(peer->local);
- 	kfree_rcu(peer, rcu);
- }
- 
-@@ -453,6 +453,7 @@ void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
- 	if (n == 0) {
- 		hash_del_rcu(&peer->hash_link);
- 		list_del_init(&peer->keepalive_link);
-+		rxrpc_put_local(peer->local);
- 		kfree_rcu(peer, rcu);
- 	}
- }
-
+> ---
+>  fs/quota/dquot.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> index 6e826b454082..00a3c6df2ea3 100644
+> --- a/fs/quota/dquot.c
+> +++ b/fs/quota/dquot.c
+> @@ -595,7 +595,6 @@ int dquot_scan_active(struct super_block *sb,
+>  		/* Now we have active dquot so we can just increase use count */
+>  		atomic_inc(&dquot->dq_count);
+>  		spin_unlock(&dq_list_lock);
+> -		dqstats_inc(DQST_LOOKUPS);
+>  		dqput(old_dquot);
+>  		old_dquot = dquot;
+>  		/*
+> @@ -649,7 +648,6 @@ int dquot_writeback_dquots(struct super_block *sb, int type)
+>  			 * use count */
+>  			dqgrab(dquot);
+>  			spin_unlock(&dq_list_lock);
+> -			dqstats_inc(DQST_LOOKUPS);
+>  			err = sb->dq_op->write_dquot(dquot);
+>  			if (err) {
+>  				/*
+> -- 
+> 2.20.1
+> 
+> 
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
