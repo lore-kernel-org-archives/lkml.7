@@ -2,134 +2,145 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92169C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32238C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E36720867
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05056222C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 12:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KtOZZQLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfJDM1w (ORCPT
+        id S1730745AbfJDM14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 08:27:52 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12125 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbfJDM1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 08:27:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 05:27:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
-   d="scan'208";a="205842974"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga001.fm.intel.com with SMTP; 04 Oct 2019 05:27:47 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 04 Oct 2019 15:27:47 +0300
-Date:   Fri, 4 Oct 2019 15:27:47 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
-Message-ID: <20191004122747.GT1208@intel.com>
-References: <20190909135205.10277-1-benjamin.gaignard@st.com>
- <20190909135205.10277-2-benjamin.gaignard@st.com>
- <20191003142738.GM1208@intel.com>
- <CA+M3ks4FBAgCRDDHZ=x7kvQ1Y=0dBdj4+KLO2djh__hW+L=3gQ@mail.gmail.com>
- <20191003150526.GN1208@intel.com>
- <CA+M3ks7-SNusVJsiHqrmy4AN+_OO5e1X=ZRN16Hj6f-V3GnVow@mail.gmail.com>
- <20191003154627.GQ1208@intel.com>
- <CA+M3ks4gpDdZTPdBYRd=CrwgEYiSWJbXqvtPb-0KpW1BhzvmEQ@mail.gmail.com>
+        Fri, 4 Oct 2019 08:27:56 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:43697 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730606AbfJDM1x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 08:27:53 -0400
+Received: by mail-ua1-f65.google.com with SMTP id k24so1962929uag.10;
+        Fri, 04 Oct 2019 05:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wSaY7W6VdgweKOp9jTYZreYJLfH4I8nv1hwYNYCfNYk=;
+        b=KtOZZQLWCS4cSkTOhxNhKpVdlgScCqqd1k9O1sOLLv3yWqmzDmWQCdv8SbIdZBoMW1
+         p+XTPTLA1kfle7EHLlKSnLYcUlzSuqJptOPqafa3svn7Hf80RAA2Cx71KzunAZVY5CKI
+         8ojxRA8Gp9JZxvfYXIFcqiBo5VkICsvGOOLms+dAmKNc2Gyb1ABs5C4J6QthrMsOZNdB
+         mA5kWsr4Hs0Zx6aJQedGIHQBYMfbbCdUocr8j9BalA5nxZKpqtZiAC0qFj6rsGSkNaVO
+         NBFkJf8d9O/ZSW6P4AaWH+j1E+rTmA4hXSMSg0moPcRF/G6BePZfF5CN15CA+rHi0N3V
+         MILQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wSaY7W6VdgweKOp9jTYZreYJLfH4I8nv1hwYNYCfNYk=;
+        b=mtlLCuTCcBLd05SOXYG8dYN1SnnX2nuGNWkEGT8e9CSLzbeyAO5hFA5xIlha4VUN+L
+         ox0TwflDvulY3lwc5omUCkWW+yg6HpwYdZPdyQHocYSPmHL2Xz2vePYQWu9JdevbPG/k
+         J3If6Pkrnx4kopnrYSdbJpCY2kdKtNRpPc0SCjHkk+DllXhALIDHpCzhmpgcsLTe2ifv
+         I+Ur6SxmXqcwiZPtE5Vp8HUbcXq8qb0cOfYAwOd1oiaq1YbDUvVM+B3dBA63EzGVAyyl
+         OAqHDIXthDflIOk2AmdbvBqXLOxO6PNYxzWF/pjRXFOihDDTxI20tiz+oq62csuIcxEa
+         jSCQ==
+X-Gm-Message-State: APjAAAV/TQbYXSW9CD0HgYtFdK0/dskZBuvQApVkhOp4jGCOvYfNtZwq
+        02/RaAtxq3HJq/Vff5EvI6kySIr7U3T/BJpZ3vQ=
+X-Google-Smtp-Source: APXvYqyUkWxXFI6t/ssjecMpUlOsdFzkDM1l5GdegvctcVigKJWMkEH5L7iuW0BTIlwrQde45JWQ1TaHnD69ETrLuPE=
+X-Received: by 2002:ab0:2397:: with SMTP id b23mr317737uan.91.1570192072150;
+ Fri, 04 Oct 2019 05:27:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+M3ks4gpDdZTPdBYRd=CrwgEYiSWJbXqvtPb-0KpW1BhzvmEQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
+ <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
+In-Reply-To: <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
+From:   Yegor Yefremov <yegorslists@googlemail.com>
+Date:   Fri, 4 Oct 2019 14:27:39 +0200
+Message-ID: <CAGm1_kv6RMUDppu6ZjY9Dq7QL=hS=D+e3KS37+V0ncbwoXE6mQ@mail.gmail.com>
+Subject: Re: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP
+ vs SERIAL_OMAP
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 12:48:02PM +0200, Benjamin Gaignard wrote:
-> Le jeu. 3 oct. 2019 à 17:46, Ville Syrjälä
-> <ville.syrjala@linux.intel.com> a écrit :
+Hi Adam,
+
+On Fri, Oct 4, 2019 at 12:39 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Fri, Oct 4, 2019 at 5:02 AM Adam Ford <aford173@gmail.com> wrote:
 > >
-> > On Thu, Oct 03, 2019 at 05:37:15PM +0200, Benjamin Gaignard wrote:
-> > > Le jeu. 3 oct. 2019 à 17:05, Ville Syrjälä
-> > > <ville.syrjala@linux.intel.com> a écrit :
-> > > >
-> > > > On Thu, Oct 03, 2019 at 04:46:54PM +0200, Benjamin Gaignard wrote:
-> > > > > Le jeu. 3 oct. 2019 à 16:27, Ville Syrjälä
-> > > > > <ville.syrjala@linux.intel.com> a écrit :
-> > > > > >
-> > > > > > On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote:
-> > > > > > > Fix warnings with W=1.
-> > > > > > > Few for_each macro set variables that are never used later.
-> > > > > > > Prevent warning by marking these variables as __maybe_unused.
-> > > > > > >
-> > > > > > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > > > > > > ---
-> > > > > > >  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++------------------
-> > > > > > >  1 file changed, 18 insertions(+), 18 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > > index aa16ea17ff9b..b69d17b0b9bd 100644
-> > > > > > > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > > @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
-> > > > > > >             struct drm_encoder *encoder)
-> > > > > > >  {
-> > > > > > >       struct drm_crtc_state *crtc_state;
-> > > > > > > -     struct drm_connector *connector;
-> > > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >
-> > > > > > Rather ugly. IMO would be nicer if we could hide something inside
-> > > > > > the iterator macros to suppress the warning.
-> > > > >
-> > > > > Ok but how ?
-> > > > > connector is assigned in the macros but not used later and we can't
-> > > > > set "__maybe_unused"
-> > > > > in the macro.
-> > > > > Does another keyword exist for that ?
-> > > >
-> > > > Stick a (void)(connector) into the macro?
-> > >
-> > > That could work but it will look strange inside the macro.
-> > >
-> > > >
-> > > > Another (arguably cleaner) idea would be to remove the connector/crtc/plane
-> > > > argument from the iterators entirely since it's redundant, and instead just
-> > > > extract it from the appropriate new/old state as needed.
-> > > >
-> > > > We could then also add a for_each_connector_in_state()/etc. which omit
-> > > > s the state arguments and just has the connector argument, for cases where
-> > > > you don't care about the states when iterating.
-> > >
-> > > That may lead to get a macro for each possible combination of used variables.
+> > I am running Kernel 5.3.2 trying to troubleshoot some intermittent
+> > Bluetooth issues, and I think I have narrowed it down to the serial
+> > driver in use.
+>
+> I should have also noted that it's using UART2 with CTS and RTS on the
+> DM3730 (omap3630) and its configured with a baud rate of 3M.
+> I tried slowing it to 115200, but that didn't help.  I tried disabling
+> the DMA hooks from the device tree, and that didn't help.
+>
+> > By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
+> > SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
+> > appears fine.  When I enable Bluetooth, however, I get intermittent
+> > errors on an DM3730 / OMAP3630.
 > >
-> > We already have new/old/oldnew, so would "just" add one more.
-> 
-> Not just one, it will be one each new/old/oldnew macro to be able to distinguish
-> when connector is used or not.
+> > Using the 8250 driver for Blueotooth I get intermittent frame errors
+> > and data loss.
+> >
+> > Scanning ...
+> > [   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
+> > [   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
+> >         F4:4E:FC:C9:2F:57       BluJax
+> > # l2ping F4:4E:FC:C9:2F:57
+> > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+> > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
+> > no response from F4:4E:FC:C9:2F:57: id 1
+> > ^C2 sent, 1 received, 50% loss
+> >
+> > (after a fairly long hang, I hit control-c)
+> >
+> > However, disabling the 8250 driver and using the only SERIAL_OMAP and
+> > the console routed to ttyO0, the Bluetooth works well, so I believe it
+> > to be a serial driver issue and not a Bluetooth error.
+> >
+> > # hcitool scan
+> > Scanning ...
+> >         F4:4E:FC:C9:2F:57       BluJax
+> > ^C
+> > # l2ping F4:4E:FC:C9:2F:57
+> > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+> > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
+> > ...
+> > 44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
+> > ^C15 sent, 15 received, 0% loss
+> > #
+> >
+> > 0% loss and regular, repeatable communication without any Frame
+> > reassembly errors.
+> >
+>
+> I tried disabling SERIAL_OMAP and using only SERIAL_8250_OMAP, but
+> that didn't help.  Because the issue goes away when I disable
+> SERIAL_8250_OMAP, I am wondering if something is either being
+> misconfigured or some IRQ or DMA integration is missing that may be
+> present with the older SERIAL_OMAP driver.
+>
+> > Any suggestions on how to troubleshoot or what might cause the
+> > difference between the two drivers?
 
-What I'm suggesting is this:
-for_each_connector_in_state(state, connector, i)
-for_each_old_connector_in_state(state, old_conn_state, i)
-for_each_new_connector_in_state(state, new_conn_state, i)
-for_each_oldnew_connector_in_state(state, old_conn_state, new_conn_state, i)
+Can it be related to this issue [1]? Can you confirm that 5.2 is
+working as expected with the 8250 driver?
 
-So only four in total for each object type, instead of the current
-three.
+[1] https://marc.info/?l=linux-serial&m=156965039008649&w=2
 
--- 
-Ville Syrjälä
-Intel
+Cheers,
+Yegor
