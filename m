@@ -2,131 +2,63 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF31C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC129C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82489222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aD6KFFs6"
+	by mail.kernel.org (Postfix) with ESMTP id ADBD8222CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388115AbfJDRpT (ORCPT
+        id S2388269AbfJDRqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:45:19 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:45203 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDRpT (ORCPT
+        Fri, 4 Oct 2019 13:46:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37500 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387790AbfJDRp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:45:19 -0400
-Received: by mail-qt1-f180.google.com with SMTP id c21so9607824qtj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:45:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Bi0XR3hupm8FaWsiionOtqXr2yCT1RATJYfj2jN7Nko=;
-        b=aD6KFFs6/n0WLfple7V8WOE5Wn8rrv+FMdylWq2mm0aAyC8nDUHgeMNxYOvFQpPDHE
-         EbC8IsDUCdrmV7vWoxKmhQpGS/8czZbFy59AVPIEeqEyYkXoLFvGTkdsvDw4noRhceu7
-         cuvQJIke4a2mmXF2MVv0/53BkYBEirAH/R6RqJxS0c+06M6IHXTcr/28HdpFnzQsA/Yc
-         yEnAKlUc/heMZY9R6Br1zY9lNHZvfV37Q+suHlj7ql1pLrTAUa27zqw+EBt7uV2GbcC7
-         m4R/GvDj9KGcLmIEea1kW5EDLlgb4uyV11CGwAzVicslYxkATIF57uJagDlwU2e2Yoci
-         kcDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Bi0XR3hupm8FaWsiionOtqXr2yCT1RATJYfj2jN7Nko=;
-        b=kZpniwhETJpOnDb1P712BQ15kCJDEXj3KQwTw+dwL1YeoeCkpIVvdp562UxuvbzN7y
-         RK8Ak9l4N/wUwiwf3q/7oLrVdhTX0KN5apqKEL8fTGzCbvYwhQcNugqNY0NWQzGe8dlQ
-         UAb2VBeX3pRsq1Rj5lN6cWN1EjYcUIKLqyRiOidVLT7P6QAfT+4JN+ayAQRizOR9pAdV
-         LJ4FvpU13eYO+6J9OVBimfCdpRgz0uKLcnY9ZcEhxLWStxYi6JjloBKQW4C7R9idhfEc
-         V3RYLiJZpx/QfYD5iOzT+iockYDgO0anEQi+mPjGdBwEU+wZpp9vET49IeRZJdnSTRTS
-         RCSw==
-X-Gm-Message-State: APjAAAWS5SPsqIah/K69pDx/tnsTACkLJW0jaEKgN+oqLgcH9ZkErNXP
-        c+9VLmLWl1KnHf4f3/2Gsv9icQ==
-X-Google-Smtp-Source: APXvYqyPAWyb3vaf4qK5ug4xP+qdVBPW0ywm32J6kQwwYKPon44JN0O7N/RjTxu6idcF4CccyzhWjA==
-X-Received: by 2002:ac8:1302:: with SMTP id e2mr16882073qtj.326.1570211116678;
-        Fri, 04 Oct 2019 10:45:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id s16sm2817091qkg.40.2019.10.04.10.45.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 10:45:16 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iGRdj-0005rL-Np; Fri, 04 Oct 2019 14:45:15 -0300
-Date:   Fri, 4 Oct 2019 14:45:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH -next 00/11] lib/interval-tree: move to half closed
- intervals
-Message-ID: <20191004174515.GE13988@ziepe.ca>
-References: <20191003201858.11666-1-dave@stgolabs.net>
- <20191004002609.GB1492@ziepe.ca>
- <CANN689G3chM1FjFPdCNm9_OQxazs7YP1PuZLpqGtq=qzaZ0Hbw@mail.gmail.com>
+        Fri, 4 Oct 2019 13:45:59 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iGReL-0008Mj-QN; Fri, 04 Oct 2019 19:45:53 +0200
+Date:   Fri, 4 Oct 2019 19:45:53 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Daniel Wagner <dwagner@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
+ ne_fit_preload_node
+Message-ID: <20191004174553.5fk2amnp4jblc7cy@linutronix.de>
+References: <20191003090906.1261-1-dwagner@suse.de>
+ <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
+ <20191004162041.GA30806@pc636>
+ <20191004163042.jpiau6dlxqylbpfh@linutronix.de>
+ <20191004170411.GA31114@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANN689G3chM1FjFPdCNm9_OQxazs7YP1PuZLpqGtq=qzaZ0Hbw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191004170411.GA31114@pc636>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 06:15:11AM -0700, Michel Lespinasse wrote:
-> Hi Jason,
+On 2019-10-04 19:04:11 [+0200], Uladzislau Rezki wrote:
+> if another, we can free the object allocated on previous step if
+> it already has it. If another CPU does not have it, save it in 
+> ne_fit_preload_node for another current CPU to reuse later. Further
+> we can not migrate because of:
 > 
-> On Thu, Oct 3, 2019 at 5:26 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > Hurm, this is not entirely accurate. Most users do actually want
-> > overlapping and multiple ranges. I just studied this extensively:
-> 
-> (Just curious, are you the person we discussed this with after the
-> Maple Tree talk at LPC 2019 ?)
+> <snip>
+>     spin_lock(&vmap_area_lock);
+>     preempt_enable();
+> <snip>
 
-Possibly!
- 
-> I think we have two separate API problems there:
-> - overlapping vs non-overlapping intervals (the interval tree API
-> supports overlapping intervals, but some users are confused about
-> this)
+ah right. So you keep the lock later on, I somehow missed that part.
+That way it actually makes sense.
 
-I think we just have a bunch of confused drivers, ie the two drm
-drivers sure look confused to me.
-
-> - closed vs half-open interval definitions
-
-I'm not sure why this is a big problem..
-
-We may actually just have bugs in handling the '-1' as it is supposed
-to be written as start + (size-1) so that start + size == ULONG_MAX+1
-works properly.
-
-> > hfi1/mmu_rb definitely needs overlapping as it is dealing with
-> > userspace VA ranges under control of userspace. As do the other
-> > infiniband users.
-> 
-> Do you have a handle on what usnic is doing with its intervals ?
-> usnic_uiom_insert_interval() has some complicated logic to avoid
-> having overlapping intervals, which is very confusing to me.
-
-I don't know why it is so complicated, but I can say that it is
-storing userspace VA's in that tree.
-
-I have some feeling this driver is trying to use the IOMMU to create a
-mirror of the userspace VA
-
-Userspace can request the HW be able to access any set of overlapping
-regions and so the driver must intersect all the ranges and compute a
-list of VA pages to IOMMU map. Just guessing.
-
-Jason
+Sebastian
