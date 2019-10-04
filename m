@@ -2,130 +2,84 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA215C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB8DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EB420862
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62D3215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHbN9Zq3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BWP72EUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfJDT3u (ORCPT
+        id S2387452AbfJDTdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:29:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45202 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDT3t (ORCPT
+        Fri, 4 Oct 2019 15:33:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35954 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJDTdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:29:49 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so15905328iot.12;
-        Fri, 04 Oct 2019 12:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y0OJ7/SgReOk2grQFvLnWH91Op9wRRMdd5tOpx1hbC4=;
-        b=mHbN9Zq37CUj7dDvd5GrFR4IpOo9GIoKPErGNZnhpHnU56KhvOuWcFlRocijnLctvK
-         VLqMyrAwP66rgebj4xeayopAFe9kezh8O0LUhQNIP/3WCjkmfCts8nUSNKv0IA4O3kXS
-         9uZmUiVfs/da+hSDrhijeCxDwnUvpbeNy+nUUGPoi7HzCK3irA33zewV4A7tcGGX374y
-         Qpk+rsA3D1yrJATG9JfbEflWw/+SyUnbWD0Z71jrVxzDaVdR5IpKN18eJGXFbGdxpYwn
-         s8dSDWR37eSDNVweXavLH0TGAt6R0ircrGNjs7pylUYmHUHuMAfTY4H5zmExHRBrdQR+
-         MdTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y0OJ7/SgReOk2grQFvLnWH91Op9wRRMdd5tOpx1hbC4=;
-        b=mfI9rzDhvBYzE3bFn5jWbdGoEB0oJL7lm01Q7+lkBvNkLM9Qz/O6GaW78sA3LdOlNP
-         8BkgQ+LBZTlo+dzeBfLUE9Nw46JEKFO/Ov7476iutneCNcEnjDB+HHngM/CgrafnMJv2
-         wEManqk8LDZxo0XfduKl9b6NQErC6N9chQ/MIGfpnqws33UsFicKq+JZgXprPr2vZgl2
-         wnPtaDTqo0UveO1hZZ/T2pfabnAX0daxd1OR67Zg5ve+ohB4xMB8MpdiVAIAWyKltQ+D
-         Q2IBVQzYKqFUxVlJt6J79WS1iE9SG2T6r73CUIU6h2GR/4CVjgKuMLAhrWZBBiuRYHdu
-         BYFg==
-X-Gm-Message-State: APjAAAWAFWa40gFDQXhvy5leYrFovHO4ETd3lkQ88/XVIB1y4AEF9kmT
-        TZE4zY+ebpGq50wLSSTAUqjxwFCbC//iFmW5LGU=
-X-Google-Smtp-Source: APXvYqzaMGngribRRvqu3VAuNb5LGILxFgGbQKy7BcwnBkr8wOogbBTVo+amQa6LHmrdHfubVeo8mjbYvh53Yxf3djg=
-X-Received: by 2002:a92:3314:: with SMTP id a20mr16796103ilf.276.1570217386586;
- Fri, 04 Oct 2019 12:29:46 -0700 (PDT)
+        Fri, 4 Oct 2019 15:33:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LHh/YQwQTy7byEfLDg0tl2YRDGuuUomeM/luIJJrsME=; b=BWP72EUXNPAivlKYRsOMtPtaw
+        Kp+yyT1wO0BN8iWpVPl+wKzLz6FEMavN+iPUFllU1t7UN7k/TOU5TjN50/T5X8Avm/n6ZkoC9GsH7
+        C7F0dR01CVPEPdLw6LgZuYdizR4Ul+FVlyZsh4h/NSlyWLYb51wNn1ziUt2QisHXe2+SOPRnWjxVf
+        KIPKHdP/XPLB1+qhzkDpDsa9sMJ/Oad0sI4Slc6YCMXhsZFtLTbvyWcLsC9LJ9WnP30Dzix0gKsEY
+        hrEEYiiu+NglwLFL5GWQ20TBs63WW4f6YrffxW1M4tFtHLs00SqLjbd7xne4o917PClzgzP/j/a/F
+        zUEQoI0Sw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGTK2-00063Z-9N; Fri, 04 Oct 2019 19:33:02 +0000
+Date:   Fri, 4 Oct 2019 12:33:02 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/15] mm: Add file_offset_of_ helpers
+Message-ID: <20191004193302.GL32665@bombadil.infradead.org>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20191002130753.7680-1-hdanton@sina.com>
 MIME-Version: 1.0
-References: <20190723115400.46432-1-tony@atomide.com>
-In-Reply-To: <20190723115400.46432-1-tony@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 4 Oct 2019 14:29:35 -0500
-Message-ID: <CAHCN7x+6KYjnm5daRe_Y5XEWnDBWQnz8rOKYH2wTgx9avvokmQ@mail.gmail.com>
-Subject: Re: [PATCH] serial: 8250_omap: Fix idling for unloaded serdev drivers
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Peter Hurley <peter@hurleysoftware.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Vignesh R <vigneshr@ti.com>, linux-serial@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002130753.7680-1-hdanton@sina.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 5:21 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> For many years omap variants have been setting the runtime PM
-> autosuspend delay to -1 to prevent unsafe policy with lossy first
-> character on wake-up. The user must specifically enable the timeout
-> for UARTs if desired.
->
-> We must not enable the workaround for serdev devices though. It leads
-> into UARTs not idling if no serdev devices are loaded and there is no
-> sysfs entry to configure the UART in that case. And this means that
-> my PM may not work unless the serdev modules are loaded.
->
-> We can detect a serdev device being configured based on a dts child
-> node, and we can simply skip the workround in that case. And the
-> serdev driver can idle the port during runtime when suitable if an
-> out-of-band wake-up GPIO line exists for example.
->
-> Let's also add some comments to the workaround while at it.
 
-This seems to help some of the stability issues I am seeing on the
-DM3730 UART2 running Bluetooth at 3000000 baud.
-Does it make sense to backport this to the stable kernels?
+Your mail program is still broken.  This shows up as a reply to the 0/15
+email instead of as a reply to the 3/15 email.
 
-adam
+On Wed, Oct 02, 2019 at 09:07:53PM +0800, Hillf Danton wrote:
+> On Tue, 24 Sep 2019 17:52:02 -0700 From: Matthew Wilcox (Oracle)
+> > +/**
+> > + * file_offset_of_page - File offset of this page.
+> > + * @page: Page cache page.
+> > + *
+> > + * Context: Any context.
+> > + * Return: The offset of the first byte of this page.
+> >   */
+> > -static inline loff_t page_offset(struct page *page)
+> > +static inline loff_t file_offset_of_page(struct page *page)
+> >  {
+> >  	return ((loff_t)page->index) << PAGE_SHIFT;
+> >  }
+> >  
+> >  static inline loff_t page_file_offset(struct page *page)
+> >  {
+> >  	return ((loff_t)page_index(page)) << PAGE_SHIFT;
+> 
+> Would you like to specify the need to build a moon on the moon,
+> with another name though?
 
->
-> Cc: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/tty/serial/8250/8250_omap.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> --- a/drivers/tty/serial/8250/8250_omap.c
-> +++ b/drivers/tty/serial/8250/8250_omap.c
-> @@ -1234,7 +1234,16 @@ static int omap8250_probe(struct platform_device *pdev)
->
->         device_init_wakeup(&pdev->dev, true);
->         pm_runtime_use_autosuspend(&pdev->dev);
-> -       pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
-> +
-> +       /*
-> +        * Disable runtime PM until autosuspend delay unless specifically
-> +        * enabled by the user via sysfs. This is the historic way to
-> +        * prevent an unsafe default policy with lossy characters on wake-up.
-> +        * For serdev devices this is not needed, the policy can be managed by
-> +        * the serdev driver.
-> +        */
-> +       if (!of_get_available_child_count(pdev->dev.of_node))
-> +               pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
->
->         pm_runtime_irq_safe(&pdev->dev);
->         pm_runtime_enable(&pdev->dev);
-> --
-> 2.21.0
+I have no idea what you mean.  Is this an idiom in your native language,
+perhaps?
