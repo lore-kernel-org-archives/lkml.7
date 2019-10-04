@@ -4,79 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB06C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A16C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A4621D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A941721D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 16:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390279AbfJDQEt (ORCPT
+        id S2390292AbfJDQE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 12:04:49 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:40133 "EHLO
+        Fri, 4 Oct 2019 12:04:59 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:39029 "EHLO
         relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390043AbfJDQEt (ORCPT
+        with ESMTP id S2390043AbfJDQE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 12:04:49 -0400
+        Fri, 4 Oct 2019 12:04:58 -0400
 X-Originating-IP: 93.23.105.117
 Received: from xps13.stephanxp.local (117.105.23.93.rev.sfr.net [93.23.105.117])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 164A524000A;
-        Fri,  4 Oct 2019 16:04:44 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9287024000B;
+        Fri,  4 Oct 2019 16:04:55 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Piotr Sroka <piotrs@cadence.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
 Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
         Marek Vasut <marek.vasut@gmail.com>,
         linux-mtd@lists.infradead.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        bcm-kernel-feedback-list@broadcom.com,
         Brian Norris <computersforpeace@gmail.com>,
         David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [v2] mtd: rawnand: Change calculating of position page containing BBM
-Date:   Fri,  4 Oct 2019 18:04:43 +0200
-Message-Id: <20191004160443.6258-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 1/2] mtd: nand: brcmnand: Add support for flash-dma v0
+Date:   Fri,  4 Oct 2019 18:04:52 +0200
+Message-Id: <20191004160452.6320-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924055439.4212-1-piotrs@cadence.com>
+In-Reply-To: <20190906194719.15761-1-kdasu.kdev@gmail.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: a3c4c2339f8948b0f578e938970303a7372e60c0
+X-linux-mtd-patch-commit: 83156c1c6c283e32397498f839347c510ef1107d
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-24 at 05:54:31 UTC, Piotr Sroka wrote:
-> Change calculating of position page containing BBM
+On Fri, 2019-09-06 at 19:47:15 UTC, Kamal Dasu wrote:
+> This change adds support for flash dma v0.0.
 > 
-> If none of BBM flags are set then function nand_bbm_get_next_page 
-> reports EINVAL. It causes that BBM is not read at all during scanning
-> factory bad blocks. The result is that the BBT table is build without 
-> checking factory BBM at all. For Micron flash memories none of these 
-> flags are set if page size is different than 2048 bytes.
-> 
-> Address this regression by:
-> - adding NAND_BBM_FIRSTPAGE chip flag without any condition. It solves
->   issue only for Micron devices.
-> - changing the nand_bbm_get_next_page_function. It will return 0 
->   if no of BBM flag is set and page parameter is 0. After that modification
->   way of discovering factory bad blocks will work similar as in kernel 
->   version 5.1.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: f90da7818b14 (mtd: rawnand: Support bad block markers in first, second or last page)
-> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
