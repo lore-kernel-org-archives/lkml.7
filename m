@@ -2,110 +2,120 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A14C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A87DC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2E2215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570180187;
-	bh=hm9yY4mY6cAad/FS1LSmCGDFTnHyfdN4fmY2yqMQxzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SkG90dCmlygw3wMcDwxwitLQsVx0BTV8RKWFTrWdbcG3P+4PFzbB4GE9Ptio9w2LQ
-	 3LHhnY5ojW5DHd/Bdbyur2mxghG1prMJ5s/jNpEeoTmcijgf+4Nj4XR/NDy1J50KxL
-	 ICEYFD/O8t8c6UJZe3Xw6x5L3Gqt/N5uAdHqgurE=
+	by mail.kernel.org (Postfix) with ESMTP id 4DE2C20867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R1YBBAy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbfJDJJq (ORCPT
+        id S1730883AbfJDJKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfJDJJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:09:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D9A20867;
-        Fri,  4 Oct 2019 09:09:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570180185;
-        bh=hm9yY4mY6cAad/FS1LSmCGDFTnHyfdN4fmY2yqMQxzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=17pnv8iBTAvOsSYGBVxGkVbDS9BdRJYY/2WIpvd2Zd/zgyS36I7AxeKuUf0E0xSFQ
-         UuqHUn4K0QMnphSNfcR2pPU/m4gk/bcCPKSN6Ys4XwiSoC4zRTH+g+CFGKqGhGZpbP
-         3qMHJFANMlS43Mk0L9U0tJaOorP0MFBscY+E7cqI=
-Date:   Fri, 4 Oct 2019 11:09:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v3] string-choice: add yesno(), onoff(),
- enableddisabled(), plural() helpers
-Message-ID: <20191004090943.GA306905@kroah.com>
-References: <8e697984-03b5-44f3-304e-42d303724eaa@rasmusvillemoes.dk>
- <20191001080739.18513-1-jani.nikula@intel.com>
+        Fri, 4 Oct 2019 05:10:17 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:40344 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbfJDJKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:10:17 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9496h28013482;
+        Fri, 4 Oct 2019 11:09:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=7TARpab+GgoE0XBcyvsvh3bkT5vF11t+SCOxhdeo7fQ=;
+ b=R1YBBAy55psjTN8CG/9ymKL/R7b8tlaSp8Wjzn3mltynAMswP9ewRPEupwriuQJK8lQ3
+ aySdSt+GWiwmsCuJuMfUoqKoLbkZrsST4/k3HAAoLrEyB31XIRtTBD61uTmm84p0Eadr
+ KfKXVdmR6tHBoTFMJ5cfgKjAReiEsCIpYcu7XS+qANk+h5uZshQL8pm6heXt19X/bVMd
+ dsfxpgAD8vB4PSxgyCP+9SLaOSfjNR7pPB8a7uDAXM40q+NVea5eB0u+SOGK+Pye5jLy
+ 3Eg3f/4wmzaw3oAGjJL3O4WS/eMZ7rzagGPhlFj1O0mB17zI6TG+oXhKFdFAnLvkIVN/ vw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vcem3esn1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Oct 2019 11:09:53 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 78F3510002A;
+        Fri,  4 Oct 2019 11:09:52 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6A5FD2B00C1;
+        Fri,  4 Oct 2019 11:09:52 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Oct
+ 2019 11:09:52 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 4 Oct 2019 11:09:51 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>, Yizhuo <yzhai003@ucr.edu>
+CC:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [Linux-stm32] [PATCH] pwm: stm32: Fix the usage of uninitialized
+ variable in stm32_pwm_config()
+Thread-Topic: [Linux-stm32] [PATCH] pwm: stm32: Fix the usage of uninitialized
+ variable in stm32_pwm_config()
+Thread-Index: AQHVenxIJtBrJYZdmEWJltaWtr2m56dKEG6A
+Date:   Fri, 4 Oct 2019 09:09:51 +0000
+Message-ID: <e6824330-d331-798d-0f0a-1952db028900@st.com>
+References: <20191004044649.2405-1-yzhai003@ucr.edu>
+ <20191004062336.jidzrytx4z5talro@pengutronix.de>
+In-Reply-To: <20191004062336.jidzrytx4z5talro@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9356118905A9F942ADA617A804B4486F@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001080739.18513-1-jani.nikula@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-04_05:2019-10-03,2019-10-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 11:07:39AM +0300, Jani Nikula wrote:
-> The kernel has plenty of ternary operators to choose between constant
-> strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
-> "s":
-> 
-> $ git grep '? "yes" : "no"' | wc -l
-> 258
-> $ git grep '? "on" : "off"' | wc -l
-> 204
-> $ git grep '? "enabled" : "disabled"' | wc -l
-> 196
-> $ git grep '? "" : "s"' | wc -l
-> 25
-> 
-> Additionally, there are some occurences of the same in reverse order,
-> split to multiple lines, or otherwise not caught by the simple grep.
-> 
-> Add helpers to return the constant strings. Remove existing equivalent
-> and conflicting functions in i915, cxgb4, and USB core. Further
-> conversion can be done incrementally.
-> 
-> While the main goal here is to abstract recurring patterns, and slightly
-> clean up the code base by not open coding the ternary operators, there
-> are also some space savings to be had via better string constant
-> pooling.
-> 
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: Vishal Kulkarni <vishal@chelsio.com>
-> Cc: netdev@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> # v1
-> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-For this version at least :)
+DQpPbiAxMC80LzE5IDg6MjMgQU0sIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBIZWxsbywN
+Cj4NCj4gT24gVGh1LCBPY3QgMDMsIDIwMTkgYXQgMDk6NDY6NDlQTSAtMDcwMCwgWWl6aHVvIHdy
+b3RlOg0KPj4gSW5zaWRlIGZ1bmN0aW9uIHN0bTMyX3B3bV9jb25maWcoKSwgdmFyaWFibGUgInBz
+YyIgYW5kICIgYXJyIg0KPj4gY291bGQgYmUgdW5pbml0aWFsaXplZCBpZiByZWdtYXBfcmVhZCgp
+IHJldHVybnMgLUVJTlZBTHMuDQo+PiBIb3dldmVyLCB0aGV5IGFyZSB1c2VkIGxhdGVyIGluIHRo
+ZSBpZiBzdGF0ZW1lbnQgdG8gZGVjaWRlDQo+PiB0aGUgcmV0dXJuIHZhbHVlIHdoaWNoIGlzIHBv
+dGVudGlhbGx5IHVuc2FmZS4NCg0KSGkgWWl6aHVvLA0KDQpsaWtlIGZvciB0aGUgeW91ciBwYXRj
+aCBpbiBJSU8gdHJpZ2dlciByZWdtYXBfcmVhZCBjb3VsZCBvbmx5IGZhaWxlZA0KaWYgdGhlIGhh
+cmR3YXJlIGJsb2NrIGlzIG5vIG1vcmUgY2xvY2tlZCBhbmQgaW4gdGhpcyBjYXNlIHdlIHdvbid0
+IA0KcmV0dXJuIG9mIHJlZ21hcF9yZWFkLg0KVGVzdGluZyByZWdtYXBfcmVhZCgpIHJldHVybiB2
+YWx1ZSBqdXN0IGFkZCBjb2RlIGJ1dCBkb2Vzbid0IHByb3ZpZGUgYSANCnZhbGlkIGluZm9ybWF0
+aW9uLg0KSWYgeW91IHJlYWxseSB3YW50IHRvIGxvZyBhbGwgdGhlIHBvc3NpYmxlIGVycm9ycyBj
+YXNlcyBwbGVhc2UgZG8gaXQgaW4gDQpyZWdtYXAgY29kZSBpdHNlbGYgYW5kDQpub3QgaW4gKmFs
+bCogdGhlIGRyaXZlcnMuDQoNClRoYW5rcywNCg0KQmVuamFtaW4NCg0KPj4NCj4+IFRoZSBzYW1l
+IGNhc2UgaGFwcGVucyBpbiBmdW5jdGlvbiBzdG0zMl9wd21fZGV0ZWN0X2NoYW5uZWxzKCkNCj4+
+IHdpdGggdmFyaWFibGUgImNjZXIiLCBidXQgd2UgY2Fubm90IGp1c3QgcmV0dXJuIC1FSU5WQUwg
+YmVjYXVzZQ0KPj4gdGhlIGVycm9yIGNvZGUgaXMgbm90IGFjY2VwdGFibGUgYnkgdGhlIGNhbGxl
+ci4gQXNsbywgdGhlIHZhcmlhYmxlDQo+IHMvQXNsby9BbHNvLw0KPg0KPj4gImNjZXIiIGluIGZ1
+bmN0aW9uc3RtMzJfcHdtX2RldGVjdF9jb21wbGVtZW50YXJ5KCkgY291bGQgYWxzbyBiZQ0KPiBz
+L2Z1bmN0aW9uc3RtMzJfcHdtX2RldGVjdF8vZnVuY3Rpb24gc3RtMzJfcHdtX2RldGVjdF8vDQo+
+DQo+PiB1bmluaXRpYWxpemVkLCBzaW5jZSBzdG0zMl9wd21fZGV0ZWN0X2NvbXBsZW1lbnRhcnko
+KSByZXR1cm5zIHZvaWQsDQo+PiB0aGUgcGF0Y2ggaXMgbm90IGVhc3kuDQo+IGFjdGl2ZV9jaGFu
+bmVscygpIGlzIGFsc28gYWZmZWN0ZWQuIEFsc28gdGhlcmUgYXJlIGNhbGxzIHRvDQo+IHJlZ21h
+cF91cGRhdGVfYml0cyB3aGljaCBzaG91bGQgaGF2ZSB0aGVpciByZXR1cm4gdmFsdWVzIGNoZWNr
+ZWQuDQo+DQo+IFdoaWxlIGEgcGF0Y2ggdG8gZml4IHRoZXNlIGFsbCBpcyBub3QgdHJpdmlhbCBp
+dCBpcyBjZXJ0YWlubHkgcG9zc2libGUNCj4gYW5kIEkgd291bGQgcHJlZmVyIHRvIGZpeCB0aGUg
+cHJvYmxlbSBjb21wbGV0ZWx5Lg0KPg0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+
