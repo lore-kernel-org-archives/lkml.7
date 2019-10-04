@@ -7,58 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3587BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5983EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127492077B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DF22077B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570211572;
-	bh=Ad2nS83ksoWY94exUubRGqGW552s6iVe9HD5zwJ3nkA=;
+	s=default; t=1570211575;
+	bh=+kJmnciNcXWvbwtTBgwumR+MrOse+d7dqeA56CfUkYU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=pja/DTPtTpHHmd8JPaviqInX024zUpnLK6yuVngNZSHhOis9qJAFPN/HOamtaQwn9
-	 8bgEj4Sf+8ckS/iwcdMZ8L2zwLPIJCMlyScuCMYHOSIPFYcZ6Lqudec7Q5+E8rOSY8
-	 DUhrGEiGpdWNbzyhcshpbXLTkUhhfeoZOpOFXRU8=
+	b=wON1xmsgL9IM5026897DL9yjefa6q8NLC68gEOc/xhr4myDhOENHPiu240xqD8QZD
+	 3c+LcEvoeZewAg8JUppZtbKNuly/jHW0H0F//Yvk9U0WIZ9z18QwrYzkGEy8gmI63X
+	 r0f4qzpv42rPH53M6EYnOz+4sjf+/aKhr623gZgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388905AbfJDRwv (ORCPT
+        id S2388962AbfJDRwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:52:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51038 "EHLO
+        Fri, 4 Oct 2019 13:52:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51102 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388814AbfJDRwt (ORCPT
+        with ESMTP id S2388880AbfJDRwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:52:49 -0400
+        Fri, 4 Oct 2019 13:52:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=EV6mJV9fbq+0/IGUxZm9F6zPrU/8DDn5KRx+8Yb0f8c=; b=A5o4qkr7WfjT
-        HSjlWPPegxn56c5LCBWgEfCS9G5JWLdse+J5hdcb5ld9U9dE4Q35edLC45X8HZvcrGisGpm0ucBJz
-        J1clEYjbBE8EPPHV1bCVUQcSnK4u8El2Sk2J5k1ueIySnr2HIjbXVsnSOERi1UCjMpydm3jGbMxZg
-        gBVIQ=;
+        List-Archive; bh=icF1PnfaBIU2wuXv0YbLmQz3SxUsELWwRB6fPKw37KE=; b=Wjnnd151pMcb
+        epSb5ND2XSeyUmu/xmByfs7NfzcFT0jmyvjgmQYbCkGORIdSlWIhx2jbcDJuePesoWYNn5kZpGhuD
+        3zgjomxvbwfxbTgLI1ffz18hKsKTsQQamhFI4LX4eZ57BxUCei+d4oUK16l5Ulzes+8dBeycvd1GE
+        t7Fgc=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iGRky-0003wa-0S; Fri, 04 Oct 2019 17:52:44 +0000
+        id 1iGRl3-0003xC-Gn; Fri, 04 Oct 2019 17:52:49 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 843C82741EF2; Fri,  4 Oct 2019 18:52:43 +0100 (BST)
+        id 06BDF2741EF2; Fri,  4 Oct 2019 18:52:48 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     ckeepax@opensource.cirrus.com, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, zhang.chunyan@linaro.org
-Subject: Applied "regulator: Document "regulator-boot-on" binding more thoroughly" to the regulator tree
-In-Reply-To: <20191001124531.v2.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode" to the spi tree
+In-Reply-To: <20191001205216.32115-1-olteanv@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191004175243.843C82741EF2@ypsilon.sirena.org.uk>
-Date:   Fri,  4 Oct 2019 18:52:43 +0100 (BST)
+Message-Id: <20191004175249.06BDF2741EF2@ypsilon.sirena.org.uk>
+Date:   Fri,  4 Oct 2019 18:52:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: Document "regulator-boot-on" binding more thoroughly
+   spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,47 +86,84 @@ to this mail.
 Thanks,
 Mark
 
-From 87fd0db6d7df1cf4cc6e9b09e2155d1f324bf836 Mon Sep 17 00:00:00 2001
-From: Douglas Anderson <dianders@chromium.org>
-Date: Tue, 1 Oct 2019 12:45:54 -0700
-Subject: [PATCH] regulator: Document "regulator-boot-on" binding more
- thoroughly
+From 3c0f9d8bcf47ed33f479cf9dc933d405020aefe4 Mon Sep 17 00:00:00 2001
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Tue, 1 Oct 2019 23:52:16 +0300
+Subject: [PATCH] spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode
 
-The description of "regulator-boot-on" was a little unclear, at least
-to me.  Did this property mean that we should turn the regulator on at
-boot?  Or perhaps it was intended only to be used for regulators where
-we couldn't read the state at bootup to indicate what state we should
-assume?  The answer, it turns out, is both [1].
+With this patch, the "interrupts" property from the device tree bindings
+is ignored, even if present, if the driver runs in TCFQ mode.
 
-Let's document this.
+Switching to using the DSPI in poll mode has several distinct
+benefits:
 
-[1] https://lore.kernel.org/r/20190923181431.GU2036@sirena.org.uk
+- With interrupts, the DSPI driver in TCFQ mode raises an IRQ after each
+  transmitted word. There is more time wasted for the "waitq" event than
+  for actual I/O. And the DSPI IRQ count can easily get the largest in
+  /proc/interrupts on Freescale boards with attached SPI devices.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20191001124531.v2.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid
+- The SPI I/O time is both lower, and more consistently so. Attached to
+  some Freescale devices are either PTP switches, or SPI RTCs. For
+  reading time off of a SPI slave device, it is important that all SPI
+  transfers take a deterministic time to complete.
+
+- In poll mode there is much less time spent by the CPU in hardirq
+  context, which helps with the response latency of the system, and at
+  the same time there is more control over when interrupts must be
+  disabled (to get a precise timestamp measurement, which will come in a
+  future patch): win-win.
+
+On the LS1021A-TSN board, where the SPI device is a SJA1105 PTP switch
+(with a bits_per_word=8 driver), I created a "benchmark" where I
+periodically transferred a 12-byte message once per second, for 120
+seconds. I then recorded the time before putting the first byte in the
+TX FIFO, and the time after reading the last byte from the RX FIFO. That
+is the transfer delay in nanoseconds.
+
+Interrupt mode:
+
+  delay: min 125120 max 168320 mean 150286 std dev 17675.3
+
+Poll mode:
+
+  delay: min 69440 max 119040 mean 70312.9 std dev 8065.34
+
+Both the mean latency and the standard deviation are more than 50% lower
+in poll mode than in interrupt mode, and the 'max' in poll mode is lower
+than the 'min' in interrupt mode. This is with an 'ondemand' governor on
+an otherwise idle system - therefore running mostly at 600 MHz out of a
+max of 1200 MHz.
+
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Link: https://lore.kernel.org/r/20191001205216.32115-1-olteanv@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/regulator/regulator.yaml | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.yaml b/Documentation/devicetree/bindings/regulator/regulator.yaml
-index 02c3043ce419..92ff2e8ad572 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/regulator.yaml
-@@ -38,7 +38,12 @@ properties:
-     type: boolean
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 2c0f211eed87..c61074502145 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -707,7 +707,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+ 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
  
-   regulator-boot-on:
--    description: bootloader/firmware enabled regulator
-+    description: bootloader/firmware enabled regulator.
-+      It's expected that this regulator was left on by the bootloader.
-+      If the bootloader didn't leave it on then OS should turn it on
-+      at boot but shouldn't prevent it from being turned off later.
-+      This property is intended to only be used for regulators where
-+      software cannot read the state of the regulator.
-     type: boolean
+-	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
++	if (!(spi_sr & SPI_SR_EOQF))
+ 		return IRQ_NONE;
  
-   regulator-allow-bypass:
+ 	if (dspi_rxtx(dspi) == 0) {
+@@ -1134,6 +1134,9 @@ static int dspi_probe(struct platform_device *pdev)
+ 
+ 	dspi_init(dspi);
+ 
++	if (dspi->devtype_data->trans_mode == DSPI_TCFQ_MODE)
++		goto poll_mode;
++
+ 	dspi->irq = platform_get_irq(pdev, 0);
+ 	if (dspi->irq <= 0) {
+ 		dev_info(&pdev->dev,
 -- 
 2.20.1
 
