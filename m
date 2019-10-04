@@ -5,67 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE50C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D178C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B08222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D50222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 21:43:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jSw3Dviy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I0UP6QjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfJDVnm (ORCPT
+        id S1731273AbfJDVno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 17:43:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45628 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729440AbfJDVni (ORCPT
+        Fri, 4 Oct 2019 17:43:44 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38381 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730842AbfJDVnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 17:43:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so4648802pfb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:43:38 -0700 (PDT)
+        Fri, 4 Oct 2019 17:43:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w8so3728501plq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 14:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QwzY9zGvRb6P1N8Ed1qZtykz2VMjNZvPa05n7CMX4Gw=;
-        b=jSw3Dviyjy05ClBOUYY/QJuGuoSyAjvf8C5ubfUlFMJfpcjHzrg+b1IRO7zi1azAYa
-         6EtRIZkuwb8qqIWgHu/ujxJbM9AuKetLnAmhPd+2WrYV3rQJ4vHLXS1XELinhSq6oZ4b
-         /Oyx1txPmhFiEXmfsuqAcngarOOgc1FOJG0yA=
+        bh=bAfMi4NSBoja5vxxnTEYMZ6gxDSssSgVHfIbff12mb4=;
+        b=I0UP6QjOkuk9029ycIGlBRYjuryADPNl2rs34QcwDy7DnSdfOXcB/b4kY7TUCGXC/k
+         IJiGk5ETewSWBrF7ld044EOqYn1Pdu43lwCaDi9y6kk9EwIJtcCsSJvqR9/L1EzcsfJT
+         uqI7gqcYOF9lRF314+CkfUmQdzqeJGSTbKmVE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QwzY9zGvRb6P1N8Ed1qZtykz2VMjNZvPa05n7CMX4Gw=;
-        b=phjbFGPVYHvJCYKig7OW47XDEq0uVswgd/hKfwcyC/0JLjp6yMznxfnqQRiO1285el
-         TfGZuoDmi5VN2gd3ye/tvzLB5qppT0v/O0KhhnYON+LfkfOkAzG0xOf6we88Uy23hmQd
-         GRgvqlDslVOR/N6TVYsb1dMoMxrEQxIqLzbF/So9o7DV9CVVRasZLX49w8xhu77zqIAK
-         e/XBANRcB9y6vmp9zv0o9tBUhXbnQoRVR0WaM/sSMhmA2D1vLSAYxRWwXMcctTYxSM+9
-         14E96Y6RbZ/wcFooj2Gg5n0ltCQOb5QHc9zDd6ecnplvys7l2UJZYyrzFTfQXqkIsyFk
-         BUEQ==
-X-Gm-Message-State: APjAAAWQvtthB6Xtf2sD3K9YDPSP2SD1e7ujffP6a7rNjej6QT21tsOm
-        M7UcDDF7dqpjmrUggsK4B+B0QCftF7I=
-X-Google-Smtp-Source: APXvYqxkBBeV+sOFokmdCZP2CDSAx0V0nD19CAdCVC7j4pR3eBuLY7Lea48ZWWIDWRXRlCloHKfCdQ==
-X-Received: by 2002:a17:90a:7d06:: with SMTP id g6mr18468316pjl.53.1570225417391;
-        Fri, 04 Oct 2019 14:43:37 -0700 (PDT)
+        bh=bAfMi4NSBoja5vxxnTEYMZ6gxDSssSgVHfIbff12mb4=;
+        b=rO1XfKyhG0081QFdzf3uTcpwbZb8JNIZVIZPD8fvl3WlCHz1JwVmiaLQ72ElxGOq31
+         kjDUzpGbs1wNlL7NFwWwhXgHicC9kg1SBc7fyD+9b7pGGDT/hvxphsz3688Iy1MbisYz
+         XfdDGHGMX90jci3EQ4Hrfxe87qQ2VohG97VoJhCuOOCwjz51V6JmCwpvxBSsdCxkaOzx
+         h+7mDT7A+GHrl6DdCDn3UM2Ysv5WYHkfhGhQpZXr6ynx3q8pVrimMGC/BmM1fVkWsRyZ
+         aq5r8RlFFgxz+GNTTTbqCgwtMUTBA+2wlAjKEW1Mo2QUn/HdY+R24Y1ucHUas9ltafaD
+         hIaA==
+X-Gm-Message-State: APjAAAWH0cJzhb2CXGIE9n35Puku5DBGSQKlCCvm8qS5DawK6ZWL7vxQ
+        7YsvmJWLqOUVrYjxN3hsGWMW871mOeQ=
+X-Google-Smtp-Source: APXvYqxihsu1cUaj4qIQSJ2iXk6r9CdGaCYQYuCvV6SJdCiuuuOPIC9sLcbvOHlmoausFB13h9lJTg==
+X-Received: by 2002:a17:902:5987:: with SMTP id p7mr17651026pli.242.1570225419271;
+        Fri, 04 Oct 2019 14:43:39 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a11sm10446799pfg.94.2019.10.04.14.43.36
+        by smtp.gmail.com with ESMTPSA id a11sm10446799pfg.94.2019.10.04.14.43.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 14:43:36 -0700 (PDT)
+        Fri, 04 Oct 2019 14:43:38 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
-        Riku Voipio <riku.voipio@iki.fi>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Subject: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
-Date:   Fri,  4 Oct 2019 14:43:25 -0700
-Message-Id: <20191004214334.149976-2-swboyd@chromium.org>
+        linux-rtc@vger.kernel.org
+Subject: [PATCH 03/10] rtc: armada38x: Use of_device_get_match_data()
+Date:   Fri,  4 Oct 2019 14:43:27 -0700
+Message-Id: <20191004214334.149976-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 In-Reply-To: <20191004214334.149976-1-swboyd@chromium.org>
 References: <20191004214334.149976-1-swboyd@chromium.org>
@@ -76,72 +79,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver can use the of_device_get_match_data() API to simplify the
-code. Replace calls to of_match_device() with this newer API under the
-assumption that where it is called will be when we know the device is
-backed by a DT node. This nicely avoids referencing the match table when
-it is undefined with configurations where CONFIG_OF=n.
+Use the more modern API to get the match data out of the of match table.
+This saves some code, lines, and nicely avoids referencing the match
+table when it is undefined with configurations where CONFIG_OF=n.
 
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Riku Voipio <riku.voipio@iki.fi>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: <linux-leds@vger.kernel.org>
+Cc: <linux-rtc@vger.kernel.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please ack or pick for immediate merge so the last patch can be merged.
 
- drivers/leds/leds-pca9532.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ drivers/rtc/rtc-armada38x.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index c7c7199e8ebd..7d515d5e57bd 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -467,16 +467,11 @@ pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+diff --git a/drivers/rtc/rtc-armada38x.c b/drivers/rtc/rtc-armada38x.c
+index 9351bd52477e..94d7c22fc4f3 100644
+--- a/drivers/rtc/rtc-armada38x.c
++++ b/drivers/rtc/rtc-armada38x.c
+@@ -74,7 +74,7 @@ struct armada38x_rtc {
+ 	int		    irq;
+ 	bool		    initialized;
+ 	struct value_to_freq *val_to_freq;
+-	struct armada38x_rtc_data *data;
++	const struct armada38x_rtc_data *data;
+ };
+ 
+ #define ALARM1	0
+@@ -501,17 +501,14 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
  {
- 	struct pca9532_platform_data *pdata;
- 	struct device_node *child;
+ 	struct resource *res;
+ 	struct armada38x_rtc *rtc;
 -	const struct of_device_id *match;
- 	int devid, maxleds;
- 	int i = 0;
- 	const char *state;
- 
--	match = of_match_device(of_pca9532_leds_match, dev);
--	if (!match)
--		return ERR_PTR(-ENODEV);
 -
--	devid = (int)(uintptr_t)match->data;
-+	devid = (int)(uintptr_t)of_device_get_match_data(dev);
- 	maxleds = pca9532_chip_info_tbl[devid].num_leds;
+-	match = of_match_device(armada38x_rtc_of_match_table, &pdev->dev);
+-	if (!match)
+-		return -ENODEV;
  
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-@@ -509,7 +504,6 @@ static int pca9532_probe(struct i2c_client *client,
- 	const struct i2c_device_id *id)
- {
- 	int devid;
--	const struct of_device_id *of_id;
- 	struct pca9532_data *data = i2c_get_clientdata(client);
- 	struct pca9532_platform_data *pca9532_pdata =
- 			dev_get_platdata(&client->dev);
-@@ -525,11 +519,7 @@ static int pca9532_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "no platform data\n");
- 			return -EINVAL;
- 		}
--		of_id = of_match_device(of_pca9532_leds_match,
--				&client->dev);
--		if (unlikely(!of_id))
--			return -EINVAL;
--		devid = (int)(uintptr_t) of_id->data;
-+		devid = (int)(uintptr_t)of_device_get_match_data(&client->dev);
- 	} else {
- 		devid = id->driver_data;
+ 	rtc = devm_kzalloc(&pdev->dev, sizeof(struct armada38x_rtc),
+ 			    GFP_KERNEL);
+ 	if (!rtc)
+ 		return -ENOMEM;
+ 
++	rtc->data = of_device_get_match_data(&pdev->dev);
++
+ 	rtc->val_to_freq = devm_kcalloc(&pdev->dev, SAMPLE_NR,
+ 				sizeof(struct value_to_freq), GFP_KERNEL);
+ 	if (!rtc->val_to_freq)
+@@ -553,7 +550,6 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
+ 		 */
+ 		rtc->rtc_dev->ops = &armada38x_rtc_ops_noirq;
  	}
+-	rtc->data = (struct armada38x_rtc_data *)match->data;
+ 
+ 	/* Update RTC-MBUS bridge timing parameters */
+ 	rtc->data->update_mbus_timing(rtc);
 -- 
 Sent by a computer through tubes
 
