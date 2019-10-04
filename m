@@ -2,218 +2,146 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6677CC32792
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0327C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3776520865
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DE120865
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 01:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="N5HJ/Pvv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUeAQwtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731724AbfJDBUF (ORCPT
+        id S1731915AbfJDBUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 21:20:05 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:33208 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729936AbfJDBUE (ORCPT
+        Thu, 3 Oct 2019 21:20:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35436 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729936AbfJDBU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 21:20:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1570152004; x=1601688004;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JJtoW7EbTMq3z+5/83sAIqWFB2c/7rptzmLUxfNEu+A=;
-  b=N5HJ/PvvpcJVISSLpP2vreZ8w7dmbcVEe74xbnPew2Bw5rleV1ibpNIP
-   Hib7gT923v5L5N0ibIxJdT+MThb5ZbtALMyFgNBpG/zybFqkn4NSEOWfi
-   X+/bTrO+wVTmy6OK94CXEvr3sgAB7ZVKzc5/FMrrnCLu5tH6e+gRlgB2c
-   QPwRptYw1J6nlW7++VW3Vp6Ac0E8e70A6pgCzfulEk0td0uo0fQA53MHa
-   sr1G7QKnBV3YZ0yqiyn1c6zQwKKusgxiepqw80GHQfax7lOIM9PRYy38b
-   WmWyuL57s0B7kLGS67Qyol+W/bTs9Uculms4oMNL2hjBHPqdYua4KMmqk
-   A==;
-IronPort-SDR: eWHQVVSliA3qucQ0Awkg7gMD0oZ2NXaq3YVm2lLVYPwa/bBlT8Noea+9ndXOLZo48hVlewei+M
- RiMWEAiOcsac5VtuGsiWr0jNqHNjG9HD8bqHkVJMcK7yfEc7sl2w1FePS+OGH+AWS667yjZyDR
- XCliczwecwOGu4g8gjqcy9sTHa5wu4Z7KePO+tv2wLSMzhRpWBGBSK9qmqfz3EG5sQ0rJf4wSE
- nZp8xiy94SsKBxaZ4k3Z7vo2aweiSOXDpj9zySOObxnQ/XoPL/MAQMnd4hdO5ReN/5Uto+YhHu
- 3i4=
-X-IronPort-AV: E=Sophos;i="5.67,254,1566835200"; 
-   d="scan'208";a="119765644"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Oct 2019 09:20:02 +0800
-IronPort-SDR: ub3lWJdsXbhq5JeiG/TkAR4sau+43H3G/B3f1HAlwm4cHrPuQwbZ94yssY6KX6hFNcubgNIBvJ
- 0Ifjd+syC2ETvUL0PwVzKTyQrVMf/+hTdA6pnNtpv8hVjY4zDNCEopzlsBWnMHXYsnnRnOrKlL
- WhpOsQzU2cN73Ld3rT02ezSazXndN58E9THewF4wRMX6FXKN96mFXT3Qa83ZPFGzqXypNAnOPi
- rguVY/qbEj5GPZkSHJK/t7bfQ51SagldzCqXpVFTKebqEKg20nZBqH3C404TlgT6LPyViNwTup
- ic2w/4diBPvqGvikAHuad5+9
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 18:16:11 -0700
-IronPort-SDR: u7A02DRehnzLmOmcpmq6YlaRr85A14SoW78LuIuz2ZMnPLX71NoDXU2MhZSFN9a4c5AdptRds/
- A71A4ILtiUrOQNQiGtRWu8PdN5+yGmW8BoadSqeO67X5Xiz4lmNIs4w4P7lDJ5+D2E06I2yFqq
- acM/NrAGFyQASXoRMIkvWPtOjulMpgDT8Iq729lqnp3fvSTtz7B/X1cXpTGX33yb9ldGPtCMvf
- UJnWi1cWmYzzsB+K+Ua5WQvYbVatVjtIWZEeOGgFMtb81XG8MdpQ7TBF8arAGEHi53zBFBPEsX
- caI=
-WDCIronportException: Internal
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 03 Oct 2019 18:20:03 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexandre Ghiti <aghiti@upmem.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anup Patel <anup@brainfault.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [v1 PATCH  2/2] RISC-V: Consolidate isa correctness check
-Date:   Thu,  3 Oct 2019 18:20:00 -0700
-Message-Id: <20191004012000.2661-3-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191004012000.2661-1-atish.patra@wdc.com>
-References: <20191004012000.2661-1-atish.patra@wdc.com>
+        Thu, 3 Oct 2019 21:20:29 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y21so4039337wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 18:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nLQZIvjSPOCDt9axSurKW5wDdt0lMEsivNiHJ4gB4oE=;
+        b=hUeAQwtxYMBXzOWe/RGhcbRRUYRoTG881YZnt9D7/PUlJ6t+FQ7eLM2cahuJDThvlq
+         hnSfrRwcrX1UxoFoXFkDoF0GMnBMhzhC1/weNm6puwjWemTCi9KfQy2HVjQ7wfGtph69
+         uSt7mq9kxN5ouoNFHFqrs9H/b4ovG8iQM7/MZTWvWQO8KK9ivgfPQ1T7wpkSMgCqMIg/
+         FFpoMxxg1BHHWmmScUrWj9mAoWMF8yMUs/GClejcv4g1RPymN8rt16i0NH+LLjupU0EZ
+         MH0b3dngxTx4GgO0x7Q4eUOIyX50abIy8ItfW9F6KSRK2qWMhvu8qN0HeU0itLAssVTc
+         S2eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nLQZIvjSPOCDt9axSurKW5wDdt0lMEsivNiHJ4gB4oE=;
+        b=i7jQHsYwrilZ2yRLvkOguef7VtouIUDaeAT3TeyVy9K7i1SRfsSKzfr022wOhbCuXN
+         K3TRx8ia4nzQ545yziEbAIzLLF/3H1uGrF4rwD/IfoosdBxkQB5UqdPVJPZaciF+TbYY
+         9inUPLu6ktM+c+DFy+PZwVSNYgx989plJZ9PA6Rli4vZr5FUqiGKXwKWzsvjS6kLslzG
+         cZXCGO60LPNzhGtV/ErDefKHZb8SOqteR6aigD3dZk3fDJYt7Y59BDxDtU43E5W9MgJo
+         SaNhrNGxe9Dpn8rs3WM5k6CFEEjnx+ImM3tErJr+zbLiRIScQDuUIOJXov07WSygROKR
+         YyPA==
+X-Gm-Message-State: APjAAAUbg2Qr4zbQN96FmlKeCMRJzCL6HDztrv8E8lELdVWG9/sq7GEl
+        //ylcHviPZzqgn2vn6HWvaekBCYs0w+FgA==
+X-Google-Smtp-Source: APXvYqxWsnGME6HWZr7DYi55om3vkGq7sNvq1bgPC3LfGaya+9JAAU1TdTDKNpkgF/RchH8xcsn6SQ==
+X-Received: by 2002:a05:600c:295d:: with SMTP id n29mr8373193wmd.36.1570152025588;
+        Thu, 03 Oct 2019 18:20:25 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id a4sm4097404wmm.10.2019.10.03.18.20.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 18:20:24 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [RESEND PATCH v3 0/9] hacking: make kconfig menu 'kernel hacking' better structurized
+Date:   Fri,  4 Oct 2019 09:20:01 +0800
+Message-Id: <20191004012010.11287-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, isa string is read and checked for correctness at multiple
-places.
+This series is a trivial improvment for the layout of 'kernel hacking'
+configuration menu. Now we have many items in it which makes takes
+a little time to look up them since they are not well structurized yet.
 
-Consolidate them into one function and use it only during early bootup.
-In case of a incorrect isa string, the cpu shouldn't boot at all.
+Early discussion is here:
+https://lkml.org/lkml/2019/9/1/39
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/processor.h |  1 +
- arch/riscv/kernel/cpu.c            | 40 ++++++++++++++++++++++--------
- arch/riscv/kernel/cpufeature.c     |  4 +--
- arch/riscv/kernel/smpboot.c        |  4 +++
- 4 files changed, 36 insertions(+), 13 deletions(-)
+This is a preview:
 
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index f539149d04c2..189bf98f9a3f 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -74,6 +74,7 @@ static inline void wait_for_interrupt(void)
- }
- 
- struct device_node;
-+int riscv_read_check_isa(struct device_node *node, const char **isa);
- int riscv_of_processor_hartid(struct device_node *node);
- 
- extern void riscv_fill_hwcap(void);
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 40a3c442ac5f..95ef5c91823d 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -8,13 +8,42 @@
- #include <linux/of.h>
- #include <asm/smp.h>
- 
-+int riscv_read_check_isa(struct device_node *node, const char **isa)
-+{
-+	u32 hart;
-+
-+	if (of_property_read_u32(node, "reg", &hart)) {
-+		pr_warn("Found CPU without hart ID\n");
-+		return -ENODEV;
-+	}
-+
-+	if (of_property_read_string(node, "riscv,isa", isa)) {
-+		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n",
-+			hart);
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Linux doesn't support rv32e or rv128i, and we only support booting
-+	 * kernels on harts with the same ISA that the kernel is compiled for.
-+	 */
-+#if defined(CONFIG_32BIT)
-+	if (strncmp(*isa, "rv32i", 5) != 0)
-+		return -ENODEV;
-+#elif defined(CONFIG_64BIT)
-+	if (strncmp(*isa, "rv64i", 5) != 0)
-+		return -ENODEV;
-+#endif
-+
-+	return 0;
-+}
-+
- /*
-  * Returns the hart ID of the given device tree node, or -ENODEV if the node
-  * isn't an enabled and valid RISC-V hart node.
-  */
- int riscv_of_processor_hartid(struct device_node *node)
- {
--	const char *isa;
- 	u32 hart;
- 
- 	if (!of_device_is_compatible(node, "riscv")) {
-@@ -32,15 +61,6 @@ int riscv_of_processor_hartid(struct device_node *node)
- 		return -ENODEV;
- 	}
- 
--	if (of_property_read_string(node, "riscv,isa", &isa)) {
--		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n", hart);
--		return -ENODEV;
--	}
--	if (isa[0] != 'r' || isa[1] != 'v') {
--		pr_warn("CPU with hartid=%d has an invalid ISA of \"%s\"\n", hart, isa);
--		return -ENODEV;
--	}
--
- 	return hart;
- }
- 
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index b1ade9a49347..eaad5aa07403 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -38,10 +38,8 @@ void riscv_fill_hwcap(void)
- 		if (riscv_of_processor_hartid(node) < 0)
- 			continue;
- 
--		if (of_property_read_string(node, "riscv,isa", &isa)) {
--			pr_warn("Unable to find \"riscv,isa\" devicetree entry\n");
-+		if (riscv_read_check_isa(node, &isa) < 0)
- 			continue;
--		}
- 
- 		for (i = 0; i < strlen(isa); ++i)
- 			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index 18ae6da5115e..15ee71297abf 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -60,12 +60,16 @@ void __init setup_smp(void)
- 	int hart;
- 	bool found_boot_cpu = false;
- 	int cpuid = 1;
-+	const char *isa;
- 
- 	for_each_of_cpu_node(dn) {
- 		hart = riscv_of_processor_hartid(dn);
- 		if (hart < 0)
- 			continue;
- 
-+		if (riscv_read_check_isa(dn, &isa) < 0)
-+			continue;
-+
- 		if (hart == cpuid_to_hartid_map(0)) {
- 			BUG_ON(found_boot_cpu);
- 			found_boot_cpu = 1;
+  │ ┌─────────────────────────────────────────────────────────────────────────┐ │  
+  │ │        printk and dmesg options  --->                                   │ │  
+  │ │        Compile-time checks and compiler options  --->                   │ │  
+  │ │        Generic Kernel Debugging Instruments  --->                       │ │  
+  │ │    -*- Kernel debugging                                                 │ │  
+  │ │    [*]   Miscellaneous debug code                                       │ │  
+  │ │        Memory Debugging  --->                                           │ │  
+  │ │    [ ] Debug shared IRQ handlers                                        │ │  
+  │ │        Debug Oops, Lockups and Hangs  --->                              │ │  
+  │ │        Scheduler Debugging  --->                                        │ │  
+  │ │    [*] Enable extra timekeeping sanity checking                         │ │  
+  │ │        Lock Debugging (spinlocks, mutexes, etc...)  --->                │ │  
+  │ │    -*- Stack backtrace support                                          │ │  
+  │ │    [ ] Warn for all uses of unseeded randomness                         │ │  
+  │ │    [ ] kobject debugging                                                │ │  
+  │ │        Debug kernel data structures  --->                               │ │  
+  │ │    [ ] Debug credential management                                      │ │  
+  │ │        RCU Debugging  --->                                              │ │  
+  │ │    [ ] Force round-robin CPU selection for unbound work items           │ │  
+  │ │    [ ] Force extended block device numbers and spread them              │ │  
+  │ │    [ ] Enable CPU hotplug state control                                 │ │  
+  │ │    [*] Latency measuring infrastructure                                 │ │  
+  │ │    [*] Tracers  --->                                                    │ │  
+  │ │    [ ] Remote debugging over FireWire early on boot                     │ │  
+  │ │    [*] Sample kernel code  --->                                         │ │  
+  │ │    [*] Filter access to /dev/mem                                        │ │  
+  │ │    [ ]   Filter I/O access to /dev/mem                                  │ │  
+  │ │    [ ] Additional debug code for syzbot                                 │ │  
+  │ │        x86 Debugging  --->                                              │ │  
+  │ │        Kernel Testing and Coverage  --->                                │ │  
+  │ │                                                                         │ │  
+  │ │                                                                         │ │  
+  │ └─────────────────────────────────────────────────────────────────────────┘ │  
+  ├─────────────────────────────────────────────────────────────────────────────┤  
+  │          <Select>    < Exit >    < Help >    < Save >    < Load >           │  
+  └─────────────────────────────────────────────────────────────────────────────┘ 
+
+v3:
+  o change subject prefix.
+v2:
+  o rebase to linux-next.
+  o move DEBUG_FS to 'Generic Kernel Debugging Instruments'
+  o move DEBUG_NOTIFIERS to 'Debug kernel data structures'
+
+Changbin Du (9):
+  hacking: Group sysrq/kgdb/ubsan into 'Generic Kernel Debugging
+    Instruments'
+  hacking: Create submenu for arch special debugging options
+  hacking: Group kernel data structures debugging together
+  hacking: Move kernel testing and coverage options to same submenu
+  hacking: Move Oops into 'Lockups and Hangs'
+  hacking: Move SCHED_STACK_END_CHECK after DEBUG_STACK_USAGE
+  hacking: Create a submenu for scheduler debugging options
+  hacking: Move DEBUG_BUGVERBOSE to 'printk and dmesg options'
+  hacking: Move DEBUG_FS to 'Generic Kernel Debugging Instruments'
+
+ lib/Kconfig.debug | 663 ++++++++++++++++++++++++----------------------
+ 1 file changed, 342 insertions(+), 321 deletions(-)
+
 -- 
-2.21.0
+2.20.1
 
