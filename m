@@ -2,187 +2,117 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B372C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE64C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C7720867
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="CKx2nl8m"
+	by mail.kernel.org (Postfix) with ESMTP id 9113C215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387605AbfJDJP4 (ORCPT
+        id S1731322AbfJDJQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:15:56 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34770 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730179AbfJDJPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:15:52 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r22so3978067lfm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 02:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Us1lDU91ARlIyktnavIDRL8lb/sm12kQiQVA+0Ejvg=;
-        b=CKx2nl8mv09gh5ixysIItMN9ZN4Qj/4UWeO1V0Qbj2U6oKrDgc2Too9NWRvTWOP00Q
-         UwNvPh29o52J6B4Rhu8iJn5Esmj/2k//OXgsLn/j7ur/t1N3uqWtco6/CKJrEOthzl+b
-         cLkj2pGGKqcRuf8ftqe7RGtKZ4NsFRTkLsuV8=
+        Fri, 4 Oct 2019 05:16:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59866 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730179AbfJDJQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:16:10 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2279619D335
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 09:16:10 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id z1so2407348wrw.21
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 02:16:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Us1lDU91ARlIyktnavIDRL8lb/sm12kQiQVA+0Ejvg=;
-        b=aQ9MLgsfPOeHajd0AEL0K5n1TlU6BX0H3j8r4PUB32LknZ3iR2M5MQxjXT+Ng56FZP
-         jELgiCrGf7YiURyp7uLC71xFYcgTk5dQbuUdMPQaWnsvgm1Y1W92Ktvqtq/5xrEl7DpX
-         V8SnFxnsG4k11b7FMnWMrpmLGzCkDkzcCYTNpPY76CRNBqKMv94wk3Qr2lsilzKs+0Zh
-         syIQsIbZiQiLqdW7wtWe/YzR9pikSPmWW0ut2jtxEW5QBoAGrK+rjkjMNUKzpHWVZveR
-         kkPHbVniwMMvoyS9gyVrIQyqviOg+0MbMKRJlcNtZUFIBH2QgKvFEkmuDY5nnregceSB
-         JLuA==
-X-Gm-Message-State: APjAAAWJB07+ZjlYJJE7KYbACsf+/tj7iyfljHLvE45spI+jWJs6XbF9
-        K1PZm61xZaD7x4EV44uMPYvgkNychnVOzKdh
-X-Google-Smtp-Source: APXvYqx1YjgDQmgOaABKRDpDy+Ve/6T1gPykFB8TapFBVDjVxcp2BwKGTdjsjLXCFgy4RpZ1SGKRGw==
-X-Received: by 2002:a19:644c:: with SMTP id b12mr8292937lfj.104.1570180548539;
-        Fri, 04 Oct 2019 02:15:48 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id p27sm1066187lfo.95.2019.10.04.02.15.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Oct 2019 02:15:48 -0700 (PDT)
-Subject: Re: [PATCH v3] docs: Use make invocation's -j argument for
- parallelism
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <201909241627.CEA19509@keescook>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <eb25959a-9ec4-3530-2031-d9d716b40b20@rasmusvillemoes.dk>
-Date:   Fri, 4 Oct 2019 11:15:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hhPEpgLhkjexE7wGXfmiyqeRzNcW/U3S79ip8ewXhIg=;
+        b=lSfI3CFHUqE09oGBAvvfmgnhc1EmU5IB+D//P63BTMY2JMKotTEMTpywV5QNDieNgY
+         Nyya6IbX19U0MKGoAHcu5g3QnRynu/3kHRcekNo2mKtZG7QFglp7ahXUIYGhWWXfNc1w
+         SrEE8fvGg5mzTCeAQjm83RlWlqyXoaPB9geEAo+w1JPM6QjWr0nNPPDXw91x4b7NjIhd
+         frCEVWXhCPjMic7oucqfYZCnz5BbdW90WBRoWS4RB6V5tAItExrjFblM/9G1IkCOp6PP
+         f9CIUzILob9zWhOqDUz3zky5PfwSN4HHEouXqNTrUYrUXjCzdbrqwm/HeoUD9M1fkAtq
+         UH/A==
+X-Gm-Message-State: APjAAAX3fQ9ZIySHpvFFT4Y60UI9Na8UH7iIexYVsWOnpywhSXyPdCAD
+        ++aWb1765osKkYAWNw2plzopD777CNdHF622ZLmjgwWKCFFRg0UDmBjuQ3pIEe8RDDEhy/TROhd
+        L76RBzNtfKUmuEfM4WoHWA2Co
+X-Received: by 2002:a1c:9d15:: with SMTP id g21mr10287386wme.96.1570180568813;
+        Fri, 04 Oct 2019 02:16:08 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwYyFXc0psA9cM79xGyuf3QCE7kgh2CziA2e0KZxOqK4U+Rh82+kx6tnfpcYC/+KSgegIYtMA==
+X-Received: by 2002:a1c:9d15:: with SMTP id g21mr10287358wme.96.1570180568530;
+        Fri, 04 Oct 2019 02:16:08 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id q192sm7660110wme.23.2019.10.04.02.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 02:16:07 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 11:16:05 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 00/13] vsock: add multi-transports support
+Message-ID: <20191004091605.ayed7iqjhurzrdap@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <PU1P153MB0169970A7DD4383F06CDAB60BF9E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <201909241627.CEA19509@keescook>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB0169970A7DD4383F06CDAB60BF9E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/09/2019 01.29, Kees Cook wrote:
->  
->  # User-friendly check for pdflatex and latexmk
->  HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
-> @@ -68,6 +68,7 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
->  	PYTHONDONTWRITEBYTECODE=1 \
->  	BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
->  	$(SPHINXBUILD) \
-> +	-j $(shell python $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \
->  	-b $2 \
->  	-c $(abspath $(srctree)/$(src)) \
->  	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
-> diff --git a/scripts/jobserver-count b/scripts/jobserver-count
-> new file mode 100755
-> index 000000000000..0b482d6884d2
-> --- /dev/null
-> +++ b/scripts/jobserver-count
-> @@ -0,0 +1,58 @@
-> +#!/usr/bin/env python
-> +# SPDX-License-Identifier: GPL-2.0+
-> +#
-> +# This determines how many parallel tasks "make" is expecting, as it is
-> +# not exposed via an special variables.
-> +# https://www.gnu.org/software/make/manual/html_node/POSIX-Jobserver.html#POSIX-Jobserver
-> +from __future__ import print_function
-> +import os, sys, fcntl, errno
-> +
-> +# Default parallelism is "1" unless overridden on the command-line.
-> +default="1"
-> +if len(sys.argv) > 1:
-> +	default=sys.argv[1]
-> +
-> +# Set non-blocking for a given file descriptor.
-> +def nonblock(fd):
-> +	flags = fcntl.fcntl(fd, fcntl.F_GETFL)
-> +	fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
-> +	return fd
-> +
-> +# Extract and prepare jobserver file descriptors from envirnoment.
-> +try:
-> +	# Fetch the make environment options.
-> +	flags = os.environ['MAKEFLAGS']
-> +
-> +	# Look for "--jobserver=R,W"
-> +	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
+On Fri, Oct 04, 2019 at 12:04:46AM +0000, Dexuan Cui wrote:
+> > From: Stefano Garzarella <sgarzare@redhat.com>
+> > Sent: Friday, September 27, 2019 4:27 AM
+> >  ...
+> > Patch 9 changes the hvs_remote_addr_init(). setting the
+> > VMADDR_CID_HOST as remote CID instead of VMADDR_CID_ANY to make
+> > the choice of transport to be used work properly.
+> > @Dexuan Could this change break anything?
+> 
+> This patch looks good to me.
+> 
 
-OK, this handles the fact that Make changed from --jobserver-fds to
---jobserver-auth at some point. Probably the comment could be more accurate.
+Thank you very much for your reviews!
 
-> +	# Parse out R,W file descriptor numbers and set them nonblocking.
-> +	fds = opts[0].split("=", 1)[1]
-> +	reader, writer = [int(x) for x in fds.split(",", 1)]
-> +	reader = nonblock(reader)
-> +except (KeyError, IndexError, ValueError, IOError):
-> +	# Any missing environment strings or bad fds should result in just
-> +	# using the default specified parallelism.
-> +	print(default)
-> +	sys.exit(0)
-> +
-> +# Read out as many jobserver slots as possible.
-> +jobs = b""
-> +while True:
-> +	try:
-> +		slot = os.read(reader, 1)
-> +		jobs += slot
-> +	except (OSError, IOError) as e:
-> +		if e.errno == errno.EWOULDBLOCK:
-> +			# Stop when reach the end of the jobserver queue.
-> +			break
-> +		raise e
+> > @Dexuan please can you test on HyperV that I didn't break anything
+> > even without nested VMs?
+> 
+> I did some quick tests with the 13 patches in a Linux VM (this is not
+> a nested VM) on Hyper-V and it looks nothing is broken. :-)
+> 
 
-<strikethrough>Only very new Make (e.g. not make 4.1 shipped with Ubuntu
-18.04) sets the rfd as O_NONBLOCK (and only when it detected
-HAVE_PSELECT at configure time, but that can probably be assumed). So
-won't the above just hang forever if run under such a make?</strikethrough>
+Great :-)
 
-Ah, reading more carefully you set O_NONBLOCK explicitly. Well, older
-Makes are going to be very unhappy about that (remember that it's a
-property of the file description and not file descriptor). They don't
-expect EAGAIN when fetching a token, so fail hard. Probably not when
-htmldocs is the only target, because in that case the toplevel Make just
-reads back the exact number of tokens it put in as a sanity check, but
-if it builds other targets/spawns other submakes, I think this breaks.
+> > I'll try to setup a Windows host where to test the nested VMs
+> 
+> I suppose you're going to run a Linux VM on a Hyper-V host,
+> and the Linux VM itself runs KVM/VmWare so it can create its own child 
+> VMs. IMO this is similar to the test "nested KVM ( ..., virtio-transport[L1,L2]"
+> you have done.
 
-Yeah, it's a mess, and the Make documentation should be much more
-explicit about how one is supposed to interact with the job server and
-the file descriptors. Some of the pain would vanish if it just used a
-named pipe and had each client open its own fds to that so they could
-each choose O_NONBLOCK or not.
+Yes, I think so. If the Hyper-V transport works well without nested VM,
+it should work the same with a nested KVM/VMware.
 
-> +# Return all the reserved slots.
-> +os.write(writer, jobs)
-
-Well, that probably works ok for the isolated case of a toplevel "make
--j12 htmldocs", but if you're building other targets ("make -j12
-htmldocs vmlinux") this will effectively inject however many tokens the
-above loop grabbed (which might not be all if the top-level make has
-started things related to the vmlinux target), so for the duration of
-the docs build, there will be more processes running than asked for.
-
-> +# If the jobserver was (impossibly) full or communication failed, use default.
-> +if len(jobs) < 1:
-> +	print(default)
-> +
-> +# Report available slots (with a bump for our caller's reserveration).
-> +print(len(jobs) + 1)
-
-There's a missing exit() or else: here; if len(jobs) < 1 you print both
-default (probably "1") and 0+1 aka "1".
-
-Rasmus
+Thanks,
+Stefano
