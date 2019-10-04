@@ -2,118 +2,87 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E709C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4ACC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4E4215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B7A215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 19:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mLsT1CQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfJDT2G (ORCPT
+        id S1730746AbfJDT2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 15:28:06 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3677 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfJDT2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 15:28:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 12:28:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,257,1566889200"; 
-   d="scan'208";a="222253171"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga002.fm.intel.com with SMTP; 04 Oct 2019 12:28:02 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 04 Oct 2019 22:28:02 +0300
-Date:   Fri, 4 Oct 2019 22:28:02 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Eric Engestrom <eric.engestrom@intel.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Maxime Ripard <mripard@kernel.org>, kernel@collabora.com,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH] drm: Fix comment doc for format_modifiers
-Message-ID: <20191004192801.GJ1208@intel.com>
-References: <20191002183011.GA29177@ravnborg.org>
- <20191003075118.6257-1-andrzej.p@collabora.com>
- <20191003135318.GH1208@intel.com>
- <20191004190826.x26gb5wnurmwobej@intel.com>
+        Fri, 4 Oct 2019 15:28:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35846 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJDT2M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 15:28:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7FrKM8lwwq9BP68RfAzbEbu9ZbuQwm+28FVR9aIuo9k=; b=mLsT1CQPB6s297SOjc6whQlHh
+        7OQtfOT/7cA/t+dU8xiYVhYyHjt1oahqDByGmLf+dVbEXOy8b432BO4dERJl/TZOptiJc8C/IqfAv
+        CQ7oSGBik8lmRWnpZFqBHcpl/CypQTAlqsoPWcyjWzq/usEfouGHNgUHr2x3wQcWpxxapFEnpj63d
+        ZMKIUQ6ziTf5UPc9N1CYQuWI55zudMMEo7tkr9wTfCat1r9pkGDz50sUyJDg20HwMCHQ7q2OJMGEa
+        qXZ4wq1o4eVTqxBzMVw3s7MBpnGs2IgUAUdyj+uCExBlOQhqB7bKH8riky78QzO8yAIpCDi5QWoT/
+        ElZOX2C5g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGTFM-0003sN-Cm; Fri, 04 Oct 2019 19:28:12 +0000
+Date:   Fri, 4 Oct 2019 12:28:12 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/15] fs: Introduce i_blocks_per_page
+Message-ID: <20191004192812.GK32665@bombadil.infradead.org>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-3-willy@infradead.org>
+ <20190925083650.GE804@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191004190826.x26gb5wnurmwobej@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190925083650.GE804@dread.disaster.area>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 08:08:26PM +0100, Eric Engestrom wrote:
-> On Thursday, 2019-10-03 16:53:18 +0300, Ville Syrjälä wrote:
-> > On Thu, Oct 03, 2019 at 09:51:18AM +0200, Andrzej Pietrasiewicz wrote:
-> > > To human readers
-> > 
-> > The commit message is always for human readers, no need to point that
-> > out...
-> > 
-> > > 
-> > > "array of struct drm_format modifiers" is almost indistinguishable from
-> > > "array of struct drm_format_modifiers", especially given that
-> > > struct drm_format_modifier does exist.
-> > 
-> > ..but this paragraph still manages to 100% confuse this particular human.
-> 
-> There's an underscore instead of a space on the second line
-> (s/drm_format modifiers/drm_format_modifiers/).
+On Wed, Sep 25, 2019 at 06:36:50PM +1000, Dave Chinner wrote:
+> I'm actually working on abstrcting this code from both block size
+> and page size via the helpers below. We ahve need to support block
+> size > page size, and so that requires touching a bunch of all the
+> same code as this patchset. I'm currently trying to combine your
+> last patch set with my patchset so I can easily test allocating 64k
+> page cache pages on a 64k block size filesystem on a 4k page size
+> machine with XFS....
 
-OK, so I guess I really am blind.
+This all makes sense ...
 
+> > -	if (iop || i_blocksize(inode) == PAGE_SIZE)
+> > +	if (iop || i_blocks_per_page(inode, page) <= 1)
+> >  		return iop;
 > 
-> It should definitely be reworded to be much clearer.
+> That also means checks like these become:
 > 
-> > 
-> > The actual code changes lgtm, so with the commit message reworded
-> > this patch is
-> > Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > 
-> > > 
-> > > And indeed the parameter passes an array of uint64_t rather than an array
-> > > of structs, but the first words of the comment suggest that it passes
-> > > 
-> > > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_plane.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-> > > index d6ad60ab0d38..0d4f9172c0dd 100644
-> > > --- a/drivers/gpu/drm/drm_plane.c
-> > > +++ b/drivers/gpu/drm/drm_plane.c
-> > > @@ -160,7 +160,7 @@ static int create_in_format_blob(struct drm_device *dev, struct drm_plane *plane
-> > >   * @funcs: callbacks for the new plane
-> > >   * @formats: array of supported formats (DRM_FORMAT\_\*)
-> > >   * @format_count: number of elements in @formats
-> > > - * @format_modifiers: array of struct drm_format modifiers terminated by
-> > > + * @format_modifiers: array of format modifiers terminated by
-> > >   *                    DRM_FORMAT_MOD_INVALID
-> > >   * @type: type of plane (overlay, primary, cursor)
-> > >   * @name: printf style format string for the plane name, or NULL for default name
-> > > -- 
-> > > 2.17.1
-> > > 
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
+> 	if (iop || iomap_chunks_per_page(inode, page) <= 1)
+> 
+> as a single file can now have multiple pages per block, a page per
+> block and multiple blocks per page as the page size changes...
+> 
+> I'd like to only have to make one pass over this code to abstract
+> out page and block sizes, so I'm guessing we'll need to do some
+> co-ordination here....
 
--- 
-Ville Syrjälä
-Intel
+Yup.  I'm happy if you want to send your patches out; I'll keep going
+with the patches I have for the moment, and we'll figure out how to
+merge the two series in a way that makes sense.
+
