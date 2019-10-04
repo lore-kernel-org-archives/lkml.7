@@ -2,125 +2,168 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ACBC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEDDECE58B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C0C222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA93C222C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:10:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uh8tbv6F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oPja2LZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731606AbfJDXKj (ORCPT
+        id S1731644AbfJDXKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:10:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46790 "EHLO
+        Fri, 4 Oct 2019 19:10:45 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45602 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731515AbfJDXK3 (ORCPT
+        with ESMTP id S1731515AbfJDXKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:10:29 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q24so3789484plr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:10:28 -0700 (PDT)
+        Fri, 4 Oct 2019 19:10:43 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u12so3795762pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 16:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sTz6nyg/advJIHntHVaaSCimDTaVYqsOmP4OveuoExU=;
-        b=uh8tbv6FBWgRU1Hs/xPQuSapOx08gQpOnktegtniodTDgIT1ZHHTEZLiwQQXp8D13I
-         nj3IyAudwNlXUbyO4DaVwIHdYXNpjxppQNEUzp5N19GYNfInN1rE0+nzqmgOCfL1a40u
-         zWgjtPobEP3zE3qzgHtizQ383fQIl3IaHVsbKSNVoA/qpxx1C7TuzgRGdE7G0oZ9OncV
-         VMQa98fm1HhHpwNeY5DEzgv3QSSMRfFl7i6pj+sIEXLCF3moVLqn6Lhr8ArR1d/2DpoC
-         hyjOl8aG+mfOaZYz2jEyYhAEVBBYG7avDPKp7mGq0WvdDrtpqJ55447QdCooeC/D+89A
-         MWjA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tysgl1R46fdU3OksVKZHpW9zLqbqvPnl2oWqc0PQOqg=;
+        b=oPja2LZ+ZjzWwIIgczPMTwtg+FNGcSbm7xxAV/JCINpx/yp1vQ08IQzQiHGs4wRyly
+         YbCXc4ZHHHV54r6XkfIGN2kCtHFVjwM+le57/4du+XEYDcy5wbcSN0nM+dJDI0b12LcX
+         ZikwBUxxg3PiGd3obfKj/XNiIWOlooyLyOV9DjUwS3qE50KzPo9cDH1z7dSJIljdr/Z7
+         tZQByU/xEELr2sdcAOpmxavLs2sFF6O48uaUgeMrxepiwS44UUpA/LYAKV5RslwaYo6g
+         n/2r9eiMcS73JaD7vmFn8z6h6xmtSUZ7znleGhm4+7S7T8FLqi/xStUsiRfiN3NRdDY9
+         6J6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sTz6nyg/advJIHntHVaaSCimDTaVYqsOmP4OveuoExU=;
-        b=Vy8UbYlf0p+moVX5XfLpiH890M//cfLgbYHVkMVgrbWExOS833fu84G0VkQhBGeVlb
-         eA9mdt9zBuHvJGNf95mB5b3NuwbfOjRReuyvrXqc1nmcre9cLRqBYw95xR51QpE1ztuo
-         CbFKL2DLfQbQD6DF5WeAS+0wySRSTDBQkQq7XJg74OM7QC3f1YKJSg1kJH+cqaLBD1rZ
-         ESJ3fOxH87GEXYNWxQ3pK12KEOzU+MoOtdLNQJJ3w45ELznuQkcLj9YJXmxqonHMU07M
-         u15LkCZXB7k+1IBsbEayYclIIt4fQYkYMy5JErrxb3klQoViBwxv6XSTno5gtJa+HBff
-         YQJw==
-X-Gm-Message-State: APjAAAUdMlpku7eCiAaifq8yzCbqDuVVuxg8n25bRXs6EeKxbEYJJ8dY
-        Ue506+3LzDi6CXqP8HPiVtGXcDkf
-X-Google-Smtp-Source: APXvYqw7LJ2rTn96J12AST+hg2ekZuCE8wKMpn1PCkkdk45zOOE1at6c2qRqvW0cjDasyM4swa42dw==
-X-Received: by 2002:a17:902:bd48:: with SMTP id b8mr17794742plx.19.1570230628432;
-        Fri, 04 Oct 2019 16:10:28 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o9sm7406542pfp.67.2019.10.04.16.10.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 16:10:27 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH 6/7] regulator: tps65132: switch to using devm_fwnode_gpiod_get()
-Date:   Fri,  4 Oct 2019 16:10:16 -0700
-Message-Id: <20191004231017.130290-7-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-In-Reply-To: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
-References: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tysgl1R46fdU3OksVKZHpW9zLqbqvPnl2oWqc0PQOqg=;
+        b=AxftxbuR+rzZt6xxFjf8T7fnpQWlWOKioUlfbS3Ri5glkEKZIr73y+17JSMV0KxAzE
+         ep6xlN3jxx96vmfel3+XOAnpzswuY7EMyGUNW4KnsIAoUznHe3AHztwp0bziGb22TVgZ
+         J3KThVyYl2DjZSGZcXF9kSaDFEqwFDPWSJqzOvkV+ZjSWqKyDO3XZf4VE8sWlJHijQV+
+         MSHBMzsu6CBOHsrnjRXbrFQ0mWk3k0UHDnb72gOMAYZQ7rEmOmyHY3XSv9Q7ZdBzvsmA
+         3IYqBRJQ+zJ0N6HiK21dYSFc8EA3zbjlt+x4L3mPuRt2IK5gknyToVxypQxsvTNv8Cgd
+         Ls6Q==
+X-Gm-Message-State: APjAAAXj7GA8uqYQ2Tuh0zxrxqxvGj+7C8CXU+lzahtkGKXbX9KA6E19
+        vsCRGurAKrgTPeIrLYW7Vjzm9TEraMIdYlHA4RSZ/A==
+X-Google-Smtp-Source: APXvYqy2qn5i4A0WcBwjew4hCMmMwzQqLgVpE7PF0Xq4XlJnxlfT1jMDjTbCtnSFUQdVesOmn5ze08RzDHkU7ftVGYQ=
+X-Received: by 2002:a17:902:ff0e:: with SMTP id f14mr18021468plj.325.1570230641399;
+ Fri, 04 Oct 2019 16:10:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu> <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+In-Reply-To: <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 4 Oct 2019 16:10:30 -0700
+Message-ID: <CAFd5g46pzu=Bh5X7-ttfhTP+NYNDCAxN16OCGFxc5ohjTL-v0g@mail.gmail.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     shuah <shuah@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_fwnode_get_index_gpiod_from_child() is going away as the name is
-too unwieldy, let's switch to using the new devm_fwnode_gpiod_get().
+On Fri, Oct 4, 2019 at 3:47 PM shuah <shuah@kernel.org> wrote:
+>
+> On 10/4/19 4:27 PM, Brendan Higgins wrote:
+> > On Fri, Oct 04, 2019 at 03:59:10PM -0600, shuah wrote:
+> >> On 10/4/19 3:42 PM, Linus Torvalds wrote:
+> >>> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >>>>
+> >>>> This question is primarily directed at Shuah and Linus....
+> >>>>
+> >>>> What's the current status of the kunit series now that Brendan has
+> >>>> moved it out of the top-level kunit directory as Linus has requested?
+> >>>
+> >>
+> >> The move happened smack in the middle of merge window and landed in
+> >> linux-next towards the end of the merge window.
+> >>
+> >>> We seemed to decide to just wait for 5.5, but there is nothing that
+> >>> looks to block that. And I encouraged Shuah to find more kunit cases
+> >>> for when it _does_ get merged.
+> >>>
+> >>
+> >> Right. I communicated that to Brendan that we could work on adding more
+> >> kunit based tests which would help get more mileage on the kunit.
+> >>
+> >>> So if the kunit branch is stable, and people want to start using it
+> >>> for their unit tests, then I think that would be a good idea, and then
+> >>> during the 5.5 merge window we'll not just get the infrastructure,
+> >>> we'll get a few more users too and not just examples.
+> >
+> > I was planning on holding off on accepting more tests/changes until
+> > KUnit is in torvalds/master. As much as I would like to go around
+> > promoting it, I don't really want to promote too much complexity in a
+> > non-upstream branch before getting it upstream because I don't want to
+> > risk adding something that might cause it to get rejected again.
+> >
+> > To be clear, I can understand from your perspective why getting more
+> > tests/usage before accepting it is a good thing. The more people that
+> > play around with it, the more likely that someone will find an issue
+> > with it, and more likely that what is accepted into torvalds/master is
+> > of high quality.
+> >
+> > However, if I encourage arbitrary tests/improvements into my KUnit
+> > branch, it further diverges away from torvalds/master, and is more
+> > likely that there will be a merge conflict or issue that is not related
+> > to the core KUnit changes that will cause the whole thing to be
+> > rejected again in v5.5.
+> >
+>
+> The idea is that the new development will happen based on kunit in
+> linux-kselftest next. It will work just fine. As we accepts patches,
+> they will go on top of kunit that is in linux-next now.
 
-Note that we no longer need to check for NULL as devm_fwnode_gpiod_get()
-will return -ENOENT if GPIO is missing.
+But then wouldn't we want to limit what KUnit changes are going into
+linux-kselftest next for v5.5? For example, we probably don't want to
+do anymore feature development on it until it is in v5.5, since the
+goal is to make it more stable, right?
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
-
- drivers/regulator/tps65132-regulator.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/regulator/tps65132-regulator.c b/drivers/regulator/tps65132-regulator.c
-index e302bd01a084..7b0e38f8d627 100644
---- a/drivers/regulator/tps65132-regulator.c
-+++ b/drivers/regulator/tps65132-regulator.c
-@@ -136,9 +136,10 @@ static int tps65132_of_parse_cb(struct device_node *np,
- 	struct tps65132_reg_pdata *rpdata = &tps->reg_pdata[desc->id];
- 	int ret;
- 
--	rpdata->en_gpiod = devm_fwnode_get_index_gpiod_from_child(tps->dev,
--					"enable", 0, &np->fwnode, 0, "enable");
--	if (IS_ERR_OR_NULL(rpdata->en_gpiod)) {
-+	rpdata->en_gpiod = devm_fwnode_gpiod_get(tps->dev, of_fwnode_handle(np),
-+						 "enable", GPIOD_ASIS,
-+						 "enable");
-+	if (IS_ERR(rpdata->en_gpiod)) {
- 		ret = PTR_ERR(rpdata->en_gpiod);
- 
- 		/* Ignore the error other than probe defer */
-@@ -147,10 +148,12 @@ static int tps65132_of_parse_cb(struct device_node *np,
- 		return 0;
- 	}
- 
--	rpdata->act_dis_gpiod = devm_fwnode_get_index_gpiod_from_child(
--					tps->dev, "active-discharge", 0,
--					&np->fwnode, 0, "active-discharge");
--	if (IS_ERR_OR_NULL(rpdata->act_dis_gpiod)) {
-+	rpdata->act_dis_gpiod = devm_fwnode_gpiod_get(tps->dev,
-+						      of_fwnode_handle(np),
-+						      "active-discharge",
-+						      GPIOD_ASIS,
-+						      "active-discharge");
-+	if (IS_ERR(rpdata->act_dis_gpiod)) {
- 		ret = PTR_ERR(rpdata->act_dis_gpiod);
- 
- 		/* Ignore the error other than probe defer */
--- 
-2.23.0.581.g78d2f28ef7-goog
-
+I am guessing that it will probably be fine, but it still sounds like
+we need to establish some ground rules, and play it *very* safe.
