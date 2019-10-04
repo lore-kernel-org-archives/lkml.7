@@ -2,98 +2,233 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0898FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06ED215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D4D215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 05:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570166709;
+	bh=6FUTl2wd4LpbSLZQyMIKxmp2L+pBEdUGKIyHdoMmuAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M+YZPKs6ZpZ7VvB9B0Fi53gRAIuZ8QgRM7l4A48cYfzCSQNS3WWfsDwxb4mK7d5kU
+	 uZHlPRtIaIohZomyx0dRhkeE8BJ6dy7xJTBbqKWfodEGpPZlTtL8MU/Vt8kK+RQQkD
+	 cnh37ioWnD7fSB9gGAavJghVUXRQY0jgViM5quIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbfJDFR4 (ORCPT
+        id S1731352AbfJDFZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 01:17:56 -0400
-Received: from pindarots.xs4all.nl ([82.161.210.87]:37294 "EHLO
-        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729363AbfJDFRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 01:17:55 -0400
-Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
-        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id x944vtK9004569
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO)
-        for <linux-kernel@vger.kernel.org>; Fri, 4 Oct 2019 06:57:55 +0200
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Subject: 4*/5*: ppp0: recursion detected
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <f142716c-30bb-f1c6-1d88-94cd308a7adf@xs4all.nl>
-Date:   Fri, 4 Oct 2019 06:57:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 4 Oct 2019 01:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729363AbfJDFZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 01:25:08 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990B720862;
+        Fri,  4 Oct 2019 05:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570166706;
+        bh=6FUTl2wd4LpbSLZQyMIKxmp2L+pBEdUGKIyHdoMmuAQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JcaMrWxm5pYNFNB6tEBZh6bqrjnQZwzDT5iWbTJfEZRQjuu1AxYusnOUmtBKxjzrW
+         JyfRep6vnV1m8L78X4xrNATaXv7a/xcNNdtu32s3djvm3xrkVsuqT0EDFi8T3hNMbI
+         xw73rIG/L65LrP/jHzy2SbxcOO/hYV6wTyOtg9d0=
+Date:   Thu, 3 Oct 2019 22:25:05 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Xin Long <lucien.xin@gmail.com>
+Cc:     syzbot <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com>,
+        davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
+Subject: Re: memory leak in sctp_get_port_local (2)
+Message-ID: <20191004052505.GS667@sol.localdomain>
+Mail-Followup-To: Xin Long <lucien.xin@gmail.com>,
+        syzbot <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com>,
+        davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
+References: <000000000000f93dd2058f9c4873@google.com>
+ <CADvbK_dqTGZKWNmapcbyYVfLjuwzjSaqs0PHv687AjAvtPo3Zw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADvbK_dqTGZKWNmapcbyYVfLjuwzjSaqs0PHv687AjAvtPo3Zw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 09, 2019 at 04:33:11PM +0800, Xin Long wrote:
+> On Thu, Aug 8, 2019 at 11:01 PM syzbot
+> <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    0eb0ce0a Merge tag 'spi-fix-v5.3-rc3' of git://git.kernel...
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1234588c600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=39113f5c48aea971
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=2d7ecdf99f15689032b3
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160e1906600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140ab906600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com
+> >
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> > BUG: memory leak
+> > unreferenced object 0xffff88810fa4b380 (size 64):
+> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 16.560s)
+> >    hex dump (first 32 bytes):
+> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
+> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
+> >    backtrace:
+> >      [<00000000f1461735>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:43 [inline]
+> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
+> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
+> > net/sctp/socket.c:8121
+> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
+> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
+> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
+> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
+> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
+> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
+> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
+> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
+> > arch/x86/entry/common.c:296
+> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > BUG: memory leak
+> > unreferenced object 0xffff88810fa4b380 (size 64):
+> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 19.260s)
+> >    hex dump (first 32 bytes):
+> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
+> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
+> >    backtrace:
+> >      [<00000000f1461735>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:43 [inline]
+> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
+> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
+> > net/sctp/socket.c:8121
+> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
+> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
+> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
+> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
+> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
+> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
+> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
+> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
+> > arch/x86/entry/common.c:296
+> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > BUG: memory leak
+> > unreferenced object 0xffff88810fa4b380 (size 64):
+> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 21.990s)
+> >    hex dump (first 32 bytes):
+> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
+> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
+> >    backtrace:
+> >      [<00000000f1461735>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:43 [inline]
+> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
+> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
+> > net/sctp/socket.c:8121
+> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
+> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
+> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
+> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
+> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
+> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
+> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
+> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
+> > arch/x86/entry/common.c:296
+> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > BUG: memory leak
+> > unreferenced object 0xffff88810fa4b380 (size 64):
+> >    comm "syz-executor900", pid 7117, jiffies 4294946947 (age 22.940s)
+> >    hex dump (first 32 bytes):
+> >      20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
+> >      58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
+> >    backtrace:
+> >      [<00000000f1461735>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:43 [inline]
+> >      [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
+> >      [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
+> >      [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+> >      [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
+> >      [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0
+> > net/sctp/socket.c:8121
+> >      [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
+> >      [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
+> >      [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
+> >      [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
+> >      [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
+> >      [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
+> >      [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
+> >      [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0
+> > arch/x86/entry/common.c:296
+> >      [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > executing program
+> > executing program
+> > executing program
+> > executing program
+> should be fixed by:
+> commit 9b6c08878e23adb7cc84bdca94d8a944b03f099e
+> Author: Xin Long <lucien.xin@gmail.com>
+> Date:   Wed Jun 26 16:31:39 2019 +0800
+> 
+>     sctp: not bind the socket in sctp_connect
+> 
+> was this commit included in the testing kernel?
+> 
+> >
+> >
+> > ---
 
-To fix the 'ppp0: recursion detected' messages we see on our firewall I
-found a solution at:
+I'm marking this fixed by commit 29b99f54a8e6:
 
-https://forum.openwrt.org/t/pptp-recursion-detected-system-reboot-itself/12585
+#syz fix: sctp: destroy bucket if failed to bind addr
 
-Can we please implement this solution if deemed OK?
+... as it fixed a memory leak of this same data structure.
 
+However, syzbot is still hitting this in a different way, so it will get
+reported again.  If anyone wants to fix it before then, see the C reproducer
+here: https://syzkaller.appspot.com/text?tag=ReproC&x=156ab7f3600000
+It's from the "2019/10/03 02:51" crash listed at
+https://syzkaller.appspot.com/bug?id=2d2cb27d3b4e4db041c252f09c492868885e5607
 
-Kind regards,
-Udo
+- Eric
