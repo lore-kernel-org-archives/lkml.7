@@ -2,172 +2,125 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFD9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC2EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179BC222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570230966;
-	bh=ed2Oj0Rtnhm1rXJkcqfJxOLIvuDPtA/O2HMmNV71h1A=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=b7wQd+9VwIzdQ4aVVi2J6+mGAzN21lWqdWtAeWmEjTnjNeU1lXLfx0qCIOdxAArOj
-	 WkP0Foa+a/9yRnwm/isABuieFc5vtmRGGS1RiiBF+InKo7FMRJ9otzJ1f8tJQBx4GW
-	 bZ9u46e2mMQJ3jxIFNxMKVWbsZ/6TvkcJs0CgOnw=
+	by mail.kernel.org (Postfix) with ESMTP id 9ED77222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2KIa1h3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbfJDXQF (ORCPT
+        id S1731625AbfJDXRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728913AbfJDXQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:16:04 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07CB7215EA;
-        Fri,  4 Oct 2019 23:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570230963;
-        bh=ed2Oj0Rtnhm1rXJkcqfJxOLIvuDPtA/O2HMmNV71h1A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WM0U4KZ8Yc4SM5CiFfv5XPcZ0aRzdXwsYvoXnNevsXnJsPyjQKtdRXjIMQzZ+kVOJ
-         6YPavRWeR2P5RDQEazsuY+5qqP9SteouIZAzdGwtjgnZiXBW45gWTz4CaJtz77mMLh
-         9WfdeFi7Wi/iRWJWlEXKUF33HUEeeyYS7Fk3RiSQ=
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Fri, 4 Oct 2019 19:17:38 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37040 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729976AbfJDXRh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 19:17:37 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p1so2812149pgi.4;
+        Fri, 04 Oct 2019 16:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N6lld3QVqJ8v+1IBZTT7yl5zFiTihenHGMLoJcSj8pc=;
+        b=M2KIa1h3cLctN2IUIjhYHR3D5/YPSUOLWsOO+ubugv/OGi5dURuk/tPs38woAwqL+a
+         R8WFcDve8wRIPrygkMRObUTaD5m/YF2oMtpoRH3Brtl8S2kCuGOQQpwCQBCCi2S8qyXO
+         TKfcDOsQr522/TIKefYh8Jx0EG9dlYQqaLr9KJ59nBFuH7Gj1i3zRVCfToVQOUrlfLN8
+         m2UJiITUfRxFfGP4hxMPeEVQL9QicvoeRtkW+WIFGZYD54Vr2WmwZaY94dDa+WfNj81M
+         oIdtUeIvJuj/5WkpeUG4Ec56EyLle2fHaOeVdNqDXTSxMdF6GaXGoP8jeXr/ZQMw294Y
+         IeeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N6lld3QVqJ8v+1IBZTT7yl5zFiTihenHGMLoJcSj8pc=;
+        b=IJipXFazBFQ8bCkWNJreoiglBbDqVl6yjrTg1y8ZLJZv/xaVjaHdUAY8uMj9/2T/hF
+         8HQPP5bVujbqZSsSJp06EKEs4aHpfIhpiTFTjGqLmRJ8DRhs5vZ8rzogySUFUxUepxUk
+         nxdYfGzMG92lXtpFyUacWHBgeawtk2d0Qtn6SyArv51UeKeQ/+3/L2qMDf9dGuDB32NW
+         6cCV9hjthiH8Bdqsptn2j5R6duA897nmaEOteXCHPkoNWeWpNO+43XQXzJeLbWKcjTVb
+         yYQk+NGty1mApNbfT+hnBrov94SxU6013/NBd97XGUtTqeET+hIsXjtFK2e/8pSNVkiQ
+         1cKQ==
+X-Gm-Message-State: APjAAAXrNe1ty8wBdtW49/85GC3Eu0Ftku7gKOR41/bmNBNAXGDTh6P5
+        3EgSnRjzaT/WAKN+1lramJY=
+X-Google-Smtp-Source: APXvYqzfju1b5POi3rNfttLsKtoz2qe/HVmRXl91wV/sbwVNPo/D9T4qmwes+Mp3fb1tIwUmmqiR4Q==
+X-Received: by 2002:a17:90a:9a1:: with SMTP id 30mr20259144pjo.71.1570231056558;
+        Fri, 04 Oct 2019 16:17:36 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id p88sm8055120pjp.22.2019.10.04.16.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 16:17:35 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 16:17:33 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        shuah <shuah@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
- <CAFd5g46pzu=Bh5X7-ttfhTP+NYNDCAxN16OCGFxc5ohjTL-v0g@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b38b118f-9bcb-c2fc-4365-0b94fde4e1ec@kernel.org>
-Date:   Fri, 4 Oct 2019 17:15:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 4/8] firmware: Add new platform fallback mechanism and
+ firmware_request_platform()
+Message-ID: <20191004231733.GF22365@dtor-ws>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g46pzu=Bh5X7-ttfhTP+NYNDCAxN16OCGFxc5ohjTL-v0g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004145056.43267-5-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 5:10 PM, Brendan Higgins wrote:
-> On Fri, Oct 4, 2019 at 3:47 PM shuah <shuah@kernel.org> wrote:
->>
->> On 10/4/19 4:27 PM, Brendan Higgins wrote:
->>> On Fri, Oct 04, 2019 at 03:59:10PM -0600, shuah wrote:
->>>> On 10/4/19 3:42 PM, Linus Torvalds wrote:
->>>>> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->>>>>>
->>>>>> This question is primarily directed at Shuah and Linus....
->>>>>>
->>>>>> What's the current status of the kunit series now that Brendan has
->>>>>> moved it out of the top-level kunit directory as Linus has requested?
->>>>>
->>>>
->>>> The move happened smack in the middle of merge window and landed in
->>>> linux-next towards the end of the merge window.
->>>>
->>>>> We seemed to decide to just wait for 5.5, but there is nothing that
->>>>> looks to block that. And I encouraged Shuah to find more kunit cases
->>>>> for when it _does_ get merged.
->>>>>
->>>>
->>>> Right. I communicated that to Brendan that we could work on adding more
->>>> kunit based tests which would help get more mileage on the kunit.
->>>>
->>>>> So if the kunit branch is stable, and people want to start using it
->>>>> for their unit tests, then I think that would be a good idea, and then
->>>>> during the 5.5 merge window we'll not just get the infrastructure,
->>>>> we'll get a few more users too and not just examples.
->>>
->>> I was planning on holding off on accepting more tests/changes until
->>> KUnit is in torvalds/master. As much as I would like to go around
->>> promoting it, I don't really want to promote too much complexity in a
->>> non-upstream branch before getting it upstream because I don't want to
->>> risk adding something that might cause it to get rejected again.
->>>
->>> To be clear, I can understand from your perspective why getting more
->>> tests/usage before accepting it is a good thing. The more people that
->>> play around with it, the more likely that someone will find an issue
->>> with it, and more likely that what is accepted into torvalds/master is
->>> of high quality.
->>>
->>> However, if I encourage arbitrary tests/improvements into my KUnit
->>> branch, it further diverges away from torvalds/master, and is more
->>> likely that there will be a merge conflict or issue that is not related
->>> to the core KUnit changes that will cause the whole thing to be
->>> rejected again in v5.5.
->>>
->>
->> The idea is that the new development will happen based on kunit in
->> linux-kselftest next. It will work just fine. As we accepts patches,
->> they will go on top of kunit that is in linux-next now.
-> 
-> But then wouldn't we want to limit what KUnit changes are going into
-> linux-kselftest next for v5.5? For example, we probably don't want to
-> do anymore feature development on it until it is in v5.5, since the
-> goal is to make it more stable, right?
-> 
-> I am guessing that it will probably be fine, but it still sounds like
-> we need to establish some ground rules, and play it *very* safe.
-> 
+Hi Hans,
 
-How about we identify a small number tests that can add value and focus
-on them. I am thinking a number between 2 and 5. This way we get a feel
-for the API, if it changes for the better great, if it doesn't have to,
-then you know you already did a great job.
+On Fri, Oct 04, 2019 at 04:50:52PM +0200, Hans de Goede wrote:
+> In some cases the platform's main firmware (e.g. the UEFI fw) may contain
+> an embedded copy of device firmware which needs to be (re)loaded into the
+> peripheral. Normally such firmware would be part of linux-firmware, but in
+> some cases this is not feasible, for 2 reasons:
+> 
+> 1) The firmware is customized for a specific use-case of the chipset / use
+> with a specific hardware model, so we cannot have a single firmware file
+> for the chipset. E.g. touchscreen controller firmwares are compiled
+> specifically for the hardware model they are used with, as they are
+> calibrated for a specific model digitizer.
+> 
+> 2) Despite repeated attempts we have failed to get permission to
+> redistribute the firmware. This is especially a problem with customized
+> firmwares, these get created by the chip vendor for a specific ODM and the
+> copyright may partially belong with the ODM, so the chip vendor cannot
+> give a blanket permission to distribute these.
+> 
+> This commit adds a new platform fallback mechanism to the firmware loader
+> which will try to lookup a device fw copy embedded in the platform's main
+> firmware if direct filesystem lookup fails.
+> 
+> Drivers which need such embedded fw copies can enable this fallback
+> mechanism by using the new firmware_request_platform() function.
 
-Does that sound reasonable to you?
+Why would drivers not want to fetch firmware from system firmware if it
+is not present on disk? I would say let driver to opt-out of this
+fallback, but default request_firmware() should do it by default.
 
-thanks,
--- Shuah
+Thanks.
+
+-- 
+Dmitry
