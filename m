@@ -2,186 +2,165 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CB9C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F785C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E17E215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UV9gzpUS"
+	by mail.kernel.org (Postfix) with ESMTP id 86458215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 18:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388462AbfJDSJa (ORCPT
+        id S1730244AbfJDSM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 14:09:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34674 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfJDSJa (ORCPT
+        Fri, 4 Oct 2019 14:12:29 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38207 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbfJDSM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 14:09:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y35so4210967pgl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 11:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jva9qpw4IbtlmZPIgeyGwpLF5rIlYvV+DqrMYfpP5/I=;
-        b=UV9gzpUSsb+C2yovB0qxRDPkWrR/a+CCc3JIvwAZVmam3WQdRwyxRsbwvJEMsqNwic
-         fVYkivtx48Yaai7PACW4ELyoS2yCC2RsqOl6VNJJdpWUfSjlUVEzig17xvhxcY3v8kxG
-         g3kpgrFkQ9fL8HLqDPYRvpUonqGwDJprTbxxbYUCeY7EZ3/2sMgyO6kS5KBGBzWjg+wu
-         Jp+pfgmst2qEm2HPeOtABbFe9WzIPKXpmf7ZA9fiDULInx7xmidnwV9Q57TDW7wKzBOV
-         XlQeyJMmQd9xMrU527bnljs18d/TdJZYiLXZtO+quz65/+cTK/U+uyko1dRZx2tB0HUr
-         0aHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jva9qpw4IbtlmZPIgeyGwpLF5rIlYvV+DqrMYfpP5/I=;
-        b=sAgetqGTq0DW/+4ma9Lz/1AFmTvdADgUCQcdxH7Ne+F7KvIEMx9LG2qNINhc1URvqq
-         BUKCQpocEzFj0HzIwC2S6/R7pS8xyb6WAivrNyxyrnWM/gFSdE2FoIbsZDZuRtLaY2kO
-         PHZh/0M1ufNBbR7YOHdUBHl+gqXgxS8ZtkqqgoOiWkHCAv6RVuBAiIhNurfH2Pje48w7
-         8GQAky8aByQkhIPkHexti+SAqsnHLfg/peia1idzXHg2LXhZPwwLn9tOfYR16b9wJ3u4
-         eE2gVEVnOyGyRqb7IrwgUFghZ4rcUVZoxm0eF6Pe7mNWeFw5fuVjNYdbk2PzqxMe6TBD
-         yK3w==
-X-Gm-Message-State: APjAAAXfoZ5/WYXuNhztCSeoisho2aJtWq8IMKKh169ZwuYsaiLDdscO
-        a/U+7hI8kjNFU+1z9bbwocguQxHl
-X-Google-Smtp-Source: APXvYqx6g0GBSVTclmaGs4MtPq/WkOVlGeEfjg8JHrWM5P0cF7C/n0prQ9zbazU0j8yb2b2JB6/a+w==
-X-Received: by 2002:a63:cb:: with SMTP id 194mr3304854pga.172.1570212567208;
-        Fri, 04 Oct 2019 11:09:27 -0700 (PDT)
-Received: from harshads0.svl.corp.google.com ([2620:15c:2cd:202:ec1e:207a:e951:9a5b])
-        by smtp.googlemail.com with ESMTPSA id u31sm8906719pgn.93.2019.10.04.11.09.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 11:09:26 -0700 (PDT)
-From:   Harshad Shirwadkar <harshadshirwadkar@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        Josef Bacik <jbacik@fb.com>
-Subject: [PATCH] blk-wbt: fix performance regression in wbt scale_up/scale_down
-Date:   Fri,  4 Oct 2019 11:09:20 -0700
-Message-Id: <20191004180920.105572-1-harshadshirwadkar@gmail.com>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        Fri, 4 Oct 2019 14:12:28 -0400
+X-Originating-IP: 132.205.229.217
+Received: from aptenodytes (unknown [132.205.229.217])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A878A1BF203;
+        Fri,  4 Oct 2019 18:12:24 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 14:12:22 -0400
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+Message-ID: <20191004181222.GA16927@aptenodytes>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
+ <20190927221550.GA28831@bogus>
+ <20191004144551.GR18429@dell>
+ <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scale_up wakes up waiters after scaling up. But after scaling max, it
-should not wake up more waiters as waiters will not have anything to
-do. This patch fixes this by making scale_up (and also scale_down)
-return when threshold is reached.
 
-This bug causes increased fdatasync latency when fdatasync and dd
-conv=sync are performed in parallel on 4.19 compared to 4.14. This
-bug was introduced during refactoring of blk-wbt code.
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Cc: Josef Bacik <jbacik@fb.com>
-Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
----
- block/blk-rq-qos.c | 14 +++++++++-----
- block/blk-rq-qos.h |  4 ++--
- block/blk-wbt.c    |  6 ++++--
- 3 files changed, 15 insertions(+), 9 deletions(-)
+Hi,
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 3954c0dc1443..d92abb43000c 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -142,24 +142,27 @@ bool rq_depth_calc_max_depth(struct rq_depth *rqd)
- 	return ret;
- }
- 
--void rq_depth_scale_up(struct rq_depth *rqd)
-+/* Returns true on success and false if scaling up wasn't possible */
-+bool rq_depth_scale_up(struct rq_depth *rqd)
- {
- 	/*
- 	 * Hit max in previous round, stop here
- 	 */
- 	if (rqd->scaled_max)
--		return;
-+		return false;
- 
- 	rqd->scale_step--;
- 
- 	rqd->scaled_max = rq_depth_calc_max_depth(rqd);
-+	return true;
- }
- 
- /*
-  * Scale rwb down. If 'hard_throttle' is set, do it quicker, since we
-- * had a latency violation.
-+ * had a latency violation. Returns true on success and returns false if
-+ * scaling down wasn't possible.
-  */
--void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
-+bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- {
- 	/*
- 	 * Stop scaling down when we've hit the limit. This also prevents
-@@ -167,7 +170,7 @@ void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- 	 * keep up.
- 	 */
- 	if (rqd->max_depth == 1)
--		return;
-+		return false;
- 
- 	if (rqd->scale_step < 0 && hard_throttle)
- 		rqd->scale_step = 0;
-@@ -176,6 +179,7 @@ void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- 
- 	rqd->scaled_max = false;
- 	rq_depth_calc_max_depth(rqd);
-+	return 0;
- }
- 
- struct rq_qos_wait_data {
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 2300e038b9fa..c0f0778d5396 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -125,8 +125,8 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 		 acquire_inflight_cb_t *acquire_inflight_cb,
- 		 cleanup_cb_t *cleanup_cb);
- bool rq_wait_inc_below(struct rq_wait *rq_wait, unsigned int limit);
--void rq_depth_scale_up(struct rq_depth *rqd);
--void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
-+bool rq_depth_scale_up(struct rq_depth *rqd);
-+bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
- bool rq_depth_calc_max_depth(struct rq_depth *rqd);
- 
- void __rq_qos_cleanup(struct rq_qos *rqos, struct bio *bio);
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 313f45a37e9d..5a96881e7a52 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -308,7 +308,8 @@ static void calc_wb_limits(struct rq_wb *rwb)
- 
- static void scale_up(struct rq_wb *rwb)
- {
--	rq_depth_scale_up(&rwb->rq_depth);
-+	if (!rq_depth_scale_up(&rwb->rq_depth))
-+		return;
- 	calc_wb_limits(rwb);
- 	rwb->unknown_cnt = 0;
- 	rwb_wake_all(rwb);
-@@ -317,7 +318,8 @@ static void scale_up(struct rq_wb *rwb)
- 
- static void scale_down(struct rq_wb *rwb, bool hard_throttle)
- {
--	rq_depth_scale_down(&rwb->rq_depth, hard_throttle);
-+	if (!rq_depth_scale_down(&rwb->rq_depth, hard_throttle))
-+		return;
- 	calc_wb_limits(rwb);
- 	rwb->unknown_cnt = 0;
- 	rwb_trace_step(rwb, "scale down");
--- 
-2.23.0.581.g78d2f28ef7-goog
+On Fri 04 Oct 19, 11:09, Rob Herring wrote:
+> On Fri, Oct 4, 2019 at 9:45 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Fri, 27 Sep 2019, Rob Herring wrote:
+> >
+> > > On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
+> > > > The LogiCVC is a display engine which also exposes GPIO functionali=
+ty.
+> > > > For this reason, it is described as a multi-function device that is=
+ expected
+> > > > to provide register access to its children nodes for gpio and displ=
+ay.
+> > > >
+> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > ---
+> > > >  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++=
+++++
+> > > >  1 file changed, 50 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,log=
+icvc.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.ya=
+ml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..abc9937506e0
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > > > @@ -0,0 +1,50 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +# Copyright 2019 Bootlin
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
+> > > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > > +
+> > > > +title: Xylon LogiCVC multi-function device
+> > > > +
+> > > > +maintainers:
+> > > > +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > +
+> > > > +description: |
+> > > > +  The LogiCVC is a display controller that also contains a GPIO co=
+ntroller.
+> > > > +  As a result, a multi-function device is exposed as parent of the=
+ display
+> > > > +  and GPIO blocks.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    items:
+> > > > +      - enum:
+> > > > +          - xylon,logicvc-3.02.a
+> > > > +      - const: syscon
+> > > > +      - const: simple-mfd
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +select:
+> > > > +  properties:
+> > > > +    compatible:
+> > > > +      contains:
+> > > > +        enum:
+> > > > +          - xylon,logicvc-3.02.a
+> > >
+> > > I've seen a couple of these with 'syscon' today, so I fixed the schema
+> > > tool to just exclude 'syscon' and 'simple-mfd' from the generated
+> > > 'select'. So you can drop select now.
+> >
+> > Does this need to happen before this patch can be applied?
+>=20
+> Drop the 'select'? Yes that should happen first.
 
+I'll definitely respin the series for a v3 soon so no worries, I'll get rid
+of it.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2Xi4YACgkQ3cLmz3+f
+v9HpAgf/a8qK5j4yyiRTtn9wRE0GwK+Ammm9c6YApasFhMqQ4fMGrYZThmMNepOB
+/VwPfRJx6qFbQ33IAZ/J3zK2T61jYlybouAEm7h+UO2W/9RazqGyx2NBPSq1t5Q7
+wbTHABnhrs06T8bDZTiKKeFV28gnCRPE3EkNLdeydpTZ7lbtW85VEP56Ua5xkVv1
+RzvJOIvd8BzqECyd95iZOe1G+TXC89AMQ5W8pMnpLNBnM3mwb0RvWSVHJ46u/Tkm
+NMxyUqe5jnj6fWeTFe0613OwraqgqBtU7smGdfKf09m8AsOyawxgBVfgrSvvDObT
+R5OlwonQzTy2wCjL5uK4Q75gpOd7qw==
+=eX7p
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
