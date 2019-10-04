@@ -3,328 +3,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A79C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC63EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37AC21D71
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9506E215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Grs3Hqx4"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="TGlc8T8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfJDKsP (ORCPT
+        id S1730406AbfJDKss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:48:15 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42046 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJDKsO (ORCPT
+        Fri, 4 Oct 2019 06:48:48 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:18202 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJDKss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:48:14 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w14so7853394qto.9
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 03:48:13 -0700 (PDT)
+        Fri, 4 Oct 2019 06:48:48 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: figmXGPcw+UIOyXXLmNGuVWh+TKCI0G4PlsXeBVaZ8BM9sMh55KYgyhO3vpQThJBrEWot4Pouc
+ ytjTrW1wBYBQNMKK6HINLnuzAQ4sURrV0KrRfrQ5WM4DivGFjZAIzDLQgKz+KRcf0wlfhYXAk5
+ SwDQcAPGsGVfzOscSV1e3NPAOfMOUwX9ID/PdeppOeVC0xwtQ+v1eGTpfmIb2pXoLatOBynOuZ
+ ET+wJkJXUdiCMhHGXX1W6xKvuq1BwKGtTJD7eHmaLHVFPAW8w7x52+OEBHvPYSqdVkF4hz+O6r
+ aFg=
+X-IronPort-AV: E=Sophos;i="5.67,256,1566889200"; 
+   d="scan'208";a="51745368"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2019 03:48:46 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 4 Oct 2019 03:48:46 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 4 Oct 2019 03:48:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fzLQrp2n3rdK843xKHEy52nIdlY1imbN6bwO4rDd6pvK3dOBvk+VlbDY7HLv/GXySM144UJW+sEj8ELobEKct81oFzGH2TRVWYxutZyOhpIs+I5KkNCqJ1E0Ob+HVRmDvglN9dw80udwX1nsCay9v/t2drQ3zKN8TspWG9c8xvMFEGOtrF/qDJzlpJ+ejCWQXBBL1SH8y6a0V5RgZo2HH//ShbG8tlCkEnhy7HYjYhH/wmeSHNLnbVol+j33+DDJGFUcg1etkQV0hHfSpRe5XQ7oaYRjx/nirTUks8TDYBW9LsqTr6WCUtSQDKvPrS2Ck5g9qkFn6Cx3/GRU1I1mxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3UoiInd9321iKkr+w9Z2Pc0b1rni+ks2ZMtGBUC2MjM=;
+ b=Erqf7o5zbWSdTP5QrqeZEfeTRPqBdTqrCXRJoGjlPGCCjHMxeZDeCBMzIRq1f22Xz+DSaW2mWfmDxIRSs2efQE7Kb7+at/ae3I0V/C4f4IYDd23yPno/eIBuwO2/Kmzwa3T+CCWHrjwWUOxkUYSZIAJnRe9jCXdt4mxGsk4dGN2RXcetY9WeiVcQouI5rGb8DALrAuR2QTL1FKwZSG9OHuoliixAJ+VSwk/Vll19iGM2uQeFlSdcFkReTaMULgee0zv71AJBqDJXU3S+U42ZU+a6uyCNiLdIUHi2rnYMRSpLCsk9wZhO+e1MjlYRLmGLDSz6MAgoR/JCHLaxO3Ah4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=s4KyIYNFvQvXAmS2eAKBVZheKGwMRoWGvLGk+6JrzQs=;
-        b=Grs3Hqx4k5f/bH59wO9Us/mIBV6O6+3wNBH50kyKKowfVG/IfQ9RWAKtzFe0iIAJcw
-         /KhJwYZiPrXUopKZJWk/JNyIQyzdVSwiygf8DbcFPGugji6dRgOugDOaa1aynvkGCGSL
-         wio2yd2CBp+v5zD0Z3a5mnEvUrYEPOz9lQpEWlpxVRmGopw62V1XKB58J6pryAWehbiB
-         fmvjnz42abs2zhbD0fWdEH2CGlACSawN6wESeZtQN8i0bS0uc18vGOWDqbNuq7uX0g2+
-         4FtXFJaHQOtIzbYI6bI3Yzb/iYIjyenzL70bL5f5TVYmNhX5kjvQNVdLtkvRX6geI239
-         AnoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=s4KyIYNFvQvXAmS2eAKBVZheKGwMRoWGvLGk+6JrzQs=;
-        b=FMKfTBxASWnbtedUUFomqhsykdsefvsAKAdsATw057yOIVTCEPJb6Aw3sqaa69U3Xp
-         sse5Cy8CxxC6FNRgVKD7yhRuzYdzmrTWb6ZLTSByYnyt+iqOGu/C6enLgXH3ZrMwkRLV
-         6N6ynj/6hfoie1VCDJ5B5Xk7rIn00hgpQ8+C66nu7FQDktrQ5CQJjrr+oineTl/u7vmB
-         qLienvn+hCfJuiwMP9fQzx8cHogA+omKmucN3uRt1qpI20vZAtOdamDMlpOksVLQIqu6
-         G0oAmzoCUyc2XLzRxbvWunF70o6AWQf6lYBHD0A1Lgd2IMDmXBLYpoBd/PLsb70GfWYm
-         4COg==
-X-Gm-Message-State: APjAAAUUEpnC2dE6VYEv4c4X4sB9GCc/4bLrQNWpsG2HDpAkiKlIkJkq
-        weeQJy+KChdnaTR4N3RGslJH0aqeNFOP+YaXPiP9gQ==
-X-Google-Smtp-Source: APXvYqzg0CFK2zDNbHhh1v6Bgx6PIq+2osWbk0x/b6Hirq0Z6Io/RhZU1Mz2FWrXmtJGKYeXdz2S8Ssi55WIJT84FbA=
-X-Received: by 2002:ad4:41cf:: with SMTP id a15mr1045342qvq.233.1570186093170;
- Fri, 04 Oct 2019 03:48:13 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3UoiInd9321iKkr+w9Z2Pc0b1rni+ks2ZMtGBUC2MjM=;
+ b=TGlc8T8gFxbm4zLMUdZMlwy9AcgGu8FFeeFGHUIt+ZOQfcIl+co4YQ0jrsFMnblNU0XpwMXq7vDIaFAjmwMoYUFUv1HKdaJfgxjnRcZ6D8PLBtryp3SuFo/TUdikMA84TiqI//fdSeEd2P4SPzyhj1tqRlsblmjw0VujhSIcBWs=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB4222.namprd11.prod.outlook.com (52.135.36.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Fri, 4 Oct 2019 10:48:45 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::340d:5a33:dc79:1184]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::340d:5a33:dc79:1184%5]) with mapi id 15.20.2305.023; Fri, 4 Oct 2019
+ 10:48:45 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <john.garry@huawei.com>
+Subject: Re: [PATCH] mtd: spi-nor: Fix direction of the write_sr() transfer
+Thread-Topic: [PATCH] mtd: spi-nor: Fix direction of the write_sr() transfer
+Thread-Index: AQHVeqEtwNvmmNlG50ubt70oQPwmWadKTUqA
+Date:   Fri, 4 Oct 2019 10:48:44 +0000
+Message-ID: <9156860e-d257-bee6-fac8-a1821e4b5bf2@microchip.com>
+References: <c703dec2-dd11-5898-83ad-fb06127b6575@huawei.com>
+ <20191004104746.23537-1-tudor.ambarus@microchip.com>
+In-Reply-To: <20191004104746.23537-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0802CA0021.eurprd08.prod.outlook.com
+ (2603:10a6:800:aa::31) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd2f9f49-7926-4b09-cf04-08d748b86daf
+x-ms-traffictypediagnostic: MN2PR11MB4222:
+x-microsoft-antispam-prvs: <MN2PR11MB422284C89065D0560916C64CF09E0@MN2PR11MB4222.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 018093A9B5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(346002)(366004)(136003)(199004)(189003)(53546011)(446003)(2501003)(11346002)(316002)(478600001)(99286004)(6246003)(6506007)(386003)(14454004)(102836004)(25786009)(64756008)(71200400001)(71190400001)(66476007)(66556008)(66946007)(66446008)(31686004)(86362001)(229853002)(486006)(2616005)(476003)(66066001)(52116002)(2906002)(305945005)(7736002)(4744005)(256004)(6512007)(6436002)(6116002)(3846002)(14444005)(31696002)(8676002)(81166006)(76176011)(8936002)(26005)(2201001)(81156014)(186003)(6486002)(110136005)(36756003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4222;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0Nqy8eAlkW1PRRpxdxaYLEa3X9tT89ihVOqdaSUta7ktOMY4YKPeQWa6nE/StTVCanibd3BeTMR0Am/JhrNJG6f7MsdLgcQNSRCcrUhQ3KDmRM0zqXqC3RxMO/qO9WNT9aEVvWfTFOf6XXWD44GGekw7DDmK7MGHEGXYlQyQD9xzMbTz6ZlAIZmadm+4EiOlQMICQjiIH/yFpL7SThcgd1Uo/7d6RF+MIuHNHNfT5UtfLGO26EUmcewZxIetpBd57ulHrWXVnpBQPwzLPZYfSSLsKe3g5wAFN30F7D+IfDnLoZavJ9dQhsOQDWlCIRxhMOcG+o9ioUcRIDuiTCXJqhxgTE/01KgDpN3iXsVaymsUN8p9cFBB4Qp5o35xsCsqHf4+J1+mi/gwzKfUtnV+EFq8/HcITYy/XHhL/FrBJro=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F22D9A0BBF44E246AA7546AC611AF05B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190909135205.10277-1-benjamin.gaignard@st.com>
- <20190909135205.10277-2-benjamin.gaignard@st.com> <20191003142738.GM1208@intel.com>
- <CA+M3ks4FBAgCRDDHZ=x7kvQ1Y=0dBdj4+KLO2djh__hW+L=3gQ@mail.gmail.com>
- <20191003150526.GN1208@intel.com> <CA+M3ks7-SNusVJsiHqrmy4AN+_OO5e1X=ZRN16Hj6f-V3GnVow@mail.gmail.com>
- <20191003154627.GQ1208@intel.com>
-In-Reply-To: <20191003154627.GQ1208@intel.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Fri, 4 Oct 2019 12:48:02 +0200
-Message-ID: <CA+M3ks4gpDdZTPdBYRd=CrwgEYiSWJbXqvtPb-0KpW1BhzvmEQ@mail.gmail.com>
-Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd2f9f49-7926-4b09-cf04-08d748b86daf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 10:48:44.8984
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: swJwc4sKJY/Ag3mG1GsahHoLPWnHcslOTluJGPhdBce9WP6pxqMtttG1iqD5Gw4KNMWzHiWho+Fscwrk28vxp2+PZvbLx0EoVSwsJnCvnxs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4222
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeu. 3 oct. 2019 =C3=A0 17:46, Ville Syrj=C3=A4l=C3=A4
-<ville.syrjala@linux.intel.com> a =C3=A9crit :
->
-> On Thu, Oct 03, 2019 at 05:37:15PM +0200, Benjamin Gaignard wrote:
-> > Le jeu. 3 oct. 2019 =C3=A0 17:05, Ville Syrj=C3=A4l=C3=A4
-> > <ville.syrjala@linux.intel.com> a =C3=A9crit :
-> > >
-> > > On Thu, Oct 03, 2019 at 04:46:54PM +0200, Benjamin Gaignard wrote:
-> > > > Le jeu. 3 oct. 2019 =C3=A0 16:27, Ville Syrj=C3=A4l=C3=A4
-> > > > <ville.syrjala@linux.intel.com> a =C3=A9crit :
-> > > > >
-> > > > > On Mon, Sep 09, 2019 at 03:52:05PM +0200, Benjamin Gaignard wrote=
-:
-> > > > > > Fix warnings with W=3D1.
-> > > > > > Few for_each macro set variables that are never used later.
-> > > > > > Prevent warning by marking these variables as __maybe_unused.
-> > > > > >
-> > > > > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++---=
----------------
-> > > > > >  1 file changed, 18 insertions(+), 18 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/=
-drm/drm_atomic_helper.c
-> > > > > > index aa16ea17ff9b..b69d17b0b9bd 100644
-> > > > > > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *stat=
-e,
-> > > > > >             struct drm_encoder *encoder)
-> > > > > >  {
-> > > > > >       struct drm_crtc_state *crtc_state;
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > >
-> > > > > Rather ugly. IMO would be nicer if we could hide something inside
-> > > > > the iterator macros to suppress the warning.
-> > > >
-> > > > Ok but how ?
-> > > > connector is assigned in the macros but not used later and we can't
-> > > > set "__maybe_unused"
-> > > > in the macro.
-> > > > Does another keyword exist for that ?
-> > >
-> > > Stick a (void)(connector) into the macro?
-> >
-> > That could work but it will look strange inside the macro.
-> >
-> > >
-> > > Another (arguably cleaner) idea would be to remove the connector/crtc=
-/plane
-> > > argument from the iterators entirely since it's redundant, and instea=
-d just
-> > > extract it from the appropriate new/old state as needed.
-> > >
-> > > We could then also add a for_each_connector_in_state()/etc. which omi=
-t
-> > > s the state arguments and just has the connector argument, for cases =
-where
-> > > you don't care about the states when iterating.
-> >
-> > That may lead to get a macro for each possible combination of used vari=
-ables.
->
-> We already have new/old/oldnew, so would "just" add one more.
-
-Not just one, it will be one each new/old/oldnew macro to be able to distin=
-guish
-when connector is used or not.
-And it will be the same for the for_each macros...
-
->
-> >
-> > >
-> > > >
-> > > > >
-> > > > > >       struct drm_connector_state *old_connector_state, *new_con=
-nector_state;
-> > > > > >       int i;
-> > > > > >
-> > > > > > @@ -412,7 +412,7 @@ mode_fixup(struct drm_atomic_state *state)
-> > > > > >  {
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       struct drm_crtc_state *new_crtc_state;
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >       struct drm_connector_state *new_conn_state;
-> > > > > >       int i;
-> > > > > >       int ret;
-> > > > > > @@ -608,7 +608,7 @@ drm_atomic_helper_check_modeset(struct drm_=
-device *dev,
-> > > > > >  {
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >       struct drm_connector_state *old_connector_state, *new_con=
-nector_state;
-> > > > > >       int i, ret;
-> > > > > >       unsigned connectors_mask =3D 0;
-> > > > > > @@ -984,7 +984,7 @@ crtc_needs_disable(struct drm_crtc_state *o=
-ld_state,
-> > > > > >  static void
-> > > > > >  disable_outputs(struct drm_device *dev, struct drm_atomic_stat=
-e *old_state)
-> > > > > >  {
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >       struct drm_connector_state *old_conn_state, *new_conn_sta=
-te;
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > > > > > @@ -1173,7 +1173,7 @@ crtc_set_mode(struct drm_device *dev, str=
-uct drm_atomic_state *old_state)
-> > > > > >  {
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       struct drm_crtc_state *new_crtc_state;
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >       struct drm_connector_state *new_conn_state;
-> > > > > >       int i;
-> > > > > >
-> > > > > > @@ -1294,7 +1294,7 @@ void drm_atomic_helper_commit_modeset_ena=
-bles(struct drm_device *dev,
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       struct drm_crtc_state *old_crtc_state;
-> > > > > >       struct drm_crtc_state *new_crtc_state;
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >       struct drm_connector_state *new_conn_state;
-> > > > > >       int i;
-> > > > > >
-> > > > > > @@ -1384,7 +1384,7 @@ int drm_atomic_helper_wait_for_fences(str=
-uct drm_device *dev,
-> > > > > >                                     struct drm_atomic_state *st=
-ate,
-> > > > > >                                     bool pre_swap)
-> > > > > >  {
-> > > > > > -     struct drm_plane *plane;
-> > > > > > +     struct drm_plane __maybe_unused *plane;
-> > > > > >       struct drm_plane_state *new_plane_state;
-> > > > > >       int i, ret;
-> > > > > >
-> > > > > > @@ -1431,7 +1431,7 @@ drm_atomic_helper_wait_for_vblanks(struct=
- drm_device *dev,
-> > > > > >               struct drm_atomic_state *old_state)
-> > > > > >  {
-> > > > > >       struct drm_crtc *crtc;
-> > > > > > -     struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > > > > > +     struct drm_crtc_state __maybe_unused *old_crtc_state, *ne=
-w_crtc_state;
-> > > > > >       int i, ret;
-> > > > > >       unsigned crtc_mask =3D 0;
-> > > > > >
-> > > > > > @@ -1621,7 +1621,7 @@ static void commit_work(struct work_struc=
-t *work)
-> > > > > >  int drm_atomic_helper_async_check(struct drm_device *dev,
-> > > > > >                                  struct drm_atomic_state *state=
-)
-> > > > > >  {
-> > > > > > -     struct drm_crtc *crtc;
-> > > > > > +     struct drm_crtc __maybe_unused *crtc;
-> > > > > >       struct drm_crtc_state *crtc_state;
-> > > > > >       struct drm_plane *plane =3D NULL;
-> > > > > >       struct drm_plane_state *old_plane_state =3D NULL;
-> > > > > > @@ -1982,9 +1982,9 @@ int drm_atomic_helper_setup_commit(struct=
- drm_atomic_state *state,
-> > > > > >  {
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > > > > > -     struct drm_connector *conn;
-> > > > > > +     struct drm_connector __maybe_unused *conn;
-> > > > > >       struct drm_connector_state *old_conn_state, *new_conn_sta=
-te;
-> > > > > > -     struct drm_plane *plane;
-> > > > > > +     struct drm_plane __maybe_unused *plane;
-> > > > > >       struct drm_plane_state *old_plane_state, *new_plane_state=
-;
-> > > > > >       struct drm_crtc_commit *commit;
-> > > > > >       int i, ret;
-> > > > > > @@ -2214,7 +2214,7 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vbla=
-nk);
-> > > > > >   */
-> > > > > >  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state =
-*old_state)
-> > > > > >  {
-> > > > > > -     struct drm_crtc *crtc;
-> > > > > > +     struct drm_crtc __maybe_unused *crtc;
-> > > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > > > > >       struct drm_crtc_commit *commit;
-> > > > > >       int i;
-> > > > > > @@ -2300,7 +2300,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit_cl=
-eanup_done);
-> > > > > >  int drm_atomic_helper_prepare_planes(struct drm_device *dev,
-> > > > > >                                    struct drm_atomic_state *sta=
-te)
-> > > > > >  {
-> > > > > > -     struct drm_connector *connector;
-> > > > > > +     struct drm_connector __maybe_unused *connector;
-> > > > > >       struct drm_connector_state *new_conn_state;
-> > > > > >       struct drm_plane *plane;
-> > > > > >       struct drm_plane_state *new_plane_state;
-> > > > > > @@ -2953,9 +2953,9 @@ int drm_atomic_helper_disable_all(struct =
-drm_device *dev,
-> > > > > >  {
-> > > > > >       struct drm_atomic_state *state;
-> > > > > >       struct drm_connector_state *conn_state;
-> > > > > > -     struct drm_connector *conn;
-> > > > > > +     struct drm_connector __maybe_unused *conn;
-> > > > > >       struct drm_plane_state *plane_state;
-> > > > > > -     struct drm_plane *plane;
-> > > > > > +     struct drm_plane __maybe_unused *plane;
-> > > > > >       struct drm_crtc_state *crtc_state;
-> > > > > >       struct drm_crtc *crtc;
-> > > > > >       int ret, i;
-> > > > > > @@ -3199,11 +3199,11 @@ int drm_atomic_helper_commit_duplicated=
-_state(struct drm_atomic_state *state,
-> > > > > >  {
-> > > > > >       int i, ret;
-> > > > > >       struct drm_plane *plane;
-> > > > > > -     struct drm_plane_state *new_plane_state;
-> > > > > > +     struct drm_plane_state __maybe_unused *new_plane_state;
-> > > > > >       struct drm_connector *connector;
-> > > > > > -     struct drm_connector_state *new_conn_state;
-> > > > > > +     struct drm_connector_state __maybe_unused *new_conn_state=
-;
-> > > > > >       struct drm_crtc *crtc;
-> > > > > > -     struct drm_crtc_state *new_crtc_state;
-> > > > > > +     struct drm_crtc_state __maybe_unused *new_crtc_state;
-> > > > > >
-> > > > > >       state->acquire_ctx =3D ctx;
-> > > > > >
-> > > > > > --
-> > > > > > 2.15.0
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > dri-devel mailing list
-> > > > > > dri-devel@lists.freedesktop.org
-> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > > >
-> > > > > --
-> > > > > Ville Syrj=C3=A4l=C3=A4
-> > > > > Intel
-> > >
-> > > --
-> > > Ville Syrj=C3=A4l=C3=A4
-> > > Intel
->
-> --
-> Ville Syrj=C3=A4l=C3=A4
-> Intel
+Sm9obiwgZG9lcyB0aGlzIGZpeCB5b3VyIHByb2JsZW0/DQoNCk9uIDEwLzA0LzIwMTkgMDE6NDcg
+UE0sIFR1ZG9yIEFtYmFydXMgLSBNMTgwNjQgd3JvdGU6DQo+IEZyb206IFR1ZG9yIEFtYmFydXMg
+PHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4gDQo+IHdyaXRlX3NyKCkgc2VuZHMgZGF0
+YSB0byB0aGUgU1BJIG1lbW9yeSwgZml4IHRoZSBkaXJlY3Rpb24uDQo+IA0KPiBGaXhlczogYjM1
+YjlhMTAzNjJkICgibXRkOiBzcGktbm9yOiBNb3ZlIG0yNXA4MCBjb2RlIGluIHNwaS1ub3IuYyIp
+DQo+IFJlcG9ydGVkLWJ5OiBKb2huIEdhcnJ5IDxqb2huLmdhcnJ5QGh1YXdlaS5jb20+DQo+IFNp
+Z25lZC1vZmYtYnk6IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4N
+Cj4gLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyB8IDIgKy0NCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIGIvZHJpdmVycy9tdGQvc3BpLW5vci9z
+cGktbm9yLmMNCj4gaW5kZXggMWQ4NjIxZDQzMTYwLi43YWNmNGE5M2I1OTIgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL3Nw
+aS1ub3Ivc3BpLW5vci5jDQo+IEBAIC00ODcsNyArNDg3LDcgQEAgc3RhdGljIGludCB3cml0ZV9z
+cihzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCB2YWwpDQo+ICAJCQlTUElfTUVNX09QKFNQSV9NRU1f
+T1BfQ01EKFNQSU5PUl9PUF9XUlNSLCAxKSwNCj4gIAkJCQkgICBTUElfTUVNX09QX05PX0FERFIs
+DQo+ICAJCQkJICAgU1BJX01FTV9PUF9OT19EVU1NWSwNCj4gLQkJCQkgICBTUElfTUVNX09QX0RB
+VEFfSU4oMSwgbm9yLT5ib3VuY2VidWYsIDEpKTsNCj4gKwkJCQkgICBTUElfTUVNX09QX0RBVEFf
+T1VUKDEsIG5vci0+Ym91bmNlYnVmLCAxKSk7DQo+ICANCj4gIAkJcmV0dXJuIHNwaV9tZW1fZXhl
+Y19vcChub3ItPnNwaW1lbSwgJm9wKTsNCj4gIAl9DQo+IA0K
