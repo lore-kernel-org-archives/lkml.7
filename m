@@ -2,97 +2,124 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E241EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC5320867
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97AE21D81
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mlxtni30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731261AbfJDKHZ convert rfc822-to-8bit (ORCPT
+        id S1731518AbfJDKIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:07:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40428 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729466AbfJDKHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:07:25 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D2722C05AA56;
-        Fri,  4 Oct 2019 10:07:24 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ED85600C4;
-        Fri,  4 Oct 2019 10:07:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190911052849.7344-1-hdanton@sina.com>
-References: <20190911052849.7344-1-hdanton@sina.com> 
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     dhowells@redhat.com,
-        syzbot <syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com>,
-        MAILER_DAEMON@email.uscc.net, davem@davemloft.net,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in rxrpc_send_keepalive
+        Fri, 4 Oct 2019 06:08:40 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45641 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729291AbfJDKIj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:08:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r5so6365930wrm.12;
+        Fri, 04 Oct 2019 03:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=c2u7XRxJe99iE4rQjyctRU/UHhRXxdvAhzx35J6IZ0U=;
+        b=Mlxtni30BNAxSE9bntqUDeJg+UfDncBAIim0Dbfbgo75OZjNsnJqQKzXaLZfIYQiWA
+         2ME+r7KW4JXKe0j4r9EgQbFqXDbD+QETX5ibeEUCcNDa5vsJV53G+cT08x8/o8PvhJb5
+         NVRtFPi8id1UCv3NGRLL9TPVTgnoCYL85MmfoqJRK7nQArLBLAGAG9HGbghvuvs1WJ1W
+         yfnXW2JTqXpjWmPeKeqFi9Fd5ltHOTqoq/xEYeGdaGtWcxxJ2njYkJ8zDG1Go5sMixW0
+         OFjkTENcdV6qx+BQ5Ec2aeNtLbEioxiYHYOqDmHrpVssm5N6c6ar/xsmJdhm5vAwzkL8
+         tMVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=c2u7XRxJe99iE4rQjyctRU/UHhRXxdvAhzx35J6IZ0U=;
+        b=hVLGQViC6WwfxDd3TQnhSdggXvWf62WR2jyjbp88r7ZpvmjsJSAk8Ai6aqLTTRMGFk
+         X9QdQvJBXpIVfK2hj/toiaifgtO9HkiQ+RV5XThSEZy7jwsrTEXBF+LzJ1J+dDvsJNC2
+         2Ali5kXqM11rtmiHQGHZ2S3rcFmNIYBb0qmS7caIAZ1lHEga3hpWzCk/lKDSXLjaNXEv
+         /3XwGCgJ5M0nHpHWlGmKHaUHIsmeJRXTJSdYrRzaG7Z3tlJdWI8/AjDKeBcmh1EFPZG3
+         7H90dFd40VWTw5NEr7iRysuRxExdLW1cy9BfmCLnTxZXLktYQZmBNxSLhNastY3mKWCd
+         K+nQ==
+X-Gm-Message-State: APjAAAVmd97gtfZay6t8Q5jzjbLP6p2Eyfp/S02j/GypcWmAQ87f2d4N
+        QRgeZwf9XkFxFc5LOGRqaJk=
+X-Google-Smtp-Source: APXvYqwQB5aYrGxymvxvUBeHorb5eGIrb7KI3ggBpFiONG+INK2vAX3a1fxzUxGh/D0dYsNKcDiIMA==
+X-Received: by 2002:a5d:6951:: with SMTP id r17mr1272958wrw.208.1570183717716;
+        Fri, 04 Oct 2019 03:08:37 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.136.84])
+        by smtp.gmail.com with ESMTPSA id n7sm5509273wrt.59.2019.10.04.03.08.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 03:08:37 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH v2] io_uring: Fix reversed nonblock flag
+Date:   Fri,  4 Oct 2019 13:07:43 +0300
+Message-Id: <eecaf117de4894b595f300b9fb567825330b2d24.1570183599.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <75be62996d115a3e2effa6753a6d803069131460.1570177340.git.asml.silence@gmail.com>
+References: <75be62996d115a3e2effa6753a6d803069131460.1570177340.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7411.1570183641.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 04 Oct 2019 11:07:21 +0100
-Message-ID: <7412.1570183641@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 04 Oct 2019 10:07:25 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the fix, I think.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-David
+io_queue_link_head() accepts @force_nonblock flag, but io_ring_submit()
+passes something opposite.
+
+v2: fix build error by test robot: Rebase from custom tree
+Reported-by: kbuild test robot <lkp@intel.com>
+
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
-rxrpc: Fix call ref leak
+ fs/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-When sendmsg() finds a call to continue on with, if the call is in an
-inappropriate state, it doesn't release the ref it just got on that call
-before returning an error.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c934f91c51e9..c909ea2b84e9 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2703,6 +2703,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ 	struct io_kiocb *shadow_req = NULL;
+ 	bool prev_was_link = false;
+ 	int i, submit = 0;
++	bool force_nonblock = true;
+ 
+ 	if (to_submit > IO_PLUG_THRESHOLD) {
+ 		io_submit_state_start(&state, ctx, to_submit);
+@@ -2710,9 +2711,9 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ 	}
+ 
+ 	for (i = 0; i < to_submit; i++) {
+-		bool force_nonblock = true;
+ 		struct sqe_submit s;
+ 
++		force_nonblock = true;
+ 		if (!io_get_sqring(ctx, &s))
+ 			break;
+ 
+@@ -2761,7 +2762,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ 
+ 	if (link)
+ 		io_queue_link_head(ctx, link, &link->submit, shadow_req,
+-					block_for_last);
++					force_nonblock);
+ 	if (statep)
+ 		io_submit_state_end(statep);
+ 
+-- 
+2.23.0
 
-This causes the following symptom to show up with kasan:
-
-        BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
-        net/rxrpc/output.c:635
-        Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
-
-where line 635 is:
-
-        whdr.epoch      = htonl(peer->local->rxnet->epoch);
-
-The local endpoint (which cannot be pinned by the call) has been released,
-but not the peer (which is pinned by the call).
-
-Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
-Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- sendmsg.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 6cd55b1d79f9..79b5b23db4c1 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -661,6 +661,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
- 		case RXRPC_CALL_SERVER_PREALLOC:
- 		case RXRPC_CALL_SERVER_SECURING:
- 		case RXRPC_CALL_SERVER_ACCEPTING:
-+			rxrpc_put_call(call, rxrpc_call_put);
- 			ret = -EBUSY;
- 			goto error_release_sock;
- 		default:
