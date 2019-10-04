@@ -2,113 +2,167 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA9FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC95C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545982084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enBXaEXp"
+	by mail.kernel.org (Postfix) with ESMTP id 1A3C4222CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 17:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387900AbfJDRSk (ORCPT
+        id S2387935AbfJDRS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 13:18:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38541 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387458AbfJDRSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 13:18:40 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l21so6628187edr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 10:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P6ILDe87atoSpFhr4YLtT8v1Dvs0XN+7b56hhQlsV+s=;
-        b=enBXaEXpHjow9+Pz4mdlFTKzl3G3RGqsECSmVPyToON6sDWTvSqWHSCx3aJP7zHb8m
-         c5uclc8HWH8hKvhXKNL0V66ONtWbEHwLYEKfdDFvB2KSdfzcCscgixU48XqCxakcz/FZ
-         +qIWnSiT09Tf9EyszAAZicDPeHJ5BrbR8rjE7aaiuwurLJA1u9SBnHjmsCMQJKhElirg
-         3Qhh9ao8k5amjIpmewf2qbDCXbwfHZ4YoESlQVwSlJiqcB76aEbrl7hu5ITYQIiY+qyI
-         Czo3TxSQRSd/4RyxPrqJtpyVh/yUh1/W7htb9LUJ+WVZaB22qdnYAd4q5YLPc3FHkbz6
-         G+6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P6ILDe87atoSpFhr4YLtT8v1Dvs0XN+7b56hhQlsV+s=;
-        b=Q16ze2IaqyWWvSm9+5w4ie6M14GQs288k5jPPqNd8/PKxPB1bbLNBEiZKXUQa/ejzw
-         3DDo5ksHxy0k8u5UAWl8prsswJLOT/1wrRlD7UDKQ06CXcUyO5Msr2/Gai1JLS9vqrzR
-         tQwTYfnx0VNE/KtWGI7i/Jtkt+gDQfQJTeXpoA/bHoJjMTs5NG1LBSRH22gFsxA5UKjT
-         KyZYm3RcJM+jJBuOJqcX0rW1SvIF07uHLRgCC+d/KAxFOKXBrQXj0Q00/qeKM8gZlGg2
-         M7WR+Pqp3nDtQ4+yrlsydymFom3g5ik9nCvB8Rh6cTkW55wM+E9Co1hZOwS6kGpqEbs+
-         ogjA==
-X-Gm-Message-State: APjAAAUz/gOlSmWNEyjLp9imzyyAQIDPVMaUGJ6ujyWzHgbeYqPKUZtP
-        40wcVfqWIT6S0WtkPhDdQ6EftA==
-X-Google-Smtp-Source: APXvYqzwBvrnmFzZsa1Mpgi+XTXje83ZYwyx65gwJfmNiNPb0bxR4U6+rzPdd2I0VzhmJVaxNcWfaQ==
-X-Received: by 2002:a17:906:b30b:: with SMTP id n11mr13772893ejz.35.1570209518810;
-        Fri, 04 Oct 2019 10:18:38 -0700 (PDT)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id s42sm1230595edm.57.2019.10.04.10.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 10:18:37 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 19:18:35 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: Re: [PATCH v4 3/4] iommu/ioasid: Add custom allocators
-Message-ID: <20191004171835.GB1180125@lophozonia>
-References: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1570045363-24856-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        Fri, 4 Oct 2019 13:18:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50938 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387458AbfJDRS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 13:18:57 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0935910DCCA6;
+        Fri,  4 Oct 2019 17:18:57 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BB3419C69;
+        Fri,  4 Oct 2019 17:18:56 +0000 (UTC)
+Subject: Re: [PATCH v2 3/7] intel-speed-select: Add check for CascadeLake-N
+ models
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+References: <20191003121112.25870-1-prarit@redhat.com>
+ <20191003121112.25870-4-prarit@redhat.com>
+ <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <8c831fa0-bb42-76bf-a624-12b063cf8e8b@redhat.com>
+Date:   Fri, 4 Oct 2019 13:18:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570045363-24856-4-git-send-email-jacob.jun.pan@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 04 Oct 2019 17:18:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 12:42:42PM -0700, Jacob Pan wrote:
-> IOASID allocation may rely on platform specific methods. One use case is
-> that when running in the guest, in order to obtain system wide global
-> IOASIDs, emulated allocation interface is needed to communicate with the
-> host. Here we call these platform specific allocators custom allocators.
-> 
-> Custom IOASID allocators can be registered at runtime and take precedence
-> over the default XArray allocator. They have these attributes:
-> 
-> - provides platform specific alloc()/free() functions with private data.
-> - allocation results lookup are not provided by the allocator, lookup
->   request must be done by the IOASID framework by its own XArray.
-> - allocators can be unregistered at runtime, either fallback to the next
->   custom allocator or to the default allocator.
-> - custom allocators can share the same set of alloc()/free() helpers, in
->   this case they also share the same IOASID space, thus the same XArray.
-> - switching between allocators requires all outstanding IOASIDs to be
->   freed unless the two allocators share the same alloc()/free() helpers.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Link: https://lkml.org/lkml/2019/4/26/462
 
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
+On 10/4/19 1:15 PM, Srinivas Pandruvada wrote:
+> On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
+>> Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF
+>> support.
+>>
+>> Return an error if the CascadeLake processor is not one of these
+>> specific
+>> models.
+>>
+> This patch sigfaults immediately on CLX.>
+>> v2: Add is_clx_n_platform()
+>>
+>> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>> ---
+>>  .../x86/intel-speed-select/isst-config.c      | 44
+>> ++++++++++++++++++-
+>>  1 file changed, 42 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
+>> b/tools/power/x86/intel-speed-select/isst-config.c
+>> index f4a23678416e..734a7960458c 100644
+>> --- a/tools/power/x86/intel-speed-select/isst-config.c
+>> +++ b/tools/power/x86/intel-speed-select/isst-config.c
+>> @@ -23,6 +23,7 @@ static int debug_flag;
+>>  static FILE *outf;
+>>  
+>>  static int cpu_model;
+>> +static int cpu_stepping;
+>>  
+>>  #define MAX_CPUS_IN_ONE_REQ 64
+>>  static short max_target_cpus;
+>> @@ -72,7 +73,16 @@ void debug_printf(const char *format, ...)
+>>  	va_end(args);
+>>  }
+>>  
+>> -static void update_cpu_model(void)
+>> +
+>> +int is_clx_n_platform(void)
+>> +{
+>> +	if (cpu_model == 0x55)
+>> +		if (cpu_stepping == 0x6 || cpu_stepping == 0x7)
+>> +			return 1;
+>> +	return 0;
+>> +}
+>> +
+>> +static int update_cpu_model(void)
+>>  {
+>>  	unsigned int ebx, ecx, edx;
+>>  	unsigned int fms, family;
+>> @@ -82,6 +92,34 @@ static void update_cpu_model(void)
+>>  	cpu_model = (fms >> 4) & 0xf;
+>>  	if (family == 6 || family == 0xf)
+>>  		cpu_model += ((fms >> 16) & 0xf) << 4;
+>> +
+>> +	cpu_stepping = fms & 0xf;
+>> +
+>> +	/* only three CascadeLake-N models are supported */
+>> +	if (is_clx_n_platform()) {
+>> +		FILE *fp;
+>> +		size_t n;
+>> +		char *line;
+> Need n = 0 and *line = NULL here as getline() will require if it has to
+> allocate.
+
+Odd, I ran multiple tests and never hit the segfault :(.  Thanks for fixing.
+
+P.
+
+> 
+> Anyway I will update the patchset and post after test.
+> 
+
+> Thanks,
+> Srinivas
+>> +		int ret = 1;
+>> +
+>> +		fp = fopen("/proc/cpuinfo", "r");
+>> +		if (!fp)
+>> +			err(-1, "cannot open /proc/cpuinfo\n");
+>> +
+>> +		while (getline(&line, &n, fp) > 0) {
+>> +			if (strstr(line, "model name")) {
+>> +				if (strstr(line, "6252N") ||
+>> +				    strstr(line, "6230N") ||
+>> +				    strstr(line, "5218N"))
+>> +					ret = 0;
+>> +				break;
+>> +			}
+>> +		}
+>> +		free(line);
+>> +		fclose(fp);
+>> +		return ret;
+>> +	}
+>> +	return 0;
+>>  }
+>>  
+>>  /* Open a file, and exit on failure */
+>> @@ -1889,7 +1927,9 @@ static void cmdline(int argc, char **argv)
+>>  		fprintf(stderr, "Feature name and|or command not
+>> specified\n");
+>>  		exit(0);
+>>  	}
+>> -	update_cpu_model();
+>> +	ret = update_cpu_model();
+>> +	if (ret)
+>> +		err(-1, "Invalid CPU model (%d)\n", cpu_model);
+>>  	printf("Intel(R) Speed Select Technology\n");
+>>  	printf("Executing on CPU model:%d[0x%x]\n", cpu_model,
+>> cpu_model);
+>>  	set_max_cpu_num();
+> 
