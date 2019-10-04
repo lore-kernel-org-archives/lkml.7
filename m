@@ -2,132 +2,102 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21830C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EFAC47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB421207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEECE222C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 09:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388183AbfJDJkJ (ORCPT
+        id S2388239AbfJDJkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 05:40:09 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3243 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727451AbfJDJkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 05:40:08 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DEEE194FBEF2EFAB3561;
-        Fri,  4 Oct 2019 17:40:06 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 4 Oct 2019
- 17:40:01 +0800
-Subject: Re: [PATCH v2 10/22] mtd: spi-nor: Rework write_sr()
-To:     "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "jonas@norrbonn.se" <jonas@norrbonn.se>
-References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
- <20190924074533.6618-11-tudor.ambarus@microchip.com>
-CC:     "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "richard@nod.at" <richard@nod.at>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vz@mleia.com" <vz@mleia.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <83d62334-bd1c-20b7-3c58-225392c819f8@huawei.com>
-Date:   Fri, 4 Oct 2019 10:39:51 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Fri, 4 Oct 2019 05:40:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41522 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388187AbfJDJkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 05:40:17 -0400
+Received: from [185.81.136.18] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iGK4N-0007ns-BF; Fri, 04 Oct 2019 09:40:15 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] process fixes for v5.4-rc2
+Date:   Fri,  4 Oct 2019 11:39:47 +0200
+Message-Id: <20191004093947.14471-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190924074533.6618-11-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/09/2019 08:46, Tudor.Ambarus@microchip.com wrote:
-> +}
-> +
-> +/**
-> + * spi_nor_write_sr() - Write the Status Register.
-> + * @nor:	pointer to 'struct spi_nor'.
-> + * @sr:		buffer to write to the Status Register.
-> + * @len:	number of bytes to write to the Status Register.
-> + *
-> + * Return: 0 on success, -errno otherwise.
->   */
-> -static int write_sr(struct spi_nor *nor, u8 val)
-> +static int spi_nor_write_sr(struct spi_nor *nor, const u8 *sr, size_t len)
->  {
-> -	nor->bouncebuf[0] = val;
-> +	int ret;
-> +
-> +	ret = spi_nor_write_enable(nor);
-> +	if (ret)
-> +		return ret;
-> +
+Hi Linus,
 
-Hi Tudor,
+/* Summary */
+This pull request contains a couple of fixes:
 
->  	if (nor->spimem) {
->  		struct spi_mem_op op =
->  			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WRSR, 1),
->  				   SPI_MEM_OP_NO_ADDR,
->  				   SPI_MEM_OP_NO_DUMMY,
-> -				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
+- Fix pidfd selftest compilation (Shuah Kahn)
+  Due to a false linking instruction in the Makefile compilation for the
+  pidfd selftests would fail on some systems.
 
-This be SPI_MEM_OP_DATA_OUT() in the current mainline code also, right?
+- Fix compilation for glibc on RISC-V systems (Seth Forshee)
+  In some scenarios linux/uapi/linux/sched.h is included where __ASSEMBLY__
+  is defined causing a build failure because struct clone_args was not
+  guarded by an #ifndef __ASSEMBLY__.
 
-I'm testing my under development driver on top of v5.4-rc1, and 
-flash_lock -u is broken.
+- Add missing clone3() and struct clone_args kernel-doc (Christian Brauner)
+  clone3() and struct clone_args were missing kernel-docs. (The goal is to
+  use kernel-doc for any function or type where it's worth it.)
+  For struct clone_args this also contains a comment about the fact that
+  it's versioned by size.
 
-Cheers,
-John
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-> +				   SPI_MEM_OP_DATA_OUT(len, sr, 1));
->
-> -		return spi_mem_exec_op(nor->spimem, &op);
-> +		ret = spi_mem_exec_op(nor->spimem, &op);
-> +	} else {
-> +		ret = nor->controller_ops->write_reg(nor, SPINOR_OP_WRSR,
-> +						     sr, len);
->  	}
->
-> -	return nor->controller_ops->write_reg(nor, SPINOR_OP_WRSR,
-> -					      nor->bouncebuf, 1);
-> +	if (ret) {
-> +		dev_err(nor->dev, "error while writing Status Register\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = spi_nor_wait_till_ready(nor);
-> +
-> +	return ret;
->  }
->
->  static struct spi_nor *mtd_to_spi_nor(struct mtd_info *mtd)
-> @@ -741,161 +914,6 @@ static int winbond_set_4byte(struct spi_nor *nor, bool enable)
->  	return ret;
->  }
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
+are available in the Git repository at:
 
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20191003
+
+for you to fetch changes up to 78f6face5af344f12f4bd48b32faa6f499a06f36:
+
+  sched: add kernel-doc for struct clone_args (2019-10-03 21:19:29 +0200)
+
+/* Testing */
+All patches have seen exposure in linux-next and are based on v5.4-rc1.
+
+/* Conflicts */
+At the time of creating this PR no merge conflicts were reported from
+linux-next.
+
+Please consider pulling these changes from the signed for-linus-20191003 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-20191003
+
+----------------------------------------------------------------
+Christian Brauner (2):
+      fork: add kernel-doc for clone3
+      sched: add kernel-doc for struct clone_args
+
+Seth Forshee (1):
+      sched: Add __ASSEMBLY__ guards around struct clone_args
+
+Shuah Khan (1):
+      selftests: pidfd: Fix undefined reference to pthread_create()
+
+ include/uapi/linux/sched.h             | 28 ++++++++++++++++++++++++++--
+ kernel/fork.c                          | 11 +++++++++++
+ tools/testing/selftests/pidfd/Makefile |  2 +-
+ 3 files changed, 38 insertions(+), 3 deletions(-)
