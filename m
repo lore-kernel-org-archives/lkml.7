@@ -4,59 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4494EC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB809C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214CA20830
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983B220830
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390064AbfJDPp2 (ORCPT
+        id S2390081AbfJDPpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:45:28 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:42644 "EHLO fornost.hmeau.com"
+        Fri, 4 Oct 2019 11:45:45 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:42666 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389807AbfJDPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:45:28 -0400
+        id S2389807AbfJDPpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:45:44 -0400
 Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
         by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iGPky-0001Rb-OR; Sat, 05 Oct 2019 01:44:37 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 05 Oct 2019 01:44:33 +1000
-Date:   Sat, 5 Oct 2019 01:44:33 +1000
+        id 1iGPlA-0001Sq-Nh; Sat, 05 Oct 2019 01:44:49 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 05 Oct 2019 01:44:46 +1000
+Date:   Sat, 5 Oct 2019 01:44:46 +1000
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     ghook@amd.com, emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] crypto: ccp - Release all allocated memory if sha
- type is invalid
-Message-ID: <20191004154433.GX5148@gondor.apana.org.au>
-References: <7ffc6a77-f4e3-7db9-4ec6-53d6e01d881d@amd.com>
- <20190919160449.4303-1-navid.emamdoost@gmail.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     atul.gupta@chelsio.com, davem@davemloft.net,
+        akpm@linux-foundation.org, willy@infradead.org,
+        kirill.shutemov@linux.intel.com, kstewart@linuxfoundation.org,
+        yuehaibing@huawei.com, tglx@linutronix.de,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] crypto: chtls - simplify a bit 'create_flowc_wr_skb()'
+Message-ID: <20191004154445.GY5148@gondor.apana.org.au>
+References: <20190919200428.2664-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190919160449.4303-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20190919200428.2664-1-christophe.jaillet@wanadoo.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 11:04:48AM -0500, Navid Emamdoost wrote:
-> Release all allocated memory if sha type is invalid:
-> In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
-> hmac_buf should be released.
+On Thu, Sep 19, 2019 at 10:04:28PM +0200, Christophe JAILLET wrote:
+> Use '__skb_put_data()' instead of rewritting it.
+> This improves readability.
 > 
-> v2: fix the goto.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->  drivers/crypto/ccp/ccp-ops.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/crypto/chelsio/chtls/chtls_io.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Patch applied.  Thanks.
 -- 
