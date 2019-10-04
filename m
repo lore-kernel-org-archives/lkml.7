@@ -2,139 +2,90 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A48C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF9FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108D7215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CEF222C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 11:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ssUMEk0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfJDLsE (ORCPT
+        id S1731171AbfJDLtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 07:48:04 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50339 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726024AbfJDLsE (ORCPT
+        Fri, 4 Oct 2019 07:49:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36314 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJDLtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 07:48:04 -0400
-Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
-        by mail105.syd.optusnet.com.au (Postfix) with SMTP id 4235D3638C7
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 21:47:46 +1000 (AEST)
-Received: (qmail 23038 invoked by uid 501); 4 Oct 2019 11:47:45 -0000
-Date:   Fri, 4 Oct 2019 21:47:45 +1000
-From:   Duncan Roe <duncan_roe@optusnet.com.au>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Cc:     Julian Anastasov <ja@ssi.bg>, Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] selftests: netfilter: introduce test cases for
- ipvs
-Message-ID: <20191004114745.GB6803@dimstar.local.net>
-Mail-Followup-To: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        Julian Anastasov <ja@ssi.bg>, Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-References: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <alpine.LFD.2.21.1910012133330.3887@ja.home.ssi.bg>
- <20191002012726.GB9810@dimstar.local.net>
- <8E2E81F3-8385-4397-9A22-F513E507507D@cmss.chinamobile.com>
+        Fri, 4 Oct 2019 07:49:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t94arAtwMSELxUeSxpVTRDoonLVl+3+fPDniWRezYE8=; b=ssUMEk0fG4hKLEBdEcLJQEOxz
+        LFy6cOOMbYFukHC1NZ2ZG0eZfVtOZCQsPO+caJ/EQDphxs0JXz6bFbkbO3aqq7pk2KyWwJGt7PFOj
+        Rz2lQ/VBLuV11Go8JEfsvZU1zLjxol+GFuQH3ezo1ypR3Ei5l7eM4XD08fpe42VK6y+QmR/FwGj8R
+        YRs7g23kkaMKM4iVb7VUfghQIickBpaI+GT6gNzt7J6lKDKJI8U3MqzewVE2jWKq4mDUndhMWryV1
+        OmyJ7YlNnyrk71hpOXXw06WPg0N8S3CoIsDjUhr1Z8negxd01F+M8iqp20pwP+2dKzrxzLexm+Ead
+        /3zgFnZKQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGM4a-0006CC-Jk; Fri, 04 Oct 2019 11:48:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D1D430034F;
+        Fri,  4 Oct 2019 13:47:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B90C3203E50D2; Fri,  4 Oct 2019 13:48:34 +0200 (CEST)
+Date:   Fri, 4 Oct 2019 13:48:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
+Message-ID: <20191004114834.GE19463@hirez.programming.kicks-ass.net>
+References: <20191002122926.385-1-ggherdovich@suse.cz>
+ <1906426.HDqaVa71mF@kreacher>
+ <20191003121537.GR4536@hirez.programming.kicks-ass.net>
+ <1990043.dY4KdrEkPr@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8E2E81F3-8385-4397-9A22-F513E507507D@cmss.chinamobile.com>
+In-Reply-To: <1990043.dY4KdrEkPr@kreacher>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=PO7r1zJSAAAA:8 a=YExiR9hJhUxYzP8DYcgA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 10:41:06PM +0800, Haishuang Yan wrote:
->
->
-> > On 2019??10??2??, at ????9:27, Duncan Roe <duncan_roe@optusnet.com.au> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 09:34:13PM +0300, Julian Anastasov wrote:
-> >>
-> >> 	Hello,
-> >>
-> >> On Tue, 1 Oct 2019, Haishuang Yan wrote:
-> >>
-> >>> This series patch include test cases for ipvs.
-> >>>
-> >>> The test topology is who as below:
-> >>> +--------------------------------------------------------------+
-> >>> |                      |                                       |
-> >>> |         ns0          |         ns1                           |
-> >>> |      -----------     |     -----------    -----------        |
-> >>> |      | veth01  | --------- | veth10  |    | veth12  |        |
-> >>> |      -----------    peer   -----------    -----------        |
-> >>> |           |          |                        |              |
-> >>> |      -----------     |                        |              |
-> >>> |      |  br0    |     |-----------------  peer |--------------|
-> >>> |      -----------     |                        |              |
-> >>> |           |          |                        |              |
-> >>> |      ----------     peer   ----------      -----------       |
-> >>> |      |  veth02 | --------- |  veth20 |     | veth12  |       |
-> >>> |      ----------      |     ----------      -----------       |
-> >>> |                      |         ns2                           |
-> >>> |                      |                                       |
-> >>> +--------------------------------------------------------------+
-> >>>
-> >>> Test results:
-> >>> # selftests: netfilter: ipvs.sh
-> >>> # Testing DR mode...
-> >>> # Testing NAT mode...
-> >>> # Testing Tunnel mode...
-> >>> # ipvs.sh: PASS
-> >>> ok 6 selftests: netfilter: ipvs.sh
-> >>>
-> >>> Haishuang Yan (3):
-> >>>  selftests: netfilter: add ipvs test script
-> >>>  selftests: netfilter: add ipvs nat test case
-> >>>  selftests: netfilter: add ipvs tunnel test case
-> >>
-> >> Acked-by: Julian Anastasov <ja@ssi.bg>
-> >>
-> >>> tools/testing/selftests/netfilter/Makefile |   2 +-
-> >>> tools/testing/selftests/netfilter/ipvs.sh  | 234 +++++++++++++++++++++++++++++
-> >>> 2 files changed, 235 insertions(+), 1 deletion(-)
-> >>> create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
-> >>
-> >> Regards
-> >>
-> >> --
-> >> Julian Anastasov <ja@ssi.bg>
-> >
-> > I still prefer #!/bin/sh in 1/3. You never know what's in someone's environment
-> >
-> > Cheers ... Duncan.
-> >
->
-> It??s also my preference too. "_"	
->
-> I have tested both #!/bin/bash and #!/bin/sh script, they all works properly.
+On Thu, Oct 03, 2019 at 07:53:49PM +0200, Rafael J. Wysocki wrote:
+> On Thursday, October 3, 2019 2:15:37 PM CEST Peter Zijlstra wrote:
+> > On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
+> > > > +	if (smp_processor_id() != 0)
+> > > > +		return;
 
-Enter these 2 lines:
-> ip(){ return 0; }
-> export -f ip
+> Well, but the smp_processor_id() check has nothing to do with whether or not
+> this is "core" or "atom" or something else, for example.
 
-Now try the #!/bin/bash script. If that now fails, try again with #!/bin/bash
-changed to #!/bin/bash -p
-
-Any better now?
-
-Cheers ... Duncan.
+It is dodgy to begin with, it hard assumes we boot on cpu-0. A
+'initialized' state would probably be better.
