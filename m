@@ -2,82 +2,84 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DACC4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED5AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0DB215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B1A2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 07:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dudrmnfW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iAEP6pkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfJDHWr (ORCPT
+        id S1729908AbfJDHYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 03:22:47 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33709 "EHLO
+        Fri, 4 Oct 2019 03:24:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39080 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729548AbfJDHWq (ORCPT
+        by vger.kernel.org with ESMTP id S1729319AbfJDHYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 03:22:46 -0400
+        Fri, 4 Oct 2019 03:24:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570173765;
+        s=mimecast20190719; t=1570173862;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=ZZFTUGEUKAOtLqz6071gHP1dbpBLVQ8hfKF55tUq/KQ=;
-        b=dudrmnfWDZfvhgo17RR3h8JfPkFMsvD3yDqgJeSt/s+dTZPnULwpBnCqq/v/cBqjc73SWY
-        c329r3/lBQbinPP8awTW7osqObt7aFAAjqVR9NBvo7VRqLa27D2sStk0AqsZ8VfkzVxiMJ
-        F1nO1S1PBStrWhzT3pspNZrktUGG+XM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-BNVYoja6Mj-SFHpO4z-qPA-1; Fri, 04 Oct 2019 03:22:44 -0400
-Received: by mail-wr1-f72.google.com with SMTP id f3so2279899wrr.23
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 00:22:44 -0700 (PDT)
+        bh=pbx+rCyRuyCn21y+hMG3H967or+R7JkmlueXXHjswlI=;
+        b=iAEP6pklB92aWgdHUKgKjVhNjTZvzyPrqAa13NwMArbO79C5K2c6iI3HEN3z6J32y5NNXt
+        zoXtw/QSVeBUmIUsD3VZVMG/Ng4eZQEdDZsRDDGoELgi+DRpjxwx33AD+gBok8CZr8NvSH
+        JZYvklIRM1oszBMH0khPqgjTueYZuWg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-t5YnKb3uPgCIy9vCBV7-Sg-1; Fri, 04 Oct 2019 03:24:20 -0400
+Received: by mail-wr1-f71.google.com with SMTP id v17so1891979wru.12
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 00:24:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ILNTMth44lhyhVxp81yLHyMCFOzyjpLW4hR5n2e7NXY=;
-        b=EeK1rWDH6C6GU+2/AeF7WGbn2lh/1B5tzlgcXYMPs5eHxSPVdScxuw5dtFl3HBb5De
-         QSWFWHMmnGU1ISntkWvgbTgYO4Za564F5KgEVJaA74HDL/X1J2lB0xr1KkStdy1RF8+3
-         g/n3HXLvJp6DqPHyED+PZS+a3uuDliaLKFzbi8KEAisAm2XyNsQqr23fsx22RTWbkyk+
-         vswkti/M0BOhHAdCvHVqiNQ6+YnheS8/dqg/mPlcPWTp1KL7Ky+XfXDIRWm4e+06PkK3
-         r3zqOS94ysIdl/KCcTlwjK+Tkp4I0DDMH7G4k6GjpY0Y2m8hr+8cVSfA+L25H835h+BX
-         DPgw==
-X-Gm-Message-State: APjAAAXxfvQqyNkzOLKazk/L3DOur8agSCwX+ZpGFicdT/nNMDxKUEcY
-        4utReWouxFY2Q5BxXxv2seChI94Iz4ccC75douNQ4mV+0XcV0OIYvppiud6y/hfntLtMOm83h2r
-        JovTmzAzmeYYtYby2nD2FKgpz
-X-Received: by 2002:a5d:63ca:: with SMTP id c10mr10778929wrw.314.1570173763355;
-        Fri, 04 Oct 2019 00:22:43 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwEDGvpXlmcBz9oOFWe0DyzE8bVjNOqBDdH/xvILz6ksCyS5v4csWDZufvLcv4gql6PnY37oA==
-X-Received: by 2002:a5d:63ca:: with SMTP id c10mr10778904wrw.314.1570173763052;
-        Fri, 04 Oct 2019 00:22:43 -0700 (PDT)
+        bh=KI34XlCdh0iqJ/GDbHNFKp63Pe8m93EMqaoBoOW2RL4=;
+        b=jGxWdR90H6aNJf1M2/I8IADNztAs5nO6QjyQzFsES4aPpxigown8oW9HBDdsyG+8Nl
+         2kRl4UR2dJv+hH/HFPMo8h45hdcNVrnO7xT1yfQulwkicdmFmNteLFk4CoFfYCWkaBj1
+         1rL13Hdp7AoTUbK6E+xG6UnnVo2vuMw+6S5rlUsl9j5l0XyDdY/8C4voNNja4nRgTGUQ
+         Znj4VwO8JH3PhvY2zvtxUiXsvD+pDXZhZXWEfA2ruWn1D03Wr013Rd5uKRJjpKziFMjO
+         OC9piKRqo7XqbvQYZ+6Z/7S+CAoJVJsPl2A1uxHOz8TzogrgDKsIgbVtFxAKdi2Jj2Dk
+         PyMw==
+X-Gm-Message-State: APjAAAWo7BoKbBCE5gfShYvHMMXFjN92On8XFwuPxy8qgeA4Hv74Jcf4
+        Lkqv17wGLHxAwUJ+mXVUpXGQVy8zJ6MGsM08tQMqHSHzmZEUmwbVV0iCIX69FIRyONzATBoYDdt
+        3SYZCY+uxU7q5KkvDI6IVW6C0
+X-Received: by 2002:a1c:a8d8:: with SMTP id r207mr9383061wme.135.1570173859640;
+        Fri, 04 Oct 2019 00:24:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxL/3Qg2/nFz5WGI22MgLAEnEVS+FvuTHhN/9hwnbJvJz9GG9hDmIIQ7hOMBhmCec7dUA13VA==
+X-Received: by 2002:a1c:a8d8:: with SMTP id r207mr9383044wme.135.1570173859354;
+        Fri, 04 Oct 2019 00:24:19 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:e56d:fbdf:8b79:c79c? ([2001:b07:6468:f312:e56d:fbdf:8b79:c79c])
-        by smtp.gmail.com with ESMTPSA id r20sm9288291wrg.61.2019.10.04.00.22.41
+        by smtp.gmail.com with ESMTPSA id b16sm5729190wrh.5.2019.10.04.00.24.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2019 00:22:42 -0700 (PDT)
-Subject: Re: [RFC PATCH 00/13] XOM for KVM guest userspace
+        Fri, 04 Oct 2019 00:24:18 -0700 (PDT)
+Subject: Re: [RFC PATCH 06/13] kvm: Add KVM_CAP_EXECONLY_MEM
 To:     Rick Edgecombe <rick.p.edgecombe@intel.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
         luto@kernel.org, peterz@infradead.org, dave.hansen@intel.com,
         sean.j.christopherson@intel.com, keescook@chromium.org
 Cc:     kristen@linux.intel.com, deneen.t.dock@intel.com
 References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+ <20191003212400.31130-7-rick.p.edgecombe@intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Message-ID: <bc025a4f-2128-24ed-e5b7-76802f22cd53@redhat.com>
-Date:   Fri, 4 Oct 2019 09:22:42 +0200
+Message-ID: <0f2307a5-314d-d3df-0bc9-4c1fbbf93f72@redhat.com>
+Date:   Fri, 4 Oct 2019 09:24:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+In-Reply-To: <20191003212400.31130-7-rick.p.edgecombe@intel.com>
 Content-Language: en-US
-X-MC-Unique: BNVYoja6Mj-SFHpO4z-qPA-1
+X-MC-Unique: t5YnKb3uPgCIy9vCBV7-Sg-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -87,39 +89,102 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 03/10/19 23:23, Rick Edgecombe wrote:
-> Since software would have previously received a #PF with the RSVD error c=
-ode
-> set, when the HW encountered any set bits in the region 51 to M, there wa=
-s some
-> internal discussion on whether this should have a virtual MSR for the OS =
-to turn
-> it on only if the OS knows it isn't relying on this behavior for bit M. T=
-he
-> argument against needing an MSR is this blurb from the Intel SDM about re=
-served
-> bits:
-> "Bits reserved in the paging-structure entries are reserved for future
-> functionality. Software developers should be aware that such bits may be =
-used in
-> the future and that a paging-structure entry that causes a page-fault exc=
-eption
-> on one processor might not do so in the future."
+> Add a KVM capability for the KVM_MEM_EXECONLY memslot type. This memslot
+> type is supported if the HW supports execute-only TDP.
 >=20
-> So in the current patchset there is no MSR write required for the guest t=
-o turn
-> on this feature. It will have this behavior whenever qemu is run with
-> "-cpu +xo".
+> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 1 +
+>  arch/x86/kvm/svm.c              | 6 ++++++
+>  arch/x86/kvm/vmx/vmx.c          | 1 +
+>  arch/x86/kvm/x86.c              | 3 +++
+>  include/uapi/linux/kvm.h        | 1 +
+>  5 files changed, 12 insertions(+)
+>=20
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
+ost.h
+> index 6d06c794d720..be3ff71e6227 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1132,6 +1132,7 @@ struct kvm_x86_ops {
+>  =09bool (*xsaves_supported)(void);
+>  =09bool (*umip_emulated)(void);
+>  =09bool (*pt_supported)(void);
+> +=09bool (*tdp_xo_supported)(void);
+> =20
+>  =09int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr)=
+;
+>  =09void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index e0368076a1ef..f9f25f32e946 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -6005,6 +6005,11 @@ static bool svm_pt_supported(void)
+>  =09return false;
+>  }
+> =20
+> +static bool svm_xo_supported(void)
+> +{
+> +=09return false;
+> +}
+> +
+>  static bool svm_has_wbinvd_exit(void)
+>  {
+>  =09return true;
+> @@ -7293,6 +7298,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_in=
+it =3D {
+>  =09.xsaves_supported =3D svm_xsaves_supported,
+>  =09.umip_emulated =3D svm_umip_emulated,
+>  =09.pt_supported =3D svm_pt_supported,
+> +=09.tdp_xo_supported =3D svm_xo_supported,
+> =20
+>  =09.set_supported_cpuid =3D svm_set_supported_cpuid,
+> =20
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index a30dbab8a2d4..7e7260c715f2 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7767,6 +7767,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_in=
+it =3D {
+>  =09.xsaves_supported =3D vmx_xsaves_supported,
+>  =09.umip_emulated =3D vmx_umip_emulated,
+>  =09.pt_supported =3D vmx_pt_supported,
+> +=09.tdp_xo_supported =3D cpu_has_vmx_ept_execute_only,
+> =20
+>  =09.request_immediate_exit =3D vmx_request_immediate_exit,
+> =20
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 2e321d788672..810cfdb1a315 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3183,6 +3183,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
+ong ext)
+>  =09=09r =3D kvm_x86_ops->get_nested_state ?
+>  =09=09=09kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
+>  =09=09break;
+> +=09case KVM_CAP_EXECONLY_MEM:
+> +=09=09r =3D kvm_x86_ops->tdp_xo_supported();
+> +=09=09break;
+>  =09default:
+>  =09=09break;
+>  =09}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index ede487b7b216..7778a1f03b78 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -997,6 +997,7 @@ struct kvm_ppc_resize_hpt {
+>  #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+>  #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
+>  #define KVM_CAP_PMU_EVENT_FILTER 173
+> +#define KVM_CAP_EXECONLY_MEM 174
+> =20
+>  #ifdef KVM_CAP_IRQ_ROUTING
+> =20
+>=20
 
-I think the part of the manual that you quote is out of date.  Whenever
-Intel has "unreserved" bits in the page tables they have done that only
-if specific bits in CR4 or EFER or VMCS execution controls are set; this
-is a good thing, and I'd really like it to be codified in the SDM.
-
-The only bits for which this does not (and should not) apply are indeed
-bits 51:MAXPHYADDR.  But the SDM makes it clear that bits 51:MAXPHYADDR
-are reserved, hence "unreserving" bits based on just a QEMU command line
-option would be against the specification.  So, please don't do this and
-introduce an MSR that enables the feature.
+This is not needed, execution only can be a CPUID bit in the hypervisor
+range (see Documentation/virt/kvm/cpuid.txt).  Userspace can use
+KVM_GET_SUPPORTED_CPUID to check whether the host supports it.
 
 Paolo
 
