@@ -2,199 +2,249 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C60C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FEAC4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDC3222C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395A0215EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlDUpf/L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLVoTxTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbfJDIcJ (ORCPT
+        id S1730485AbfJDIce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 04:32:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39850 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfJDIcJ (ORCPT
+        Fri, 4 Oct 2019 04:32:34 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41215 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbfJDIce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 04:32:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y3so5612776ljj.6;
-        Fri, 04 Oct 2019 01:32:05 -0700 (PDT)
+        Fri, 4 Oct 2019 04:32:34 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q9so6008589wrm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 01:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=NPQ5cZjeAKLubxvECYH8lKvd804y+Ly8agJKLsQA30A=;
-        b=XlDUpf/LQ1ng0doQW6R8Au7b6U7WkZN1JRB/fMdIsJ/1tD9fQnkMcz8cHcRYbpBaNT
-         OT3XvKtOLyxT+u7+x/4AV/qTipUYH6l5load3Q0t5m2hPbQFTMMPhdRw0wBvNhBnDyPT
-         /K4qUSiZ0PXtV1RwOZ3EFSX003r4eYo2D6HQG02/kExvD2zoPWEG5e4CPKcDEdr0o5Xj
-         g4xq8FiTkWoUioDP1QHbClu1ZZUDi+/m3tIQ92BiXWVjmXg63kzYtvq2/VsoazgJj43I
-         h6UJ9n7Whw/IAH1YMd/W6Ve542DP3NAleaGa3J/nkUs9/vdDRlrQ5CpIEmQceTLNZC3p
-         VYlw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=odawl8FFS06ZpSGBB5Pezvvx3lJRWzOpGgq0TcvgjOg=;
+        b=gLVoTxTYU4YJJs5PxMDO/rAdoZSdOQm4A/y0U5DDHjyjlcr/OO5sO/eqP/gwd9cynE
+         VGggA9SR5FpSQBl+A/TBs5VbPtrp5qV2DhJLKnPdj7pKfIiyaN28mLihZncEC8uZwLBP
+         3WqL84Y0dWvPiNF9/W6Hd97g8R/7NUtbnA0npwx1Tc9IQjv0nBr+t61pGk+vGiUWk+y8
+         7Bfd4IddY9DStT4mNRzdbJDoRmqqo4vjsuZzQ0kLEnPbztiuv5bV7ihpT5t1te5kHkE0
+         /txVt3ZLr+NFXJmCkVjbzN9BDEUTDcTsGhHgyjZyK6XNhU3OMgvzwxKskYPDyDiTi1rL
+         ExSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=NPQ5cZjeAKLubxvECYH8lKvd804y+Ly8agJKLsQA30A=;
-        b=EFpXq4tg/lHdDjbPskePlcZSAoMcKPXpONkG1LFXLLGFY/it76ec48AMNbH0Z7CaiQ
-         Q+J/oQdYXLxWrpU+w+yGm/uzBgn35cMHeCkuIIkHc8wt/Dapq2JZAbitBiOmjV/jCbzH
-         7ascLqkYp8Lnrzekh9oMdwLiuSQAxvA1ySb0NdyXa5Hp8LwIwxyICGYW9jDpoHl4+KNZ
-         rMxZk5M+yqgpRf5EwNRifyU+N+6Irkb6qsCHTbrigBQ9owl4MnNqKv9H6cKqFQaOYaw2
-         2KfdbKePE58m65nJHWiPrqjSYq0F3W2pc6SCxVdoAtrFx25IoZk68nfNsbvMEt6oFh5Z
-         vrfg==
-X-Gm-Message-State: APjAAAV43ZSOB6OtwfnswiIGk4br4VV2aJuNIOGeHFFjxhada2TSbhV0
-        nR61XCgZpk0eNhfJTqGcRh4M77BE
-X-Google-Smtp-Source: APXvYqzLxS7n6FT1JetYlU1lm0Gp1CAIoBnDhgxYjByOima/TEF3aD+tp25sES0XsiSPTFM7uJF4vw==
-X-Received: by 2002:a2e:3808:: with SMTP id f8mr8688996lja.7.1570177924558;
-        Fri, 04 Oct 2019 01:32:04 -0700 (PDT)
-Received: from [192.168.100.64] (mm-61-74-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.74.61])
-        by smtp.gmail.com with ESMTPSA id 28sm989185lfy.47.2019.10.04.01.32.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2019 01:32:03 -0700 (PDT)
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <75be62996d115a3e2effa6753a6d803069131460.1570177340.git.asml.silence@gmail.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH] io_uring: Fix reversed nonblock flag
-Message-ID: <cfd89ec4-f632-9274-6982-826bc9f45284@gmail.com>
-Date:   Fri, 4 Oct 2019 11:32:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <75be62996d115a3e2effa6753a6d803069131460.1570177340.git.asml.silence@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Bw0tPhRScHj7UlXCvIrrxiJmaZn9Ij0bm"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=odawl8FFS06ZpSGBB5Pezvvx3lJRWzOpGgq0TcvgjOg=;
+        b=elhCKa5inFPZvU0VoGjWKqS8aDt0zeuOA7B2uyomdfTbpirKMcbtQkoVLWwTnkv4Lh
+         1s09raObgCdNtmKa6l6ZjyNz+5h7t6TgHHvq597m4dS/T2AX3tCqBbLZ8ccLFAOnHLUa
+         ri9pzazbf8xQXlSwfxNi16cS8SUbOlUm6cUw/PA+Z8uRF+fYsR7b6Kx2FmTxHQUgBEKV
+         wW2evCEgaxB4c8+Y4egIWWfAFJzc/9UauQpjY8LRXXcAAblOre05o2o0ZxF9ivNH1kK8
+         1ZpreDtOMgkU8jmBvdVjfkdTEtD2BQj+5DxB/9i5tPJMFq6cqL+n4IJPFx0EFg9W/Q3I
+         eF5w==
+X-Gm-Message-State: APjAAAWSAaZnqsm0PTANtbPp9EOwBUkFQB6fx8krVMKJ5kFu1KYw60RM
+        bOPIuxu24TU22MlZSz7EH6BPhw==
+X-Google-Smtp-Source: APXvYqwLFT1XQ84Dvr29PPk+Tn+ldePovSJTVW+Cy/vU2EoaglqFpt0A09jqIP+J2sR7KjOhUkR/KQ==
+X-Received: by 2002:adf:e951:: with SMTP id m17mr10383807wrn.154.1570177951050;
+        Fri, 04 Oct 2019 01:32:31 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:15f7:68ed:c037:86e6])
+        by smtp.gmail.com with ESMTPSA id 59sm6488304wrc.23.2019.10.04.01.32.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 01:32:30 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rjw@rjwysocki.net
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pm@vger.kernel.org (open list:CPU IDLE TIME MANAGEMENT FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH V4 1/3] cpuidle: play_idle: Make play_idle more flexible
+Date:   Fri,  4 Oct 2019 10:32:03 +0200
+Message-Id: <20191004083205.29302-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Bw0tPhRScHj7UlXCvIrrxiJmaZn9Ij0bm
-Content-Type: multipart/mixed; boundary="AJAJmnyxlAO8z74yubWeROTM09DJBPT06";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <cfd89ec4-f632-9274-6982-826bc9f45284@gmail.com>
-Subject: Re: [PATCH] io_uring: Fix reversed nonblock flag
-References: <75be62996d115a3e2effa6753a6d803069131460.1570177340.git.asml.silence@gmail.com>
-In-Reply-To: <75be62996d115a3e2effa6753a6d803069131460.1570177340.git.asml.silence@gmail.com>
+The play_idle function has two users, the intel powerclamp and the
+idle_injection.
 
---AJAJmnyxlAO8z74yubWeROTM09DJBPT06
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+The idle injection cooling device uses the function via the
+idle_injection powercap's APIs. Unfortunately, play_idle is currently
+limited by the idle state depth: by default the deepest idle state is
+selected. On the ARM[64] platforms, most of the time it is the cluster
+idle state, the exit latency and the residency can be very high. That
+reduces the scope of the idle injection usage because the impact on
+the performances can be very significant.
 
-I haven't followed the code path properly, but it looks strange to me.
-Jens, could you take a look?
+If the idle injection cycles can be done with a shallow state like a
+retention state, the cooling effect would eventually give similar
+results than the cpufreq cooling device.
 
+In order to prepare the function to receive an idle state parameter,
+let's replace the 'use_deepest_state' boolean field with 'use_state'
+and use this value to enter the specific idle state.
 
-On 04/10/2019 11:25, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
->=20
-> io_queue_link_head() accepts @force_nonblock flag, but io_ring_submit()=
+The current code keeps the default behavior which is go to the deepest
+idle state.
 
-> passes something opposite.
->=20
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  fs/io_uring.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index c934f91c51e9..ffe66512ca07 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2761,7 +2761,7 @@ static int io_ring_submit(struct io_ring_ctx *ctx=
-, unsigned int to_submit,
-> =20
->  	if (link)
->  		io_queue_link_head(ctx, link, &link->submit, shadow_req,
-> -					block_for_last);
-> +					force_nonblock);
->  	if (statep)
->  		io_submit_state_end(statep);
-> =20
->=20
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ drivers/cpuidle/cpuidle.c | 21 +++++++++++----------
+ include/linux/cpuidle.h   | 13 ++++++-------
+ kernel/sched/idle.c       | 10 +++++-----
+ 3 files changed, 22 insertions(+), 22 deletions(-)
 
---=20
-Yours sincerely,
-Pavel Begunkov
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 0895b988fa92..f8b54f277589 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -99,31 +99,31 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+ }
+ 
+ /**
+- * cpuidle_use_deepest_state - Set/clear governor override flag.
+- * @enable: New value of the flag.
++ * cpuidle_use_state - Force the cpuidle framework to enter an idle state.
++ * @state: An integer for an idle state
+  *
+- * Set/unset the current CPU to use the deepest idle state (override governors
+- * going forward if set).
++ * Specify an idle state the cpuidle framework must step in and bypass
++ * the idle state selection process.
+  */
+-void cpuidle_use_deepest_state(bool enable)
++void cpuidle_use_state(int state)
+ {
+ 	struct cpuidle_device *dev;
+ 
+ 	preempt_disable();
+ 	dev = cpuidle_get_device();
+ 	if (dev)
+-		dev->use_deepest_state = enable;
++		dev->use_state = state;
+ 	preempt_enable();
+ }
+ 
+ /**
+  * cpuidle_find_deepest_state - Find the deepest available idle state.
+- * @drv: cpuidle driver for the given CPU.
+- * @dev: cpuidle device for the given CPU.
+  */
+-int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-			       struct cpuidle_device *dev)
++int cpuidle_find_deepest_state(void)
+ {
++	struct cpuidle_device *dev = cpuidle_get_device();
++	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
++
+ 	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
+ }
+ 
+@@ -554,6 +554,7 @@ static void __cpuidle_unregister_device(struct cpuidle_device *dev)
+ static void __cpuidle_device_init(struct cpuidle_device *dev)
+ {
+ 	memset(dev->states_usage, 0, sizeof(dev->states_usage));
++	dev->use_state = CPUIDLE_STATE_NOUSE;
+ 	dev->last_residency = 0;
+ 	dev->next_hrtimer = 0;
+ }
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 2dc4c6b19c25..ba0751b26e37 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -15,6 +15,7 @@
+ #include <linux/list.h>
+ #include <linux/hrtimer.h>
+ 
++#define CPUIDLE_STATE_NOUSE	-1
+ #define CPUIDLE_STATE_MAX	10
+ #define CPUIDLE_NAME_LEN	16
+ #define CPUIDLE_DESC_LEN	32
+@@ -80,11 +81,11 @@ struct cpuidle_driver_kobj;
+ struct cpuidle_device {
+ 	unsigned int		registered:1;
+ 	unsigned int		enabled:1;
+-	unsigned int		use_deepest_state:1;
+ 	unsigned int		poll_time_limit:1;
+ 	unsigned int		cpu;
+ 	ktime_t			next_hrtimer;
+ 
++	int			use_state;
+ 	int			last_state_idx;
+ 	int			last_residency;
+ 	u64			poll_limit_ns;
+@@ -203,19 +204,17 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
+ #endif
+ 
+ #ifdef CONFIG_CPU_IDLE
+-extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-				      struct cpuidle_device *dev);
++extern int cpuidle_find_deepest_state(void);
+ extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				struct cpuidle_device *dev);
+-extern void cpuidle_use_deepest_state(bool enable);
++extern void cpuidle_use_state(int state);
+ #else
+-static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-					     struct cpuidle_device *dev)
++static inline int cpuidle_find_deepest_state(void)
+ {return -ENODEV; }
+ static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				       struct cpuidle_device *dev)
+ {return -ENODEV; }
+-static inline void cpuidle_use_deepest_state(bool enable)
++static inline void cpuidle_use_state(int state)
+ {
+ }
+ #endif
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index b98283fc6914..17da9cb309e1 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -165,7 +165,8 @@ static void cpuidle_idle_call(void)
+ 	 * until a proper wakeup interrupt happens.
+ 	 */
+ 
+-	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
++	if (idle_should_enter_s2idle() ||
++	    dev->use_state != CPUIDLE_STATE_NOUSE) {
+ 		if (idle_should_enter_s2idle()) {
+ 			rcu_idle_enter();
+ 
+@@ -181,8 +182,7 @@ static void cpuidle_idle_call(void)
+ 		tick_nohz_idle_stop_tick();
+ 		rcu_idle_enter();
+ 
+-		next_state = cpuidle_find_deepest_state(drv, dev);
+-		call_cpuidle(drv, dev, next_state);
++		call_cpuidle(drv, dev, dev->use_state);
+ 	} else {
+ 		bool stop_tick = true;
+ 
+@@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
+ 	rcu_sleep_check();
+ 	preempt_disable();
+ 	current->flags |= PF_IDLE;
+-	cpuidle_use_deepest_state(true);
++	cpuidle_use_state(cpuidle_find_deepest_state());
+ 
+ 	it.done = 0;
+ 	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+@@ -339,7 +339,7 @@ void play_idle(unsigned long duration_us)
+ 	while (!READ_ONCE(it.done))
+ 		do_idle();
+ 
+-	cpuidle_use_deepest_state(false);
++	cpuidle_use_state(CPUIDLE_STATE_NOUSE);
+ 	current->flags &= ~PF_IDLE;
+ 
+ 	preempt_fold_need_resched();
+-- 
+2.17.1
 
-
---AJAJmnyxlAO8z74yubWeROTM09DJBPT06--
-
---Bw0tPhRScHj7UlXCvIrrxiJmaZn9Ij0bm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2XA4YACgkQWt5b1Glr
-+6XHTQ/+PGwwouus5oMwpLXP1+9kaNm9TNeWb7RDLjZtiZhYz29BKg1fIwu48Cz3
-AiaE5BvhB3p9iXDGo6rgaawjXHVQ6wXzU7FHub6T00gfZC9jycu/IqdgDRpwfp4e
-pPisIpljx2fZd7oVNZes0lrtKueTuzozsAPHvg4j5mcbCRS8nnkqvW19daMjlavg
-brq7wB5VjD40zSvXS4a64FLgReLhdb8wqcIwdLpymIG6JI+KQsQGX1EDepZHcwyl
-Ze3L6FBfa8jbSBud0Kmzr7poaaEZng1inacje8n4P6ukk6lbqjiNrfkFL3Om+B0P
-dR5w3XgaLH20l7eStl1eg65frWw9ebDCHzHiAqzzb/P9h9huGKiiipWMMWqG163Q
-XWC0x3APpyicd7y/mgabPVxrlWSXqNmcTAfenrhVG/wT8hjflAlyKv3QWd9MeKtB
-h4uYloD9O9TIMPQxkfcwr1P5Oi9wgeeLHFvA8zpCi928/s2wQdX1uFplJ6dD4vZi
-nRreZsuzTpzcOyToANEo/S9K40pVFp0xhyi0hAWXoIdkq1xuEQkGzwJVQMdcDIQa
-hCu3bAwJCrwZaWq7SBSSLPetaTv56AEodtxHW1sOPQ8TFYopTJVILpzUUwr7eUXt
-ku5piIHy+te7HVp4g1YRuStYMH0eTUTtHlTMVdQsF3t9umxqGOs=
-=U4gt
------END PGP SIGNATURE-----
-
---Bw0tPhRScHj7UlXCvIrrxiJmaZn9Ij0bm--
