@@ -2,99 +2,186 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E46C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38219C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A06F2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0879320830
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570203478;
+	bh=YcIlppU4Lt9lhX27/S/eEJPaKSNRVLdTeNKE4mdQLkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2sMCGQ6Y1qc6rfdzBqGcgYzbjuItc/XxbHMmTaVwNgRgLvqqx+NyE0BcUl7WHcF3I
+	 +LnBE+SikU8UnkoWU6knQPrcZUTQTDuObxfhR59eC8UDU0M4SjpfagPBZZmzorkdT2
+	 jkfnj39ZXo5PYv1LfBFaqE91BT0+yi2aKnkzuQ/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389942AbfJDPhe (ORCPT
+        id S2389959AbfJDPh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:37:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37227 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389586AbfJDPhe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:37:34 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iGPe4-0006ZK-Na; Fri, 04 Oct 2019 17:37:28 +0200
-Date:   Fri, 4 Oct 2019 17:37:28 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect
- ne_fit_preload_node
-Message-ID: <20191004153728.c5xppuqwqcwecbe6@linutronix.de>
-References: <20191003090906.1261-1-dwagner@suse.de>
+        Fri, 4 Oct 2019 11:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389586AbfJDPh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 11:37:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB3420830;
+        Fri,  4 Oct 2019 15:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570203474;
+        bh=YcIlppU4Lt9lhX27/S/eEJPaKSNRVLdTeNKE4mdQLkI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XloKBE/pX20WzoK42eZ5i4VSzF0G8YyFlBDBEYnoiPhjatOgMsUkxeq5tQGpbtQqq
+         wJLE2W6ukOgQtoxm7QXyZmrft6OnOGyoBItq0MISLpf5f7FaUetBaGjtDVpubnMDeW
+         rhJSHJT9NH5V35mKhf14YUw/DGFHOem+uRP+t7hA=
+Date:   Fri, 4 Oct 2019 17:37:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com, kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v11 3/6] of: property: Add functional dependency link
+ from DT bindings
+Message-ID: <20191004153750.GB823823@kroah.com>
+References: <20190904211126.47518-1-saravanak@google.com>
+ <20190904211126.47518-4-saravanak@google.com>
+ <20190911102926.A9F8D2082C@mail.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003090906.1261-1-dwagner@suse.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190911102926.A9F8D2082C@mail.kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you post something that is related to PREEMPT_RT please keep tglx and
-me in Cc.
-
-On 2019-10-03 11:09:06 [+0200], Daniel Wagner wrote:
-> Replace preempt_enable() and preempt_disable() with the vmap_area_lock
-> spin_lock instead. Calling spin_lock() with preempt disabled is
-> illegal for -rt. Furthermore, enabling preemption inside the
-> spin_lock() doesn't really make sense.
-
-This spin_lock will cause all CPUs to block on it while the
-preempt_disable() does not have this limitation.
-I added a migrate_disable() in my -next tree. Looking at it again, I
-have reasonable doubt that this preempt_disable() is needed.
-
-> Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for
-> split purpose")
-> Cc: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
->  mm/vmalloc.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+On Wed, Sep 11, 2019 at 03:29:25AM -0700, Stephen Boyd wrote:
+> Quoting Saravana Kannan (2019-09-04 14:11:22)
+> > Add device links after the devices are created (but before they are
+> > probed) by looking at common DT bindings like clocks and
+> > interconnects.
+> > 
+> > Automatically adding device links for functional dependencies at the
+> > framework level provides the following benefits:
+> > 
+> > - Optimizes device probe order and avoids the useless work of
+> >   attempting probes of devices that will not probe successfully
+> >   (because their suppliers aren't present or haven't probed yet).
+> > 
+> >   For example, in a commonly available mobile SoC, registering just
+> >   one consumer device's driver at an initcall level earlier than the
+> >   supplier device's driver causes 11 failed probe attempts before the
+> >   consumer device probes successfully. This was with a kernel with all
+> >   the drivers statically compiled in. This problem gets a lot worse if
+> >   all the drivers are loaded as modules without direct symbol
+> >   dependencies.
+> > 
+> > - Supplier devices like clock providers, interconnect providers, etc
+> >   need to keep the resources they provide active and at a particular
+> >   state(s) during boot up even if their current set of consumers don't
+> >   request the resource to be active. This is because the rest of the
+> >   consumers might not have probed yet and turning off the resource
+> >   before all the consumers have probed could lead to a hang or
+> >   undesired user experience.
+> > 
+> >   Some frameworks (Eg: regulator) handle this today by turning off
+> >   "unused" resources at late_initcall_sync and hoping all the devices
+> >   have probed by then. This is not a valid assumption for systems with
+> >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >   this due to the lack of a clear signal for when they can turn off
+> >   resources.
 > 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 08c134aa7ff3..0d1175673583 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -1091,11 +1091,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  	 * Even if it fails we do not really care about that. Just proceed
->  	 * as it is. "overflow" path will refill the cache we allocate from.
->  	 */
-> -	preempt_disable();
-> +	spin_lock(&vmap_area_lock);
->  	if (!__this_cpu_read(ne_fit_preload_node)) {
-> -		preempt_enable();
-> +		spin_unlock(&vmap_area_lock);
->  		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
-> -		preempt_disable();
-> +		spin_lock(&vmap_area_lock);
->  
->  		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
->  			if (pva)
-> @@ -1103,9 +1103,6 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  		}
->  	}
->  
-> -	spin_lock(&vmap_area_lock);
-> -	preempt_enable();
-> -
->  	/*
->  	 * If an allocation fails, the "vend" address is
->  	 * returned. Therefore trigger the overflow path.
-> -- 
+> The clk framework disables unused clks at late_initcall_sync. What do
+> you mean clk framework doesn't turn them off because of a clear signal?
 
-Sebastian
+There's a number of minor things you pointed out in this review.
+
+Saravana, can you send a follow-on patch for the minor code cleanups
+like formatting and the like that was found here?
+
+> > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
+> > +{
+> > +       struct device *sup_dev;
+> > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> 
+> Is it really a u32 instead of an unsigned int or unsigned long?
+> 
+> > +       int ret = 0;
+> > +       struct device_node *tmp_np = sup_np;
+> > +
+> > +       of_node_get(sup_np);
+> > +       /*
+> > +        * Find the device node that contains the supplier phandle.  It may be
+> > +        * @sup_np or it may be an ancestor of @sup_np.
+> > +        */
+> > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> > +               sup_np = of_get_next_parent(sup_np);
+> 
+> I don't get this. This is assuming that drivers are only probed for
+> device nodes that have a compatible string? What about drivers that make
+> sub-devices for clk support that have drivers in drivers/clk/ that then
+> attach at runtime later? This happens sometimes for MFDs that want to
+> split the functionality across the driver tree to the respective
+> subsystems.
+
+For that, the link would not be there, correct?
+
+> > +static int of_link_property(struct device *dev, struct device_node *con_np,
+> > +                            const char *prop_name)
+> > +{
+> > +       struct device_node *phandle;
+> > +       const struct supplier_bindings *s = bindings;
+> > +       unsigned int i = 0;
+> > +       bool matched = false;
+> > +       int ret = 0;
+> > +
+> > +       /* Do not stop at first failed link, link all available suppliers. */
+> > +       while (!matched && s->parse_prop) {
+> > +               while ((phandle = s->parse_prop(con_np, prop_name, i))) {
+> > +                       matched = true;
+> > +                       i++;
+> > +                       if (of_link_to_phandle(dev, phandle) == -EAGAIN)
+> > +                               ret = -EAGAIN;
+> 
+> And don't break?
+
+There was comments before about how this is not needed.  Frank asked
+that the comment be removed.  And now you point it out again :)
+
+Look at the comment a few lines up, we have to go through all of the
+suppliers.
+
+> > +static int __of_link_to_suppliers(struct device *dev,
+> 
+> Why the double underscore?
+> 
+> > +                                 struct device_node *con_np)
+> > +{
+> > +       struct device_node *child;
+> > +       struct property *p;
+> > +       int ret = 0;
+> > +
+> > +       for_each_property_of_node(con_np, p)
+> > +               if (of_link_property(dev, con_np, p->name))
+> > +                       ret = -EAGAIN;
+> 
+> Same comment.
+
+Same response as above :)
+
+thanks,
+
+greg k-h
