@@ -4,112 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813B1C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B87C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F90321D71
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0F9207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbfJDKdB (ORCPT
+        id S2387468AbfJDKdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:33:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47366 "EHLO mx1.redhat.com"
+        Fri, 4 Oct 2019 06:33:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:41204 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfJDKdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:33:01 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 041BCC059B7C
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Oct 2019 10:33:01 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id i10so2503643wrb.20
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 03:33:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r0XRItmM0feIRH6oRRHgQMeNYVcpa+lwa27e7953gw4=;
-        b=qCdhUMbRsckZ+pdMy1YGtg3/7O885/HolLxfFE3q5RpHlcwskOgcyCb6amP6pFrGsg
-         SpudbHapSWIczDPMwfZ0o9xJNSFtgk/WE3B0OL3NwCJNQcGCTDpvVFd6Fie7C8VIHtEs
-         1jH/EzhB/icHRXExpcdSTo1H7sneRhm3/5BOIO03AE480HxA3fxhM9qB22l7aZHEez4d
-         iaFnI9pzMygt/WxjwZt31DWjR3I9X/hoExfPZcJD6WotXMN66h3wyZGvDleIRTF5a8/G
-         mh50ePAH5QQt4eE7+SjWzN3aesEqmWoavToqwq4B03IPoji5w0m8iLhuOvARa9K9+ZCw
-         EGtw==
-X-Gm-Message-State: APjAAAXmc8DJNk6ECafyW59jxVsioJ39e9dhVDdADCAoYQD6K4502QB8
-        IgyDcK5szKPgq3Dz20RZGr3RTZ6owRJZaAAPV95pcUM+KbOC0th46RpmhDSAGhIVRgsRfvFHVyq
-        9q4te1UggZRvOD/0nUKgVaHwH
-X-Received: by 2002:a7b:c764:: with SMTP id x4mr10544396wmk.138.1570185178752;
-        Fri, 04 Oct 2019 03:32:58 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzL47z7J01Mlc0Ny4ymOI7hWHv9YGQ8hc0ev/0gQQd41tjTfNscKpDCKG//anTrALeM9ETJwg==
-X-Received: by 2002:a7b:c764:: with SMTP id x4mr10544377wmk.138.1570185178409;
-        Fri, 04 Oct 2019 03:32:58 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.241])
-        by smtp.gmail.com with ESMTPSA id r12sm6225438wrq.88.2019.10.04.03.32.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 03:32:57 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 12:32:55 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Juri Lelli <jlelli@redhat.com>
-Subject: Re: [PATCH v2] lib/smp_processor_id: Don't use cpumask_equal()
-Message-ID: <20191004103255.GE19588@localhost.localdomain>
-References: <20191003203608.21881-1-longman@redhat.com>
+        id S1729908AbfJDKdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:33:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C038615AB;
+        Fri,  4 Oct 2019 03:33:17 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2130B3F706;
+        Fri,  4 Oct 2019 03:33:17 -0700 (PDT)
+Date:   Fri, 4 Oct 2019 11:33:15 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
+Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for
+ r8a774b1
+Message-ID: <20191004103315.GS42880@e119886-lin.cambridge.arm.com>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003203608.21881-1-longman@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 03/10/19 16:36, Waiman Long wrote:
-> The check_preemption_disabled() function uses cpumask_equal() to see
-> if the task is bounded to the current CPU only. cpumask_equal() calls
-> memcmp() to do the comparison. As x86 doesn't have __HAVE_ARCH_MEMCMP,
-> the slow memcmp() function in lib/string.c is used.
+On Fri, Oct 04, 2019 at 09:35:29AM +0100, Fabrizio Castro wrote:
+> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
 > 
-> On a RT kernel that call check_preemption_disabled() very frequently,
-> below is the perf-record output of a certain microbenchmark:
-> 
->   42.75%  2.45%  testpmd [kernel.kallsyms] [k] check_preemption_disabled
->   40.01% 39.97%  testpmd [kernel.kallsyms] [k] memcmp
-> 
-> We should avoid calling memcmp() in performance critical path. So the
-> cpumask_equal() call is now replaced with an equivalent simpler check.
-> 
-> Signed-off-by: Waiman Long <longman@redhat.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > ---
->  lib/smp_processor_id.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
-> index 60ba93fc42ce..bd9571653288 100644
-> --- a/lib/smp_processor_id.c
-> +++ b/lib/smp_processor_id.c
-> @@ -23,7 +23,7 @@ unsigned int check_preemption_disabled(const char *what1, const char *what2)
->  	 * Kernel threads bound to a single CPU can safely use
->  	 * smp_processor_id():
->  	 */
-> -	if (cpumask_equal(current->cpus_ptr, cpumask_of(this_cpu)))
-> +	if (current->nr_cpus_allowed == 1)
->  		goto out;
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 45bba9f..12702c8 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
+>  	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
+> +	    "renesas,pcie-r8a774b1" for the R8A774B1 SoC;
 
-Makes sense to me.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
-
-Thanks,
-
-Juri
+>  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
+>  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
+>  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+> -- 
+> 2.7.4
+> 
