@@ -2,69 +2,139 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2573C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF434C4CED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9064F215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97866222CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 08:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570178050;
+	bh=EzTRgxaUrltboPpYJffIObhqvsHvKOigiyXhoO9LTdU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Z2hgw7QgzIJxFOOXbnxb7dYR3MIdCN19KR3+gXSslEVHs6P1seCY5VSBgyAaI+NEA
+	 gzLSWGpo/O/ZeL+/SJ9pnc3QH7iKRFFgVGaBbT/TvMBYgZsLQl6MlU/V15T1kH1Rbl
+	 FszI8fLw6eQ4QJxAdZJoaLiVtP8H+oUdpOGvvDiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbfJDIdH (ORCPT
+        id S1730906AbfJDIeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 04:33:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:57519 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730607AbfJDIcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 04:32:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 01:32:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,255,1566889200"; 
-   d="scan'208";a="204236430"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.66])
-  by orsmga002.jf.intel.com with ESMTP; 04 Oct 2019 01:32:43 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] perf data: Correctly identify directory data files
-Date:   Fri,  4 Oct 2019 11:31:17 +0300
-Message-Id: <20191004083121.12182-2-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191004083121.12182-1-adrian.hunter@intel.com>
-References: <20191004083121.12182-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Fri, 4 Oct 2019 04:34:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37537 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbfJDIeJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 04:34:09 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k32so4651925otc.4;
+        Fri, 04 Oct 2019 01:34:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ld1X7lbISkCrGFf+99YQWnlVcdBMNf7XxUB1bfdwTh0=;
+        b=saz7H5ZziAdFQkJCa6xbnhPbE3ktONZ7Plf7S1nOvkCukHuKamTryNl9Ccmm73M4xQ
+         6zL1yJQJeQHEKZefSPwpPyk0g1yXq/dFu55nbLxlcELDIRXHSQBpxV2EJiWhRex6EEYc
+         Xbwx94l3mNmECMF2nXcwwHAwp16q4UZn0OzYOjlYqly/x0KSSMxb2HHtCYea5b4H4g0v
+         FR97AuzNc2uXyAZqFHq3nLMZtncbg/l2bHn3XGkRScDIkiUD+/bIQiI/Jm1yoUdMFizx
+         awjTI+Wk7kblvig3Ul4K8O4i6lzFqfnTVDPhjoRo8N8DKMOj/wF4qoNzqkHwl2f1moFR
+         Ru2g==
+X-Gm-Message-State: APjAAAWS5AvL8fMZTegsuvsbAnPBcUSoUSLLxJgmC9+LV2EKS9jlhzZx
+        vkuVRR9GzZPSmutCuvCk3gqKmqB+SH2s9kxcEsc=
+X-Google-Smtp-Source: APXvYqx8NklrAu+r2XhFr/T01+KnxBdUz77nlWB2/6gBhVtJ9QTxszp6uYmvoWNp3lsGyZvLOncbmBs6BQxJuN9ZMzY=
+X-Received: by 2002:a9d:6a16:: with SMTP id g22mr9317222otn.118.1570178046805;
+ Fri, 04 Oct 2019 01:34:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002122926.385-1-ggherdovich@suse.cz> <20191002122926.385-3-ggherdovich@suse.cz>
+ <13106850.QMtCbivBLn@kreacher> <5d6d601d2647644238fc51621407061e1c29320d.camel@linux.intel.com>
+ <1570177786.30086.1.camel@suse.cz> <CAKfTPtDo_wpGvc+rzJaTYOZc2wVbzMojaSSq0pC_M4ySSaicBw@mail.gmail.com>
+In-Reply-To: <CAKfTPtDo_wpGvc+rzJaTYOZc2wVbzMojaSSq0pC_M4ySSaicBw@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 4 Oct 2019 10:33:55 +0200
+Message-ID: <CAJZ5v0gQAxzZeiz2xsBk6bpQFV3dpASa=ZSR3aW0veorbo_5Hw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: intel_pstate: Conditional frequency
+ invariant accounting
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to rename the "header" file to "data" without conflicting,
-correctly identify the non-header files as starting with "data."
+On Fri, Oct 4, 2019 at 10:28 AM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> On Fri, 4 Oct 2019 at 10:24, Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+> >
+> > On Thu, 2019-10-03 at 20:31 -0700, Srinivas Pandruvada wrote:
+> > > On Thu, 2019-10-03 at 20:05 +0200, Rafael J. Wysocki wrote:
+> > > > On Wednesday, October 2, 2019 2:29:26 PM CEST Giovanni Gherdovich
+> > > > wrote:
+> > > > > From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > > > >
+> > > > > intel_pstate has two operating modes: active and passive. In "active"
+> > > > > mode, the in-built scaling governor is used and in "passive" mode, the
+> > > > > driver can be used with any governor like "schedutil". In "active" mode
+> > > > > the utilization values from schedutil is not used and there is a
+> > > > > requirement from high performance computing use cases, not to readas
+> > > > > well any APERF/MPERF MSRs.
+> > > >
+> > > > Well, this isn't quite convincing.
+> > > >
+> > > > In particular, I don't see why the "don't read APERF/MPERF MSRs" argument
+> > > > applies *only* to intel_pstate in the "active" mode.  What about
+> > > > intel_pstate in the "passive" mode combined with the "performance"
+> > > > governor?  Or any other governor different from "schedutil" for that
+> > > > matter?
+> > > >
+> > > > And what about acpi_cpufreq combined with any governor different from
+> > > > "schedutil"?
+> > > >
+> > > > Scale invariance is not really needed in all of those cases right now
+> > > > AFAICS, or is it?
+> > >
+> > > Correct. This is just part of the patch to disable in active mode
+> > > (particularly in HWP and performance mode).
+> > >
+> > > But this patch is 2 years old. The folks who wanted this, disable
+> > > intel-pstate and use userspace governor with acpi-cpufreq. So may be
+> > > better to address those cases too.
+> >
+> > I disagree with "scale invariance is needed only by the schedutil governor";
+> > the two other users are the CPU's estimated utilization in the wakeup path,
+> > via cpu_util_without(), as well as the load-balance path, via cpu_util() which
+> > is used by update_sg_lb_stats().
+> >
+> > Also remember that scale invariance is applied to both PELT signals util_avg
+> > and load_avg; schedutil uses the former but not the latter.
+>
+> You have been quicker than me to reply. I was about to say the exact
+> same things.
+> scale invariance also helps the scheduler in task placement by
+> stabilizing the metrics whatever the running frequency so a task will
+> not be seen as a big task just because of a CPU running at lower
+> frequency
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So avoiding it just in one specific driver/governor configuration
+would be inconsistent at best.
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 88fba2ba549f..8993253c5564 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -96,7 +96,7 @@ int perf_data__open_dir(struct perf_data *data)
- 		if (stat(path, &st))
- 			continue;
- 
--		if (!S_ISREG(st.st_mode) || strncmp(dent->d_name, "data", 4))
-+		if (!S_ISREG(st.st_mode) || strncmp(dent->d_name, "data.", 5))
- 			continue;
- 
- 		ret = -ENOMEM;
--- 
-2.17.1
-
+I guess that leaves us with the impact reduction option, realistically.
