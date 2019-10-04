@@ -2,134 +2,86 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE414C4CED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32726C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A65215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJmgbSUm"
+	by mail.kernel.org (Postfix) with ESMTP id 0ED1020867
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbfJDKSK (ORCPT
+        id S2388696AbfJDKTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:18:10 -0400
-Received: from mail-vs1-f45.google.com ([209.85.217.45]:42735 "EHLO
-        mail-vs1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388656AbfJDKSJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:18:09 -0400
-Received: by mail-vs1-f45.google.com with SMTP id m22so3746636vsl.9;
-        Fri, 04 Oct 2019 03:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=FR8/a0jMod/hGsojz+LGnIr8+PyKD68xBHORYzblMNk=;
-        b=RJmgbSUmpYIPMnsXW4fiFNIs/nVsdpLxuh/2Jl/WgsZA02vC1tEOopTRcwbYPHM5L0
-         r2vkElO9koITv+QRvcZ7eWPw4X/99IQsFa1qglm8P6X6HCy8xXv5WsVfamS72xN5rYMw
-         TzISRhXTwgV1pJXSjocdgc8XLqm8jZ0owy4hJmRMYenI8QXCmerUwPEafvg9lM1tQ8rU
-         Qk/XRRYHCoYpI+Ufi5B0LMqpNs4TCnVpdD8rYcqHCS6I24R+H1Y9wCVsoXmceg1+1g3L
-         r8ijid7u8AvvOR9BsWsNr/+nlo7QPKNheFq4GAPHjhDsRX06CmrmT9PEi5YQJ+EeCMzQ
-         wUmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=FR8/a0jMod/hGsojz+LGnIr8+PyKD68xBHORYzblMNk=;
-        b=CXRUz/JmjRamDIHitGw1pwg+vQIjLFV0KEFC+Q5OcaKS6TUY0Fk9fuWDgb+TK/BUN4
-         i5jACOVKdcRgYLcunTZXtfOq8ZpdORgpO3g9NhbJp90hxvXXcMIS+RgqfCv8tXHqCSPr
-         3Y/Xy1OykoE+Jp4pTTDKpvagaALxkZj8s/ltgjhK667SP9giqVvRGdKqUW9xrXBncdWC
-         HAwKREzsx32j8siDms2Psh0F1P0kuSSEjxkAkcSJqDrmd0+iU4BVeYY51sBKnbAg559L
-         9gSSjvVYGqV0AAzpmPjAdpcFkbtzFOT678BB2g4rqbVfRk3qnmz9o/K3FyYFBEhnZ7l/
-         XLTg==
-X-Gm-Message-State: APjAAAXBhVUhOKJGOsPNUva1lxv3bmU+dqRfD4spOCJxdNOY4hcFgir4
-        ZnAslo1inzUrLBPRZ1aYj86yqxRE2oFnJLa2JoY=
-X-Google-Smtp-Source: APXvYqzoJg533BuJP8X9hanZyDP0L9alk4DwLrlKbxlCtR/Dh3mBh8FRwtP02LUsZBLr2AmV84eZG7uiFXxZAQO1QWo=
-X-Received: by 2002:a67:e40a:: with SMTP id d10mr7102858vsf.196.1570184288590;
- Fri, 04 Oct 2019 03:18:08 -0700 (PDT)
+        Fri, 4 Oct 2019 06:19:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:40892 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388657AbfJDKTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 06:19:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3771D15A1;
+        Fri,  4 Oct 2019 03:19:05 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 604683F706;
+        Fri,  4 Oct 2019 03:19:04 -0700 (PDT)
+Subject: Re: [PATCH] arm64/mm: Poison initmem while freeing with
+ free_reserved_area()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+References: <1570163038-32067-1-git-send-email-anshuman.khandual@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <600676fd-1b39-74f4-49a7-3c807ee24cff@arm.com>
+Date:   Fri, 4 Oct 2019 11:19:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CAOuPNLgH=JQeT3=tZ_AdBsV0e-S_JNEe4CtpFW8Wj5NfYW5PsA@mail.gmail.com>
- <CAOuPNLjqm+Dv5RARP6dzZRKSttCvqoLe7MNYOeChAGUWX1krRA@mail.gmail.com> <CAOuPNLgZ3kjBaCmXkXHZrncYqUxsNYKiXQqptoDBT_EWfjpNqg@mail.gmail.com>
-In-Reply-To: <CAOuPNLgZ3kjBaCmXkXHZrncYqUxsNYKiXQqptoDBT_EWfjpNqg@mail.gmail.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Fri, 4 Oct 2019 15:47:57 +0530
-Message-ID: <CAOuPNLjMFPn5WLcotG26wy_ROhJZn39iywwOYG0imzjqeQ3jeg@mail.gmail.com>
-Subject: Re: imx6: hdmi black screen issue after resume
-To:     p.zabel@pengutronix.de, bob.beckett@collabora.com,
-        dri-devel@lists.freedesktop.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1570163038-32067-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 04/10/2019 05:23, Anshuman Khandual wrote:
+> Platform implementation for free_initmem() should poison the memory while
+> freeing it up. Hence pass across POISON_FREE_INITMEM while calling into
+> free_reserved_area(). The same is being followed in the generic fallback
+> for free_initmem() and some other platforms overriding it.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-On Sun, Sep 29, 2019 at 10:24 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
->
-> >
-> > On Mon, Sep 23, 2019 at 1:28 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
-> > >
-> > > Dear Philipp,
-> > >
-> > > I have a iMX6dl custom board with custom Linux Kernel 4.8.
-> > > I have both LCD and HDMI connected to the board.
-> > > And we are using weston/wayland as the display interface.
-> > > In normal boot, both LCD and HDMI display is working fine.
-> > >
-> > > But, currently, for one of the requirement, I am trying to explore and
-> > > support hibernation image booting on it.
-> > > Currently, we are able to resume the system without display.
-> > > Also, if we make the entire imx-drm as modules, and then install the
-> > > modules after resume, even LCD is also coming up.
-> > > But HDMI display is black out.
-> > >
+Is there a good reason you haven't made a similar change to
+free_initrd_mem() - the same logic seems to apply. However this change
+looks fine to me.
 
-I just found the main root cause of the HDMI screen blackout issue
-after system resume.
-* HDMI is trying to get EDID data from the monitor using I2C interface.
-* But its seems i2c_transfer is getting timeout after 5 retries.
-* Thus EDID data is failing, and HDMI could not able to detect the monitor.
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-This is the logs:
+> ---
+>  arch/arm64/mm/init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 45c00a54909c..ea7d38011e83 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -571,7 +571,7 @@ void free_initmem(void)
+>  {
+>  	free_reserved_area(lm_alias(__init_begin),
+>  			   lm_alias(__init_end),
+> -			   0, "unused kernel");
+> +			   POISON_FREE_INITMEM, "unused kernel");
+>  	/*
+>  	 * Unmap the __init region but leave the VM area in place. This
+>  	 * prevents the region from being reused for kernel modules, which
+> 
 
-[  441.104989] [drm:drm_helper_probe_single_connector_modes]
-[CONNECTOR:29:HDMI-A-1] status updated from unknown to connected
-[  441.116080]: drm_helper_probe_single_connector_modes - inside -
-else override_edid
-[  441.124416]: drm_helper_probe_single_connector_modes - inside -
-else - drm_load_edid_firmware: count: 0
-[  441.134546]: drm_helper_probe_single_connector_modes - calling - get_modes
-[  441.142157]: dw_hdmi_connector_get_modes : called
-[  441.147652]: dw_hdmi_connector_get_modes : called - calling -> drm_get_edid
-[  441.155346]: drm_do_probe_ddc_edid : called!
-[  441.660759]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 5
-[  442.170758]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 4
-[  442.680755]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 3
-[  443.190755]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 2
-[  443.700754]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 1
-[  443.707989]: drm_get_edid : called - drm_probe_ddc - failed
-[  443.714303] dwhdmi-imx 120000.hdmi: failed to get edid
-
-Is there any clue, how to resolve this i2c failure issue, after resume?
-This does not happen in normal booting case.
-
-These are the steps I follow:
-* Boot the system normally (without display) and install all imx-drm as modules.
-* Then uninstall the modules in reverse order.
-* Take the snapshot of the system (suspend to disk).
-* Reboot the system and boot with the image.
-* Install all the modules again.
-* Then launch the Weston.
-* During the weston launch in the beginning we observe this error.
-
-
-Regards,
-Pintu
