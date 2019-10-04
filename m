@@ -2,145 +2,94 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A561C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC62FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42696215EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8276D222C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 10:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BT7Isw0U"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kiP1Osyw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dq9nn0XL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388597AbfJDKMm (ORCPT
+        id S2388627AbfJDKRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 06:12:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59562 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfJDKMm (ORCPT
+        Fri, 4 Oct 2019 06:17:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39726 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387702AbfJDKRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 06:12:42 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x94ACQmo109113;
-        Fri, 4 Oct 2019 05:12:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570183946;
-        bh=c3zkR74xsAFswSP7dMpMX60k0Qrn8EeINoag7SKD4dU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BT7Isw0UTPLb/7GgIZs0OD4IsoxdnUVrlcUKN+NUsK272elLQvEoPKIyIrnJHc/4X
-         kyjHClQnj/RQgIJefBB2l49gBxuClpW1Zz+q08f9ibGWXuhiZmFsbkTfyCe5Ic0vqP
-         +VxcuVOJf0Z8aCMxKH0IgjdSP9A8CbnPUozQMSTI=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94ACQCb116498;
-        Fri, 4 Oct 2019 05:12:26 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 4 Oct
- 2019 05:12:25 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 4 Oct 2019 05:12:25 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x94ACMPE100107;
-        Fri, 4 Oct 2019 05:12:23 -0500
-Subject: Re: Should regulator core support parsing OF based fwnode?
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, <dmurphy@ti.com>,
-        <linux-leds@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-References: <20191003082812.28491-1-jjhiblot@ti.com>
- <20191003082812.28491-3-jjhiblot@ti.com>
- <20191003104228.c5nho6eimwzqwxpt@earth.universe>
- <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
- <62591735-9082-1fd7-d791-07929ddaa223@gmail.com>
- <20191003183554.GA37096@sirena.co.uk>
- <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
- <20191003194140.GE6090@sirena.co.uk>
- <a9f668f9-ad26-4e18-178a-8403b8b3b1db@gmail.com>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <58f32544-89ba-6a72-2491-82307a71df05@ti.com>
-Date:   Fri, 4 Oct 2019 12:12:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <a9f668f9-ad26-4e18-178a-8403b8b3b1db@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 4 Oct 2019 06:17:15 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 85899619F9; Fri,  4 Oct 2019 10:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570184234;
+        bh=knjsL0SuUPWrDx0GJG+yspvSK/j86QdNPhdZ9lyoVFs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kiP1Osywo763L+f4Ym2iaO/drZx1SnU4xm7piQedmzfEfyY54SgZo1U3OhMHSJmhr
+         hGUZ+JE3kQLM/TcF3NZ7sBrQlHHN6QMrJzcxrHMkA3HBJxq4X39n2Jw0Nl3RmcYheK
+         zqfXt0qVvGpqqehiVEPSPzVYLH9l7GlcjQs79lYc=
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 349C8619F6;
+        Fri,  4 Oct 2019 10:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570184233;
+        bh=knjsL0SuUPWrDx0GJG+yspvSK/j86QdNPhdZ9lyoVFs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dq9nn0XLpqIyoTgi7OTZ/UzFPzDyI2yhDBIh2H/fuNIpz2fHmKZPWLlml7+QqtXLm
+         m+5fSMHwmJoNIT/zUi1nuyAB58tFzhDqTFBcG8anoJlQGptI1qfpmZ8Jx49dtUado0
+         ZpbuBmNFrvFYayfx/FSi8jUz/KPFbAY/xUQ9HsPs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 349C8619F6
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V1] regulator: qcom-rpmh: Fix PMIC5 BoB min voltage
+Date:   Fri,  4 Oct 2019 15:46:55 +0530
+Message-Id: <1570184215-5355-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Correct the PMIC5 BoB min voltage from 0.3V to 3V. Also correct
+the voltage selector accordingly.
 
-On 03/10/2019 22:27, Jacek Anaszewski wrote:
-> On 10/3/19 9:41 PM, Mark Brown wrote:
->> On Thu, Oct 03, 2019 at 09:21:06PM +0200, Jacek Anaszewski wrote:
->>> On 10/3/19 8:35 PM, Mark Brown wrote:
->>>> On Thu, Oct 03, 2019 at 07:43:17PM +0200, Jacek Anaszewski wrote:
->>>>> On 10/3/19 2:47 PM, Jean-Jacques Hiblot wrote:
->>>>>> On 03/10/2019 12:42, Sebastian Reichel wrote:
->>>>>>> On Thu, Oct 03, 2019 at 10:28:09AM +0200, Jean-Jacques Hiblot wrote:
->>>> This mail has nothing relevant in the subject line and pages of quotes
->>>> before the question for me, it's kind of lucky I noticed it....
->>> Isn't it all about creating proper filters?
->> My point there is that there's nothing obvious in the mail that suggests
->> it should get past filters - just being CCed on a mail isn't super
->> reliable, people often get pulled in due to things like checkpatch or
->> someone copying a CC list from an earlier patch series where there were
->> things were relevant.
-> OK, updated the subject.
->
->>>>> I wonder if it wouldn't make sense to add support for fwnode
->>>>> parsing to regulator core. Or maybe it is either somehow supported
->>>>> or not supported on purpose?
->>>> Anything attempting to use the regulator DT bindings in ACPI has very
->>>> serious problems, ACPI has its own power model which isn't compatible
->>>> with that used in DT.
->>> We have a means for checking if fwnode refers to of_node:
->>> is_of_node(const struct fwnode_handle *fwnode)
->>> Couldn't it be employed for OF case?
->> Why would we want to do that?  We'd continue to support only DT systems,
->> just with code that's less obviously DT only and would need to put
->> checks in.  I'm not seeing an upside here.
-> For instance few weeks ago we had a patch [0] in the LED core switching
-> from using struct device's of_node property to fwnode for conveying
-> device property data. And this transition to fwnode property API can be
-> observed as a frequent pattern across subsystems.
->
-> Recently there is an ongoing effort aiming to add generic support for
-> handling regulators in the LED core [1], but it turns out to require
-> bringing back initialization of of_node property for
-> devm_regulator_get_optional() to work properly.
->
-> Support for OF related fwnodes in regulator core could help reducing
-> this noise.
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+Depends-on: This patch depends on "Add regulator support for SC7180"
 
-We could have this done in dev_of_node():
+ drivers/regulator/qcom-rpmh-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-static inline struct device_node *dev_of_node(struct device *dev)
-{
-     if (!IS_ENABLED(CONFIG_OF) || !dev)
-         return NULL;
-     return dev->of_node ? dev->of_node : to_of_node(dev->fwnode);
-}
+diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+index 8ae7ddf..c86ad40 100644
+--- a/drivers/regulator/qcom-rpmh-regulator.c
++++ b/drivers/regulator/qcom-rpmh-regulator.c
+@@ -735,8 +735,8 @@ static unsigned int rpmh_regulator_pmic4_bob_of_map_mode(unsigned int rpmh_mode)
+ static const struct rpmh_vreg_hw_data pmic5_bob = {
+ 	.regulator_type = VRM,
+ 	.ops = &rpmh_regulator_vrm_bypass_ops,
+-	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
+-	.n_voltages = 136,
++	.voltage_range = REGULATOR_LINEAR_RANGE(3000000, 0, 31, 32000),
++	.n_voltages = 32,
+ 	.pmic_mode_map = pmic_mode_map_pmic5_bob,
+ 	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
 
-Then it will only be a matter of using dev_of_node() instead of 
-accessing directly dev->of_node
-
-
->
-> [0]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/leds/led-class.c?id=fd81d7e946c6bdb86dbf0bd88fee3e1a545e7979
-> [1]
-> https://lore.kernel.org/linux-leds/20190923102059.17818-4-jjhiblot@ti.com/
->
