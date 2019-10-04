@@ -2,81 +2,109 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC71C47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E8EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71EC1222C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570196372;
-	bh=tS5fRsfiPqn1291pxv549Db3c25yrm1KCjXpxDa5YcQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RBIA6aCaBtKFhGyaCINoR7T0n6gM6bixiC8l51QGid8FGc1PH+8YGJvqiQt2G+uyS
-	 PuL7vHRJBahnN8VBsjBedao2EGNAESe8gh1WO5eYGwP1cVVT6eb2kwSg+kzV7M1pPg
-	 t78iplu8s4ARTj4Zx1RNJLNgofoXJRpkDC6i3rhY=
+	by mail.kernel.org (Postfix) with ESMTP id D78EF222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388657AbfJDNjb (ORCPT
+        id S2388673AbfJDNkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 09:39:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39234 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388462AbfJDNjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:39:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B6B7BB193;
-        Fri,  4 Oct 2019 13:39:29 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 15:39:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2] mm/swap: piggyback lru_add_drain_all() calls
-Message-ID: <20191004133929.GN9578@dhcp22.suse.cz>
-References: <157019456205.3142.3369423180908482020.stgit@buzz>
- <20191004131230.GL9578@dhcp22.suse.cz>
- <c1617cff-847f-4cbf-d314-0382a3e9233d@yandex-team.ru>
+        Fri, 4 Oct 2019 09:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388272AbfJDNkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 09:40:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E2AE20700;
+        Fri,  4 Oct 2019 13:40:16 +0000 (UTC)
+Date:   Fri, 4 Oct 2019 09:40:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191004094014.72a990ee@gandalf.local.home>
+In-Reply-To: <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
+References: <20190827180622.159326993@infradead.org>
+        <20190827181147.166658077@infradead.org>
+        <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
+        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+        <20191003181045.7fb1a5b3@gandalf.local.home>
+        <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1617cff-847f-4cbf-d314-0382a3e9233d@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 04-10-19 16:32:39, Konstantin Khlebnikov wrote:
-> On 04/10/2019 16.12, Michal Hocko wrote:
-> > On Fri 04-10-19 16:09:22, Konstantin Khlebnikov wrote:
-> > > This is very slow operation. There is no reason to do it again if somebody
-> > > else already drained all per-cpu vectors while we waited for lock.
-> > > 
-> > > Piggyback on drain started and finished while we waited for lock:
-> > > all pages pended at the time of our enter were drained from vectors.
-> > > 
-> > > Callers like POSIX_FADV_DONTNEED retry their operations once after
-> > > draining per-cpu vectors when pages have unexpected references.
-> > 
-> > This describes why we need to wait for preexisted pages on the pvecs but
-> > the changelog doesn't say anything about improvements this leads to.
-> > In other words what kind of workloads benefit from it?
-> 
-> Right now POSIX_FADV_DONTNEED is top user because it have to freeze page
-> reference when removes it from cache. invalidate_bdev calls it for same reason.
-> Both are triggered from userspace, so it's easy to generate storm.
-> 
-> mlock/mlockall no longer calls lru_add_drain_all - I've seen here
-> serious slowdown on older kernel.
-> 
-> There are some less obvious paths in memory migration/CMA/offlining
-> which shouldn't be called frequently.
+On Fri, 4 Oct 2019 10:10:47 +0200
+Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
 
-Can you back those claims by any numbers?
--- 
-Michal Hocko
-SUSE Labs
+> [ In addition ]
+> 
+> Currently, ftrace_rec entries are ordered inside the group of functions, but
+> "groups of function" are not ordered. So, the current int3 handler does a (*):
+> 
+> for_each_group_of_functions:
+> 	check if the ip is in the range    ----> n by the number of groups.
+> 		do a bsearch.		   ----> log(n) by the numbers of entry
+> 					         in the group.
+> 
+> If, instead, it uses an ordered vector, the complexity would be log(n) by the
+> total number of entries, which is better. So, how bad is the idea of:
+
+BTW, I'm currently rewriting the grouping of the vectors, in order to
+shrink the size of each dyn_ftrace_rec (as we discussed at Kernel
+Recipes). I can make the groups all sorted in doing so, thus we can
+load the sorted if that's needed, without doing anything special.
+
+> 
+> 	in the enabling ftrace code path, it:
+> 		discover the number of entries
+> 		alloc a buffer
+> 		discover the order of the groups
+> 		for each group in the correct order
+> 			queue the entry in the buffer
+> 		apply the changes using the text_poke...
+> 
+> In this way we would optimize the two hot-paths:
+> 	int3 will be log(n)
+> 	IPIs bounded to 3.
+> 
+> I am not saying we need to do it now, as Steve said, not sure if this is a big
+> problem, but... those that don't like kernel interference may complain. But if
+> we leave the per-use-case vector in the text_poke_batch interface, things will
+> be easier to fix.
+> 
+> NOTE: the other IPIs are generated by hooking the tracepoints and switching the
+> code to RO/RW...
+
+Yeah, I did a trace of who is doing the on_each_cpu() call, and saw it
+coming from the RO/RW changes, which this patch series removes.
+
+-- Steve
+
+
+> 		
+> * as far as I understood ftrace_location_range().
+> 
+> -- Daniel
+> 
+> > -- Steve
+> >   
+
