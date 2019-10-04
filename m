@@ -2,89 +2,72 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3BFC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43524C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993F821D81
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0B0222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 13:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570194436;
-	bh=CFOCouonhzz00UEFUDuYK1KXMg/m6E5gMfXnX/sdPAU=;
+	s=default; t=1570194438;
+	bh=DYvKBLrQ9xE8etdOewCNIThIXhsfz/oB4iAL1IiS0JY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jXYK8xDWmFqIRksW85uG0t509didigkyRbMnEexPLkDQBKaN5G/zWMOQb/ytz7Nk1
-	 PG86K02ndhAdv4UJJhRtsGVrBL4gNdVl9wDzENlHfzSo+XpoxYfVCS62wShc3rwZU9
-	 Ecvrj23Ka0XJOcmDQY2g7eCql0fKhBQkENyzkIks=
+	b=FdKgxkerR10bmsK4s3uVEf/bvcNDH0dYBXet4WPluYVwP6tGbvdaS/nVcryb231y9
+	 CtCJARL2+zqoG8LDPqIq7fBvbncM0b/8TrltX9Qn7lE/LGLvSDUurYzBX2ivDtRORJ
+	 EWZugFbMMVZCYzUZQe9tVFBtZrPR4bAmKG38WAc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388186AbfJDNHQ (ORCPT
+        id S2388215AbfJDNHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 4 Oct 2019 09:07:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50788 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387916AbfJDNHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Oct 2019 09:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387834AbfJDNHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 09:07:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 827BC215EA;
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 65C2EB1A3;
         Fri,  4 Oct 2019 13:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570194435;
-        bh=CFOCouonhzz00UEFUDuYK1KXMg/m6E5gMfXnX/sdPAU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M2hNx4wBJ3d6xKK06wIa4l/jLjZEavgdqqygSEgxPkVPkwhmI+W9ieVmynxzKF+O9
-         H16/ubVYs/dKerC8+r7HrMMcIzoocZLmnbamnWenR9kZdXrkDmmrGyQ55hvZvTl+ji
-         rrKfFhUVaH7tKWXGggTaeRFccoog52ppxMZOJrOU=
-Date:   Fri, 4 Oct 2019 15:07:12 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 3/5] serial: fsl_linflexuart: Be consistent with the
- name
-Message-ID: <20191004130712.GA622272@kroah.com>
-References: <20191002130425.28905-1-stefan-gabriel.mirea@nxp.com>
- <20191002130425.28905-4-stefan-gabriel.mirea@nxp.com>
+Date:   Fri, 4 Oct 2019 15:07:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+Message-ID: <20191004130713.GK9578@dhcp22.suse.cz>
+References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
+ <20191004105824.GD9578@dhcp22.suse.cz>
+ <91128b73-9a47-100b-d3de-e83f0b941e9f@arm.com>
+ <1570193776.5576.270.camel@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191002130425.28905-4-stefan-gabriel.mirea@nxp.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1570193776.5576.270.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:04:42PM +0000, Stefan-gabriel Mirea wrote:
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -290,7 +290,7 @@
->  /* Sunix UART */
->  #define PORT_SUNIX	121
->  
-> -/* Freescale Linflex UART */
-> -#define PORT_LINFLEXUART	121
-> +/* Freescale LINFlexD UART */
-> +#define PORT_LINFLEXUART	122
+On Fri 04-10-19 08:56:16, Qian Cai wrote:
+[...]
+> It might be a good time to rethink if it is really a good idea to dump_page()
+> at all inside has_unmovable_pages(). As it is right now, it is a a potential
+> deadlock between console vs memory offline. More details are in this thread,
+> 
+> https://lore.kernel.org/lkml/1568817579.5576.172.camel@lca.pw/
 
-This is a different change, and one that should be split out and
-submitted now, for 5.4.  Please do that as the id number is incorrect,
-don't bury a valid change in the middle of a "marketing renamed the
-device" patch :)
-
-thanks,
-
-greg k-h
+Huh. That would imply we cannot do any printk from that path, no?
+-- 
+Michal Hocko
+SUSE Labs
