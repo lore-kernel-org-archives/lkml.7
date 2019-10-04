@@ -2,104 +2,105 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7724FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A01C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565F5222BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032DF222BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 20:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWRjsMO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbfJDUIM (ORCPT
+        id S1731328AbfJDUJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 16:08:12 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59343 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfJDUIM (ORCPT
+        Fri, 4 Oct 2019 16:09:04 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42107 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbfJDUJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 16:08:12 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iGTs1-0001TG-Br; Fri, 04 Oct 2019 22:08:09 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iGTrw-0008EY-Kb; Fri, 04 Oct 2019 22:08:04 +0200
-Date:   Fri, 4 Oct 2019 22:08:04 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Yizhuo <yzhai003@ucr.edu>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [Linux-stm32] [PATCH] pwm: stm32: Fix the usage of uninitialized
- variable in stm32_pwm_config()
-Message-ID: <20191004200804.ee6kedadchxoznnd@pengutronix.de>
-References: <20191004044649.2405-1-yzhai003@ucr.edu>
- <20191004062336.jidzrytx4z5talro@pengutronix.de>
- <e6824330-d331-798d-0f0a-1952db028900@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e6824330-d331-798d-0f0a-1952db028900@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 4 Oct 2019 16:09:03 -0400
+Received: by mail-io1-f68.google.com with SMTP id n197so16151518iod.9;
+        Fri, 04 Oct 2019 13:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TzGHd63YhhSYgCiRZ9tl0C+QqBhc3B9t1YurdXMHHEk=;
+        b=kWRjsMO7kWGMm/IT1zcaML7wX7Qq9Yq8WRm+RABc1yvFRuSkg1MJFKvuhIADpR86Sk
+         vk1W0Z5v0fSKpGUd8/OWzfGGYUmUKyVV0GCdL13GMMOSK9DpPSyvyt77eG5WmY3ZmctQ
+         TGC8Cmmzyp9qWwicYV847MUo/KmeyE8yz2h7Smb7WOcrkh2TV9S23hinrXd+nv5M0ZyF
+         ASEYU02I8rRxFXPCLp8D/KgP4shuTzi8Fg2/Hk1WrnV7b+j7LB2iDWk/cyp1qilFIKMU
+         ZBR7mheI1uaHirJEtlL1lGs5B+v25rI82daNM0pAfgJ1uilLnWPeFNCSgjxJjo/1l4rp
+         Y9qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TzGHd63YhhSYgCiRZ9tl0C+QqBhc3B9t1YurdXMHHEk=;
+        b=i14dfaCVcowVdtunic+1Wp2wGV+1ZNLuoXJwp7E15v+1eEJZwFN3kPpygTaLhCxUcK
+         GwKISgBQGzHrbHDnyg1HwrLXM02Ldx63K+ocW92bWoiabvGepNaNkKLLjh1Cc9Z5Udr5
+         FaRfo4jqaLUlKwSETn1kU+GSCbHc7OjVJMEAosWc4bRRpy2Z+vcoUwHuCG5OaNg6EQsh
+         rYclOJRJfMAu448q1becWoBHIpImXDm50NiWfQtEoUOj5o22/QPRUwaUeIC5LrB/sOiI
+         ZDVFoRHgEjTok93ZXTlcDfOXok4PcETTA6aDez2v7cwSd2y9Z9PI3Ng1mnPK/vmvqmXW
+         iQZw==
+X-Gm-Message-State: APjAAAXV8P3/lHsEKg8iHeiLr3dvIg5sDmZQ5/1qeeMO2VMTctGtUgtN
+        UfU23ad10Ce+u/Moful94ba6TP6V/uo=
+X-Google-Smtp-Source: APXvYqzID3S043QvcjXSlnz2Lfed2XSsv1r0x047tSPe8/gvBVD1NyJxtMQ/ZV89X4qzhOAjTbC2WA==
+X-Received: by 2002:a92:603:: with SMTP id x3mr17481056ilg.295.1570219742776;
+        Fri, 04 Oct 2019 13:09:02 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id i67sm4267112ilf.84.2019.10.04.13.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 13:09:02 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mwifiex: pcie: Fix memory leak in mwifiex_pcie_alloc_cmdrsp_buf
+Date:   Fri,  4 Oct 2019 15:08:52 -0500
+Message-Id: <20191004200853.23353-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In mwifiex_pcie_alloc_cmdrsp_buf, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release is added.
 
-Cc += Mark Brown who maintains regmap
+Fixes: fc3314609047 ("mwifiex: use pci_alloc/free_consistent APIs for PCIe")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On Fri, Oct 04, 2019 at 09:09:51AM +0000, Benjamin GAIGNARD wrote:
-> 
-> On 10/4/19 8:23 AM, Uwe Kleine-König wrote:
-> > Hello,
-> >
-> > On Thu, Oct 03, 2019 at 09:46:49PM -0700, Yizhuo wrote:
-> >> Inside function stm32_pwm_config(), variable "psc" and " arr"
-> >> could be uninitialized if regmap_read() returns -EINVALs.
-> >> However, they are used later in the if statement to decide
-> >> the return value which is potentially unsafe.
-> 
-> Hi Yizhuo,
-> 
-> like for the your patch in IIO trigger regmap_read could only failed
-> if the hardware block is no more clocked and in this case we won't 
-> return of regmap_read.
-
-I'm not sure this is aligned with how regmap is supposed to be used. I
-think the driver making use of regmap is not supposed to make any
-assumptions about how and when a read or write access can or cannot fail
-and instead is supposed to check all return values. So IMHO the patch
-goes in the right direction.
-
-> Testing regmap_read() return value just add code but doesn't provide a 
-> valid information.
-> If you really want to log all the possible errors cases please do it in 
-> regmap code itself and
-> not in *all* the drivers.
-
-Best regards
-Uwe
-
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index eff06d59e9df..1578eaa071bd 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -1029,8 +1029,10 @@ static int mwifiex_pcie_alloc_cmdrsp_buf(struct mwifiex_adapter *adapter)
+ 	}
+ 	skb_put(skb, MWIFIEX_UPLD_SIZE);
+ 	if (mwifiex_map_pci_memory(adapter, skb, MWIFIEX_UPLD_SIZE,
+-				   PCI_DMA_FROMDEVICE))
++				   PCI_DMA_FROMDEVICE)) {
++		kfree_skb(skb);
+ 		return -1;
++	}
+ 
+ 	card->cmdrsp_buf = skb;
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
+
