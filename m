@@ -2,101 +2,105 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92130C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DEFC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CD2222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AD420659
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 15:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="X2zUH10m"
+	dkim=pass (1024-bit key) header.d=kellner.me header.i=@kellner.me header.b="UA9NtX4F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nxF4Wnpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389671AbfJDPVp (ORCPT
+        id S2389783AbfJDPWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 11:21:45 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:41902 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389165AbfJDPVp (ORCPT
+        Fri, 4 Oct 2019 11:22:33 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:48655 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389165AbfJDPWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:21:45 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x94FEqL2023042;
-        Fri, 4 Oct 2019 10:21:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=p7+1RJbWg4qn+lD3vb5E/TJ6wjfRTkxdKjhfoIz+FUM=;
- b=X2zUH10mirbj+x/n8RnymRCWE63V6+ujHW7xyrMxoxYqbYGsTLoX60M+kOYD0ALkvOlj
- kJ87bqI1miKgzRN0fnZmJzOb/boYUtKqqWv1detwk7AC1qpBe6EyOiJbHbZ4YVft+NQ8
- 3bWibyzYdjqz8kA2+B176enacAdVeUiBiYpm8lTdtbkNHaMp0wjVQ3CcAd8JAUi+e+G4
- 9Jxv3iEGBDd6jucXt8wKQHH8Wswcx8gJQs+ZlW1mX/cIsYLOw9EYaI4zH3bLcRTTRQMF
- UAU+COcdZkqCuGK4OD7DE+4ZWoyfPORiLxq/65tgK+b5y+aCPjSMGlDI10XuMUuaa1jJ xw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2va4x4t7rf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 04 Oct 2019 10:21:37 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 4 Oct
- 2019 16:21:35 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 4 Oct 2019 16:21:35 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E49EF2A1;
-        Fri,  4 Oct 2019 15:21:34 +0000 (UTC)
-Date:   Fri, 4 Oct 2019 15:21:34 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v3 3/3] mfd: madera: Add support for requesting the
- supply clocks
-Message-ID: <20191004152134.GA31391@ediswmail.ad.cirrus.com>
-References: <20191001134617.12093-1-ckeepax@opensource.cirrus.com>
- <20191001134617.12093-3-ckeepax@opensource.cirrus.com>
- <20191004143410.GJ18429@dell>
+        Fri, 4 Oct 2019 11:22:32 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 58C124D02;
+        Fri,  4 Oct 2019 11:22:31 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 04 Oct 2019 11:22:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kellner.me; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=mesmtp;
+         bh=DGg/NPiJuxCMtUzYywJWwJZJ6z11qN/tjEFenTY84II=; b=UA9NtX4FgSGP
+        Pji315adIMdVvtMpnYsFe0mfLXx8y7nW+Y95lyHSeApFtRwm6uLbpjGF+0mm0D/D
+        D00lns1rvfQ5Z+kbYOf7Lh8PSH8vGAr9tGJNqDvZwLLbCNcS8eJuteMP6VTl2yU6
+        Y84B4gFJJGCyyJxkCwlfEoAPrZwuk5Y=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=DGg/NPiJuxCMtUzYywJWwJZJ6z11qN/tjEFenTY84
+        II=; b=nxF4WnpoLW8+3jvKIy8BqoPrMX4YUMKPZLXnbifmyGYej64BQTjet/dQj
+        lL3KaVLKkN790I20Ub9Lpiaim6wijDd//T+qdNKX8Pmej2LfT4/uM+gHqF9lMW8A
+        HIoXcC+pD7N/m1Z8/qkJeynR/U0NZ1POh62bO19RlWovY9pOvYOSttJ85mZT3MIe
+        pbvEgWMV1XjgRfBl3f8t7h+Ly2Ihyt0A/1p3CnInOzLOBK5T3mdMz8GzDGdyx8DC
+        LuVt/XJLloNUmWioTiqEQIGNEn1xdUlkTC4AsaTxlTJ2PxNV8LtDoHP1nxsJP7sn
+        4q3msIB6ZT+CqXnxBVdIapHF/OWvg==
+X-ME-Sender: <xms:tmOXXbc0mQBASt8PgYJZIyIeezr-BCvh6no6Vd8j_4S30Xu2zM_ARQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrhedugdekudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpeevhhhrihhs
+    thhirghnucfmvghllhhnvghruceotghhrhhishhtihgrnheskhgvlhhlnhgvrhdrmhgvqe
+    enucfkphepkeelrdduiedrudehfedrudelieenucfrrghrrghmpehmrghilhhfrhhomhep
+    tghhrhhishhtihgrnheskhgvlhhlnhgvrhdrmhgvnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:tmOXXavIjENa3FZu_bsC2zU36ialf1z-ezu4Y8pWgDb0HCZmHM-r2g>
+    <xmx:tmOXXcOLkFAc_it75QhNrM8-tpoBBE8WVrm_s98N2llbq5WOZq5Dqw>
+    <xmx:tmOXXbzHo1gzO8i1C2wsQQeM5pm8XxQWeM2YLVa9p0wiMmxkManIHQ>
+    <xmx:t2OXXREUwIILtjextET6QZM_ykFhe4e7O1YXFcBAvJSq6dJz32Da-Q>
+Received: from hanada.local (cable-89-16-153-196.cust.telecolumbus.net [89.16.153.196])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A52938005A;
+        Fri,  4 Oct 2019 11:22:27 -0400 (EDT)
+Message-ID: <ec1e06404931e78f91d84f0cd8df9341c9cd74d6.camel@kellner.me>
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+From:   Christian Kellner <christian@kellner.me>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Mario.Limonciello@dell.com, yehezkelshb@gmail.com,
+        linux-usb@vger.kernel.org, andreas.noever@gmail.com,
+        michael.jamet@intel.com, rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
+Date:   Fri, 04 Oct 2019 17:22:24 +0200
+In-Reply-To: <20191004151621.GL2819@lahna.fi.intel.com>
+References: <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
+         <20191003080028.GK2819@lahna.fi.intel.com>
+         <06a04bff94494da99c5359a7fb645d19@AUSX13MPC105.AMER.DELL.COM>
+         <20191004075426.GA2819@lahna.fi.intel.com>
+         <CA+CmpXsMkwZhCegGYPYQo2GwN6ROwDYbY3RVZTEeN+FfZ-PbMQ@mail.gmail.com>
+         <20191004081951.GD2819@lahna.fi.intel.com>
+         <CA+CmpXvoro+m-NZLguMtDq_r_Og8LAFQgPGosvA+WsjMhi6m1Q@mail.gmail.com>
+         <332849ed8714496587251b6319a11b0b@AUSX13MPC105.AMER.DELL.COM>
+         <20191004142110.GJ2819@lahna.fi.intel.com> <1570201357.2.0@kellner.me>
+         <20191004151621.GL2819@lahna.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191004143410.GJ18429@dell>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=852
- malwarescore=0 adultscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910040136
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 03:34:10PM +0100, Lee Jones wrote:
-> On Tue, 01 Oct 2019, Charles Keepax wrote:
+On Fri, 2019-10-04 at 18:16 +0300, Mika Westerberg wrote:
+> > Is there any harm of also having the 'generation' exposed
+> > as well? I like the simplicity of the mapping from that value to
+> > Thunderbolt/USB4 standard version (e.g. I would show that in
+> > 'boltctl
+> > list'); 'hw_version' will need a bit more "interpreting".
 > 
-> > Add the ability to get the clock for each clock input pin of the chip
-> > and enable MCLK2 since that is expected to be a permanently enabled
-> > 32kHz clock.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> >  	/* Init 32k clock sourced from MCLK2 */
-> > +	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2].clk);
-> > +	if (ret != 0) {
-> 
-> Nit: Why is this not 'if (ret)' like in the rest of the file?
-> 
+> If generation is the only thing you need, we can export that now and
+> forget hw_version :)
+Sounds good to me, that is should indeed be good enough for bolt.
 
-Apologies will get that fixed up.
 
-Thanks,
-Charles
