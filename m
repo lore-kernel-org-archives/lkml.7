@@ -2,152 +2,187 @@ Return-Path: <SRS0=OvUS=X5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C40BECE58B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8B0C47404
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D93222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570233460;
-	bh=QnxgZGjRGb9kVa/AbzFU/w+ata+FCIrTiXgoxZKR668=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=G4Z0Bibkwj0Y+YrfHmWHpzp/AW5v7rONjMrR9QScGKTD+dUtlrggsonVA9O/fsJhD
-	 UwRGZ7YlGHoa2mtKCDbA5H2Q+CO5jwZFloI0hLo5/vwXNJ7MYRrseyGaRF9F81RR9W
-	 rQhr66tvpboEEwkMpbvcoFK1gGvgQhiEZwhBEI2c=
+	by mail.kernel.org (Postfix) with ESMTP id 321AD217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Oct 2019 23:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=threespeedlogic.com header.i=@threespeedlogic.com header.b="CpnE52qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfJDX5j (ORCPT
+        id S1731238AbfJDX7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 19:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfJDX5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 19:57:38 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5B4217F5;
-        Fri,  4 Oct 2019 23:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570233456;
-        bh=QnxgZGjRGb9kVa/AbzFU/w+ata+FCIrTiXgoxZKR668=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=14VBaXN2i1lZzsGbzc40dGmK4Kz7MeNzgfzYFP1mBUWKFrLWr5b8W2fbZxF7XWXT/
-         kFJ2TnRAgZew/x23kGW5L/k2jFdvXDJGUxAALPAqq4xa3NgG7/4XUrOkkuVZWSwetb
-         YcbcyPY+1xumtG3sOuB8AeQgccrkurfn3PNq0JFU=
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        shuah <shuah@kernel.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
- <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
-Date:   Fri, 4 Oct 2019 17:57:26 -0600
+        Fri, 4 Oct 2019 19:59:00 -0400
+Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:56985
+        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbfJDX7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 19:59:00 -0400
+X-Sender-Id: a2hosting|x-authuser|gsmecher@threespeedlogic.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id EA34F8C1B9B;
+        Fri,  4 Oct 2019 23:52:31 +0000 (UTC)
+Received: from mi3-ss2.a2hosting.com (100-96-87-199.trex.outbound.svc.cluster.local [100.96.87.199])
+        (Authenticated sender: a2hosting)
+        by relay.mailchannels.net (Postfix) with ESMTPA id B89798C199E;
+        Fri,  4 Oct 2019 23:52:30 +0000 (UTC)
+X-Sender-Id: a2hosting|x-authuser|gsmecher@threespeedlogic.com
+Received: from mi3-ss2.a2hosting.com ([TEMPUNAVAIL]. [68.66.200.197])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+        by 0.0.0.0:2500 (trex/5.18.3);
+        Fri, 04 Oct 2019 23:52:31 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: a2hosting|x-authuser|gsmecher@threespeedlogic.com
+X-MailChannels-Auth-Id: a2hosting
+X-Juvenile-Abortive: 2cccfe5837ad8e4d_1570233151679_4059249461
+X-MC-Loop-Signature: 1570233151679:2669541974
+X-MC-Ingress-Time: 1570233151679
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=threespeedlogic.com; s=default; h=Content-Type:In-Reply-To:MIME-Version:
+        Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q8BxvX3DMBws5dkJLATmzJZixhwXgmSBrqOfQ+jEjX4=; b=CpnE52qq9Taqi8vtQDPNCUajs
+        vKioTVH2urUkwhnKdfFZZTYeSfj2Y6ejzLWafSEjNyTWWTgOSkgBR0K4BC4W7OZIGQAP/Y5AvRKE/
+        W7xS+OckhjYKQ60voVcH+ZU+QDhJ9Nkgz4voxErk87Dvbm1PYYdqrQtaMfvw8Xgqtw5oq2r23qZjW
+        NHy+yIWFgeuFBSuYjl01e52ala0lNVOgyG5Q7mfzNzm6bSF+6OqlrQBy0UMsFz3cqReIQ3JhF69vt
+        we0dBMEbR2Kp7TIxWdVItOO2Tk3WD5OjDpJ6bmkFNZu3892lqDXBwnA0veqbtn56UnGymhMbgbW2O
+        wNTaYd1qQ==;
+Received: from 107-190-23-133.cpe.teksavvy.com ([107.190.23.133]:39320 helo=[192.168.0.103])
+        by mi3-ss2.a2hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gsmecher@threespeedlogic.com>)
+        id 1iGXN2-002Tg8-OH; Fri, 04 Oct 2019 19:52:24 -0400
+Subject: Re: [PATCH] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect'
+ usage
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-omap@vger.kernel.org
+Cc:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191004014548.29583-1-andrew.smirnov@gmail.com>
+From:   Graeme Smecher <gsmecher@threespeedlogic.com>
+Message-ID: <c40b8414-45a8-575a-c3c8-902ed35e5764@threespeedlogic.com>
+Date:   Fri, 4 Oct 2019 16:52:23 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191004014548.29583-1-andrew.smirnov@gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------D88F802452A7457DB086316E"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-AuthUser: gsmecher@threespeedlogic.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 5:52 PM, Brendan Higgins wrote:
-> On Fri, Oct 4, 2019 at 4:30 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->>
->> On Fri, Oct 04, 2019 at 04:47:09PM -0600, shuah wrote:
->>>> However, if I encourage arbitrary tests/improvements into my KUnit
->>>> branch, it further diverges away from torvalds/master, and is more
->>>> likely that there will be a merge conflict or issue that is not related
->>>> to the core KUnit changes that will cause the whole thing to be
->>>> rejected again in v5.5.
->>>
->>> The idea is that the new development will happen based on kunit in
->>> linux-kselftest next. It will work just fine. As we accepts patches,
->>> they will go on top of kunit that is in linux-next now.
->>
->> I don't see how this would work.  If I add unit tests to ext4, they
->> would be in fs/ext4.  And to the extent that I need to add test mocks
->> to allow the unit tests to work, they will involve changes to existing
->> files in fs/ext4.  I can't put them in the ext4.git tree without
->> pulling in the kunit changes into the ext4 git tree.  And if they ext4
->> unit tests land in the kunit tree, it would be a receipe for large
->> numbers of merge conflicts.
-> 
-> That's where I was originally coming from.
-> 
-> So here's a dumb idea: what if we merged KUnit through the ext4 tree?
-> I imagine that could potentially get very confusing when we go back to
-> sending changes in through the kselftest tree, but at least it means
-> that ext4 can use it in the meantime, which means that it at least
-> gets to be useful to one group of people. Also, since Ted seems pretty
-> keen on using this, I imagine it is much more likely to produce real
-> world, immediately useful tests not written by me (I'm not being lazy,
-> I just think it is better to get other people's experiences other than
-> my own).
-> 
+This is a multi-part message in MIME format.
+--------------D88F802452A7457DB086316E
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-That doesn't make sense does it? The tests might not be limited to
-fs/ext4. We might have other sub-systems that add tests.
+Hi Andrey,
 
-So, we will have to work to make linux-next as the base for new
-development and limit the number of tests to where it will be
-easier work in this mode for 5.5. We can stage the pull requests
-so that kunit lands first followed by tests.
+On 2019-10-03 6:45 p.m., Andrey Smirnov wrote:
+> According to
+> Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
+> i2c-mux-idle-disconnect is a property of a parent node since it
+> pertains to the mux/switch as a whole, so move it there and drop all
+> of the concurrences in child nodes.
+>=20
+> Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceB=
+oard, based on TI AM3874")
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Beno=C3=AEt Cousson <bcousson@baylibre.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
+> Cc: linux-omap@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>=20
+> This is purely a drive-by fix, since it concerns the HW I've never
+> heard of before. However I was working with PCA9548
+> (vf610-zii-scu4-aib is my HW) and looking at various users in the
+> kernel, when this code caught my eye. Apologies for the noise if this
+> fix is somehow bogus.
+>=20
+> In case that it matters this patch is based on top of 5.4-rc1.
 
-We have a similar situation with kselftest as well. Sub-systems
-send tests that depend on their tress separately.
+Thanks! We do have I2C address collisions on downstream bus segments, so
+keeping these segments isolated is important. I'm surprised this patch
+was necessary and happy to see it.
 
-thanks,
--- Shuah
+Lightly tested on 5.3.
+
+Tested-by: Graeme Smecher <gsmecher@threespeedlogic.com>
+
+cheers,
+Graeme
+
+--------------D88F802452A7457DB086316E
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+gbQuluiSg2k+M+9FMQ=3D=3D
+=3DO3pl
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------D88F802452A7457DB086316E--
