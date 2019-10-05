@@ -2,166 +2,203 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEE7C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D36C3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652F920862
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5731F2133F
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XHbk02Tn"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gYqhjfCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfJEHf6 (ORCPT
+        id S1727171AbfJEHyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 03:35:58 -0400
-Received: from mout.gmx.net ([212.227.17.21]:34785 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfJEHf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 03:35:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570260890;
-        bh=IqQBTN6oLYYEnwtUFxRtOkUgGK+FmQ6e9thND80bFq4=;
-        h=X-UI-Sender-Class:To:Cc:References:From:Subject:Date:In-Reply-To;
-        b=XHbk02TnbXHPZwtiY8yuWoNwUI0PH4DX/vKQ5MeBCL8TCGB6InOkIKTOgCloXM08F
-         DeLqMq/8qX2TF4v4TPCnqmOJRIyu646wwFqmbRgBeLiFgQKOjxUoHT7J0fkii4jqjx
-         7hYlEQijc4iPQN4shxxC/LDe9heCBt0RU6znXVW8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from mandree.no-ip.org ([79.229.35.161]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MwwZX-1htN4M3Nu7-00yRvH; Sat, 05
- Oct 2019 09:34:49 +0200
-Received: from ryzen.an3e.de (localhost [IPv6:::1])
-        by ryzen.an3e.de (Postfix) with ESMTP id 971FA12016F;
-        Sat,  5 Oct 2019 09:34:46 +0200 (CEST)
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <811277ae-bec1-1724-23ce-c13407bd79c5@gmx.de>
- <20191004130619.GI2819@lahna.fi.intel.com>
-From:   Matthias Andree <matthias.andree@gmx.de>
-Autocrypt: addr=matthias.andree@gmx.de; prefer-encrypt=mutual; keydata=
- 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
- H29L93g/7fa+B3v7
-Subject: Re: [PATCH v2 0/2] PCI: Add missing link delays
-Message-ID: <ed169065-1a2a-4729-b052-6ec8b1bf4835@gmx.de>
-Date:   Sat, 5 Oct 2019 09:34:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sat, 5 Oct 2019 03:54:49 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:59036 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfJEHys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 03:54:48 -0400
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x957sXmH016806;
+        Sat, 5 Oct 2019 16:54:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x957sXmH016806
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570262074;
+        bh=p9yHPmji7rhXxbD1ueOLfyVRDRN+WWX9cUEoagUBsPo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gYqhjfCqvHItsTpdrBo64s26DGk+jMGl1G5HlzdZGM0ZXovjrsAoOi5a+5oQx6BQG
+         xKKbciHExcILv3ZFipkp9bbNdOhF6VTrnbMzVFvxzwJnzvAS51a30hiSlmmaKG12ev
+         G0ZfsCE65zadJbg0Md9Wwocj6Zl6f3v04MjppagFM6JAvmbXWmFeQ5pmEahHPHgk+e
+         M4wNnD3X1u7wIgHH9WuxnBQrevnCAgt/optHmEl+oBluf2oPIu2Ug7PpShIxTOuchL
+         dc7jlB0bI7K/eoNpQvBDPr1mMa/ig5VQKPoAFmGtFuZGwXNKkVCcvzDvK2DtcEnirI
+         UDWLB8pm5yzSQ==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id w3so1980215vkm.3;
+        Sat, 05 Oct 2019 00:54:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAXbhwX1dd1f3VTiTrj9b2sFPuEhnxnUxyGhYTZezTAXiWMMHxAt
+        HeIw+vqfakshMoeKUGiBLWeO+8uoNXwV1XwZanc=
+X-Google-Smtp-Source: APXvYqzDurXQq2dsaaJqF1yLKd5J5UZj/D5REygO26wC83Bq3c7adyD3TqS2rt1AYxtM25e98I5dwg/MlwdK3tiwXjk=
+X-Received: by 2002:a1f:6d84:: with SMTP id i126mr9857322vkc.73.1570262072838;
+ Sat, 05 Oct 2019 00:54:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191004130619.GI2819@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
-X-Provags-ID: V03:K1:ZMNMSxUMs8fmmT5e5U6y/XzFo0OfMPy1T5Ua+QB0bskh3sKEvuU
- Wi5143jkMLewDKe+vhYcEfg86q1Chsycg56rEjAygfwefgvsiJ5iyfKv8HjvE43egC173TN
- Q6tIT4Q5BrGeR/aSb5RiC9eM+XWHMpJm5oQ4w1ZeK8+2wRh5gHdCE37hLIVZxLuT1ZUMs/U
- QDIxiKwsL0ZyjiY9Gs8xw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V5W0EYn0jc8=:S6VvYiugYlUr/2qySqEZWo
- ZEHOy9A4BEy95W5u/3tBeM8nbf0HjrB35dRpOWWGNKFoSmnxgTsgb+T5IIyedrU+HADwlgJ29
- 9FYRlx6rtG/uKrqapOG+BU8CBUqifui8gWtpQnTw4uy/GZOcowyfDJ9yFNyWSJnLug4i1TpCb
- ZFuY4LWJD5sSOLkqO+hSv6Z1u/bFiqrPUrgZWO1+UDSdyMsurW9REIASCextXdmGTeo62VhGQ
- T44B9/lD5JCi8lm7mMGgRV8HKC2E0oshg+6n2LkKrYWNEUUk/VXfWWJsTfc/kDfCZgTeTCJnz
- pEhdhQVwE9Hcr6+lU3qKHED1lwL6xxqQHJIjhfM1eKSrwe7dcIlufhErIIGMxBMolKHokMmgj
- 7XoSyR6pDbAApFUC+qJKrK72rR6mnBCaf5CATjH7zYkBMPNPK7LBcLsGxUrHHphwM6HiVWGTs
- sNFijNWKLJGIKYn2vK2fjUFoeztMMvO2F1gROslAAC+S7HDNZdJIJuc5skR+RdFZiQWBShUFA
- yh/9lVIzykQHHhnu6k8t4uBeUUZRf2073eVRU8/gf1QbqpLScwqMkQ+h9tv5HUOYwfjIRmY4e
- VGcfh6FpTXx+ihL5Mgie6M6noA3uxotIm1LThwWCDCHND/yurwmi8GjjhAt3mfdlrY2kYZBRJ
- FGsR6EApwJEKzh0DSR7N81/LJ6TkNDX7AJlB4aY5JeV328P4ZGEXBq1YP0B+AIESQcID3nKm9
- SGm+TJLKsahocWtixq2JCiq+chTsQPdwGbG8lhqGPohj+is7ozt0RlaulM1VHNneKaE/IwnWd
- YZsHGPjp4QWTtviTIZF6c0wLRoUnnfj3hqwxAAgzIyPyoyLO2Ln1RyeQoJO81B4LjVh5D9D3M
- oIMmKzuu12B/K5+wgcbfTXj0KFCqmmJIH7W+cQIWSYPjIVfuoLr5sAFwT7oj3RIc3utyYEL28
- w7cYeOe/8ggGEE1lPcjLyQYBTkXWnqWrQbM01vhYwMZc0n9DLyDP6eH5bWiHZulR+GjmY0sb0
- glqxHClSM894HGG8dgkKAsQabgmMpaC+8Vb3gGxWllorQCMi9cdc0bnqcwLvIBhUQHH7rTKha
- fjSYs3SMrOgrp68EWP/r8cWYz+sRlT8uvpF4EEgcofyy12lTKVqnRFkcXpm1RuFDNvX8yYH+Q
- 1HPVH5X1B+8WXFw4MPAPzI5Sl1PQVvI+4cE+5kxzmNrDDVfNTbhYiWbojhVqGdfrTUP+ss84U
- UOqqADI/ezkmD5jK3IPJgp4iwlirrD3hCV/MfQFrscS474rEeVGbrknxJ3No=
+References: <20190917231031.81341-1-maennich@google.com> <20191004095748.223119-1-maennich@google.com>
+ <CAKi4VALPF7r25SJ+9jazeRz612pv_4MmhjOsJ8aumW_JO29VvA@mail.gmail.com>
+In-Reply-To: <CAKi4VALPF7r25SJ+9jazeRz612pv_4MmhjOsJ8aumW_JO29VvA@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 5 Oct 2019 16:53:56 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ10xCm52PrgUvE=Z+d4BabuATSRpw+kL9Xm=O-ik_Duw@mail.gmail.com>
+Message-ID: <CAK7LNAQ10xCm52PrgUvE=Z+d4BabuATSRpw+kL9Xm=O-ik_Duw@mail.gmail.com>
+Subject: Re: [PATCH] depmod: create and use System.map.no_namespaces
+To:     Lucas De Marchi <lucas.de.marchi@gmail.com>
+Cc:     Matthias Maennich <maennich@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-modules <linux-modules@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMDQuMTAuMTkgdW0gMTU6MDYgc2NocmllYiBNaWthIFdlc3RlcmJlcmc6Cj4gT24gRnJp
-LCBPY3QgMDQsIDIwMTkgYXQgMDI6NTc6MjFQTSArMDIwMCwgTWF0dGhpYXMgQW5kcmVlIHdy
-b3RlOgo+PiBBbSAwNC4xMC4xOSB1bSAxNDozOSBzY2hyaWViIE1pa2EgV2VzdGVyYmVyZzoK
-Pj4+IEBNYXR0aGlhcywgQFBhdWwgYW5kIEBOaWNob2xhcywgSSBhcHByZWNpYXRlIGlmIHlv
-dSBjb3VsZCBjaGVjayB0aGF0IHRoaXMKPj4+IGRvZXMgbm90IGNhdXNlIGFueSBpc3N1ZXMg
-Zm9yIHlvdXIgc3lzdGVtcy4KPj4gSnVzdCB0byBiZSBzdXJlOiBpcyB0aGlzIGludGVuZGVk
-IHRvIGJlIGFwcGxpZWQgYWdhaW5zdCB0aGUgNS40LXJjKgo+PiBtYXN0ZXIgYnJhbmNoPwo+
-IFllcywgaXQgYXBwbGllcyBvbiB0b3Agb2YgdjUuNC1yYzEuCgpJIGFtIHNvcnJ5IHRvIHNh
-eSB0aGF0IEkgY2Fubm90IGN1cnJlbnRseSB0ZXN0IC0gbXkgY29tcHV0ZXIgaGFzIGEKR2VG
-b3JjZSAxMDYwLTZHQiBhbiBubyBvbmJvYXJkL29uLWNoaXAgZ3JhcGhpY3MuClRoZSBudmlk
-aWEgbW9kdWxlIDQzNS4yMSBkb2VzIG5vdCBjb21waWxlIGFnYWluc3QgNS40LXJjKiBmb3Ig
-bWUgKDUuMy4xCndhcyBmaW5lKS4KCkZvciBzb21lIHJlYXNvbnMgSSBkb24ndCB1bmRlcnN0
-YW5kLCBpdCBmaXJzdCBjb21wbGFpbnMgYWJvdXQgbWlzc2luZyBvcgplbXB0ecKgIE1vZHVs
-ZS5zeW12ZXJzLCAod2hpY2ggSSBkbyBoYXZlIGFuZCB3aGljaCBoYXMgMTI5NjcgbGluZXMp
-CmFuZCBpZiBJIGJ5cGFzcyB0aGF0IGNoZWNrLCBpdCBjb21wbGFpbnMgYWJvdXQgdW5kZWNs
-YXJlZCBEUklWRVJfUFJJTUUKImhlcmUgKG91dHNpZGUgYSBmdW5jdGlvbikiIC0gc29ycnkg
-Zm9yIHRoZSBHZXJtYW4gbG9jYWxlOgoKL3Zhci9saWIvZGttcy9udmlkaWEvNDM1LjIxL2J1
-aWxkL252aWRpYS1kcm0vbnZpZGlhLWRybS1kcnYuYzo2NjI6NDQ6CkZlaGxlcjogwrtEUklW
-RVJfUFJJTUXCqyBpc3QgaGllciAoYXXDn2VyaGFsYiBlaW5lciBGdW5rdGlvbikgbmljaHQK
-ZGVrbGFyaWVydDsgbWVpbnRlbiBTaWUgwrtEUklWRVJfUENJX0RNQcKrPwrCoCA2NjIgfMKg
-wqDCoMKgIC5kcml2ZXJfZmVhdHVyZXPCoMKgwqDCoMKgwqDCoCA9IERSSVZFUl9HRU0gfCBE
-UklWRVJfUFJJTUUgfApEUklWRVJfUkVOREVSLArCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBefn5+fn5+fn5+fn4KwqDCoMKgwqDCoCB8wqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgRFJJVkVSX1BDSV9ETUEKCkkgbmVlZCBOT1QgdHJ5
-IHRoaXMgaGFyZHdhcmUgd2l0aG91dCBudmlkaWEgcHJvcHJpZXRhcnkgZHJpdmVyLCBub3V2
-ZWF1CmhhcyBhbHdheXMgYmVlbiB1bmRlcmZlYXR1cmVkIGFuZCBJIG5ldmVyIGdvdCBzdXNw
-ZW5kL3Jlc3VtZSB3b3JraW5nCndpdGggaXQsIHNvIEkgZG9uJ3QgYm90aGVyIGVsc2UgaXQg
-d291bGQgc2tldyB0aGUgZmluZGluZ3MuCgooU29tZW9uZSBsZXQgbWUga25vdyBpZiBzd2l0
-Y2hpbmcgdG8gQU1EIDV4MDAgKFhUKSBpcyB3b3J0aHdoaWxlIG9yCnByZW1hdHVyZS4gVmVn
-YSBhbmQgZWFybGllciBjb25zdW1lIHdheSB0b28gbXVjaCBwb3dlciB0byBib3RoZXIuIEkn
-bQpub3QgYnV5aW5nIGEgbmV3IFBTVS4pCgoK
+On Sat, Oct 5, 2019 at 3:25 AM Lucas De Marchi
+<lucas.de.marchi@gmail.com> wrote:
+>
+> On Fri, Oct 4, 2019 at 2:57 AM Matthias Maennich <maennich@google.com> wrote:
+> >
+> > depmod in its current version is not aware of symbol namespace in
+> > ksymtab entries introduced with 8651ec01daed ("module: add support for
+> > symbol namespaces."). They have the form
+> >
+> >   __ksymtab_NAMESPACE.symbol_name
+> >
+> > A fix for kmod's depmod has been proposed [1]. In order to support older
+> > versions of depmod as well, create a System.map.no_namespaces during
+> > scripts/depmod.sh that has the pre-namespaces format. That way users do
+> > not immediately upgrade the userspace tool.
+> >
+> > [1] https://lore.kernel.org/linux-modules/20191004094136.166621-1-maennich@google.com/
+> >
+> > Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > Fixes: 8651ec01daed ("module: add support for symbol namespaces.")
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Lucas De Marchi <lucas.de.marchi@gmail.com>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > Cc: Martijn Coenen <maco@android.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: linux-modules@vger.kernel.org
+> > Signed-off-by: Matthias Maennich <maennich@google.com>
+> > ---
+> >
+> > Please note this depends on the new ksymtab entry format proposed in
+> > https://lore.kernel.org/lkml/20191003075826.7478-2-yamada.masahiro@socionext.com/
+>
+> I don't really agree with that thought, more below.
+>
+> >
+> > That is likely to be merged soon as well as it fixes problems in 5.4-rc*, hence
+> > this patch depends on it.
+> >
+> > Cheers,
+> > Matthias
+> >
+> >  .gitignore        | 1 +
+> >  scripts/depmod.sh | 8 +++++++-
+> >  2 files changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/.gitignore b/.gitignore
+> > index 70580bdd352c..5ed58a7cb433 100644
+> > --- a/.gitignore
+> > +++ b/.gitignore
+> > @@ -59,6 +59,7 @@ modules.order
+> >  /vmlinux-gdb.py
+> >  /vmlinuz
+> >  /System.map
+> > +/System.map.no_namespaces
+> >  /Module.markers
+> >  /modules.builtin.modinfo
+> >
+> > diff --git a/scripts/depmod.sh b/scripts/depmod.sh
+> > index e083bcae343f..602e1af072c7 100755
+> > --- a/scripts/depmod.sh
+> > +++ b/scripts/depmod.sh
+> > @@ -39,7 +39,13 @@ if $depmod_hack_needed; then
+> >         KERNELRELEASE=99.98.$KERNELRELEASE
+> >  fi
+> >
+> > -set -- -ae -F System.map
+> > +# Older versions of depmod do not support symbol namespaces in ksymtab entries,
+> > +# hence create an alternative System.map with namespace patched out to use for
+> > +# depmod. I.e. transform entries as follows:
+> > +#    __ksymtab_NAMESPACE.symbol_name -> __ksymtab_symbol_name
+> > +sed 's/__ksymtab_.*\./__ksymtab_/' System.map > System.map.no_namespaces
+>
+> So people with old kmod will have to know they need to pass
+> System.map.no_namespaces rather than the usual
+> System.map. Also, distros will need to be update to also copy the new
+> file to the kernel package (or upgrade/patch kmod).
+>
+> I'd rather maintain the current format and fix the bug that patch is
+> fixing. The namespace
+> in the end IMO is just a small annoyance with a reason to  exist.
+
+I agree, this fix is bad.
+We should not bother kmod or any tools.
+And System.map.no_namespaces is a cheesy workaround.
+
+
+BTW, I expressed my negative opinion in the review process
+for the patch set. I am still not convinced with the
+namespace feature, but anyway it was merged
+(with poor review and test).
+
+
+
+Get back on track, probably the right fix would be to
+stop using __ksymtab_<namespace>.<symbol>.
+
+It is not used for any purposes but passing
+<namespace> / <symbol> pairs to modpost.
+
+
+For example, __kstrtabns_##sym points to
+the namespace string, so it would be possible
+to parse it from modpost?
+
+Then, asm("__ksymtab_" #ns NS_SEPARATOR #sym)
+will go away.
+
+
+
+Masahiro
+
+
+
+
+> Lucas De Marchi
+>
+> > +
+> > +set -- -ae -F System.map.no_namespaces
+> >  if test -n "$INSTALL_MOD_PATH"; then
+> >         set -- "$@" -b "$INSTALL_MOD_PATH"
+> >  fi
+> > --
+> > 2.23.0.581.g78d2f28ef7-goog
+> >
+>
+>
+> --
+> Lucas De Marchi
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
