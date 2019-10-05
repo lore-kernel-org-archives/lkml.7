@@ -2,171 +2,116 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9375EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD521C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D27222C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA53E20873
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9r4usZD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4Xe3j5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfJEAwG (ORCPT
+        id S1726446AbfJEA6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 20:52:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46761 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfJEAwG (ORCPT
+        Fri, 4 Oct 2019 20:58:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37421 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJEA6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 20:52:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u22so11032653qtq.13;
-        Fri, 04 Oct 2019 17:52:05 -0700 (PDT)
+        Fri, 4 Oct 2019 20:58:38 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so2909282pgi.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 17:58:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4kfrSx9pecxmKTopMM3H10hlWnjEzdS6486P99JMZic=;
-        b=A9r4usZDZI1XYmdWnzVDPjU28NFB618J3iWHmZTBuy82f9U3ecTW2gbZdbInrcGzjq
-         fh5weVuLHOJQh3ffu4wX0tY03UT4iIYplzkz8+AdtxDomM4W9SXNj5GVzewfAaobZHII
-         VMvttb3S/h9tbr/warC36/gJYESQvrSa9kA3qOn90t2DREceaqkikAiiGYnidiulC0TH
-         0j09D0Ta+TUUb1pwj1X9t+SiC4vMXpcgzdBSeb0MCpfoFpQ6GP83lrw3T9RWLiy6RCCZ
-         lLnGsLenLxLGq5ul+nxXGy9KWX5XuE0YaYza/7kh9NXDBVjeuawDVIXPts7DnaOHK1nH
-         ipSA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3GjI3HdpMykSY2+YmUKXAGRqWylFQzs02bDymLtXFRo=;
+        b=S4Xe3j5UFzuZy9Ry51hOVq8fxBmCZxkot3xa/TgwrqWxHYI4R01/XBxuyHV7jvMYTt
+         d6ESb1Y8co6iV0yjNCMTiiG85glaKlitSt6v75329fHF28dw1lGK05f8q+jnEG1qgPch
+         QSncUntBp4TPzJTPH/UovGjbxelGdWzz4wpbRRx+cavWzUPmwa9DsQ9f03u4njae4BG4
+         nc1dgg7Qtl1SqXWLS5gY6OXrJ2qLOXdwuiioSnCg11zP5u2efG2BqCgiDmHycPrwYFEB
+         A9KNXIhBVU1f+RF85lT+Bpjno1bMyB5Z/rmYe8mbQybiVcbEulL9z1xSAu8SRnJ9KIG5
+         sMUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4kfrSx9pecxmKTopMM3H10hlWnjEzdS6486P99JMZic=;
-        b=OI6+EKgMo4C+5qqi33zdwKHOtOrjHvg0imDWvLQN7OLfisKyQyYoWtRa9NbwM8Kqu1
-         qkgsptMGxHqFNIF9sKOTuwEmgMu2MdnsTCEVneXpYL/BtBkweiejNg9DCrAxmtUt6a7s
-         4nEkawuff3bSr9Fv4gDhgvCLyh/cLb8us+8DBy9vB9EVW3kTn8/Up7YZYaQ2Z+byqN+b
-         0phEVc2gy3nQbBj1/s5Ig3SJSmznQ2zruL46PukqAJfaQqu4PuCFA6aFDvmgNZjtqqD5
-         WzvCgSZIWSc+R9IQULCmKVgG5QjUZB9JIbqBGwWtk1G2j5Yfgaf0Nn5rMJI5mT6KA62I
-         QahQ==
-X-Gm-Message-State: APjAAAVOKIvFJlChuy6zBkIUkttp/1S5o/rb7ozWUNh0IEkVC9sfxQqg
-        PR3/9E/cSAfcNtLP6Hyt7yg=
-X-Google-Smtp-Source: APXvYqxe2v6jRShlgbNxkPA59YDigb42WrFKwpnJxW+Hl+XUgwGuTXMhgBPuZ2LJ/loDpT2Bd3iI7g==
-X-Received: by 2002:ad4:40c8:: with SMTP id x8mr16740235qvp.227.1570236725160;
-        Fri, 04 Oct 2019 17:52:05 -0700 (PDT)
-Received: from vivek-desktop (ool-457857f8.dyn.optonline.net. [69.120.87.248])
-        by smtp.gmail.com with ESMTPSA id k2sm3492216qti.24.2019.10.04.17.52.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 17:52:04 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 20:52:00 -0400
-From:   Vivek Unune <npcomplete13@gmail.com>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Vicente Bergas <vicencb@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, ezequiel@collabora.com, akash@openedev.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
-Message-ID: <20191005005200.GA11418@vivek-desktop>
-References: <20190929032230.24628-1-npcomplete13@gmail.com>
- <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
- <20190929234615.GA5355@vivek-desktop>
- <2223294.9I8gkMH88G@phil>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3GjI3HdpMykSY2+YmUKXAGRqWylFQzs02bDymLtXFRo=;
+        b=Q2l51eB6MLp0zXxxFBvXjqtBWdgPR2sShCAnXofgEOw1qrc9hbiHrCHOJAbshPhWbC
+         r05V38kYnPlSlfsthPEtjMqmKn9CuodZaFD9jpDxbqtnmR/PMnr4QEeNWLVuawyvRbCX
+         ONaQGrz2smM7f1PvnqOcWZfq0hhqCZ9rGKgaHOX8GdF40nbawTY4xXqwxtioWueZr6Kr
+         q9uTXX0KYaWOMBHauUTswW7oNUvGRTqphVJIH8cDuTlbTbpaG3SuhxnvnNEC8vn9+sVe
+         3PGMENOOFoYg5UgZsorLRjbIAcO0IS5DMReHm2oKlfa5LOrUdN0cXlOLU2T4Qo11jl+8
+         I59A==
+X-Gm-Message-State: APjAAAUq6znS0ekfjhZo3zcc8nSBvPM8tEtphj/sTJqAWF3zwX4FrNSM
+        57bMjlb8v8AFzph16iS5dy4=
+X-Google-Smtp-Source: APXvYqx7E1GXPDQMTScVb8zQZ11wXcWAK3iRlSBepgyKZbego+uFki/8Sko4fvUeVL/LDW4fOrxYeg==
+X-Received: by 2002:a63:682:: with SMTP id 124mr18045104pgg.102.1570237117746;
+        Fri, 04 Oct 2019 17:58:37 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id t11sm5611290pjy.10.2019.10.04.17.58.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Oct 2019 17:58:36 -0700 (PDT)
+Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
+To:     Will Deacon <will@kernel.org>, Marco Elver <elver@google.com>
+Cc:     kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>, paulmck@linux.ibm.com,
+        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
+        Anatol Pomazau <anatol@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        stern@rowland.harvard.edu, akiyks@gmail.com, npiggin@gmail.com,
+        boqun.feng@gmail.com, dlustig@nvidia.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr
+References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
+ <20190920155420.rxiflqdrpzinncpy@willie-the-truck>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <0715d98b-12e9-fd81-31d1-67bcb752b0a1@gmail.com>
+Date:   Fri, 4 Oct 2019 17:58:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2223294.9I8gkMH88G@phil>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190920155420.rxiflqdrpzinncpy@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 11:45:08PM +0200, Heiko Stuebner wrote:
-> Hi Vivek,
+
+
+On 9/20/19 8:54 AM, Will Deacon wrote:
+
 > 
-> Am Montag, 30. September 2019, 01:46:15 CEST schrieb Vivek Unune:
-> > On Sun, Sep 29, 2019 at 01:22:17PM +0200, Vicente Bergas wrote:
-> > > On Sunday, September 29, 2019 5:22:30 AM CEST, Vivek Unune wrote:
-> > > > Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
-> > > > 
-> > > > Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
-> > > > ---
-> > > >  arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > > b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > > index 0d1f5f9a0de9..c133e8d64b2a 100644
-> > > > --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > > @@ -644,7 +644,7 @@
-> > > >  	status = "okay";
-> > > >  	u2phy0_host: host-port {
-> > > > -		phy-supply = <&vcc5v0_host>;
-> > > > +		phy-supply = <&vcc5v0_typec>;
-> > > >  		status = "okay";
-> > > >  	};
-> > > > @@ -712,7 +712,7 @@
-> > > >  &usbdrd_dwc3_0 {
-> > > >  	status = "okay";
-> > > > -	dr_mode = "otg";
-> > > > +	dr_mode = "host";
-> > > >  };
-> > > >  &usbdrd3_1 {
-> > > 
-> > > Hi Vivek,
-> > > 
-> > > which is the relationship of your patch and this commit:
-> > > 
-> > > e1d9149e8389f1690cdd4e4056766dd26488a0fe
-> > > arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
-> > > 
-> > > with respect to this other commit:
-> > > 
-> > > c09b73cfac2a9317f1104169045c519c6021aa1d
-> > > usb: dwc3: don't set gadget->is_otg flag
-> > > 
-> > > ?
-> > > 
-> > > I did not test reverting e1d9149e since c09b73cf was applied.
-> > > 
-> > > Regards,
-> > >  Vicenç.
-> > > 
-> > 
-> > Hi Vicenç,
-> > 
-> > Indeed, I was motivated by e1d9149e ("arm64: dts: rockchip: Fix USB3 
-> > Type-C on rk3399-sapphire"). X99 TV box showed exact same symptoms
-> > with usb-c port. After applying the fix, it worked.
-> > 
-> > I was not aware of c09b73cf ("usb: dwc3: don't set gadget->is_otg
-> >  flag") and it will be interesting to test it. This might render
-> > my fix unecessary.
+> This one is tricky. What I think we need to avoid is an onslaught of
+> patches adding READ_ONCE/WRITE_ONCE without a concrete analysis of the
+> code being modified. My worry is that Joe Developer is eager to get their
+> first patch into the kernel, so runs this tool and starts spamming
+> maintainers with these things to the point that they start ignoring KCSAN
+> reports altogether because of the time they take up.
 > 
-> So I'll let this patch sit here for now.
-> Once you've done the testing, can you please respond with the
-> result (both positive and negative results please).
-> 
-> Thanks
-> Heiko
-> 
+> I suppose one thing we could do is to require each new READ_ONCE/WRITE_ONCE
+> to have a comment describing the racy access, a bit like we do for memory
+> barriers. Another possibility would be to use atomic_t more widely if
+> there is genuine concurrency involved.
 > 
 
-Hi Heiko,
+About READ_ONCE() and WRITE_ONCE(), we will probably need
 
-I tested the c09b73cf patch without modifying exsisting dts. I can confirm
-that that patch doesn't work for me. No usb-c devices were recognized.
+ADD_ONCE(var, value)  for arches that can implement the RMW in a single instruction.
 
-Vicenç - were you able to test it?
+WRITE_ONCE(var, var + value) does not look pretty, and increases register pressure.
 
-As soon as I apply dts patch, usb-c devices are recognized.
+I had a look at first KCSAN reports, and I can tell that tcp_poll() being lockless
+means we need to add hundreds of READ_ONCE(), WRITE_ONCE() and ADD_ONCE() all over the places.
 
-Thanks,
-
-Vivek
+-> Absolute nightmare for future backports to stable branches.
