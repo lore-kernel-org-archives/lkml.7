@@ -2,136 +2,112 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E553C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 19:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91778C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EBE222C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 19:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63212222CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USekCAdz"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BeIKYf+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfJETqg (ORCPT
+        id S1729773AbfJEUBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 15:46:36 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43179 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbfJETqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 15:46:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id n14so9739003ljj.10
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 12:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pIRtXMzeKU/5iWBtHcvdAVzohUlQNYBWg9glyekRjho=;
-        b=USekCAdzBBS2vPp1Kbs7c8ZuFj1hxIcTm3ZnzErvDhKIP7zQmD2LZ7wIpbvoUctPE1
-         ubsft+BbXfoZ/YStIB7/yv5LqQYQtqRme9fFkqnHVPDLflQT63d5hUu6z2b+ib7t9pba
-         iY7WeWiBqg6hTD0YSf+BVrJ75lOtuDHQDERTe2ysc1nSXMm874Jz7dgp1W5uOS4fOBj1
-         xDk2qIYvscGHqjxErhcMSNq6JzeG2l+KyT5gL/TNl0ug/BIJVeoCiFLeEV76k6/jw0ju
-         AWUqnWUVAlX37t1TtyFuY+t19GTSo+ppQ/nb5v4UOQuRtgnq2Rc39Tv67ypLqr8LBg+N
-         Pj7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pIRtXMzeKU/5iWBtHcvdAVzohUlQNYBWg9glyekRjho=;
-        b=WP5zfLJkbJZTjuA9Y2pLYD/9Dvyn5OGmN/w3GmmtEXvSI8xfEGdKpQUwM7gh39sg2v
-         kwYqe354SrtEcQqys7xYC+BUQwB7tntux6ENFU8ZepgUZCJU88M8VPvxR4cvKv7y4ZjK
-         5onPsTrX4fuClEiMMdis+kFVb6rDyCt8AHmBCIVyjYqupcNecRnuFjTkEKB8qmuKyr8t
-         br3yTW/qvhHkH1yvG3HdbZoKaZe9A+V/714JViCkufyZegEoBemmcJDMGmcrCOphQjq7
-         Kl0ShLwK7zkWbotMzeCkYqdw53Yb0d6/KMhzicGmgnP/JMyP//CNKkHBUarbtnOWCsxn
-         SS9g==
-X-Gm-Message-State: APjAAAXlCjRCIY3KsynBhdQZrGITNMUIJAn7A8REOjBnitFhPlVRpTtw
-        D7kiD9Ll5AOW9g919xOo4+o=
-X-Google-Smtp-Source: APXvYqz78uYXi/QmR5Xe88a/NPo3a70vR6WSNUBuYFhVYdCBbuZ678Yq4X9J4WX7E/0L1UxAvmt2RQ==
-X-Received: by 2002:a2e:9049:: with SMTP id n9mr13136819ljg.45.1570304793994;
-        Sat, 05 Oct 2019 12:46:33 -0700 (PDT)
-Received: from rikard (h-98-128-228-153.NA.cust.bahnhof.se. [98.128.228.153])
-        by smtp.gmail.com with ESMTPSA id h10sm2043194ljb.14.2019.10.05.12.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 12:46:33 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
-Date:   Sat, 5 Oct 2019 21:46:27 +0200
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     akpm@linux-foundation.org, joe@perches.com,
-        johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kees Cook <keescook@chromium.org>, x86@kernel.org
-Subject: Re: [PATCH v3 0/3] Add compile time sanity check of GENMASK inputs
-Message-ID: <20191005194627.GA1817543@rikard>
-References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190811184938.1796-1-rikard.falkeborn@gmail.com>
+        Sat, 5 Oct 2019 16:01:53 -0400
+Received: from mout.gmx.net ([212.227.17.22]:60179 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727980AbfJEUBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 16:01:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570305695;
+        bh=qySV3tlxF55Vn/7Dh9FTVARSYZ+YXZdXkb4UesYQYM4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=BeIKYf+Rmt42RrNTCWaDviRy+ohnDWmmwtQvBURXjRsr2jSBIR1+L+2qplAsJLDTX
+         j1QwiTcRdPJJiX0VdWTEETn54MPWxTnykLV6xEIcksLtDRSZuQRi7VRrx9SNEudkol
+         cqbSl5ELylxm2zwnF1lGFjkwMLcsszF4ft98YGiY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTzfG-1ihgXF1jiE-00R41C; Sat, 05
+ Oct 2019 22:01:35 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] docs: i2c: Fix SPDX-License-Identifier syntax
+Date:   Sat,  5 Oct 2019 22:01:22 +0200
+Message-Id: <20191005200126.25809-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LMni/TfrfxOuDts2qQNrNG0VhnaXFqUh0VdHKqWXcHWkUxD9WdJ
+ aydOUR7RKdhdSuUNuyJKaLVd3VDkRDRriT57B3ES+TP8te+ViVTdNEIinxeyvOshsp/Ves0
+ diYtv9sOgEzKwXnRfNJ+TTID9RsBV4laTAA3wnthUtO3/rJRp/txF0tmAPnOfJsZN/o0td6
+ EHWAYdcz9MuHG1peO7Y2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+s/KPiena6U=:C8xDlyRYB+fOBmIf0rMIST
+ p+D472UZ9kalsKpLibPkhl/Ta5qkfibzHgDZA/ulZvnH2hZOvD4G3vR7qdPCxlE18L3eLGqGl
+ 4+dBCVEqt/kR+/JdCdILTA05Q1k7mgRbflfpOJRovtxKUO1dSzPmXmXV+chPCkLhnDKlCoO4p
+ OEtsVH9201GgFe+gdRm+1/+RPpC9XhHEXxLecrxyeFkglwTm+uw5jyapkn4ojhmUKzzMkN/vm
+ 2eGjCF7bbE63bdrZRXNw95EXm/VnEYp5Uqa5NlpfXtzOkhgrq5+XaGhpqgumMBpqcMQO73vrF
+ ++WNdtTTBdhRkoeevePY5eIjAsgODcnbL8vgnbPKhGrX+8lbggN8GApVRdcKa+vrig4T6MDAc
+ fh8jotdqlJQBm5bY1KLnz21lXg1mWM24Lf4NE8mMiz1hgabhdnsu8QHTRkeBOUDtIBzI6TcsB
+ xEF6BPY1PT8LcW6spQCZJJ65klzajkwOOWCweZx3uxw/EkNPydjDVdabilCB75bG/sn8wHpzo
+ sRW+xat21OpTRPuliF/LVuY26K2rPSpvFtjjZLjw04besVhU8P66GgBQRxGALQOFXrGdELcSb
+ XZQBEy2aU6k7RKav2z28pcY91fRF87MbX3d1Qu1+ecdGQCEA+YBxldM0eX+Z6yLO0mdAYX20j
+ WCbWsY0Mo9qdqdMz5vvLONhEQz6uWiNc52SnD/dCNJDMG8DcXpMfHVnJDTENHZfbkoDZW+7NG
+ ahdP+sraNm8oeALOOGX6+qzjHATndEf5XxjAX92/3Cej76eKmOuwwNbttwOcx1IaY1bBRE7wU
+ PQV9cJ/cnEILkTinU3RTQTiqrnG0RS8Vu3bGEiNyqy3U4PRZw03NW8YDYlYdjsWr6L335Ya6i
+ XKJYNFKGgZ4V4xW3o1OY+yrRZumG0zcQ73oRXEaTvmSHqTcYHvvO3XWCX39ZSyAqkl90byfkN
+ zCniWWRto3iGtTAsAL3zKSBfgNwjolWQ+otqceo5mGAK3amWiqc6vZM1N0oOOFYyn24jxo9ya
+ Y0AbQ8JevR+FX5SMqjPhjX4mnC1L0VLxJbmGmU+nCOSSqNND08lfoN8WeC4WU3+2clyNQXKgT
+ IRkC98zwixwLobFzdi3zvhYg6o0Nu3nQ/zsY4y02IAk9WY/hDEmNU62vJRkQQY/x/NXciQDJb
+ dvXvHSQJUj38Hyytw1VcJLTAMt+YQ0utJAjI61RB1P0Sg83k+D2+HiJ/1gATWzPg9q51OFP02
+ +VwpMpwSpY9MtisDf8AyZ29osmVq9fIdkowWnoHb9/vVlVa5UvJtSvefW+rk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 08:49:35PM +0200, Rikard Falkeborn wrote:
-> Hello,
-> 
-> A new attempt to try to add build time validity checks of GENMASK (and
-> GENMASK_ULL) inputs. There main differences from v2:
-> 
-> Remove a define of BUILD_BUG_ON in x86/boot to avoid a compiler warning
-> about redefining BUILD_BUG_ON. Instead, use the common one from
-> include/.
-> 
-> Drop patch 2 in v2 where GENMASK arguments where made more verbose.
-> 
-> Add a cast in the BUILD_BUG_ON_ZERO macro change the type to int to
-> avoid the somewhat clumpsy casts of BUILD_BUG_ON_ZERO. The second patch
-> in this series adds such a cast to BUILD_BUG_ON_ZERO, which makes it
-> possible to avoid casts when using BUILD_BUG_ON_ZERO in patch 3.
-> 
-> I have checked all users of BUILD_BUG_ON_ZERO and I did not find a case
-> where adding a cast to int would affect existing users but I'd feel much
-> more comfortable if someone else double (or tripple) checked (there are
-> ~80 instances plus ~10 copies in tools). Perhaps I should have CC:d
-> maintainers of files using BUILD_BUG_ON_ZERO?
-> 
-> Finally, use __builtin_constant_p instead of __is_constexpr. This avoids
-> pulling in kernel.h in bits.h.
-> 
-> Joe Perches sent a patch series to fix existing misuses, currently there
-> are five such misuses (which patches pending) left in Linus tree and two
-> (with patches pending) in linux-next. Those patches should fix all
-> "simple" misuses of GENMASK (cases where the arguments are numerical
-> constants). Pushing v2 to linux-next also revealed an arm-specific
-> misuse where GENMASK was used in another macro (and also broke the
-> arm-builds). There is a patch to fix that by Nathan Chancellor (not in
-> linux-next yet). Those patches should be merged before the last patch of
-> this series to avoid breaking builds.
-> 
+ReST directives are introduced with two dots.
 
-Ping.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/i2c/busses/index.rst | 2 +-
+ Documentation/i2c/index.rst        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-The current status is that patch 1 has been merged into Linus tree
-through the x86 tree. The patches mentioned about actually fixing the
-existing misuses have all been merged except two of Joe Perches patches
-[0], [1], but those patches fixes misuse in unused macros, and will not
-affect anyones build.
+diff --git a/Documentation/i2c/busses/index.rst b/Documentation/i2c/busses=
+/index.rst
+index 97ca4d510816..2a26e251a335 100644
+=2D-- a/Documentation/i2c/busses/index.rst
++++ b/Documentation/i2c/busses/index.rst
+@@ -1,4 +1,4 @@
+-. SPDX-License-Identifier: GPL-2.0
++.. SPDX-License-Identifier: GPL-2.0
 
-I have testbuilt the two remaining patches rebased on top of Linus tree
-and on linux-next for aarch64 and x86 without seeing any problems (when
-v2 of the series went into linux-next, those were the only archs where
-any problems were spotted (build warning on x86, build error on
-aarch64)).
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ I2C Bus Drivers
+diff --git a/Documentation/i2c/index.rst b/Documentation/i2c/index.rst
+index cd8d020f7ac5..a0fbaf6d0675 100644
+=2D-- a/Documentation/i2c/index.rst
++++ b/Documentation/i2c/index.rst
+@@ -1,4 +1,4 @@
+-. SPDX-License-Identifier: GPL-2.0
++.. SPDX-License-Identifier: GPL-2.0
 
-[0] https://lore.kernel.org/lkml/cddd7ad7e9f81dec1e86c106f04229d21fc21920.1562734889.git.joe@perches.com/
-[1] https://lore.kernel.org/lkml/d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com/
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ I2C/SMBus Subsystem
+=2D-
+2.20.1
 
-Rikard
