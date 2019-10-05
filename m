@@ -2,132 +2,86 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACC3C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D2CC3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B892133F
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6q34BHA"
+	by mail.kernel.org (Postfix) with ESMTP id 289222133F
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfJEMY6 (ORCPT
+        id S1728272AbfJEM0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 08:24:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38314 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbfJEMY5 (ORCPT
+        Sat, 5 Oct 2019 08:26:11 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:35359 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726198AbfJEM0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 08:24:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w12so10140233wro.5;
-        Sat, 05 Oct 2019 05:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AndZMSEDGnOk0Jn24aQIRsC/2ExlDZE2yMCCrzypQ00=;
-        b=m6q34BHADtE4ePg8AWkpufWj8+PRLpcFc7IZhGNXAI0YUpVyi5cQQ3XxdAVDB8rguj
-         GxaLlD1uB5ukEP81v3KcsDB7IUGw6V+O3Nltur5KznD5VKDgEwMYkyjcsxwJwdnC8bSf
-         h3sYVumVryfYm5wcdJjwoXiUNffQnZY/QAh14gZ1uaB4+Bjw2mJ9m2qZ5clJxIJW00kA
-         s4qxyFA9T7XA2ofykkz6aZTV9+2fxPfH9B9GtgoPW/V/rqGmZYTjdX+5nS6Ji5971McY
-         8sReQeX27fGHaGh3xRH05ufwzskBSN/OcnnkgGqE3RjYBkGlvoQXndf313ZVQ6NP2CeF
-         uKig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AndZMSEDGnOk0Jn24aQIRsC/2ExlDZE2yMCCrzypQ00=;
-        b=Wq78xsdmr2iKksrFANqJuTipOyBiQyMtssbOzqiwa21j1+sUsC3ZNFLuwOeYbiKVne
-         p/RbkiFq4Ya+OAt7kUV8To6NMEiRCSEzcYb5PN43IGcR38rLJ8StnMIEJb1XHYhWHoTQ
-         833iZgpbj4pfWA9PWzvZt4oabHH+qIyA5lVDhJw8OGmvcaUtnpId25f22hynMf2vVKhl
-         0UQZibJKd3SRdJVOkYo6YCUTzdJH0JLpax/U3KSSf4unDxqeBVwSCjvQdbwxxxeVm9h/
-         B9o9rpKJ2YwXPQ6zZ2rj6s0vqNqKW763OI3klkRevCNFUVguPKla8depGMvUxY2Ar844
-         XfgQ==
-X-Gm-Message-State: APjAAAWs29/Yr88L6yUm8ueJiNU3h1sPM7SDnUHdmaEMB8zCP6qlguC7
-        0TnX2doWY/D87eRJqfnPdRY=
-X-Google-Smtp-Source: APXvYqzXztDn6JBikilw5BsQ/wznLPYZFPp9T77lNEkZMsKOC9lDHog6P12smbv5L5k/8g4RtVShjA==
-X-Received: by 2002:adf:aa98:: with SMTP id h24mr10852669wrc.60.1570278294265;
-        Sat, 05 Oct 2019 05:24:54 -0700 (PDT)
-Received: from localhost.localdomain ([46.56.192.152])
-        by smtp.gmail.com with ESMTPSA id a2sm8570792wrt.45.2019.10.05.05.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 05:24:53 -0700 (PDT)
-Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
-        by localhost.localdomain with esmtp (Exim 4.92.1)
-        (envelope-from <jekhor@gmail.com>)
-        id 1iGj9T-0005DT-Js; Sat, 05 Oct 2019 15:27:11 +0300
-Date:   Sat, 5 Oct 2019 15:27:11 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
- revert of support for newer surface devices
-Message-ID: <20191005122711.GC7077@jeknote.loshitsa1.net>
-References: <20191005105551.353273-1-hdegoede@redhat.com>
+        Sat, 5 Oct 2019 08:26:11 -0400
+X-IronPort-AV: E=Sophos;i="5.67,260,1566856800"; 
+   d="scan'208";a="404856155"
+Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 14:26:09 +0200
+Date:   Sat, 5 Oct 2019 14:26:08 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Martijn Coenen <maco@android.com>,
+        =?ISO-8859-15?Q?Matthias_M=E4nnich?= <maennich@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yue Haibing <yuehaibing@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [RFC] scripts: Fix coccicheck failed
+In-Reply-To: <21684307-d05c-1856-c849-95436aedeb86@web.de>
+Message-ID: <alpine.DEB.2.21.1910051425050.2653@hadrien>
+References: <CAK7LNAS2K6i+s2A_xTyRq730M6_=tyjtfwHAnEHF37_nrJa4Eg@mail.gmail.com> <21684307-d05c-1856-c849-95436aedeb86@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005105551.353273-1-hdegoede@redhat.com>
+Content-Type: multipart/mixed; boundary="8323329-1481532127-1570278369=:2653"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 12:55:51PM +0200, Hans de Goede wrote:
-> Commit c394159310d0 ("Input: soc_button_array - add support for newer
-> surface devices") not only added support for the MSHW0040 ACPI HID,
-> but for some reason it also makes changes to the error handling of the
-> soc_button_lookup_gpio() call in soc_button_device_create(). Note ideally
-> this seamingly unrelated change would have been made in a separate commit,
-> with a message explaining the what and why of this change.
-> 
-> I guess this change may have been added to deal with -EPROBE_DEFER errors,
-> but in case of the existing support for PNP0C40 devices, treating
-> -EPROBE_DEFER as any other error is deliberate, see the comment this
-> commit adds for why.
-> 
-> The actual returning of -EPROBE_DEFER to the caller of soc_button_probe()
-> introduced by the new error checking causes a serious regression:
-> 
-> On devices with so called virtual GPIOs soc_button_lookup_gpio() will
-> always return -EPROBE_DEFER for these fake GPIOs, when this happens
-> during the second call of soc_button_device_create() we already have
-> successfully registered our first child. This causes the kernel to think
-> we are making progress with probing things even though we unregister the
-> child before again before we return the -EPROBE_DEFER. Since we are making
-> progress the kernel will retry deferred-probes again immediately ending
-> up stuck in a loop with the following showing in dmesg:
-> 
-> [  124.022697] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6537
-> [  124.040764] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6538
-> [  124.056967] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6539
-> [  124.072143] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6540
-> [  124.092373] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6541
-> [  124.108065] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6542
-> [  124.128483] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6543
-> [  124.147141] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6544
-> [  124.165070] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6545
-> [  124.179775] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6546
-> [  124.202726] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6547
-> <continues on and on and on>
-> 
-> And 1 CPU core being stuck at 100% and udev hanging since it is waiting
-> for the modprobe of soc_button_array to return.
-> 
-> This patch reverts the soc_button_lookup_gpio() error handling changes,
-> fixing this regression.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I confirm this issue and I made similar hotfix while developing of other
-things, so it's actual and patch should work. I will test it at my hardware
-soon.
+--8323329-1481532127-1570278369=:2653
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
--- 
-Yauhen Kharuzhy
+
+
+On Sat, 5 Oct 2019, Markus Elfring wrote:
+
+> > You gave Acked-by to the one-liner fix "virtual report",
+>
+> It was (temporarily?) accepted to use the script “add_namespace.cocci”
+> without such a type of SmPL variable.
+>
+>
+> > and I am happy to apply it to my tree.
+>
+> Would you like to take the change possibility into account
+> that the coccicheck system configuration should be adapted instead?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccicheck?id=4ea655343ce4180fe9b2c7ec8cb8ef9884a47901#n257
+
+I prefer the one line change for now.  If more issues arise one can see
+what is more desirable at a larger scale.
+
+julia
+
+>
+> Regards,
+> Markus
+>
+--8323329-1481532127-1570278369=:2653--
