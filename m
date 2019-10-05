@@ -2,200 +2,153 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C89C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854EDC32792
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA956206C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CD420830
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="y7i/bh3Y"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="COJ/7kQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfJEDZd (ORCPT
+        id S1726750AbfJEDbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 23:25:33 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:26070 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfJEDZc (ORCPT
+        Fri, 4 Oct 2019 23:31:45 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:60558 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJEDbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 23:25:32 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x953PHUW016112
-        for <linux-kernel@vger.kernel.org>; Sat, 5 Oct 2019 12:25:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x953PHUW016112
+        Fri, 4 Oct 2019 23:31:45 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x953Vb23017252
+        for <linux-kernel@vger.kernel.org>; Sat, 5 Oct 2019 12:31:38 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x953Vb23017252
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570245919;
-        bh=CzFqgt/RCBxVczdLz7YZTh6TWXFPuhMLi7QdDPzfle4=;
+        s=dec2015msa; t=1570246298;
+        bh=wdrix7BLC0yyJUdGOSxFzpfVJlld0/Th9nkSWXbSeko=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=y7i/bh3YIbfdRm6QTVFXgN+9oNyz93rS9E2fAc320YdhUKJjBdPXSGi0KDVwr4cHM
-         kzbzxhoDmSVkYeTRvpLhPM+baMMcj50K5iHnIYX2BOzG321+LcrJHCxISH+IYqULdF
-         V/Wy5QObfrK7T2CzeNY+4b/b4gaRxWicFWMCgwkBK4dtzgkUev8L3XzwTMevFn84gB
-         Kmxcj2yebV7EoZOtg8aqFOu4D4Si4bu/ph/feLAYP8QczbVv/fKSrVKKTsG5zLA1/p
-         c7dIBFN7a6zB3DvZ4OqEVnEgeKraqhFVeH7YX47BrVut+OWLaucBb2AmnQo86M2g5F
-         oJ0inhjH/TBmQ==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id i13so2633225uaq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 20:25:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAV6H6VcK7XhFYvpex+NNjLNQrIeh6ZGMLXYd8uiXB0HnkU4kbaM
-        4AfUCO2rj6q97CMzoTnVeA0bLAkARNRKef4EY0s=
-X-Google-Smtp-Source: APXvYqzdxqsXAaRsCvC2uuekWzSIauGAAR33V7TOeM7d7W03t0fPbaGlMobJoEIy1s9VPksLWthhFuNn10fZFlvfZ58=
-X-Received: by 2002:ab0:20b4:: with SMTP id y20mr9673912ual.121.1570245916807;
- Fri, 04 Oct 2019 20:25:16 -0700 (PDT)
+        b=COJ/7kQlhSMTkV5yiAkp+Wb6CdlJ75hoNbDwyMc30lc1vUmEkKrvEX90PNAYkMWzL
+         GrVpPflajQ6HKH8Ud2Es0dJ61byTAFN9KctMP7yNPRf5raM+huD3NMe3CHJRj7AYFr
+         gVYtxWoAum/0hWCZLVxRP6580+ONo9ytyG+Rbsrl5gZOGVwZDtFLOgD97pCvE5pgmZ
+         YpjPzE1nVkGGiqbJn0dH+/yHLdA61nup/21AlRlapxrleuJNkT1TQ38BQNbeH0RCFx
+         OGnqulNwRatJ00FpDzDKRiIO2SxqWQaZ0JoEw6HtzfsJQ1CLRWjIGR9jG838xPj9uA
+         5W6YTi3FXzQeQ==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id z14so5404478vsz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 20:31:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAVqdZrE9PLPVyCvXOqYSE0On/EFxXIbPxYI6jH86myDDYJxk0sH
+        rthVgWKtDqWHX+ZDxA2XlCPUXQQq7WC4gS2JCvk=
+X-Google-Smtp-Source: APXvYqw82lLXqSNaK0/Szm7D0jz7yld2NsmMNVZGARheHzcciRuXkggwpd5i8wDz63XWWnNL+RCHYdCLQGbBTqSzg7o=
+X-Received: by 2002:a67:ec09:: with SMTP id d9mr9864622vso.215.1570246297166;
+ Fri, 04 Oct 2019 20:31:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <cf947abb-c94e-9b6f-229a-1e219fd38e94@skogtun.org>
-In-Reply-To: <cf947abb-c94e-9b6f-229a-1e219fd38e94@skogtun.org>
+References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
+In-Reply-To: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 5 Oct 2019 12:24:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
-Message-ID: <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
-Subject: Re: BISECTED: Compile error on 5.4-rc1
-To:     Harald Arnesen <harald@skogtun.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sat, 5 Oct 2019 12:31:01 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATz=j4zyF264rQD4fivw0BaW0nS5kHSBBLEjZbKoXf3yg@mail.gmail.com>
+Message-ID: <CAK7LNATz=j4zyF264rQD4fivw0BaW0nS5kHSBBLEjZbKoXf3yg@mail.gmail.com>
+Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
+To:     Dmitry Goldin <dgoldin@protonmail.ch>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Ben Hutchings <ben@decadent.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 5:26 PM Harald Arnesen <harald@skogtun.org> wrote:
+On Fri, Oct 4, 2019 at 7:40 PM Dmitry Goldin <dgoldin@protonmail.ch> wrote:
 >
-> I just tried to compile kernel 5.4-rc1 on my ThinkPad, which runs Devuan
-> Beowulf. Got the following:
+> From: Dmitry Goldin <dgoldin+lkml@protonmail.ch>
 >
-> $ make bindeb-pkg
->   UPD     include/config/kernel.release
-> sh ./scripts/package/mkdebian
-> dpkg-buildpackage -r"fakeroot -u" -a$(cat debian/arch)  -b -nc -uc
-> dpkg-buildpackage: info: source package linux-5.4.0-rc1-00014-gcc3a7bfe62b9
-> dpkg-buildpackage: info: source version 5.4.0-rc1-00014-gcc3a7bfe62b9-1
-> dpkg-buildpackage: info: source distribution beowulf
-> dpkg-buildpackage: info: source changed by Harald Arnesen
-> <harald@skogtun.org>
-> dpkg-architecture: warning: specified GNU system type x86_64-linux-gnu
-> does not match CC system type x86_64-pc-linux-gnu, try setting a correct
-> CC environment variable
-> dpkg-buildpackage: info: host architecture amd64
->  dpkg-source --before-build .
-> dpkg-source: warning: can't parse dependency -n libelf-dev
-> dpkg-source: error: error occurred while parsing Build-Depends
-> dpkg-buildpackage: error: dpkg-source --before-build . subprocess
-> returned exit status 255
-> make[1]: *** [scripts/Makefile.package:83: bindeb-pkg] Error 255
-> make: *** [Makefile:1448: bindeb-pkg] Error 2
+> In commit 43d8ce9d65a5 ("Provide in-kernel headers to make
+> extending kernel easier") a new mechanism was introduced, for kernels
+> >=5.2, which embeds the kernel headers in the kernel image or a module
+> and exposes them in procfs for use by userland tools.
 >
+> The archive containing the header files has nondeterminism caused by
+> header files metadata. This patch normalizes the metadata and utilizes
+> KBUILD_BUILD_TIMESTAMP if provided and otherwise falls back to the
+> default behaviour.
 >
-> Bisecting gives me
+> In commit f7b101d33046 ("kheaders: Move from proc to sysfs") it was
+> modified to use sysfs and the script for generation of the archive was
+> renamed to what is being patched.
 >
-> 858805b336be1cabb3d9033adaa3676574d12e37 is the first bad commit
-> commit 858805b336be1cabb3d9033adaa3676574d12e37
-> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Date:   Sun Aug 25 22:28:37 2019 +0900
-> ...
+> Signed-off-by: Dmitry Goldin <dgoldin+lkml@protonmail.ch>
 >
-> By reverting commit 858805b336be1cabb3d9033adaa3676574d12e37 I could
-> compile the kernel.
+> ---
+
+Applied to linux-kbuild. Thanks.
+
+
+
+>
+> v1: Initial fix
+>
+> v2: Added a bit of info about kheaders to the reproducible builds
+> documentation and used the opportunity to fix a few typos in the
+> original patch.
+>
+> ---
+>  Documentation/kbuild/reproducible-builds.rst | 13 +++++++++----
+>  kernel/gen_kheaders.sh                       |  5 ++++-
+>  2 files changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
+> index ab92e98c89c8..ce6a408b3303 100644
+> --- a/Documentation/kbuild/reproducible-builds.rst
+> +++ b/Documentation/kbuild/reproducible-builds.rst
+> @@ -16,16 +16,21 @@ the kernel may be unreproducible, and how to avoid them.
+>  Timestamps
+>  ----------
+>
+> -The kernel embeds a timestamp in two places:
+> +The kernel embeds timestamps in three places:
+>
+>  * The version string exposed by ``uname()`` and included in
+>    ``/proc/version``
+>
+>  * File timestamps in the embedded initramfs
+>
+> -By default the timestamp is the current time.  This must be overridden
+> -using the `KBUILD_BUILD_TIMESTAMP`_ variable.  If you are building
+> -from a git commit, you could use its commit date.
+> +* If enabled via ``CONFIG_IKHEADERS``, file timestamps of kernel
+> +  headers embedded in the kernel or respective module,
+> +  exposed via ``/sys/kernel/kheaders.tar.xz``
+> +
+> +By default the timestamp is the current time and in the case of
+> +``kheaders`` the various files' modification times. This must
+> +be overridden using the `KBUILD_BUILD_TIMESTAMP`_ variable.
+> +If you are building from a git commit, you could use its commit date.
+>
+>  The kernel does *not* use the ``__DATE__`` and ``__TIME__`` macros,
+>  and enables warnings if they are used.  If you incorporate external
+> diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+> index 9ff449888d9c..aff79e461fc9 100755
+> --- a/kernel/gen_kheaders.sh
+> +++ b/kernel/gen_kheaders.sh
+> @@ -71,7 +71,10 @@ done | cpio --quiet -pd $cpio_dir >/dev/null 2>&1
+>  find $cpio_dir -type f -print0 |
+>         xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
+>
+> -tar -Jcf $tarfile -C $cpio_dir/ . > /dev/null
+> +# Create archive and try to normalize metadata for reproducibility
+> +tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
+> +    --owner=0 --group=0 --sort=name --numeric-owner \
+> +    -Jcf $tarfile -C $cpio_dir/ . > /dev/null
+>
+>  echo "$src_files_md5" >  kernel/kheaders.md5
+>  echo "$obj_files_md5" >> kernel/kheaders.md5
 > --
-> Hilsen Harald
->
-
-
-I cannot reproduce it.
-
-I tested bindeb-pkg for the latest Linus tree successfully.
-
-
-
-masahiro@grover:~/ref/linux$ git log --oneline -1
-4ea655343ce4 (HEAD -> master, origin/master, origin/HEAD) Merge tag
-'mips_fixes_5.4_1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
-masahiro@grover:~/ref/linux$ make bindeb-pkg
-sh ./scripts/package/mkdebian
-dpkg-buildpackage -r"fakeroot -u" -a$(cat debian/arch)  -b -nc -uc
-dpkg-buildpackage: info: source package linux-5.4.0-rc1+
-dpkg-buildpackage: info: source version 5.4.0-rc1+-4
-dpkg-buildpackage: info: source distribution bionic
-dpkg-buildpackage: info: source changed by Masahiro Yamada
-<yamada.masahiro@socionext.com>
-dpkg-buildpackage: info: host architecture amd64
- dpkg-source --before-build linux
- debian/rules build
-make KERNELRELEASE=5.4.0-rc1+ ARCH=x86 KBUILD_BUILD_VERSION=4 -f ./Makefile
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-  CHK     include/generated/compile.h
-  UPD     include/generated/compile.h
-  CC      init/version.o
-  AR      init/built-in.a
-  GEN     .version
-  CHK     include/generated/compile.h
-  LD      vmlinux.o
-  MODPOST vmlinux.o
-  MODINFO modules.builtin.modinfo
-  LD      .tmp_vmlinux1
-  KSYM    .tmp_kallsyms1.o
-  LD      .tmp_vmlinux2
-  KSYM    .tmp_kallsyms2.o
-  LD      vmlinux
-  SORTEX  vmlinux
-  SYSMAP  System.map
-  VOFFSET arch/x86/boot/compressed/../voffset.h
-  CC      arch/x86/boot/compressed/misc.o
-  OBJCOPY arch/x86/boot/compressed/vmlinux.bin
-  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
-  GZIP    arch/x86/boot/compressed/vmlinux.bin.gz
-  MKPIGGY arch/x86/boot/compressed/piggy.S
-  AS      arch/x86/boot/compressed/piggy.o
-  CC      arch/x86/boot/compressed/kaslr.o
-  LD      arch/x86/boot/compressed/vmlinux
-  ZOFFSET arch/x86/boot/zoffset.h
-  AS      arch/x86/boot/header.o
-  CC      arch/x86/boot/version.o
-  LD      arch/x86/boot/setup.elf
-  OBJCOPY arch/x86/boot/setup.bin
-  OBJCOPY arch/x86/boot/vmlinux.bin
-  BUILD   arch/x86/boot/bzImage
-Setup is 16124 bytes (padded to 16384 bytes).
-System is 8661 kB
-CRC fab8ebd9
-Kernel: arch/x86/boot/bzImage is ready  (#5)
-  Building modules, stage 2.
-  MODPOST 12 modules
- fakeroot -u debian/rules binary
-make KERNELRELEASE=5.4.0-rc1+ ARCH=x86 KBUILD_BUILD_VERSION=4 -f
-./Makefile intdeb-pkg
-sh ./scripts/package/builddeb
-  INSTALL drivers/thermal/intel/x86_pkg_temp_thermal.ko
-  INSTALL fs/efivarfs/efivarfs.ko
-  INSTALL net/ipv4/netfilter/iptable_nat.ko
-  INSTALL net/ipv4/netfilter/nf_log_arp.ko
-  INSTALL net/ipv4/netfilter/nf_log_ipv4.ko
-  INSTALL net/ipv6/netfilter/nf_log_ipv6.ko
-  INSTALL net/netfilter/nf_log_common.ko
-  INSTALL net/netfilter/xt_LOG.ko
-  INSTALL net/netfilter/xt_MASQUERADE.ko
-  INSTALL net/netfilter/xt_addrtype.ko
-  INSTALL net/netfilter/xt_mark.ko
-  INSTALL net/netfilter/xt_nat.ko
-  DEPMOD  5.4.0-rc1+
-  INSTALL ./debian/headertmp/usr/include
-dpkg-deb: building package 'linux-headers-5.4.0-rc1+' in
-'../linux-headers-5.4.0-rc1+_5.4.0-rc1+-4_amd64.deb'.
-dpkg-deb: building package 'linux-libc-dev' in
-'../linux-libc-dev_5.4.0-rc1+-4_amd64.deb'.
-dpkg-deb: building package 'linux-image-5.4.0-rc1+' in
-'../linux-image-5.4.0-rc1+_5.4.0-rc1+-4_amd64.deb'.
- dpkg-genbuildinfo --build=binary
- dpkg-genchanges --build=binary >../linux-5.4.0-rc1+_5.4.0-rc1+-4_amd64.changes
-dpkg-genchanges: warning: package linux-image-5.4.0-rc1+-dbg in
-control file but not in files list
-dpkg-genchanges: info: binary-only upload (no source code included)
- dpkg-source --after-build linux
-dpkg-buildpackage: info: binary-only upload (no source included)
+> 2.23.0
 
 
 
