@@ -2,69 +2,123 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B02C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42926C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C24C222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570305933;
-	bh=oxbOdxHcUxUWx2zWBS7kJctmNnM1ALr/0CzL2DSyvXA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Xdc+EOi87lpSx7uhEBV5bdsgvf/RsSP0HgIbRvc8LC+pPJ5xrADHJqGyQh/hLXoKm
-	 +Hh7bPEbTzujleyEefN9o56a1J/nDoXUaNQnldlHSOILtAURsjzEDIknSsXYLr5NFu
-	 mKtKuFoQnNg6Ey9qhCX/eKDyJcEKckifJE6P0hPk=
+	by mail.kernel.org (Postfix) with ESMTP id 115E420867
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:15:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VGMr/oM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfJEUF1 (ORCPT
+        id S1729852AbfJEUPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 16:05:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730076AbfJEUFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 16:05:14 -0400
-Subject: Re: [GIT PULL] SCSI fixes for 5.4-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570305914;
-        bh=oxbOdxHcUxUWx2zWBS7kJctmNnM1ALr/0CzL2DSyvXA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ilxxug3D2QqMpb7RSaMo5L1a9wkatmR3UVqXdXGcB+ab5l7qp2V/gl2z22kc4mIkT
-         Y1frKeTvMTatZ0sB43OeXNQDa8S7aHm9F7J14nJL7WSk+MR08zv8ziBurprDOBlaQo
-         hSM3+WOIIT6Y5W8lLoD4P0ZMpnjvCpse0C0Hdl6k=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1570250655.17537.18.camel@HansenPartnership.com>
-References: <1570250655.17537.18.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1570250655.17537.18.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: 0aabb6b699f72dca96988d3f428e222f932dc889
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 126195c972a2adba8cae12a65cdee155440a4525
-Message-Id: <157030591442.15791.1282877858778600053.pr-tracker-bot@kernel.org>
-Date:   Sat, 05 Oct 2019 20:05:14 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Sat, 5 Oct 2019 16:15:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28884 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729509AbfJEUO7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 16:14:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570306498;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=74m7R2QCNiRN5XO1W/NvGcgKkkecv4UuoVhWV1iP+dQ=;
+        b=VGMr/oM1SJMP+pc9U5Hyrf1L+E/QivH9w9vb/u8xzIkU2/ueHulu5Pg71rEX8lMXZpmxCx
+        6+ig8WzHroHdd89ymjk2I0AFiOUb6XO9BnD2oJ5+ZvX8P42GUioVqy7DFtmj5ExBMNxHbg
+        k33biBAJrOrOPQgL1iM40gWo6l9rnOc=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-7sdE9os5Nn-zJqCQGbs7ug-1; Sat, 05 Oct 2019 16:14:55 -0400
+Received: by mail-ed1-f69.google.com with SMTP id 34so6366128edf.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 13:14:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tDL81Jt6nq7ggiYD7GVJv4TfLui66vmNV5jvA1q5UxI=;
+        b=eoWVPQan0b60oj9aXY/IQOOAJrECJmGSLS72CjGOO5gN6fmxK7TXVhQ1DExnsDjYPC
+         FX0eGgDZm1R4LSppKaQE6xF6lE0ysS4/I9JCOYbK88NC2sYQy1bnZZGK41xjA2MRQBcW
+         X3z8I8Tw0gYlQV3GFBdr1VFFKxX3JtPYzCB0/yWKWRn94AC+0AScoUvepw+zfXg3kyrC
+         ZuuSKK4TTJ3bXEF8aM0nB5wuEDIVRC9OMn2FLucw9BMavnY6CRvicPdp0bekhp2LM+bh
+         Usqmf6bd5I2zGqOLOsSUFRhBflGI6VOq4MYPLNhYcDGSWQRgX5SAELAP06rSZJT1Qt7L
+         77kw==
+X-Gm-Message-State: APjAAAW2+Z8FdBesN2aVQliv56a28GKPkJ8o7kAF8MvWhdbsFl+QJ6Q5
+        uJMyGOPBZ1rZFZwiOVI+L9/InuM0+vK85jJMoOrLJmwjVOtkmqT5vVjlfY21Ibtmu/ZqOE4TW/7
+        PKkSKCOfxFdpdvB65GV3f2OGX
+X-Received: by 2002:a50:cd1a:: with SMTP id z26mr21461286edi.75.1570306493874;
+        Sat, 05 Oct 2019 13:14:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwVWCrzdITY+i/ypf9AQx5ArY37dHswT/NrqAvrmx3g0SZ9rXFiUE3dKcN2ZWzo1xfXVJOhQg==
+X-Received: by 2002:a50:cd1a:: with SMTP id z26mr21461273edi.75.1570306493729;
+        Sat, 05 Oct 2019 13:14:53 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id c22sm2245620edc.9.2019.10.05.13.14.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Oct 2019 13:14:52 -0700 (PDT)
+Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
+ revert of support for newer surface devices
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191005105551.353273-1-hdegoede@redhat.com>
+ <222c364a-bc2b-5960-3fe4-7d1ce222e3e2@gmail.com>
+ <96cea5be-d285-8323-1ab2-9c8e87993165@redhat.com>
+ <65b265d2-f7a8-bcd7-e63f-f8efb7349324@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ef31abf6-b3f2-f3aa-1536-3ecd5fc819e1@redhat.com>
+Date:   Sat, 5 Oct 2019 22:14:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <65b265d2-f7a8-bcd7-e63f-f8efb7349324@gmail.com>
+Content-Language: en-US
+X-MC-Unique: 7sdE9os5Nn-zJqCQGbs7ug-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 04 Oct 2019 21:44:15 -0700:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+On 05-10-2019 17:01, Maximilian Luz wrote:
+> Hi, again
+>=20
+> On 10/5/19 3:20 PM, Hans de Goede wrote:
+>> Ok, on x86 the GPIO drivers really should all be builtin because
+>> various ACPI methods including device D0 / D3 (power-on/off) methods
+>> may depend on them. So normally this should never happen.
+>>
+>> If this (-EPROBE_DEFER on surface devices) somehow still is happening
+>> please let me know and we will figure something out.
+>=20
+> I have never personally experienced this, only received reports which
+> indicated this and that the change (as well as manually reloading
+> soc_button_array) fixed it. I will come back to you if I hear anything
+> in regards to this again.
+>=20
+> I have now also tested your patch on the Surface Book 2. Does not cause
+> any issues as far as I can tell.
+>=20
+> Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
+>=20
+> And if that is needed/wanted
+>=20
+> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/126195c972a2adba8cae12a65cdee155440a4525
+Great, thank you.
 
-Thank you!
+Regards,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Hans
+
