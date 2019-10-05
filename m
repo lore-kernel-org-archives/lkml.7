@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EACFC3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63616C3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68B8222C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F67C222C9
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TDZr/IHU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z5vT+rgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfJEJQt (ORCPT
+        id S1727735AbfJEJQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 05:16:49 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37381 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfJEJQs (ORCPT
+        Sat, 5 Oct 2019 05:16:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34819 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfJEJQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 05:16:48 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l3so12198876qtr.4
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 02:16:46 -0700 (PDT)
+        Sat, 5 Oct 2019 05:16:53 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w2so8180650qkf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 02:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6oKadehOfuqvchi0MOdyWhMtht9hVnMfKkag850zFWI=;
-        b=TDZr/IHUGHDNGMgaV72PWvAvVyveRW1J40XKwUGE+N8oYAHUd9mhkLlu09mVxBJI7s
-         GqbPNcNj/bRMrczIfnEdBFl3ybYNtf4bIgaClwcgeUX4Rb+QHAk20D3cp9dfWcwRr4kG
-         9D29taw93N0VDo+9tf5dkmzL+dwoq9dvXJFxUN/t/1uJo2zsTO7+CPGv7WbG03vos9Tk
-         diUjMGTSVNEgULTFALrHjMVgz4+eBpTrb5jDNoE4AmMxZ0Ib4MuqucEfuuz0VvOlIic8
-         PgBJApbTEMADIMHR4mf+dGQtoPkcNhb+uI20FhXYRF6+837HLdLIRfuxm4v6ybJ/39qh
-         0Kmw==
+        bh=Cvyd7SHkhsAyUTNzK4HPFdW4gJjTTlJOoIIwpnVpIng=;
+        b=z5vT+rgzkZPqTKKCurUgvEv1ooynkUFR/AQMCq+v6/Osi48scL/33NZN1iGSeO2Dj3
+         Pn4NTON6EroCgzngDc0FbriOnT+uSNYaa4TspMk58PI+BwMXS/IlTmsMs9AVwlYlzOUS
+         7QNaXX953LvpWa6PJqJvz51Nkn4cedIaP/S46Ho9LEIe3D+udB47yY3yCdh2NvnWn8UL
+         YbScIKTKICmyHa26J/VoJ/dVo4Bh3OlCsj7im2WOhQYw1isOR6/Oorsd55zCZfEoplsr
+         ebEQ/sej2qOtSm9rzHqxoEUhNf1+vsQEPwlfFWi+tp4cR2tXID58ShYh2kMFyovTesBR
+         eS5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=6oKadehOfuqvchi0MOdyWhMtht9hVnMfKkag850zFWI=;
-        b=fzzIEeMLi+QUKyp+510Og0dyTo1pB/S1mHochaoNAIytT1OLSbEcm7Ycmg7jBqPdkF
-         yENS8nwPDPgOcFxG5Fh+nnajjOGlufyUh5zeiYR10FuGTCX41CTKmloyQYfucDAZEABV
-         aDF3IYFByj2PZStWOQUEwj47isEQffwVdXn4x+vBpaHEVCBRL7eitSjB23Hkk7kX7pil
-         GwYGhZSOk83mjXMQR3VrkIitEOmhf/HHbLSlxfGKpcocQAqbeHQAFlMnalYY9nCHbJv+
-         LFJklTNRYVPtjbiXLghKHeyd7TFcAKu8Wc+vXZvvX1H7HdsPUM468/Xx08/Q2ycOlgne
-         knbw==
-X-Gm-Message-State: APjAAAXC+6q0/8cGP01v9r55FYy4nQdYrp2vb49pKIPGIIhNBIszTRX/
-        /GgHTSDCRCcuxorZzcAg4/YHAA==
-X-Google-Smtp-Source: APXvYqwm5BY4l2NqSfENXb6KtiQLbeZX5B53V8Nw1aoIlItN4tedlMnC/dP000d3XY8Wl7GtAxXKPw==
-X-Received: by 2002:aed:31c6:: with SMTP id 64mr20419643qth.67.1570267005805;
-        Sat, 05 Oct 2019 02:16:45 -0700 (PDT)
+        bh=Cvyd7SHkhsAyUTNzK4HPFdW4gJjTTlJOoIIwpnVpIng=;
+        b=Km/58bd/ak05vVQf67BrpTOjfX/VOu8RYwuA0P752BDX+ixtTIRXnfFD3yIZHEMFtj
+         rcEiVE9aJDzDZovQYzDwAeETQ21P6D9N35hWU7u8znQdPBzFXp0YFlVg08kNsq8Zj5r5
+         zYrpqvudROAPuWk+D/qpzFZf1O293/yCRiaOS0c25XR0Uej6iOJ8La8M/mKmx9D6AAsu
+         kB4REnbxT+nZxoYKfqKb+FgpkBLmEkWghxYhxCKscQJ4ptvPK5jkXAJqrhv26bctbopR
+         9X/Tf3imAlkSB/YFJc1iT05wIKgSDhHMu51t2vaeCw409z0qcBHl0ag6aG1ltRVGbrB1
+         cGww==
+X-Gm-Message-State: APjAAAWpJylkUrpubE2jqnwpZBqQDPAe8PUYTcbLaWSdgeveZgEuiXh/
+        p1MEExPnjIizSibp4ezfcHE8VjZ0BpY=
+X-Google-Smtp-Source: APXvYqxbrf2Ugxqv9P2QRTP6avgLIX8PiUCRNZeHQvtGRWDEvqDY9WaJDEVj3B8Kx7aE6qTo8gwsCg==
+X-Received: by 2002:ae9:f215:: with SMTP id m21mr14508170qkg.47.1570267011921;
+        Sat, 05 Oct 2019 02:16:51 -0700 (PDT)
 Received: from localhost.localdomain (li937-157.members.linode.com. [45.56.119.157])
-        by smtp.gmail.com with ESMTPSA id u132sm4384621qka.50.2019.10.05.02.16.40
+        by smtp.gmail.com with ESMTPSA id u132sm4384621qka.50.2019.10.05.02.16.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 02:16:45 -0700 (PDT)
+        Sat, 05 Oct 2019 02:16:51 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -69,9 +69,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 2/6] perf cs-etm: Refactor instruction size handling
-Date:   Sat,  5 Oct 2019 17:16:10 +0800
-Message-Id: <20191005091614.11635-3-leo.yan@linaro.org>
+Subject: [PATCH v3 3/6] perf cs-etm: Support thread stack
+Date:   Sat,  5 Oct 2019 17:16:11 +0800
+Message-Id: <20191005091614.11635-4-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191005091614.11635-1-leo.yan@linaro.org>
 References: <20191005091614.11635-1-leo.yan@linaro.org>
@@ -80,105 +80,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cs-etm.c there have several functions need to know instruction size
-based on address, e.g. cs_etm__instr_addr() and cs_etm__copy_insn()
-these two functions both calculate the instruction size separately.
-Furthermore, if we consider to add new features later which also might
-require to calculate instruction size.
+Since Arm CoreSight doesn't support thread stack, the decoding cannot
+display symbols with indented spaces to reflect the stack depth.
 
-For this reason, this patch refactors the code to introduce a new
-function cs_etm__instr_size(), it will be a central place to calculate
-the instruction size based on ISA type and instruction address.
+This patch adds support thread stack for Arm CoreSight, this allows
+'perf script' to display properly for option '-F,+callindent'.
 
-For a neat implementation, cs_etm__instr_addr() will always execute the
-loop without checking ISA type, this allows cs_etm__instr_size() and
-cs_etm__instr_addr() have no any duplicate code with each other and both
-functions can be changed independently later without breaking anything.
-As a side effect, cs_etm__instr_addr() will do a few more iterations for
-A32/A64 instructions, this would be fine if consider perf tool runs in
-the user space.
+Before:
+
+  # perf script -F,+callindent
+            main  2808          1          branches: coresight_test1                      ffff8634f5c8 coresight_test1+0x3c (/root/coresight_test/libcstest.so)
+            main  2808          1          branches: printf@plt                           aaaaba8d37ec main+0x28 (/root/coresight_test/main)
+            main  2808          1          branches: printf@plt                           aaaaba8d36bc printf@plt+0xc (/root/coresight_test/main)
+            main  2808          1          branches: _init                                aaaaba8d3650 _init+0x30 (/root/coresight_test/main)
+            main  2808          1          branches: _dl_fixup                            ffff86373b4c _dl_runtime_resolve+0x40 (/lib/aarch64-linux-gnu/ld-2.28.so)
+            main  2808          1          branches: _dl_lookup_symbol_x                  ffff8636e078 _dl_fixup+0xb8 (/lib/aarch64-linux-gnu/ld-2.28.so)
+  [...]
+
+After:
+
+  # perf script -F,+callindent
+            main  2808          1          branches:                 coresight_test1                                      ffff8634f5c8 coresight_test1+0x3c (/root/coresight_test/libcstest.so)
+            main  2808          1          branches:                 printf@plt                                           aaaaba8d37ec main+0x28 (/root/coresight_test/main)
+            main  2808          1          branches:                     printf@plt                                       aaaaba8d36bc printf@plt+0xc (/root/coresight_test/main)
+            main  2808          1          branches:                     _init                                            aaaaba8d3650 _init+0x30 (/root/coresight_test/main)
+            main  2808          1          branches:                     _dl_fixup                                        ffff86373b4c _dl_runtime_resolve+0x40 (/lib/aarch64-linux-gnu/ld-2.28.s
+            main  2808          1          branches:                         _dl_lookup_symbol_x                          ffff8636e078 _dl_fixup+0xb8 (/lib/aarch64-linux-gnu/ld-2.28.so)
+  [...]
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 48 +++++++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ tools/perf/util/cs-etm.c | 44 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 4bc2d9709d4f..58ceba7b91d5 100644
+index 58ceba7b91d5..780abbfd1833 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -918,6 +918,26 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
- 	return ((instrBytes[1] & 0xF8) >= 0xE8) ? 4 : 2;
+@@ -1117,6 +1117,45 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
+ 			   sample->insn_len, (void *)sample->insn);
  }
  
-+static inline int cs_etm__instr_size(struct cs_etm_queue *etmq,
-+				     u8 trace_chan_id,
-+				     enum cs_etm_isa isa,
-+				     u64 addr)
++static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
++				    struct cs_etm_traceid_queue *tidq)
 +{
++	struct cs_etm_auxtrace *etm = etmq->etm;
++	u8 trace_chan_id = tidq->trace_chan_id;
 +	int insn_len;
++	u64 from_ip, to_ip;
 +
-+	/*
-+	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
-+	 * cs_etm__t32_instr_size().
-+	 */
-+	if (isa == CS_ETM_ISA_T32)
-+		insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id, addr);
-+	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
-+	else
-+		insn_len = 4;
++	if (etm->synth_opts.thread_stack) {
++		from_ip = cs_etm__last_executed_instr(tidq->prev_packet);
++		to_ip = cs_etm__first_executed_instr(tidq->packet);
 +
-+	return insn_len;
++		insn_len = cs_etm__instr_size(etmq, trace_chan_id,
++					      tidq->prev_packet->isa, from_ip);
++
++		/*
++		 * Create thread stacks by keeping track of calls and returns;
++		 * any call pushes thread stack, return pops the stack, and
++		 * flush stack when the trace is discontinuous.
++		 */
++		thread_stack__event(tidq->thread, tidq->prev_packet->cpu,
++				    tidq->prev_packet->flags,
++				    from_ip, to_ip, insn_len,
++				    etmq->buffer->buffer_nr);
++	} else {
++		/*
++		 * The thread stack can be output via thread_stack__process();
++		 * thus the detailed information about paired calls and returns
++		 * will be facilitated by Python script for the db-export.
++		 *
++		 * Need to set trace buffer number and flush thread stack if the
++		 * trace buffer number has been alternate.
++		 */
++		thread_stack__set_trace_nr(tidq->thread,
++					   tidq->prev_packet->cpu,
++					   etmq->buffer->buffer_nr);
++	}
 +}
 +
- static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
- {
- 	/* Returns 0 for the CS_ETM_DISCONTINUITY packet */
-@@ -942,19 +962,15 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
- 				     const struct cs_etm_packet *packet,
- 				     s64 offset)
- {
--	if (packet->isa == CS_ETM_ISA_T32) {
--		u64 addr = packet->start_addr;
-+	u64 addr = packet->start_addr;
- 
--		while (offset > 0) {
--			addr += cs_etm__t32_instr_size(etmq,
--						       trace_chan_id, addr);
--			offset--;
--		}
--		return addr;
-+	while (offset > 0) {
-+		addr += cs_etm__instr_size(etmq, trace_chan_id,
-+					   packet->isa, addr);
-+		offset--;
+ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 					    struct cs_etm_traceid_queue *tidq,
+ 					    u64 addr, u64 period)
+@@ -1393,6 +1432,9 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 		tidq->period_instructions = instrs_over;
  	}
  
--	/* Assume a 4 byte instruction size (A32/A64) */
--	return packet->start_addr + offset * 4;
-+	return addr;
- }
++	if (tidq->prev_packet->last_instr_taken_branch)
++		cs_etm__add_stack_event(etmq, tidq);
++
+ 	if (etm->sample_branches) {
+ 		bool generate_sample = false;
  
- static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
-@@ -1094,16 +1110,8 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
- 		return;
+@@ -2593,6 +2635,8 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+ 		itrace_synth_opts__set_default(&etm->synth_opts,
+ 				session->itrace_synth_opts->default_no_sample);
+ 		etm->synth_opts.callchain = false;
++		etm->synth_opts.thread_stack =
++				session->itrace_synth_opts->thread_stack;
  	}
  
--	/*
--	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
--	 * cs_etm__t32_instr_size().
--	 */
--	if (packet->isa == CS_ETM_ISA_T32)
--		sample->insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
--							  sample->ip);
--	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
--	else
--		sample->insn_len = 4;
-+	sample->insn_len = cs_etm__instr_size(etmq, trace_chan_id,
-+					      packet->isa, sample->ip);
- 
- 	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
- 			   sample->insn_len, (void *)sample->insn);
+ 	err = cs_etm__synth_events(etm, session);
 -- 
 2.17.1
 
