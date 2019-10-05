@@ -2,159 +2,116 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF691C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094B0C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86304222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JrWVESZB"
+	by mail.kernel.org (Postfix) with ESMTP id D4F0C222CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570285701;
+	bh=0HytaZ1Qi8pY6GlOq+DBjycReyqLhaTKhTi+ABILHH0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=D6QQFYHvlshCAyRtGT1TATjLnlpidRhOOzuDnYMvyfUSRx9V+ZjjbQjUAx+ZuNtBS
+	 9yb1bq4hNQnQlekd4AkSPl0AVz3aHnAb+W+R5KjYjYzxczaYzjeJLkAaqVHSUJqQ+S
+	 Sme54fpBaLpzbMsG1F3QOti40X7TohOeiaLTDru0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfJEOTw (ORCPT
+        id S1727952AbfJEO2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 10:19:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45417 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfJEOTv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 10:19:51 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so4522150pls.12
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 07:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mkXpYcbeC0bnNO0q+6BYbbUdKRmj3eZu6k2PkyZZ+20=;
-        b=JrWVESZBcJgWFEPXetGcmowjNz2MF3jNDBTKbFar5RnY+PKgHXH8eVvgNRCq9tlvfO
-         sKG5H5kI7PcBS7Gls0j4X8ssaVUr5p59L464hKLCuEhhbwBeITGMto8GYRngMviExJ/G
-         p/oUnL8vpohQ+vwmALgGFNaH661mTU6zP/cUY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mkXpYcbeC0bnNO0q+6BYbbUdKRmj3eZu6k2PkyZZ+20=;
-        b=llfqDRohgfDFBjwANAxbUTrbpDIkUl0WYpt7AtqaZEUCvLfjm52EADT+vJXX5W07ay
-         F1j5mCgj1PE0xmbiZjhtJCMkw6M6AkEQwqckxFuFPtZ16uvnd05ASYKWZ39bYu6kQ16w
-         X0CJiBF9sJRVBoMrlHYyTxBxEa1p/3HRhk71JypD31B33k0gyt8pN0o8VWP5uGljuqzY
-         S0Ot33bg/IJQ5nUPRuaZ2L8xIxgM9JAUVoKYDdlfVSu0tsL8M84kFacCfxkmtAwuksYe
-         rfvJmobA9mlBEPxpwy6JNMlFZLpmHHXDq2Mm+4cY5LcqyvOeIjYu5TgYTCI5/RcTk2l7
-         vYwQ==
-X-Gm-Message-State: APjAAAVQQI40R6wm9iN2CVHCuRV8O2OmE6NN29R5BzRv5Pqndt5odxhO
-        /sZweZYs93cKd/M3EhaGzTfxkw==
-X-Google-Smtp-Source: APXvYqzPnYTsblSf60TZovxlUVlvSuc+XFLl1zKjvdo1Yvwqtsr2H7uR3x61W/FY7WkWYe/J6M0wOQ==
-X-Received: by 2002:a17:902:684a:: with SMTP id f10mr9295764pln.91.1570285189302;
-        Sat, 05 Oct 2019 07:19:49 -0700 (PDT)
-Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id y138sm8977604pfb.174.2019.10.05.07.19.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 07:19:48 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v10 6/6] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
-Date:   Sat,  5 Oct 2019 19:49:13 +0530
-Message-Id: <20191005141913.22020-7-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20191005141913.22020-1-jagan@amarulasolutions.com>
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+        Sat, 5 Oct 2019 10:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbfJEO2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 10:28:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4759520867;
+        Sat,  5 Oct 2019 14:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570285700;
+        bh=0HytaZ1Qi8pY6GlOq+DBjycReyqLhaTKhTi+ABILHH0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1vFSC5X6EvPe318HJvAuNvuIcag3zPq2fH5UP82biM+c8M0DRehQvabjwK/gJLTgm
+         mup0Lv5VnlXBVgRXlu87Wd+s148f4hdWuwLVz/o51x5Ebrs1yZeZrigSynKzes/znX
+         JmEwbrVbV2XQE3Q1NaxciA/Wk4W/Y72XY4mDzkQk=
+Date:   Sat, 5 Oct 2019 15:28:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org,
+        alexandre.torgue@st.com, linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] counter: stm32-timer-cnt: fix a kernel-doc warning
+Message-ID: <20191005152805.49eec3b8@archlinux>
+In-Reply-To: <20190925235310.GD14133@icarus>
+References: <1568809323-26079-1-git-send-email-fabrice.gasnier@st.com>
+        <20190925234927.GB14133@icarus>
+        <20190925235310.GD14133@icarus>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for Bananapi S070WV20-CT16 DSI panel to
-BPI-M64 board.
+On Wed, 25 Sep 2019 19:53:10 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-DSI panel connected via board DSI port with,
-- DLDO1 as VCC-DSI supply
-- DCDC1 as VDD supply
-- PD7 gpio for lcd enable pin
-- PD6 gpio for lcd reset pin
-- PD5 gpio for backlight enable pin
+> On Wed, Sep 25, 2019 at 07:49:27PM -0400, William Breathitt Gray wrote:
+> > On Wed, Sep 18, 2019 at 02:22:03PM +0200, Fabrice Gasnier wrote:  
+> > > Fix the following warning when documentation is built:
+> > > drivers/counter/stm32-timer-cnt.c:37: warning: cannot understand function
+> > > prototype: 'enum stm32_count_function'
+> > > 
+> > > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > > ---
+> > >  drivers/counter/stm32-timer-cnt.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> > > index 644ba18..e425dd1 100644
+> > > --- a/drivers/counter/stm32-timer-cnt.c
+> > > +++ b/drivers/counter/stm32-timer-cnt.c
+> > > @@ -28,7 +28,7 @@ struct stm32_timer_cnt {
+> > >  };
+> > >  
+> > >  /**
+> > > - * stm32_count_function - enumerates stm32 timer counter encoder modes
+> > > + * enum stm32_count_function - enumerates stm32 timer counter encoder modes
+> > >   * @STM32_COUNT_SLAVE_MODE_DISABLED: counts on internal clock when CEN=1
+> > >   * @STM32_COUNT_ENCODER_MODE_1: counts TI1FP1 edges, depending on TI2FP2 level
+> > >   * @STM32_COUNT_ENCODER_MODE_2: counts TI2FP2 edges, depending on TI1FP1 level
+> > > -- 
+> > > 2.7.4  
+> > 
+> > Fixes: 597f55e3f36c ("counter: stm32-lptimer: add counter device")
+> > 
+> > Jonathan, please pick this fix up through IIO.
+> > 
+> > Thanks,
+> > 
+> > William Breathitt Gray  
+> 
+> Sorry, that's the wrong Fixes line. Here's the right one:
+> 
+> Fixes: ad29937e206f ("counter: Add STM32 Timer quadrature encoder")
+> 
+> William Breathitt Gray
+I've picked it up, but please be more formal and also give an
+Acked-by: in future.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Applied to the togreg branch of iio.git and pushed out as testing though
+I doubt automatic testing of kernel-doc is occurring.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 208373efee49..6beaecdd802a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -45,6 +45,7 @@
- #include "sun50i-a64.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "BananaPi-M64";
-@@ -56,6 +57,14 @@
- 		serial1 = &uart1;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -116,6 +125,24 @@
- 	status = "okay";
- };
- 
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "bananapi,s070wv20-ct16-icn6211";
-+		reg = <0>;
-+		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
-+		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
-+		vdd-supply = <&reg_dcdc1>;
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -206,6 +233,10 @@
- 	status = "okay";
- };
- 
-+&r_pwm {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
--- 
-2.18.0.321.gffc6fa0e3
+Thanks,
+
+Jonathan
+
 
