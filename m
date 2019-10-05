@@ -2,88 +2,73 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EECBC4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA47C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2237C222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2F3222CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570300839;
+	bh=RWuY0RSvkUj2zaP9FkesiWE2O7HQPq1rvX2ddcue8vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WEXy02v+WsqHdEmJUtChhsJOdh7sTK9f87NFvsSaNAJyzGYryxcIqHWPPDxMwSd9z
+	 OSEb5FlAst5hsY65ikSCm3bqRfRfiQgj+khGBWrXaW37p2RABCllUa8dxPkPurIhSl
+	 md+EyFqQu81CK1kIExzbS4VRBRN7F0DxiIfhq96k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbfJESjl (ORCPT
+        id S2388365AbfJESkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 14:39:41 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59559 "EHLO mga11.intel.com"
+        Sat, 5 Oct 2019 14:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387941AbfJESjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 14:39:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 11:39:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,261,1566889200"; 
-   d="scan'208";a="183033437"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga007.jf.intel.com with ESMTP; 05 Oct 2019 11:39:39 -0700
-Date:   Sat, 5 Oct 2019 11:39:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v22 16/24] x86/vdso: Add support for exception fixup in
- vDSO functions
-Message-ID: <20191005183939.GB9159@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-17-jarkko.sakkinen@linux.intel.com>
- <20191002231804.GA14315@linux.intel.com>
- <20191004001459.GD14325@linux.intel.com>
- <20191004185221.GI6945@linux.intel.com>
+        id S2387791AbfJESki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 14:40:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3478222CA;
+        Sat,  5 Oct 2019 18:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570300838;
+        bh=RWuY0RSvkUj2zaP9FkesiWE2O7HQPq1rvX2ddcue8vk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GuDQBTf27tJ/syv9eY4jSxOcMtKfYqkusdHd0rK27nz/xQvJbJ0PKX5ktBzm9RAwY
+         +60XGaBoNV66J2AKN5x/aokPrI+lzXEpNe6Jf0M5DsyuSLJGXS+FHra9LbCqE3EPYT
+         0NCtMa+xZZWjnpRhaqWQodNHEn/NUGr5xqOTJ8oE=
+Date:   Sat, 5 Oct 2019 20:40:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>, linux-kernel@vger.kernel.org,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Stephen McCamant <smccaman@umn.edu>
+Subject: Re: [PATCH] staging: vt6655: Fix memory leak in vt6655_probe
+Message-ID: <20191005184035.GA2062613@kroah.com>
+References: <20191004200319.22394-1-navid.emamdoost@gmail.com>
+ <1d0ba4c6-99ed-e2c9-48a2-ce34b0042876@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004185221.GI6945@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1d0ba4c6-99ed-e2c9-48a2-ce34b0042876@web.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 09:52:21PM +0300, Jarkko Sakkinen wrote:
-> On Thu, Oct 03, 2019 at 05:15:00PM -0700, Sean Christopherson wrote:
-> > I'll tackle this tomorrow.  I've been working on the feature control MSR
-> > series and will get that sent out tomorrow as well.  I should also be able
-> > to get you the multi-page EADD patch.
+On Sat, Oct 05, 2019 at 06:30:13PM +0200, Markus Elfring wrote:
+> > In vt6655_probe, if vnt_init() fails the cleanup code needs to be called
+> > like other error handling cases. The call to device_free_info() is
+> > added.
 > 
-> Great I'll compose the patch set during the weekend and take Monday off
-> so you have the full work day to get everything (probably send the patch
-> set on Sunday).
+> Please improve this change description.
 
-I wasn't able to finish everything this morning (not even close).  The
-vDSO code and documentation was in rough shape.  I finished cleaning it
-up, but still need to test and rewrite the changelog.
-
-If you really want to send v23 this weekend I can work more tonight
-and/or tomorrow morning.  My preference would be to just punt a few more
-days.
-
-My todo list for v23:
-
-  - Test vDSO changes and craft proper patches
-  - Rewrite vDSO changelog
-  - Rewrite vDSO exception fixup changelog
-  - Implement multi-page EADD
-
-My todo list post-v23:
-  - Write SGX programming model documentation (requested by Casey)
+It is fine as-is, please do not confuse people.
