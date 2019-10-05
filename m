@@ -2,156 +2,232 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854EDC32792
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B65BC32792
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CD420830
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14A7222BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="COJ/7kQl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLaLvLZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfJEDbp (ORCPT
+        id S1726602AbfJEDpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 23:31:45 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:60558 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfJEDbp (ORCPT
+        Fri, 4 Oct 2019 23:45:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42934 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJEDpy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 23:31:45 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x953Vb23017252
-        for <linux-kernel@vger.kernel.org>; Sat, 5 Oct 2019 12:31:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x953Vb23017252
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570246298;
-        bh=wdrix7BLC0yyJUdGOSxFzpfVJlld0/Th9nkSWXbSeko=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=COJ/7kQlhSMTkV5yiAkp+Wb6CdlJ75hoNbDwyMc30lc1vUmEkKrvEX90PNAYkMWzL
-         GrVpPflajQ6HKH8Ud2Es0dJ61byTAFN9KctMP7yNPRf5raM+huD3NMe3CHJRj7AYFr
-         gVYtxWoAum/0hWCZLVxRP6580+ONo9ytyG+Rbsrl5gZOGVwZDtFLOgD97pCvE5pgmZ
-         YpjPzE1nVkGGiqbJn0dH+/yHLdA61nup/21AlRlapxrleuJNkT1TQ38BQNbeH0RCFx
-         OGnqulNwRatJ00FpDzDKRiIO2SxqWQaZ0JoEw6HtzfsJQ1CLRWjIGR9jG838xPj9uA
-         5W6YTi3FXzQeQ==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id z14so5404478vsz.13
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 20:31:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAVqdZrE9PLPVyCvXOqYSE0On/EFxXIbPxYI6jH86myDDYJxk0sH
-        rthVgWKtDqWHX+ZDxA2XlCPUXQQq7WC4gS2JCvk=
-X-Google-Smtp-Source: APXvYqw82lLXqSNaK0/Szm7D0jz7yld2NsmMNVZGARheHzcciRuXkggwpd5i8wDz63XWWnNL+RCHYdCLQGbBTqSzg7o=
-X-Received: by 2002:a67:ec09:: with SMTP id d9mr9864622vso.215.1570246297166;
- Fri, 04 Oct 2019 20:31:37 -0700 (PDT)
+        Fri, 4 Oct 2019 23:45:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id n197so17740899iod.9;
+        Fri, 04 Oct 2019 20:45:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RbOV3wUZGc55OMGd29XCe5o36BtLuTkL2nl8j4ZexH8=;
+        b=iLaLvLZPDI3+ubx2d1POYTJlXGaqW+uAKgvv/uUNV6F+dNuF/AH/LVe3pXauHSdsBv
+         j0yNP+tEZNx7Ha+jUAQrwSK2+0UEpT9nmrH7bBXzrueGjd/aAUrzw2fmf/o0Jk/D7z52
+         XyEeU5YtkRixCKjG6zeT/rOUaoHY5q4lLK1uZwQUgHR4y0AZT81aawaZvdntGsHnQnGf
+         beo6Jpt/A9Yl5tfuLPpnWYzcZClBVoWjB4NB07MCY90BmHXubbt39PRIoj9FdLBWP5zC
+         PLkK9uQSW0P5Yn4x0PsFQm1+TLw2bp0ZTZd95OsnYHyuW8YkNPSfhxYfsH6D/a16obIJ
+         kbmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RbOV3wUZGc55OMGd29XCe5o36BtLuTkL2nl8j4ZexH8=;
+        b=qwu6Ea1rbJNrv+IUNP85HTzQUsCKSoaoYuopt0pIlogDqpGrP8cxbysLAub3J3GfPA
+         L1pTsBC3erBo8zxlnKXNaniTkhvS1dvTs9W4oaiE6AqNXoFCvjRFkrMmjRF+1cGUhGaO
+         AjE6mlNxwoYPuEvBYVCR5hFRkvr3xAmjlbKxwXC9Rveex7s1YqUl5KZGHutzKs7ff+Fo
+         D5RmtJ7Z+wIVMmf7xYZsYAHDNaRLGlbO2tG6PPM9jyO6+DdyHnXJwuT7aeg0YtsG54oL
+         8xOrMRAXIPe6bpDshBdNkO0LxxF1dSlHOFVexAhg5ESf0/leg7+9HKuNgWbynl98MIPG
+         9/Wg==
+X-Gm-Message-State: APjAAAVtlnN5bjFvUFBT1nQl5eYm1GNavYYHRyE7MYvIsJALQXfYtPm0
+        uuzN00WBtJRM63CdhK+27Z1lfJZsypUYbwdqynw=
+X-Google-Smtp-Source: APXvYqz3tCzOSy/+h7h3l/lcKeA+u1PiF903ta+om2XMsvEk/JNZMNqbbHXnymtiAUL86JYced4BzI8YhAWqrun8eo0=
+X-Received: by 2002:a02:6017:: with SMTP id i23mr935803jac.0.1570247153151;
+ Fri, 04 Oct 2019 20:45:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
-In-Reply-To: <z4zhwEnRqCVnnV8RYwKbY9H_TEnHePR6grYfw1toELFA-iZidlp3T18y0w35JtWNghJQ3hwL23RrsKXIVJHYiv9wOsqmow33NU6LcHcFWyw=@protonmail.ch>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 5 Oct 2019 12:31:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATz=j4zyF264rQD4fivw0BaW0nS5kHSBBLEjZbKoXf3yg@mail.gmail.com>
-Message-ID: <CAK7LNATz=j4zyF264rQD4fivw0BaW0nS5kHSBBLEjZbKoXf3yg@mail.gmail.com>
-Subject: Re: [PATCH v2] kheaders: making headers archive reproducible
-To:     Dmitry Goldin <dgoldin@protonmail.ch>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Ben Hutchings <ben@decadent.org.uk>
+References: <CAHCN7xLO5VgA6tW4p7QjwPv_QXv==zbC38TxXtsR5x9H0mUGJA@mail.gmail.com>
+ <CAHCN7xJPv7W381R7LS4bB8xWWpugz2NwbTUtj-hqHnDBZ9MFzA@mail.gmail.com>
+ <CAGm1_kv6RMUDppu6ZjY9Dq7QL=hS=D+e3KS37+V0ncbwoXE6mQ@mail.gmail.com>
+ <CAHCN7xKsGz4UA4gfM5jpS9UE-V7_k265G_hB=wQ5Ueh3T5kaNQ@mail.gmail.com> <CAHCN7xKirqyj3un1k+QNeoKc0DvOt4g8ScFScG02pZF=OX+GZg@mail.gmail.com>
+In-Reply-To: <CAHCN7xKirqyj3un1k+QNeoKc0DvOt4g8ScFScG02pZF=OX+GZg@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 4 Oct 2019 22:45:46 -0500
+Message-ID: <CAHCN7xLkBi0dWiuirh7sAgywKFM5Oe=sU3nojSuN2MMzkqyEEA@mail.gmail.com>
+Subject: Re: DM3730 Bluetooth Performance differences between SERIAL_8250_OMAP
+ vs SERIAL_OMAP
+To:     Yegor Yefremov <yegorslists@googlemail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Vignesh R <vigneshr@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 7:40 PM Dmitry Goldin <dgoldin@protonmail.ch> wrote:
+On Fri, Oct 4, 2019 at 11:51 AM Adam Ford <aford173@gmail.com> wrote:
 >
-> From: Dmitry Goldin <dgoldin+lkml@protonmail.ch>
+> On Fri, Oct 4, 2019 at 9:08 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > On Fri, Oct 4, 2019 at 7:27 AM Yegor Yefremov
+> > <yegorslists@googlemail.com> wrote:
+> > >
+> > > Hi Adam,
+> > >
+> > > On Fri, Oct 4, 2019 at 12:39 PM Adam Ford <aford173@gmail.com> wrote:
+> > > >
+> > > > On Fri, Oct 4, 2019 at 5:02 AM Adam Ford <aford173@gmail.com> wrote:
+> > > > >
+> > > > > I am running Kernel 5.3.2 trying to troubleshoot some intermittent
+> > > > > Bluetooth issues, and I think I have narrowed it down to the serial
+> > > > > driver in use.
+> > > >
+> > > > I should have also noted that it's using UART2 with CTS and RTS on the
+> > > > DM3730 (omap3630) and its configured with a baud rate of 3M.
+> > > > I tried slowing it to 115200, but that didn't help.  I tried disabling
+> > > > the DMA hooks from the device tree, and that didn't help.
+> > > >
+> > > > > By default, omap2plus_defconfig enables both SERIAL_8250_OMAP and
+> > > > > SERIAL_OMAP.  I have my console device configured as  ttyS0, and all
+> > > > > appears fine.  When I enable Bluetooth, however, I get intermittent
+> > > > > errors on an DM3730 / OMAP3630.
+> > > > >
+> > > > > Using the 8250 driver for Blueotooth I get intermittent frame errors
+> > > > > and data loss.
+> > > > >
+> > > > > Scanning ...
+> > > > > [   28.482452] Bluetooth: hci0: Frame reassembly failed (-84)
+> > > > > [   36.162170] Bluetooth: hci0: Frame reassembly failed (-84)
+> > > > >         F4:4E:FC:C9:2F:57       BluJax
+> > > > > # l2ping F4:4E:FC:C9:2F:57
+> > > > > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+> > > > > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 8.27ms
+> > > > > no response from F4:4E:FC:C9:2F:57: id 1
+> > > > > ^C2 sent, 1 received, 50% loss
+> > > > >
+> > > > > (after a fairly long hang, I hit control-c)
+> > > > >
+> > > > > However, disabling the 8250 driver and using the only SERIAL_OMAP and
+> > > > > the console routed to ttyO0, the Bluetooth works well, so I believe it
+> > > > > to be a serial driver issue and not a Bluetooth error.
+> > > > >
+> > > > > # hcitool scan
+> > > > > Scanning ...
+> > > > >         F4:4E:FC:C9:2F:57       BluJax
+> > > > > ^C
+> > > > > # l2ping F4:4E:FC:C9:2F:57
+> > > > > Ping: F4:4E:FC:C9:2F:57 from 00:18:30:49:7D:63 (data size 44) ...
+> > > > > 44 bytes from F4:4E:FC:C9:2F:57 id 0 time 6.90ms
+> > > > > ...
+> > > > > 44 bytes from F4:4E:FC:C9:2F:57 id 14 time 28.29ms
+> > > > > ^C15 sent, 15 received, 0% loss
+> > > > > #
+> > > > >
+> > > > > 0% loss and regular, repeatable communication without any Frame
+> > > > > reassembly errors.
+> > > > >
+> > > >
+> > > > I tried disabling SERIAL_OMAP and using only SERIAL_8250_OMAP, but
+> > > > that didn't help.  Because the issue goes away when I disable
+> > > > SERIAL_8250_OMAP, I am wondering if something is either being
+> > > > misconfigured or some IRQ or DMA integration is missing that may be
+> > > > present with the older SERIAL_OMAP driver.
+> > > >
+> > > > > Any suggestions on how to troubleshoot or what might cause the
+> > > > > difference between the two drivers?
+> > >
+> > > Can it be related to this issue [1]? Can you confirm that 5.2 is
+> > > working as expected with the 8250 driver?
+> > >
+> > > [1] https://marc.info/?l=linux-serial&m=156965039008649&w=2
+> >
+> > I reverted the whole 8250 directory to d99482673f95 ("serial:
+> > mctrl_gpio: Check if GPIO property exisits before requesting it") and
+> > it is somewhat better, but it's not as good as the stock OMAP serial
+> > driver.  I get some frame errors and eventually, I get some timeouts,
+> > but it's not as bad.  I'll try to implement the RTS and CTS as gpio
+> > pins and change the device tree accordingly.  It might shed some light
+> > on the situation.
 >
-> In commit 43d8ce9d65a5 ("Provide in-kernel headers to make
-> extending kernel easier") a new mechanism was introduced, for kernels
-> >=5.2, which embeds the kernel headers in the kernel image or a module
-> and exposes them in procfs for use by userland tools.
+> I tried to manually setup RTS and CTS pins as GPIO, but that didn't
+> work, so I changed it back.
 >
-> The archive containing the header files has nondeterminism caused by
-> header files metadata. This patch normalizes the metadata and utilizes
-> KBUILD_BUILD_TIMESTAMP if provided and otherwise falls back to the
-> default behaviour.
+> It looks like the clocking is correct.  I don't know enough about the
+> DMA or the IRQ to know if it's working correctly.
 >
-> In commit f7b101d33046 ("kheaders: Move from proc to sysfs") it was
-> modified to use sysfs and the script for generation of the archive was
-> renamed to what is being patched.
+> I was wondering if the problem is in the handshaking or not.
+> I added " uart-has-rtscts;" to by uart node thinking it might help,
+> but it did not.
 >
-> Signed-off-by: Dmitry Goldin <dgoldin+lkml@protonmail.ch>
+> >
+> 8250_omap.c has some checks to see if we can enable autoRTS:
 >
-> ---
+> if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
+>     !up->gpios) {
+>      /* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
+>      ...
+> }
+>
+> Based on this, I would expect up->gpios to always be zero if we want
+> auto RTS CTS.
+>
+> I threw some debug code into the serial driver to look at the status
+> of the various flags that go into setting up auto RTS/CTS.
+>
+> [   13.837005] termios->c_cflag & CRTSCTS = 80000000
+> [   13.841888] up->port.flags & UPF_HARD_FLOW = 300000
+> [   13.846801] up->gpios = ce3f3cc0
+> [   17.166595] termios->c_cflag & CRTSCTS = 0
+> [   17.170745] up->port.flags & UPF_HARD_FLOW = 300000
+> [   17.175781] up->gpios = ce3f3d40
+>
+> I don't know which port is which, but I only have two active uarts
+> (console and Bluetooth)
+> The Bluetooth port should use handshaking and the console should not.
+>
+> From the look of the dump, up->gpios is never 0, so the last
+> evaluation would always be false unless I am misinterpreting
+> something.
+>
+> I tried to modify the check to remove !up->gpios check, but that
+> didn't help either, but it made it a little better.
 
-Applied to linux-kbuild. Thanks.
+I have it working now on the 5.3.y branch, but I had to do 4 things.
 
+1)   Disable the older OMAP serial driver
+2)   Apply [1] patch
+3)   Disable 8250 DMA support
+4)  Remove checks for !up->gpios in the 8250-omap.c code.
 
+With all those changes, I am able to successfully and repeatedly scan
+and l2ping Bluetooth devices.  Without any one of those, I get frame
+errors or lost packets.
 
->
-> v1: Initial fix
->
-> v2: Added a bit of info about kheaders to the reproducible builds
-> documentation and used the opportunity to fix a few typos in the
-> original patch.
->
-> ---
->  Documentation/kbuild/reproducible-builds.rst | 13 +++++++++----
->  kernel/gen_kheaders.sh                       |  5 ++++-
->  2 files changed, 13 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
-> index ab92e98c89c8..ce6a408b3303 100644
-> --- a/Documentation/kbuild/reproducible-builds.rst
-> +++ b/Documentation/kbuild/reproducible-builds.rst
-> @@ -16,16 +16,21 @@ the kernel may be unreproducible, and how to avoid them.
->  Timestamps
->  ----------
->
-> -The kernel embeds a timestamp in two places:
-> +The kernel embeds timestamps in three places:
->
->  * The version string exposed by ``uname()`` and included in
->    ``/proc/version``
->
->  * File timestamps in the embedded initramfs
->
-> -By default the timestamp is the current time.  This must be overridden
-> -using the `KBUILD_BUILD_TIMESTAMP`_ variable.  If you are building
-> -from a git commit, you could use its commit date.
-> +* If enabled via ``CONFIG_IKHEADERS``, file timestamps of kernel
-> +  headers embedded in the kernel or respective module,
-> +  exposed via ``/sys/kernel/kheaders.tar.xz``
-> +
-> +By default the timestamp is the current time and in the case of
-> +``kheaders`` the various files' modification times. This must
-> +be overridden using the `KBUILD_BUILD_TIMESTAMP`_ variable.
-> +If you are building from a git commit, you could use its commit date.
->
->  The kernel does *not* use the ``__DATE__`` and ``__TIME__`` macros,
->  and enables warnings if they are used.  If you incorporate external
-> diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
-> index 9ff449888d9c..aff79e461fc9 100755
-> --- a/kernel/gen_kheaders.sh
-> +++ b/kernel/gen_kheaders.sh
-> @@ -71,7 +71,10 @@ done | cpio --quiet -pd $cpio_dir >/dev/null 2>&1
->  find $cpio_dir -type f -print0 |
->         xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
->
-> -tar -Jcf $tarfile -C $cpio_dir/ . > /dev/null
-> +# Create archive and try to normalize metadata for reproducibility
-> +tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
-> +    --owner=0 --group=0 --sort=name --numeric-owner \
-> +    -Jcf $tarfile -C $cpio_dir/ . > /dev/null
->
->  echo "$src_files_md5" >  kernel/kheaders.md5
->  echo "$obj_files_md5" >> kernel/kheaders.md5
-> --
-> 2.23.0
+I wonder if we can dump the legacy omap serial driver once  the 8250
+driver is working better.  That would eliminate at least one of the 4.
+I am not sure what's up with the DMA, and I've already stated some
+thoughts on item 4 in a previous e-mail.
 
+I think the [1] patch is probably going to help fix some other issues
+and should probably be backported, but by itself it isn't enough to
+fix the Bluetooth problem on the OMAP3630.
 
+[1] - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/tty/serial/8250/8250_omap.c?h=v5.4-rc1&id=627a545c6bb0c7de09208e6546f5111290477261
 
--- 
-Best Regards
-Masahiro Yamada
+adam
+>
+>
+> > adam
+> > >
+> > > Cheers,
+> > > Yegor
