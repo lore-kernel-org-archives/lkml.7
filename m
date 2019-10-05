@@ -2,105 +2,96 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539ADC3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA5C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3927222C5
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D269222C8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfJEMfc (ORCPT
+        id S1728348AbfJEMkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 08:35:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:2630 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfJEMfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 08:35:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 05:35:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,260,1566889200"; 
-   d="scan'208";a="222425250"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 05 Oct 2019 05:35:25 -0700
-Date:   Sat, 5 Oct 2019 20:35:07 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
-        khlebnikov@yandex-team.ru, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/rmap.c: reuse mergeable anon_vma as parent when fork
-Message-ID: <20191005123507.GA7222@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191004160632.30251-1-richardw.yang@linux.intel.com>
- <20191004161120.GI32665@bombadil.infradead.org>
- <20191004234845.GB15415@richard>
- <20191005011554.GQ32665@bombadil.infradead.org>
+        Sat, 5 Oct 2019 08:40:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37808 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727322AbfJEMkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 08:40:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9A173AE40;
+        Sat,  5 Oct 2019 12:40:39 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Pu Wen <puwen@hygon.com>, Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Renninger <trenn@suse.com>, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/2] Modify cpupower to schedule itself on cores it is reading MSRs from
+Date:   Sat, 05 Oct 2019 14:40:57 +0200
+Message-ID: <1798336.DyNOivuPDK@c100>
+In-Reply-To: <64022abd-a798-c679-1c1d-eec9b18c4fb2@amd.com>
+References: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com> <4340017.MFpoU6RDpq@c100> <64022abd-a798-c679-1c1d-eec9b18c4fb2@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005011554.GQ32665@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 06:15:54PM -0700, Matthew Wilcox wrote:
->On Sat, Oct 05, 2019 at 07:48:45AM +0800, Wei Yang wrote:
->> On Fri, Oct 04, 2019 at 09:11:20AM -0700, Matthew Wilcox wrote:
->> >On Sat, Oct 05, 2019 at 12:06:32AM +0800, Wei Yang wrote:
->> >> After this change, kernel build test reduces 20% anon_vma allocation.
->> >
->> >But does it have any effect on elapsed time or peak memory consumption?
->> 
->> Do the same kernel build test and record time:
->> 
->> 
->> Origin
->> 
->> real	2m50.467s
->> user	17m52.002s
->> sys	1m51.953s    
->> 
->> real	2m48.662s
->> user	17m55.464s
->> sys	1m50.553s    
->> 
->> real	2m51.143s
->> user	17m59.687s
->> sys	1m53.600s    
->> 
->> 
->> Patched
->> 
->> real	2m43.733s
->> user	17m25.705s
->> sys	1m41.791s    
->> 
->> real	2m47.146s
->> user	17m47.451s
->> sys	1m43.474s    
->> 
->> real	2m45.763s
->> user	17m38.230s
->> sys	1m42.102s    
->> 
->> 
->> For time in sys, it reduced 8.5%.
->
->That's compelling!
+Hi,
 
-Yep, looks good :-)
+On Wednesday, October 2, 2019 4:45:03 PM CEST Natarajan, Janakarajan wrote:
+> On 9/27/19 4:48 PM, Thomas Renninger wrote:
+> 
+> > On Friday, September 27, 2019 6:07:56 PM CEST  Natarajan, Janakarajan 
+> > wrote:
+> 
+> >> On 9/18/2019 11:34 AM, Natarajan, Janakarajan wrote:
+ 
+> On a 256 logical-cpu Rome system we see C0 value from cpupower output go 
+> from 0.01 to ~(0.1 to 1.00)
+> 
+> for all cpus with the 1st patch.
+> 
+> However, this goes down to ~0.01 when we use the RDPRU instruction 
+> (which can be used to get
+> 
+> APERF/MPERF from CPL > 0) and avoid using the msr module (patch 2).
 
--- 
-Wei Yang
-Help you, Help me
+And this one only exists on latest AMD cpus, right?
+
+> However, for systems that provide an instruction  to get register values 
+> from userspace, would a command-line parameter be acceptable?
+
+Parameter sounds like a good idea. In fact, there already is such a paramter.
+cpupower monitor --help
+       -c
+           Schedule  the  process  on every core before starting and ending 
+measuring.  This could be needed for the Idle_Stats monitor when no other MSR 
+based monitor (has to be run on the core that is measured) is run in parallel.  
+This is to wake up the processors from deeper sleep states and let the kernel 
+reaccount its cpuidle (C-state) information before reading the cpuidle timings 
+from sysfs.
+
+Best is you exchange the order of your patches. The 2nd looks rather straight
+forward and you can add my reviewed-by.
+
+If you still need adjustings with -c param, they can be discussed separately.
+It would also be nice to mention in which case it makes sense to use it in the 
+manpage or advantages/drawbacks if you don't.
+
+Thanks!
+
+    Thomas 
+
+
+
