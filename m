@@ -2,93 +2,132 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE3FC47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACC3C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BD7222CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570278151;
-	bh=3btm0i9Jw2jAGC2vk2TzyudcZjIAbZJevaaA7q42kDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=R5lHODAkd614J3kxF+UkhwJOsfDdSdzQ+12PfMlMA3Oyf+ILnQuQhEWKyanyjawru
-	 inKbZTrASnnWvBgeLovJx1tD70QEHF9A+fWefiFeJcjHPxaFcqrhQScYtB1/6zywS3
-	 WHJGMDmd1R+eGRJR18VDbs6kJ4LglhZpQ1JRNUUY=
+	by mail.kernel.org (Postfix) with ESMTP id A2B892133F
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6q34BHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfJEMWa (ORCPT
+        id S1728213AbfJEMY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 08:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbfJEMWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 08:22:30 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD412133F;
-        Sat,  5 Oct 2019 12:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570278149;
-        bh=3btm0i9Jw2jAGC2vk2TzyudcZjIAbZJevaaA7q42kDI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ULciMT7q1Ifab+Ce7gpWYG4BY3lC39MOhrnndHW6XgjSHlwUkRM5mQop8v2QAmVFn
-         TSAIVu2+gCgvGJx3A8EX9Y8hCkudgmbej6qfj5UinDN2AG8/Z4opgPJfhxugg1OjDK
-         GyVe2JN+SZMhxYGeCzID8ui9F4x7MMH6aYDfObO8=
-Date:   Sat, 5 Oct 2019 13:22:25 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomasz Duszynski <tduszyns@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH 2/2] MAINTAINERS: add entry for ROHM BH1750 driver
-Message-ID: <20191005132225.63019df2@archlinux>
-In-Reply-To: <20190916190024.9955-3-tduszyns@gmail.com>
-References: <20190916190024.9955-1-tduszyns@gmail.com>
-        <20190916190024.9955-3-tduszyns@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 5 Oct 2019 08:24:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38314 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfJEMY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 08:24:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w12so10140233wro.5;
+        Sat, 05 Oct 2019 05:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AndZMSEDGnOk0Jn24aQIRsC/2ExlDZE2yMCCrzypQ00=;
+        b=m6q34BHADtE4ePg8AWkpufWj8+PRLpcFc7IZhGNXAI0YUpVyi5cQQ3XxdAVDB8rguj
+         GxaLlD1uB5ukEP81v3KcsDB7IUGw6V+O3Nltur5KznD5VKDgEwMYkyjcsxwJwdnC8bSf
+         h3sYVumVryfYm5wcdJjwoXiUNffQnZY/QAh14gZ1uaB4+Bjw2mJ9m2qZ5clJxIJW00kA
+         s4qxyFA9T7XA2ofykkz6aZTV9+2fxPfH9B9GtgoPW/V/rqGmZYTjdX+5nS6Ji5971McY
+         8sReQeX27fGHaGh3xRH05ufwzskBSN/OcnnkgGqE3RjYBkGlvoQXndf313ZVQ6NP2CeF
+         uKig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AndZMSEDGnOk0Jn24aQIRsC/2ExlDZE2yMCCrzypQ00=;
+        b=Wq78xsdmr2iKksrFANqJuTipOyBiQyMtssbOzqiwa21j1+sUsC3ZNFLuwOeYbiKVne
+         p/RbkiFq4Ya+OAt7kUV8To6NMEiRCSEzcYb5PN43IGcR38rLJ8StnMIEJb1XHYhWHoTQ
+         833iZgpbj4pfWA9PWzvZt4oabHH+qIyA5lVDhJw8OGmvcaUtnpId25f22hynMf2vVKhl
+         0UQZibJKd3SRdJVOkYo6YCUTzdJH0JLpax/U3KSSf4unDxqeBVwSCjvQdbwxxxeVm9h/
+         B9o9rpKJ2YwXPQ6zZ2rj6s0vqNqKW763OI3klkRevCNFUVguPKla8depGMvUxY2Ar844
+         XfgQ==
+X-Gm-Message-State: APjAAAWs29/Yr88L6yUm8ueJiNU3h1sPM7SDnUHdmaEMB8zCP6qlguC7
+        0TnX2doWY/D87eRJqfnPdRY=
+X-Google-Smtp-Source: APXvYqzXztDn6JBikilw5BsQ/wznLPYZFPp9T77lNEkZMsKOC9lDHog6P12smbv5L5k/8g4RtVShjA==
+X-Received: by 2002:adf:aa98:: with SMTP id h24mr10852669wrc.60.1570278294265;
+        Sat, 05 Oct 2019 05:24:54 -0700 (PDT)
+Received: from localhost.localdomain ([46.56.192.152])
+        by smtp.gmail.com with ESMTPSA id a2sm8570792wrt.45.2019.10.05.05.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 05:24:53 -0700 (PDT)
+Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
+        by localhost.localdomain with esmtp (Exim 4.92.1)
+        (envelope-from <jekhor@gmail.com>)
+        id 1iGj9T-0005DT-Js; Sat, 05 Oct 2019 15:27:11 +0300
+Date:   Sat, 5 Oct 2019 15:27:11 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
+ revert of support for newer surface devices
+Message-ID: <20191005122711.GC7077@jeknote.loshitsa1.net>
+References: <20191005105551.353273-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191005105551.353273-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 21:00:24 +0200
-Tomasz Duszynski <tduszyns@gmail.com> wrote:
-
-> Add myself as a ROHM BH1750 ambient light sensor driver maintainer.
+On Sat, Oct 05, 2019 at 12:55:51PM +0200, Hans de Goede wrote:
+> Commit c394159310d0 ("Input: soc_button_array - add support for newer
+> surface devices") not only added support for the MSHW0040 ACPI HID,
+> but for some reason it also makes changes to the error handling of the
+> soc_button_lookup_gpio() call in soc_button_device_create(). Note ideally
+> this seamingly unrelated change would have been made in a separate commit,
+> with a message explaining the what and why of this change.
 > 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-Applied.
-
-Thanks,
-
-Jonathan
-
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
+> I guess this change may have been added to deal with -EPROBE_DEFER errors,
+> but in case of the existing support for PNP0C40 devices, treating
+> -EPROBE_DEFER as any other error is deliberate, see the comment this
+> commit adds for why.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f0c03740b9fb..928059c5cd49 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13792,6 +13792,12 @@ L:	linux-serial@vger.kernel.org
->  S:	Odd Fixes
->  F:	drivers/tty/serial/rp2.*
->  
-> +ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
-> +M:	Tomasz Duszynski <tduszyns@gmail.com>
-> +S:	Maintained
-> +F:	drivers/iio/light/bh1750.c
-> +F:	Documentation/devicetree/bindings/iio/light/bh1750.yaml
-> +
->  ROHM MULTIFUNCTION BD9571MWV-M PMIC DEVICE DRIVERS
->  M:	Marek Vasut <marek.vasut+renesas@gmail.com>
->  L:	linux-kernel@vger.kernel.org
+> The actual returning of -EPROBE_DEFER to the caller of soc_button_probe()
+> introduced by the new error checking causes a serious regression:
+> 
+> On devices with so called virtual GPIOs soc_button_lookup_gpio() will
+> always return -EPROBE_DEFER for these fake GPIOs, when this happens
+> during the second call of soc_button_device_create() we already have
+> successfully registered our first child. This causes the kernel to think
+> we are making progress with probing things even though we unregister the
+> child before again before we return the -EPROBE_DEFER. Since we are making
+> progress the kernel will retry deferred-probes again immediately ending
+> up stuck in a loop with the following showing in dmesg:
+> 
+> [  124.022697] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6537
+> [  124.040764] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6538
+> [  124.056967] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6539
+> [  124.072143] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6540
+> [  124.092373] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6541
+> [  124.108065] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6542
+> [  124.128483] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6543
+> [  124.147141] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6544
+> [  124.165070] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6545
+> [  124.179775] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6546
+> [  124.202726] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6547
+> <continues on and on and on>
+> 
+> And 1 CPU core being stuck at 100% and udev hanging since it is waiting
+> for the modprobe of soc_button_array to return.
+> 
+> This patch reverts the soc_button_lookup_gpio() error handling changes,
+> fixing this regression.
 
+I confirm this issue and I made similar hotfix while developing of other
+things, so it's actual and patch should work. I will test it at my hardware
+soon.
+
+-- 
+Yauhen Kharuzhy
