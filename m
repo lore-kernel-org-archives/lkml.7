@@ -2,103 +2,128 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A69C3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C691EC3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00792133F
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="ZYaW7DfQ"
+	by mail.kernel.org (Postfix) with ESMTP id A3E722133F
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfJEKu0 (ORCPT
+        id S1727940AbfJEKz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 06:50:26 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:51325 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfJEKuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 06:50:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
-        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xD/VQSMhPIhILBRPV/+Es2GSvycUj6n/OQKyPmLu98E=; b=ZYaW7DfQP2PoR8OwysID7RZfz+
-        HcCV1Y1DO3T97kt2K8Av6SfMEIUnBIrcJ6p93gBUiWvyYgYAkSvspqxajxEk0FuPYKI/EY2h5WqDg
-        SKrCK3X09/kFW7Z8DjlFP9yszNwJK6g9R+Yc0ohPHlKtlJpV8FR/KHCYeBkD3EorQlMDGZ54qZsDt
-        bVJ+ST2iy5JxVSnx/9AhD0E8NsWpWLNJE3x41WYtmTENRTJpc4+GjKhKEhbxqRu+QospchA0YnCah
-        D4XaeLde90+lEy45MJVSuaI4dgPIdd9ZPskgOPzJ6fG8LKvPNl/AkG8ZeF9BgqagMoOtxqTCJB8hb
-        yHOGbwaw==;
-Received: from [2a01:79c:cebe:b88c:caff:28ff:fe94:90a0] (port=55958)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <harald@skogtun.org>)
-        id 1iGhdn-0008Dd-Ka; Sat, 05 Oct 2019 12:50:23 +0200
-Subject: Re: BISECTED: Compile error on 5.4-rc1
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <cf947abb-c94e-9b6f-229a-1e219fd38e94@skogtun.org>
- <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
- <240d0353-2e66-7d0c-3dc0-f58f62c999be@skogtun.org>
- <fafb9730-6d0c-eac1-e2e2-374de509244a@skogtun.org>
- <CAK7LNARsDQU11GGA3N11zERJdiGFCDR=fS6LtTUXfj5TZBEj4w@mail.gmail.com>
-From:   Harald Arnesen <harald@skogtun.org>
-Message-ID: <d0259e98-225c-58f8-1640-04322c621690@skogtun.org>
-Date:   Sat, 5 Oct 2019 12:50:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 5 Oct 2019 06:55:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43592 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727597AbfJEKzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 06:55:55 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7B93F89810C;
+        Sat,  5 Oct 2019 10:55:54 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-45.ams2.redhat.com [10.36.116.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C7A55D9DC;
+        Sat,  5 Oct 2019 10:55:52 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 5.4 regression fix] Input: soc_button_array - partial revert of support for newer surface devices
+Date:   Sat,  5 Oct 2019 12:55:51 +0200
+Message-Id: <20191005105551.353273-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARsDQU11GGA3N11zERJdiGFCDR=fS6LtTUXfj5TZBEj4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: nb-NO
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Sat, 05 Oct 2019 10:55:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada [05.10.2019 12:19]:
+Commit c394159310d0 ("Input: soc_button_array - add support for newer
+surface devices") not only added support for the MSHW0040 ACPI HID,
+but for some reason it also makes changes to the error handling of the
+soc_button_lookup_gpio() call in soc_button_device_create(). Note ideally
+this seamingly unrelated change would have been made in a separate commit,
+with a message explaining the what and why of this change.
 
-> CONFIG_SHELL previously fell back to 'sh' when bash is not installed,
-> so I just kept it as it was.
-> 
-> If we had used the exact absolute path /bin/sh,
-> it would have worked irrespective of the PATH environment.
-> 
-> But, there is a counter option like this:
-> 
-> 
-> commit 16f8259ca77d04f95e5ca90be1b1894ed45816c0
-> Author: Bjørn Forsman <bjorn.forsman@gmail.com>
-> Date:   Sun Nov 5 10:44:16 2017 +0100
-> 
->     kbuild: /bin/pwd -> pwd
-> 
->     Most places use pwd and rely on $PATH lookup. Moving the remaining
->     absolute path /bin/pwd users over for consistency.
-> 
->     Also, a reason for doing /bin/pwd -> pwd instead of the other way around
->     is because I believe build systems should make little assumptions on
->     host filesystem layout. Case in point, we do this kind of patching
->     already in NixOS.
-> 
->     Ref. commit 028568d84da3cfca49f5f846eeeef01441d70451
->     ("kbuild: revert $(realpath ...) to $(shell cd ... && /bin/pwd)").
-> 
->     Signed-off-by: Bjørn Forsman <bjorn.forsman@gmail.com>
->     Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> 
-> 
-> 
-> I cannot find a way to satisfy everybody.
-> 
+I guess this change may have been added to deal with -EPROBE_DEFER errors,
+but in case of the existing support for PNP0C40 devices, treating
+-EPROBE_DEFER as any other error is deliberate, see the comment this
+commit adds for why.
 
-I'm totally fine with the way it is now, now that I know how it works.
-However, doesn't Posix dictate that there is a /bin/sh?
+The actual returning of -EPROBE_DEFER to the caller of soc_button_probe()
+introduced by the new error checking causes a serious regression:
+
+On devices with so called virtual GPIOs soc_button_lookup_gpio() will
+always return -EPROBE_DEFER for these fake GPIOs, when this happens
+during the second call of soc_button_device_create() we already have
+successfully registered our first child. This causes the kernel to think
+we are making progress with probing things even though we unregister the
+child before again before we return the -EPROBE_DEFER. Since we are making
+progress the kernel will retry deferred-probes again immediately ending
+up stuck in a loop with the following showing in dmesg:
+
+[  124.022697] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6537
+[  124.040764] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6538
+[  124.056967] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6539
+[  124.072143] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6540
+[  124.092373] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6541
+[  124.108065] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6542
+[  124.128483] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6543
+[  124.147141] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6544
+[  124.165070] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6545
+[  124.179775] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6546
+[  124.202726] input: gpio-keys as /devices/platform/INTCFD9:00/gpio-keys.0.auto/input/input6547
+<continues on and on and on>
+
+And 1 CPU core being stuck at 100% and udev hanging since it is waiting
+for the modprobe of soc_button_array to return.
+
+This patch reverts the soc_button_lookup_gpio() error handling changes,
+fixing this regression.
+
+Fixes: c394159310d0 ("Input: soc_button_array - add support for newer surface devices")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205031
+Cc: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/input/misc/soc_button_array.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index 97e3639e99d0..97761421d6dd 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -92,11 +92,18 @@ soc_button_device_create(struct platform_device *pdev,
+ 			continue;
+ 
+ 		gpio = soc_button_lookup_gpio(&pdev->dev, info->acpi_index);
+-		if (gpio < 0 && gpio != -ENOENT) {
+-			error = gpio;
+-			goto err_free_mem;
+-		} else if (!gpio_is_valid(gpio)) {
+-			/* Skip GPIO if not present */
++		if (!gpio_is_valid(gpio)) {
++			/*
++			 * Skip GPIO if not present. Note we deliberately
++			 * ignore -EPROBE_DEFER errors here. On some devices
++			 * Intel is using so called virtual GPIOs which are not
++			 * GPIOs at all but some way for AML code to check some
++			 * random status bits without need a custom opregion.
++			 * In some cases the resources table we parse points to
++			 * such a virtual GPIO, since these are not real GPIOs
++			 * we do not have a driver for these so they will never
++			 * show up, therefor we ignore -EPROBE_DEFER.
++			 */
+ 			continue;
+ 		}
+ 
 -- 
-Hilsen Harald
+2.23.0
+
