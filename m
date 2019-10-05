@@ -2,175 +2,120 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B0C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D470C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19698222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC57222C0
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjHYE04f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4StFwvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfJERXI (ORCPT
+        id S1729081AbfJERa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 13:23:08 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41723 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfJERXH (ORCPT
+        Sat, 5 Oct 2019 13:30:27 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:37157 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfJERa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 13:23:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id n26so20185538ioj.8;
-        Sat, 05 Oct 2019 10:23:07 -0700 (PDT)
+        Sat, 5 Oct 2019 13:30:27 -0400
+Received: by mail-yb1-f194.google.com with SMTP id z125so3235338ybc.4;
+        Sat, 05 Oct 2019 10:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pxUjmIbw13CFxUgTRwyvWTjL0FCOWPTaQat66nHsxn0=;
-        b=GjHYE04fxu3DN13Mnf7fbSHz1nFx//ZjX7nE9aR/qHFSe2rn6p59OexXtYrrEraHOa
-         cXCoRJk2iT1G5LdGA6mTi8hUidXPkXUBu+tOw+Tx2dvt0IUcjmL41mT7b4dRX8eUrTyk
-         607GLwODe1OC5tQeDGdWeIkX+MYfVZVXXswoWXtm70D9EHTsWqAr/FZsMS7GpIuokoPm
-         9/8/yAHZaDs3AstB1kp0qbEECIodqnVJfQ+l7AG/akZsUlPGpW+a1VQXF08r15qDG0UX
-         a+JybUpzNaVL93WAYik84iCfzADKmk1AcZ4f7dLGNeuLteK+YraQ3dkxhHswE/HTi/kP
-         Qp+w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SFxd5AapzSICM/6Xgqhe/u9Vw5QC679Bx+c0QdN9hnI=;
+        b=C4StFwvN+lCG1jC5GtRTymuZCkTXZueajmp5oKh8q2nS/QR4Y2Oo9mBbom6a6lMX/v
+         f60G7QcnH8JR/KGokgFN2ry3x3ceJqyt0nyeTAkLqQ7SsSWqzosmkiLWW2dB85RQWaUZ
+         84ubNkcrNehQ4E0ryRIKFRdhvYl+I1a/sJrA/gvfYI/XHD28QUBdpd3oOhyXrN43bQK5
+         q5eNY46ePlOob7dDWUIctgZzkEKPabn+3FopVzptgyXTYfM8jYbTjnBHttfjXTT6iDQk
+         zucn3Ajq0P4wByuR6wWzOPHXuIzhE1ag6cVKPVQBA1dLhD2+UnXqTF4K7mG2A79O+zOM
+         ziPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pxUjmIbw13CFxUgTRwyvWTjL0FCOWPTaQat66nHsxn0=;
-        b=XjCDmB2QcTjEQA/14iaHdBh3qk+/njOBDrQE4CCHfZ+jCNoa15+152nFbDyBX+im4H
-         HShQOhSB46rwuXM/QgbojnV9Xayf+fZGavlUotxL8SdjrMIZWblE9RE5pyZLuhXuwVNg
-         DJf4+lAaEL3ckkwc5hCzXIiDQ0+NrFgGRTTbgxzDUrRx/zmy0S14bjSGgiTz3+MC+s8F
-         +AR+zBc7LwjdHxTucL0OKNvpaUqQvqamfNe4Llpu3z3EIOYnie39SE7dGFDg1dgISb8r
-         MbrAqx4yMF34chxNPHTO8nSCTMmKPIrNJR30xlx85s3oCJT7w4wLKqMFsKS89GWrXl/M
-         5nVw==
-X-Gm-Message-State: APjAAAWDFfeyDAfXRlfEquZ4BwtOqglIiBXO191iBlKrBbZKz8yjkXhl
-        A1TTByoiRKBrqZeewisH3KKko3hbpWGChrws5KY=
-X-Google-Smtp-Source: APXvYqw5Yui+O5GuTNL9SpPqBww1zkYRVIwN1ybYrEwInOuQbbnSEOAw3FiqxgVcoXVCZ2BQo2WQINUT+MLaImyTfPk=
-X-Received: by 2002:a6b:da06:: with SMTP id x6mr9478783iob.42.1570296186664;
- Sat, 05 Oct 2019 10:23:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SFxd5AapzSICM/6Xgqhe/u9Vw5QC679Bx+c0QdN9hnI=;
+        b=J7BlL7nMIjw+3RN71fvDqaEh4cU1FkNodsC/HTY8ifcmh8fZPkiySvaCE6vdaVe0v4
+         e/H+m1C8dxCL14QCMk/WdrLdNLXN7kvBuSUHsPUFkM4M+jp4EWezaOzMzMvpIbDq4vty
+         fVG2Ks/rNdRnsPUTDXrg2f1QuPZot7LEByrThkgKlZogf0uRLtGm8F1b0ps5n2GFfkoQ
+         bTXw1AJKFkgvM9nZgi2vJTaH5nQcvgzvbVnIMO6SYlM/Y0ZLzMRfdoYRp1cnd/mnGY0S
+         oGDMqq1kgjAthy6UYcp+fzYUQS2gzVcVCYbQMM3eZi38GEg95jopHpBjYKvE1lOItA3h
+         VrUw==
+X-Gm-Message-State: APjAAAU1ZK0BVN82X3o+jD1ZCP082pCoyZgqTk9eiRN8YJ7T2TJcUU8S
+        6T9zzyHnT17vjndq4voANOY=
+X-Google-Smtp-Source: APXvYqzmQLtqtYywZioGiUcaIwSMLMNOrMMcyq48VNb2gTooHR+RghLWiW32nmaFQGBN3NvDc+DJ6Q==
+X-Received: by 2002:a25:7701:: with SMTP id s1mr6210156ybc.286.1570296625972;
+        Sat, 05 Oct 2019 10:30:25 -0700 (PDT)
+Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
+        by smtp.gmail.com with ESMTPSA id 12sm2546780ywu.59.2019.10.05.10.30.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 10:30:25 -0700 (PDT)
+Date:   Sat, 5 Oct 2019 13:30:04 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Colin King <colin.king@canonical.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] counter: stm32: clean up indentation issue
+Message-ID: <20191005173004.GA7431@icarus>
+References: <20190925095126.20219-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <1570208647.1250.55.camel@oc5348122405> <20191004233052.28865.1609.stgit@localhost.localdomain>
- <1570241926.10511.7.camel@oc5348122405>
-In-Reply-To: <1570241926.10511.7.camel@oc5348122405>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Sat, 5 Oct 2019 10:22:55 -0700
-Message-ID: <CAKgT0Ud7SupVd3RQmTEJ8e0fixiptS-1wFg+8V4EqpHEuAC3wQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
- between net and pci/pm
-To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, zdai@us.ibm.com,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190925095126.20219-1-colin.king@canonical.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 7:18 PM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
->
-> On Fri, 2019-10-04 at 16:36 -0700, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> >
-> > This patch is meant to address possible race conditions that can exist
-> > between network configuration and power management. A similar issue was
-> > fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
-> > netif_device_detach").
-> >
-> > In addition it consolidates the code so that the PCI error handling code
-> > will essentially perform the power management freeze on the device prior to
-> > attempting a reset, and will thaw the device afterwards if that is what it
-> > is planning to do. Otherwise when we call close on the interface it should
-> > see it is detached and not attempt to call the logic to down the interface
-> > and free the IRQs again.
-> >
-> > >From what I can tell the check that was adding the check for __E1000_DOWN
-> > in e1000e_close was added when runtime power management was added. However
-> > it should not be relevant for us as we perform a call to
-> > pm_runtime_get_sync before we call e1000_down/free_irq so it should always
-> > be back up before we call into this anyway.
-> >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >
-> > I'm putting this out as an RFC for now. I haven't had a chance to do much
-> > testing yet, but I have verified no build issues, and the driver appears
-> > to load, link, and pass traffic without problems.
-> >
-> > This should address issues seen with either double freeing or never freeing
-> > IRQs that have been seen on this and similar drivers in the past.
-> >
-> > I'll submit this formally after testing it over the weekend assuming there
-> > are no issues.
-> >
-> >  drivers/net/ethernet/intel/e1000e/netdev.c |   33 ++++++++++++++--------------
-> >  1 file changed, 17 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> > index d7d56e42a6aa..182a2c8f12d8 100644
-> > --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> > +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+On Wed, Sep 25, 2019 at 10:51:26AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is an if statement that is indented one level too deeply,
+> remove the extraneous tabs.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/counter/stm32-timer-cnt.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> index 644ba18a72ad..613dcccf79e1 100644
+> --- a/drivers/counter/stm32-timer-cnt.c
+> +++ b/drivers/counter/stm32-timer-cnt.c
+> @@ -219,8 +219,8 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
+>  
+>  	if (enable) {
+>  		regmap_read(priv->regmap, TIM_CR1, &cr1);
+> -			if (!(cr1 & TIM_CR1_CEN))
+> -				clk_enable(priv->clk);
+> +		if (!(cr1 & TIM_CR1_CEN))
+> +			clk_enable(priv->clk);
+>  
+>  		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+>  				   TIM_CR1_CEN);
+> -- 
+> 2.20.1
 
-<snip>
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-> >
-> > -#ifdef CONFIG_PM_SLEEP
-> >  static int e1000e_pm_thaw(struct device *dev)
-> >  {
-> >       struct net_device *netdev = dev_get_drvdata(dev);
-> >       struct e1000_adapter *adapter = netdev_priv(netdev);
-> > +     int rc = 0;
-> >
-> >       e1000e_set_interrupt_capability(adapter);
-> > -     if (netif_running(netdev)) {
-> > -             u32 err = e1000_request_irq(adapter);
-> >
-> > -             if (err)
-> > -                     return err;
-> > +     rtnl_lock();
-> > +     if (netif_running(netdev)) {
-> > +             rc = e1000_request_irq(adapter);
-> > +             if (rc)
-> > +                     goto err_irq;
-> >
-> >               e1000e_up(adapter);
-> >       }
-> >
-> >       netif_device_attach(netdev);
-> > -
-> > -     return 0;
-> > +     rtnl_unlock();
-> > +err_irq:
-> > +     return rc;
-> >  }
-> >
-> In e1000e_pm_thaw(), these 2 lines need to switch order to avoid
-> deadlock.
-> from:
-> +       rtnl_unlock();
-> +err_irq:
->
-> to:
-> +err_irq:
-> +       rtnl_unlock();
->
-> I will find hardware to test this patch next week. Will update the test
-> result later.
->
-> Thanks! - David
+Fabrice,
 
-Thanks for spotting that. I will update my copy of the patch for when
-I submit the final revision.
+I noticed the TIM_CR1_CEN check is happening before the
+regmap_update_bits call for the enable path, while the disable path does
+the check after. Is this logic is correct.
 
-I'll probably wait to submit it for acceptance until you have had a
-chance to verify that it resolves the issue you were seeing.
-
-Thanks.
-
-- Alex
+William Breathitt Gray
