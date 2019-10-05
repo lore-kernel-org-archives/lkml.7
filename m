@@ -2,86 +2,185 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3780C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3DCECE58B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96264218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rpEtxSVE"
+	by mail.kernel.org (Postfix) with ESMTP id 25786222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570293459;
+	bh=MSKk/rzD86FdbxX6TMaJfYnUyTWjXQTCYiYpcY6M/cw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vpINAi3f4+h3QA1e+gPjizKqBo15ewZlfdf+nUb2UGSD4pJ7RcK4hJ1oYhTRhtrRb
+	 3KfX4ZW7KJIIqZxlRnkagvo387mFT1LlH1AtyiQfDgwh7jtteFzt3rhuqVFYQfqy0N
+	 Bt94+kMUk0xbxQlg4VQEaopGoiled9SWybwfxqzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfJEQf5 (ORCPT
+        id S2387477AbfJEQhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 12:35:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38819 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfJEQf4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 12:35:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u28so6531701lfc.5
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 09:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pn6mxtcEEEc3owMIwbkt2TQL3Wmbd6NRz2v8eZ+RVTk=;
-        b=rpEtxSVEvEX2HhDQUFGyl3RdGfgjIagn3D9aobXi/wZtjscUnA1mkJD0kM3fiNupTG
-         AfnKtyqJeYJ2uOTaQs6ySZeaNTCqFfo0/LKAfsZG6XIHVgRQWHGjbI4X+8tR86xbgh58
-         UxZZo2Z8FOTYmp7b39uIYNs66Brkx9UEIKIyeGX7lge6cL6kKDMj9FaHEFKuhUJoIrou
-         aEWJ35sYx+gYXF4Ss9Yohhnn31dOWy2cV94C52WosfyCgY4tR3/6M6q+HpHrqtJkL9IN
-         V7orx4r/DU5hbKtRoeY/W3lxfG/Iy2raEXipla9KnUlwGY2BgV32P1ctLRpxvIGgWLm1
-         qLAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pn6mxtcEEEc3owMIwbkt2TQL3Wmbd6NRz2v8eZ+RVTk=;
-        b=mNB0rkIs/x9dlHwzWk97uhxPNhsCLnd7aExGA6IwGM9EllhD/H16D7E9HefULNSSCJ
-         xTpe3TbSCH8vPP6fJzrOERkh+/yMRckgLepf2az6Yn4WjKJEMOepgK8EH5FxIEFk8UY/
-         3F8630s/QB9AcZSgCvfWvly0u6ko0OoKGuRSKHS/wKzvYfoF8QmPpa7z0FgndLZrcyU0
-         yjyzCzyExDPAfG0i8KyXxaU1+ELNVr5cl1phThL5M7ZQRIBa4AQR4y0zQkSTHqH+AAg+
-         vCuEID1leftSBIJ4SjfpudHgttcH065MIYvUJAhdDg6CurVP2cZ75NExThGGSSX78oiT
-         WUlQ==
-X-Gm-Message-State: APjAAAVGCl1Ck9qlskLNu6YS6PxdvExaieNO2UMSnPvBVo4Nxl59SsFc
-        Qyn7w9BG5JiXZnQF+yX631BsyJIYZuZxLP+6rxbvrA==
-X-Google-Smtp-Source: APXvYqy99lBsuY63SZm1Hovkzqrn5mNe5uNYRXbJEe6kopZaSTzsWTlUs5zAiyKhJwvIMM8Ytt5JplveuThrYIBo6hg=
-X-Received: by 2002:a05:6512:25b:: with SMTP id b27mr12485234lfo.60.1570293354605;
- Sat, 05 Oct 2019 09:35:54 -0700 (PDT)
+        Sat, 5 Oct 2019 12:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729035AbfJEQhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 12:37:37 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24226218AC;
+        Sat,  5 Oct 2019 16:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570293456;
+        bh=MSKk/rzD86FdbxX6TMaJfYnUyTWjXQTCYiYpcY6M/cw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=C1kt+2rDwHc/oeL6nU+milJEkkKTpbhOoM2M2Uj2tFzKARd97lncbphKlRJN59sVy
+         V7NybNpX9SWEyUxedybFNW089BHfkc1kWD+WpjDqKhAwO738XowJjglSg8OLxkZOkU
+         uVfa9U/ODK25Dqug17ZczsSsosgnFRfcFkSPq8fY=
+Date:   Sat, 5 Oct 2019 17:37:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 12/13] iio: cros_ec: Report hwfifo_watermark_max
+Message-ID: <20191005173730.4a6895ed@archlinux>
+In-Reply-To: <20190922175021.53449-13-gwendal@chromium.org>
+References: <20190922175021.53449-1-gwendal@chromium.org>
+        <20190922175021.53449-13-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz> <20191003000310.17099-2-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20191003000310.17099-2-chris.packham@alliedtelesis.co.nz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Oct 2019 18:35:43 +0200
-Message-ID: <CACRpkdbQapKs5f7=7U-=jRYN_CYQ4Rtrwrk_1nLwZJHD26bw2A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: iproc: allow for error from platform_get_irq()
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Li Jin <li.jin@broadcom.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 2:03 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+On Sun, 22 Sep 2019 10:50:20 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-> platform_get_irq() can return an error code. Allow for this when getting
-> the irq.
->
-> Fixes: 6f265e5d4da7 ("pinctrl: bcm-iproc: Pass irqchip when adding gpiochip")
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Report the maximum amount of sample the EC can hold.
+> This is not tunable, but can be useful for application to find out the
+> maximum amount of time it can sleep when hwfifo_timeout is set to a
+> large number.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Looks good to me. I'm adding tags because I have no idea what route
+this will eventually take and it saves me trying to remember which
+patches need another look in v2.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 35 +++++++++++++++++--
+>  .../linux/iio/common/cros_ec_sensors_core.h   |  4 ++-
+>  2 files changed, 36 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index a31a761e3a81..a32260c9bc09 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -23,6 +23,12 @@
+>  #include <linux/platform_data/cros_ec_sensorhub.h>
+>  #include <linux/platform_device.h>
+>  
+> +/*
+> + * Hard coded to the first device to support sensor fifo.  The EC has a 2048
+> + * byte fifo and will trigger an interrupt when fifo is 2/3 full.
+> + */
+> +#define CROS_EC_FIFO_SIZE (2048 * 2 / 3)
+> +
+>  static char *cros_ec_loc[] = {
+>  	[MOTIONSENSE_LOC_BASE] = "base",
+>  	[MOTIONSENSE_LOC_LID] = "lid",
+> @@ -56,8 +62,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>  
+>  static void get_default_min_max_freq(enum motionsensor_type type,
+>  				     u32 *min_freq,
+> -				     u32 *max_freq)
+> +				     u32 *max_freq,
+> +				     u32 *max_fifo_events)
+>  {
+> +	/*
+> +	 * We don't know fifo size, set to size previously used by older
+> +	 * hardware.
+> +	 */
+> +	*max_fifo_events = CROS_EC_FIFO_SIZE;
+> +
+>  	switch (type) {
+>  	case MOTIONSENSE_TYPE_ACCEL:
+>  	case MOTIONSENSE_TYPE_GYRO:
+> @@ -122,6 +135,7 @@ static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
+>  	return len;
+>  }
+>  
+> +
+>  static ssize_t cros_ec_sensor_get_report_latency(struct device *dev,
+>  					      struct device_attribute *attr,
+>  					      char *buf)
+> @@ -149,8 +163,22 @@ static IIO_DEVICE_ATTR(hwfifo_timeout, 0644,
+>  		       cros_ec_sensor_get_report_latency,
+>  		       cros_ec_sensor_set_report_latency, 0);
+>  
+> +static ssize_t hwfifo_watermark_max_show(
+> +		struct device *dev,
+> +		struct device_attribute *attr,
+> +		char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +
+> +	return sprintf(buf, "%d\n", st->fifo_max_event_count);
+> +}
+> +
+> +static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
+> +
+>  static const struct attribute *cros_ec_sensor_fifo_attributes[] = {
+>  	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
+> +	&iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
+>  	NULL,
+>  };
+>  
+> @@ -251,12 +279,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  		if (state->msg->version < 3) {
+>  			get_default_min_max_freq(state->resp->info.type,
+>  						 &state->frequencies[1],
+> -						 &state->frequencies[2]);
+> +						 &state->frequencies[2],
+> +						 &state->fifo_max_event_count);
+>  		} else {
+>  			state->frequencies[1] =
+>  			    state->resp->info_3.min_frequency;
+>  			state->frequencies[2] =
+>  			    state->resp->info_3.max_frequency;
+> +			state->fifo_max_event_count =
+> +			    state->resp->info_3.fifo_max_event_count;
+>  		}
+>  
+>  		if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
+> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> index 60f78f0e4884..2c6acbde0d02 100644
+> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> @@ -54,7 +54,8 @@ typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
+>   *				the timestamp. The timestamp is always last and
+>   *				is always 8-byte aligned.
+>   * @read_ec_sensors_data:	function used for accessing sensors values
+> - * @cuur_sampl_freq:		current sampling period
+> + * @curr_sampl_freq:		current sampling period
+> + * @fifo_max_event_count:	Size of the EC sensor FIFO
+>   */
+>  struct cros_ec_sensors_core_state {
+>  	struct cros_ec_device *ec;
+> @@ -78,6 +79,7 @@ struct cros_ec_sensors_core_state {
+>  				    unsigned long scan_mask, s16 *data);
+>  
+>  	int curr_sampl_freq;
+> +	u32 fifo_max_event_count;
+>  
+>  	/* Table of known available frequencies : 0, Min and Max in mHz */
+>  	int frequencies[3];
 
-Patch applied for fixes.
-
-Yours,
-Linus Walleij
