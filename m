@@ -2,298 +2,74 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742E6C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28DCECE58B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2D3222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570290758;
-	bh=/g8fhgJQmax4u5b7N1Sd3foyk4jTb/pa5bVe9a4L8fc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=X17e80y4CV5wBqQvt62XY7krHOvDbmd4eJ6bngDHzjUtXfrPJqApLIV2Izk4UeQBZ
-	 S1NVU4zGuGGSUjcpvwicz+8p1V9fBo5EK3gaRcvjlFLISjV5rvSFT3Gmy3f6ZwDAuy
-	 VQRBpfUfcssgFWSPrRYkBM7cSobGrvLutPdpfO3k=
+	by mail.kernel.org (Postfix) with ESMTP id C97322133F
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbfJEPwh (ORCPT
+        id S1729066AbfJEPyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 11:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35046 "EHLO mail.kernel.org"
+        Sat, 5 Oct 2019 11:54:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:25133 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfJEPwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 11:52:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 345002133F;
-        Sat,  5 Oct 2019 15:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570290755;
-        bh=/g8fhgJQmax4u5b7N1Sd3foyk4jTb/pa5bVe9a4L8fc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZwckkVtrM1iPrdXbXj2io0vKM+u0cucQoNdEF8R9AwvyD9eH9TgBZ6NNZqRNasKZj
-         aB+/XupI6mgJfgYqtQHRGwQopioNZzD4pBfunDjbhz5GuNqyY9pYpCyQjmBssRY5sT
-         DxKSSrmKuJ9rkwsl1iU53POGiXOz9SqY33gaiwok=
-Date:   Sat, 5 Oct 2019 16:52:29 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Enrico Granata <egranata@chromium.org>
-Subject: Re: [PATCH 06/13] platform: chrome: cros_ec: handle MKBP more
- events flag
-Message-ID: <20191005165229.5f1cbd7e@archlinux>
-In-Reply-To: <20190922175021.53449-7-gwendal@chromium.org>
-References: <20190922175021.53449-1-gwendal@chromium.org>
-        <20190922175021.53449-7-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725826AbfJEPyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 11:54:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 08:54:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,260,1566889200"; 
+   d="scan'208";a="222456842"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Oct 2019 08:54:13 -0700
+Date:   Sat, 5 Oct 2019 08:54:13 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v22 16/24] x86/vdso: Add support for exception fixup in
+ vDSO functions
+Message-ID: <20191005155412.GA9159@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-17-jarkko.sakkinen@linux.intel.com>
+ <20191002231804.GA14315@linux.intel.com>
+ <20191004001459.GD14325@linux.intel.com>
+ <20191004185221.GI6945@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004185221.GI6945@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Sep 2019 10:50:14 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
-
-> From: Enrico Granata <egranata@chromium.org>
+On Fri, Oct 04, 2019 at 09:52:21PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Oct 03, 2019 at 05:15:00PM -0700, Sean Christopherson wrote:
+> > I'll tackle this tomorrow.  I've been working on the feature control MSR
+> > series and will get that sent out tomorrow as well.  I should also be able
+> > to get you the multi-page EADD patch.
 > 
-> The ChromeOS EC has support for signaling to the host that
-> a single IRQ can serve multiple MKBP events.
+> Great I'll compose the patch set during the weekend and take Monday off
+> so you have the full work day to get everything (probably send the patch
+> set on Sunday).
 
-Be nice to those of us who don't know the system that well.
-What are MKBP events?
-
-> 
-> Doing this serves an optimization purpose, as it minimizes the
-> number of round-trips into the interrupt handling machinery, and
-> it proves beneficial to sensor timestamping as it keeps the desired
-> synchronization of event times between the two processors.
-> 
-> This patch adds kernel support for this EC feature, allowing the
-> ec_irq to loop until all events have been served.
-> 
-> Signed-off-by: Enrico Granata <egranata@chromium.org>
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-
-Minor comments inline.
-
-> ---
->  drivers/platform/chrome/cros_ec.c           | 33 +++++++++----
->  drivers/platform/chrome/cros_ec_proto.c     | 51 ++++++++++++---------
->  include/linux/platform_data/cros_ec_proto.h |  7 ++-
->  3 files changed, 57 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-> index 9c8dc7cdb2b7..4adc007c357c 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -46,25 +46,38 @@ static irqreturn_t ec_irq_handler(int irq, void *data)
->  	return IRQ_WAKE_THREAD;
->  }
->  
-> -static irqreturn_t ec_irq_thread(int irq, void *data)
-> +static bool ec_handle_event(struct cros_ec_device *ec_dev)
->  {
-> -	struct cros_ec_device *ec_dev = data;
->  	bool wake_event = true;
-> -	int ret;
-> +	bool ec_has_more_events = false;
-> +	int ret = cros_ec_get_next_event(ec_dev, &wake_event);
->  
-> -	ret = cros_ec_get_next_event(ec_dev, &wake_event);
-
-Moving definition of int to this line just added noise to the
-patch.  I would leave that as it was to make reviewers life
-ever so slightly simpler ;)
-
-> +	if (ec_dev->mkbp_event_supported) {
-> +		ec_has_more_events = (ret > 0) &&
-> +			(ec_dev->event_data.event_type &
-> +				EC_MKBP_HAS_MORE_EVENTS);
-> +	}
->  
-> -	/*
-> -	 * Signal only if wake host events or any interrupt if
-> -	 * cros_ec_get_next_event() returned an error (default value for
-> -	 * wake_event is true)
-> -	 */
-> -	if (wake_event && device_may_wakeup(ec_dev->dev))
-> +	if (device_may_wakeup(ec_dev->dev) && wake_event)
->  		pm_wakeup_event(ec_dev->dev, 0);
->  
->  	if (ret > 0)
->  		blocking_notifier_call_chain(&ec_dev->event_notifier,
->  					     0, ec_dev);
-> +
-> +	return ec_has_more_events;
-> +
-
-Drop this blank line.
-
-> +}
-> +
-> +static irqreturn_t ec_irq_thread(int irq, void *data)
-> +{
-> +	struct cros_ec_device *ec_dev = data;
-> +	bool ec_has_more_events;
-> +
-> +	do {
-> +		ec_has_more_events = ec_handle_event(ec_dev);
-> +	} while (ec_has_more_events);
-> +
->  	return IRQ_HANDLED;
->  }
->  
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index f659f96bda12..70e6d6c93b8d 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -425,10 +425,14 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
->  	ret = cros_ec_get_host_command_version_mask(ec_dev,
->  						    EC_CMD_GET_NEXT_EVENT,
->  						    &ver_mask);
-> -	if (ret < 0 || ver_mask == 0)
-> +	if (ret < 0 || ver_mask == 0) {
->  		ec_dev->mkbp_event_supported = 0;
-> -	else
-> -		ec_dev->mkbp_event_supported = 1;
-> +		dev_info(ec_dev->dev, "MKBP not supported\n");
-> +	} else {
-> +		ec_dev->mkbp_event_supported = fls(ver_mask);
-> +		dev_info(ec_dev->dev, "MKBP support version %u\n",
-> +			ec_dev->mkbp_event_supported - 1);
-
-dev_dbg perhaps?
-
-> +	}
->  
->  	/* Probe if host sleep v1 is supported for S0ix failure detection. */
->  	ret = cros_ec_get_host_command_version_mask(ec_dev,
-> @@ -519,6 +523,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
->  
->  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  			       struct cros_ec_command *msg,
-> +			       struct ec_response_get_next_event_v1 *event,
->  			       int version, uint32_t size)
->  {
->  	int ret;
-> @@ -531,7 +536,7 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  	ret = cros_ec_cmd_xfer(ec_dev, msg);
->  	if (ret > 0) {
->  		ec_dev->event_size = ret - 1;
-> -		memcpy(&ec_dev->event_data, msg->data, ret);
-> +		ec_dev->event_data = *event;
->  	}
->  
->  	return ret;
-> @@ -539,30 +544,29 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  
->  static int get_next_event(struct cros_ec_device *ec_dev)
->  {
-> -	u8 buffer[sizeof(struct cros_ec_command) + sizeof(ec_dev->event_data)];
-> -	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
-> -	static int cmd_version = 1;
-> -	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		struct ec_response_get_next_event_v1 event;
-> +	} __packed buf;
-
-Nice tidy up, but I don't think directly relevant to what this patch is doing..
-I think that should be a precursor patch.
-
-> +	struct cros_ec_command *msg = &buf.msg;
-> +	struct ec_response_get_next_event_v1 *event = &buf.event;
-> +	const int cmd_version = ec_dev->mkbp_event_supported - 1;
-> +
-> +	BUILD_BUG_ON(sizeof(union ec_response_get_next_data_v1) != 16);
-> +
-> +	memset(&buf, 0, sizeof(buf));
->  
->  	if (ec_dev->suspended) {
->  		dev_dbg(ec_dev->dev, "Device suspended.\n");
->  		return -EHOSTDOWN;
->  	}
->  
-> -	if (cmd_version == 1) {
-> -		ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-> -				sizeof(struct ec_response_get_next_event_v1));
-> -		if (ret < 0 || msg->result != EC_RES_INVALID_VERSION)
-> -			return ret;
-> -
-> -		/* Fallback to version 0 for future send attempts */
-> -		cmd_version = 0;
-> -	}
-> -
-> -	ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-> +	if (cmd_version == 0)
-> +		return get_next_event_xfer(ec_dev, msg, event, 0,
->  				  sizeof(struct ec_response_get_next_event));
->  
-> -	return ret;
-> +	return get_next_event_xfer(ec_dev, msg, event, cmd_version,
-> +				sizeof(struct ec_response_get_next_event_v1));
->  }
->  
->  static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
-> @@ -606,7 +610,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->  		return ret;
->  
->  	if (wake_event) {
-> -		event_type = ec_dev->event_data.event_type;
-> +		event_type =
-> +			ec_dev->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
->  		host_event = cros_ec_get_host_event(ec_dev);
->  
->  		/*
-> @@ -631,10 +636,12 @@ EXPORT_SYMBOL(cros_ec_get_next_event);
->  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
->  {
->  	u32 host_event;
-> +	const u8 event_type =
-> +		ec_dev->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
->  
->  	BUG_ON(!ec_dev->mkbp_event_supported);
->  
-> -	if (ec_dev->event_data.event_type != EC_MKBP_EVENT_HOST_EVENT)
-> +	if (event_type != EC_MKBP_EVENT_HOST_EVENT)
->  		return 0;
->  
->  	if (ec_dev->event_size != sizeof(host_event)) {
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index ab12e28f2107..63b5597294e7 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -115,7 +115,9 @@ struct cros_ec_command {
->   *            code.
->   * @pkt_xfer: Send packet to EC and get response.
->   * @lock: One transaction at a time.
-> - * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
-> + * @mkbp_event_supported: 0 if MKBP not supported. Otherwise its value is
-> + *                        the maximum supported version of the MKBP host event
-> + *                        command + 1.
->   * @host_sleep_v1: True if this EC supports the sleep v1 command.
->   * @event_notifier: Interrupt event notifier for transport devices.
->   * @event_data: Raw payload transferred with the MKBP event.
-> @@ -155,7 +157,8 @@ struct cros_ec_device {
->  	int (*pkt_xfer)(struct cros_ec_device *ec,
->  			struct cros_ec_command *msg);
->  	struct mutex lock;
-> -	bool mkbp_event_supported;
-> +	/* 0 == not supported, otherwise it supports version x - 1 */
-> +	u8 mkbp_event_supported;
->  	bool host_sleep_v1;
->  	struct blocking_notifier_head event_notifier;
->  
-
+Didn't get to the actual SGX stuff yesterday as the feature control series
+took longer than expected to finish.  Working on the other items this
+morning.
