@@ -2,71 +2,67 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BA7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64745C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1498521D81
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1708520873
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 03:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="O2tOZ+rm"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="LzM2hIEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfJEDIw (ORCPT
+        id S1726831AbfJEDLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 23:08:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43035 "EHLO
+        Fri, 4 Oct 2019 23:11:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34982 "EHLO
         mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfJEDIv (ORCPT
+        with ESMTP id S1725907AbfJEDLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 23:08:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f21so3991610plj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 20:08:49 -0700 (PDT)
+        Fri, 4 Oct 2019 23:11:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c3so2540269plo.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 20:11:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QQQk/yXItHMtaY1FgUSQ/D/iCGEeH0bka58Gcuq4gos=;
-        b=O2tOZ+rm8DIuKzxtU9e2deiqPFtFDXZHgplQcOHLUk7bAbhlEZWYI+kVW1kMQ6e/Rq
-         InwdJnQtrDqP1D3wwx+SNs5fNVmqzJ9f7fJAUaAo5mjrLTjvzFJ/zjfMJVXvkTALrvXu
-         BXuDYXkNamkhYBbgCNsAFrva1yK8/5TV3r51WuUFAX5O0wDat7TorZ3WMMQxqn9Lptqy
-         qoXWqg2/azzxRKbmOy7wp9iqrhRpErasNN3uOoBNlIMGkQROoEfeYmXsf6G8ztSNDcQm
-         IaigLqrJLb+KVTnC7g38IzOM9Kkabsd0b1s0jTn0bbVtYw5q8VbEOfRd8XxNq4OV6Tgf
-         LTdw==
+        bh=KQX6ssbEw4rLSjyECAACt4sR5uTLgduLyfYglqejROU=;
+        b=LzM2hIElEkxOtPpwDVT2DteJzLhGZoIhmOvED6f7FUBdryP3QNKo0E9Qzy8gZ24lcC
+         4bd59qB/fZTwkTPY5vCbbpbIue/edf3QueWF3TRgs71fHmBjGjRLh6U43pYB6JtFNn5Q
+         0UECH8KYCi+pPRqt2dWEwBPgnEBecxvDaOkUc5wuMGi6PCq/fILm9Aw1v/HVAYBtFddB
+         py2krAOTPI6TeWuiut3lXiV1rn2D6JqB6wRIpkMUMkhnCw1u+IziW99/fTd0WqaOZGHp
+         SM9lsBnys+GZrqcApXk+WwfTIhiDJiNeaMscF1kDidvxmohDbovOZfEVJphgSAn64XJm
+         4Paw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=QQQk/yXItHMtaY1FgUSQ/D/iCGEeH0bka58Gcuq4gos=;
-        b=kNhJwov3F1WG5ykWHEqJ4RXXKE42i4dqbAv3kHfSE8zReX8wUJIOt2YjAeCtJY80Fk
-         DnGShuAfvXRVpiJn1VswyYpw8Lil4LySgimz0KRHYyUpfMPKoSfMqXiBcfo2DRVKTZpE
-         ceBaX+l1w4Nc4YBq9JzxPh0eIBPDu0GvjkniAVXzUhNwB69nIiODwvsLCA40r4CqHkdd
-         mmcmXdhJuVlz3NgWV8GnY42csZjewXcxzZdcYdzPXZzAkBMw+B/FHb2JjSak/1OXB5NP
-         Oq0XGP/HyfmllOn7aHx+KxaEYzeL+SGI3DCPip8qCO3gAXaE7rwaISx76wU9VAtWl4vB
-         1Jeg==
-X-Gm-Message-State: APjAAAVCWdxlc5VIWMNgXkyqcdamIy4GLq6LROCeEdQdAvZRV7moZsrQ
-        u+nInXiluT117Nop/B9Z50I/xC6s73nUaA==
-X-Google-Smtp-Source: APXvYqysji/8R5ac4+ZJNUIwZmdCc45ZxA+V/W+lY00ShXJfumR38X3ff9Oe6JFlNlMHLh9N85gFiQ==
-X-Received: by 2002:a17:902:7401:: with SMTP id g1mr18441655pll.20.1570244929059;
-        Fri, 04 Oct 2019 20:08:49 -0700 (PDT)
+        bh=KQX6ssbEw4rLSjyECAACt4sR5uTLgduLyfYglqejROU=;
+        b=DVVNcqHVQ8BckZ6MdOUgTga9toWnGwLm6oZvG0+9Xdejrlo156V6UU3frZgTlvxH3D
+         7YCm4VNUbEk9o6SGjjhXAu7QplawIapApNaKmcehAKz/oyQV1sT5xiIHG6awmxa3/fTl
+         txFHx42q6jNz7TwmdyseSIYs+I74uaJOQnSn8Ia1r+Ga8pDLp+7Hy5WOEXlr7V3xWLfk
+         isrM8LJ8+cH/BIz8TCo1j+/OPZT+1ANk5SpaPZbALLC9lQ+jmRcZIt7AkL97IX7Y8IP4
+         E7AlAKAUmZlNYktSbQYJut45GGBYSFhnu8XPvMVboJOhv5nlQXBQo0uZLBOFDKVEF+y1
+         2/sQ==
+X-Gm-Message-State: APjAAAVhQrVh6grk18RMej++VBLkSKsJU6hnx1h7Hf/Hi5tWLramZ40z
+        FZh+S7VI2sLpSEqzorzdtNqpvw==
+X-Google-Smtp-Source: APXvYqxZhEyYo/OVzVGatSgOuaNVBfycbwx7FTGZFhnh83W0B8BMLVovqtDd37hf8gub90p1o2wIXw==
+X-Received: by 2002:a17:902:b589:: with SMTP id a9mr18228253pls.117.1570245074894;
+        Fri, 04 Oct 2019 20:11:14 -0700 (PDT)
 Received: from [192.168.10.86] (203-206-37-215.dyn.iinet.net.au. [203.206.37.215])
-        by smtp.gmail.com with ESMTPSA id e22sm6459088pgi.43.2019.10.04.20.08.45
+        by smtp.gmail.com with ESMTPSA id 196sm12926660pfz.99.2019.10.04.20.11.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2019 20:08:48 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] mm: kmemleak: Make the tool tolerant to struct
- scan_area allocation failures
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>
-References: <20190812160642.52134-1-catalin.marinas@arm.com>
- <20190812160642.52134-2-catalin.marinas@arm.com>
- <2ac37341-097e-17a2-fb6b-7912da9fa38e@ozlabs.ru>
- <20191003084135.GA21629@arrakis.emea.arm.com>
+        Fri, 04 Oct 2019 20:11:14 -0700 (PDT)
+Subject: Re: [PATCH] kmemleak: Do not corrupt the object_list during clean-up
+To:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Marc Dionne <marc.c.dionne@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191004134624.46216-1-catalin.marinas@arm.com>
 From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 Autocrypt: addr=aik@ozlabs.ru; keydata=
  mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
@@ -141,12 +137,12 @@ Autocrypt: addr=aik@ozlabs.ru; keydata=
  c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
  DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
  XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <ba47fb68-f44c-04c9-7ea8-2705e799937b@ozlabs.ru>
-Date:   Sat, 5 Oct 2019 13:08:43 +1000
+Message-ID: <5a75249e-47ee-bb7c-d281-31b385d8bb86@ozlabs.ru>
+Date:   Sat, 5 Oct 2019 13:11:10 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191003084135.GA21629@arrakis.emea.arm.com>
+In-Reply-To: <20191004134624.46216-1-catalin.marinas@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -157,80 +153,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 03/10/2019 18:41, Catalin Marinas wrote:
-> On Thu, Oct 03, 2019 at 04:13:07PM +1000, Alexey Kardashevskiy wrote:
->> On 13/08/2019 02:06, Catalin Marinas wrote:
->>> Object scan areas are an optimisation aimed to decrease the false
->>> positives and slightly improve the scanning time of large objects known
->>> to only have a few specific pointers. If a struct scan_area fails to
->>> allocate, kmemleak can still function normally by scanning the full
->>> object.
->>>
->>> Introduce an OBJECT_FULL_SCAN flag and mark objects as such when
->>> scan_area allocation fails.
->>
->> I came across this one while bisecting sudden drop in throughput of a
->> 100Gbit Mellanox CX4 ethernet card in a PPC POWER9 system, the speed
->> dropped from 100Gbit to about 40Gbit. Bisect pointed at dba82d943177,
->> this are the relevant config options:
->>
->> [fstn1-p1 kernel]$ grep KMEMLEAK ~/pbuild/kernel-le-4g/.config
->> CONFIG_HAVE_DEBUG_KMEMLEAK=y
->> CONFIG_DEBUG_KMEMLEAK=y
->> CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE=16000
->> # CONFIG_DEBUG_KMEMLEAK_TEST is not set
->> # CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF is not set
->> CONFIG_DEBUG_KMEMLEAK_AUTO_SCAN=y
+On 04/10/2019 23:46, Catalin Marinas wrote:
+> In case of an error (e.g. memory pool too small), kmemleak disables
+> itself and cleans up the already allocated metadata objects. However, if
+> this happens early before the RCU callback mechanism is available,
+> put_object() skips call_rcu() and frees the object directly. This is not
+> safe with the RCU list traversal in __kmemleak_do_cleanup().
 > 
-> The throughput drop is probably caused caused by kmemleak slowing down
-> all memory allocations (including skb). So that's expected. You may get
-> similar drop with other debug options like lock proving, kasan.
+> Change the list traversal in __kmemleak_do_cleanup() to
+> list_for_each_entry_safe() and remove the rcu_read_{lock,unlock} since
+> the kmemleak is already disabled at this point. In addition, avoid an
+> unnecessary metadata object rb-tree look-up since it already has the
+> struct kmemleak_object pointer.
+> 
+> Fixes: c5665868183f ("mm: kmemleak: use the memory pool for early allocations")
+> Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> Reported-by: Marc Dionne <marc.c.dionne@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 
-I was not precise. I meant that before dba82d943177 kmemleak would work but would not slow network down (at least
-100Gbit) and now it does which is downgrade so I was wondering if kmemleak just got so much better to justify this
-change or there is a bug somewhere, so which one is it? Or "LOG_SIZE=400" never really worked? See my findings below though.
 
-If it was always slow, it is expected indeed.
+Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-> 
->> Setting CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE=400 or even 4000 (this is
->> what KMEMLEAK_EARLY_LOG_SIZE is now in the master) produces soft
->> lockups on the recent upstream (sha1 a3c0e7b1fe1f):
->>
->> [c000001fde64fb60] [c000000000c24ed4] _raw_write_unlock_irqrestore+0x54/0x70
->> [c000001fde64fb90] [c0000000004117e4] find_and_remove_object+0xa4/0xd0
->> [c000001fde64fbe0] [c000000000411c74] delete_object_full+0x24/0x50
->> [c000001fde64fc00] [c000000000411d28] __kmemleak_do_cleanup+0x88/0xd0
->> [c000001fde64fc40] [c00000000012a1a4] process_one_work+0x374/0x6a0
->> [c000001fde64fd20] [c00000000012a548] worker_thread+0x78/0x5a0
->> [c000001fde64fdb0] [c000000000135508] kthread+0x198/0x1a0
->> [c000001fde64fe20] [c00000000000b980] ret_from_kernel_thread+0x5c/0x7c
-> 
-> That's the kmemleak disabling path. I don't have the full log but I
-> suspect by setting a small pool size, kmemleak failed to allocate memory
-> and went into disabling itself. The clean-up above tries to remove the
-> allocated metadata. It seems that it takes significant time on your
-> platform. Not sure how to avoid the soft lock-up but I wouldn't bother
-> too much about it, it's only triggered by a previous error condition
-> disabling kmemleak.
-> 
->> KMEMLEAK_EARLY_LOG_SIZE=8000 works but slow.
->>
->> Interestingly KMEMLEAK_EARLY_LOG_SIZE=400 on dba82d943177 still worked
->> and I saw my 100Gbit. Disabling KMEMLEAK also fixes the speed
->> (apparently).
-> 
-> A small memory pool for kmemleak just disables it shortly after boot, so
-> it's no longer in the way and you get your throughput back.
-> 
->> Is that something expected? Thanks,
-> 
-> Yes for the throughput. Not sure about the soft lock-up. Do you have the
-> full log around the lock-up?
+It not just fixed lockups but brought network speed back to normal but I guess it is because kmemleak disables itself
+when CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE=400.
 
-I was going to post one but then I received "kmemleak: Do not corrupt the object_list during clean-up" which fixed
-lockups and took throughput back to normal, I'll reply there too. Thanks,
+dmesg:
+[    0.000000] kmemleak: Memory pool empty, consider increasing CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE
+[    0.000000] kmemleak: Cannot allocate a kmemleak_object structure
+[    0.000000] kmemleak: Kernel memory leak detector disabled
 
+
+
+> ---
+>  mm/kmemleak.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+> index 03a8d84badad..244607663363 100644
+> --- a/mm/kmemleak.c
+> +++ b/mm/kmemleak.c
+> @@ -526,6 +526,16 @@ static struct kmemleak_object *find_and_get_object(unsigned long ptr, int alias)
+>  	return object;
+>  }
+>  
+> +/*
+> + * Remove an object from the object_tree_root and object_list. Must be called
+> + * with the kmemleak_lock held _if_ kmemleak is still enabled.
+> + */
+> +static void __remove_object(struct kmemleak_object *object)
+> +{
+> +	rb_erase(&object->rb_node, &object_tree_root);
+> +	list_del_rcu(&object->object_list);
+> +}
+> +
+>  /*
+>   * Look up an object in the object search tree and remove it from both
+>   * object_tree_root and object_list. The returned object's use_count should be
+> @@ -538,10 +548,8 @@ static struct kmemleak_object *find_and_remove_object(unsigned long ptr, int ali
+>  
+>  	write_lock_irqsave(&kmemleak_lock, flags);
+>  	object = lookup_object(ptr, alias);
+> -	if (object) {
+> -		rb_erase(&object->rb_node, &object_tree_root);
+> -		list_del_rcu(&object->object_list);
+> -	}
+> +	if (object)
+> +		__remove_object(object);
+>  	write_unlock_irqrestore(&kmemleak_lock, flags);
+>  
+>  	return object;
+> @@ -1834,12 +1842,16 @@ static const struct file_operations kmemleak_fops = {
+>  
+>  static void __kmemleak_do_cleanup(void)
+>  {
+> -	struct kmemleak_object *object;
+> +	struct kmemleak_object *object, *tmp;
+>  
+> -	rcu_read_lock();
+> -	list_for_each_entry_rcu(object, &object_list, object_list)
+> -		delete_object_full(object->pointer);
+> -	rcu_read_unlock();
+> +	/*
+> +	 * Kmemleak has already been disabled, no need for RCU list traversal
+> +	 * or kmemleak_lock held.
+> +	 */
+> +	list_for_each_entry_safe(object, tmp, &object_list, object_list) {
+> +		__remove_object(object);
+> +		__delete_object(object);
+> +	}
+>  }
+>  
+>  /*
+> 
 
 -- 
 Alexey
