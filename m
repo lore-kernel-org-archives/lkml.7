@@ -2,88 +2,82 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5C6C3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 13:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAD3C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6211F222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 13:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570282415;
-	bh=N38XZT/ZGKyamYsz24sQHqqiC9R554U2eV45zXldpaE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=z5WWpo2BmIhamByno/xt/h/wIjNKU5QUa7BHr3dUHRmkgLV7++PQTcIYSIUr3p1CO
-	 YndIPT+snkXGivgpJBxKdQqYHbqUQ/Msf0JUKygQLou1Sml6lFAk5chUZjLIGvKlht
-	 UoL1SOupHp6jsJNUqVyad41c6Sf0UvsTvvqh5IIE=
+	by mail.kernel.org (Postfix) with ESMTP id AD4BE222C0
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="WUnwTkfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfJENdd (ORCPT
+        id S1726535AbfJEOEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 09:33:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfJENdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 09:33:32 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A651B222C5;
-        Sat,  5 Oct 2019 13:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570282411;
-        bh=N38XZT/ZGKyamYsz24sQHqqiC9R554U2eV45zXldpaE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=lMMExsEd7DQiL1ZbMg5X7yqLGWIGBP/fB9vg8wJDNN0kuZlRr9CEIwwWT9xEuE5Y1
-         zwqVSkUPC54FHj8ngILUAvSSS6cdfUS55hVV7F8d+U8Q2DCwCMyh/YTpphNgTDdeGR
-         Xo1KMof0Sxc4riE84nZFv6b5efvZ/tdFBzyIO0F4=
-Date:   Sat, 5 Oct 2019 06:33:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rculist: Describe variadic macro argument in a
- Sphinx-compatible way
-Message-ID: <20191005133330.GX2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191004215402.28008-1-j.neuschaefer@gmx.net>
- <20191004222439.GR2689@paulmck-ThinkPad-P72>
- <20191004232328.GC19803@latitude>
+        Sat, 5 Oct 2019 10:04:00 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:41583 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfJEOEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 10:04:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
+        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lZDSELIErTwgG0KoTCoXpFRWHdcKcdxouIRQ+zM6TLw=; b=WUnwTkfR/EIEhyc/38JqPOnpL7
+        MDvfTrKGLFpXlpwrNZHx1LzY+vshk0u0evauxigI4AGKz7ndlO3Eg2aI2dVJEkBBYOJnoHvx6Ck9P
+        2r85W/yeDbZTZXuhklfl4fWFxKSzaMdqQx6C3Oun/X7uO7pTI4XwhyN+mkBQiwcV+VEosyVSq8xQa
+        27LmPro6XmV28dINRiF/8lbOxpHEETu6bLtuC+/JD9D3HDSItwNdKwxVOm7oILordCPccg/iG44Nc
+        M2LcSQUQ0AggnQzy/QTsOySsHnaHBWUYAuGGL4VwY6nncaZU7zIqg8fTl5RdCOCKkAPXqmIODcEgE
+        NrPHx14g==;
+Received: from [2a01:79c:cebe:b88c:caff:28ff:fe94:90a0] (port=35232)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <harald@skogtun.org>)
+        id 1iGkf8-00055a-FP; Sat, 05 Oct 2019 16:03:58 +0200
+Subject: Re: BISECTED: Compile error on 5.4-rc1
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cf947abb-c94e-9b6f-229a-1e219fd38e94@skogtun.org>
+ <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
+ <240d0353-2e66-7d0c-3dc0-f58f62c999be@skogtun.org>
+ <fafb9730-6d0c-eac1-e2e2-374de509244a@skogtun.org>
+ <CAK7LNARsDQU11GGA3N11zERJdiGFCDR=fS6LtTUXfj5TZBEj4w@mail.gmail.com>
+ <d0259e98-225c-58f8-1640-04322c621690@skogtun.org>
+ <CAK7LNATF=50am-TBOAvr8-O+usgyczyfbDYbMp3MAmAKu46-1A@mail.gmail.com>
+From:   Harald Arnesen <harald@skogtun.org>
+Message-ID: <f7c3682b-2e5c-9b0a-b1e6-90500566f2ef@skogtun.org>
+Date:   Sat, 5 Oct 2019 16:03:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191004232328.GC19803@latitude>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAK7LNATF=50am-TBOAvr8-O+usgyczyfbDYbMp3MAmAKu46-1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: nb-NO
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 01:23:28AM +0200, Jonathan Neuschäfer wrote:
-> On Fri, Oct 04, 2019 at 03:24:39PM -0700, Paul E. McKenney wrote:
-> > On Fri, Oct 04, 2019 at 11:54:02PM +0200, Jonathan Neuschäfer wrote:
-> > > Without this patch, Sphinx shows "variable arguments" as the description
-> > > of the cond argument, rather than the intended description, and prints
-> > > the following warnings:
-> > > 
-> > > ./include/linux/rculist.h:374: warning: Excess function parameter 'cond' description in 'list_for_each_entry_rcu'
-> > > ./include/linux/rculist.h:651: warning: Excess function parameter 'cond' description in 'hlist_for_each_entry_rcu'
-> 
-> Hmm, small detail that I didn't realize before: It's actually the
-> kernel-doc script, not Sphinx, that can't deal with variadic macro
-> arguments and thus requires this patch.
-> 
-> So it may also be possible to fix the script instead. (I have not
-> looked into how much work that would be.)
+Masahiro Yamada [05.10.2019 15:17]:
 
-OK, thank you for letting me know.  I will keep your patch for the
-moment, but please let me know if the fix can be elsewhere.
+> As for POSIX, I found this:
+> 
+> ---------------------->8----------------------------
+> Applications should note that the standard PATH to the shell cannot
+> be assumed to be either /bin/sh or /usr/bin/sh, and should be determined
+> by interrogation of the PATH returned by getconf PATH , ensuring that
+> the returned pathname is an absolute pathname and not a shell built-in.
+> ---------------------->8----------------------------
+> 
+> https://pubs.opengroup.org/onlinepubs/009695399/utilities/sh.html
 
-							Thanx, Paul
+Okay. Then it's the Schilling/OpenSolaris shell that is the problem, not
+that I use it anyway.
+-- 
+Hilsen Harald
