@@ -2,70 +2,70 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E2EC4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 08:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAAFC3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C6A222C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 08:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E390320873
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:03:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="gwU4gKCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfJEIkk (ORCPT
+        id S1727554AbfJEJDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 04:40:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:49377 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbfJEIkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 04:40:40 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2EC3168B05; Sat,  5 Oct 2019 10:40:34 +0200 (CEST)
-Date:   Sat, 5 Oct 2019 10:40:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Semmle Security Reports <security-reports@semmle.com>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v2] dma-mapping: Move vmap address checks into
- dma_map_single()
-Message-ID: <20191005084033.GA14801@lst.de>
-References: <201910041420.F6E55D29A@keescook>
+        Sat, 5 Oct 2019 05:03:17 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:59411 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbfJEJDQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 05:03:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
+        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=p2ZvjAtFLmmRhheK0QBBgB4Z3DITrok9mnQpQe4ZL8k=; b=gwU4gKCNPpsjADrV7KzCt8x2Hv
+        JRWWN0e9e5im8fsEFMrW+GoUNL6QJpPQC9DOGndiqM321xSylWMjBUBsrJpucexYKedkLJFjD+Zv6
+        ygvdSMz98xovf9scLmn+SgkBp+MzntNhbyS75KaNQPuEUcJeQji/hk/FmE+/AG1GRqcJ44TbOxlqH
+        6Xoy8cvvN3LGlIlHVBtDS6VNWnuFVrjy34obWxQ+wdVQgdyCXQ9F3tRGkiCRMoX7LhkTBc4DCQl/R
+        Tj+Yh5E1OdrploBf08PHKfi0k0HjU7RimgXZkmT3H15O4SyQOPwFoDj6NpiywBA11laNyJUeHO2H2
+        ChoHDG3Q==;
+Received: from [2a01:79c:cebe:b88c:caff:28ff:fe94:90a0] (port=55588)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <harald@skogtun.org>)
+        id 1iGfy6-0002Li-7a; Sat, 05 Oct 2019 11:03:14 +0200
+Subject: Re: BISECTED: Compile error on 5.4-rc1
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cf947abb-c94e-9b6f-229a-1e219fd38e94@skogtun.org>
+ <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
+From:   Harald Arnesen <harald@skogtun.org>
+Message-ID: <240d0353-2e66-7d0c-3dc0-f58f62c999be@skogtun.org>
+Date:   Sat, 5 Oct 2019 11:03:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910041420.F6E55D29A@keescook>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: nb-NO
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please split the usb and dma-mapping parts into separate patches.
+Masahiro Yamada [05.10.2019 05:24]:
 
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index 4a1c4fca475a..12dbd07f74f2 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -583,6 +583,13 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
->  static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
->  		size_t size, enum dma_data_direction dir, unsigned long attrs)
->  {
-> +	/* DMA must never operate on areas that might be remapped. */
-> +	if (WARN_ONCE(is_vmalloc_addr(ptr),
-> +		      "%s %s: driver maps %lu bytes from vmalloc area\n",
-> +		      dev ? dev_driver_string(dev) : "unknown driver",
-> +		      dev ? dev_name(dev) : "unknown device", size))
-> +		return DMA_MAPPING_ERROR;
+> I cannot reproduce it.
+> 
+> I tested bindeb-pkg for the latest Linus tree successfully.
 
-a NULL device isn't supported any more, so we can remove the handling
-for it here.
+Strange, I have now tried another machine running the same distro
+(Devuan Beowulf), and I get the same result there. Will check further.
+-- 
+Hilsen Harald
