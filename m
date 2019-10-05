@@ -6,63 +6,55 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F5AC4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD72C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B80B222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2C3222CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570310560;
-	bh=b2ojuscvA5vHZZCIRcmyr63IQh+4Z67dn4JCAN9oUvI=;
+	s=default; t=1570312113;
+	bh=HNhRg9C+uT8munplm6gItEmqRk2fzoMeetuPUipn458=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a9FNay3aKjLIa+kk/1doh47DaI0Zj7Dcj4ORSaiOiT3dOHeiY7i1cgHNVICdTqOOI
-	 faTcg1urprP63ql0EJ3E6ygFfYF3UuR3654lpSNobQdkX1OAIlELOkdNccXPMj440f
-	 AJqma31CcdSSyrv6hKoBqyIC5SuGk4IeqR2UkSMI=
+	b=RRYO2UuICQd1DUr5+N0q3iVuLOGrkgDKiXq2QtV5DjGBCPE9k5usvosRrRmncmNRt
+	 jCZlV06KZZkpd8r6uXy7QFCdKD7xf3uxNI1fvOsvf1WwRh2+laoZHezYiuEASFevId
+	 gljw63JJxvLNf/FAKeT6grvvnyEOguXfYR1hHWgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbfJEVWg (ORCPT
+        id S1726034AbfJEVsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 17:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Sat, 5 Oct 2019 17:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfJEVWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 17:22:36 -0400
+        id S1725801AbfJEVsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 17:48:32 -0400
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E39222C5;
-        Sat,  5 Oct 2019 21:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494D0222C0;
+        Sat,  5 Oct 2019 21:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570310553;
-        bh=b2ojuscvA5vHZZCIRcmyr63IQh+4Z67dn4JCAN9oUvI=;
+        s=default; t=1570312111;
+        bh=HNhRg9C+uT8munplm6gItEmqRk2fzoMeetuPUipn458=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Vomw4Odzzw6K7rO6NN4INokEnUY6gIv4thk7COYozO8+LUEx2QuMV+Pq8PZVl+7oa
-         Nx5x+M1wSdYtnKovrxGVdUAzPbhBR+C04UtI6ublLEyzQxdZKdUWvDyYP07mNo5cbN
-         LpFB/bMGN6ywLBW0Gt6P5gpkqiWgnYJpxSvNwIgo=
-Date:   Sat, 5 Oct 2019 14:22:32 -0700
+        b=09sGzm+TkX4yptOvFcUZkbVIfYJVinR8FNqinr3BNuPCm9QnXgBl25ss/I51or6+n
+         dRjZCJYRrB9O7ZgSvm/k/Yca6R4Vzq6Hfk2pmpWSeYNfMan5hE+i4HKKh8zpVGNvY2
+         djLeN5GjdXIwt/0F+3LNDkESxOLCJdgIJLWz4fS8=
+Date:   Sat, 5 Oct 2019 14:48:30 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
- has_unmovable_pages()
-Message-Id: <20191005142232.e08976cf8905824fad0533ff@linux-foundation.org>
-In-Reply-To: <20191004144150.GO9578@dhcp22.suse.cz>
-References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
-        <20191004105824.GD9578@dhcp22.suse.cz>
-        <91128b73-9a47-100b-d3de-e83f0b941e9f@arm.com>
-        <1570193776.5576.270.camel@lca.pw>
-        <20191004130713.GK9578@dhcp22.suse.cz>
-        <1570195839.5576.273.camel@lca.pw>
-        <20191004133814.GM9578@dhcp22.suse.cz>
-        <1570197360.5576.275.camel@lca.pw>
-        <20191004144150.GO9578@dhcp22.suse.cz>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        linux-doc@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3] printf: add support for printing symbolic error
+ codes
+Message-Id: <20191005144830.f94bc9d63001981c5eefe875@linux-foundation.org>
+In-Reply-To: <20190917065959.5560-1-linux@rasmusvillemoes.dk>
+References: <20190909203826.22263-1-linux@rasmusvillemoes.dk>
+        <20190917065959.5560-1-linux@rasmusvillemoes.dk>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -72,28 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Oct 2019 16:41:50 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+On Tue, 17 Sep 2019 08:59:59 +0200 Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
 
-> > > This is just insane. The hotplug code is in no way special wrt printk.
-> > > It is never called from the printk code AFAIK and thus there is no real
-> > > reason why this particular code should be any special. Not to mention
-> > > it calls printk indirectly from a code that is shared with other code
-> > > paths.
-> > 
-> > Basically, printk() while holding the zone_lock will be problematic as console
-> > is doing the opposite as it always needs to allocate some memory. Then, it will
-> > always find some way to form this chain,
-> > 
-> > console_lock -> * -> zone_lock.
+> It has been suggested several times to extend vsnprintf() to be able
+> to convert the numeric value of ENOSPC to print "ENOSPC". This is yet
+> another attempt. Rather than adding another %p extension, simply teach
+> plain %p to convert ERR_PTRs. While the primary use case is
 > 
-> So this is not as much a hotplug specific problem but zone->lock ->
-> printk -> alloc chain that is a problem, right? Who is doing an
-> allocation from this atomic context? I do not see any atomic allocation
-> in kernel/printk/printk.c.
+>   if (IS_ERR(foo)) {
+>     pr_err("Sorry, can't do that: %p\n", foo);
+>     return PTR_ERR(foo);
+>   }
+> 
+> it is also more helpful to get a symbolic error code (or, worst case,
+> a decimal number) in case an ERR_PTR is accidentally passed to some
+> %p<something>, rather than the (efault) that check_pointer() would
+> result in.
+> 
+> With my embedded hat on, I've made it possible to remove this.
+> 
+> I've tested that the #ifdeffery in errcode.c is sufficient to make
+> this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
+> 0day bot will tell me which ones I've missed.
+> 
+> The symbols to include have been found by massaging the output of
+> 
+>   find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
+> 
+> In the cases where some common aliasing exists
+> (e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
+> I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
+> to the bottom so that one takes precedence.
 
-Apparently some console drivers can do memory allocation on the printk()
-path.
+Looks reasonable to me.
 
-This behavior is daft, IMO.  Have we identified which ones and looked
-into fixing them?
+Is there any existing kernel code which presently uses this?  Can we
+get some conversions done to demonstrate and hopefully test the
+feature?
 
