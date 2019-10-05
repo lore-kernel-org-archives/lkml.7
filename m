@@ -2,203 +2,88 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743E4C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EECBC4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3733A222D2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:38:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKvHeQVE"
+	by mail.kernel.org (Postfix) with ESMTP id 2237C222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388797AbfJESiW (ORCPT
+        id S2388809AbfJESjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 14:38:22 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45732 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388168AbfJEShf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 14:37:35 -0400
-Received: by mail-yw1-f68.google.com with SMTP id x65so3557056ywf.12;
-        Sat, 05 Oct 2019 11:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DSd0IOl/SfIaZDr2U/8RUT6ZXyKiyqc5Z3E1jM5LeZE=;
-        b=TKvHeQVE7Ireoc37hz2hgKIhyPHqwX0ix2u0tLXmstDJCdr6IuuCXXIyxNJLbJgeXn
-         xuTUXFXnEKTWFVC0pmhVUvUYhw6qcnDqh0HysL+gtREkl7BJhAcVuJP7kxzoxXHEwo4u
-         MEpq52fPvh4tfoVlU7ZurfiDVO7RwMLceOIippXHKYAZsGPOvjxuF5mcD78fvKhjDERM
-         oDFWocStW7aPVNEc8+k/sF4jSeGeHjDq/0odV8u3Q3KIQl8qpQamlc1eIS4FTQbnDoR1
-         dAC1CWakkZg8J6F2sj7vnl+wEIQGIlFEAleta86KfZetER3BSxbMzQK5rjNtpHviaKIX
-         kcaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DSd0IOl/SfIaZDr2U/8RUT6ZXyKiyqc5Z3E1jM5LeZE=;
-        b=p5ZmqwjHMC9QoKThPRZHNYIenKpZ8m9xIi/CJaawP/Hr3rSThWkJNcTV54skG2BMy0
-         RFLH0p6RV7twddhFIvRdG+SwMgiGmM187FQjXjBjUFWbYHPp42S5r13qz+7XdG/8cP0m
-         N45sEjbIJ5PYDGQYS0evfMm84yUEMKi3pLSMQPCigEXLeqSBdX4v6M7wlEyJSzLxVAo1
-         bCBL+9iyoH+G9uR8IQJK1ZTwuSu6PvJ43MNzJ1MNJSHDm4uCJktKTsAaVdzooAzOdyp7
-         1keDDaxlAx/3M85Kc393GEdKlU6fyvLh6tgP0hBhnUVfU04N8ksezBpC6HkfVjwhyWwX
-         uY6w==
-X-Gm-Message-State: APjAAAU4+9bT3kwwCIWU/iweuEVesuLSahRUKDdIoymnwo8TI9AVUPq9
-        /1sfWkGCLs/Jp7h7dqNrM30=
-X-Google-Smtp-Source: APXvYqzMK0WXy1FSjuik++YP4mriPld97hnA61hDykwZR+fuDGF5lZr9zjaL8N56lOtqNHCctef+xg==
-X-Received: by 2002:a0d:e64b:: with SMTP id p72mr14596237ywe.347.1570300653865;
-        Sat, 05 Oct 2019 11:37:33 -0700 (PDT)
-Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id g128sm2376654ywb.13.2019.10.05.11.37.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 11:37:33 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v15 05/14] gpio: gpio-mm: Utilize for_each_set_clump8 macro
-Date:   Sat,  5 Oct 2019 14:36:59 -0400
-Message-Id: <a81daf717adef2586fe43174b107304b346992a6.1570299719.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1570299719.git.vilhelm.gray@gmail.com>
-References: <cover.1570299719.git.vilhelm.gray@gmail.com>
+        Sat, 5 Oct 2019 14:39:41 -0400
+Received: from mga11.intel.com ([192.55.52.93]:59559 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387941AbfJESjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 14:39:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 11:39:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,261,1566889200"; 
+   d="scan'208";a="183033437"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 05 Oct 2019 11:39:39 -0700
+Date:   Sat, 5 Oct 2019 11:39:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v22 16/24] x86/vdso: Add support for exception fixup in
+ vDSO functions
+Message-ID: <20191005183939.GB9159@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-17-jarkko.sakkinen@linux.intel.com>
+ <20191002231804.GA14315@linux.intel.com>
+ <20191004001459.GD14325@linux.intel.com>
+ <20191004185221.GI6945@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004185221.GI6945@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace verbose implementation in get_multiple/set_multiple callbacks
-with for_each_set_clump8 macro to simplify code and improve clarity.
+On Fri, Oct 04, 2019 at 09:52:21PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Oct 03, 2019 at 05:15:00PM -0700, Sean Christopherson wrote:
+> > I'll tackle this tomorrow.  I've been working on the feature control MSR
+> > series and will get that sent out tomorrow as well.  I should also be able
+> > to get you the multi-page EADD patch.
+> 
+> Great I'll compose the patch set during the weekend and take Monday off
+> so you have the full work day to get everything (probably send the patch
+> set on Sunday).
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/gpio/gpio-gpio-mm.c | 73 +++++++++++--------------------------
- 1 file changed, 21 insertions(+), 52 deletions(-)
+I wasn't able to finish everything this morning (not even close).  The
+vDSO code and documentation was in rough shape.  I finished cleaning it
+up, but still need to test and rewrite the changelog.
 
-diff --git a/drivers/gpio/gpio-gpio-mm.c b/drivers/gpio/gpio-gpio-mm.c
-index 78a1db24e931..72196ea36358 100644
---- a/drivers/gpio/gpio-gpio-mm.c
-+++ b/drivers/gpio/gpio-gpio-mm.c
-@@ -164,46 +164,25 @@ static int gpiomm_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	return !!(port_state & mask);
- }
- 
-+static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
-+
- static int gpiomm_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
- 	unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	size_t i;
--	static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
--	const unsigned int gpio_reg_size = 8;
--	unsigned int bits_offset;
--	size_t word_index;
--	unsigned int word_offset;
--	unsigned long word_mask;
--	const unsigned long port_mask = GENMASK(gpio_reg_size - 1, 0);
-+	unsigned long offset;
-+	unsigned long gpio_mask;
-+	unsigned int port_addr;
- 	unsigned long port_state;
- 
- 	/* clear bits array to a clean slate */
- 	bitmap_zero(bits, chip->ngpio);
- 
--	/* get bits are evaluated a gpio port register at a time */
--	for (i = 0; i < ARRAY_SIZE(ports); i++) {
--		/* gpio offset in bits array */
--		bits_offset = i * gpio_reg_size;
--
--		/* word index for bits array */
--		word_index = BIT_WORD(bits_offset);
--
--		/* gpio offset within current word of bits array */
--		word_offset = bits_offset % BITS_PER_LONG;
--
--		/* mask of get bits for current gpio within current word */
--		word_mask = mask[word_index] & (port_mask << word_offset);
--		if (!word_mask) {
--			/* no get bits in this port so skip to next one */
--			continue;
--		}
--
--		/* read bits from current gpio port */
--		port_state = inb(gpiommgpio->base + ports[i]);
-+	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
-+		port_addr = gpiommgpio->base + ports[offset / 8];
-+		port_state = inb(port_addr) & gpio_mask;
- 
--		/* store acquired bits at respective bits array offset */
--		bits[word_index] |= (port_state << word_offset) & word_mask;
-+		bitmap_set_value8(bits, port_state, offset);
- 	}
- 
- 	return 0;
-@@ -234,37 +213,27 @@ static void gpiomm_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct gpiomm_gpio *const gpiommgpio = gpiochip_get_data(chip);
--	unsigned int i;
--	const unsigned int gpio_reg_size = 8;
--	unsigned int port;
--	unsigned int out_port;
--	unsigned int bitmask;
-+	unsigned long offset;
-+	unsigned long gpio_mask;
-+	size_t index;
-+	unsigned int port_addr;
-+	unsigned long bitmask;
- 	unsigned long flags;
- 
--	/* set bits are evaluated a gpio register size at a time */
--	for (i = 0; i < chip->ngpio; i += gpio_reg_size) {
--		/* no more set bits in this mask word; skip to the next word */
--		if (!mask[BIT_WORD(i)]) {
--			i = (BIT_WORD(i) + 1) * BITS_PER_LONG - gpio_reg_size;
--			continue;
--		}
-+	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
-+		index = offset / 8;
-+		port_addr = gpiommgpio->base + ports[index];
- 
--		port = i / gpio_reg_size;
--		out_port = (port > 2) ? port + 1 : port;
--		bitmask = mask[BIT_WORD(i)] & bits[BIT_WORD(i)];
-+		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
- 
- 		spin_lock_irqsave(&gpiommgpio->lock, flags);
- 
- 		/* update output state data and set device gpio register */
--		gpiommgpio->out_state[port] &= ~mask[BIT_WORD(i)];
--		gpiommgpio->out_state[port] |= bitmask;
--		outb(gpiommgpio->out_state[port], gpiommgpio->base + out_port);
-+		gpiommgpio->out_state[index] &= ~gpio_mask;
-+		gpiommgpio->out_state[index] |= bitmask;
-+		outb(gpiommgpio->out_state[index], port_addr);
- 
- 		spin_unlock_irqrestore(&gpiommgpio->lock, flags);
--
--		/* prepare for next gpio register set */
--		mask[BIT_WORD(i)] >>= gpio_reg_size;
--		bits[BIT_WORD(i)] >>= gpio_reg_size;
- 	}
- }
- 
--- 
-2.23.0
+If you really want to send v23 this weekend I can work more tonight
+and/or tomorrow morning.  My preference would be to just punt a few more
+days.
 
+My todo list for v23:
+
+  - Test vDSO changes and craft proper patches
+  - Rewrite vDSO changelog
+  - Rewrite vDSO exception fixup changelog
+  - Implement multi-page EADD
+
+My todo list post-v23:
+  - Write SGX programming model documentation (requested by Casey)
