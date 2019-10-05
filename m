@@ -2,102 +2,215 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82216C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809FCC4CED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6B621D81
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D04D222C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TV6E3RyA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GPhhjUv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbfJEBQF (ORCPT
+        id S1726359AbfJEBSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 21:16:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35838 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJEBQF (ORCPT
+        Fri, 4 Oct 2019 21:18:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45467 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfJEBSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 21:16:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=76PvWG28Wf5VWGGq/eiwJm/zoctdt2tMBJW16pZ6SJc=; b=TV6E3RyA/PqAV8ahjRwF6ETx9
-        6sk0zSIkxCy4Z3dxHFslxT3InYPSUf4cGpcRTAkajsnvOdUtLrnjgXsS5/xH92dtbMcHN5fBrz88F
-        sAm+/YpYsbOpMy86xSe4sL9SoRQudK0ENoQg4lI7rCwR0Fj3p8fhV3ZFlQUOeoHDsGPg2aYe1+Ho/
-        vAgMN4GJ36AMyFNm1My9bqkO0nPblSBrZYaSpkOpneegQHnyUnFGuI76xnWDnTQbpIR8MMyA+dRiA
-        nkxIVB7hMYSxXaRVs5dYYmdETxn6O4/xF6Pa1lljqxFDTNPBa0N5DismyJ1nD8HFP2vPnWZKd/0sh
-        ABmCfqSig==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iGYfq-0001PH-7v; Sat, 05 Oct 2019 01:15:54 +0000
-Date:   Fri, 4 Oct 2019 18:15:54 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
-        khlebnikov@yandex-team.ru, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/rmap.c: reuse mergeable anon_vma as parent when fork
-Message-ID: <20191005011554.GQ32665@bombadil.infradead.org>
-References: <20191004160632.30251-1-richardw.yang@linux.intel.com>
- <20191004161120.GI32665@bombadil.infradead.org>
- <20191004234845.GB15415@richard>
+        Fri, 4 Oct 2019 21:18:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u12so3904256pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 18:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q2oP8A+66Rac3wNrpkR8MWsLUwrIym5JWD2OWoQLn2I=;
+        b=GPhhjUv+KkS/VzHR5+UKHbUpig67OUz+p2ab8gzDSHD3qWPn5BM1Y5BuX7lxM7j2sb
+         kfHr9wmq/ZxD9CMSuGBeBnRcFNxBoNrc0jkNUB4Rgmx5E/OBumH+nRsrohMgMe+j/Rvr
+         t8LXEhaVzelX3CPRpPkB2Y5G0/ztqK3oeYNRWvHYetjEo1eOHmWOT3CD6xhMJchs6eDb
+         OxHBa5qEKGeZBHYqpxi4evGAx/VhufwkpQPNLZaEp4DWShmC9T8N6LCor4kERCu29UaE
+         O+Yo2QExYcBHz7N8yqMIajJuvzJZ49QCOIBtYIj8yxzgyIBkwnbnqn5CemWWy9ROQDur
+         OLdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q2oP8A+66Rac3wNrpkR8MWsLUwrIym5JWD2OWoQLn2I=;
+        b=SMorU6nIJLmQZLOKW+Y6qdrWnYwok3xNto0XP/4i+MR1d7flHfFVypckHf6ZrhK00C
+         E1xspMdvYQeANN5gZMBhe4HGiEOhppxyaQMyHcYsdBB7DQWW9jj4A+By8PulHcSr4EX9
+         qw5LEUsqc+ZqIYALT2VroZ4hxAr0AuGVVVwVhBmr2F/a3fQ7iQxfL5RLcUYrgZbY3Ewu
+         bn2NExTdxh4VfrWADnXelLHBjO8kFlB4gq+sdH5oT+/w7PU2VFQxD6URRKLnOEG9C3Wa
+         OP7L1XVxGAecv9Wy1vSQOZQKjLy+5kxOUXW71buuknHfs8H0iNjki+m/rgwAF4ju3QIb
+         XMMw==
+X-Gm-Message-State: APjAAAXEMAFLGDdM5IwrQ4KaIOLCzNxvzc1+5+5ReoUQp6eMn8XH5QAq
+        I14Z3T5grMVts2G1N21inuL6UJ0Ozjv1pVzW2Q/RXw==
+X-Google-Smtp-Source: APXvYqxXIgL1V9Pz63bm5hrH1w7OGcZMj9O7xWX+0gLh6oom7FtSqHJPBvTviBg5NgEsO3lWv0/RgnZ1WUmPfaPcH/I=
+X-Received: by 2002:a17:902:8f88:: with SMTP id z8mr18539665plo.232.1570238296215;
+ Fri, 04 Oct 2019 18:18:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004234845.GB15415@richard>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu> <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org> <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+In-Reply-To: <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 4 Oct 2019 18:18:04 -0700
+Message-ID: <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     shuah <shuah@kernel.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 07:48:45AM +0800, Wei Yang wrote:
-> On Fri, Oct 04, 2019 at 09:11:20AM -0700, Matthew Wilcox wrote:
-> >On Sat, Oct 05, 2019 at 12:06:32AM +0800, Wei Yang wrote:
-> >> After this change, kernel build test reduces 20% anon_vma allocation.
+On Fri, Oct 4, 2019 at 5:49 PM shuah <shuah@kernel.org> wrote:
+>
+> On 10/4/19 6:33 PM, Brendan Higgins wrote:
+> > On Fri, Oct 4, 2019 at 4:57 PM shuah <shuah@kernel.org> wrote:
+> >>
+> >> On 10/4/19 5:52 PM, Brendan Higgins wrote:
+> >>> On Fri, Oct 4, 2019 at 4:30 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >>>>
+> >>>> On Fri, Oct 04, 2019 at 04:47:09PM -0600, shuah wrote:
+> >>>>>> However, if I encourage arbitrary tests/improvements into my KUnit
+> >>>>>> branch, it further diverges away from torvalds/master, and is more
+> >>>>>> likely that there will be a merge conflict or issue that is not related
+> >>>>>> to the core KUnit changes that will cause the whole thing to be
+> >>>>>> rejected again in v5.5.
+> >>>>>
+> >>>>> The idea is that the new development will happen based on kunit in
+> >>>>> linux-kselftest next. It will work just fine. As we accepts patches,
+> >>>>> they will go on top of kunit that is in linux-next now.
+> >>>>
+> >>>> I don't see how this would work.  If I add unit tests to ext4, they
+> >>>> would be in fs/ext4.  And to the extent that I need to add test mocks
+> >>>> to allow the unit tests to work, they will involve changes to existing
+> >>>> files in fs/ext4.  I can't put them in the ext4.git tree without
+> >>>> pulling in the kunit changes into the ext4 git tree.  And if they ext4
+> >>>> unit tests land in the kunit tree, it would be a receipe for large
+> >>>> numbers of merge conflicts.
+> >>>
+> >>> That's where I was originally coming from.
+> >>>
+> >>> So here's a dumb idea: what if we merged KUnit through the ext4 tree?
+> >>> I imagine that could potentially get very confusing when we go back to
+> >>> sending changes in through the kselftest tree, but at least it means
+> >>> that ext4 can use it in the meantime, which means that it at least
+> >>> gets to be useful to one group of people. Also, since Ted seems pretty
+> >>> keen on using this, I imagine it is much more likely to produce real
+> >>> world, immediately useful tests not written by me (I'm not being lazy,
+> >>> I just think it is better to get other people's experiences other than
+> >>> my own).
+> >>>
+> >>
+> >> That doesn't make sense does it? The tests might not be limited to
+> >> fs/ext4. We might have other sub-systems that add tests.
 > >
-> >But does it have any effect on elapsed time or peak memory consumption?
-> 
-> Do the same kernel build test and record time:
-> 
-> 
-> Origin
-> 
-> real	2m50.467s
-> user	17m52.002s
-> sys	1m51.953s    
-> 
-> real	2m48.662s
-> user	17m55.464s
-> sys	1m50.553s    
-> 
-> real	2m51.143s
-> user	17m59.687s
-> sys	1m53.600s    
-> 
-> 
-> Patched
-> 
-> real	2m43.733s
-> user	17m25.705s
-> sys	1m41.791s    
-> 
-> real	2m47.146s
-> user	17m47.451s
-> sys	1m43.474s    
-> 
-> real	2m45.763s
-> user	17m38.230s
-> sys	1m42.102s    
-> 
-> 
-> For time in sys, it reduced 8.5%.
+> > Well, I have some small isolated examples that I think would probably
+> > work no matter what, so we can get some usage outside of ext4. Also,
+> > if we want to limit the number of tests, then we don't expect to get
+> > much usage outside of ext4 before v5.5 anyway. I just figure, it's
+> > better to make it work for one person than no one, right?
+> >
+> > In any case, I admit it is not a great idea. I just thought it had
+> > some interesting advantages over going in through linux-kselftest that
+> > were worth exploring.
+> >
+> >> So, we will have to work to make linux-next as the base for new
+> >> development and limit the number of tests to where it will be
+> >> easier work in this mode for 5.5. We can stage the pull requests
+> >> so that kunit lands first followed by tests.
+> >
+> > So we are going to encourage maintainers to allow tests in their tree
+> > based on KUnit on the assumption that KUnit will get merged before
+> > there changes? That sounds like a huge burden, not just on us, but on
+> > other maintainers and users.
+> >
+> > I think if we are going to allow tests before KUnit is merged, we
+> > should have the tests come in through the same tree as KUnit.
+> >
+> >> We have a similar situation with kselftest as well. Sub-systems
+> >> send tests that depend on their tress separately.
+> >
+> > Well it is different if the maintainer wants to send the test in
+> > through their tree, right? Otherwise, it won't matter what the state
+> > of linux-next is and it won't matter when linux-kselftest gets merged.
+> > Or am I not understanding you?
+> >
+>
+> Let's talk about current state. Right now kunit is in linux-next and
+> we want to add a few more tests. We will have to coordinate the effort.
+> Once kunit get into mainline, then the need for this coordination goes
+> down.
 
-That's compelling!
+Sure, I was just thinking that getting other people to write the tests
+would be better. Since not only is it then useful to someone else, it
+provides the best possible exercise of KUnit.
+
+Nevertheless, it would probably just be easier to get a handful of
+example tests, and it is less likely to result in any issues for v5.5,
+so that's probably better. (I think that is what you are hinting at
+here. ;-) )
+
+Hey Ted, do you know if that ext4 timestamp test can go in through
+linux-kselftest? It seemed fairly self-contained. Or is that what you
+were saying wouldn't work for you?
+
+> Let's focus on the next few weeks first so we can get this into mainline
+> in 5.5.
+
+I agree. That is the most important thing.
+
+> The two of us can chat next week and come up with a plan.
+
+Sure.
+
+Cheers!
