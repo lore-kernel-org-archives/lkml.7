@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33179C3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2918DC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC9820867
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B76222CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="c+bNHX15"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pqNAHW+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfJEOT3 (ORCPT
+        id S1728629AbfJEOTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 10:19:29 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45393 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfJEOT2 (ORCPT
+        Sat, 5 Oct 2019 10:19:33 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39904 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbfJEOTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 10:19:28 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u12so4521866pls.12
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 07:19:28 -0700 (PDT)
+        Sat, 5 Oct 2019 10:19:32 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s17so4529496plp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 07:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j71JSmqo2p/lC+pVotGwXL+zyAoHaLpisutyi3M3xfk=;
-        b=c+bNHX150ih1LLE2k5LrQDgeo2hmhkZLqKyEExZX/B9Swz4KTLiOD9Tf1g9nTLGKsa
-         YqPTXWFZnLndq79saXmDqpW7gRgHF3ZqVz6kDb/BW0O0RXfwr0kO947ZodH7f5X2p4c5
-         fgCyZ0HJsarIkoZGz+CU1cmFxaXs0+2q01eB0=
+        bh=lLu60EjnRBnW4wz32/fkJTOsgD5cNWvT5qBN+RYNBTg=;
+        b=pqNAHW+FwCPLtmMCrEkOjKWwvUGOVLbSDKFc786vnhYyrwlP6swsENzUfsK51+kxu6
+         cA0MvHQrlrJpu2rAbw5We0cRNiGT6OWwq+E4UdP0X+x8tJ33JVZQj3upf7PeS8f9W/2t
+         FPdU2xvzZ/L6YVpMLVCBITsyrAOB7exwrsfv4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j71JSmqo2p/lC+pVotGwXL+zyAoHaLpisutyi3M3xfk=;
-        b=RLIY0nPJU6VK+WrG1Ebdv8rGTKJEUI1RSiNkVqdQ9BdOwr9r7Sg6nG/zwiQa3tHfe7
-         Z5EiouaYESI1LGwfjxoMKUzCI/lj//vrBgRuRoRFxkWvPMECjn/wGw+rHoG3y3DWFDml
-         uJR3v6dL/KXwXxcGdnK7I/HN2OpbD6jmwygHixf8pAkTz1LXjIrqDIOOrun7Vq1ksOUh
-         jq6fgbpdIREQMmELtWxEzXsrtt/SSgc5VTXTvc1v04GtVFCPoLPqVFCEGR3r0LueScx1
-         rEDVbqG0FDWNq4ZmfkANbAolEw7AbzTy/5qEqVaBw6ykMUYkCWViai7QKfPGXWrpJDrM
-         MWJg==
-X-Gm-Message-State: APjAAAWgTF7z1MowdfW9P2cxMbuNDHtMR/GLLzaJXPXAtLR3Jj/+dbcE
-        DZfHAkTJ7DSri9W5jWeFUOkhlQ==
-X-Google-Smtp-Source: APXvYqyUl411uM87vrRwvlJ+wF+fjjwaiPL9XpGjvqCaxZBcb4sTtYi07sCxLpjnKzSjOFwvn84EDg==
-X-Received: by 2002:a17:902:b182:: with SMTP id s2mr20310966plr.219.1570285168104;
-        Sat, 05 Oct 2019 07:19:28 -0700 (PDT)
+        bh=lLu60EjnRBnW4wz32/fkJTOsgD5cNWvT5qBN+RYNBTg=;
+        b=S7VRFXL/roNESIp9o9gAbgd0NWFQs8umwyqVfRZFNM6bP2TXNZzVzSw2oWaXSmNBQS
+         6bx6kM7CKq+TjADsvw/+g2Do6zv6OcD8L1xCYWCjArQIZFQ2t/K0sX3s6HX+OHeHGpJM
+         4dXKrH2Y0efH+NrGNeuWEiiL2usjrUIfFxZdvmFmd8e78xYvP/VN9YeQWqbws8h8ohCz
+         RcTrnOc6Tr9HUt1PTY9N/cH0ip6boLyT8sKXcWONZ6YY4OXm/xSgbkEAhav927EVoRKX
+         he0XfGosXAGKShxr16sDZMmr3BS/lEtA4Prz/Kl/8WpVSwojxHkqir9zuNAevh6A8qQW
+         YooA==
+X-Gm-Message-State: APjAAAUdT6Taj4jeAWv8kZOjnF0rxKbsiaffGKIRY7IQAqh3sgfBHeL9
+        UWZj/k9+QzT3E4cOU8GYWzsFRg==
+X-Google-Smtp-Source: APXvYqzyfbYoP0nigJLm601pen/N5iojsrxWH3PJfSr9afbuIRmYCd4P+TgvvrASJEz29Up2FoLOMw==
+X-Received: by 2002:a17:902:9a41:: with SMTP id x1mr14550279plv.269.1570285172204;
+        Sat, 05 Oct 2019 07:19:32 -0700 (PDT)
 Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id y138sm8977604pfb.174.2019.10.05.07.19.24
+        by smtp.gmail.com with ESMTPSA id y138sm8977604pfb.174.2019.10.05.07.19.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 07:19:27 -0700 (PDT)
+        Sat, 05 Oct 2019 07:19:31 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v10 1/6] dt-bindings: sun6i-dsi: Add A64 MIPI-DSI compatible
-Date:   Sat,  5 Oct 2019 19:49:08 +0530
-Message-Id: <20191005141913.22020-2-jagan@amarulasolutions.com>
+Subject: [PATCH v10 2/6] dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
+Date:   Sat,  5 Oct 2019 19:49:09 +0530
+Message-Id: <20191005141913.22020-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191005141913.22020-1-jagan@amarulasolutions.com>
 References: <20191005141913.22020-1-jagan@amarulasolutions.com>
@@ -77,28 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MIPI DSI controller in Allwinner A64 is similar to A33.
+The MIPI DSI PHY controller on Allwinner A64 is similar
+on the one on A31.
 
-But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-to with separate compatible for A64 on the same driver.
+Add A64 compatible and append A31 compatible as fallback.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml        | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml         | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-index dafc0980c4fa..cfcc84d38084 100644
---- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-@@ -15,7 +15,9 @@ properties:
-   "#size-cells": true
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+index fa46670de299..8841938050b2 100644
+--- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+@@ -15,7 +15,11 @@ properties:
+     const: 0
  
    compatible:
--    const: allwinner,sun6i-a31-mipi-dsi
-+    enum:
-+      - const: allwinner,sun6i-a31-mipi-dsi
-+      - const: allwinner,sun50i-a64-mipi-dsi
+-    const: allwinner,sun6i-a31-mipi-dphy
++    oneOf:
++      - const: allwinner,sun6i-a31-mipi-dphy
++      - items:
++          - const: allwinner,sun50i-a64-mipi-dphy
++          - const: allwinner,sun6i-a31-mipi-dphy
  
    reg:
      maxItems: 1
