@@ -2,167 +2,103 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE65CC3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EEDC3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C81222D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DD1222C0
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oKYr8rvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfJEKPR (ORCPT
+        id S1727478AbfJEKQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 06:15:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39721 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbfJEKPQ (ORCPT
+        Sat, 5 Oct 2019 06:16:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33977 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbfJEKQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 06:15:16 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iGh5W-0001FC-Ee; Sat, 05 Oct 2019 12:14:58 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B74151C073C;
-        Sat,  5 Oct 2019 12:14:57 +0200 (CEST)
-Date:   Sat, 05 Oct 2019 10:14:57 -0000
-From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm: Reorder early variables
-Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191003095238.29831-1-jslaby@suse.cz>
-References: <20191003095238.29831-1-jslaby@suse.cz>
+        Sat, 5 Oct 2019 06:16:43 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k7so4360005pll.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 03:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=By/tkFXpcovd+/oyN3ineSJ0gYN93wEee4C2ekIO2Ic=;
+        b=oKYr8rvm7PDDnBB0z2S6/KdLSYzcUNHwSOj1J9T/ChP0bnupJTdyM+SfvEPl1GzLPt
+         NeFCQ/a7Nmqv03dECle5ic16CoB8H2UHbglD+VB4p79kmUVMZUNJtdq6rjozXagtM6Ez
+         OIoz2fWoVuXD2zAk35AyB0F+h2mnTKUPFPMB0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=By/tkFXpcovd+/oyN3ineSJ0gYN93wEee4C2ekIO2Ic=;
+        b=MXQEjLDGNTxa4O0VjCj0Pxg0WydcZVRmG8uRVuYN9xSurvlgbKlxWLAnTLB4EJo51Y
+         ZaYxuAPQGVJP5SinMPXCH3aKjFBFWzjMl71YTm/7UciRooAQcP5mTfWtUg5H2vefDyJ0
+         5gcNYelSl1w3llNFeqJxRrQhRbto3yRpSet6XRPwbUqldni3SKiyfN4BH9cb6oNWIZlf
+         wSZlmq3jOqF/pdQRjeoIRan8+eiQNR2PEMmjLuNRuvg+dqphPXtQYPtncU34ilN2tRal
+         M1wY4zYuNvR/rWAZVLz3bo+odJrheBC8lqJJTzWEkEDPsE/Jj1+mlCusdASjtZkrmgW7
+         AQwg==
+X-Gm-Message-State: APjAAAXeJ8orlud6i8uu3m1S881pUcLq48e/cbQtkFjVmBJBBVodynz0
+        2tFHdnbRosDgDzIcTnx775reLA==
+X-Google-Smtp-Source: APXvYqyx6DaEE0oraB7LAbHSkND2TJ8TnSGts/p6253FS+92EDlqSNGabp0guVGGBosi3GSyYCx/1w==
+X-Received: by 2002:a17:902:720a:: with SMTP id ba10mr20268276plb.328.1570270602686;
+        Sat, 05 Oct 2019 03:16:42 -0700 (PDT)
+Received: from ikjn-glaptop.roam.corp.google.com ([61.254.209.103])
+        by smtp.gmail.com with ESMTPSA id v68sm10682279pfv.47.2019.10.05.03.16.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 03:16:42 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Enrico Granata <egranata@google.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH 3/3] HID: google: whiskers: mask out extra flags in EC event_type
+Date:   Sat,  5 Oct 2019 18:16:29 +0800
+Message-Id: <20191005101629.146710-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-Message-ID: <157027049768.9978.11005637397803915038.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+Whiskers needs to get notifications from EC for getting current base
+attached state. EC sends extra bits in event_type field that receiver
+should mask out.
 
-Commit-ID:     1a8770b746bd05ef68217989cd723b2c24d2208d
-Gitweb:        https://git.kernel.org/tip/1a8770b746bd05ef68217989cd723b2c24d2208d
-Author:        Jiri Slaby <jslaby@suse.cz>
-AuthorDate:    Thu, 03 Oct 2019 11:52:37 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 05 Oct 2019 12:11:00 +02:00
-
-x86/asm: Reorder early variables
-
-Moving early_recursion_flag (4 bytes) after early_level4_pgt (4k) and
-early_dynamic_pgts (256k) saves 4k which are used for alignment of
-early_level4_pgt after early_recursion_flag.
-
-The real improvement is merely on the source code side. Previously it
-was:
-* __INITDATA + .balign
-* early_recursion_flag variable
-* a ton of CPP MACROS
-* __INITDATA (again)
-* early_top_pgt and early_recursion_flag variables
-* .data
-
-Now, it is a bit simpler:
-* a ton of CPP MACROS
-* __INITDATA + .balign
-* early_top_pgt and early_recursion_flag variables
-* early_recursion_flag variable
-* .data
-
-On the binary level the change looks like this:
-Before:
- (sections)
-  12 .init.data    00042000  0000000000000000  0000000000000000 00008000  2**12
- (symbols)
-  000000       4 OBJECT  GLOBAL DEFAULT   22 early_recursion_flag
-  001000    4096 OBJECT  GLOBAL DEFAULT   22 early_top_pgt
-  002000 0x40000 OBJECT  GLOBAL DEFAULT   22 early_dynamic_pgts
-
-After:
- (sections)
-  12 .init.data    00041004  0000000000000000  0000000000000000 00008000  2**12
- (symbols)
-  000000    4096 OBJECT  GLOBAL DEFAULT   22 early_top_pgt
-  001000 0x40000 OBJECT  GLOBAL DEFAULT   22 early_dynamic_pgts
-  041000       4 OBJECT  GLOBAL DEFAULT   22 early_recursion_flag
-
-So the resulting vmlinux is smaller by 4k with my toolchain as many
-other variables can be placed after early_recursion_flag to fill the
-rest of the page. Note that this is only .init data, so it is freed
-right after being booted anyway. Savings on-disk are none -- compression
-of zeros is easy, so the size of bzImage is the same pre and post the
-change.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191003095238.29831-1-jslaby@suse.cz
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
 ---
- arch/x86/kernel/head_64.S | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/hid/hid-google-hammer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index f3d3e96..f00d7c0 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -335,12 +335,6 @@ early_idt_handler_common:
- 	jmp restore_regs_and_return_to_kernel
- END(early_idt_handler_common)
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index bf2b6c6c9787..91cb62afbc2b 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -96,8 +96,9 @@ static int cbas_ec_notify(struct notifier_block *nb,
+ 	struct cros_ec_device *ec = _notify;
+ 	unsigned long flags;
+ 	bool base_present;
++	const u8 event_type = ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
  
--	__INITDATA
--
--	.balign 4
--GLOBAL(early_recursion_flag)
--	.long 0
--
- #define NEXT_PAGE(name) \
- 	.balign	PAGE_SIZE; \
- GLOBAL(name)
-@@ -375,6 +369,8 @@ GLOBAL(name)
- 	.endr
- 
- 	__INITDATA
-+	.balign 4
-+
- NEXT_PGD_PAGE(early_top_pgt)
- 	.fill	512,8,0
- 	.fill	PTI_USER_PGD_FILL,8,0
-@@ -382,6 +378,9 @@ NEXT_PGD_PAGE(early_top_pgt)
- NEXT_PAGE(early_dynamic_pgts)
- 	.fill	512*EARLY_DYNAMIC_PAGE_TABLES,8,0
- 
-+GLOBAL(early_recursion_flag)
-+	.long 0
-+
- 	.data
- 
- #if defined(CONFIG_XEN_PV) || defined(CONFIG_PVH)
+-	if (ec->event_data.event_type == EC_MKBP_EVENT_SWITCH) {
++	if (event_type == EC_MKBP_EVENT_SWITCH) {
+ 		base_present = cbas_parse_base_state(
+ 					&ec->event_data.data.switches);
+ 		dev_dbg(cbas_ec.dev,
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
