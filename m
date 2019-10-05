@@ -2,190 +2,191 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA7AC4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29B3C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9237222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D21222CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmnkvKAn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hInKtJ1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfJERRv (ORCPT
+        id S1728697AbfJERT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 13:17:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34305 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfJERRu (ORCPT
+        Sat, 5 Oct 2019 13:19:59 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:37001 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfJERT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 13:17:50 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j19so9602510lja.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 10:17:48 -0700 (PDT)
+        Sat, 5 Oct 2019 13:19:59 -0400
+Received: by mail-yw1-f67.google.com with SMTP id m7so3538137ywe.4;
+        Sat, 05 Oct 2019 10:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aOGwf0ucGcTkS6kG4Kqk1TV9ERcqoABUEj/aVR2d/Z8=;
-        b=nmnkvKAnmJ6huZwLDkCbI0BEMZz0U8eNx9E3GwVdoU8kYKN/jHK+JoN/4Tuo3frO4R
-         BcYnL9nLZxSH1mKKGsVA4dAM6ovSFVaBo4xJWx6CmqYOA599+ckIlBAu1Fh+GZRObNle
-         E1eSKC2s/JuahQdWmCAePmmoD/uvO01Cbfva3VjcNP7R4QuROA7VMXbYVNVGgaH1GHs7
-         IMqMcvm4Ctz4J8gtDSo/JxqnxLGnc7Q1D3uOfIl/aU9jpUF5+AJWCCGH9n+5Zlb3Iq5I
-         eTvzOpNlkWQEcQEMReCgy9S3vBvKWct2BWfpV22ZA6d0YRVGn9nH/Dot7oNZNfcqT0QS
-         D+AQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MGAToH7gf0cf1NNYqYOLRrO0bNygR1ZINN+gs4KcfjI=;
+        b=hInKtJ1wQDIAaaHqSxMc1KyxX4ngqQzK06TYsc/fewv9OUTewxjNvhoAA22E2/loFi
+         wasFDBlq9zqGi2r4tcMli2676VkrYeWc1VXonj2huB9BN3/KO62U593XrF3cCPk9zh6/
+         Ro3i0ArBfq+DiD4Hjv4cx+SzU6bYwnUpYuNYZyv3BwS51hHP+2oNYpbFzTziWvHPq8uA
+         rxkpkdoCpCasIyeZOFSod3u9r/N1cd2scssUF3wZUa98SWne/8/bY2otB/XZ9Pu6S6ie
+         GdABnngINi8bA5qSz0P8R+JqRAjS6T41wKr3An9fF/dYeSQaFX8z5Jmv3S99rwN62CoH
+         a1gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aOGwf0ucGcTkS6kG4Kqk1TV9ERcqoABUEj/aVR2d/Z8=;
-        b=EImhgyLI/ArLrxbPnSfo7nRnHNktIJCu6dnmAVrur1TwF5Ddbz+dVQ2VbtAvTn9jly
-         5KJ5oqM0XPx83O7viTRjEwWfyO0g+LNbTLIiA5FQV4OY+9kcm/vk0x2V9TRBk2IUDkkX
-         hC88VZwiWuaSalwlnLgzRU+y9R4SPVtW6JnLMesls4/t2Si9HPyXX8PpxaigV8KesTcp
-         weJZSEXRZAjNrnpxxypl5+p8jgOJHvTuJPAdQjEaHMvyQb5YMHA4dclMjPvp0koSS2bK
-         mXPhKhCZZx792dUVBubfu2Lbs+iPaAYzORkrI6+5/+YzlEfdzzRV2tKMd21ayHbGTGtC
-         169w==
-X-Gm-Message-State: APjAAAUA99XRBnX+jjCzAT1aIU8DzweCWYOnHLFsFDWi/d1MrJS1gvmg
-        f66p7EGRghBpY6hSuwZ1/qLwwqp28v81O7VvOI8=
-X-Google-Smtp-Source: APXvYqyf/R203uk2dgYx0dAoz07OE5wQM2/VxwGuukp6SCj3pp06/9Av8SFyEJVAMxTC6tvX/q3IcsKfaB2lYXQp5R8=
-X-Received: by 2002:a2e:9a4e:: with SMTP id k14mr9654449ljj.129.1570295867498;
- Sat, 05 Oct 2019 10:17:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MGAToH7gf0cf1NNYqYOLRrO0bNygR1ZINN+gs4KcfjI=;
+        b=ar4ZQ2DbRujuifOQqYF29wn1um0T2hCrz0+e0O/xQSeVaE8Jni/nFkf+zvybjTwgbb
+         XTGKPnFUUlPV4Hu6Q59jFyHyV7Cy5Fopcz0PiPqrzoThdTGxbypiHdCRBefRrJBpblkb
+         wiNpxveRBcb45/zjLXFSvt/kPhCBuAVUn4PjMaTclBzL7aRZOrIzDIa4oys6BTPWnnJs
+         xwzKTHln4fwpjs/q6+Jrsq/3YLvFLv+8eymnc/j9B+k2Ee+RwwAIPs+j+ZXelh8q96iX
+         NYyHjJPkad49DDmYUbRV8OScpVd7kwGcxAfmucC0noVACTJMBHcK9NPyJwguvsXiJ2vm
+         cncA==
+X-Gm-Message-State: APjAAAW7iGxYVIfiI2PebtI6pwqTILfCSsy8wLtASpwRykG5ehESlYVK
+        ekRpdTk91WaWEbEKCYGLEz4=
+X-Google-Smtp-Source: APXvYqwwjA05OEJO+32btwCbv0PRqgBlNIanc9PkgxO2kfSjusl2VL25zMbuvWbNGxLNX46za0Mg4Q==
+X-Received: by 2002:a81:3601:: with SMTP id d1mr15208844ywa.103.1570295998277;
+        Sat, 05 Oct 2019 10:19:58 -0700 (PDT)
+Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
+        by smtp.gmail.com with ESMTPSA id y205sm2445684ywc.6.2019.10.05.10.19.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 10:19:57 -0700 (PDT)
+Date:   Sat, 5 Oct 2019 13:19:38 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        David Lechner <david@lechnology.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH v3 0/2] Simplify count_read/count_write/signal_read
+Message-ID: <20191005171938.GA7199@icarus>
+References: <cover.1568816248.git.vilhelm.gray@gmail.com>
+ <20191005153255.4290ce81@archlinux>
 MIME-Version: 1.0
-References: <cover.1570292505.git.joe@perches.com> <79237afe056af8d81662f183491e3589922b8ddd.1570292505.git.joe@perches.com>
-In-Reply-To: <79237afe056af8d81662f183491e3589922b8ddd.1570292505.git.joe@perches.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 5 Oct 2019 19:17:36 +0200
-Message-ID: <CANiq72kU2_s=58HqdN6VMGDAh_+G+dtns9xzoc4huSVwP+ZXUg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191005153255.4290ce81@archlinux>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+On Sat, Oct 05, 2019 at 03:33:08PM +0100, Jonathan Cameron wrote:
+> Hi William,
+> 
+> This all makes sense to me.  Do you want to wait for some more reviews
+> or should I pick them up now through IIO?  We are really early in
+> the cycle so plenty of time, unless there are new drivers coming you
+> want to use these from the start.
+> 
+> Thanks,
+> 
+> Jonathan
 
-On Sat, Oct 5, 2019 at 6:46 PM Joe Perches <joe@perches.com> wrote:
->
-> Reserve the pseudo keyword 'fallthrough' for the ability to convert the
-> various case block /* fallthrough */ style comments to appear to be an
-> actual reserved word with the same gcc case block missing fallthrough
-> warning capability.
->
-> All switch/case blocks now must end in one of:
->
->         break;
->         fallthrough;
->         goto <label>;
->         return [expression];
->         continue;
->
-> fallthough is gcc's __attribute__((__fallthrough__)) which was introduced
-> in gcc version 7..
+Getting this in sooner would be better since that will save Fabien from
+having to introduce the COUNTER_COUNT_TALLY type in the cros_ec patch
+submission.
 
-Nits: double period, missing "r" in fallthough.
+The only concern left now is that the TI eQEP driver needs to be updated
+as well for these changes, but it's not in the IIO testing branch yet.
 
-> fallthrough devolves to an empty "do {} while (0)" if the compiler
-> version (any version less than gcc 7) does not support the attribute.
+Do you want to merge this patchset first, or wait until TI eQEP makes it
+into the testing branch? Alternatively, I can merge the cros_ec patchset
+and Intel QEP patchset into my personal repository when they are ready,
+then later submit a git pull request to you with these changes if you
+prefer that route.
 
-Perhaps add a short note why (empty statement warnings maybe? I don't
-remember them but it was months ago so maybe it changed).
+William Breathitt Gray
 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Please add Dan's Suggested-by and copy the things I wrote in the
-commit message when I proposed this:
-
-  https://github.com/ojeda/linux/commit/668f011a2706ea555987e263f609a5deba9c7fc4
-
-> ---
->  include/linux/compiler_attributes.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-> index 6b318efd8a74..cdf016596659 100644
-> --- a/include/linux/compiler_attributes.h
-> +++ b/include/linux/compiler_attributes.h
-> @@ -40,6 +40,7 @@
->  # define __GCC4_has_attribute___noclone__             1
->  # define __GCC4_has_attribute___nonstring__           0
->  # define __GCC4_has_attribute___no_sanitize_address__ (__GNUC_MINOR__ >= 8)
-> +# define __GCC4_has_attribute___fallthrough__         0
-
-This goes after __externally_visible__.
-
->  #endif
->
->  /*
-> @@ -185,6 +186,22 @@
->  # define __noclone
->  #endif
->
-> +/*
-> + * Add the pseudo keyword 'fallthrough' so case statement blocks
-> + * must end with any of these keywords:
-> + *   break;
-> + *   fallthrough;
-> + *   goto <label>;
-> + *   return [expression];
-> + *
-> + *  gcc: https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
-
-This also goes after __externally_visible__.
-
-Please add:
-
-  * Optional: only supported since gcc >= 7.1
-  * Optional: only supported since clang >= 10
-  * Optional: not supported by icc
-
-As well as:
-
-  clang: https://clang.llvm.org/docs/AttributeReference.html#fallthrough
-
-See how I did it in the link above:
-
-  https://github.com/ojeda/linux/commit/668f011a2706ea555987e263f609a5deba9c7fc4
-
-> + */
-> +#if __has_attribute(__fallthrough__)
-> +# define fallthrough                    __attribute__((__fallthrough__))
-> +#else
-> +# define fallthrough                    do {} while (0)  /* fallthrough */
-> +#endif
-> +
->  /*
->   * Note the missing underscores.
->   *
-> --
-> 2.15.0
->
-
-Cheers,
-Miguel
+> On Wed, 18 Sep 2019 23:22:44 +0900
+> William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+> 
+> > Changes in v3:
+> >  - Squash code changes to single patch to avoid compilation error
+> > 
+> > The changes in this patchset will not affect the userspace interface.
+> > Rather, these changes are intended to simplify the kernelspace Counter
+> > callbacks for counter device driver authors.
+> > 
+> > The following main changes are proposed:
+> > 
+> > * Retire the opaque counter_count_read_value/counter_count_write_value
+> >   structures and simply represent count data as an unsigned integer.
+> > 
+> > * Retire the opaque counter_signal_read_value structure and represent
+> >   Signal data as a counter_signal_value enum.
+> > 
+> > These changes should reduce some complexity and code in the use and
+> > implementation of the count_read, count_write, and signal_read
+> > callbacks.
+> > 
+> > The opaque structures for Count data and Signal data were introduced
+> > originally in anticipation of supporting various representations of
+> > counter data (e.g. arbitrary-precision tallies, floating-point spherical
+> > coordinate positions, etc). However, with the counter device drivers
+> > that have appeared, it's become apparent that utilizing opaque
+> > structures in kernelspace is not the best approach to take.
+> > 
+> > I believe it is best to let userspace applications decide how to
+> > interpret the count data they receive. There are a couple of reasons why
+> > it would be good to do so:
+> > 
+> > * Users use their devices in unexpected ways.
+> > 
+> >   For example, a quadrature encoder counter device is typically used to
+> >   keep track of the position of a motor, but a user could set the device
+> >   in a pulse-direction mode and instead use it to count sporadic rising
+> >   edges from an arbitrary signal line unrelated to positioning. Users
+> >   should have the freedom to decide what their data represents.
+> > 
+> > * Most counter devices represent data as unsigned integers anyway.
+> > 
+> >   For example, whether the device is a tally counter or position
+> >   counter, the count data is represented to the user as an unsigned
+> >   integer value. So specifying that one device is representing tallies
+> >   while the other specifies positions does not provide much utility from
+> >   an interface perspective.
+> > 
+> > For these reasons, the count_read and count_write callbacks have been
+> > redefined to pass count data directly as unsigned long instead of passed
+> > via opaque structures:
+> > 
+> >         count_read(struct counter_device *counter,
+> >                    struct counter_count *count, unsigned long *val);
+> >         count_write(struct counter_device *counter,
+> >                     struct counter_count *count, unsigned long val);
+> > 
+> > Similarly, the signal_read is redefined to pass Signal data directly as
+> > a counter_signal_value enum instead of via an opaque structure:
+> > 
+> >         signal_read(struct counter_device *counter,
+> >                     struct counter_signal *signal,
+> >                     enum counter_signal_value *val);
+> > 
+> > The counter_signal_value enum is simply the counter_signal_level enum
+> > redefined to remove the references to the Signal data "level" data type.
+> > 
+> > William Breathitt Gray (2):
+> >   counter: Simplify the count_read and count_write callbacks
+> >   docs: driver-api: generic-counter: Update Count and Signal data types
+> > 
+> >  Documentation/driver-api/generic-counter.rst |  22 ++--
+> >  drivers/counter/104-quad-8.c                 |  33 ++----
+> >  drivers/counter/counter.c                    | 101 +++----------------
+> >  drivers/counter/ftm-quaddec.c                |  14 +--
+> >  drivers/counter/stm32-lptimer-cnt.c          |   5 +-
+> >  drivers/counter/stm32-timer-cnt.c            |  17 +---
+> >  include/linux/counter.h                      |  74 ++------------
+> >  7 files changed, 53 insertions(+), 213 deletions(-)
+> > 
+> 
