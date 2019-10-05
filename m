@@ -2,138 +2,150 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF270C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F076C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A91218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD4F222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X2KcB4+M"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hh4phBLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387660AbfJERAn (ORCPT
+        id S2387669AbfJERHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 13:00:43 -0400
-Received: from mout.web.de ([212.227.15.14]:58213 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbfJERAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 13:00:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570294825;
-        bh=hO8pVDCnGnN+L44oZmDwg+octkPnrarHqchufRH28SQ=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=X2KcB4+MVH4AtiY7iOpMSjByVqhFJ3CnTmXckLca72B/dmRBtqXQTNpaeiPcMhaDF
-         KWdrATD7nhVBX2psgp2O5X2wyl7aIC4YxTr2ZrV282rvXY1IMwgPAHLKhrj4BwaHbP
-         6lJNY71DsWj2wPsjwTBkDaWjUVqoBefGDy8NViCM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.178.111]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lfipe-1hkFwg3pvu-00pJT3; Sat, 05
- Oct 2019 19:00:25 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20191004201649.25087-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] mwifiex: pcie: Fix memory leak in
- mwifiex_pcie_init_evt_ring
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0bbe35aa-dddb-a3b6-bdeb-c54322f3efc3@web.de>
-Date:   Sat, 5 Oct 2019 19:00:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191004201649.25087-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Sat, 5 Oct 2019 13:07:46 -0400
+Received: from mail-eopbgr790104.outbound.protection.outlook.com ([40.107.79.104]:37248
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725826AbfJERHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 13:07:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JU1dTblbWOb1N4XMlC4j//xJsrvTvIL5f6P+hQaMHeWKV5pqwgNI0oz/BQ0CSQ4KOpUocyRcpPwKpOvdQ2vOT6nDOpTUufozQA7DIEuNIDBGHacovutc/8bK4dQ+IVPcpIldUOCIRXuShkYzTNlckIEj1jzozddi/ip9N+kZBz1vM3D4E7e3fwsNUuKaE2lRWji0RQrzuRXFHcnTGJukt+rYUbO5XUSyu6uox6W6qy0s4F/rSDN8mpCJajsmddoIpEhHXwwHMBG4YiivFsQcgHGl/uRL4rUoQnETvdkqLDSfYF32Eh3vUkdQMoQ6sQByWCQSqtVQbE59z5kldEQfLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ykYRDN50MUPe9vqF8SnRBLfv/e0lUiab4pzeAYImQm8=;
+ b=P/k8LjvpbzP6CQT13X7hEReEdAI19RG5icPJa2vYRlxJtKSP1UPIyZbHQCoHZ/fE5Hc171IVOdgVASOyUyh+7btRizDRBPGxx8KvKt5MGEAe+Fq0ZfU9RWtwkno5m3wTJZ0nqHzzO8dWBVnKrpT7M+Shy/Pq7N0uvexQ9iIpIvV7suwEn4BorZOtyZzsRlW97NrAk5qaeilGU1ou0+XxKp94AnTrH302W1dtvY0OwYr0TSQyE4jZUTR2HRBsYMJTyvngTAWLS+XXHhDG/lsnD+oAwEcVD0olD8R9rzM72DBlNh7NQFTYV6WAhSfB4He6KqIHnUTIr1Fonrh4B+qN/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ykYRDN50MUPe9vqF8SnRBLfv/e0lUiab4pzeAYImQm8=;
+ b=hh4phBLEhyIphK3geBgYkm3lTPhMhbBrfNGbUAyNrTS6oFYIJOBgqntxvHkbFngp/KYmexOHid5vu+rUl47nVV+TTTArGvaiuKFotLZ+7Ux0NfBuUA94uR9M5SFSvMPvSulBp1jdb79Px42TwDKMJ59zKc/yglorIYCYv/7oGyk=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0745.namprd21.prod.outlook.com (10.173.172.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.11; Sat, 5 Oct 2019 17:07:02 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.012; Sat, 5 Oct 2019
+ 17:07:02 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: RE: [PATCH v4 4/4] x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+Thread-Topic: [PATCH v4 4/4] x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+Thread-Index: AQHVerwRUoDH1CpwOk2j+xAs0Api66dMSNGQ
+Date:   Sat, 5 Oct 2019 17:07:02 +0000
+Message-ID: <DM5PR21MB0137632BCB5396630281E07FD7990@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <1570111335-12731-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1570111335-12731-5-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <1570111335-12731-5-git-send-email-zhenzhong.duan@oracle.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Provags-ID: V03:K1:zcvLwnmtfhCHYyJgU/tiFy4rDDM2wKToyRQpP+liiq6gccwceuP
- FIeB9+Abhr+8ITpm8v132Rl3IKOkebyWkHlhWxIoDjncO/RxtEyuE1LGftLHIpMfHy9CtuS
- IZwGj0ZWePtcM+BrlTcZoFZpG6ldxY02ZXJAwwTDMGtpYV15TwwBvAG01ApvPDYBkFvhayv
- 4CDde+vYBtkwf7JZhspVQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Q+luW6sB9F0=:tC/mi3mzRZxTXeMa7ylv4u
- +1VyAR44Qt/T+DhSw6NdmHuQ2Nv6HjuFeSHCMi8FywWAshHflRP1J6t+cVTvbGPlaIsBgBcpe
- hKMQUfzwn8SLaFhFPhkKbg4/p3V98Wh/v0glWgNzFCNeliku3t7BoRJ1THpdPe4IZ2Q7HbhEK
- 30pnDs/Pz+4Ej2kbEfXAHkVvKIfdm2RGj03LbUOcvlw0VML6ntOY0XhsqGs681MUlW11ErDC9
- 3EAzn9nj7tdpCWDQjfPGUK2u/3iLUq81uBwV08n3Y8i3vDz8P6cSnelCLpkFBhWhrNjFCI6AJ
- DYT3u1OULnaatzaOjEgT7+LW1TJglYHhjkY8AhuiThUY+AbL4DtfqhEh1qV5Q74JEGnWJK0t8
- Xkfe6IWB41kjt1BGI5ibVkM3D4Zo03FdHX0bQTjFhLBAkzHYSbRAsi0UpetStZDqeAgseL9fV
- IQKGNfFAt9Eq8jtwN3O7+izEsdUFgFin9yNn/nAOEpgvd/KZnZJaELBn84cHzWFERlGvSg6K0
- JNdjGVr+Lgo4HQps4msDazO7QbsXXJGd1CSkbezjpw7HPjboUhFT5gCQeGlfaa5UqTO8Ys6lt
- 2tcQ851mJo8uLUFF8C6oP2pmL+KyxMa1M3cFl3v5/HR3eGzZMmWQ76WVbNAZ8LE3cFFRcPgGv
- xpNb06FwmMxjagadJDy2PJ3B7PnHeWoBM77/sXVo8eVSRyY6Wdqs022ptOAsZaQpSAz0bPVEQ
- ShjvceydWUTk3lmsNVXDEXKpCqqW5XDXwvvqLdqWr2ruhOjjI16quh11pOShhirsvlCpTS8Zc
- xJwK7p5xawn6bSrgOCZFJj/qbfhFmtIyLK57kD9tL0xJK7DJCWrJjSEgH89HhBGCD2SskuByM
- QADyv5LJBldcWD3pPmVCMGhER+vMB88Y7iUZXD5o10V937n3Rx5eF9clt3uf2ub4pFza7tIp5
- Z7Gl8eglY+jNsSm/3sC7Q9xePTKRakYUVR6orQ0fwTsukYE9SLoxQKr+JuIECd6eUuyiPkrEn
- MbuKx6aBi+PX7hiT/C13tI0QzM1PiCieM7v3sux5ujB1lPe4SpcGo87DJAFPcILkKSoFZJakL
- xlG6LoGnlzapbnhN6Y7MgAglA6FG5SvX5PRLK8bV0mCI5rjXfSVJqpLDybNcXM1O77R38MSzF
- lvJMmrECUyXe4G2e4vwLeyhl4mIoQ+cuO4Cm5JfHbqzzyRtvzX3oDlxFlzhFvVfVHpde8NVbe
- 9Pz6XOU+OdA/BEFugJnHtr02iz8h8KhK240Bc1d41n/n81H8i5BJHob6biMQ=
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-05T17:07:00.3174886Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e27722ac-7d8c-451c-b5ce-d145ca606cb6;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6b87dca7-d3bc-433a-60f2-08d749b67132
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM5PR21MB0745:|DM5PR21MB0745:|DM5PR21MB0745:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB07455DB29833AF8FFCB22978D7990@DM5PR21MB0745.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:220;
+x-forefront-prvs: 0181F4652A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(376002)(396003)(346002)(189003)(199004)(81166006)(81156014)(8676002)(8936002)(6246003)(74316002)(305945005)(2501003)(66066001)(7416002)(6116002)(3846002)(256004)(14444005)(10090500001)(4326008)(486006)(52536014)(4744005)(229853002)(9686003)(476003)(11346002)(55016002)(6506007)(186003)(86362001)(6436002)(71190400001)(71200400001)(7736002)(5660300002)(102836004)(446003)(26005)(14454004)(76176011)(33656002)(110136005)(54906003)(76116006)(66556008)(99286004)(25786009)(7696005)(66946007)(8990500004)(64756008)(66476007)(66446008)(2906002)(22452003)(316002)(478600001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0745;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p3zTX3yofiyPdO+3Zd6QwfKZCkfMFBs7eBh1RrH771veCfrR9lDdk5xmCFxpCyPG1ooPQdUwNkJS4k9cAC4OaZAoTGywOOjFbCNgs7YnurU0nsI9ICZar/v1ThoE3MA7V1DGk/4shDIKp186sXwyDNbZLLPQk1xeMS+QXfOpV2rNffOsDyJSPN91QNJv1arOLC6f8cazwYwyiPWAaH/iylVvvdqDne3XOFWZrVAaXEELEU7xODYbiag0kKdXBE7ewLP1UooiVuTLa4b7kONagqtzvqPBcZU2LYoiQgB9jYMY9sEl9m8qt502GYeG8eTEibSEHm2hnXv/3vPUeDZe1/wYLgzjiPE24pTJc3ZKVFwXNN3tw9KMRFvDMoEy2L39eBRcT79kMhHfklwLEwARzoRzDK2OpNrE+Ge9UhX/W0w=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b87dca7-d3bc-433a-60f2-08d749b67132
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Oct 2019 17:07:02.7237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9DYvOqhtClNaTT+bONah5c2/G5V3e1oGQKdQ2LCGcz9EM9j35uWXelRB2RzfJxhUsVpnUMZjYrDnHGZj2ieof8SOvQO5b9MwkLpRB+j5loM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0745
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
-> released if mwifiex_map_pci_memory() fails. The release for skb and
-> card->evtbd_ring_vbase is added.
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>  Sent: Thursday, October 3=
+, 2019 7:02 AM
+>=20
+> Map "hv_nopvspin" to "nopvspin".
+>=20
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 6 +++++-
+>  arch/x86/hyperv/hv_spinlock.c                   | 4 ++++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+>=20
 
-Please improve also this change description.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=4ea655343ce4180fe9b2c7ec8cb8ef9884a47901#n151
-
-Regards,
-Markus
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
