@@ -2,180 +2,173 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015FCC47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F97C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC45521D81
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pfJammvn"
+	by mail.kernel.org (Postfix) with ESMTP id F202E222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbfJEAdV (ORCPT
+        id S1731533AbfJEAdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 20:33:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35685 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730400AbfJEAdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 20:33:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p30so2584366pgl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 17:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D46P+pVFfxgwgDsZx7SQOen52ll2cZjAnqUT3X3NgW0=;
-        b=pfJammvnqsEMehjoLkxaDxOUGpDw9sMZZncjKjevQVD06AywjDWgKxI3wf/rjLvej+
-         UMstuf7cZplWndCtVzElsJOLS9g3ywukZExpQOCwhcvJdVD/JBab/7OxMaqUq+VMf8uB
-         HAlF4ShFAU0DFBIxJWc0azVVvQ3Wy3f/oPQ9fuPzdpvWA0iIdowJ2c5Zbg/9JFOECY68
-         O0WE57VT7qGlC8/9NlRmT3cO731/aVh8fcnZ5D//mK4n1CuG+yjNV9JbOBBcB23LSygI
-         0TQKj3Hpc++fct7e7Rz4uTtgBBwkQmtKSHbbFGBlPsmvEeBSrzgLlq+QG4ouGMdfYcWZ
-         C2hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D46P+pVFfxgwgDsZx7SQOen52ll2cZjAnqUT3X3NgW0=;
-        b=r/MXLz8vFooI9adtAV461W/XcRU2EnGUOasJGrNAfyMxpNgIu9ZsP79fUImwHds0Ak
-         V0RX3nz4kvzvczVgP09yQ3sphaHuOfUb5vsEpiZzmuuzJ3t3gZzMgKMuuNaMScPWU4yp
-         dTK9I1AyeAzwLwKVie5naTFhOKUgpMZCrYRUW5sNgopMadG61qs1pC/NrE4ieJiHsPNa
-         8HTQaDdPD0ItCk6QkP3M1ima940oLUm4JV9a6d7imsYchSE/lYUvNglg3A/T+rGn87vt
-         H9/R01fme3PPZIjRjqYqgQjtK7+piCeHRqltbGfVCKSkvn1+caaUR25WnivhqH+BUUl6
-         UZsg==
-X-Gm-Message-State: APjAAAVkHQXbyjInkVEIHMhkLYReyiH5TNNJTMEUAWZM/MTfp0IqjfH/
-        n3rmnzco1PdakPXeM/U4mEKGbZ4Nx/a9gDNjXt2uWA==
-X-Google-Smtp-Source: APXvYqw66A3fhEGGLREG4yw4Pr+r6ZvkAOqsm8j0EV5rRDrFLbH6NKzALIarwIy5UgNm5Ny2R6LZT6ifOs8an8aRKWI=
-X-Received: by 2002:a63:ba47:: with SMTP id l7mr17994364pgu.201.1570235599104;
- Fri, 04 Oct 2019 17:33:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu> <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com> <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
-In-Reply-To: <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 4 Oct 2019 17:33:07 -0700
-Message-ID: <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     shuah <shuah@kernel.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 4 Oct 2019 20:33:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34432 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730400AbfJEAdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 20:33:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Oct 2019 17:33:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,258,1566889200"; 
+   d="scan'208";a="191743043"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Oct 2019 17:33:22 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
+        hughd@google.com, aarcange@redhat.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH] hugetlb: remove unused hstate in hugetlb_fault_mutex_hash()
+Date:   Sat,  5 Oct 2019 08:33:02 +0800
+Message-Id: <20191005003302.785-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190927151033.aad57472652a0b3a6948df6e@linux-foundation.org>
+References: <20190927151033.aad57472652a0b3a6948df6e@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 4:57 PM shuah <shuah@kernel.org> wrote:
->
-> On 10/4/19 5:52 PM, Brendan Higgins wrote:
-> > On Fri, Oct 4, 2019 at 4:30 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >>
-> >> On Fri, Oct 04, 2019 at 04:47:09PM -0600, shuah wrote:
-> >>>> However, if I encourage arbitrary tests/improvements into my KUnit
-> >>>> branch, it further diverges away from torvalds/master, and is more
-> >>>> likely that there will be a merge conflict or issue that is not related
-> >>>> to the core KUnit changes that will cause the whole thing to be
-> >>>> rejected again in v5.5.
-> >>>
-> >>> The idea is that the new development will happen based on kunit in
-> >>> linux-kselftest next. It will work just fine. As we accepts patches,
-> >>> they will go on top of kunit that is in linux-next now.
-> >>
-> >> I don't see how this would work.  If I add unit tests to ext4, they
-> >> would be in fs/ext4.  And to the extent that I need to add test mocks
-> >> to allow the unit tests to work, they will involve changes to existing
-> >> files in fs/ext4.  I can't put them in the ext4.git tree without
-> >> pulling in the kunit changes into the ext4 git tree.  And if they ext4
-> >> unit tests land in the kunit tree, it would be a receipe for large
-> >> numbers of merge conflicts.
-> >
-> > That's where I was originally coming from.
-> >
-> > So here's a dumb idea: what if we merged KUnit through the ext4 tree?
-> > I imagine that could potentially get very confusing when we go back to
-> > sending changes in through the kselftest tree, but at least it means
-> > that ext4 can use it in the meantime, which means that it at least
-> > gets to be useful to one group of people. Also, since Ted seems pretty
-> > keen on using this, I imagine it is much more likely to produce real
-> > world, immediately useful tests not written by me (I'm not being lazy,
-> > I just think it is better to get other people's experiences other than
-> > my own).
-> >
->
-> That doesn't make sense does it? The tests might not be limited to
-> fs/ext4. We might have other sub-systems that add tests.
+The first parameter hstate in function hugetlb_fault_mutex_hash() is not
+used anymore.
 
-Well, I have some small isolated examples that I think would probably
-work no matter what, so we can get some usage outside of ext4. Also,
-if we want to limit the number of tests, then we don't expect to get
-much usage outside of ext4 before v5.5 anyway. I just figure, it's
-better to make it work for one person than no one, right?
+This patch removes it.
 
-In any case, I admit it is not a great idea. I just thought it had
-some interesting advantages over going in through linux-kselftest that
-were worth exploring.
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+---
+ fs/hugetlbfs/inode.c    |  4 ++--
+ include/linux/hugetlb.h |  4 ++--
+ mm/hugetlb.c            | 12 ++++++------
+ mm/userfaultfd.c        |  5 +----
+ 4 files changed, 11 insertions(+), 14 deletions(-)
 
-> So, we will have to work to make linux-next as the base for new
-> development and limit the number of tests to where it will be
-> easier work in this mode for 5.5. We can stage the pull requests
-> so that kunit lands first followed by tests.
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index a478df035651..715db1e34174 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -440,7 +440,7 @@ static void remove_inode_hugepages(struct inode *inode, loff_t lstart,
+ 			u32 hash;
+ 
+ 			index = page->index;
+-			hash = hugetlb_fault_mutex_hash(h, mapping, index, 0);
++			hash = hugetlb_fault_mutex_hash(mapping, index, 0);
+ 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 			/*
+@@ -644,7 +644,7 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
+ 		addr = index * hpage_size;
+ 
+ 		/* mutex taken here, fault path and hole punch */
+-		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
++		hash = hugetlb_fault_mutex_hash(mapping, index, addr);
+ 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 		/* See if already present in mapping to avoid alloc/free */
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 53fc34f930d0..40e9e3fad1cf 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -105,8 +105,8 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason);
+ void free_huge_page(struct page *page);
+ void hugetlb_fix_reserve_counts(struct inode *inode);
+ extern struct mutex *hugetlb_fault_mutex_table;
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+-				pgoff_t idx, unsigned long address);
++u32 hugetlb_fault_mutex_hash(struct address_space *mapping, pgoff_t idx,
++				unsigned long address);
+ 
+ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
+ 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ef37c85423a5..e0f033baac9d 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3916,7 +3916,7 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 			 * handling userfault.  Reacquire after handling
+ 			 * fault to make calling code simpler.
+ 			 */
+-			hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
++			hash = hugetlb_fault_mutex_hash(mapping, idx, haddr);
+ 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
+ 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
+ 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+@@ -4043,8 +4043,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ }
+ 
+ #ifdef CONFIG_SMP
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+-			    pgoff_t idx, unsigned long address)
++u32 hugetlb_fault_mutex_hash(struct address_space *mapping, pgoff_t idx,
++				unsigned long address)
+ {
+ 	unsigned long key[2];
+ 	u32 hash;
+@@ -4061,8 +4061,8 @@ u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+  * For uniprocesor systems we always use a single mutex, so just
+  * return 0 and avoid the hashing overhead.
+  */
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+-			    pgoff_t idx, unsigned long address)
++u32 hugetlb_fault_mutex_hash(struct address_space *mapping, pgoff_t idx,
++				unsigned long address)
+ {
+ 	return 0;
+ }
+@@ -4106,7 +4106,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	 * get spurious allocation failures if two CPUs race to instantiate
+ 	 * the same page in the page cache.
+ 	 */
+-	hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
++	hash = hugetlb_fault_mutex_hash(mapping, idx, haddr);
+ 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 	entry = huge_ptep_get(ptep);
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 0a40746a5b1e..5c0a80626cf0 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -214,7 +214,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 	unsigned long src_addr, dst_addr;
+ 	long copied;
+ 	struct page *page;
+-	struct hstate *h;
+ 	unsigned long vma_hpagesize;
+ 	pgoff_t idx;
+ 	u32 hash;
+@@ -271,8 +270,6 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 			goto out_unlock;
+ 	}
+ 
+-	h = hstate_vma(dst_vma);
+-
+ 	while (src_addr < src_start + len) {
+ 		pte_t dst_pteval;
+ 
+@@ -283,7 +280,7 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
+ 		 */
+ 		idx = linear_page_index(dst_vma, dst_addr);
+ 		mapping = dst_vma->vm_file->f_mapping;
+-		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
++		hash = hugetlb_fault_mutex_hash(mapping, idx, dst_addr);
+ 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 		err = -ENOMEM;
+-- 
+2.17.1
 
-So we are going to encourage maintainers to allow tests in their tree
-based on KUnit on the assumption that KUnit will get merged before
-there changes? That sounds like a huge burden, not just on us, but on
-other maintainers and users.
-
-I think if we are going to allow tests before KUnit is merged, we
-should have the tests come in through the same tree as KUnit.
-
-> We have a similar situation with kselftest as well. Sub-systems
-> send tests that depend on their tress separately.
-
-Well it is different if the maintainer wants to send the test in
-through their tree, right? Otherwise, it won't matter what the state
-of linux-next is and it won't matter when linux-kselftest gets merged.
-Or am I not understanding you?
