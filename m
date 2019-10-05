@@ -2,192 +2,92 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84554ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 19:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BC0C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 19:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD02222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 19:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406692245C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 19:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMQ6xjlt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yjBGb7Yk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfJETBp (ORCPT
+        id S1729788AbfJETBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 15:01:45 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45127 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfJETBp (ORCPT
+        Sat, 5 Oct 2019 15:01:55 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38628 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfJETBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 15:01:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u12so4736491pls.12;
-        Sat, 05 Oct 2019 12:01:44 -0700 (PDT)
+        Sat, 5 Oct 2019 15:01:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so9723054ljj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 12:01:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w5oAZiGSPpXNuK1uwtnytopuj3PDV8HZJHuPSIRCGfY=;
-        b=SMQ6xjltP8wFyQBHo1N9WhWtUM90tqi1NAC1mTHsQ5WApkLvtUXvR9nI17r23qJ/31
-         Gtjck5swaNEY0aIz0uH0tJQngvDL8806g9UXp/gikykefvPZBMrrwNTwHesnVhndtbNB
-         uKx4fQy5yGJ9N6dH1anVp8pdl0342GNzIdxeggJXw4disfuNBns8KSOEGadVD1fQnvmC
-         3lhvAhmAeTv+ZxVa1natV28wDG70nWk6PeYUiYYlGFE5zoLY5snDNy2K7aK6K8C7UtnN
-         idBSgpXP7aTNsjoJB2xU4+Kn6wtPE9x/lRLfyAjTJmX6evSiFj2vBLvlZJVFkTBEsq9V
-         lDdw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cLnPIVbBJS+TxpO+SqFajYphNiVo4QZ5RCiCT+hdl/0=;
+        b=yjBGb7YkhVlUnWVh1z11Gt4T3I97PkNYGB6u4AujbJIlRcsROUQ8lx59RmCuXDtVnY
+         JfEWnWsXwUbqOoYErwHaZXi9lFD8Ayfsp0mlFtidGFrHL2LKYDLTcBcMTnjxc3C70RVq
+         DYrDQLnn6ZPatonqM+3qWgFGx3No3skQVde3fwBREmdmPk6ZzSy8a9UPJi1n8B/Z0ODl
+         muwChKMZQyZH6wvqbjQ1c6JdYQ+y+0/Ljcqlmw3wvaWn+nr9WxkwR6papCF1gwnqJSk7
+         ks/UQQjnVMMNw8op4JJ/oNy1yd4x3ehqU9P+Yj5j5bfL0I7fP7r2pEqRwPevh90q6EN9
+         GW6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w5oAZiGSPpXNuK1uwtnytopuj3PDV8HZJHuPSIRCGfY=;
-        b=SMQlOmB8USeNZOUhxBqw9RMr+wPr0fGlBC5dSaVqiGcJl1ZV3midWwDFWov5uA8XVk
-         jted13tq/e/KxL35qvpoTA081GjAYsph/Z17YTOUinIQfm1yCNmtY5BiD4m5m1kBesZR
-         O4mtVwPor3h5h4bfeqpB9mzbL1Y4tiVyetspJuD/h/LUsgy/GmNplmjfTBMMouoZ+jlR
-         NiXQwgM0rjAlzyAf1zS/9uHKPDb5y1ZjpXU+7/sW8yaq1Z2LYTLKQnJU5/TMM/L9IUcG
-         9joKQ3Q8rtZEoQjEOGMAsNugsjJxmNIwhxKHqTfMj00aA+57H28wXAdfC/sUEVMD2zlG
-         l+cQ==
-X-Gm-Message-State: APjAAAXW+iVqirPzEa1hPDyFGkZfPLLwpBigHDRc/Iq6IQa5BRCO1ghY
-        1NRSS0XAayecjWkgdB9pU1eMvmJz8gg=
-X-Google-Smtp-Source: APXvYqytt2XwZKYsjUEoqIT1JSjH+1dps/xHrJqBU0UlLsZtG8NBhuUg/Pm+hzNcsH5cULf8KNwrqw==
-X-Received: by 2002:a17:902:b789:: with SMTP id e9mr14712011pls.7.1570302103828;
-        Sat, 05 Oct 2019 12:01:43 -0700 (PDT)
-Received: from harshads0.svl.corp.google.com ([2620:15c:2cd:202:ec1e:207a:e951:9a5b])
-        by smtp.googlemail.com with ESMTPSA id ep10sm23686288pjb.2.2019.10.05.12.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 12:01:43 -0700 (PDT)
-From:   Harshad Shirwadkar <harshadshirwadkar@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        vaibhavrustagi@google.com,
-        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        Josef Bacik <jbacik@fb.com>
-Subject: [PATCH v2] blk-wbt: fix performance regression in wbt scale_up/scale_down
-Date:   Sat,  5 Oct 2019 11:59:27 -0700
-Message-Id: <20191005185927.91209-1-harshadshirwadkar@gmail.com>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cLnPIVbBJS+TxpO+SqFajYphNiVo4QZ5RCiCT+hdl/0=;
+        b=E2ewy9o/AJ3dyVZD5xtpvgj/8vP75zz+diI2x/cy9TkF1ZNFIVEt8k02F16u6Ayuws
+         ftv42QjT1xO69LLp5ikSffWvrXkWylyzbfRMSqQTnRwBzz277HSvKUy9ONlpF6mLCARW
+         +HsyZag3aBpj3CVyZSQIAaR7NMObry/+BsTgK/kNX3YVlS4p34CYxKRvNy9WZD8E2TXg
+         cONaOzljWZU9JhmvxzN7K4REaXSc0JzNN69JzpG+hRHGrEB/dvRi8B5N1142KgJB9DoC
+         0fyCwPmQ6XR9WRkRpSN4dQ2QiWPX2X6yFPgSaExGeTUiiAtNO5b2yhHVKtjCl1SC2H+n
+         2qqA==
+X-Gm-Message-State: APjAAAUv2gErBPMe8Vn2NBmXmegbzcFa7F+sD7zySkZ57j2BdCczKk1m
+        H6Kpojh2dz0OtCHJY3G/K3KFybKKCI3ZlmGCruei27kK
+X-Google-Smtp-Source: APXvYqzKaW2NgNBp6MUPtuvXz9pw5/psSZ8RIpsZPr6vu/11xyyRUj+RCR6PRRrx5s83L0M46vj7xj5KMzhRPKRww8k=
+X-Received: by 2002:a2e:9094:: with SMTP id l20mr13767405ljg.35.1570302112498;
+ Sat, 05 Oct 2019 12:01:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20191004231017.130290-1-dmitry.torokhov@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 5 Oct 2019 21:01:37 +0200
+Message-ID: <CACRpkdZ_+YKKmNrho5edu7hn8UsOCPySSn2YMWz+qjYwMxgvpw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] regulator: switch to using [devm_]fwnode_gpiod_get_index
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scale_up wakes up waiters after scaling up. But after scaling max, it
-should not wake up more waiters as waiters will not have anything to
-do. This patch fixes this by making scale_up (and also scale_down)
-return when threshold is reached.
+On Sat, Oct 5, 2019 at 1:10 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-This bug causes increased fdatasync latency when fdatasync and dd
-conv=sync are performed in parallel on 4.19 compared to 4.14. This
-bug was introduced during refactoring of blk-wbt code.
+> This series swiches regulator drivers form using
+> [devm_]gpiod_get_from_of_node() that is scheduled to be removed in favor
+> of [devm_]fwnode_gpiod_get_index() that behaves more like standard
+> [devm_]gpiod_get_index() and will potentially handle secondary software
+> nodes in cases we need to augment platform firmware.
 
-Changes since V1:
-- Replaced incorrect "return 0" with "return true" in
-  rq_depth_scale_down()
+The series:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Cc: Josef Bacik <jbacik@fb.com>
-Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
----
- block/blk-rq-qos.c | 14 +++++++++-----
- block/blk-rq-qos.h |  4 ++--
- block/blk-wbt.c    |  6 ++++--
- 3 files changed, 15 insertions(+), 9 deletions(-)
+Too bad with the build robots being unable to parse the
+pull deps. Now they hammer out complaints.
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 3954c0dc1443..de04b89e9157 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -142,24 +142,27 @@ bool rq_depth_calc_max_depth(struct rq_depth *rqd)
- 	return ret;
- }
- 
--void rq_depth_scale_up(struct rq_depth *rqd)
-+/* Returns true on success and false if scaling up wasn't possible */
-+bool rq_depth_scale_up(struct rq_depth *rqd)
- {
- 	/*
- 	 * Hit max in previous round, stop here
- 	 */
- 	if (rqd->scaled_max)
--		return;
-+		return false;
- 
- 	rqd->scale_step--;
- 
- 	rqd->scaled_max = rq_depth_calc_max_depth(rqd);
-+	return true;
- }
- 
- /*
-  * Scale rwb down. If 'hard_throttle' is set, do it quicker, since we
-- * had a latency violation.
-+ * had a latency violation. Returns true on success and returns false if
-+ * scaling down wasn't possible.
-  */
--void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
-+bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- {
- 	/*
- 	 * Stop scaling down when we've hit the limit. This also prevents
-@@ -167,7 +170,7 @@ void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- 	 * keep up.
- 	 */
- 	if (rqd->max_depth == 1)
--		return;
-+		return false;
- 
- 	if (rqd->scale_step < 0 && hard_throttle)
- 		rqd->scale_step = 0;
-@@ -176,6 +179,7 @@ void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- 
- 	rqd->scaled_max = false;
- 	rq_depth_calc_max_depth(rqd);
-+	return true;
- }
- 
- struct rq_qos_wait_data {
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 2300e038b9fa..c0f0778d5396 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -125,8 +125,8 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 		 acquire_inflight_cb_t *acquire_inflight_cb,
- 		 cleanup_cb_t *cleanup_cb);
- bool rq_wait_inc_below(struct rq_wait *rq_wait, unsigned int limit);
--void rq_depth_scale_up(struct rq_depth *rqd);
--void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
-+bool rq_depth_scale_up(struct rq_depth *rqd);
-+bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
- bool rq_depth_calc_max_depth(struct rq_depth *rqd);
- 
- void __rq_qos_cleanup(struct rq_qos *rqos, struct bio *bio);
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 313f45a37e9d..5a96881e7a52 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -308,7 +308,8 @@ static void calc_wb_limits(struct rq_wb *rwb)
- 
- static void scale_up(struct rq_wb *rwb)
- {
--	rq_depth_scale_up(&rwb->rq_depth);
-+	if (!rq_depth_scale_up(&rwb->rq_depth))
-+		return;
- 	calc_wb_limits(rwb);
- 	rwb->unknown_cnt = 0;
- 	rwb_wake_all(rwb);
-@@ -317,7 +318,8 @@ static void scale_up(struct rq_wb *rwb)
- 
- static void scale_down(struct rq_wb *rwb, bool hard_throttle)
- {
--	rq_depth_scale_down(&rwb->rq_depth, hard_throttle);
-+	if (!rq_depth_scale_down(&rwb->rq_depth, hard_throttle))
-+		return;
- 	calc_wb_limits(rwb);
- 	rwb->unknown_cnt = 0;
- 	rwb_trace_step(rwb, "scale down");
--- 
-2.23.0.581.g78d2f28ef7-goog
-
+Yours,
+Linus Walleij
