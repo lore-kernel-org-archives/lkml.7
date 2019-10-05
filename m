@@ -2,121 +2,95 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2329AC3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D97C3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB733222C5
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bd/SpF5Z"
+	by mail.kernel.org (Postfix) with ESMTP id BEAEB222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfJEKO6 (ORCPT
+        id S1727928AbfJEKPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 06:14:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34775 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfJEKO5 (ORCPT
+        Sat, 5 Oct 2019 06:15:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39717 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfJEKPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 06:14:57 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b128so5466068pfa.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 03:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3RTNY8wK4fg6Ur2FSGs8j8MYz5LC7K5RU1Q9U1f79zE=;
-        b=bd/SpF5Z6uDGHkSQeb9tqR1c4yP+9mM2N9y/zARpg7UBQjUfkGuHWVD77pi+c099tj
-         +wXHtq/uN3a7co3rwkD4JKB9YLAEu1l5Sgy29gzliPJvDlGGMiYV+siW6/bvfFqgiqSz
-         owpXUicJzYPD5Rygwqj3waXUdqN7oOWKN2lik=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3RTNY8wK4fg6Ur2FSGs8j8MYz5LC7K5RU1Q9U1f79zE=;
-        b=r0X6WR6b9YhNi6gC1wKhH3DZZX09g7l+6yrUj7XtSTVXJrq6oWg7tPScS7MJ3WMu6z
-         dNkpeBJeBrXVsXncN0lZygpdL/WOjYC8AyJZBeidF0xma798o1LpUSR0v8Kas9Ore9kc
-         anJfP1xWRjcgFAGQtrjWo+tryjzF9lWWld2TT0HWnepSgfPP0QDuFLbZasAv2OBjH0RR
-         nYRSRyiMfVG02MJygi072hJ/8HWxLyOFVKShsPCqLQJgJQr3feMemFjGXyUnbdMCkXf+
-         hJhYMSmzEXBFZDfm1cfjBg/g9Y1rS6Kzht+jzoYDAGJa9cJ3j3ngdHLP/604HLo7H9re
-         OsXw==
-X-Gm-Message-State: APjAAAW85QTnwdug4XTKbMnCXGEwm6cCbil70CWyltHNrQAhCOP/FDx4
-        RksH5VrkQ6FcEPMZvPd8+F7Btg==
-X-Google-Smtp-Source: APXvYqy819c+zDO2gbBv4p7WXcuJLsdEBSZATNeDcK4UJhT+HMC7FijTUsBwBco/wu4fFgEuDbevRw==
-X-Received: by 2002:a63:4616:: with SMTP id t22mr20787000pga.123.1570270496997;
-        Sat, 05 Oct 2019 03:14:56 -0700 (PDT)
-Received: from ikjn-glaptop.roam.corp.google.com ([61.254.209.103])
-        by smtp.gmail.com with ESMTPSA id m123sm9607933pfb.133.2019.10.05.03.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 03:14:56 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Enrico Granata <egranata@google.com>,
-        Ting Shen <phoenixshen@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH 2/3] HID: google: Add of_match table to Whiskers switch device.
-Date:   Sat,  5 Oct 2019 18:14:44 +0800
-Message-Id: <20191005101444.146554-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+        Sat, 5 Oct 2019 06:15:10 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iGh5W-0001FB-Ea; Sat, 05 Oct 2019 12:14:58 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 94F1C1C0334;
+        Sat,  5 Oct 2019 12:14:57 +0200 (CEST)
+Date:   Sat, 05 Oct 2019 10:14:57 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/asm: Make boot_gdt_descr local
+Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191003095238.29831-2-jslaby@suse.cz>
+References: <20191003095238.29831-2-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <157027049748.9978.13067332350014336578.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a device tree match table.
+The following commit has been merged into the x86/asm branch of tip:
 
-Change-Id: Iaee68311073cefa4b99cde182bd37d1a67c94ea6
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Commit-ID:     5aa5cbd2e95e0079b2cc6b4b66f0d0de5e0fbbfd
+Gitweb:        https://git.kernel.org/tip/5aa5cbd2e95e0079b2cc6b4b66f0d0de5e0fbbfd
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Thu, 03 Oct 2019 11:52:38 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Sat, 05 Oct 2019 12:11:05 +02:00
+
+x86/asm: Make boot_gdt_descr local
+
+As far as I can see, it was never used outside of head_32.S. Not even
+when added in 2004. So make it local.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191003095238.29831-2-jslaby@suse.cz
 ---
- drivers/hid/hid-google-hammer.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/x86/kernel/head_32.S | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index 31e4a39946f5..bf2b6c6c9787 100644
---- a/drivers/hid/hid-google-hammer.c
-+++ b/drivers/hid/hid-google-hammer.c
-@@ -17,6 +17,7 @@
- #include <linux/hid.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_data/cros_ec_commands.h>
- #include <linux/platform_data/cros_ec_proto.h>
- #include <linux/platform_device.h>
-@@ -272,12 +273,21 @@ static const struct acpi_device_id cbas_ec_acpi_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
+diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
+index 30f9cb2..7feb953 100644
+--- a/arch/x86/kernel/head_32.S
++++ b/arch/x86/kernel/head_32.S
+@@ -597,8 +597,6 @@ int_msg:
+  */
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id cbas_ec_of_match[] = {
-+	{ .compatible = "google,cros-cbas" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, cbas_ec_of_match);
-+#endif
-+
- static struct platform_driver cbas_ec_driver = {
- 	.probe = cbas_ec_probe,
- 	.remove = cbas_ec_remove,
- 	.driver = {
- 		.name = "cbas_ec",
- 		.acpi_match_table = ACPI_PTR(cbas_ec_acpi_ids),
-+		.of_match_table = of_match_ptr(cbas_ec_of_match),
- 		.pm = &cbas_ec_pm_ops,
- 	},
- };
--- 
-2.23.0.581.g78d2f28ef7-goog
-
+ 	.data
+-.globl boot_gdt_descr
+-
+ 	ALIGN
+ # early boot GDT descriptor (must use 1:1 address mapping)
+ 	.word 0				# 32 bit align gdt_desc.address
