@@ -2,134 +2,308 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1A5ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A83C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15320222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WcqjNGqQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2A17D222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570293340;
+	bh=co8QYOFq2+Bv+EHOsHtw/4B/LNeErn2t4IQMxcF09c0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WtC01gs8iccg0ZGBtQRXBPmWfX27bc0722zbPJCWpMJ4K//XIDGgwMtWDJGDboj/3
+	 hdGp5e2K+GuTQ9BIqKiX4SYh90GerO0snvXAbtjox4nhjSwyDXk1SwdI/wKiRBtuco
+	 31llaKpUSyxVD9AHonjll8K31hFNeyYbcLRLnjWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbfJEQa3 (ORCPT
+        id S1729018AbfJEQfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 12:30:29 -0400
-Received: from mout.web.de ([212.227.15.3]:44017 "EHLO mout.web.de"
+        Sat, 5 Oct 2019 12:35:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfJEQa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 12:30:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570293015;
-        bh=87n4kg+fR+Y1+xpvz5fyxHKWdJH95A9k7Flf6LNmjFA=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=WcqjNGqQ58sU8s7B26E2HZ3ve4t/m06v966JI5yt1NzHIoywdmwyv8nJU4RG84bwn
-         mRZR0qfDhgte3NYESA445K6/pzVi+ovSpRpEsv6Rn9z+VLVFPQI1QYocEWvY2uwrA/
-         RghGu0X1JLNmaZvr6gTsBMU4nlrOEPrpea1E5R9o=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.178.111]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MAvVk-1iQiZv1nUa-009vyC; Sat, 05
- Oct 2019 18:30:15 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20191004200319.22394-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] staging: vt6655: Fix memory leak in vt6655_probe
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        devel@driverdev.osuosl.org
-Message-ID: <1d0ba4c6-99ed-e2c9-48a2-ce34b0042876@web.de>
-Date:   Sat, 5 Oct 2019 18:30:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726114AbfJEQfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 12:35:39 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC628218AC;
+        Sat,  5 Oct 2019 16:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570293338;
+        bh=co8QYOFq2+Bv+EHOsHtw/4B/LNeErn2t4IQMxcF09c0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lHIcNztXo+boy4i4JgE2isR2TmBBabKeGgh2EWLesnkB41aHDlvBcvvYzHcld/TFe
+         kBY7QAoxySBRl1vb64Y3szeBx9HYHdQrGLWR3U4OgLVmUi+w79BkfPaWQB7KgabHgR
+         7VzbISi4tJSkxPvUoWXUhbeFFo5836LQPDbkhrMY=
+Date:   Sat, 5 Oct 2019 17:35:32 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 11/13] iio: cros_ec: Expose hwfifo_timeout
+Message-ID: <20191005173532.20fa7bcd@archlinux>
+In-Reply-To: <20190922175021.53449-12-gwendal@chromium.org>
+References: <20190922175021.53449-1-gwendal@chromium.org>
+        <20190922175021.53449-12-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191004200319.22394-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:zd5wPEFaPYD2QW+eeMyABcG/UY6DUrEzSELFjAfB1cCB4lcdG/+
- 7ttLI3kbeQAJkl7tx9//AF9mZdL5A+V2p3vzckE1CRaDzash0xR9Ap3oJT/EZkZ9MhgCirH
- hRUStdXxeuc+9FA/wsM0Qw6RLdjQTSrGevZ63A1a6H2XYks6AK6LULp4myvq+seevKcfFdl
- YvbRp1TmBi3NaUl4FHhYA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:L/LNEIeoKxk=:H5RziFHM248eXRXAyi+437
- 6syRz/mPgRdHCZhNnbiIlkCI8fACKrG1TScrKVYEeEodphajxx2cVP6G5zX6bnnzN0s+84tyX
- CB0R1nFAdNn9ri/ACVCYcbgRxe3X+JxAdBYYLE2Tqospm1jKgF5zYjxS3q8xsdE7c68TWqN0l
- Wlxj43TVzWuDdRmgpQOV3yPiWIXeR+bcRqsRsIbajFenMVGocGv6KTIVIdtwTedzy47BWfos+
- RSdVt8dsD/QQhzgKrEoOo4dxMBmOXpubC82BXLA0Hv0DesY1C3xXOD6u2ui8wKAXxClV2OdMh
- /+DtkqVeX2BTu7ZRjQML9uONFwn/zqlge4X0rqELk8VnokQWKCYC2HDbgYtdgkTZe8AyZDMxK
- 7HT/gkwsL/kxkVYhpqqrkUiNw8pfLiecfSXsSpDCI+VQAYKGdWFpyqgk3By+wtAnL1IYrh04u
- HcXxwE69gLMOM+DNqKfkoUxoYg6P5GkVUrkfQtfGelWX8ViIUV/LbMeb+Zlp8Dc+3+OirJLoj
- wwBI1QBp7EkbWDV+spK0/F5uqAtjG8GrTgNgTdR1jcVCov/1qXnWBRWnomwuysZlFshhLE/JG
- q654arTN+rbVuLfU4Yy8E3bquJJFAorlq1vsi85EiBpoOxQAC/v2P0+CQmIQlx+II7y+6KPjq
- rZtRjxxTkHbBehugmQWxmHeNGkUMI86MicIIE66lkFPl6BiMnZZzd8t9HQ6GxQ2DsqaKIJrIW
- eWy7buKVtLtFuyCcAL6s+fBN7q2I/VzrD1IJvb87fFPnExqSxY8+NTxDHoVE/3gGqDc4sNxUF
- +Uf/2HPGMHC3pjZyBwc5MbBVvy4EyQ72GWs9LCsomBkFiNSkxiwNgT8Z43Uih7ynuDJNNK1s5
- eZcqT6hzgkAiM35Vt5efyxuWh/vesx10ozBAwx0oXWhDItQBrQyCT3AQyNxq1/q7HEgi7d3l8
- APA0oQAtp1WDasJPlvJoYIrTmBG6VrEDtrMSJBqQghKPxVGahszaB+BC7UnRsbVX0YtwNAjJl
- ERUPfmlNJdlI5QlZUiecgZ3PGEnqncSb5ECQzkD+GMzBC3lWUxqgEzJCUSdE+O/FJnq/Ka/7k
- a1P0dd/77acfjlYvNk2Zf56Cs4mVlxx7i/q00tVY6dWw07bF9rSZgbi2B4MJOZ4Q7XlnojDi0
- MlZz7L+BBB2hmYFebXJexQeAc8V04LtWTsj4PVzMgMOY6h+v5LgnWoaAepAeNbfQuAd/vp5Eg
- ZoyNQ8Y9ihWcXezUPQyR3m0KHikM9iKPLRDpOkz0UJlS90L9SAT8d0BtAaFE=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In vt6655_probe, if vnt_init() fails the cleanup code needs to be called
-> like other error handling cases. The call to device_free_info() is
-> added.
+On Sun, 22 Sep 2019 10:50:19 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-Please improve this change description.
+> Expose EC sampling rate through buffer/hwfifo_timeout.
 
-Regards,
-Markus
+This seems a bit odd unless EC term "sampling rate"
+is rather different from what I'd expect. Code looks
+fine though ;)
+
+> Rename frequency to sampling_frequency to match IIO ABI.
+
+That looks like a straight forward bug.  We might
+want to think about pushing that back to older kernels.
+
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |   1 -
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 110 +++++++++++++-----
+>  drivers/iio/light/cros_ec_light_prox.c        |   3 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |   3 +-
+>  4 files changed, 81 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> index b78a942ac8e5..95a4b4cf8f87 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> @@ -255,7 +255,6 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+>  			BIT(IIO_CHAN_INFO_CALIBSCALE);
+>  		channel->info_mask_shared_by_all =
+>  			BIT(IIO_CHAN_INFO_SCALE) |
+> -			BIT(IIO_CHAN_INFO_FREQUENCY) |
+>  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  		channel->info_mask_shared_by_all_available =
+>  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index c4c37c6df301..a31a761e3a81 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/iio/common/cros_ec_sensors_core.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/kfifo_buf.h>
+> +#include <linux/iio/sysfs.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/kernel.h>
+> @@ -84,6 +85,75 @@ static void get_default_min_max_freq(enum motionsensor_type type,
+>  	}
+>  }
+>  
+> +static int cros_ec_sensor_set_ec_rate(struct cros_ec_sensors_core_state *st,
+> +				      int rate)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&st->cmd_lock);
+> +	st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> +	st->param.ec_rate.data = rate;
+> +	ret = cros_ec_motion_send_host_cmd(st, 0);
+> +	if (ret == 0)
+> +		st->curr_sampl_freq = rate;
+> +	mutex_unlock(&st->cmd_lock);
+> +	return ret;
+> +}
+> +
+> +static ssize_t cros_ec_sensor_set_report_latency(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      const char *buf, size_t len)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +	int integer, fract, ret;
+> +	int latency;
+> +
+> +	ret = iio_str_to_fixpoint(buf, 100000, &integer, &fract);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* EC rate is in ms. */
+> +	latency = integer * 1000 + fract / 1000;
+> +	ret = cros_ec_sensor_set_ec_rate(st, latency);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t cros_ec_sensor_get_report_latency(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +	int latency, ret;
+> +
+> +	mutex_lock(&st->cmd_lock);
+> +	st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> +	st->param.ec_rate.data = EC_MOTION_SENSE_NO_VALUE;
+> +
+> +	ret = cros_ec_motion_send_host_cmd(st, 0);
+> +	latency = st->resp->ec_rate.ret;
+> +	mutex_unlock(&st->cmd_lock);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return sprintf(buf, "%d.%06u\n",
+> +		       latency / 1000,
+> +		       (latency % 1000) * 1000);
+> +}
+> +
+> +static IIO_DEVICE_ATTR(hwfifo_timeout, 0644,
+> +		       cros_ec_sensor_get_report_latency,
+> +		       cros_ec_sensor_set_report_latency, 0);
+> +
+> +static const struct attribute *cros_ec_sensor_fifo_attributes[] = {
+> +	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+>  int cros_ec_sensors_push_data(
+>  		struct iio_dev *indio_dev,
+>  		s16 *data,
+> @@ -194,6 +264,9 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  			if (!buffer)
+>  				return -ENOMEM;
+>  
+> +			iio_buffer_set_attrs(buffer,
+> +					     cros_ec_sensor_fifo_attributes);
+> +
+>  			iio_device_attach_buffer(indio_dev, buffer);
+>  			indio_dev->modes = INDIO_BUFFER_SOFTWARE;
+>  			ret = cros_ec_sensorhub_register_push_data(
+> @@ -553,18 +626,6 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> -		st->param.ec_rate.data =
+> -			EC_MOTION_SENSE_NO_VALUE;
+> -
+> -		ret = cros_ec_motion_send_host_cmd(st, 0);
+> -		if (ret)
+> -			break;
+> -
+> -		*val = st->resp->ec_rate.ret;
+> -		ret = IIO_VAL_INT;
+> -		break;
+> -	case IIO_CHAN_INFO_FREQUENCY:
+>  		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
+>  		st->param.sensor_odr.data =
+>  			EC_MOTION_SENSE_NO_VALUE;
+> @@ -613,23 +674,16 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>  	int ret;
+>  
+>  	switch (mask) {
+> -	case IIO_CHAN_INFO_FREQUENCY:
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+>  		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
+>  		st->param.sensor_odr.data = val;
+>  
+>  		/* Always roundup, so caller gets at least what it asks for. */
+>  		st->param.sensor_odr.roundup = 1;
+>  
+> -		ret = cros_ec_motion_send_host_cmd(st, 0);
+> -		break;
+> -	case IIO_CHAN_INFO_SAMP_FREQ:
+> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> -		st->param.ec_rate.data = val;
+> -
+>  		ret = cros_ec_motion_send_host_cmd(st, 0);
+>  		if (ret)
+>  			break;
+> -		st->curr_sampl_freq = val;
+>  		break;
+>  	default:
+>  		ret = -EINVAL;
+> @@ -643,6 +697,7 @@ static int __maybe_unused cros_ec_sensors_prepare(struct device *dev)
+>  {
+>  	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>  	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +	int ret = 0;
+>  
+>  	if (st->curr_sampl_freq == 0)
+>  		return 0;
+> @@ -652,13 +707,10 @@ static int __maybe_unused cros_ec_sensors_prepare(struct device *dev)
+>  	 * sleep. Set sampling to a long period if necessary.
+>  	 */
+>  	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
+> -		mutex_lock(&st->cmd_lock);
+> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> -		st->param.ec_rate.data = CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY;
+> -		cros_ec_motion_send_host_cmd(st, 0);
+> -		mutex_unlock(&st->cmd_lock);
+> +		ret = cros_ec_sensor_set_ec_rate(st,
+> +				CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY);
+>  	}
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static void __maybe_unused cros_ec_sensors_complete(struct device *dev)
+> @@ -670,11 +722,7 @@ static void __maybe_unused cros_ec_sensors_complete(struct device *dev)
+>  		return;
+>  
+>  	if (st->curr_sampl_freq < CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY) {
+> -		mutex_lock(&st->cmd_lock);
+> -		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
+> -		st->param.ec_rate.data = st->curr_sampl_freq;
+> -		cros_ec_motion_send_host_cmd(st, 0);
+> -		mutex_unlock(&st->cmd_lock);
+> +		cros_ec_sensor_set_ec_rate(st, st->curr_sampl_freq);
+>  	}
+>  }
+>  
+> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+> index d58f010880ce..e9b0072d5c88 100644
+> --- a/drivers/iio/light/cros_ec_light_prox.c
+> +++ b/drivers/iio/light/cros_ec_light_prox.c
+> @@ -199,8 +199,7 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+>  
+>  	/* Common part */
+>  	channel->info_mask_shared_by_all =
+> -		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+> -		BIT(IIO_CHAN_INFO_FREQUENCY);
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->info_mask_shared_by_all_available =
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+> diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
+> index c7538e93d24f..aa3cae5a1a15 100644
+> --- a/drivers/iio/pressure/cros_ec_baro.c
+> +++ b/drivers/iio/pressure/cros_ec_baro.c
+> @@ -148,8 +148,7 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+>  	channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+>  	channel->info_mask_shared_by_all =
+>  		BIT(IIO_CHAN_INFO_SCALE) |
+> -		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+> -		BIT(IIO_CHAN_INFO_FREQUENCY);
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+>  	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+>  	channel->scan_type.shift = 0;
+
