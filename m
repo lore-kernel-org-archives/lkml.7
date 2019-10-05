@@ -2,108 +2,175 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF64ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B0C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27576222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570296093;
-	bh=P+A+B/vAX7FWF7rY8J0O5Q3WyY/wMB/KN9IVikAAJEM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=t39DcytqkHV92aa9Qy6vEgN3H+KIOsc1fq642P0x1cKkB4VAbrOl3OhGFPrMRSIQC
-	 mk2fSam+H2J6cHyfDNp4bE0fdyi2ZmakiQpGTJ+ocVPkZSgIJ7jhl++BnPl/P7KHpW
-	 xH6wPGxwRcTtwTID1DYjOrt+EK0fF51f0SPUxab0=
+	by mail.kernel.org (Postfix) with ESMTP id 19698222C8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 17:23:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjHYE04f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfJERVc (ORCPT
+        id S1729348AbfJERXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 13:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfJERVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 13:21:32 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E859222C0;
-        Sat,  5 Oct 2019 17:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570296091;
-        bh=P+A+B/vAX7FWF7rY8J0O5Q3WyY/wMB/KN9IVikAAJEM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=W71fxnXlylJd5Hi9X5SDa0MZfJO2tCUu5VfPVuuOY3ZFB4WgVSRmjEUbHusiher1B
-         qwtIwwqRW3YhTxgk0SJhcn+MyrdcEvQ2K9asEZcwpUHLm9VBdEh9G9OS4SI39a31/Q
-         SgngeuJJh3wC6ZvLIL0Rbj5lIvn2PVubgrd9OcP0=
-Date:   Sat, 5 Oct 2019 10:21:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 08/12] rcu: Force tick on for nohz_full CPUs
- not reaching quiescent states
-Message-ID: <20191005172129.GL2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191003013834.GA12927@paulmck-ThinkPad-P72>
- <20191003013903.13079-8-paulmck@kernel.org>
- <20191003145054.GC27555@lenoir>
+        Sat, 5 Oct 2019 13:23:08 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41723 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfJERXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 13:23:07 -0400
+Received: by mail-io1-f68.google.com with SMTP id n26so20185538ioj.8;
+        Sat, 05 Oct 2019 10:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pxUjmIbw13CFxUgTRwyvWTjL0FCOWPTaQat66nHsxn0=;
+        b=GjHYE04fxu3DN13Mnf7fbSHz1nFx//ZjX7nE9aR/qHFSe2rn6p59OexXtYrrEraHOa
+         cXCoRJk2iT1G5LdGA6mTi8hUidXPkXUBu+tOw+Tx2dvt0IUcjmL41mT7b4dRX8eUrTyk
+         607GLwODe1OC5tQeDGdWeIkX+MYfVZVXXswoWXtm70D9EHTsWqAr/FZsMS7GpIuokoPm
+         9/8/yAHZaDs3AstB1kp0qbEECIodqnVJfQ+l7AG/akZsUlPGpW+a1VQXF08r15qDG0UX
+         a+JybUpzNaVL93WAYik84iCfzADKmk1AcZ4f7dLGNeuLteK+YraQ3dkxhHswE/HTi/kP
+         Qp+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pxUjmIbw13CFxUgTRwyvWTjL0FCOWPTaQat66nHsxn0=;
+        b=XjCDmB2QcTjEQA/14iaHdBh3qk+/njOBDrQE4CCHfZ+jCNoa15+152nFbDyBX+im4H
+         HShQOhSB46rwuXM/QgbojnV9Xayf+fZGavlUotxL8SdjrMIZWblE9RE5pyZLuhXuwVNg
+         DJf4+lAaEL3ckkwc5hCzXIiDQ0+NrFgGRTTbgxzDUrRx/zmy0S14bjSGgiTz3+MC+s8F
+         +AR+zBc7LwjdHxTucL0OKNvpaUqQvqamfNe4Llpu3z3EIOYnie39SE7dGFDg1dgISb8r
+         MbrAqx4yMF34chxNPHTO8nSCTMmKPIrNJR30xlx85s3oCJT7w4wLKqMFsKS89GWrXl/M
+         5nVw==
+X-Gm-Message-State: APjAAAWDFfeyDAfXRlfEquZ4BwtOqglIiBXO191iBlKrBbZKz8yjkXhl
+        A1TTByoiRKBrqZeewisH3KKko3hbpWGChrws5KY=
+X-Google-Smtp-Source: APXvYqw5Yui+O5GuTNL9SpPqBww1zkYRVIwN1ybYrEwInOuQbbnSEOAw3FiqxgVcoXVCZ2BQo2WQINUT+MLaImyTfPk=
+X-Received: by 2002:a6b:da06:: with SMTP id x6mr9478783iob.42.1570296186664;
+ Sat, 05 Oct 2019 10:23:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003145054.GC27555@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1570208647.1250.55.camel@oc5348122405> <20191004233052.28865.1609.stgit@localhost.localdomain>
+ <1570241926.10511.7.camel@oc5348122405>
+In-Reply-To: <1570241926.10511.7.camel@oc5348122405>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sat, 5 Oct 2019 10:22:55 -0700
+Message-ID: <CAKgT0Ud7SupVd3RQmTEJ8e0fixiptS-1wFg+8V4EqpHEuAC3wQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] e1000e: Use rtnl_lock to prevent race conditions
+ between net and pci/pm
+To:     "David Z. Dai" <zdai@linux.vnet.ibm.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, zdai@us.ibm.com,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 04:50:55PM +0200, Frederic Weisbecker wrote:
-> On Wed, Oct 02, 2019 at 06:38:59PM -0700, paulmck@kernel.org wrote:
-> > From: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> > 
-> > CPUs running for long time periods in the kernel in nohz_full mode
-> > might leave the scheduling-clock interrupt disabled for then full
-> > duration of their in-kernel execution.  This can (among other things)
-> > delay grace periods.  This commit therefore forces the tick back on
-> > for any nohz_full CPU that is failing to pass through a quiescent state
-> > upon return from interrupt, which the resched_cpu() will induce.
-> > 
-> > Reported-by: Joel Fernandes <joel@joelfernandes.org>
-> > [ paulmck: Clear ->rcu_forced_tick as reported by Joel Fernandes testing. ]
-> > [ paulmck: Apply Joel Fernandes TICK_DEP_MASK_RCU->TICK_DEP_BIT_RCU fix. ]
-> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+On Fri, Oct 4, 2019 at 7:18 PM David Z. Dai <zdai@linux.vnet.ibm.com> wrote:
+>
+> On Fri, 2019-10-04 at 16:36 -0700, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > This patch is meant to address possible race conditions that can exist
+> > between network configuration and power management. A similar issue was
+> > fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
+> > netif_device_detach").
+> >
+> > In addition it consolidates the code so that the PCI error handling code
+> > will essentially perform the power management freeze on the device prior to
+> > attempting a reset, and will thaw the device afterwards if that is what it
+> > is planning to do. Otherwise when we call close on the interface it should
+> > see it is detached and not attempt to call the logic to down the interface
+> > and free the IRQs again.
+> >
+> > >From what I can tell the check that was adding the check for __E1000_DOWN
+> > in e1000e_close was added when runtime power management was added. However
+> > it should not be relevant for us as we perform a call to
+> > pm_runtime_get_sync before we call e1000_down/free_irq so it should always
+> > be back up before we call into this anyway.
+> >
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > > ---
-> >  kernel/rcu/tree.c | 38 +++++++++++++++++++++++++++++++-------
-> >  kernel/rcu/tree.h |  1 +
-> >  2 files changed, 32 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 74bf5c65..621cc06 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -650,6 +650,12 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
-> >  	 */
-> >  	if (rdp->dynticks_nmi_nesting != 1) {
-> >  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
-> > +		if (tick_nohz_full_cpu(rdp->cpu) &&
-> > +		    rdp->dynticks_nmi_nesting == 2 &&
-> > +		    rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> > +			rdp->rcu_forced_tick = true;
-> > +			tick_dep_set_cpu(rdp->cpu, TICK_DEP_MASK_RCU);
-> 
-> I understand rdp->cpu is always smp_processor_id() here, right? Because calling
-> tick_dep_set_cpu() to a remote CPU while in NMI wouldn't be safe. It would warn anyway.
+> >
+> > I'm putting this out as an RFC for now. I haven't had a chance to do much
+> > testing yet, but I have verified no build issues, and the driver appears
+> > to load, link, and pass traffic without problems.
+> >
+> > This should address issues seen with either double freeing or never freeing
+> > IRQs that have been seen on this and similar drivers in the past.
+> >
+> > I'll submit this formally after testing it over the weekend assuming there
+> > are no issues.
+> >
+> >  drivers/net/ethernet/intel/e1000e/netdev.c |   33 ++++++++++++++--------------
+> >  1 file changed, 17 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> > index d7d56e42a6aa..182a2c8f12d8 100644
+> > --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> > +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
 
-Yes, this is always invoked on the CPU whose ID is rdp->cpu, but thank
-you for checking!
+<snip>
 
-							Thanx, Paul
+> >
+> > -#ifdef CONFIG_PM_SLEEP
+> >  static int e1000e_pm_thaw(struct device *dev)
+> >  {
+> >       struct net_device *netdev = dev_get_drvdata(dev);
+> >       struct e1000_adapter *adapter = netdev_priv(netdev);
+> > +     int rc = 0;
+> >
+> >       e1000e_set_interrupt_capability(adapter);
+> > -     if (netif_running(netdev)) {
+> > -             u32 err = e1000_request_irq(adapter);
+> >
+> > -             if (err)
+> > -                     return err;
+> > +     rtnl_lock();
+> > +     if (netif_running(netdev)) {
+> > +             rc = e1000_request_irq(adapter);
+> > +             if (rc)
+> > +                     goto err_irq;
+> >
+> >               e1000e_up(adapter);
+> >       }
+> >
+> >       netif_device_attach(netdev);
+> > -
+> > -     return 0;
+> > +     rtnl_unlock();
+> > +err_irq:
+> > +     return rc;
+> >  }
+> >
+> In e1000e_pm_thaw(), these 2 lines need to switch order to avoid
+> deadlock.
+> from:
+> +       rtnl_unlock();
+> +err_irq:
+>
+> to:
+> +err_irq:
+> +       rtnl_unlock();
+>
+> I will find hardware to test this patch next week. Will update the test
+> result later.
+>
+> Thanks! - David
+
+Thanks for spotting that. I will update my copy of the patch for when
+I submit the final revision.
+
+I'll probably wait to submit it for acceptance until you have had a
+chance to verify that it resolves the issue you were seeing.
+
+Thanks.
+
+- Alex
