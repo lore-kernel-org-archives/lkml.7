@@ -2,123 +2,107 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42926C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB958C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115E420867
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:15:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VGMr/oM1"
+	by mail.kernel.org (Postfix) with ESMTP id BA178222C8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfJEUPA (ORCPT
+        id S1725905AbfJEU3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 16:15:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28884 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729509AbfJEUO7 (ORCPT
+        Sat, 5 Oct 2019 16:29:54 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59120 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbfJEU3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 16:14:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570306498;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=74m7R2QCNiRN5XO1W/NvGcgKkkecv4UuoVhWV1iP+dQ=;
-        b=VGMr/oM1SJMP+pc9U5Hyrf1L+E/QivH9w9vb/u8xzIkU2/ueHulu5Pg71rEX8lMXZpmxCx
-        6+ig8WzHroHdd89ymjk2I0AFiOUb6XO9BnD2oJ5+ZvX8P42GUioVqy7DFtmj5ExBMNxHbg
-        k33biBAJrOrOPQgL1iM40gWo6l9rnOc=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-132-7sdE9os5Nn-zJqCQGbs7ug-1; Sat, 05 Oct 2019 16:14:55 -0400
-Received: by mail-ed1-f69.google.com with SMTP id 34so6366128edf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 13:14:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tDL81Jt6nq7ggiYD7GVJv4TfLui66vmNV5jvA1q5UxI=;
-        b=eoWVPQan0b60oj9aXY/IQOOAJrECJmGSLS72CjGOO5gN6fmxK7TXVhQ1DExnsDjYPC
-         FX0eGgDZm1R4LSppKaQE6xF6lE0ysS4/I9JCOYbK88NC2sYQy1bnZZGK41xjA2MRQBcW
-         X3z8I8Tw0gYlQV3GFBdr1VFFKxX3JtPYzCB0/yWKWRn94AC+0AScoUvepw+zfXg3kyrC
-         ZuuSKK4TTJ3bXEF8aM0nB5wuEDIVRC9OMn2FLucw9BMavnY6CRvicPdp0bekhp2LM+bh
-         Usqmf6bd5I2zGqOLOsSUFRhBflGI6VOq4MYPLNhYcDGSWQRgX5SAELAP06rSZJT1Qt7L
-         77kw==
-X-Gm-Message-State: APjAAAW2+Z8FdBesN2aVQliv56a28GKPkJ8o7kAF8MvWhdbsFl+QJ6Q5
-        uJMyGOPBZ1rZFZwiOVI+L9/InuM0+vK85jJMoOrLJmwjVOtkmqT5vVjlfY21Ibtmu/ZqOE4TW/7
-        PKkSKCOfxFdpdvB65GV3f2OGX
-X-Received: by 2002:a50:cd1a:: with SMTP id z26mr21461286edi.75.1570306493874;
-        Sat, 05 Oct 2019 13:14:53 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwVWCrzdITY+i/ypf9AQx5ArY37dHswT/NrqAvrmx3g0SZ9rXFiUE3dKcN2ZWzo1xfXVJOhQg==
-X-Received: by 2002:a50:cd1a:: with SMTP id z26mr21461273edi.75.1570306493729;
-        Sat, 05 Oct 2019 13:14:53 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id c22sm2245620edc.9.2019.10.05.13.14.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2019 13:14:52 -0700 (PDT)
-Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
- revert of support for newer surface devices
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191005105551.353273-1-hdegoede@redhat.com>
- <222c364a-bc2b-5960-3fe4-7d1ce222e3e2@gmail.com>
- <96cea5be-d285-8323-1ab2-9c8e87993165@redhat.com>
- <65b265d2-f7a8-bcd7-e63f-f8efb7349324@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ef31abf6-b3f2-f3aa-1536-3ecd5fc819e1@redhat.com>
-Date:   Sat, 5 Oct 2019 22:14:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 5 Oct 2019 16:29:54 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iGqga-0001sj-D0; Sat, 05 Oct 2019 21:29:52 +0100
+Received: from ben by deadeye with local (Exim 4.92.1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iGqga-0005Sc-57; Sat, 05 Oct 2019 21:29:52 +0100
+Message-ID: <0f3eac55aa9ff8f6515fbd7fce94f4784189ff47.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 00/87] 3.16.75-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Sat, 05 Oct 2019 21:29:46 +0100
+In-Reply-To: <20191004230903.GB15860@roeck-us.net>
+References: <lsq.1570043210.379046399@decadent.org.uk>
+         <20191004230903.GB15860@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-vO6FBl6Tvo/WYOA6q1zz"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <65b265d2-f7a8-bcd7-e63f-f8efb7349324@gmail.com>
-Content-Language: en-US
-X-MC-Unique: 7sdE9os5Nn-zJqCQGbs7ug-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 05-10-2019 17:01, Maximilian Luz wrote:
-> Hi, again
->=20
-> On 10/5/19 3:20 PM, Hans de Goede wrote:
->> Ok, on x86 the GPIO drivers really should all be builtin because
->> various ACPI methods including device D0 / D3 (power-on/off) methods
->> may depend on them. So normally this should never happen.
->>
->> If this (-EPROBE_DEFER on surface devices) somehow still is happening
->> please let me know and we will figure something out.
->=20
-> I have never personally experienced this, only received reports which
-> indicated this and that the change (as well as manually reloading
-> soc_button_array) fixed it. I will come back to you if I hear anything
-> in regards to this again.
->=20
-> I have now also tested your patch on the Surface Book 2. Does not cause
-> any issues as far as I can tell.
->=20
-> Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
->=20
-> And if that is needed/wanted
->=20
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+--=-vO6FBl6Tvo/WYOA6q1zz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Great, thank you.
+On Fri, 2019-10-04 at 16:09 -0700, Guenter Roeck wrote:
+> On Wed, Oct 02, 2019 at 08:06:50PM +0100, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.75 release.
+> > There are 87 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Fri Oct 04 19:06:50 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+> For v3.16.74-85-g811e39a80ea5:
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 229 pass: 229 fail: 0
 
-Regards,
+Great, thanks.
 
-Hans
+Ben.
 
+--=20
+Ben Hutchings
+The most exhausting thing in life is being insincere.
+                                                 - Anne Morrow Lindberg
+
+
+
+--=-vO6FBl6Tvo/WYOA6q1zz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl2Y/ToACgkQ57/I7JWG
+EQkexhAAvuRZOTcVYnihwW8ElbLZ3FR3FXxP5y8BLhuX0oFDekMqwKVc5b/ijX9U
+/mLiNvr/FMb6N1RXpuEzT+w4xI48KPXMwgiALUnziedvZD+mQFZ5diVRFb6dE5ae
+Q+kv/81QXH6bLLgkTL/kVfHhxs0bCPdls6IL5nIiq8bYw9Lpm7rdzE3PvZtMkywG
+gGpUuUYaklqMea+6N0Cyz439Hoh6w2pJ8GXgB/29X2mxLRNJJBBVcT3Ayqwek1JA
+mIgBELeZmFufrcqTsCGkco89WCfvkRBZ5BDD5P7zh98/tnts4hs6IkfPRzASQG/1
+ohRHn02BDH3YbxyF8Z1OiebeFoLxmF9P0fwTgfLZhFEqgfpTIz3PGY6mdhQjosI8
+MGAALH9Q/eNL3GCkOviE0DW8PKQBwhKZMa240r3N6UYDyVP7cTB1T6+AW8BFM7w5
+yPauqbXBDuPdk293RxbZzI/pK6JvXiz/aDTpZ393L/IzlDnCx+KLn79ilvIsN4T0
+i4zf0nRimk2Q1XsLGgyefvEvps6HS+cwf760f6IrVsgrzFSGV0fqFrRSncN+U4NW
+PeG5fGfR9apPerHcnAyQI+04xXEyf0MiTqWuPlMXDdJXIA+a7yTtGxqB/XyKDk4J
+8wgUHJo3Cp6hyMFrcA8RI34NnL1bfaPjyj5e4M0jsXVdG3PFvQM=
+=tCY+
+-----END PGP SIGNATURE-----
+
+--=-vO6FBl6Tvo/WYOA6q1zz--
