@@ -2,158 +2,145 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD3BC47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC998C3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BE5222D0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570284853;
-	bh=TuHflHmEutPUZp7LZpISROZKG+shrx1bA5GiMj2kLHA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Er7pV9VsExzMI+upCf+qcJgedEnoDrBfmd0vBPjymrJxs+e4n1L92LFkVFfXZrSFR
-	 Gu7jb7Xe08c+HCAp6vReXxEyVmRB/7RuQJ34beS63IcufwmVK8rquP7EJc3QTwLYv+
-	 QesIbWNzTZQtwnCOIVwAcDSl41qeGGzTvQna9KsY=
+	by mail.kernel.org (Postfix) with ESMTP id 8948E222D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfJEOON (ORCPT
+        id S1728374AbfJEOPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 10:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfJEOOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 10:14:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8D120862;
-        Sat,  5 Oct 2019 14:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570284851;
-        bh=TuHflHmEutPUZp7LZpISROZKG+shrx1bA5GiMj2kLHA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VciFKt0glXSsiTwp/G8D2YxJNiHTtUbK3rLe3DFTDFDxBWY8NSTbcJx5JahZ3Evn/
-         p3NzfmXg4fJHQ4Mrp5hrnv057OZ5411sWDZ/7fyQclVbepiff0yMBxdfSMSXO2ZNOp
-         Srg4VNhYrD0Au7or1nm4O1ewIAwPW+KWxFR6CBjY=
-Date:   Sat, 5 Oct 2019 15:14:04 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hslester96@gmail.com, wsa+renesas@sang-engineering.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 2/3] dt-bindings: iio: light: add veml6030 ALS
- bindings
-Message-ID: <20191005151404.5fc7386f@archlinux>
-In-Reply-To: <b9d5cb134c7c2c7351025a0b556148bca23f302f.1569321085.git.gupt21@gmail.com>
-References: <cover.1569321085.git.gupt21@gmail.com>
-        <b9d5cb134c7c2c7351025a0b556148bca23f302f.1569321085.git.gupt21@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 5 Oct 2019 10:15:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41508 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfJEOPa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 10:15:30 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iGkqD-0003fV-3P; Sat, 05 Oct 2019 14:15:25 +0000
+Date:   Sat, 5 Oct 2019 16:15:24 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Marco Elver <elver@google.com>
+Cc:     syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        bsingharora@gmail.com, LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] taskstats: fix data-race
+Message-ID: <20191005141523.kog6il27seucy2f4@wittgenstein>
+References: <0000000000009b403005942237bf@google.com>
+ <20191005112806.13960-1-christian.brauner@ubuntu.com>
+ <CANpmjNMqTupyPc6-PCviB1HPTHawjzNL1r1gmdQqnwCvE=BNNA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMqTupyPc6-PCviB1HPTHawjzNL1r1gmdQqnwCvE=BNNA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Sep 2019 16:21:57 +0530
-Rishi Gupta <gupt21@gmail.com> wrote:
-
-> This commit adds device tree bindings for veml6030 ambient
-> light sensor.
+On Sat, Oct 05, 2019 at 03:33:07PM +0200, Marco Elver wrote:
+> On Sat, 5 Oct 2019 at 13:28, Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > When assiging and testing taskstats in taskstats
+> > taskstats_exit() there's a race around writing and reading sig->stats.
+> >
+> > cpu0:
+> > task calls exit()
+> > do_exit()
+> >         -> taskstats_exit()
+> >                 -> taskstats_tgid_alloc()
+> > The task takes sighand lock and assigns new stats to sig->stats.
+> >
+> > cpu1:
+> > task catches signal
+> > do_exit()
+> >         -> taskstats_tgid_alloc()
+> >                 -> taskstats_exit()
+> > The tasks reads sig->stats __without__ holding sighand lock seeing
+> > garbage.
 > 
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-looks fine to me, but...
+> Is the task seeing garbage reading the data pointed to by stats, or is
+> this just the pointer that would be garbage?
 
-DT bindings should always be sent to the DT-bindings maintainers and mailing list
-for review.
+I expect the pointer to be garbage.
 
-+CC Rob, Mark and devicetree list.
-
-Jonathan
-
-> ---
-> Changes in v2:
-> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
 > 
->  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
+> My only observation here is that the previous version was trying to do
+> double-checked locking, to avoid taking the lock if sig->stats was
+> already set. The obvious problem with the previous version is plain
+> read/write and missing memory ordering: the write inside the critical
+> section should be smp_store_release and there should only be one
+> smp_load_acquire at the start.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> new file mode 100644
-> index 0000000..969b314
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VEML6030 Ambient Light Sensor (ALS)
-> +
-> +maintainers:
-> +  - Rishi Gupta <gupt21@gmail.com>
-> +
-> +description: |
-> +  Bindings for the ambient light sensor veml6030 from Vishay
-> +  Semiconductors over an i2c interface.
-> +
-> +  Irrespective of whether interrupt is used or not, application
-> +  can get the ALS and White channel reading from IIO raw interface.
-> +
-> +  If the interrupts are used, application will receive an IIO event
-> +  whenever configured threshold is crossed.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.vishay.com/docs/84366/veml6030.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,veml6030
-> +
-> +  reg:
-> +    description:
-> +      I2C address of the device. If the ADDR pin on veml6030
-> +      is pulled up, this address is 0x48. If the ADDR pin is
-> +      pulled down, this address is 0x10.
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
-> +      Refer to interrupt-controller/interrupts.txt for generic
-> +      interrupt client node bindings.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        light-sensor@10 {
-> +                compatible = "vishay,veml6030";
-> +                reg = <0x10>;
-> +                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> +        };
-> +    };
-> +...
+> Maybe I missed something somewhere, but maybe my suggestion below
+> would be an equivalent fix without always having to take the lock to
+> assign the pointer? If performance is not critical here, then it's
+> probably not worth it.
 
+The only point of contention is when the whole thread-group exits (e.g.
+via exit_group(2) since threads in a thread-group share signal struct).
+The reason I didn't do memory barriers was because we need to take the
+spinlock for the actual list manipulation anyway.
+But I don't mind incorporating the acquire/release.
+
+Christian
+
+> 
+> Thanks,
+> -- Marco
+> 
+> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+> index 13a0f2e6ebc2..f58dd285a44b 100644
+> --- a/kernel/taskstats.c
+> +++ b/kernel/taskstats.c
+> @@ -554,25 +554,31 @@ static int taskstats_user_cmd(struct sk_buff
+> *skb, struct genl_info *info)
+>  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+>  {
+>   struct signal_struct *sig = tsk->signal;
+> - struct taskstats *stats;
+> + struct taskstats *stats_new, *stats;
+> 
+> - if (sig->stats || thread_group_empty(tsk))
+> + /* acquire load to make pointed-to data visible */
+> + stats = smp_load_acquire(&sig->stats);
+> + if (stats || thread_group_empty(tsk))
+>   goto ret;
+> 
+>   /* No problem if kmem_cache_zalloc() fails */
+> - stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> + stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+> 
+>   spin_lock_irq(&tsk->sighand->siglock);
+> - if (!sig->stats) {
+> - sig->stats = stats;
+> - stats = NULL;
+> + stats = sig->stats;
+> + if (!stats) {
+> + stats = stats_new;
+> + /* release store to order zalloc before */
+> + smp_store_release(&sig->stats, stats_new);
+> + stats_new = NULL;
+>   }
+>   spin_unlock_irq(&tsk->sighand->siglock);
+> 
+> - if (stats)
+> - kmem_cache_free(taskstats_cache, stats);
+> + if (stats_new)
+> + kmem_cache_free(taskstats_cache, stats_new);
+> +
+>  ret:
+> - return sig->stats;
+> + return stats;
+>  }
+> 
+>  /* Send pid data out on exit */
