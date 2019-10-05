@@ -2,32 +2,44 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E539CC47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AEBC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5832084B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942CC2084D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I/EFFs8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387834AbfJESXK (ORCPT
+        id S2387903AbfJESaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 14:23:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43617 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387486AbfJESXJ (ORCPT
+        Sat, 5 Oct 2019 14:30:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46784 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387486AbfJESaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 14:23:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iGohu-0000XB-DU; Sat, 05 Oct 2019 18:23:06 +0000
+        Sat, 5 Oct 2019 14:30:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+fgV0tic/m2eaYgm1jyj1dhCFsqYL5Ok8DtOhW/xIhw=; b=I/EFFs8tNcRNTTsh4FxjTYyqU
+        9rK/La27+zAz+k0pn/W0fDccyNKZnMSCwifeFGutHV8k9SqZLz3/qEw3OD6QxNPV7F+QtpyQQTTqu
+        wz4M8HwrLgQwofpqgq3Mcyzr5571Zr1KhNLq7ITtjbnaHYEGzVXb8G2SEQcgSpMNvIUdPaclF4UCl
+        L2e25p8EVw8K9UDs20pWATHEi3nqarpH4ahUNWzlly2+iytBZQUsA6i4Z0KcvlMZVvZDeYD8bZOiC
+        3R5yudalCyPgakpsmrsQF78TONjr5kIZXVJALtw4KBuLl8K8fkURfleFLHXNyIaRJTxyzUd13E9sT
+        Zl4qVwEzA==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGoob-00086Y-F8; Sat, 05 Oct 2019 18:30:01 +0000
 Subject: Re: [PATCH] drm/amdkfd: add missing void argument to function
  kgd2kfd_init
-To:     Randy Dunlap <rdunlap@infradead.org>,
+To:     Colin Ian King <colin.king@canonical.com>,
         Felix Kuehling <Felix.Kuehling@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
@@ -38,55 +50,14 @@ To:     Randy Dunlap <rdunlap@infradead.org>,
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20191005175808.32018-1-colin.king@canonical.com>
  <7677a8bc-cc5a-eb03-c7d4-b1a27330126f@infradead.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d9ae3586-f484-9734-1cc7-5e960fde76a3@canonical.com>
-Date:   Sat, 5 Oct 2019 19:23:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ <d9ae3586-f484-9734-1cc7-5e960fde76a3@canonical.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <43fae0fa-aa26-c713-ca64-627b58c6519b@infradead.org>
+Date:   Sat, 5 Oct 2019 11:30:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <7677a8bc-cc5a-eb03-c7d4-b1a27330126f@infradead.org>
+In-Reply-To: <d9ae3586-f484-9734-1cc7-5e960fde76a3@canonical.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,55 +66,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/10/2019 19:10, Randy Dunlap wrote:
-> On 10/5/19 10:58 AM, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
+On 10/5/19 11:23 AM, Colin Ian King wrote:
+> On 05/10/2019 19:10, Randy Dunlap wrote:
+>> On 10/5/19 10:58 AM, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> Function kgd2kfd_init is missing a void argument, add it
+>>> to clean up the non-ANSI function declaration.
+>>>
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 >>
->> Function kgd2kfd_init is missing a void argument, add it
->> to clean up the non-ANSI function declaration.
+>> Acked-by: Randy Dunlap <rdunlap@infradead.org>
 >>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> sparse reports 2 such warnings in amdgpu:
-> 
-> ../drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_module.c:85:18: warning: non-ANSI function declaration of function 'kgd2kfd_init'
-> ../drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c:168:60: warning: non-ANSI function declaration of function 'amdgpu_amdkfd_gfx_10_0_get_functions'
-
-Looking at linux-next, the amdgpu_amdkfd_gfx_10_0_get_functions() was
-removed in commit:
-
-commit e392c887df979112af94cfec08dd87f4dd55d085
-Author: Yong Zhao <Yong.Zhao@amd.com>
-Date:   Fri Sep 27 22:03:42 2019 -0400
-
-    drm/amdkfd: Use array to probe kfd2kgd_calls
-
-..so I didn't fix that one up
-
-Coln
-> 
-> Thanks.
-> 
->> ---
->>  drivers/gpu/drm/amd/amdkfd/kfd_module.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> sparse reports 2 such warnings in amdgpu:
 >>
->> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_module.c b/drivers/gpu/drm/amd/amdkfd/kfd_module.c
->> index 986ff52d5750..f4b7f7e6c40e 100644
->> --- a/drivers/gpu/drm/amd/amdkfd/kfd_module.c
->> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_module.c
->> @@ -82,7 +82,7 @@ static void kfd_exit(void)
->>  	kfd_chardev_exit();
->>  }
->>  
->> -int kgd2kfd_init()
->> +int kgd2kfd_init(void)
->>  {
->>  	return kfd_init();
->>  }
->>
+>> ../drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_module.c:85:18: warning: non-ANSI function declaration of function 'kgd2kfd_init'
+>> ../drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c:168:60: warning: non-ANSI function declaration of function 'amdgpu_amdkfd_gfx_10_0_get_functions'
 > 
+> Looking at linux-next, the amdgpu_amdkfd_gfx_10_0_get_functions() was
+> removed in commit:
 > 
+> commit e392c887df979112af94cfec08dd87f4dd55d085
+> Author: Yong Zhao <Yong.Zhao@amd.com>
+> Date:   Fri Sep 27 22:03:42 2019 -0400
+> 
+>     drm/amdkfd: Use array to probe kfd2kgd_calls
+> 
+> ..so I didn't fix that one up
 
+ah. Thanks.
+
+-- 
+~Randy
