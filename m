@@ -2,154 +2,203 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522E6C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBCEC4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C42222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678D9222CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 15:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570290005;
+	bh=qzZ8scKc7hDWoTIj8h7sqmHcifGcZt/4GAY0vT1rRok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qTmkDgMEG4efkIAuPkhiLjPp4Yl6TjyKNd76D0iiFnFMvs3UE0CuSSfIemTJKhNRF
+	 vuWb/xu1xi4PgnNwfTXHEi68JPXYN/767vcciCFaDwKrE5ObWGW1vcov4JymQHmhPz
+	 NuRvgty+DYJ1oj1mCr9D6OV8OUzsYK35rYlVjma4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfJEPi6 (ORCPT
+        id S1728995AbfJEPkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 11:38:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725826AbfJEPi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 11:38:58 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x95FajBL024940
-        for <linux-kernel@vger.kernel.org>; Sat, 5 Oct 2019 11:38:56 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2veq5r85n3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 11:38:56 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Sat, 5 Oct 2019 16:38:54 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 5 Oct 2019 16:38:51 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x95FcnkA52101342
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 5 Oct 2019 15:38:49 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3FE04C052;
-        Sat,  5 Oct 2019 15:38:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A4064C044;
-        Sat,  5 Oct 2019 15:38:49 +0000 (GMT)
-Received: from localhost (unknown [9.145.65.39])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  5 Oct 2019 15:38:49 +0000 (GMT)
-Date:   Sat, 5 Oct 2019 17:38:47 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.4-rc2
+        Sat, 5 Oct 2019 11:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbfJEPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 11:40:04 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E751020862;
+        Sat,  5 Oct 2019 15:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570290003;
+        bh=qzZ8scKc7hDWoTIj8h7sqmHcifGcZt/4GAY0vT1rRok=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NThlPTVx+PN3UYqVgfdC3FArOoBLWJD3p3WRUeyVi6cmFmup/a5Mdykv0M+0/Q92K
+         M5qSL/TpV9zTGYy6cI6LFnib7rNO6mN1RzcAC8ND3erjKGacXppyOEeN9HhNN8CFJV
+         XTo/JA1Jx7235U6jj1WaL+wr0SGx2BW6L715FEfI=
+Date:   Sat, 5 Oct 2019 16:39:57 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 00/13] cros_ec: Add sensorhub driver and FIFO processing
+Message-ID: <20191005163957.64afa7da@archlinux>
+In-Reply-To: <20190922175021.53449-1-gwendal@chromium.org>
+References: <20190922175021.53449-1-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19100515-0020-0000-0000-0000037551BB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100515-0021-0000-0000-000021CB643D
-Message-Id: <your-ad-here.call-01570289927-ext-8803@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-05_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=690 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910050156
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On Sun, 22 Sep 2019 10:50:08 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-please pull s390 changes for 5.4-rc2.
+> This patchset adds a sensorhub driver for spreading sensor
+> events coming from the Embedded controller sensor FIFO:
+> 
+>        +---------------+ +--------------+ +----
+>        | cros_ec_accel | | cros_ec_gyro | | ...
+>        +---------------+ +--------------+ +----
+>            id:0       \        id:1 |       / id:..
+>                  +------------------------------+
+>                  |       cros_ec_sensorhub      |
+>                  +------------------------------+
+>                  |           cros_ec_dev        |
+>                  +------------------------------+
+>                  | cros_ec_i2c, cros_ec_lpc, .. |
+>                  +------------------------------+
+>                                  |
+>                                  EC
+> 
+> When new sensors events are present, the EC raises and interrupt,
+> sensorhub reads the FIFO and uses the 'id' field to spread the event to
+> the proper IIO sensors. This stack is similar to the HID sensor input
+> stack.
+> 
+> The first 3 patches add a primitive cros_ec_sensorhub. MFD just have to
+> register this driver if at least one sensor is presented by the EC.
+> cros_ec_sensorhub retrieves more information from the EC to find out
+> which sensors are actually present:
+>   mfd: cros_ec: Add sensor_count and make check_features public
+>   platform: cros_ec: Add cros_ec_sensor_hub driver
+>   platform/mfd:iio: cros_ec: Register sensor through sensorhub
+> 
+> The next 3 patches prepare for FIFO support:
+>   platform: chrome: cros-ec: record event timestamp in the hard irq
+>   platform: chrome: cros_ec: Do not attempt to register a non-positive
+>   platform: chrome: cros_ec: handle MKBP more events flag
+> 
+> The next 4 patches add FIFO support. An interface is added to connect
+> the IIO sensors with cros_ec_sensorhub, and filters are needed to spread
+> the timestamp when the EC send batches of events and deal with variation
+> in interrupt delay.
+>   platform: chrome: sensorhub: Add FIFO support
+>   platform: chrome: sensorhub: Add code to spread timestmap
+>   platform: chrome: sensorhub: Add median filter
+>   iio: cros_ec: Use triggered buffer only when EC does not support FIFO
+> 
+> Finally, the last 3 patches present sensor information following the IIO
+> ABI:
+> -  Configurable EC timeout to allow batch mode in buffer/hwfifo_timeout,
+>   in seconds.
+> -  Hard coded EC FIFO size in buffer/hwfifo_watermark_max
+> -  Sensor sampling frequency in hertz at sampling_frequency:
+>   iio: cros_ec: Expose hwfifo_timeout
+>   iio: cros_ec: Report hwfifo_watermark_max
+>   iio: cros_ec: Use Hertz as unit for sampling frequency
+> 
+> For testing, libiio test tools can be used:
+> A iio device link looks like:
+> iio:device1 ->
+> ...09:00/GOOG0004:00/cros-ec-dev.6.auto/cros-ec-sensorhub.7.auto/
+>                      cros-ec-accel.15.auto/iio:device1
+> 
+> When FIFO is available, no trigger are presented. Once
+> sampling_freqeuncy and hwfifo_timeout are set, sensor events flow
+> when listening to /dev/iio:device1:
+> echo 12 > sampling_frequency   # Set ODR to at least 12Hz
+> echo .100 > buffer/hwfifo_timeout  # do not wait more than 100ms to
+>                                    # to send samples
+> iio_readdev -b 2 -T 1000 -s 2 iio:device1 2>/dev/null| od -x
+> 0000000 ffd0 2e20 d990 0000 8630 b56c 07ea 0000
+> 0000020 ffc0 2e10 d970 0000 877e b56c 07ea 0000
+> 0000040`
+> 
+> When FIFO is not supported by the EC, a trigger is present in the
+> directory. After registering a trigger, setting sampling_frequency,
+> the latest data collected by the sensor will be retrieved by the host
+> when the trigger expires.
 
-Thank you,
-Vasily
+This is the only bit that makes me wonder... For other devices we have
+supported allowing triggers even when there is a fifo present.  I assume
+we can disable the fifo if necessary?  In that case we use the hwfifo
+path if no trigger is provided, but if there is one switch back to
+the handling for when the hardware doesn't support such a fifo.
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+Could that model be useful here?
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+Thanks,
 
-are available in the Git repository at:
+Jonathan
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-3
-
-for you to fetch changes up to d0dea733f60efe94257d08ae6eba81d0b511d0a9:
-
-  KVM: s390: mark __insn32_query() as __always_inline (2019-10-05 13:51:22 +0200)
-
-----------------------------------------------------------------
-s390 updates for 5.4-rc2
-
-- Default configs updates.
-
-- Fix build errors with CC_OPTIMIZE_FOR_SIZE due to usage of "i" constraint
-  for function arguments. Two kvm changes acked-by Christian Borntraeger.
-
-- Fix -Wunused-but-set-variable warnings in mm code.
-
-- Avoid a constant misuse in qdio.
-
-- Handle a case when cpumf is temporarily unavailable.
-
-----------------------------------------------------------------
-Heiko Carstens (8):
-      s390/atomic,bitops: mark function(s) __always_inline
-      s390/cpu_mf: mark function(s) __always_inline
-      s390/jump_label: mark function(s) __always_inline
-      s390/mm: mark function(s) __always_inline
-      s390/pci: mark function(s) __always_inline
-      s390: update defconfigs
-      KVM: s390: fix __insn32_query() inline assembly
-      KVM: s390: mark __insn32_query() as __always_inline
-
-Jiri Kosina (1):
-      s390: mark __cpacf_query() as __always_inline
-
-Julian Wiedmann (1):
-      s390/qdio: clarify size of the QIB parm area
-
-Qian Cai (1):
-      s390/mm: fix -Wunused-but-set-variable warnings
-
-Thomas Richter (3):
-      s390/cpumf: Use consistant debug print format
-      s390/cpumsf: Check for CPU Measurement sampling
-      s390/cpumf: Fix indentation in sampling device driver
-
- arch/s390/configs/debug_defconfig    | 24 ++++++++++++++++--------
- arch/s390/configs/defconfig          | 25 ++++++++++++++++---------
- arch/s390/configs/zfcpdump_defconfig |  2 +-
- arch/s390/include/asm/atomic_ops.h   |  2 +-
- arch/s390/include/asm/bitops.h       |  8 ++++----
- arch/s390/include/asm/cpacf.h        |  2 +-
- arch/s390/include/asm/cpu_mf.h       |  8 ++++++--
- arch/s390/include/asm/hugetlb.h      |  9 +++++++--
- arch/s390/include/asm/jump_label.h   |  4 ++--
- arch/s390/include/asm/pgtable.h      | 25 +++++++++++++------------
- arch/s390/include/asm/qdio.h         |  2 +-
- arch/s390/kernel/perf_cpum_cf_diag.c |  4 ++--
- arch/s390/kernel/perf_cpum_sf.c      |  8 +++++++-
- arch/s390/kvm/kvm-s390.c             |  6 +++---
- arch/s390/pci/pci_clp.c              |  2 +-
- drivers/s390/cio/qdio_setup.c        |  2 +-
- drivers/s390/net/qeth_core_main.c    |  3 +--
- 17 files changed, 83 insertions(+), 53 deletions(-)
+> 
+> When cros_ec_accel_legacy driver is used, no FIFO is supported and the
+> sampling frequency for the accelerometers is hard coded at 10Hz.
+> 
+> This set is built upon the master branch of
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> 
+> 
+> Enrico Granata (2):
+>   platform: chrome: cros_ec: Do not attempt to register a non-positive
+>     IRQ number
+>   platform: chrome: cros_ec: handle MKBP more events flag
+> 
+> Gwendal Grignou (11):
+>   mfd: cros_ec: Add sensor_count and make check_features public
+>   platform: cros_ec: Add cros_ec_sensor_hub driver
+>   platform/mfd:iio: cros_ec: Register sensor through sensorhub
+>   platform: chrome: cros-ec: record event timestamp in the hard irq
+>   platform: chrome: sensorhub: Add FIFO support
+>   platform: chrome: sensorhub: Add code to spread timestmap
+>   platform: chrome: sensorhub: Add median filter
+>   iio: cros_ec: Use triggered buffer only when EC does not support FIFO
+>   iio: cros_ec: Expose hwfifo_timeout
+>   iio: cros_ec: Report hwfifo_watermark_max
+>   iio: cros_ec: Use Hertz as unit for sampling frequency
+> 
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |  13 +-
+>  drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
+>  .../cros_ec_sensors/cros_ec_lid_angle.c       |   2 +-
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  14 +-
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 251 ++++-
+>  drivers/iio/light/cros_ec_light_prox.c        |  18 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |  12 +-
+>  drivers/mfd/cros_ec_dev.c                     | 208 +---
+>  drivers/platform/chrome/Kconfig               |  18 +-
+>  drivers/platform/chrome/Makefile              |   2 +
+>  drivers/platform/chrome/cros_ec.c             |  51 +-
+>  drivers/platform/chrome/cros_ec_lpc.c         |   2 +
+>  drivers/platform/chrome/cros_ec_proto.c       |  51 +-
+>  drivers/platform/chrome/cros_ec_sensorhub.c   | 269 +++++
+>  .../platform/chrome/cros_ec_sensorhub_ring.c  | 918 ++++++++++++++++++
+>  .../linux/iio/common/cros_ec_sensors_core.h   |  29 +-
+>  include/linux/mfd/cros_ec.h                   |  17 +
+>  include/linux/platform_data/cros_ec_proto.h   |  30 +-
+>  .../linux/platform_data/cros_ec_sensorhub.h   | 173 ++++
+>  19 files changed, 1780 insertions(+), 300 deletions(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_sensorhub.c
+>  create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+>  create mode 100644 include/linux/platform_data/cros_ec_sensorhub.h
+> 
 
