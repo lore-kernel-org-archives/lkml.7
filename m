@@ -2,145 +2,102 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC998C3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9725AC3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8948E222D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0BF20867
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 14:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZNHjWeN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfJEOPa (ORCPT
+        id S1728124AbfJEOTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 10:15:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41508 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfJEOPa (ORCPT
+        Sat, 5 Oct 2019 10:19:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36080 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfJEOTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 10:15:30 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iGkqD-0003fV-3P; Sat, 05 Oct 2019 14:15:25 +0000
-Date:   Sat, 5 Oct 2019 16:15:24 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Marco Elver <elver@google.com>
-Cc:     syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        bsingharora@gmail.com, LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] taskstats: fix data-race
-Message-ID: <20191005141523.kog6il27seucy2f4@wittgenstein>
-References: <0000000000009b403005942237bf@google.com>
- <20191005112806.13960-1-christian.brauner@ubuntu.com>
- <CANpmjNMqTupyPc6-PCviB1HPTHawjzNL1r1gmdQqnwCvE=BNNA@mail.gmail.com>
+        Sat, 5 Oct 2019 10:19:05 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so10352587wrd.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 07:19:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5c+80gfuhaDVm4O1ji2rUPY3d7u88SmARcL9f7vN7dY=;
+        b=mZNHjWeNPmo5BapnTp7RGJqxGLhREJ4bX3fwgK/s9gougd5fNMzMt7OPcJjngnFQ3x
+         7xkaxz25z1VWtliMz7q6nAuBj4Y6qQnUbkf7eZg+vFaj21YfS8L05t1WjDknNK/u+tsq
+         a9XHHC2bJMrWUx15w7NYLn9prPjMkYQ2pukIA/TGblZPBVHvB2pQCcxiowCmOfxy2oaN
+         QtJ7JCwdi22t6uQkvYQOndUpobBfsOYWhvOJjXhrK0UaqOFtsecOve3iAbEVmjtkvdCp
+         +6v+8CgsOCWE7kvOOtIDvy903zkYlIOlfBGtpAtZwxMi7NA8FfxX/zyByD0epPyHKGwC
+         iI7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5c+80gfuhaDVm4O1ji2rUPY3d7u88SmARcL9f7vN7dY=;
+        b=hi37xYzQO2B4p9G61G16fNs/WBqiW5YNX0AnlGH0GarIEoX1LlLnJno7rKQ37VpxBW
+         z/hlaToI2t4QcryVFTeRvsgx/WhJCvlq8ve59aLor3bt07D2ku4BMTvXSWpDrXlPJIyb
+         VtouSqraHHQqooywFJfGo4nKVWMi7z7OPSpyvCP2wgabA2cit0qpFyR+eBoXTgBUjk7X
+         PIAGYj0n858LJES0MB0gceNGTM1mwM8tA0FWVVEsXWPhyWv1ua4HCyITOpQ3j4Ih8VSw
+         EcUlA0oCp7ptY9aFjavLWEcN4SkuAqm45THWFL69G1+hwnpxNbwf2Ex/x62vFrTFSjrA
+         fjHQ==
+X-Gm-Message-State: APjAAAVLA9fukctSbrYFvPeD/nifp0Q/EpThJABHzQ/wxwALi5aP+84D
+        RKydE4pAmm/kfny1iryWK3U=
+X-Google-Smtp-Source: APXvYqwscbFmjT1IGg3hC0Kg1mBJY6UX/5CYfa0zNu/seamnmezggP7S0/FwWrabio+Ge1irjUcDXA==
+X-Received: by 2002:adf:e588:: with SMTP id l8mr1614352wrm.290.1570285142895;
+        Sat, 05 Oct 2019 07:19:02 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
+        by smtp.gmail.com with ESMTPSA id c17sm1480126wrc.60.2019.10.05.07.19.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 07:19:02 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: remove unnecessary asignment and initialization
+Date:   Sat,  5 Oct 2019 16:18:52 +0200
+Message-Id: <20191005141852.88712-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMqTupyPc6-PCviB1HPTHawjzNL1r1gmdQqnwCvE=BNNA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 03:33:07PM +0200, Marco Elver wrote:
-> On Sat, 5 Oct 2019 at 13:28, Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > When assiging and testing taskstats in taskstats
-> > taskstats_exit() there's a race around writing and reading sig->stats.
-> >
-> > cpu0:
-> > task calls exit()
-> > do_exit()
-> >         -> taskstats_exit()
-> >                 -> taskstats_tgid_alloc()
-> > The task takes sighand lock and assigns new stats to sig->stats.
-> >
-> > cpu1:
-> > task catches signal
-> > do_exit()
-> >         -> taskstats_tgid_alloc()
-> >                 -> taskstats_exit()
-> > The tasks reads sig->stats __without__ holding sighand lock seeing
-> > garbage.
-> 
-> Is the task seeing garbage reading the data pointed to by stats, or is
-> this just the pointer that would be garbage?
+Variable badworden is asigned in two subsequent lines. So the first
+asignment is useless and not needed. Also the initialization to zero
+is not needed. Remove the first asignment and the initialization.
 
-I expect the pointer to be garbage.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_efuse.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> 
-> My only observation here is that the previous version was trying to do
-> double-checked locking, to avoid taking the lock if sig->stats was
-> already set. The obvious problem with the previous version is plain
-> read/write and missing memory ordering: the write inside the critical
-> section should be smp_store_release and there should only be one
-> smp_load_acquire at the start.
-> 
-> Maybe I missed something somewhere, but maybe my suggestion below
-> would be an equivalent fix without always having to take the lock to
-> assign the pointer? If performance is not critical here, then it's
-> probably not worth it.
+diff --git a/drivers/staging/rtl8188eu/core/rtw_efuse.c b/drivers/staging/rtl8188eu/core/rtw_efuse.c
+index 02c476f45b33..d191dbef0bb3 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_efuse.c
++++ b/drivers/staging/rtl8188eu/core/rtw_efuse.c
+@@ -615,10 +615,9 @@ static bool hal_EfusePgPacketWrite1ByteHeader(struct adapter *pAdapter, u8 efuse
+ static bool hal_EfusePgPacketWriteData(struct adapter *pAdapter, u8 efuseType, u16 *pAddr, struct pgpkt *pTargetPkt)
+ {
+ 	u16	efuse_addr = *pAddr;
+-	u8 badworden = 0;
++	u8 badworden;
+ 	u32	PgWriteSuccess = 0;
+ 
+-	badworden = 0x0f;
+ 	badworden = Efuse_WordEnableDataWrite(pAdapter, efuse_addr + 1, pTargetPkt->word_en, pTargetPkt->data);
+ 	if (badworden == 0x0F) {
+ 		/*  write ok */
+-- 
+2.23.0
 
-The only point of contention is when the whole thread-group exits (e.g.
-via exit_group(2) since threads in a thread-group share signal struct).
-The reason I didn't do memory barriers was because we need to take the
-spinlock for the actual list manipulation anyway.
-But I don't mind incorporating the acquire/release.
-
-Christian
-
-> 
-> Thanks,
-> -- Marco
-> 
-> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> index 13a0f2e6ebc2..f58dd285a44b 100644
-> --- a/kernel/taskstats.c
-> +++ b/kernel/taskstats.c
-> @@ -554,25 +554,31 @@ static int taskstats_user_cmd(struct sk_buff
-> *skb, struct genl_info *info)
->  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
->  {
->   struct signal_struct *sig = tsk->signal;
-> - struct taskstats *stats;
-> + struct taskstats *stats_new, *stats;
-> 
-> - if (sig->stats || thread_group_empty(tsk))
-> + /* acquire load to make pointed-to data visible */
-> + stats = smp_load_acquire(&sig->stats);
-> + if (stats || thread_group_empty(tsk))
->   goto ret;
-> 
->   /* No problem if kmem_cache_zalloc() fails */
-> - stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> + stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> 
->   spin_lock_irq(&tsk->sighand->siglock);
-> - if (!sig->stats) {
-> - sig->stats = stats;
-> - stats = NULL;
-> + stats = sig->stats;
-> + if (!stats) {
-> + stats = stats_new;
-> + /* release store to order zalloc before */
-> + smp_store_release(&sig->stats, stats_new);
-> + stats_new = NULL;
->   }
->   spin_unlock_irq(&tsk->sighand->siglock);
-> 
-> - if (stats)
-> - kmem_cache_free(taskstats_cache, stats);
-> + if (stats_new)
-> + kmem_cache_free(taskstats_cache, stats_new);
-> +
->  ret:
-> - return sig->stats;
-> + return stats;
->  }
-> 
->  /* Send pid data out on exit */
