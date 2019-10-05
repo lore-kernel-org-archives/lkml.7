@@ -2,761 +2,1531 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09035C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F2EC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53F2222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570292659;
-	bh=w1RQZ9uAwUrnzsvjaMQ4+H5iGjs5GNKlqp+TPURqoRA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=L7OqSfTv+3lod5a8TbenxiV4GfIzOIdY0pHYa0xQXZJe6WS23FtNcdaRnFN38CeUv
-	 MVKG1ET+rCj08ClPq30v3fi7nKtOi5DlVBQQ92v6WnFdCwofr6BXHAnyyQsOixmyN5
-	 pdQhpyKxezah8rI6j3X00yVU4Xs1IpGEdPKz/VR0=
+	by mail.kernel.org (Postfix) with ESMTP id C781820862
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urerP07X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbfJEQYT (ORCPT
+        id S1729148AbfJEQ3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 12:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbfJEQYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 12:24:18 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A78BE20862;
-        Sat,  5 Oct 2019 16:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570292655;
-        bh=w1RQZ9uAwUrnzsvjaMQ4+H5iGjs5GNKlqp+TPURqoRA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mb/gyUZw21pgqPp7uYOTjX/HLci5QcdfNKbIg+A9zl9alX88V8wjTZRtD5NT3ae32
-         n5Zbnc28dlIOY13qnye7wipvrstPZsjRM8wuNlMFJfIjb6R+R3+y7q5guRTI2Mev+h
-         VJaRx+Z0IEK0lyNwaSWPlb1JDhEUVrI8tIxHs0ZA=
-Date:   Sat, 5 Oct 2019 17:24:09 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 09/13] platform: chrome: sensorhub: Add median filter
-Message-ID: <20191005172409.2ad45bd0@archlinux>
-In-Reply-To: <20190922175021.53449-10-gwendal@chromium.org>
-References: <20190922175021.53449-1-gwendal@chromium.org>
-        <20190922175021.53449-10-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 5 Oct 2019 12:29:10 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42743 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfJEQ3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 12:29:09 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f16so8766555qkl.9;
+        Sat, 05 Oct 2019 09:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bCsDJFs0VW+eVAS1KhxX45t1uZ+34prQYaV8ux690a0=;
+        b=urerP07XK74h5iyhtd2qEvmdsmAo1DITTw8xdtvRAobWFZ+bQEtme7DIQAicaHM4lw
+         3jSpRyVNnXQ2Z7XnXmoZoRFhEOoyDrjq/ThCjBi7YUFBh1eL94xTMXFYtVFglxBQpJrQ
+         YxRjb8jpVIAnPJCz07ncmUhoun9balCjViT9GgNTCHGWFviUbvViJmqhltm/SExZ7yto
+         V7POk7unIJKvftuJh//TDBGe0qP0rhB4yNyZYVWlpV4+2HLwTjn7GLV0+KDM1N1cBqj9
+         iKCeoKsFWJGpYEZ4hZSdU9N6oN0TW8fI80Nrj+8YMVhY2p2iYmSpGETOLILa+CddQdf9
+         g+nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bCsDJFs0VW+eVAS1KhxX45t1uZ+34prQYaV8ux690a0=;
+        b=HYtkVjfdDqxJYfkrQVk+XmFaZc8S83jYmJbOZzMxkpOxq1gEC0KdZvHSZtTQnMR07Y
+         yGaMjq8ahLvyM8+Dtj5KigVXwmyovlBDWgOBvEWoMEdsAaU5kIGB7FhXk8PPwQEWPkM6
+         1FpmMaXKNU47LTbSPyMoelszefTPZO17vNl6s022gPER8Jd5VxcE/XORsPiLgk0sn7ro
+         HTKWYnL8ztRgiCwWLFeTTiDaRqdVbrmWDlk7X0v5bGbTYhtYA1lx+tEKFbPxsgiAexhv
+         q8pfFGFAOyDFQwhsHk4zKHKEp2wWXC87QSIs1VXTBe1iDr//OC3IKWjCxKO3tEuSkSJu
+         AfhQ==
+X-Gm-Message-State: APjAAAVEUVtI4Tje4H1M9XcQ66Vnk0/JycdUL112X8SIb5VmgVoqBgfm
+        dkZw1T5MxP6Lt/yvcwj1XNPiTwILENwfi4DwRZo=
+X-Google-Smtp-Source: APXvYqw2NrvhNtc4f7h1omFaqyrJAUQJCVmH0sXc/A4NlP0Zr4BnnzCZBBo/TCNXJMaZiD/RPsuukoHs7lxCZ3hZQeM=
+X-Received: by 2002:a37:76c3:: with SMTP id r186mr16255279qkc.224.1570292945349;
+ Sat, 05 Oct 2019 09:29:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190811210043.20122-1-digetx@gmail.com> <20190811210043.20122-13-digetx@gmail.com>
+In-Reply-To: <20190811210043.20122-13-digetx@gmail.com>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Sat, 5 Oct 2019 12:28:54 -0400
+Message-ID: <CAMdYzYqNL_KAYwsnWYuz9wf2xT_RM0cWA8jkKATWMX7yuVq7Hw@mail.gmail.com>
+Subject: Re: [PATCH v10 12/15] memory: tegra: Introduce Tegra30 EMC driver
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Sep 2019 10:50:17 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
+Tested on the Ouya (tegra30).
 
-> Events are timestamped in EC time space, their timestamps need to be
-> converted in host time space.
-> The assumption is the time delta between when the interrupt is sent
-> by the EC and when it is receive by the host is a [small] constant.
-> This is not always true, even with hard-wired interrupt. To mitigate
-> worst offenders, add a median filter to weed out bigger than expected
-> delays.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-This stuff is always hard to get right. I'll assume you've tested
-this extensively :)
+Tested-by: Peter Geis <pgwipeout@gmail.com>
 
-I'll be honest, I'm going to assume you have this right as it would be a
-while before I'd find time to go through this with a fine toothed comb
-and I'd probably need right unit tests etc.  Hence my comments
-are superficial + there is a worrying looking todo in there I don't
-understand ;)
-
-Thanks,
-
-Jonathan
-
-
+On Sun, Aug 11, 2019 at 5:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Introduce driver for the External Memory Controller (EMC) found on Tegra30
+> chips, it controls the external DRAM on the board. The purpose of this
+> driver is to program memory timing for external memory on the EMC clock
+> rate change.
+>
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  .../platform/chrome/cros_ec_sensorhub_ring.c  | 485 +++++++++++++++++-
->  .../linux/platform_data/cros_ec_sensorhub.h   |  65 +++
->  2 files changed, 533 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-> index 48327e80a5a3..9955c80d0907 100644
-> --- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-> +++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-> @@ -69,9 +69,11 @@ int cros_ec_sensorhub_ring_fifo_toggle(
->  		struct cros_ec_sensorhub *sensorhub,
->  		bool on)
+>  drivers/memory/tegra/Kconfig       |   10 +
+>  drivers/memory/tegra/Makefile      |    1 +
+>  drivers/memory/tegra/mc.c          |    9 +-
+>  drivers/memory/tegra/mc.h          |   30 +-
+>  drivers/memory/tegra/tegra30-emc.c | 1232 ++++++++++++++++++++++++++++
+>  drivers/memory/tegra/tegra30.c     |   42 +
+>  include/soc/tegra/mc.h             |    2 +-
+>  7 files changed, 1311 insertions(+), 15 deletions(-)
+>  create mode 100644 drivers/memory/tegra/tegra30-emc.c
+>
+> diff --git a/drivers/memory/tegra/Kconfig b/drivers/memory/tegra/Kconfig
+> index 4680124ddcab..fbfbaada61a2 100644
+> --- a/drivers/memory/tegra/Kconfig
+> +++ b/drivers/memory/tegra/Kconfig
+> @@ -17,6 +17,16 @@ config TEGRA20_EMC
+>           This driver is required to change memory timings / clock rate for
+>           external memory.
+>
+> +config TEGRA30_EMC
+> +       bool "NVIDIA Tegra30 External Memory Controller driver"
+> +       default y
+> +       depends on TEGRA_MC && ARCH_TEGRA_3x_SOC
+> +       help
+> +         This driver is for the External Memory Controller (EMC) found on
+> +         Tegra30 chips. The EMC controls the external DRAM on the board.
+> +         This driver is required to change memory timings / clock rate for
+> +         external memory.
+> +
+>  config TEGRA124_EMC
+>         bool "NVIDIA Tegra124 External Memory Controller driver"
+>         default y
+> diff --git a/drivers/memory/tegra/Makefile b/drivers/memory/tegra/Makefile
+> index 3971a6b7c487..3d23c4261104 100644
+> --- a/drivers/memory/tegra/Makefile
+> +++ b/drivers/memory/tegra/Makefile
+> @@ -11,5 +11,6 @@ tegra-mc-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210.o
+>  obj-$(CONFIG_TEGRA_MC) += tegra-mc.o
+>
+>  obj-$(CONFIG_TEGRA20_EMC)  += tegra20-emc.o
+> +obj-$(CONFIG_TEGRA30_EMC)  += tegra30-emc.o
+>  obj-$(CONFIG_TEGRA124_EMC) += tegra124-emc.o
+>  obj-$(CONFIG_ARCH_TEGRA_186_SOC) += tegra186.o
+> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+> index 3d8d322511c5..43819e8df95c 100644
+> --- a/drivers/memory/tegra/mc.c
+> +++ b/drivers/memory/tegra/mc.c
+> @@ -48,9 +48,6 @@
+>  #define MC_EMEM_ADR_CFG 0x54
+>  #define MC_EMEM_ADR_CFG_EMEM_NUMDEV BIT(0)
+>
+> -#define MC_TIMING_CONTROL              0xfc
+> -#define MC_TIMING_UPDATE               BIT(0)
+> -
+>  static const struct of_device_id tegra_mc_of_match[] = {
+>  #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+>         { .compatible = "nvidia,tegra20-mc-gart", .data = &tegra20_mc_soc },
+> @@ -307,7 +304,7 @@ static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
+>         return 0;
+>  }
+>
+> -void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
+> +int tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
 >  {
-> -	int ret;
-> +	int ret, i;
->  
->  	mutex_lock(&sensorhub->cmd_lock);
-> +	for (i = 0; i < CROS_EC_SENSOR_MAX; i++)
-> +		sensorhub->last_batch_len[i] = 0;
->  	sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INT_ENABLE;
->  	sensorhub->params->fifo_int_enable.enable = on;
->  
-> @@ -86,6 +88,227 @@ int cros_ec_sensorhub_ring_fifo_toggle(
->  	return ret;
+>         unsigned int i;
+>         struct tegra_mc_timing *timing = NULL;
+> @@ -322,11 +319,13 @@ void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
+>         if (!timing) {
+>                 dev_err(mc->dev, "no memory timing registered for rate %lu\n",
+>                         rate);
+> -               return;
+> +               return -EINVAL;
+>         }
+>
+>         for (i = 0; i < mc->soc->num_emem_regs; ++i)
+>                 mc_writel(mc, timing->emem_data[i], mc->soc->emem_regs[i]);
+> +
+> +       return 0;
 >  }
->  
-> +static int cros_ec_ring_median_cmp(const void *pv1, const void *pv2)
-> +{
-> +	s64 v1 = *(s64 *)pv1;
-> +	s64 v2 = *(s64 *)pv2;
+>
+>  unsigned int tegra_mc_get_emem_device_count(struct tegra_mc *mc)
+> diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+> index f9353494b708..410efc4d7e7b 100644
+> --- a/drivers/memory/tegra/mc.h
+> +++ b/drivers/memory/tegra/mc.h
+> @@ -6,20 +6,32 @@
+>  #ifndef MEMORY_TEGRA_MC_H
+>  #define MEMORY_TEGRA_MC_H
+>
+> +#include <linux/bits.h>
+>  #include <linux/io.h>
+>  #include <linux/types.h>
+>
+>  #include <soc/tegra/mc.h>
+>
+> -#define MC_INT_DECERR_MTS (1 << 16)
+> -#define MC_INT_SECERR_SEC (1 << 13)
+> -#define MC_INT_DECERR_VPR (1 << 12)
+> -#define MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
+> -#define MC_INT_INVALID_SMMU_PAGE (1 << 10)
+> -#define MC_INT_ARBITRATION_EMEM (1 << 9)
+> -#define MC_INT_SECURITY_VIOLATION (1 << 8)
+> -#define MC_INT_INVALID_GART_PAGE (1 << 7)
+> -#define MC_INT_DECERR_EMEM (1 << 6)
+> +#define MC_INT_DECERR_MTS                              BIT(16)
+> +#define MC_INT_SECERR_SEC                              BIT(13)
+> +#define MC_INT_DECERR_VPR                              BIT(12)
+> +#define MC_INT_INVALID_APB_ASID_UPDATE                 BIT(11)
+> +#define MC_INT_INVALID_SMMU_PAGE                       BIT(10)
+> +#define MC_INT_ARBITRATION_EMEM                                BIT(9)
+> +#define MC_INT_SECURITY_VIOLATION                      BIT(8)
+> +#define MC_INT_INVALID_GART_PAGE                       BIT(7)
+> +#define MC_INT_DECERR_EMEM                             BIT(6)
 > +
-> +	if (v1 > v2)
-> +		return 1;
-> +	else if (v1 < v2)
-> +		return -1;
-> +	else
-> +		return 0;
-> +}
+> +#define MC_EMEM_ARB_OUTSTANDING_REQ                    0x94
+> +#define MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK           0x1ff
+> +#define MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE   BIT(30)
+> +#define MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE       BIT(31)
 > +
+> +#define MC_EMEM_ARB_OVERRIDE                           0xe8
+> +#define MC_EMEM_ARB_OVERRIDE_EACK_MASK                 0x3
+> +
+> +#define MC_TIMING_CONTROL                              0xfc
+> +#define MC_TIMING_UPDATE                               BIT(0)
+>
+>  static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+>  {
+> diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+> new file mode 100644
+> index 000000000000..6929980bf907
+> --- /dev/null
+> +++ b/drivers/memory/tegra/tegra30-emc.c
+> @@ -0,0 +1,1232 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 > +/*
-> + * cros_ec_ring_median: Gets median of an array of numbers
+> + * Tegra30 External Memory Controller driver
 > + *
-> + * For now it's implemented using an inefficient > O(n) sort then return
-> + * the middle element. A more optimal method would be something like
-> + * quickselect, but given that n = 64 we can probably live with it in the
-> + * name of clarity.
+> + * Based on downstream driver from NVIDIA and tegra124-emc.c
+> + * Copyright (C) 2011-2014 NVIDIA Corporation
 > + *
-> + * Warning: the input array gets modified (sorted)!
-> + */
-> +static s64 cros_ec_ring_median(s64 *array, size_t length)
-> +{
-> +	sort(array, length, sizeof(s64), cros_ec_ring_median_cmp, NULL);
-> +	return array[length / 2];
-> +}
-> +
-> +/*
-> + * IRQ Timestamp Filtering
-> + *
-> + * Lower down in cros_ec_ring_process_event(), for each sensor event we have to
-> + * calculate it's timestamp in the AP timebase. There are 3 time points:
-> + *   a - EC timebase, sensor event
-> + *   b - EC timebase, IRQ
-> + *   c - AP timebase, IRQ
-> + *   a' - what we want: sensor even in AP timebase
-> + *
-> + * While a and b are recorded at accurate times (due to the EC real time
-> + * nature); c is pretty untrustworthy, even though it's recorded the
-> + * first thing in ec_irq_handler(). There is a very good change we'll get
-> + * added lantency due to:
-> + *   other irqs
-> + *   ddrfreq
-> + *   cpuidle
-> + *
-> + * Normally a' = c - b + a, but if we do that naive math any jitter in c
-> + * will get coupled in a', which we don't want. We want a function
-> + * a' = cros_ec_ring_ts_filter(a) which will filter out outliers in c.
-> + *
-> + * Think of a graph of AP time(b) on the y axis vs EC time(c) on the x axis.
-> + * The slope of the line won't be exactly 1, there will be some clock drift
-> + * between the 2 chips for various reasons (mechanical stress, temperature,
-> + * voltage). We need to extrapolate values for a future x, without trusting
-> + * recent y values too much.
-> + *
-> + * We use a median filter for the slope, then another median filter for the
-> + * y-intercept to calculate this function:
-> + *   dx[n] = x[n-1] - x[n]
-> + *   dy[n] = x[n-1] - x[n]
-> + *   m[n] = dy[n] / dx[n]
-> + *   median_m = median(m[n-k:n])
-> + *   error[i] = y[n-i] - median_m * x[n-i]
-> + *   median_error = median(error[:k])
-> + *   predicted_y = median_m * x + median_error
-> + *
-> + * Implementation differences from above:
-> + * - Redefined y to be actually c - b, this gives us a lot more precision
-> + * to do the math. (c-b)/b variations are more obvious than c/b variations.
-> + * - Since we don't have floating point, any operations involving slope are
-> + * done using fixed point math (*M_PRECISION)
-> + * - Since x and y grow with time, we keep zeroing the graph (relative to
-> + * the last sample), this way math involving *x[n-i] will not overflow
-> + * - EC timestamps are kept in us, it improves the slope calculation precision
+> + * Author: Dmitry Osipenko <digetx@gmail.com>
+> + * Copyright (C) 2019 GRATE-DRIVER project
 > + */
 > +
-> +/*
-> + * cros_ec_ring_ts_filter_update: Given a new IRQ timestamp pair (EC and
-> + * AP timebases), add it to the filter history.
-> + *
-> + * @b IRQ timestamp, EC timebase (us)
-> + * @c IRQ timestamp, AP timebase (ns)
-> + */
-> +static void cros_ec_ring_ts_filter_update(
-> +			struct cros_ec_sensors_ts_filter_state *state,
-> +			s64 b, s64 c)
-> +{
-> +	s64 x, y;
-> +	s64 dx, dy;
-> +	s64 m; /* stored as *M_PRECISION */
-> +	s64 *m_history_copy = state->temp_buf;
-> +	s64 *error = state->temp_buf;
-> +	int i;
+> +#include <linux/clk.h>
+> +#include <linux/clk/tegra.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sort.h>
+> +#include <linux/types.h>
 > +
-> +	/* we trust b the most, that'll be our independent variable */
-> +	x = b;
-> +	/* y is the offset between AP and EC times, in ns */
-> +	y = c - b * 1000;
+> +#include <soc/tegra/fuse.h>
 > +
-> +	dx = (state->x_history[0] + state->x_offset) - x;
-> +	if (dx == 0)
-> +		return; /* we already have this irq in the history */
-> +	dy = (state->y_history[0] + state->y_offset) - y;
-> +	m = div64_s64(dy * M_PRECISION, dx);
+> +#include "mc.h"
 > +
-> +	/* Empty filter if we haven't seen any action in a while. */
-> +	if (-dx > TS_HISTORY_BORED_US)
-> +		state->history_len = 0;
+> +#define EMC_INTSTATUS                          0x000
+> +#define EMC_INTMASK                            0x004
+> +#define EMC_DBG                                        0x008
+> +#define EMC_CFG                                        0x00c
+> +#define EMC_REFCTRL                            0x020
+> +#define EMC_TIMING_CONTROL                     0x028
+> +#define EMC_RC                                 0x02c
+> +#define EMC_RFC                                        0x030
+> +#define EMC_RAS                                        0x034
+> +#define EMC_RP                                 0x038
+> +#define EMC_R2W                                        0x03c
+> +#define EMC_W2R                                        0x040
+> +#define EMC_R2P                                        0x044
+> +#define EMC_W2P                                        0x048
+> +#define EMC_RD_RCD                             0x04c
+> +#define EMC_WR_RCD                             0x050
+> +#define EMC_RRD                                        0x054
+> +#define EMC_REXT                               0x058
+> +#define EMC_WDV                                        0x05c
+> +#define EMC_QUSE                               0x060
+> +#define EMC_QRST                               0x064
+> +#define EMC_QSAFE                              0x068
+> +#define EMC_RDV                                        0x06c
+> +#define EMC_REFRESH                            0x070
+> +#define EMC_BURST_REFRESH_NUM                  0x074
+> +#define EMC_PDEX2WR                            0x078
+> +#define EMC_PDEX2RD                            0x07c
+> +#define EMC_PCHG2PDEN                          0x080
+> +#define EMC_ACT2PDEN                           0x084
+> +#define EMC_AR2PDEN                            0x088
+> +#define EMC_RW2PDEN                            0x08c
+> +#define EMC_TXSR                               0x090
+> +#define EMC_TCKE                               0x094
+> +#define EMC_TFAW                               0x098
+> +#define EMC_TRPAB                              0x09c
+> +#define EMC_TCLKSTABLE                         0x0a0
+> +#define EMC_TCLKSTOP                           0x0a4
+> +#define EMC_TREFBW                             0x0a8
+> +#define EMC_QUSE_EXTRA                         0x0ac
+> +#define EMC_ODT_WRITE                          0x0b0
+> +#define EMC_ODT_READ                           0x0b4
+> +#define EMC_WEXT                               0x0b8
+> +#define EMC_CTT                                        0x0bc
+> +#define EMC_MRS_WAIT_CNT                       0x0c8
+> +#define EMC_MRS                                        0x0cc
+> +#define EMC_EMRS                               0x0d0
+> +#define EMC_SELF_REF                           0x0e0
+> +#define EMC_MRW                                        0x0e8
+> +#define EMC_XM2DQSPADCTRL3                     0x0f8
+> +#define EMC_FBIO_SPARE                         0x100
+> +#define EMC_FBIO_CFG5                          0x104
+> +#define EMC_FBIO_CFG6                          0x114
+> +#define EMC_CFG_RSV                            0x120
+> +#define EMC_AUTO_CAL_CONFIG                    0x2a4
+> +#define EMC_AUTO_CAL_INTERVAL                  0x2a8
+> +#define EMC_AUTO_CAL_STATUS                    0x2ac
+> +#define EMC_STATUS                             0x2b4
+> +#define EMC_CFG_2                              0x2b8
+> +#define EMC_CFG_DIG_DLL                                0x2bc
+> +#define EMC_CFG_DIG_DLL_PERIOD                 0x2c0
+> +#define EMC_CTT_DURATION                       0x2d8
+> +#define EMC_CTT_TERM_CTRL                      0x2dc
+> +#define EMC_ZCAL_INTERVAL                      0x2e0
+> +#define EMC_ZCAL_WAIT_CNT                      0x2e4
+> +#define EMC_ZQ_CAL                             0x2ec
+> +#define EMC_XM2CMDPADCTRL                      0x2f0
+> +#define EMC_XM2DQSPADCTRL2                     0x2fc
+> +#define EMC_XM2DQPADCTRL2                      0x304
+> +#define EMC_XM2CLKPADCTRL                      0x308
+> +#define EMC_XM2COMPPADCTRL                     0x30c
+> +#define EMC_XM2VTTGENPADCTRL                   0x310
+> +#define EMC_XM2VTTGENPADCTRL2                  0x314
+> +#define EMC_XM2QUSEPADCTRL                     0x318
+> +#define EMC_DLL_XFORM_DQS0                     0x328
+> +#define EMC_DLL_XFORM_DQS1                     0x32c
+> +#define EMC_DLL_XFORM_DQS2                     0x330
+> +#define EMC_DLL_XFORM_DQS3                     0x334
+> +#define EMC_DLL_XFORM_DQS4                     0x338
+> +#define EMC_DLL_XFORM_DQS5                     0x33c
+> +#define EMC_DLL_XFORM_DQS6                     0x340
+> +#define EMC_DLL_XFORM_DQS7                     0x344
+> +#define EMC_DLL_XFORM_QUSE0                    0x348
+> +#define EMC_DLL_XFORM_QUSE1                    0x34c
+> +#define EMC_DLL_XFORM_QUSE2                    0x350
+> +#define EMC_DLL_XFORM_QUSE3                    0x354
+> +#define EMC_DLL_XFORM_QUSE4                    0x358
+> +#define EMC_DLL_XFORM_QUSE5                    0x35c
+> +#define EMC_DLL_XFORM_QUSE6                    0x360
+> +#define EMC_DLL_XFORM_QUSE7                    0x364
+> +#define EMC_DLL_XFORM_DQ0                      0x368
+> +#define EMC_DLL_XFORM_DQ1                      0x36c
+> +#define EMC_DLL_XFORM_DQ2                      0x370
+> +#define EMC_DLL_XFORM_DQ3                      0x374
+> +#define EMC_DLI_TRIM_TXDQS0                    0x3a8
+> +#define EMC_DLI_TRIM_TXDQS1                    0x3ac
+> +#define EMC_DLI_TRIM_TXDQS2                    0x3b0
+> +#define EMC_DLI_TRIM_TXDQS3                    0x3b4
+> +#define EMC_DLI_TRIM_TXDQS4                    0x3b8
+> +#define EMC_DLI_TRIM_TXDQS5                    0x3bc
+> +#define EMC_DLI_TRIM_TXDQS6                    0x3c0
+> +#define EMC_DLI_TRIM_TXDQS7                    0x3c4
+> +#define EMC_STALL_THEN_EXE_BEFORE_CLKCHANGE    0x3c8
+> +#define EMC_STALL_THEN_EXE_AFTER_CLKCHANGE     0x3cc
+> +#define EMC_UNSTALL_RW_AFTER_CLKCHANGE         0x3d0
+> +#define EMC_SEL_DPD_CTRL                       0x3d8
+> +#define EMC_PRE_REFRESH_REQ_CNT                        0x3dc
+> +#define EMC_DYN_SELF_REF_CONTROL               0x3e0
+> +#define EMC_TXSRDLL                            0x3e4
 > +
-> +	/* Move everything over, also update offset to all absolute coords .*/
-> +	for (i = state->history_len - 1; i >= 1; i--) {
-> +		state->x_history[i] = state->x_history[i-1] + dx;
-> +		state->y_history[i] = state->y_history[i-1] + dy;
+> +#define EMC_STATUS_TIMING_UPDATE_STALLED       BIT(23)
 > +
-> +		state->m_history[i] = state->m_history[i-1];
-> +		/*
-> +		 * Also use the same loop to copy m_history for future
-> +		 * median extraction.
-> +		 */
-> +		m_history_copy[i] = state->m_history[i-1];
-> +	}
+> +#define EMC_MODE_SET_DLL_RESET                 BIT(8)
+> +#define EMC_MODE_SET_LONG_CNT                  BIT(26)
 > +
-> +	/* Store the x and y, but remember offset is actually last sample. */
-> +	state->x_offset = x;
-> +	state->y_offset = y;
-> +	state->x_history[0] = 0;
-> +	state->y_history[0] = 0;
+> +#define EMC_SELF_REF_CMD_ENABLED               BIT(0)
 > +
-> +	state->m_history[0] = m;
-> +	m_history_copy[0] = m;
+> +#define DRAM_DEV_SEL_ALL                       (0 << 30)
+> +#define DRAM_DEV_SEL_0                         (2 << 30)
+> +#define DRAM_DEV_SEL_1                         (1 << 30)
+> +#define DRAM_BROADCAST(num) \
+> +       ((num) > 1 ? DRAM_DEV_SEL_ALL : DRAM_DEV_SEL_0)
 > +
-> +	if (state->history_len < TS_HISTORY_SIZE)
-> +		state->history_len++;
+> +#define EMC_ZQ_CAL_CMD                         BIT(0)
+> +#define EMC_ZQ_CAL_LONG                                BIT(4)
+> +#define EMC_ZQ_CAL_LONG_CMD_DEV0 \
+> +       (DRAM_DEV_SEL_0 | EMC_ZQ_CAL_LONG | EMC_ZQ_CAL_CMD)
+> +#define EMC_ZQ_CAL_LONG_CMD_DEV1 \
+> +       (DRAM_DEV_SEL_1 | EMC_ZQ_CAL_LONG | EMC_ZQ_CAL_CMD)
 > +
-> +	/* Precalculate things for the filter. */
-> +	if (state->history_len > TS_HISTORY_THRESHOLD) {
-> +		state->median_m =
-> +		    cros_ec_ring_median(m_history_copy, state->history_len - 1);
+> +#define EMC_DBG_READ_MUX_ASSEMBLY              BIT(0)
+> +#define EMC_DBG_WRITE_MUX_ACTIVE               BIT(1)
+> +#define EMC_DBG_FORCE_UPDATE                   BIT(2)
+> +#define EMC_DBG_CFG_PRIORITY                   BIT(24)
 > +
-> +		/*
-> +		 * Calculate y-intercepts as if m_median is the slope and
-> +		 * points in the history are on the line. median_error will
-> +		 * still be in the offset coordinate system.
-> +		 */
-> +		for (i = 0; i < state->history_len; i++)
-> +			error[i] = state->y_history[i] -
-> +				div_s64(state->median_m * state->x_history[i],
-> +					M_PRECISION);
-> +		state->median_error =
-> +			cros_ec_ring_median(error, state->history_len);
-> +	} else {
-> +		state->median_m = 0;
-> +		state->median_error = 0;
-> +	}
-> +}
+> +#define EMC_CFG5_QUSE_MODE_SHIFT               13
+> +#define EMC_CFG5_QUSE_MODE_MASK                        (7 << EMC_CFG5_QUSE_MODE_SHIFT)
 > +
-> +/*
-> + * cros_ec_ring_ts_filter: Translate EC timebase timestamp to AP timebase
-> + *
-> + * @x any ec timestamp (us):
-> + *
-> + * cros_ec_ring_ts_filter(a) => a' event timestamp, AP timebase
-> + * cros_ec_ring_ts_filter(b) => calculated timestamp when the EC IRQ
-> + *                           should have happened on the AP, with low jitter
-> + *
-> + * @returns timestamp in AP timebase (ns)
-> + *
-> + * Note: The filter will only activate once state->history_len goes
-> + * over TS_HISTORY_THRESHOLD. Otherwise it'll just do the naive c - b + a
-> + * transform.
-> + *
-> + * How to derive the formula, starting from:
-> + *   f(x) = median_m * x + median_error
-> + * That's the calculated AP - EC offset (at the x point in time)
-> + * Undo the coordinate system transform:
-> + *   f(x) = median_m * (x - x_offset) + median_error + y_offset
-> + * Remember to undo the "y = c - b * 1000" modification:
-> + *   f(x) = median_m * (x - x_offset) + median_error + y_offset + x * 1000
-> + */
-> +static s64 cros_ec_ring_ts_filter(struct cros_ec_sensors_ts_filter_state *state,
-> +				  s64 x)
-> +{
-> +	return div_s64(state->median_m * (x - state->x_offset), M_PRECISION)
-> +	       + state->median_error + state->y_offset + x * 1000;
-> +}
+> +#define EMC_CFG5_QUSE_MODE_INTERNAL_LPBK       2
+> +#define EMC_CFG5_QUSE_MODE_PULSE_INTERN                3
 > +
-> +/*
-> + * Since a and b were originally 32 bit values from the EC,
-> + * they overflow relatively often, casting is not enough, so we need to
-> + * add an offset.
-> + */
-> +static void cros_ec_ring_fix_overflow(s64 *ts,
-> +		const s64 overflow_period,
-> +		struct cros_ec_sensors_ec_overflow_state *state)
-> +{
-> +	s64 adjust;
+> +#define EMC_SEL_DPD_CTRL_QUSE_DPD_ENABLE       BIT(9)
 > +
-> +	*ts += state->offset;
-> +	if (abs(state->last - *ts) > (overflow_period / 2)) {
-> +		adjust = state->last > *ts ? overflow_period : -overflow_period;
-> +		state->offset += adjust;
-> +		*ts += adjust;
-> +	}
-> +	state->last = *ts;
-> +}
+> +#define EMC_XM2COMPPADCTRL_VREF_CAL_ENABLE     BIT(10)
 > +
-> +static void cros_ec_ring_check_for_past_timestamp(
-> +				struct cros_ec_sensorhub *sensorhub,
-> +				struct cros_ec_sensors_ring_sample *sample)
-> +{
-> +	const u8 sensor_id = sample->sensor_id;
+> +#define EMC_XM2QUSEPADCTRL_IVREF_ENABLE                BIT(4)
 > +
-> +	// if this event is earlier than one we saw before...
-/* please :)
-> +	if (sensorhub->newest_sensor_event[sensor_id] > sample->timestamp)
-> +		// mark it for spreading
-> +		sample->timestamp = sensorhub->last_batch_timestamp[sensor_id];
-> +	else
-> +		sensorhub->newest_sensor_event[sensor_id] = sample->timestamp;
-> +}
+> +#define EMC_XM2DQSPADCTRL2_VREF_ENABLE         BIT(5)
+> +#define EMC_XM2DQSPADCTRL3_VREF_ENABLE         BIT(5)
 > +
->  /*
->   * cros_ec_ring_process_event: process one EC FIFO event
->   *
-> @@ -117,25 +340,47 @@ static bool cros_ec_ring_process_event(
->  		s64 a = in->timestamp;
->  		s64 b = fifo_info->info.timestamp;
->  		s64 c = fifo_timestamp;
-> -		s64 new_timestamp;
->  
-> +		cros_ec_ring_fix_overflow(&a, 1LL << 32,
-> +				&sensorhub->overflow_a);
-> +		cros_ec_ring_fix_overflow(&b, 1LL << 32,
-> +				&sensorhub->overflow_b);
+> +#define EMC_AUTO_CAL_STATUS_ACTIVE             BIT(31)
 > +
-> +		if (sensorhub->tight_timestamps) {
-> +			cros_ec_ring_ts_filter_update(&sensorhub->filter, b, c);
-> +			*current_timestamp =
-> +				cros_ec_ring_ts_filter(&sensorhub->filter, a);
-> +		} else {
-> +			s64 new_timestamp;
-> +			/*
-> +			 * disable filtering since we might add more jitter
-> +			 * if b is in a random point in time
-> +			 */
-> +			new_timestamp = c - b * 1000 + a * 1000;
-> +			/*
-> +			 * The timestamp can be stale if we had to use the fifo
-> +			 * info timestamp.
-> +			 */
-> +			if (new_timestamp - *current_timestamp > 0)
-> +				*current_timestamp = new_timestamp;
-> +		}
-> +	}
+> +#define        EMC_FBIO_CFG5_DRAM_TYPE_MASK            0x3
 > +
-> +	if (in->flags & MOTIONSENSE_SENSOR_FLAG_ODR) {
-> +		sensorhub->last_batch_len[in->sensor_num] =
-> +			sensorhub->penultimate_batch_len[in->sensor_num] = 0;
->  		/*
-> -		 * disable filtering since we might add more jitter
-> -		 * if b is in a random point in time
-> -		 */
-> -		new_timestamp = c - b * 1000 + a * 1000;
-> -		/*
-> -		 * The timestamp can be stale if we had to use the fifo
-> -		 * info timestamp.
-> +		 * ODR change is only useful for the sensor_ring, it does not
-> +		 * convey information to clients.
->  		 */
-> -		if (new_timestamp - *current_timestamp > 0)
-> -			*current_timestamp = new_timestamp;
-> +		return false;
->  	}
->  
->  	if (in->flags & MOTIONSENSE_SENSOR_FLAG_FLUSH) {
->  		out->sensor_id = in->sensor_num;
->  		out->timestamp = *current_timestamp;
->  		out->flag = in->flags;
-> +		sensorhub->last_batch_len[out->sensor_id] = 0;
->  		/*
->  		 * No other payload information provided with
->  		 * flush ack.
-> @@ -149,7 +394,22 @@ static bool cros_ec_ring_process_event(
->  	/* Regular sample */
->  	out->sensor_id = in->sensor_num;
->  	if (*current_timestamp - now > 0) {
-> -		/* If the timestamp is in the future. */
-> +		/*
-> +		 * This fix is needed to overcome the timestamp filter putting
-> +		 * events in the future.
-> +		 */
-> +		sensorhub->future_timestamp_total_ns +=
-> +			*current_timestamp - now;
-> +		if (++sensorhub->future_timestamp_count ==
-> +				FUTURE_TS_ANALYTICS_COUNT_MAX) {
-> +			s64 avg = div_s64(sensorhub->future_timestamp_total_ns,
-> +					sensorhub->future_timestamp_count);
-> +			dev_warn(sensorhub->dev,
-> +					"100 timestamps in the future, %lldns shaved on average\n",
-> +					avg);
-> +			sensorhub->future_timestamp_count = 0;
-> +			sensorhub->future_timestamp_total_ns = 0;
-> +		}
->  		out->timestamp = now;
->  	} else {
->  		out->timestamp = *current_timestamp;
-> @@ -157,13 +417,195 @@ static bool cros_ec_ring_process_event(
->  	out->flag = in->flags;
->  	for (axis = 0; axis < 3; axis++)
->  		out->vector[axis] = in->data[axis];
-> +	if (sensorhub->tight_timestamps)
-> +		cros_ec_ring_check_for_past_timestamp(sensorhub, out);
->  	return true;
->  }
->  
->  /*
-> - * cros_ec_ring_spread_add: Calculate proper timestamps then
-> + * cros_ec_ring_spread_add: Calculate proper timestamps then add to ringbuffer.
-> + *
-> + * Note: This is the new spreading code, assumes every sample's timestamp
-> + * preceeds the sample. Run if tight_timestamps == true.
-> + *
-> + * Sometimes the EC receives only one interrupt (hence timestamp) for
-> + * a batch of samples. Only the first sample will have the correct
-> + * timestamp. So we must interpolate the other samples.
-> + * We use the previous batch timestamp and our current batch timestamp
-> + * as a way to calculate period, then spread the samples evenly.
-> + *
-> + * s0 int, 0ms
-> + * s1 int, 10ms
-> + * s2 int, 20ms
-> + * 30ms point goes by, no interrupt, previous one is still asserted
-> + * downloading s2 and s3
-> + * s3 sample, 20ms (incorrect timestamp)
-> + * s4 int, 40ms
-> + *
-> + * The batches are [(s0), (s1), (s2, s3), (s4)]. Since the 3rd batch
-> + * has 2 samples in them, we adjust the timestamp of s3.
-> + * s2 - s1 = 10ms, so s3 must be s2 + 10ms => 20ms. If s1 would have
-> + * been part of a bigger batch things would have gotten a little
-> + * more complicated.
-> + *
-> + * Note: we also assume another sensor sample doesn't break up a batch
-> + * in 2 or more partitions. Example, there can't ever be a sync sensor
-> + * in between S2 and S3. This simplifies the following code.
-> + */
-> +static void cros_ec_ring_spread_add(
-> +				struct cros_ec_sensorhub *sensorhub,
-> +				unsigned long sensor_mask,
-> +				struct cros_ec_sensors_ring_sample *last_out)
-> +{
-> +	struct cros_ec_sensors_ring_sample *batch_start, *next_batch_start;
-> +	int id;
+> +#define EMC_MRS_WAIT_CNT_SHORT_WAIT_MASK       0x3ff
+> +#define EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT       16
+> +#define EMC_MRS_WAIT_CNT_LONG_WAIT_MASK \
+> +       (0x3ff << EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT)
 > +
-> +	for_each_set_bit(id, &sensor_mask, BITS_PER_LONG) {
-> +		for (batch_start = sensorhub->ring; batch_start < last_out;
-> +		     batch_start = next_batch_start) {
-> +			/*
-> +			 * For each batch (where all samples have the same
-> +			 * timestamp).
-> +			 */
-> +			int batch_len, sample_idx;
-> +			struct cros_ec_sensors_ring_sample *batch_end =
-> +				batch_start;
-> +			struct cros_ec_sensors_ring_sample *s;
-> +			s64 batch_timestamp = batch_start->timestamp;
-> +			s64 sample_period;
+> +#define EMC_REFCTRL_DEV_SEL_MASK               0x3
+> +#define EMC_REFCTRL_ENABLE                     BIT(31)
+> +#define EMC_REFCTRL_ENABLE_ALL(num) \
+> +       (((num) > 1 ? 0 : 2) | EMC_REFCTRL_ENABLE)
+> +#define EMC_REFCTRL_DISABLE_ALL(num)           ((num) > 1 ? 0 : 2)
 > +
-> +			/*
-> +			 * Skip over batches that start with the sensor types
-> +			 * we're not looking at right now.
-> +			 */
-> +			if (batch_start->sensor_id != id) {
-> +				next_batch_start = batch_start + 1;
-> +				continue;
-> +			}
+> +#define EMC_CFG_PERIODIC_QRST                  BIT(21)
+> +#define EMC_CFG_DYN_SREF_ENABLE                        BIT(28)
 > +
-> +			/*
-> +			 * TODO(gwendal): can not send out flush packets
-> +			 * anymore.
-> +			 * Do not start a batch
-> +			 * from a flush, as it happens asynchronously to the
-> +			 * regular flow of events.
-
-Slightly worrying TODO... Fixed later?
-
-> +			 */
-> +			if (batch_start->flag &
-> +				MOTIONSENSE_SENSOR_FLAG_FLUSH) {
-> +				next_batch_start = batch_start + 1;
-> +				continue;
-> +			}
+> +#define EMC_CLKCHANGE_REQ_ENABLE               BIT(0)
+> +#define EMC_CLKCHANGE_PD_ENABLE                        BIT(1)
+> +#define EMC_CLKCHANGE_SR_ENABLE                        BIT(2)
 > +
-> +			if (batch_start->timestamp <=
-> +				sensorhub->last_batch_timestamp[id]) {
+> +#define EMC_TIMING_UPDATE                      BIT(0)
 > +
-> +				batch_timestamp =
-> +					sensorhub->last_batch_timestamp[id];
-> +				batch_len = sensorhub->last_batch_len[id];
+> +#define EMC_REFRESH_OVERFLOW_INT               BIT(3)
+> +#define EMC_CLKCHANGE_COMPLETE_INT             BIT(4)
 > +
-> +				sample_idx = batch_len;
-> +
-> +				sensorhub->last_batch_timestamp[id] =
-> +				  sensorhub->penultimate_batch_timestamp[id];
-> +				sensorhub->last_batch_len[id] =
-> +				  sensorhub->penultimate_batch_len[id];
-> +			} else {
-> +				/*
-> +				 * Push first sample in the batch to the,
-> +				 * kifo, it's guaranteed to be correct, the
-> +				 * rest will follow later on.
-> +				 */
-> +				sample_idx = batch_len = 1;
-> +				cros_sensorhub_send_sample(
-> +						sensorhub, batch_start);
-> +				batch_start++;
-> +			}
-> +
-> +			/* Find all samples have the same timestamp. */
-> +			for (s = batch_start; s < last_out; s++) {
-> +				if (s->sensor_id != id)
-> +					/*
-> +					 * Skip over other sensor types that
-> +					 * are interleaved, don't count them.
-> +					 */
-> +					continue;
-> +				if (s->timestamp != batch_timestamp)
-> +					/* we discovered the next batch */
-> +					break;
-> +				if (s->flag & MOTIONSENSE_SENSOR_FLAG_FLUSH)
-> +					/* break on flush packets */
-> +					break;
-> +				batch_end = s;
-> +				batch_len++;
-> +			}
-> +
-> +			if (batch_len == 1)
-> +				goto done_with_this_batch;
-> +
-> +			/* Can we calculate period? */
-> +			if (sensorhub->last_batch_len[id] == 0) {
-> +				dev_warn(sensorhub->dev, "Sensor %d: lost %d samples when spreading\n",
-> +						id, batch_len - 1);
-> +				goto done_with_this_batch;
-> +				/*
-> +				 * Note: we're dropping the rest of the samples
-> +				 * in this batch since we have no idea where
-> +				 * they're supposed to go without a period
-> +				 * calculation.
-> +				 */
-> +			}
-> +
-> +			sample_period = div_s64(batch_timestamp -
-> +					sensorhub->last_batch_timestamp[id],
-> +					sensorhub->last_batch_len[id]);
-> +			dev_dbg(sensorhub->dev,
-> +					"Adjusting %d samples, sensor %d last_batch @%lld (%d samples) batch_timestamp=%lld => period=%lld\n",
-> +					batch_len, id,
-> +					sensorhub->last_batch_timestamp[id],
-> +					sensorhub->last_batch_len[id],
-> +					batch_timestamp,
-> +					sample_period);
-> +
-> +			/*
-> +			 * Adjust timestamps of the samples then push them to
-> +			 * kfifo.
-> +			 */
-> +			for (s = batch_start; s <= batch_end; s++) {
-> +				if (s->sensor_id != id)
-> +					/*
-> +					 * Skip over other sensor types that
-> +					 * are interleaved, don't change them.
-> +					 */
-> +					continue;
-> +
-> +				s->timestamp = batch_timestamp +
-> +					sample_period * sample_idx;
-> +				sample_idx++;
-> +
-> +				cros_sensorhub_send_sample(sensorhub, s);
-> +			}
-> +
-> +done_with_this_batch:
-> +			sensorhub->penultimate_batch_timestamp[id] =
-> +				sensorhub->last_batch_timestamp[id];
-> +			sensorhub->penultimate_batch_len[id] =
-> +				sensorhub->last_batch_len[id];
-> +
-> +			sensorhub->last_batch_timestamp[id] = batch_timestamp;
-> +			sensorhub->last_batch_len[id] = batch_len;
-> +
-> +			next_batch_start = batch_end + 1;
-> +		}
-> +	}
-> +}
-> +
-> +/*
-> + * cros_ec_ring_spread_add_legacy: Calculate proper timestamps then
->   * add to ringbuffer (legacy).
->   *
-> + * Note: This assumes we're running old firmware, where every sample's timestamp
-> + * is after the sample. Run if tight_timestamps == false.
-> + *
->   * If there is a sample with a proper timestamp
->   *                        timestamp | count
->   * older_unprocess_out --> TS1      | 1
-> @@ -181,7 +623,7 @@ static bool cros_ec_ring_process_event(
->   * out -->                 TS1      | 3
->   * We know have [TS1+1/3, TS1+2/3, current timestamp]
->   */
-> -static void cros_ec_ring_spread_add(
-> +static void cros_ec_ring_spread_add_legacy(
->  				struct cros_ec_sensorhub *sensorhub,
->  				unsigned long sensor_mask,
->  				s64 current_timestamp,
-> @@ -355,7 +797,8 @@ static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
->  	 * the AP is slow to respond to the IRQ, the EC may have added new
->  	 * samples. Use the FIFO info timestamp as last timestamp then.
->  	 */
-> -	if ((last_out-1)->timestamp == current_timestamp)
-> +	if (!sensorhub->tight_timestamps &&
-> +	    (last_out-1)->timestamp == current_timestamp)
->  		current_timestamp = fifo_timestamp;
->  
->  	/* Warn on lost samples. */
-> @@ -367,6 +810,7 @@ static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
->  				dev_warn(sensorhub->dev,
->  					"Sensor %d: lost: %d out of %d\n", i,
->  					lost, fifo_info->info.total_lost);
-> +				sensorhub->last_batch_len[i] = 0;
->  			}
->  		}
->  	}
-> @@ -374,8 +818,11 @@ static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
->  	/*
->  	 * Spread samples in case of batching, then add them to the ringbuffer.
->  	 */
-> -	cros_ec_ring_spread_add(sensorhub, sensor_mask,
-> -			current_timestamp, last_out);
-> +	if (sensorhub->tight_timestamps)
-> +		cros_ec_ring_spread_add(sensorhub, sensor_mask, last_out);
-> +	else
-> +		cros_ec_ring_spread_add_legacy(sensorhub, sensor_mask,
-> +					       current_timestamp, last_out);
->  
->  ring_handler_end:
->  	sensorhub->fifo_timestamp[LAST_TS] = current_timestamp;
-> @@ -436,6 +883,10 @@ int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
->  
->  	sensorhub->fifo_timestamp[LAST_TS] = cros_ec_get_time_ns();
->  
-> +	sensorhub->tight_timestamps = cros_ec_check_features(ec,
-> +		EC_FEATURE_MOTION_SENSE_TIGHT_TIMESTAMPS);
-> +
-> +
->  	/* register the notifier that will act as a top half interrupt. */
->  	sensorhub->notifier.notifier_call = cros_ec_sensorhub_event;
->  	ret = blocking_notifier_chain_register(&ec->ec_dev->event_notifier,
-> diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
-> index 18cda568c58a..df67f2015da9 100644
-> --- a/include/linux/platform_data/cros_ec_sensorhub.h
-> +++ b/include/linux/platform_data/cros_ec_sensorhub.h
-> @@ -53,6 +53,42 @@ struct cros_ec_sensors_ring_sample {
->  	s64      timestamp;
->  } __packed;
->  
-> +/* State used for cros_ec_ring_fix_overflow */
-> +struct cros_ec_sensors_ec_overflow_state {
-> +	s64 offset;
-> +	s64 last;
+> +enum emc_dram_type {
+> +       DRAM_TYPE_DDR3,
+> +       DRAM_TYPE_DDR1,
+> +       DRAM_TYPE_LPDDR2,
+> +       DRAM_TYPE_DDR2,
 > +};
 > +
-> +/* Precision of fixed point for the m values from the filter */
-> +#define M_PRECISION (1 << 23)
-
-These are a bit generic names.  Prefix them so we don't get a clash
-sometime in the future.
-
-> +
-> +/* Length of the filter, how long to remember entries for */
-> +#define TS_HISTORY_SIZE 64
-> +
-> +/* Only activate the filter once we have at least this many elements. */
-> +#define TS_HISTORY_THRESHOLD 8
-> +
-> +/*
-> + * If we don't have any history entries for this long, empty the filter to
-> + * make sure there are no big discontinuities.
-> + */
-> +#define TS_HISTORY_BORED_US 500000
-> +
-> +struct cros_ec_sensors_ts_filter_state {
-> +	s64 x_offset, y_offset;
-> +	s64 x_history[TS_HISTORY_SIZE]; /* stored relative to x_offset */
-> +	s64 y_history[TS_HISTORY_SIZE]; /* stored relative to y_offset */
-> +	s64 m_history[TS_HISTORY_SIZE]; /* stored as *M_PRECISION */
-> +	int history_len;
-> +
-> +	s64 temp_buf[TS_HISTORY_SIZE];
-> +
-> +	s64 median_m;
-> +	s64 median_error;
+> +enum emc_dll_change {
+> +       DLL_CHANGE_NONE,
+> +       DLL_CHANGE_ON,
+> +       DLL_CHANGE_OFF
 > +};
 > +
-> +#define FUTURE_TS_ANALYTICS_COUNT_MAX 100
+> +static const u16 emc_timing_registers[] = {
+> +       [0] = EMC_RC,
+> +       [1] = EMC_RFC,
+> +       [2] = EMC_RAS,
+> +       [3] = EMC_RP,
+> +       [4] = EMC_R2W,
+> +       [5] = EMC_W2R,
+> +       [6] = EMC_R2P,
+> +       [7] = EMC_W2P,
+> +       [8] = EMC_RD_RCD,
+> +       [9] = EMC_WR_RCD,
+> +       [10] = EMC_RRD,
+> +       [11] = EMC_REXT,
+> +       [12] = EMC_WEXT,
+> +       [13] = EMC_WDV,
+> +       [14] = EMC_QUSE,
+> +       [15] = EMC_QRST,
+> +       [16] = EMC_QSAFE,
+> +       [17] = EMC_RDV,
+> +       [18] = EMC_REFRESH,
+> +       [19] = EMC_BURST_REFRESH_NUM,
+> +       [20] = EMC_PRE_REFRESH_REQ_CNT,
+> +       [21] = EMC_PDEX2WR,
+> +       [22] = EMC_PDEX2RD,
+> +       [23] = EMC_PCHG2PDEN,
+> +       [24] = EMC_ACT2PDEN,
+> +       [25] = EMC_AR2PDEN,
+> +       [26] = EMC_RW2PDEN,
+> +       [27] = EMC_TXSR,
+> +       [28] = EMC_TXSRDLL,
+> +       [29] = EMC_TCKE,
+> +       [30] = EMC_TFAW,
+> +       [31] = EMC_TRPAB,
+> +       [32] = EMC_TCLKSTABLE,
+> +       [33] = EMC_TCLKSTOP,
+> +       [34] = EMC_TREFBW,
+> +       [35] = EMC_QUSE_EXTRA,
+> +       [36] = EMC_FBIO_CFG6,
+> +       [37] = EMC_ODT_WRITE,
+> +       [38] = EMC_ODT_READ,
+> +       [39] = EMC_FBIO_CFG5,
+> +       [40] = EMC_CFG_DIG_DLL,
+> +       [41] = EMC_CFG_DIG_DLL_PERIOD,
+> +       [42] = EMC_DLL_XFORM_DQS0,
+> +       [43] = EMC_DLL_XFORM_DQS1,
+> +       [44] = EMC_DLL_XFORM_DQS2,
+> +       [45] = EMC_DLL_XFORM_DQS3,
+> +       [46] = EMC_DLL_XFORM_DQS4,
+> +       [47] = EMC_DLL_XFORM_DQS5,
+> +       [48] = EMC_DLL_XFORM_DQS6,
+> +       [49] = EMC_DLL_XFORM_DQS7,
+> +       [50] = EMC_DLL_XFORM_QUSE0,
+> +       [51] = EMC_DLL_XFORM_QUSE1,
+> +       [52] = EMC_DLL_XFORM_QUSE2,
+> +       [53] = EMC_DLL_XFORM_QUSE3,
+> +       [54] = EMC_DLL_XFORM_QUSE4,
+> +       [55] = EMC_DLL_XFORM_QUSE5,
+> +       [56] = EMC_DLL_XFORM_QUSE6,
+> +       [57] = EMC_DLL_XFORM_QUSE7,
+> +       [58] = EMC_DLI_TRIM_TXDQS0,
+> +       [59] = EMC_DLI_TRIM_TXDQS1,
+> +       [60] = EMC_DLI_TRIM_TXDQS2,
+> +       [61] = EMC_DLI_TRIM_TXDQS3,
+> +       [62] = EMC_DLI_TRIM_TXDQS4,
+> +       [63] = EMC_DLI_TRIM_TXDQS5,
+> +       [64] = EMC_DLI_TRIM_TXDQS6,
+> +       [65] = EMC_DLI_TRIM_TXDQS7,
+> +       [66] = EMC_DLL_XFORM_DQ0,
+> +       [67] = EMC_DLL_XFORM_DQ1,
+> +       [68] = EMC_DLL_XFORM_DQ2,
+> +       [69] = EMC_DLL_XFORM_DQ3,
+> +       [70] = EMC_XM2CMDPADCTRL,
+> +       [71] = EMC_XM2DQSPADCTRL2,
+> +       [72] = EMC_XM2DQPADCTRL2,
+> +       [73] = EMC_XM2CLKPADCTRL,
+> +       [74] = EMC_XM2COMPPADCTRL,
+> +       [75] = EMC_XM2VTTGENPADCTRL,
+> +       [76] = EMC_XM2VTTGENPADCTRL2,
+> +       [77] = EMC_XM2QUSEPADCTRL,
+> +       [78] = EMC_XM2DQSPADCTRL3,
+> +       [79] = EMC_CTT_TERM_CTRL,
+> +       [80] = EMC_ZCAL_INTERVAL,
+> +       [81] = EMC_ZCAL_WAIT_CNT,
+> +       [82] = EMC_MRS_WAIT_CNT,
+> +       [83] = EMC_AUTO_CAL_CONFIG,
+> +       [84] = EMC_CTT,
+> +       [85] = EMC_CTT_DURATION,
+> +       [86] = EMC_DYN_SELF_REF_CONTROL,
+> +       [87] = EMC_FBIO_SPARE,
+> +       [88] = EMC_CFG_RSV,
+> +};
 > +
->  /**
->   * struct cros_ec_sensorhub - Sensor Hub device data.
->   */
-> @@ -76,6 +112,35 @@ struct cros_ec_sensorhub {
->  	struct cros_ec_fifo_info fifo_info;
->  	int    fifo_size;
->  
-> +	/* Used for timestamp spreading calculations when a batch shows up */
-> +	s64 penultimate_batch_timestamp[CROS_EC_SENSOR_MAX];
-> +	int penultimate_batch_len[CROS_EC_SENSOR_MAX];
-> +	s64 last_batch_timestamp[CROS_EC_SENSOR_MAX];
-> +	int last_batch_len[CROS_EC_SENSOR_MAX];
-> +	s64 newest_sensor_event[CROS_EC_SENSOR_MAX];
+> +struct emc_timing {
+> +       unsigned long rate;
 > +
-> +	struct cros_ec_sensors_ec_overflow_state overflow_a;
-> +	struct cros_ec_sensors_ec_overflow_state overflow_b;
+> +       u32 data[ARRAY_SIZE(emc_timing_registers)];
 > +
-> +	struct cros_ec_sensors_ts_filter_state filter;
+> +       u32 emc_auto_cal_interval;
+> +       u32 emc_mode_1;
+> +       u32 emc_mode_2;
+> +       u32 emc_mode_reset;
+> +       u32 emc_zcal_cnt_long;
+> +       bool emc_cfg_periodic_qrst;
+> +       bool emc_cfg_dyn_self_ref;
+> +};
 > +
-> +	/*
-> +	 * The timestamps reported from the EC have low jitter.
-> +	 * Timestamps also come before every sample.
-> +	 * Set either by feature bits coming from the EC or userspace.
-> +	 */
-> +	bool tight_timestamps;
+> +struct tegra_emc {
+> +       struct device *dev;
+> +       struct tegra_mc *mc;
+> +       struct completion clk_handshake_complete;
+> +       struct notifier_block clk_nb;
+> +       struct clk *clk;
+> +       void __iomem *regs;
+> +       unsigned int irq;
 > +
-> +	/*
-> +	 * Statistics used to compute shaved time. This occures when
-> +	 * timestamp interpolation from EC time to AP time accidentally
-> +	 * puts timestamps in the future. These timestamps are clamped
-> +	 * to `now` and these count/total_ns maintain the statistics for
-> +	 * how much time was removed in a given period..
-> +	 */
-> +	s32 future_timestamp_count;
-> +	s64 future_timestamp_total_ns;
+> +       struct emc_timing *timings;
+> +       unsigned int num_timings;
 > +
->  	/*
->  	 * Dynamic array to be able to spread datum to iio sensor objects.
->  	 */
-
+> +       u32 mc_override;
+> +       u32 emc_cfg;
+> +
+> +       u32 emc_mode_1;
+> +       u32 emc_mode_2;
+> +       u32 emc_mode_reset;
+> +
+> +       bool vref_cal_toggle : 1;
+> +       bool zcal_long : 1;
+> +       bool dll_on : 1;
+> +       bool prepared : 1;
+> +       bool bad_state : 1;
+> +};
+> +
+> +static irqreturn_t tegra_emc_isr(int irq, void *data)
+> +{
+> +       struct tegra_emc *emc = data;
+> +       u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
+> +       u32 status;
+> +
+> +       status = readl_relaxed(emc->regs + EMC_INTSTATUS) & intmask;
+> +       if (!status)
+> +               return IRQ_NONE;
+> +
+> +       /* notify about EMC-CAR handshake completion */
+> +       if (status & EMC_CLKCHANGE_COMPLETE_INT)
+> +               complete(&emc->clk_handshake_complete);
+> +
+> +       /* notify about HW problem */
+> +       if (status & EMC_REFRESH_OVERFLOW_INT)
+> +               dev_err_ratelimited(emc->dev,
+> +                                   "refresh request overflow timeout\n");
+> +
+> +       /* clear interrupts */
+> +       writel_relaxed(status, emc->regs + EMC_INTSTATUS);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static struct emc_timing *emc_find_timing(struct tegra_emc *emc,
+> +                                         unsigned long rate)
+> +{
+> +       struct emc_timing *timing = NULL;
+> +       unsigned int i;
+> +
+> +       for (i = 0; i < emc->num_timings; i++) {
+> +               if (emc->timings[i].rate >= rate) {
+> +                       timing = &emc->timings[i];
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (!timing) {
+> +               dev_err(emc->dev, "no timing for rate %lu\n", rate);
+> +               return NULL;
+> +       }
+> +
+> +       return timing;
+> +}
+> +
+> +static bool emc_dqs_preset(struct tegra_emc *emc, struct emc_timing *timing,
+> +                          bool *schmitt_to_vref)
+> +{
+> +       bool preset = false;
+> +       u32 val;
+> +
+> +       if (timing->data[71] & EMC_XM2DQSPADCTRL2_VREF_ENABLE) {
+> +               val = readl_relaxed(emc->regs + EMC_XM2DQSPADCTRL2);
+> +
+> +               if (!(val & EMC_XM2DQSPADCTRL2_VREF_ENABLE)) {
+> +                       val |= EMC_XM2DQSPADCTRL2_VREF_ENABLE;
+> +                       writel_relaxed(val, emc->regs + EMC_XM2DQSPADCTRL2);
+> +
+> +                       preset = true;
+> +               }
+> +       }
+> +
+> +       if (timing->data[78] & EMC_XM2DQSPADCTRL3_VREF_ENABLE) {
+> +               val = readl_relaxed(emc->regs + EMC_XM2DQSPADCTRL3);
+> +
+> +               if (!(val & EMC_XM2DQSPADCTRL3_VREF_ENABLE)) {
+> +                       val |= EMC_XM2DQSPADCTRL3_VREF_ENABLE;
+> +                       writel_relaxed(val, emc->regs + EMC_XM2DQSPADCTRL3);
+> +
+> +                       preset = true;
+> +               }
+> +       }
+> +
+> +       if (timing->data[77] & EMC_XM2QUSEPADCTRL_IVREF_ENABLE) {
+> +               val = readl_relaxed(emc->regs + EMC_XM2QUSEPADCTRL);
+> +
+> +               if (!(val & EMC_XM2QUSEPADCTRL_IVREF_ENABLE)) {
+> +                       val |= EMC_XM2QUSEPADCTRL_IVREF_ENABLE;
+> +                       writel_relaxed(val, emc->regs + EMC_XM2QUSEPADCTRL);
+> +
+> +                       *schmitt_to_vref = true;
+> +                       preset = true;
+> +               }
+> +       }
+> +
+> +       return preset;
+> +}
+> +
+> +static int emc_seq_update_timing(struct tegra_emc *emc)
+> +{
+> +       u32 val;
+> +       int err;
+> +
+> +       writel_relaxed(EMC_TIMING_UPDATE, emc->regs + EMC_TIMING_CONTROL);
+> +
+> +       err = readl_relaxed_poll_timeout_atomic(emc->regs + EMC_STATUS, val,
+> +                               !(val & EMC_STATUS_TIMING_UPDATE_STALLED),
+> +                               1, 200);
+> +       if (err) {
+> +               dev_err(emc->dev, "failed to update timing: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int emc_prepare_mc_clk_cfg(struct tegra_emc *emc, unsigned long rate)
+> +{
+> +       struct tegra_mc *mc = emc->mc;
+> +       unsigned int misc0_index = 16;
+> +       unsigned int i;
+> +       bool same;
+> +
+> +       for (i = 0; i < mc->num_timings; i++) {
+> +               if (mc->timings[i].rate != rate)
+> +                       continue;
+> +
+> +               if (mc->timings[i].emem_data[misc0_index] & BIT(27))
+> +                       same = true;
+> +               else
+> +                       same = false;
+> +
+> +               return tegra20_clk_prepare_emc_mc_same_freq(emc->clk, same);
+> +       }
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +static int emc_prepare_timing_change(struct tegra_emc *emc, unsigned long rate)
+> +{
+> +       struct emc_timing *timing = emc_find_timing(emc, rate);
+> +       enum emc_dll_change dll_change;
+> +       enum emc_dram_type dram_type;
+> +       bool schmitt_to_vref = false;
+> +       unsigned int pre_wait = 0;
+> +       bool qrst_used = false;
+> +       unsigned int dram_num;
+> +       unsigned int i;
+> +       u32 fbio_cfg5;
+> +       u32 emc_dbg;
+> +       u32 val;
+> +       int err;
+> +
+> +       if (!timing || emc->bad_state)
+> +               return -EINVAL;
+> +
+> +       dev_dbg(emc->dev, "%s: using timing rate %lu for requested rate %lu\n",
+> +               __func__, timing->rate, rate);
+> +
+> +       emc->bad_state = true;
+> +
+> +       err = emc_prepare_mc_clk_cfg(emc, rate);
+> +       if (err) {
+> +               dev_err(emc->dev, "mc clock preparation failed: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       emc->vref_cal_toggle = false;
+> +       emc->mc_override = mc_readl(emc->mc, MC_EMEM_ARB_OVERRIDE);
+> +       emc->emc_cfg = readl_relaxed(emc->regs + EMC_CFG);
+> +       emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
+> +
+> +       if (emc->dll_on == !!(timing->emc_mode_1 & 0x1))
+> +               dll_change = DLL_CHANGE_NONE;
+> +       else if (timing->emc_mode_1 & 0x1)
+> +               dll_change = DLL_CHANGE_ON;
+> +       else
+> +               dll_change = DLL_CHANGE_OFF;
+> +
+> +       emc->dll_on = !!(timing->emc_mode_1 & 0x1);
+> +
+> +       if (timing->data[80] && !readl_relaxed(emc->regs + EMC_ZCAL_INTERVAL))
+> +               emc->zcal_long = true;
+> +       else
+> +               emc->zcal_long = false;
+> +
+> +       fbio_cfg5 = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
+> +       dram_type = fbio_cfg5 & EMC_FBIO_CFG5_DRAM_TYPE_MASK;
+> +
+> +       dram_num = tegra_mc_get_emem_device_count(emc->mc);
+> +
+> +       /* disable dynamic self-refresh */
+> +       if (emc->emc_cfg & EMC_CFG_DYN_SREF_ENABLE) {
+> +               emc->emc_cfg &= ~EMC_CFG_DYN_SREF_ENABLE;
+> +               writel_relaxed(emc->emc_cfg, emc->regs + EMC_CFG);
+> +
+> +               pre_wait = 5;
+> +       }
+> +
+> +       /* update MC arbiter settings */
+> +       val = mc_readl(emc->mc, MC_EMEM_ARB_OUTSTANDING_REQ);
+> +       if (!(val & MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE) ||
+> +           ((val & MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK) > 0x50)) {
+> +
+> +               val = MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE |
+> +                     MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE | 0x50;
+> +               mc_writel(emc->mc, val, MC_EMEM_ARB_OUTSTANDING_REQ);
+> +               mc_writel(emc->mc, MC_TIMING_UPDATE, MC_TIMING_CONTROL);
+> +       }
+> +
+> +       if (emc->mc_override & MC_EMEM_ARB_OVERRIDE_EACK_MASK)
+> +               mc_writel(emc->mc,
+> +                         emc->mc_override & ~MC_EMEM_ARB_OVERRIDE_EACK_MASK,
+> +                         MC_EMEM_ARB_OVERRIDE);
+> +
+> +       /* check DQ/DQS VREF delay */
+> +       if (emc_dqs_preset(emc, timing, &schmitt_to_vref)) {
+> +               if (pre_wait < 3)
+> +                       pre_wait = 3;
+> +       }
+> +
+> +       if (pre_wait) {
+> +               err = emc_seq_update_timing(emc);
+> +               if (err)
+> +                       return err;
+> +
+> +               udelay(pre_wait);
+> +       }
+> +
+> +       /* disable auto-calibration if VREF mode is switching */
+> +       if (timing->emc_auto_cal_interval) {
+> +               val = readl_relaxed(emc->regs + EMC_XM2COMPPADCTRL);
+> +               val ^= timing->data[74];
+> +
+> +               if (val & EMC_XM2COMPPADCTRL_VREF_CAL_ENABLE) {
+> +                       writel_relaxed(0, emc->regs + EMC_AUTO_CAL_INTERVAL);
+> +
+> +                       err = readl_relaxed_poll_timeout_atomic(
+> +                               emc->regs + EMC_AUTO_CAL_STATUS, val,
+> +                               !(val & EMC_AUTO_CAL_STATUS_ACTIVE), 1, 300);
+> +                       if (err) {
+> +                               dev_err(emc->dev,
+> +                                       "failed to disable auto-cal: %d\n",
+> +                                       err);
+> +                               return err;
+> +                       }
+> +
+> +                       emc->vref_cal_toggle = true;
+> +               }
+> +       }
+> +
+> +       /* program shadow registers */
+> +       for (i = 0; i < ARRAY_SIZE(timing->data); i++) {
+> +               /* EMC_XM2CLKPADCTRL should be programmed separately */
+> +               if (i != 73)
+> +                       writel_relaxed(timing->data[i],
+> +                                      emc->regs + emc_timing_registers[i]);
+> +       }
+> +
+> +       err = tegra_mc_write_emem_configuration(emc->mc, timing->rate);
+> +       if (err)
+> +               return err;
+> +
+> +       /* DDR3: predict MRS long wait count */
+> +       if (dram_type == DRAM_TYPE_DDR3 && dll_change == DLL_CHANGE_ON) {
+> +               u32 cnt = 512;
+> +
+> +               if (emc->zcal_long)
+> +                       cnt -= dram_num * 256;
+> +
+> +               val = timing->data[82] & EMC_MRS_WAIT_CNT_SHORT_WAIT_MASK;
+> +               if (cnt < val)
+> +                       cnt = val;
+> +
+> +               val = timing->data[82] & ~EMC_MRS_WAIT_CNT_LONG_WAIT_MASK;
+> +               val |= (cnt << EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT) &
+> +                       EMC_MRS_WAIT_CNT_LONG_WAIT_MASK;
+> +
+> +               writel_relaxed(val, emc->regs + EMC_MRS_WAIT_CNT);
+> +       }
+> +
+> +       /* disable interrupt since read access is prohibited after stalling */
+> +       disable_irq(emc->irq);
+> +
+> +       /* this read also completes the writes */
+> +       val = readl_relaxed(emc->regs + EMC_SEL_DPD_CTRL);
+> +
+> +       if (!(val & EMC_SEL_DPD_CTRL_QUSE_DPD_ENABLE) && schmitt_to_vref) {
+> +               u32 cur_mode, new_mode;
+> +
+> +               cur_mode = fbio_cfg5 & EMC_CFG5_QUSE_MODE_MASK;
+> +               cur_mode >>= EMC_CFG5_QUSE_MODE_SHIFT;
+> +
+> +               new_mode = timing->data[39] & EMC_CFG5_QUSE_MODE_MASK;
+> +               new_mode >>= EMC_CFG5_QUSE_MODE_SHIFT;
+> +
+> +               if ((cur_mode != EMC_CFG5_QUSE_MODE_PULSE_INTERN &&
+> +                    cur_mode != EMC_CFG5_QUSE_MODE_INTERNAL_LPBK) ||
+> +                   (new_mode != EMC_CFG5_QUSE_MODE_PULSE_INTERN &&
+> +                    new_mode != EMC_CFG5_QUSE_MODE_INTERNAL_LPBK))
+> +                       qrst_used = true;
+> +       }
+> +
+> +       /* flow control marker 1 */
+> +       writel_relaxed(0x1, emc->regs + EMC_STALL_THEN_EXE_BEFORE_CLKCHANGE);
+> +
+> +       /* enable periodic reset */
+> +       if (qrst_used) {
+> +               writel_relaxed(emc_dbg | EMC_DBG_WRITE_MUX_ACTIVE,
+> +                              emc->regs + EMC_DBG);
+> +               writel_relaxed(emc->emc_cfg | EMC_CFG_PERIODIC_QRST,
+> +                              emc->regs + EMC_CFG);
+> +               writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
+> +       }
+> +
+> +       /* disable auto-refresh to save time after clock change */
+> +       writel_relaxed(EMC_REFCTRL_DISABLE_ALL(dram_num),
+> +                      emc->regs + EMC_REFCTRL);
+> +
+> +       /* turn off DLL and enter self-refresh on DDR3 */
+> +       if (dram_type == DRAM_TYPE_DDR3) {
+> +               if (dll_change == DLL_CHANGE_OFF)
+> +                       writel_relaxed(timing->emc_mode_1,
+> +                                      emc->regs + EMC_EMRS);
+> +
+> +               writel_relaxed(DRAM_BROADCAST(dram_num) |
+> +                              EMC_SELF_REF_CMD_ENABLED,
+> +                              emc->regs + EMC_SELF_REF);
+> +       }
+> +
+> +       /* flow control marker 2 */
+> +       writel_relaxed(0x1, emc->regs + EMC_STALL_THEN_EXE_AFTER_CLKCHANGE);
+> +
+> +       /* enable write-active MUX, update unshadowed pad control */
+> +       writel_relaxed(emc_dbg | EMC_DBG_WRITE_MUX_ACTIVE, emc->regs + EMC_DBG);
+> +       writel_relaxed(timing->data[73], emc->regs + EMC_XM2CLKPADCTRL);
+> +
+> +       /* restore periodic QRST and disable write-active MUX */
+> +       val = !!(emc->emc_cfg & EMC_CFG_PERIODIC_QRST);
+> +       if (qrst_used || timing->emc_cfg_periodic_qrst != val) {
+> +               if (timing->emc_cfg_periodic_qrst)
+> +                       emc->emc_cfg |= EMC_CFG_PERIODIC_QRST;
+> +               else
+> +                       emc->emc_cfg &= ~EMC_CFG_PERIODIC_QRST;
+> +
+> +               writel_relaxed(emc->emc_cfg, emc->regs + EMC_CFG);
+> +       }
+> +       writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
+> +
+> +       /* exit self-refresh on DDR3 */
+> +       if (dram_type == DRAM_TYPE_DDR3)
+> +               writel_relaxed(DRAM_BROADCAST(dram_num),
+> +                              emc->regs + EMC_SELF_REF);
+> +
+> +       /* set DRAM-mode registers */
+> +       if (dram_type == DRAM_TYPE_DDR3) {
+> +               if (timing->emc_mode_1 != emc->emc_mode_1)
+> +                       writel_relaxed(timing->emc_mode_1,
+> +                                      emc->regs + EMC_EMRS);
+> +
+> +               if (timing->emc_mode_2 != emc->emc_mode_2)
+> +                       writel_relaxed(timing->emc_mode_2,
+> +                                      emc->regs + EMC_EMRS);
+> +
+> +               if (timing->emc_mode_reset != emc->emc_mode_reset ||
+> +                   dll_change == DLL_CHANGE_ON) {
+> +                       val = timing->emc_mode_reset;
+> +                       if (dll_change == DLL_CHANGE_ON) {
+> +                               val |= EMC_MODE_SET_DLL_RESET;
+> +                               val |= EMC_MODE_SET_LONG_CNT;
+> +                       } else {
+> +                               val &= ~EMC_MODE_SET_DLL_RESET;
+> +                       }
+> +                       writel_relaxed(val, emc->regs + EMC_MRS);
+> +               }
+> +       } else {
+> +               if (timing->emc_mode_2 != emc->emc_mode_2)
+> +                       writel_relaxed(timing->emc_mode_2,
+> +                                      emc->regs + EMC_MRW);
+> +
+> +               if (timing->emc_mode_1 != emc->emc_mode_1)
+> +                       writel_relaxed(timing->emc_mode_1,
+> +                                      emc->regs + EMC_MRW);
+> +       }
+> +
+> +       emc->emc_mode_1 = timing->emc_mode_1;
+> +       emc->emc_mode_2 = timing->emc_mode_2;
+> +       emc->emc_mode_reset = timing->emc_mode_reset;
+> +
+> +       /* issue ZCAL command if turning ZCAL on */
+> +       if (emc->zcal_long) {
+> +               writel_relaxed(EMC_ZQ_CAL_LONG_CMD_DEV0,
+> +                              emc->regs + EMC_ZQ_CAL);
+> +
+> +               if (dram_num > 1)
+> +                       writel_relaxed(EMC_ZQ_CAL_LONG_CMD_DEV1,
+> +                                      emc->regs + EMC_ZQ_CAL);
+> +       }
+> +
+> +       /* re-enable auto-refresh */
+> +       writel_relaxed(EMC_REFCTRL_ENABLE_ALL(dram_num),
+> +                      emc->regs + EMC_REFCTRL);
+> +
+> +       /* flow control marker 3 */
+> +       writel_relaxed(0x1, emc->regs + EMC_UNSTALL_RW_AFTER_CLKCHANGE);
+> +
+> +       reinit_completion(&emc->clk_handshake_complete);
+> +
+> +       /* interrupt can be re-enabled now */
+> +       enable_irq(emc->irq);
+> +
+> +       emc->bad_state = false;
+> +       emc->prepared = true;
+> +
+> +       return 0;
+> +}
+> +
+> +static int emc_complete_timing_change(struct tegra_emc *emc,
+> +                                     unsigned long rate)
+> +{
+> +       struct emc_timing *timing = emc_find_timing(emc, rate);
+> +       unsigned long timeout;
+> +       int ret;
+> +
+> +       timeout = wait_for_completion_timeout(&emc->clk_handshake_complete,
+> +                                             msecs_to_jiffies(100));
+> +       if (timeout == 0) {
+> +               dev_err(emc->dev, "emc-car handshake failed\n");
+> +               emc->bad_state = true;
+> +               return -EIO;
+> +       }
+> +
+> +       /* restore auto-calibration */
+> +       if (emc->vref_cal_toggle)
+> +               writel_relaxed(timing->emc_auto_cal_interval,
+> +                              emc->regs + EMC_AUTO_CAL_INTERVAL);
+> +
+> +       /* restore dynamic self-refresh */
+> +       if (timing->emc_cfg_dyn_self_ref) {
+> +               emc->emc_cfg |= EMC_CFG_DYN_SREF_ENABLE;
+> +               writel_relaxed(emc->emc_cfg, emc->regs + EMC_CFG);
+> +       }
+> +
+> +       /* set number of clocks to wait after each ZQ command */
+> +       if (emc->zcal_long)
+> +               writel_relaxed(timing->emc_zcal_cnt_long,
+> +                              emc->regs + EMC_ZCAL_WAIT_CNT);
+> +
+> +       udelay(2);
+> +       /* update restored timing */
+> +       ret = emc_seq_update_timing(emc);
+> +       if (ret)
+> +               emc->bad_state = true;
+> +
+> +       /* restore early ACK */
+> +       mc_writel(emc->mc, emc->mc_override, MC_EMEM_ARB_OVERRIDE);
+> +
+> +       emc->prepared = false;
+> +
+> +       return ret;
+> +}
+> +
+> +static int emc_unprepare_timing_change(struct tegra_emc *emc,
+> +                                      unsigned long rate)
+> +{
+> +       if (emc->prepared && !emc->bad_state) {
+> +               /* shouldn't ever happen in practice */
+> +               dev_err(emc->dev, "timing configuration can't be reverted\n");
+> +               emc->bad_state = true;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int emc_clk_change_notify(struct notifier_block *nb,
+> +                                unsigned long msg, void *data)
+> +{
+> +       struct tegra_emc *emc = container_of(nb, struct tegra_emc, clk_nb);
+> +       struct clk_notifier_data *cnd = data;
+> +       int err;
+> +
+> +       switch (msg) {
+> +       case PRE_RATE_CHANGE:
+> +               err = emc_prepare_timing_change(emc, cnd->new_rate);
+> +               break;
+> +
+> +       case ABORT_RATE_CHANGE:
+> +               err = emc_unprepare_timing_change(emc, cnd->old_rate);
+> +               break;
+> +
+> +       case POST_RATE_CHANGE:
+> +               err = emc_complete_timing_change(emc, cnd->new_rate);
+> +               break;
+> +
+> +       default:
+> +               return NOTIFY_DONE;
+> +       }
+> +
+> +       return notifier_from_errno(err);
+> +}
+> +
+> +static int load_one_timing_from_dt(struct tegra_emc *emc,
+> +                                  struct emc_timing *timing,
+> +                                  struct device_node *node)
+> +{
+> +       u32 value;
+> +       int err;
+> +
+> +       err = of_property_read_u32(node, "clock-frequency", &value);
+> +       if (err) {
+> +               dev_err(emc->dev, "timing %pOF: failed to read rate: %d\n",
+> +                       node, err);
+> +               return err;
+> +       }
+> +
+> +       timing->rate = value;
+> +
+> +       err = of_property_read_u32_array(node, "nvidia,emc-configuration",
+> +                                        timing->data,
+> +                                        ARRAY_SIZE(emc_timing_registers));
+> +       if (err) {
+> +               dev_err(emc->dev,
+> +                       "timing %pOF: failed to read emc timing data: %d\n",
+> +                       node, err);
+> +               return err;
+> +       }
+> +
+> +#define EMC_READ_BOOL(prop, dtprop) \
+> +       timing->prop = of_property_read_bool(node, dtprop);
+> +
+> +#define EMC_READ_U32(prop, dtprop) \
+> +       err = of_property_read_u32(node, dtprop, &timing->prop); \
+> +       if (err) { \
+> +               dev_err(emc->dev, \
+> +                       "timing %pOFn: failed to read " #prop ": %d\n", \
+> +                       node, err); \
+> +               return err; \
+> +       }
+> +
+> +       EMC_READ_U32(emc_auto_cal_interval, "nvidia,emc-auto-cal-interval")
+> +       EMC_READ_U32(emc_mode_1, "nvidia,emc-mode-1")
+> +       EMC_READ_U32(emc_mode_2, "nvidia,emc-mode-2")
+> +       EMC_READ_U32(emc_mode_reset, "nvidia,emc-mode-reset")
+> +       EMC_READ_U32(emc_zcal_cnt_long, "nvidia,emc-zcal-cnt-long")
+> +       EMC_READ_BOOL(emc_cfg_dyn_self_ref, "nvidia,emc-cfg-dyn-self-ref")
+> +       EMC_READ_BOOL(emc_cfg_periodic_qrst, "nvidia,emc-cfg-periodic-qrst")
+> +
+> +#undef EMC_READ_U32
+> +#undef EMC_READ_BOOL
+> +
+> +       dev_dbg(emc->dev, "%s: %pOF: rate %lu\n", __func__, node, timing->rate);
+> +
+> +       return 0;
+> +}
+> +
+> +static int cmp_timings(const void *_a, const void *_b)
+> +{
+> +       const struct emc_timing *a = _a;
+> +       const struct emc_timing *b = _b;
+> +
+> +       if (a->rate < b->rate)
+> +               return -1;
+> +
+> +       if (a->rate > b->rate)
+> +               return 1;
+> +
+> +       return 0;
+> +}
+> +
+> +static int emc_check_mc_timings(struct tegra_emc *emc)
+> +{
+> +       struct tegra_mc *mc = emc->mc;
+> +       unsigned int i;
+> +
+> +       if (emc->num_timings != mc->num_timings) {
+> +               dev_err(emc->dev, "emc/mc timings number mismatch: %u %u\n",
+> +                       emc->num_timings, mc->num_timings);
+> +               return -EINVAL;
+> +       }
+> +
+> +       for (i = 0; i < mc->num_timings; i++) {
+> +               if (emc->timings[i].rate != mc->timings[i].rate) {
+> +                       dev_err(emc->dev,
+> +                               "emc/mc timing rate mismatch: %lu %lu\n",
+> +                               emc->timings[i].rate, mc->timings[i].rate);
+> +                       return -EINVAL;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int emc_load_timings_from_dt(struct tegra_emc *emc,
+> +                                   struct device_node *node)
+> +{
+> +       struct device_node *child;
+> +       struct emc_timing *timing;
+> +       int child_count;
+> +       int err;
+> +
+> +       child_count = of_get_child_count(node);
+> +       if (!child_count) {
+> +               dev_err(emc->dev, "no memory timings in: %pOF\n", node);
+> +               return -EINVAL;
+> +       }
+> +
+> +       emc->timings = devm_kcalloc(emc->dev, child_count, sizeof(*timing),
+> +                                   GFP_KERNEL);
+> +       if (!emc->timings)
+> +               return -ENOMEM;
+> +
+> +       emc->num_timings = child_count;
+> +       timing = emc->timings;
+> +
+> +       for_each_child_of_node(node, child) {
+> +               err = load_one_timing_from_dt(emc, timing++, child);
+> +               if (err) {
+> +                       of_node_put(child);
+> +                       return err;
+> +               }
+> +       }
+> +
+> +       sort(emc->timings, emc->num_timings, sizeof(*timing), cmp_timings,
+> +            NULL);
+> +
+> +       err = emc_check_mc_timings(emc);
+> +       if (err)
+> +               return err;
+> +
+> +       dev_info(emc->dev,
+> +                "got %u timings for RAM code %u (min %luMHz max %luMHz)\n",
+> +                emc->num_timings,
+> +                tegra_read_ram_code(),
+> +                emc->timings[0].rate / 1000000,
+> +                emc->timings[emc->num_timings - 1].rate / 1000000);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct device_node *emc_find_node_by_ram_code(struct device *dev)
+> +{
+> +       struct device_node *np;
+> +       u32 value, ram_code;
+> +       int err;
+> +
+> +       ram_code = tegra_read_ram_code();
+> +
+> +       for_each_child_of_node(dev->of_node, np) {
+> +               err = of_property_read_u32(np, "nvidia,ram-code", &value);
+> +               if (err || value != ram_code)
+> +                       continue;
+> +
+> +               return np;
+> +       }
+> +
+> +       dev_err(dev, "no memory timings for RAM code %u found in device-tree\n",
+> +               ram_code);
+> +
+> +       return NULL;
+> +}
+> +
+> +static int emc_setup_hw(struct tegra_emc *emc)
+> +{
+> +       u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
+> +       u32 fbio_cfg5, emc_cfg, emc_dbg;
+> +       enum emc_dram_type dram_type;
+> +
+> +       fbio_cfg5 = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
+> +       dram_type = fbio_cfg5 & EMC_FBIO_CFG5_DRAM_TYPE_MASK;
+> +
+> +       emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
+> +
+> +       /* enable EMC and CAR to handshake on PLL divider/source changes */
+> +       emc_cfg |= EMC_CLKCHANGE_REQ_ENABLE;
+> +
+> +       /* configure clock change mode accordingly to DRAM type */
+> +       switch (dram_type) {
+> +       case DRAM_TYPE_LPDDR2:
+> +               emc_cfg |= EMC_CLKCHANGE_PD_ENABLE;
+> +               emc_cfg &= ~EMC_CLKCHANGE_SR_ENABLE;
+> +               break;
+> +
+> +       default:
+> +               emc_cfg &= ~EMC_CLKCHANGE_SR_ENABLE;
+> +               emc_cfg &= ~EMC_CLKCHANGE_PD_ENABLE;
+> +               break;
+> +       }
+> +
+> +       writel_relaxed(emc_cfg, emc->regs + EMC_CFG_2);
+> +
+> +       /* initialize interrupt */
+> +       writel_relaxed(intmask, emc->regs + EMC_INTMASK);
+> +       writel_relaxed(0xffffffff, emc->regs + EMC_INTSTATUS);
+> +
+> +       /* ensure that unwanted debug features are disabled */
+> +       emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
+> +       emc_dbg |= EMC_DBG_CFG_PRIORITY;
+> +       emc_dbg &= ~EMC_DBG_READ_MUX_ASSEMBLY;
+> +       emc_dbg &= ~EMC_DBG_WRITE_MUX_ACTIVE;
+> +       emc_dbg &= ~EMC_DBG_FORCE_UPDATE;
+> +       writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
+> +
+> +       return 0;
+> +}
+> +
+> +static long emc_round_rate(unsigned long rate,
+> +                          unsigned long min_rate,
+> +                          unsigned long max_rate,
+> +                          void *arg)
+> +{
+> +       struct emc_timing *timing = NULL;
+> +       struct tegra_emc *emc = arg;
+> +       unsigned int i;
+> +
+> +       min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
+> +
+> +       for (i = 0; i < emc->num_timings; i++) {
+> +               if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
+> +                       continue;
+> +
+> +               if (emc->timings[i].rate > max_rate) {
+> +                       i = max(i, 1u) - 1;
+> +
+> +                       if (emc->timings[i].rate < min_rate)
+> +                               break;
+> +               }
+> +
+> +               if (emc->timings[i].rate < min_rate)
+> +                       continue;
+> +
+> +               timing = &emc->timings[i];
+> +               break;
+> +       }
+> +
+> +       if (!timing) {
+> +               dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
+> +                       rate, min_rate, max_rate);
+> +               return -EINVAL;
+> +       }
+> +
+> +       return timing->rate;
+> +}
+> +
+> +static int tegra_emc_probe(struct platform_device *pdev)
+> +{
+> +       struct platform_device *mc;
+> +       struct device_node *np;
+> +       struct tegra_emc *emc;
+> +       int err;
+> +
+> +       if (of_get_child_count(pdev->dev.of_node) == 0) {
+> +               dev_info(&pdev->dev,
+> +                        "device-tree node doesn't have memory timings\n");
+> +               return 0;
+> +       }
+> +
+> +       np = of_parse_phandle(pdev->dev.of_node, "nvidia,memory-controller", 0);
+> +       if (!np) {
+> +               dev_err(&pdev->dev, "could not get memory controller node\n");
+> +               return -ENOENT;
+> +       }
+> +
+> +       mc = of_find_device_by_node(np);
+> +       of_node_put(np);
+> +       if (!mc)
+> +               return -ENOENT;
+> +
+> +       np = emc_find_node_by_ram_code(&pdev->dev);
+> +       if (!np)
+> +               return -EINVAL;
+> +
+> +       emc = devm_kzalloc(&pdev->dev, sizeof(*emc), GFP_KERNEL);
+> +       if (!emc) {
+> +               of_node_put(np);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       emc->mc = platform_get_drvdata(mc);
+> +       if (!emc->mc)
+> +               return -EPROBE_DEFER;
+> +
+> +       init_completion(&emc->clk_handshake_complete);
+> +       emc->clk_nb.notifier_call = emc_clk_change_notify;
+> +       emc->dev = &pdev->dev;
+> +
+> +       err = emc_load_timings_from_dt(emc, np);
+> +       of_node_put(np);
+> +       if (err)
+> +               return err;
+> +
+> +       emc->regs = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(emc->regs))
+> +               return PTR_ERR(emc->regs);
+> +
+> +       err = emc_setup_hw(emc);
+> +       if (err)
+> +               return err;
+> +
+> +       err = platform_get_irq(pdev, 0);
+> +       if (err < 0) {
+> +               dev_err(&pdev->dev, "interrupt not specified: %d\n", err);
+> +               return err;
+> +       }
+> +       emc->irq = err;
+> +
+> +       err = devm_request_irq(&pdev->dev, emc->irq, tegra_emc_isr, 0,
+> +                              dev_name(&pdev->dev), emc);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "failed to request irq: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       tegra20_clk_set_emc_round_callback(emc_round_rate, emc);
+> +
+> +       emc->clk = devm_clk_get(&pdev->dev, "emc");
+> +       if (IS_ERR(emc->clk)) {
+> +               err = PTR_ERR(emc->clk);
+> +               dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
+> +               goto unset_cb;
+> +       }
+> +
+> +       err = clk_notifier_register(emc->clk, &emc->clk_nb);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
+> +                       err);
+> +               goto unset_cb;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, emc);
+> +
+> +       return 0;
+> +
+> +unset_cb:
+> +       tegra20_clk_set_emc_round_callback(NULL, NULL);
+> +
+> +       return err;
+> +}
+> +
+> +static int tegra_emc_suspend(struct device *dev)
+> +{
+> +       struct tegra_emc *emc = dev_get_drvdata(dev);
+> +
+> +       /*
+> +        * Suspending in a bad state will hang machine. The "prepared" var
+> +        * shall be always false here unless it's a kernel bug that caused
+> +        * suspending in a wrong order.
+> +        */
+> +       if (WARN_ON(emc->prepared) || emc->bad_state)
+> +               return -EINVAL;
+> +
+> +       emc->bad_state = true;
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_emc_resume(struct device *dev)
+> +{
+> +       struct tegra_emc *emc = dev_get_drvdata(dev);
+> +
+> +       emc_setup_hw(emc);
+> +       emc->bad_state = false;
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops tegra_emc_pm_ops = {
+> +       .suspend = tegra_emc_suspend,
+> +       .resume = tegra_emc_resume,
+> +};
+> +
+> +static const struct of_device_id tegra_emc_of_match[] = {
+> +       { .compatible = "nvidia,tegra30-emc", },
+> +       {},
+> +};
+> +
+> +static struct platform_driver tegra_emc_driver = {
+> +       .probe = tegra_emc_probe,
+> +       .driver = {
+> +               .name = "tegra30-emc",
+> +               .of_match_table = tegra_emc_of_match,
+> +               .pm = &tegra_emc_pm_ops,
+> +               .suppress_bind_attrs = true,
+> +       },
+> +};
+> +
+> +static int __init tegra_emc_init(void)
+> +{
+> +       return platform_driver_register(&tegra_emc_driver);
+> +}
+> +subsys_initcall(tegra_emc_init);
+> diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+> index 14788fc2f9e8..b1226d3f067f 100644
+> --- a/drivers/memory/tegra/tegra30.c
+> +++ b/drivers/memory/tegra/tegra30.c
+> @@ -10,6 +10,46 @@
+>
+>  #include "mc.h"
+>
+> +#define MC_EMEM_ARB_CFG                                0x90
+> +#define MC_EMEM_ARB_OUTSTANDING_REQ            0x94
+> +#define MC_EMEM_ARB_TIMING_RCD                 0x98
+> +#define MC_EMEM_ARB_TIMING_RP                  0x9c
+> +#define MC_EMEM_ARB_TIMING_RC                  0xa0
+> +#define MC_EMEM_ARB_TIMING_RAS                 0xa4
+> +#define MC_EMEM_ARB_TIMING_FAW                 0xa8
+> +#define MC_EMEM_ARB_TIMING_RRD                 0xac
+> +#define MC_EMEM_ARB_TIMING_RAP2PRE             0xb0
+> +#define MC_EMEM_ARB_TIMING_WAP2PRE             0xb4
+> +#define MC_EMEM_ARB_TIMING_R2R                 0xb8
+> +#define MC_EMEM_ARB_TIMING_W2W                 0xbc
+> +#define MC_EMEM_ARB_TIMING_R2W                 0xc0
+> +#define MC_EMEM_ARB_TIMING_W2R                 0xc4
+> +#define MC_EMEM_ARB_DA_TURNS                   0xd0
+> +#define MC_EMEM_ARB_DA_COVERS                  0xd4
+> +#define MC_EMEM_ARB_MISC0                      0xd8
+> +#define MC_EMEM_ARB_RING1_THROTTLE             0xe0
+> +
+> +static const unsigned long tegra30_mc_emem_regs[] = {
+> +       MC_EMEM_ARB_CFG,
+> +       MC_EMEM_ARB_OUTSTANDING_REQ,
+> +       MC_EMEM_ARB_TIMING_RCD,
+> +       MC_EMEM_ARB_TIMING_RP,
+> +       MC_EMEM_ARB_TIMING_RC,
+> +       MC_EMEM_ARB_TIMING_RAS,
+> +       MC_EMEM_ARB_TIMING_FAW,
+> +       MC_EMEM_ARB_TIMING_RRD,
+> +       MC_EMEM_ARB_TIMING_RAP2PRE,
+> +       MC_EMEM_ARB_TIMING_WAP2PRE,
+> +       MC_EMEM_ARB_TIMING_R2R,
+> +       MC_EMEM_ARB_TIMING_W2W,
+> +       MC_EMEM_ARB_TIMING_R2W,
+> +       MC_EMEM_ARB_TIMING_W2R,
+> +       MC_EMEM_ARB_DA_TURNS,
+> +       MC_EMEM_ARB_DA_COVERS,
+> +       MC_EMEM_ARB_MISC0,
+> +       MC_EMEM_ARB_RING1_THROTTLE,
+> +};
+> +
+>  static const struct tegra_mc_client tegra30_mc_clients[] = {
+>         {
+>                 .id = 0x00,
+> @@ -994,6 +1034,8 @@ const struct tegra_mc_soc tegra30_mc_soc = {
+>         .atom_size = 16,
+>         .client_id_mask = 0x7f,
+>         .smmu = &tegra30_smmu_soc,
+> +       .emem_regs = tegra30_mc_emem_regs,
+> +       .num_emem_regs = ARRAY_SIZE(tegra30_mc_emem_regs),
+>         .intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
+>                    MC_INT_DECERR_EMEM,
+>         .reset_ops = &tegra_mc_reset_ops_common,
+> diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+> index 16e2c2fb5f6c..1238e35653d1 100644
+> --- a/include/soc/tegra/mc.h
+> +++ b/include/soc/tegra/mc.h
+> @@ -181,7 +181,7 @@ struct tegra_mc {
+>         spinlock_t lock;
+>  };
+>
+> -void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate);
+> +int tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate);
+>  unsigned int tegra_mc_get_emem_device_count(struct tegra_mc *mc);
+>
+>  #endif /* __SOC_TEGRA_MC_H__ */
+> --
+> 2.22.0
+>
