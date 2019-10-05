@@ -2,112 +2,214 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7A5ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B50EC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E72222C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC55222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570292171;
-	bh=eqnryWtzabgZzM7uNXAO12dttpuheq0j+RkDpfvQTto=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1Mpe0uPLFwXb5j0EvptA6/x803UVd18tU9hL1fqZewSi3A/31DbaCYxfVX/t8E7sX
-	 SICg0U04t98C8sfC4k7mdglwynojr+edq8/NpIHZHvvb8+sUKzjy7KAZLWYBjtqz+X
-	 BL1ZxTImDDoWhCi9IWxKXAoI98Jqle8+4Y0vbHYw=
+	s=default; t=1570292203;
+	bh=zFFS8k2lbRbcQL+fckDvfr83fOZaAsE77ehiJSvGoLI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uDqs8cHKrrbavi2HXtOf1/HcGoV49GAEnXWD8vA24LLNcAl7WZvvyMtHuedJQagNy
+	 aPupRluqB4BtNcKgywSVU8pyis1cOY8YPmJfGV0A2pbS2hwZyI9v9SAoMks7kL4Qyz
+	 rzksfF84wQXtCSYbLqqFA6hJkvttjI5HVe7/4Mj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbfJEQQL (ORCPT
+        id S1729238AbfJEQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 12:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
+        Sat, 5 Oct 2019 12:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbfJEQQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 12:16:10 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1728101AbfJEQQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 12:16:42 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A754120862;
-        Sat,  5 Oct 2019 16:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2CA222C8;
+        Sat,  5 Oct 2019 16:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570292169;
-        bh=eqnryWtzabgZzM7uNXAO12dttpuheq0j+RkDpfvQTto=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=QjucN5lc/gzfxGIgPsljQW0GS6FHdu1CwpKXYK7mTFlpz/AfwWyzp6UklxFWg+5Vk
-         Xc8Z5D9joQ9RinxnLFFi7Ka8Wx67MCKOXmgTZj51GWKXZoxCobrVSZJx++J2KOr3H2
-         FCMH2XaJaFOTg049hKtoBFuon7x665OQve2NGngc=
-Date:   Sat, 5 Oct 2019 09:16:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     rcu@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, dipankar@in.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH tip/core/rcu 9/9] rcu: Suppress levelspread uninitialized
- messages
-Message-ID: <20191005161608.GH2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191003014710.GA13323@paulmck-ThinkPad-P72>
- <20191003014728.13496-9-paulmck@kernel.org>
- <CAMuHMdW5+RSp6iycmyPnYPv+xHr5tNY7U3w-BVrWqz4BR2Dd7w@mail.gmail.com>
+        s=default; t=1570292200;
+        bh=zFFS8k2lbRbcQL+fckDvfr83fOZaAsE77ehiJSvGoLI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sFVmkPU1iJtcsIMCEg1XhfX97MYXdl/3W1U8c2/DzfBYJkvFL7S/KUeweKYAedHu1
+         N6Kb9WRIhRVNz5l5jTUTVvNP/7sbZfqfZt0HVhgH2Z5bTB5yHwYXuE8a8DT1ZnqL2/
+         jtQO1ncSt3wYG9iSGbxRtlBecy33qwyfoKD5g8/A=
+Date:   Sat, 5 Oct 2019 17:16:35 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 08/13] platform: chrome: sensorhub: Add code to spread
+ timestmap
+Message-ID: <20191005171635.6bbc8bbf@archlinux>
+In-Reply-To: <20190922175021.53449-9-gwendal@chromium.org>
+References: <20190922175021.53449-1-gwendal@chromium.org>
+        <20190922175021.53449-9-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW5+RSp6iycmyPnYPv+xHr5tNY7U3w-BVrWqz4BR2Dd7w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 10:53:03AM +0200, Geert Uytterhoeven wrote:
-> Hi Paul,
-> 
-> On Thu, Oct 3, 2019 at 3:49 AM <paulmck@kernel.org> wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> >
-> > New tools bring new warnings, and with v5.3 comes:
-> 
-> According to the kisskb build logs, it happens with gcc 4.6.3 only ;-)
-> 
-> > kernel/rcu/srcutree.c: warning: 'levelspread[<U aa0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-> >
-> > This commit suppresses this warning by initializing the full array
-> > to INT_MIN, which will result in failures should any out-of-bounds
-> > references appear.
-> >
-> > Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> Thanks for your patch!
-> 
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> (for the initialization loop, not for the actual INT_MIN value)
+On Sun, 22 Sep 2019 10:50:16 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-Applied, thank you!
+> EC FIFO can send sensor events in batch. Spread them based on
+> previous (TSa) and currnet timestamp (TSb)
+> 
+>   EC FIFO                             iio events
+> +-----------+
+> | TSa       |
+> +-----------+             +---------------------------------------+
+> | event 1   |             | event 1 | TSb - (TSb - TSa)/n * (n-1) |
+> +-----------+             +---------------------------------------+
+> | event 2   |             | event 2 | TSb - (TSb - TSa)/n * (n-2) |
+> +-----------+             +---------------------------------------+
+> |  ...      |  ------>    |  ....   |                             |
+> +-----------+             +---------------------------------------+
+> | event n-1 |             | event 2 | TSb - (TSb - TSa)/n         |
+> +-----------+             +---------------------------------------+
+> | event n   |             | event 2 | TSb                         |
+> +-----------+             +---------------------------------------+
+> | TSb       |
+> +-----------+
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Looks fine to me and the docs are nice :)
+Timestamps for batches are always a pita.
 
-> Unfortunately I don't have a gcc-4.6.3 Linux cross-compiler anymore.
-> I tried with msp430-gcc-4.6.3 and some hackery to get it to compile,
-> but that didn't let me reproduce the warning.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-OK, please let me know when gcc-4.6.3 is old enough that this patch
-should be reverted.  Or just submit the revert at that point, as the
-case may be.  ;-)
+> ---
+>  .../platform/chrome/cros_ec_sensorhub_ring.c  | 99 ++++++++++++++++++-
+>  1 file changed, 96 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> index 8cd533d5542e..48327e80a5a3 100644
+> --- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> @@ -160,6 +160,97 @@ static bool cros_ec_ring_process_event(
+>  	return true;
+>  }
+>  
+> +/*
+> + * cros_ec_ring_spread_add: Calculate proper timestamps then
+> + * add to ringbuffer (legacy).
+> + *
+> + * If there is a sample with a proper timestamp
+> + *                        timestamp | count
+> + * older_unprocess_out --> TS1      | 1
+> + *                         TS1      | 2
+> + * out -->                 TS1      | 3
+> + * next_out -->            TS2      |
+> + * We spread time for the samples [older_unprocess_out .. out]
+> + * between TS1 and TS2: [TS1+1/4, TS1+2/4, TS1+3/4, TS2].
+> + *
+> + * If we reach the end of the samples, we compare with the
+> + * current timestamp:
+> + *
+> + * older_unprocess_out --> TS1      | 1
+> + *                         TS1      | 2
+> + * out -->                 TS1      | 3
+> + * We know have [TS1+1/3, TS1+2/3, current timestamp]
+> + */
+> +static void cros_ec_ring_spread_add(
+> +				struct cros_ec_sensorhub *sensorhub,
+> +				unsigned long sensor_mask,
+> +				s64 current_timestamp,
+> +				struct cros_ec_sensors_ring_sample *last_out)
+> +{
+> +	struct cros_ec_sensors_ring_sample *out;
+> +	int i;
+> +
+> +	for_each_set_bit(i, &sensor_mask, BITS_PER_LONG) {
+> +		s64 older_timestamp;
+> +		s64 timestamp;
+> +		struct cros_ec_sensors_ring_sample *older_unprocess_out =
+> +			sensorhub->ring;
+> +		struct cros_ec_sensors_ring_sample *next_out;
+> +		int count = 1;
+> +
+> +		for (out = sensorhub->ring; out < last_out; out = next_out) {
+> +			s64 time_period;
+> +
+> +			next_out = out + 1;
+> +			if (out->sensor_id != i)
+> +				continue;
+> +
+> +			/* Timestamp to start with */
+> +			older_timestamp = out->timestamp;
+> +
+> +			/* find next sample */
+> +			while (next_out < last_out && next_out->sensor_id != i)
+> +				next_out++;
+> +
+> +			if (next_out >= last_out) {
+> +				timestamp = current_timestamp;
+> +			} else {
+> +				timestamp = next_out->timestamp;
+> +				if (timestamp == older_timestamp) {
+> +					count++;
+> +					continue;
+> +				}
+> +			}
+> +
+> +			/*
+> +			 * The next sample has a new timestamp,
+> +			 * spread the unprocessed samples.
+> +			 */
+> +			if (next_out < last_out)
+> +				count++;
+> +			time_period = div_s64(timestamp - older_timestamp,
+> +					      count);
+> +
+> +			for (; older_unprocess_out <= out;
+> +					older_unprocess_out++) {
+> +				if (older_unprocess_out->sensor_id != i)
+> +					continue;
+> +				older_timestamp += time_period;
+> +				older_unprocess_out->timestamp =
+> +					older_timestamp;
+> +			}
+> +			count = 1;
+> +			/* The next_out sample has a valid timestamp, skip. */
+> +			next_out++;
+> +			older_unprocess_out = next_out;
+> +		}
+> +	}
+> +
+> +	/* push the event into the kfifo */
+> +	for (out = sensorhub->ring; out < last_out; out++)
+> +		cros_sensorhub_send_sample(sensorhub, out);
+> +}
+> +
+>  /*
+>   * cros_ec_sensorhub_ring_handler - the trigger handler function
+>   *
+> @@ -280,9 +371,11 @@ static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
+>  		}
+>  	}
+>  
+> -	/* push the event into the kfifo */
+> -	for (out = sensorhub->ring; out < last_out; out++)
+> -		cros_sensorhub_send_sample(sensorhub, out);
+> +	/*
+> +	 * Spread samples in case of batching, then add them to the ringbuffer.
+> +	 */
+> +	cros_ec_ring_spread_add(sensorhub, sensor_mask,
+> +			current_timestamp, last_out);
+>  
+>  ring_handler_end:
+>  	sensorhub->fifo_timestamp[LAST_TS] = current_timestamp;
 
-							Thanx, Paul
