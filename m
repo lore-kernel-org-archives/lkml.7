@@ -2,139 +2,102 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B193BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82216C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83586222BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6B621D81
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TV6E3RyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfJEBGB convert rfc822-to-8bit (ORCPT
+        id S1726137AbfJEBQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 21:06:01 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:3111 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJEBGB (ORCPT
+        Fri, 4 Oct 2019 21:16:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35838 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfJEBQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 21:06:01 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5d97ec641ed-bc085; Sat, 05 Oct 2019 09:05:40 +0800 (CST)
-X-RM-TRANSID: 2eec5d97ec641ed-bc085
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [10.0.0.249] (unknown[112.0.144.232])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65d97ec619ac-e007b;
-        Sat, 05 Oct 2019 09:05:40 +0800 (CST)
-X-RM-TRANSID: 2ee65d97ec619ac-e007b
-Content-Type: text/plain; charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v3 0/3] selftests: netfilter: introduce test cases for
- ipvs
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-In-Reply-To: <20191004114745.GB6803@dimstar.local.net>
-Date:   Sat, 5 Oct 2019 09:05:37 +0800
-Cc:     Julian Anastasov <ja@ssi.bg>, Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <4C9C0C54-4CC6-49A4-A868-6F7604B1AB2B@cmss.chinamobile.com>
-References: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <alpine.LFD.2.21.1910012133330.3887@ja.home.ssi.bg>
- <20191002012726.GB9810@dimstar.local.net>
- <8E2E81F3-8385-4397-9A22-F513E507507D@cmss.chinamobile.com>
- <20191004114745.GB6803@dimstar.local.net>
-To:     Duncan Roe <duncan_roe@optusnet.com.au>
-X-Mailer: Apple Mail (2.3273)
+        Fri, 4 Oct 2019 21:16:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=76PvWG28Wf5VWGGq/eiwJm/zoctdt2tMBJW16pZ6SJc=; b=TV6E3RyA/PqAV8ahjRwF6ETx9
+        6sk0zSIkxCy4Z3dxHFslxT3InYPSUf4cGpcRTAkajsnvOdUtLrnjgXsS5/xH92dtbMcHN5fBrz88F
+        sAm+/YpYsbOpMy86xSe4sL9SoRQudK0ENoQg4lI7rCwR0Fj3p8fhV3ZFlQUOeoHDsGPg2aYe1+Ho/
+        vAgMN4GJ36AMyFNm1My9bqkO0nPblSBrZYaSpkOpneegQHnyUnFGuI76xnWDnTQbpIR8MMyA+dRiA
+        nkxIVB7hMYSxXaRVs5dYYmdETxn6O4/xF6Pa1lljqxFDTNPBa0N5DismyJ1nD8HFP2vPnWZKd/0sh
+        ABmCfqSig==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iGYfq-0001PH-7v; Sat, 05 Oct 2019 01:15:54 +0000
+Date:   Fri, 4 Oct 2019 18:15:54 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
+        khlebnikov@yandex-team.ru, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/rmap.c: reuse mergeable anon_vma as parent when fork
+Message-ID: <20191005011554.GQ32665@bombadil.infradead.org>
+References: <20191004160632.30251-1-richardw.yang@linux.intel.com>
+ <20191004161120.GI32665@bombadil.infradead.org>
+ <20191004234845.GB15415@richard>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004234845.GB15415@richard>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Oct 05, 2019 at 07:48:45AM +0800, Wei Yang wrote:
+> On Fri, Oct 04, 2019 at 09:11:20AM -0700, Matthew Wilcox wrote:
+> >On Sat, Oct 05, 2019 at 12:06:32AM +0800, Wei Yang wrote:
+> >> After this change, kernel build test reduces 20% anon_vma allocation.
+> >
+> >But does it have any effect on elapsed time or peak memory consumption?
+> 
+> Do the same kernel build test and record time:
+> 
+> 
+> Origin
+> 
+> real	2m50.467s
+> user	17m52.002s
+> sys	1m51.953s    
+> 
+> real	2m48.662s
+> user	17m55.464s
+> sys	1m50.553s    
+> 
+> real	2m51.143s
+> user	17m59.687s
+> sys	1m53.600s    
+> 
+> 
+> Patched
+> 
+> real	2m43.733s
+> user	17m25.705s
+> sys	1m41.791s    
+> 
+> real	2m47.146s
+> user	17m47.451s
+> sys	1m43.474s    
+> 
+> real	2m45.763s
+> user	17m38.230s
+> sys	1m42.102s    
+> 
+> 
+> For time in sys, it reduced 8.5%.
 
-> On 2019年10月4日, at 下午7:47, Duncan Roe <duncan_roe@optusnet.com.au> wrote:
-> 
-> On Thu, Oct 03, 2019 at 10:41:06PM +0800, Haishuang Yan wrote:
->> 
->> 
->>> On 2019??10??2??, at ????9:27, Duncan Roe <duncan_roe@optusnet.com.au> wrote:
->>> 
->>> On Tue, Oct 01, 2019 at 09:34:13PM +0300, Julian Anastasov wrote:
->>>> 
->>>> 	Hello,
->>>> 
->>>> On Tue, 1 Oct 2019, Haishuang Yan wrote:
->>>> 
->>>>> This series patch include test cases for ipvs.
->>>>> 
->>>>> The test topology is who as below:
->>>>> +--------------------------------------------------------------+
->>>>> |                      |                                       |
->>>>> |         ns0          |         ns1                           |
->>>>> |      -----------     |     -----------    -----------        |
->>>>> |      | veth01  | --------- | veth10  |    | veth12  |        |
->>>>> |      -----------    peer   -----------    -----------        |
->>>>> |           |          |                        |              |
->>>>> |      -----------     |                        |              |
->>>>> |      |  br0    |     |-----------------  peer |--------------|
->>>>> |      -----------     |                        |              |
->>>>> |           |          |                        |              |
->>>>> |      ----------     peer   ----------      -----------       |
->>>>> |      |  veth02 | --------- |  veth20 |     | veth12  |       |
->>>>> |      ----------      |     ----------      -----------       |
->>>>> |                      |         ns2                           |
->>>>> |                      |                                       |
->>>>> +--------------------------------------------------------------+
->>>>> 
->>>>> Test results:
->>>>> # selftests: netfilter: ipvs.sh
->>>>> # Testing DR mode...
->>>>> # Testing NAT mode...
->>>>> # Testing Tunnel mode...
->>>>> # ipvs.sh: PASS
->>>>> ok 6 selftests: netfilter: ipvs.sh
->>>>> 
->>>>> Haishuang Yan (3):
->>>>> selftests: netfilter: add ipvs test script
->>>>> selftests: netfilter: add ipvs nat test case
->>>>> selftests: netfilter: add ipvs tunnel test case
->>>> 
->>>> Acked-by: Julian Anastasov <ja@ssi.bg>
->>>> 
->>>>> tools/testing/selftests/netfilter/Makefile |   2 +-
->>>>> tools/testing/selftests/netfilter/ipvs.sh  | 234 +++++++++++++++++++++++++++++
->>>>> 2 files changed, 235 insertions(+), 1 deletion(-)
->>>>> create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
->>>> 
->>>> Regards
->>>> 
->>>> --
->>>> Julian Anastasov <ja@ssi.bg>
->>> 
->>> I still prefer #!/bin/sh in 1/3. You never know what's in someone's environment
->>> 
->>> Cheers ... Duncan.
->>> 
->> 
->> It??s also my preference too. "_"	
->> 
->> I have tested both #!/bin/bash and #!/bin/sh script, they all works properly.
-> 
-> Enter these 2 lines:
->> ip(){ return 0; }
->> export -f ip
-> 
-> Now try the #!/bin/bash script. If that now fails, try again with #!/bin/bash
-> changed to #!/bin/bash -p
-> 
-> Any better now?
-> 
-> Cheers ... Duncan.
-> 
-It’s better now, thanks for your explanation.
-In v3 commit I will use #!/bin/bash -p to prevent exporting function from environment variables.
-
+That's compelling!
