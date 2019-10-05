@@ -2,86 +2,88 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4094C3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EF3C3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1BD222BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C3C222C5
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="mUqGfMVw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BhiRqVnQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfJEJgK (ORCPT
+        id S1727318AbfJEJog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 05:36:10 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:42723 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfJEJgK (ORCPT
+        Sat, 5 Oct 2019 05:44:36 -0400
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:35267 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfJEJog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 05:36:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
-        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Yhr3P6QDJ5P2/xa5/OMk/WHlqGvYCHv5owId7eV5XsQ=; b=mUqGfMVwBTYwljYtKD2Y0lJ7dp
-        peIQk1FY8oLW5H1rBykiA5eiAf47IXz3D4ZtMh07AFOBcPJnbdrN71PV0Kb+2yZsaDdl24uktYZsP
-        4KRqA98eKhW/RhBazqdHAOmj0gEgVAM2xeHlaGDC4U5pXOxf9ba+VMeJz3Yqhft9ffdYOGMhN02uT
-        1VK1IjZH2RRhW4nR/h0VbVbgy89yfa8pabL9C3iQb79btSaI5Mt0NdCDNmGl3FuKE86SfpDRtquMF
-        nbaLlADnxvYvm05GKMY/iehPKs/vyaxcACFU1rLSBRR+USnR68HYg6s05j/3zxH90YlKt101TKmem
-        A3zzE+EA==;
-Received: from [2a01:79c:cebe:b88c:caff:28ff:fe94:90a0] (port=55756)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <harald@skogtun.org>)
-        id 1iGgTw-0003w6-9X; Sat, 05 Oct 2019 11:36:08 +0200
-Subject: Re: BISECTED: Compile error on 5.4-rc1
-From:   Harald Arnesen <harald@skogtun.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <cf947abb-c94e-9b6f-229a-1e219fd38e94@skogtun.org>
- <CAK7LNAS-msvdv+=msqfSYX3ZKPQm_AJ0B=Uu7hfah1V+NGPjmQ@mail.gmail.com>
- <240d0353-2e66-7d0c-3dc0-f58f62c999be@skogtun.org>
-Message-ID: <fafb9730-6d0c-eac1-e2e2-374de509244a@skogtun.org>
-Date:   Sat, 5 Oct 2019 11:36:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 5 Oct 2019 05:44:36 -0400
+Received: by mail-pf1-f180.google.com with SMTP id 205so5426095pfw.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 02:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OsLzyk4cLtJ1BsL0pj+tOIyv2uo2YDHISl9Wqf9mUJQ=;
+        b=BhiRqVnQZCeZKTuBwXu0GRxK4pmARihnJjooRHPB0xGLsH7b/uf+P5sXJhoTwYZZmv
+         gyJ3w3JU5dVMHUZesxndOg4hiEQi/OM71knG1p64AaEUCtpsy39rfKPxjTx8ijMROb7Q
+         SC00j3fHPgaFgma9AJlKA9Osci27XKS8Y8Yys=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OsLzyk4cLtJ1BsL0pj+tOIyv2uo2YDHISl9Wqf9mUJQ=;
+        b=ZZAmF/OgM9MoXdZV+GpRumbwTsb2MoNEa2PKYLsYGKg4iKx1w8w3pt/m/CSqitu6Yg
+         2Kc1iAiH2UQymICy3hHXPPX6eqOg874DGItq/zdcndRnoeUaNhm0Z8Zhz1wQYbH7FFWc
+         CZx0jXJ+UGbiUC+BuxPiTOClFGsCMWKJZJxxwqtij22khpKI8mxVTw/SJ6iAlnzs5tK6
+         hd/FNHlacQ3fITc+9F2nTSGaWxaJ/4Kw7IBmwpNb83l2M+nxhLHSkpfzqAFvbA4ZG2wc
+         T4UMw9nrmCvpSPhrqoGYUEm0SsOSvHqen38eUiGaVxby1xZP6PEHwUd+/4vv7Z0dOVtR
+         Koiw==
+X-Gm-Message-State: APjAAAXf8aqqr9B81k2RpjIGYKn6vXuBCQvtAe54Ik2tL4FGm4pmvMEl
+        yGZUkS6P1O4Vcd6lN6EYeselbg==
+X-Google-Smtp-Source: APXvYqx0MHX5m0aqntaz8yO1KmDVqjRSOZbYZ7k8pegKmCs4EbmDU0kCblnsnC9PihgrpTT85euvPw==
+X-Received: by 2002:a17:90a:33e7:: with SMTP id n94mr22493367pjb.15.1570268675429;
+        Sat, 05 Oct 2019 02:44:35 -0700 (PDT)
+Received: from ikjn-glaptop.roam.corp.google.com ([61.254.209.103])
+        by smtp.gmail.com with ESMTPSA id s1sm9012998pjs.31.2019.10.05.02.44.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 02:44:34 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Enrico Granata <egranata@google.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH 0/3] HID: google: whiskers, minor fixes.
+Date:   Sat,  5 Oct 2019 17:44:16 +0800
+Message-Id: <20191005094416.126152-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-In-Reply-To: <240d0353-2e66-7d0c-3dc0-f58f62c999be@skogtun.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: nb-NO
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Harald Arnesen [05.10.2019 11:03]:
+Ikjoon Jang (3):
+  dt-bindings: input: Add DT bindings for Whiskers switch
+  HID: google: Add of_match table to Whiskers switch device.
+  HID: google: whiskers: mask out extra flags in EC event_type
 
-> Masahiro Yamada [05.10.2019 05:24]:
-> 
->> I cannot reproduce it.
->> 
->> I tested bindeb-pkg for the latest Linus tree successfully.
-> 
-> Strange, I have now tried another machine running the same distro
-> (Devuan Beowulf), and I get the same result there. Will check further.
+ .../devicetree/bindings/input/cros-cbas.yaml  | 25 +++++++++++++++++++
+ drivers/hid/hid-google-hammer.c               | 13 +++++++++-
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
 
-I found out what was wrong.
-
-Both machines have been used for dvd burning, and I have used Jörg
-Schilling's cdrecord - and I had installed all of the "Schily Tools",
-which unfortunately includes a shell command. Now, I had (by mistake)
-/opt/schily/bin early in my path, and his OpenSolaris-derived shell
-didn't work as expected.
-
-Moving /opt/schily/bin to the end of the path fixes the problem.
-
-But shouldn't it work even if "sh" is not equal to "/bin/sh"?
 -- 
-Hilsen Harald
+2.23.0.581.g78d2f28ef7-goog
 
