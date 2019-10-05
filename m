@@ -2,172 +2,131 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975BBC47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3906EC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6869320673
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B93B2084D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 07:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570260383;
+	bh=xFrXVj45JYqwx14emMFIPwY8ZuiE+j2pGgmNe8jT3vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1LV+L3/kIqNreEbxo1EHhhSP45A4dZYJ8NskjiJkO4zFjC8cFRzDoZOINeJ/5oJn6
+	 GeY1AjAiSUpXcwKVPwdJMoeWtGCCqv3S/+AEmp+AJjsh0x0fhdjtvVxV1Yu4z68Qh2
+	 hiDmhEn3eUN9A197XC6ydSSoAZaFsjFgVbR1xhaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfJEHQH (ORCPT
+        id S1727033AbfJEH0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 03:16:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:38663 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfJEHQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 03:16:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id e6so17304576iog.5
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 00:16:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=f6t/rs5xQhCT1Gu3lBp2UYzdFdG5BM97A92TtuPqnUo=;
-        b=OQC9Lhrg0ABIpcJfoCbcX6qMppjD2dSNy+YoMFdZMZdUB3uO5+e2wQTmfYB0HugmSq
-         LBvmGbxj+FqyHgPgZWpY8rCbrFnOCrUD3J+dAqxCUcrE1S0ryQor6CM0EmKH6LUZbVSa
-         qJ39sCM2K+vbKKQAQv0I0FcR2Dkyb8uQjyv6gKE12m1uBkWHVYiYifSmNyc5rhB8ycGS
-         5HLbTh/yy38p92waEou7/5a+AQZt0qiBexXfu8a4g7l2G7zCzrWLl1nKAe5Vg5fuFe2V
-         tWARMCiVaBMYWOLLSasnk+PEcwOgr2iyLZG0Xl4I3dPE52R2c7aUGbP3zxA+2vTx+jpO
-         v9bA==
-X-Gm-Message-State: APjAAAX6MiawfglE7ftYANAd3jMPWg0SGpEzZ7UzvwXTPxQmsiS+BDXC
-        sqz0FFZv8lQ4kHYzBdk2xcP1MxQBBZLQV/TeCSitwKXc5/gj
-X-Google-Smtp-Source: APXvYqwhoIFNTht4WEgQkbOFbVOomWljZZis7DUFvj+mYjxRcaqAVfGIR+c8M2y2ub561Kgr1xFVTaKeywQy+wipdN0ZbBDj414x
+        Sat, 5 Oct 2019 03:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725927AbfJEH0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 03:26:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EF120830;
+        Sat,  5 Oct 2019 07:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570260381;
+        bh=xFrXVj45JYqwx14emMFIPwY8ZuiE+j2pGgmNe8jT3vk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=htZNkApCedGQroo8d6Fz6NZ17pKIL5w52kCPF98KRNd3LBUeP4ewyKCqBya09yPc8
+         rpXlwcINKSgJY87L/3GiNqdVcIsmj2iuryXkw53Exrqk0rK3GBqpZQdTUSjIAzpK7E
+         Mho1CPRlJ4eTErIoDFtt9E5zWoE/LSDwCnYVtNio=
+Date:   Sat, 5 Oct 2019 09:26:18 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Semmle Security Reports <security-reports@semmle.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2] dma-mapping: Move vmap address checks into
+ dma_map_single()
+Message-ID: <20191005072618.GA930906@kroah.com>
+References: <201910041420.F6E55D29A@keescook>
 MIME-Version: 1.0
-X-Received: by 2002:a92:8c86:: with SMTP id s6mr3580973ill.298.1570259766123;
- Sat, 05 Oct 2019 00:16:06 -0700 (PDT)
-Date:   Sat, 05 Oct 2019 00:16:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000090a62605942497af@google.com>
-Subject: WARNING: refcount bug in sctp_transport_put (2)
-From:   syzbot <syzbot+6cad8d7f75ebce50a44d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910041420.F6E55D29A@keescook>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Oct 04, 2019 at 02:28:16PM -0700, Kees Cook wrote:
+> As we've seen from USB and other areas, we need to always do runtime
+> checks for DMA operating on memory regions that might be remapped. This
+> moves the existing checks from USB into dma_map_single(), but leaves
+> the slightly heavier checks as they are.
+> 
+> Suggested-by: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2: Only add is_vmalloc_addr()
+> v1: https://lore.kernel.org/lkml/201910021341.7819A660@keescook
+> ---
+>  drivers/usb/core/hcd.c      | 8 +-------
+>  include/linux/dma-mapping.h | 7 +++++++
+>  2 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index f225eaa98ff8..281568d464f9 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -1410,10 +1410,7 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+>  		if (hcd->self.uses_pio_for_control)
+>  			return ret;
+>  		if (hcd_uses_dma(hcd)) {
+> -			if (is_vmalloc_addr(urb->setup_packet)) {
+> -				WARN_ONCE(1, "setup packet is not dma capable\n");
+> -				return -EAGAIN;
+> -			} else if (object_is_on_stack(urb->setup_packet)) {
+> +			if (object_is_on_stack(urb->setup_packet)) {
+>  				WARN_ONCE(1, "setup packet is on stack\n");
+>  				return -EAGAIN;
+>  			}
+> @@ -1479,9 +1476,6 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+>  					ret = -EAGAIN;
+>  				else
+>  					urb->transfer_flags |= URB_DMA_MAP_PAGE;
+> -			} else if (is_vmalloc_addr(urb->transfer_buffer)) {
+> -				WARN_ONCE(1, "transfer buffer not dma capable\n");
+> -				ret = -EAGAIN;
+>  			} else if (object_is_on_stack(urb->transfer_buffer)) {
+>  				WARN_ONCE(1, "transfer buffer is on stack\n");
+>  				ret = -EAGAIN;
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index 4a1c4fca475a..12dbd07f74f2 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -583,6 +583,13 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+>  static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
+>  		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>  {
+> +	/* DMA must never operate on areas that might be remapped. */
+> +	if (WARN_ONCE(is_vmalloc_addr(ptr),
+> +		      "%s %s: driver maps %lu bytes from vmalloc area\n",
+> +		      dev ? dev_driver_string(dev) : "unknown driver",
+> +		      dev ? dev_name(dev) : "unknown device", size))
 
-syzbot found the following crash on:
+If you use dev_warn() here you get all of that "unknown driver/device"
+checking and handling set properly.  And it's in the "standard" format
+that userspace tools know how to check.
 
-HEAD commit:    311ef88a Add linux-next specific files for 20191004
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1688f6fb600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db2e4361e48662f4
-dashboard link: https://syzkaller.appspot.com/bug?extid=6cad8d7f75ebce50a44d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+thanks,
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6cad8d7f75ebce50a44d@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 0 PID: 23726 at lib/refcount.c:190  
-refcount_sub_and_test_checked lib/refcount.c:190 [inline]
-WARNING: CPU: 0 PID: 23726 at lib/refcount.c:190  
-refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 23726 Comm: syz-executor.4 Not tainted 5.4.0-rc1-next-20191004  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:220
-  __warn.cold+0x2f/0x3c kernel/panic.c:581
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
-RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
-Code: 1d 9d a9 7f 06 31 ff 89 de e8 6c 0d 31 fe 84 db 75 94 e8 23 0c 31 fe  
-48 c7 c7 a0 6e e6 87 c6 05 7d a9 7f 06 01 e8 28 51 02 fe <0f> 0b e9 75 ff  
-ff ff e8 04 0c 31 fe e9 6e ff ff ff 48 89 df e8 47
-RSP: 0018:ffff8880ae809bc8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000100 RSI: ffffffff815cb526 RDI: ffffed1015d0136b
-RBP: ffff8880ae809c60 R08: ffff888097c901c0 R09: fffffbfff14edb4a
-R10: fffffbfff14edb49 R11: ffffffff8a76da4f R12: 00000000ffffffff
-R13: 0000000000000001 R14: ffff8880ae809c38 R15: 0000000000000000
-  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
-  sctp_transport_put+0x1e/0x130 net/sctp/transport.c:325
-  sctp_generate_heartbeat_event+0x2cf/0x450 net/sctp/sm_sideeffect.c:401
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:__sanitizer_cov_trace_pc+0x44/0x50 kernel/kcov.c:109
-Code: 48 8b 75 08 75 2b 8b 90 00 13 00 00 83 fa 02 75 20 48 8b 88 08 13 00  
-00 8b 80 04 13 00 00 48 8b 11 48 83 c2 01 48 39 d0 76 07 <48> 89 34 d1 48  
-89 11 5d c3 0f 1f 00 65 4c 8b 04 25 40 fe 01 00 65
-RSP: 0018:ffff88805f30f4e0 EFLAGS: 00000216 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000040000 RBX: 0000000000000008 RCX: ffffc9000e9aa000
-RDX: 0000000000021364 RSI: ffffffff830d569e RDI: 0000000000000001
-RBP: ffff88805f30f4e0 R08: ffff888097c901c0 R09: ffffed100be61eb3
-R10: ffffed100be61eb2 R11: 0000000000000000 R12: ffff8880a858e780
-R13: 0000000000000010 R14: 00000000000002d0 R15: 0000000000000000
-  tomoyo_domain_quota_is_ok+0x2fe/0x540 security/tomoyo/util.c:1069
-  tomoyo_supervisor+0x2e8/0xef0 security/tomoyo/common.c:2087
-  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
-  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
-  tomoyo_path_permission+0x263/0x360 security/tomoyo/file.c:573
-  tomoyo_check_open_permission+0x372/0x3f0 security/tomoyo/file.c:780
-  tomoyo_file_open security/tomoyo/tomoyo.c:325 [inline]
-  tomoyo_file_open+0x106/0x150 security/tomoyo/tomoyo.c:317
-  security_file_open+0x71/0x300 security/security.c:1497
-  do_dentry_open+0x373/0x1250 fs/open.c:784
-  vfs_open+0xa0/0xd0 fs/open.c:914
-  do_last fs/namei.c:3412 [inline]
-  path_openat+0x10e9/0x4720 fs/namei.c:3529
-  do_filp_open+0x1a1/0x280 fs/namei.c:3559
-  do_sys_open+0x3fe/0x5d0 fs/open.c:1097
-  ksys_open include/linux/syscalls.h:1386 [inline]
-  __do_sys_creat fs/open.c:1155 [inline]
-  __se_sys_creat fs/open.c:1153 [inline]
-  __x64_sys_creat+0x61/0x80 fs/open.c:1153
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a59
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007faa895c7c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000055
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 0000000000459a59
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000040
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007faa895c86d4
-R13: 00000000004c00fd R14: 00000000004d2430 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+greg k-h
