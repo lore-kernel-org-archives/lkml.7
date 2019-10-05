@@ -2,142 +2,122 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33385C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028E4C4CED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC8720830
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aNlQ5uVh"
+	by mail.kernel.org (Postfix) with ESMTP id CD44420873
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 01:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570239203;
+	bh=n4aRImq4Lrub/+kEZQaJLf+YSE+YDB6MnfXrB9ePfvk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oJFP5Q0DI4yWMj6rC6JWrNUeo5I5dLM0DcOYm6rnAMkmzNWLpYrlUeoUfIW3HoYTx
+	 K3sQSijSJZfTO3bi3hyltmkN5ZdRWsAJrVWrtX0/S9E5NddTkw1d5UnbRpl6UdLlmf
+	 PRwQuJYmFYYObmwx3b/I8qfUYcVPmbAeR5QIQQ2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfJEBYK (ORCPT
+        id S1726469AbfJEBdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 21:24:10 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41005 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfJEBYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 21:24:10 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w65so7319262oiw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 18:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Gr3vPHhUUWGmUVhCZ83FOVrxuAp5M1FSUXsxEnqOUVw=;
-        b=aNlQ5uVh9JxZHsH9PosFCQkAXOZbUVmDp4sYNIiyQWF7usjj7tYRWSXGvGeb+TKmQx
-         /PKYmS1XWZi9z89cLQ8sCIOSbR9FlH6ncaopWkD+hcrjvRWSclilETaXt24XtrsjiYTW
-         FcDmxdTcT38ukq9MY0VdtfU84Hpxq5kPDmMmxPxIUYlpICCR1J71ZFp8FcxLdMTuQ4O+
-         0PciPfJdQ8/SgJA0QMK8CeGeuaSM+1WVBGkDGgs2dijunkUXtplNyQ7tYe0MLNEryPel
-         sN28J2s2rF3qk1Js6Fl2vJo3uz3N3ajPuVP0SYKhSHp2NGk0frPPaNviNK6+V2Af1CQg
-         AHIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Gr3vPHhUUWGmUVhCZ83FOVrxuAp5M1FSUXsxEnqOUVw=;
-        b=hyt3T339uC1EWeNZNfaVxMbPfj+tqEKVG/QShIC8DNOP7s+9ylwtk6sucUg+FNjWY8
-         4c1zQyrPLu+ypzfhgVTsnQWHeFo9oVJ2lOlIfM4nBVZBtQoEtprH+8Jh5qlbpFMW4PMO
-         5/u3YqnN3e5XwIlmPMeZhJeAMCyPl2p0Rc7RpyLgmdQLaDhpRC6ZlM4uyy4uD1aiP2Nr
-         UjgjhpOF+HTgL33sjZvOSFnYl4mvWIjZ5jXOkNUHu8Kjqyks0gxk3MzdEDJ9+BZaJOrG
-         wbuVZ5jifpmVzRTJ2rEBUKomCZN0rKI331i1bmjPfRiwhl4akW008ZITXMTfxfdMRx7p
-         HQOg==
-X-Gm-Message-State: APjAAAXhuOKakapLqaL2gRZtHV6mCq+OMQfMJB67h3QBtJgTsvHCkwdi
-        DyGwFbdaZp5dvIoLlsiCl+5uBg==
-X-Google-Smtp-Source: APXvYqzgkJxuaT0woltjn4JGZ5HsgdZmLxkxcI/oHlVqnvxI9eGlw+q4m2LXamIq0+QDajNCtfMU3A==
-X-Received: by 2002:aca:d07:: with SMTP id 7mr9442211oin.155.1570238649063;
-        Fri, 04 Oct 2019 18:24:09 -0700 (PDT)
-Received: from localhost ([2600:100e:b029:4ada:34fb:aeb7:d598:e51c])
-        by smtp.gmail.com with ESMTPSA id a9sm2260524otc.75.2019.10.04.18.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2019 18:24:08 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 18:24:07 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Kees Cook <keescook@chromium.org>
-cc:     Tycho Andersen <tycho@tycho.ws>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, me@carlosedp.com
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-In-Reply-To: <CAJr-aD=UnCN9E_mdVJ2H5nt=6juRSWikZnA5HxDLQxXLbsRz-w@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1910041820560.15827@viisi.sifive.com>
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com> <20190826145756.GB4664@cisco> <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com> <201908261043.08510F5E66@keescook>
- <alpine.DEB.2.21.9999.1908281825240.13811@viisi.sifive.com> <CAJr-aD=UnCN9E_mdVJ2H5nt=6juRSWikZnA5HxDLQxXLbsRz-w@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 4 Oct 2019 21:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfJEBdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Oct 2019 21:33:22 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD1C3222C2
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Oct 2019 01:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570239200;
+        bh=n4aRImq4Lrub/+kEZQaJLf+YSE+YDB6MnfXrB9ePfvk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zGBM+UNsZR8OsJ1PXh+SazN8Gfrgzza8tliaSIapsiWiXnx3A2i7sGOF3aPVfco/8
+         rvrzVhz8KSc9k65CjC2SLi+8DxLTCSLuuq/trh1RKCGEOE5pwFgx+jITp8MPlNocCB
+         7Q2ofFrta4JwtK0hf3/MhK3BhFZtUDZQmkHclipg=
+Received: by mail-wr1-f54.google.com with SMTP id o18so9080016wrv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 18:33:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAUNd47SB9fSKlO+v9jFaa+FECSwrK8IVK9l5Pry58RH5+O98PDz
+        x46xXTF56U5bcXoO7GdFc4rWRLKvcFbg4yeHlxKxQg==
+X-Google-Smtp-Source: APXvYqyjhheOmqMgJaDuXYPsAFybWX1peME6BJhrzOo/E8Me2RUlybh6fcihReGSWFe7PARuThdGh065aUJ9r5hsRnc=
+X-Received: by 2002:a5d:4647:: with SMTP id j7mr14200264wrs.106.1570239199136;
+ Fri, 04 Oct 2019 18:33:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+ <CALCETrW9MEvNt+kB_65cbX9VJiLxktAFagkzSGR0VQfd4VHOiQ@mail.gmail.com> <d5be8611158108a05fbb67c23b10357f2fb19816.camel@intel.com>
+In-Reply-To: <d5be8611158108a05fbb67c23b10357f2fb19816.camel@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 4 Oct 2019 18:33:07 -0700
+X-Gmail-Original-Message-ID: <CALCETrWDFYO4LZu_OM24FAcnphm4jwvbz4j31q8w7eeHUR_4EA@mail.gmail.com>
+Message-ID: <CALCETrWDFYO4LZu_OM24FAcnphm4jwvbz4j31q8w7eeHUR_4EA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/13] XOM for KVM guest userspace
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "luto@kernel.org" <luto@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "Dock, Deneen T" <deneen.t.dock@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kristen@linux.intel.com" <kristen@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Sep 2019, Kees Cook wrote:
-
-> On Wed, Aug 28, 2019 at 6:30 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> > On Mon, 26 Aug 2019, Kees Cook wrote:
-> >
-> > > On Mon, Aug 26, 2019 at 09:39:50AM -0700, David Abdurachmanov wrote:
-> > > > I don't have the a build with SECCOMP for the board right now, so it
-> > > > will have to wait. I just finished a new kernel (almost rc6) for Fedora,
+On Fri, Oct 4, 2019 at 1:10 PM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+>
+> On Fri, 2019-10-04 at 07:56 -0700, Andy Lutomirski wrote:
+> > On Thu, Oct 3, 2019 at 2:38 PM Rick Edgecombe
+> > <rick.p.edgecombe@intel.com> wrote:
 > > >
-> > > FWIW, I don't think this should block landing the code: all the tests
-> > > fail without seccomp support. ;) So this patch is an improvement!
+> > > This patchset enables the ability for KVM guests to create execute-only (XO)
+> > > memory by utilizing EPT based XO permissions. XO memory is currently
+> > > supported
+> > > on Intel hardware natively for CPU's with PKU, but this enables it on older
+> > > platforms, and can support XO for kernel memory as well.
 > >
-> > Am sympathetic to this -- we did it with the hugetlb patches for RISC-V --
-> > but it would be good to understand a little bit more about why the test
-> > fails before we merge it.
-> 
-> The test is almost certainly failing due to the environmental
-> requirements (i.e. namespaces, user ids, etc). There are some corner
-> cases in there that we've had to fix in the past. If the other tests
-> are passing, then I would expect all the seccomp internals are fine --
-> it's just the case being weird. It's just a matter of figuring out
-> what state the test environment is in so we can cover that corner case
-> too.
-> 
-> > Once we merge the patch, it will probably reduce the motivation for others
-> > to either understand and fix the underlying problem with the RISC-V code
-> > -- or, if it truly is a flaky test, to drop (or fix) the test in the
-> > seccomp_bpf kselftests.
-> 
-> Sure, I get that point -- but I don't want to block seccomp landing
-> for riscv for that. I suggested to David offlist that the test could
-> just be marked with a FIXME XFAIL on riscv and once someone's in a
-> better position to reproduce it we can fix it. (I think the test bug
-> is almost certainly not riscv specific, but just some missing
-> requirement that we aren't handling correctly.)
+> > The patchset seems to sometimes call this feature "XO" and sometimes
+> > call it "NR".  To me, XO implies no-read and no-write, whereas NR
+> > implies just no-read.  Can you please clarify *exactly* what the new
+> > bit does and be consistent?
+> >
+> > I suggest that you make it NR, which allows for PROT_EXEC and
+> > PROT_EXEC|PROT_WRITE and plain PROT_WRITE.  WX is of dubious value,
+> > but I can imagine plain W being genuinely useful for logging and for
+> > JITs that could maintain a W and a separate X mapping of some code.
+> > In other words, with an NR bit, all 8 logical access modes are
+> > possible.  Also, keeping the paging bits more orthogonal seems nice --
+> > we already have a bit that controls write access.
+>
+> Sorry, yes the behavior of this bit needs to be documented a lot better. I will
+> definitely do this for the next version.
+>
+> To clarify, since the EPT permissions in the XO/NR range are executable, and not
+> readable or writeable the new bit really means XO, but only when NX is 0 since
+> the guest page tables are being checked as well. When NR=1, W=1, and NX=0, the
+> memory is still XO.
+>
+> NR was picked over XO because as you say. The idea is that it can be defined
+> that in the case of KVM XO, NR and writable is not a valid combination, like
+> writeable but not readable is defined as not valid for the EPT.
+>
 
-OK.  It might be nice to mark the seccomp_bpf.c test as flaky in the 
-comments for the test.
+Ugh, I see, this is an "EPT Misconfiguration".  Oh, well.  I guess
+just keep things as they are and document things better, please.
+Don't try to emulate.
 
-> How does that sound?
+I don't suppose Intel could be convinced to get rid of that in a
+future CPU and allow write-only memory?
 
-Let's follow your plan.  Thanks for your review and feedback.
-
-
-- Paul
+BTW, is your patch checking for support in IA32_VMX_EPT_VPID_CAP?  I
+didn't notice it, but I didn't look that hard.
