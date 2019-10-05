@@ -2,108 +2,69 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D58AC4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B02C47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF20620867
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C24C222C8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 20:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570305933;
+	bh=oxbOdxHcUxUWx2zWBS7kJctmNnM1ALr/0CzL2DSyvXA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Xdc+EOi87lpSx7uhEBV5bdsgvf/RsSP0HgIbRvc8LC+pPJ5xrADHJqGyQh/hLXoKm
+	 +Hh7bPEbTzujleyEefN9o56a1J/nDoXUaNQnldlHSOILtAURsjzEDIknSsXYLr5NFu
+	 mKtKuFoQnNg6Ey9qhCX/eKDyJcEKckifJE6P0hPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfJEUF3 (ORCPT
+        id S1729348AbfJEUF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 16:05:29 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40137 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730568AbfJEUF0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 16:05:26 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 0621D60004;
-        Sat,  5 Oct 2019 20:05:21 +0000 (UTC)
-Date:   Sat, 5 Oct 2019 22:05:21 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     u.kleine-koenig@pengutronix.de,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: at91: avoid sleeping early
-Message-ID: <20191005200521.GB4254@piout.net>
-References: <20190920153906.20887-1-alexandre.belloni@bootlin.com>
- <20190924122147.fojcu5u44letrele@pengutronix.de>
- <20190924202015.EFEBF20640@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924202015.EFEBF20640@mail.kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Sat, 5 Oct 2019 16:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730076AbfJEUFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 16:05:14 -0400
+Subject: Re: [GIT PULL] SCSI fixes for 5.4-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570305914;
+        bh=oxbOdxHcUxUWx2zWBS7kJctmNnM1ALr/0CzL2DSyvXA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ilxxug3D2QqMpb7RSaMo5L1a9wkatmR3UVqXdXGcB+ab5l7qp2V/gl2z22kc4mIkT
+         Y1frKeTvMTatZ0sB43OeXNQDa8S7aHm9F7J14nJL7WSk+MR08zv8ziBurprDOBlaQo
+         hSM3+WOIIT6Y5W8lLoD4P0ZMpnjvCpse0C0Hdl6k=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1570250655.17537.18.camel@HansenPartnership.com>
+References: <1570250655.17537.18.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1570250655.17537.18.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: 0aabb6b699f72dca96988d3f428e222f932dc889
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 126195c972a2adba8cae12a65cdee155440a4525
+Message-Id: <157030591442.15791.1282877858778600053.pr-tracker-bot@kernel.org>
+Date:   Sat, 05 Oct 2019 20:05:14 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/09/2019 13:20:15-0700, Stephen Boyd wrote:
-> Quoting Uwe  (2019-09-24 05:21:47)
-> > On Fri, Sep 20, 2019 at 05:39:06PM +0200, Alexandre Belloni wrote:
-> > > Note that this was already discussed a while ago and Arnd said this approach was
-> > > reasonable:
-> > >   https://lore.kernel.org/lkml/6120818.MyeJZ74hYa@wuerfel/
-> > > 
-> > >  drivers/clk/at91/clk-main.c |  5 ++++-
-> > >  drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
-> > >  2 files changed, 20 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-> > > index f607ee702c83..ccd48e7a3d74 100644
-> > > --- a/drivers/clk/at91/clk-main.c
-> > > +++ b/drivers/clk/at91/clk-main.c
-> > > @@ -293,7 +293,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
-> > >               regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
-> > >               if (mcfr & AT91_PMC_MAINRDY)
-> > >                       return 0;
-> > > -             usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
-> > > +             if (system_state < SYSTEM_RUNNING)
-> > > +                     udelay(MAINF_LOOP_MIN_WAIT);
-> > > +             else
-> > > +                     usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
-> > 
-> > Given that this construct is introduced several times, I wonder if we
-> > want something like:
-> > 
-> >         static inline void early_usleep_range(unsigned long min, unsigned long max)
-> >         {
-> >                 if (system_state < SYSTEM_RUNNING)
-> >                         udelay(min);
-> >                 else
-> >                         usleep_range(min, max);
-> >         }
-> > 
-> 
-> Maybe, but I think the intent is to not encourage this behavior? So
-> providing a wrapper will make it "easy" and then we'll have to tell
-> users to stop calling it. Another idea would be to make usleep_range()
-> "do the right thing" and call udelay if the system isn't running. And
-> another idea from tlgx[1] is to pull the delay logic into another clk op
-> that we can call to see when the enable or prepare is done. That may be
-> possible by introducing another clk_ops callback that when present
-> indicates we should sleep or delay for so much time while waiting for
-> the prepare or enable to complete.
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.11.1606061448010.28031@nanos
-> 
+The pull request you sent on Fri, 04 Oct 2019 21:44:15 -0700:
 
-Do you want me to implement that now or are you planning to apply the
-patch in the meantime ?
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/126195c972a2adba8cae12a65cdee155440a4525
+
+Thank you!
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
