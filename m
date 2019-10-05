@@ -2,86 +2,83 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D2CC3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C07FC3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289222133F
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9046222CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 12:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="eXiaWehj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfJEM0L (ORCPT
+        id S1728150AbfJEM3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 08:26:11 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:35359 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726198AbfJEM0L (ORCPT
+        Sat, 5 Oct 2019 08:29:46 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:51212 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfJEM3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 08:26:11 -0400
-X-IronPort-AV: E=Sophos;i="5.67,260,1566856800"; 
-   d="scan'208";a="404856155"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 14:26:09 +0200
-Date:   Sat, 5 Oct 2019 14:26:08 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Martijn Coenen <maco@android.com>,
-        =?ISO-8859-15?Q?Matthias_M=E4nnich?= <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [RFC] scripts: Fix coccicheck failed
-In-Reply-To: <21684307-d05c-1856-c849-95436aedeb86@web.de>
-Message-ID: <alpine.DEB.2.21.1910051425050.2653@hadrien>
-References: <CAK7LNAS2K6i+s2A_xTyRq730M6_=tyjtfwHAnEHF37_nrJa4Eg@mail.gmail.com> <21684307-d05c-1856-c849-95436aedeb86@web.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 5 Oct 2019 08:29:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 6D6FD3F9CA;
+        Sat,  5 Oct 2019 14:29:43 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=eXiaWehj;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZvVhr-XueHu5; Sat,  5 Oct 2019 14:29:42 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id CBC323F9B6;
+        Sat,  5 Oct 2019 14:29:41 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 3C13836014C;
+        Sat,  5 Oct 2019 14:29:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570278581; bh=/gR1HwYFIIqFRwJfuDUBbZYDELbnZuayqLuZ9ZZV6b8=;
+        h=To:Cc:From:Subject:Date:From;
+        b=eXiaWehju1eFoQiw6YFkzE3Wmwwf94Hlc6AH0FmGBSkirtIB4zPrIT4711WNqm61c
+         zLQR7fVqctWxaw5m5+KLmGCTlXb+NtTUOluIzaZHcnKC0g7doLKFfAY36yXpHHlhFy
+         GMGQLB6uVLjwXeAi8tG3pcQa8gRrtNHlA6wzs9e0=
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Subject: hmm pud-entry callback locking?
+Organization: VMware Inc.
+Message-ID: <4d25d751-d03a-29c6-950b-cafe8d201784@shipmail.org>
+Date:   Sat, 5 Oct 2019 14:29:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1481532127-1570278369=:2653"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi, Jerome,
 
---8323329-1481532127-1570278369=:2653
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+I was asked by Kirill to try to unify the pagewalk pud_entry and 
+pmd_entry callbacks. The only user of the pagewalk pud-entry is 
+currently hmm.
+
+But the pagewalk code call pud_entry only for huge puds with the 
+page-table lock held, whereas the hmm callback appears to assume it gets 
+called unconditionally without the page-table lock held?
+
+Could you shed some light into this?
+
+Thanks,
+Thomas
 
 
-
-On Sat, 5 Oct 2019, Markus Elfring wrote:
-
-> > You gave Acked-by to the one-liner fix "virtual report",
->
-> It was (temporarily?) accepted to use the script “add_namespace.cocci”
-> without such a type of SmPL variable.
->
->
-> > and I am happy to apply it to my tree.
->
-> Would you like to take the change possibility into account
-> that the coccicheck system configuration should be adapted instead?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccicheck?id=4ea655343ce4180fe9b2c7ec8cb8ef9884a47901#n257
-
-I prefer the one line change for now.  If more issues arise one can see
-what is more desirable at a larger scale.
-
-julia
-
->
-> Regards,
-> Markus
->
---8323329-1481532127-1570278369=:2653--
