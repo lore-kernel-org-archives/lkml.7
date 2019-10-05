@@ -2,275 +2,367 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9D4ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3F0ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D0E222D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zep7EH8p"
+	by mail.kernel.org (Postfix) with ESMTP id 636A0222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570293026;
+	bh=RjId2eFUhdEkkPxQZVw2HxNbbdsYUHqf1ZzcLPC/eGE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uN8aKlr6xdvIWwFTaLIN/9Qk7ModFQngueXY/EstXUSLrTUyIhsq4+38bZmIHTis9
+	 h/x69fY/sv3QrJ/981T/S8ry/YE6PgDfPMRqs5nz3Je5kvo7VMkiwkLVPJCgNsEngn
+	 qtYsjKvT2QQOUP/n2w6ZQDSdnLrMlafIZlI2Uxvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbfJEQ3x (ORCPT
+        id S1729327AbfJEQaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 12:29:53 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38256 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfJEQ3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 12:29:53 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j31so13152308qta.5;
-        Sat, 05 Oct 2019 09:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=stUeq6JlpWLFXyg96f1LSeLONzeqiyJLX5utdPTxFBc=;
-        b=Zep7EH8pO7JmpCe1G6r56TuRXPs8YmKTwcXPCZweibMkKiGXZMWHc6qpaIp+5wDNz+
-         EbNm5u6fD0FDeKKxhzIA+j3tNR6X1WNjAre6pmf4PNQvaL41sbiwmkfNucY1ACzskB01
-         mqkKEaeK+uCu9ZjDznOPUUvjtHROgircblQeiLTXb/9owXTCcBnKbdC3WXWPOdnAqMbS
-         XWgKfr4hdLUnL/4QF4mmE86Wofm+QPRCocTJeho/6Jr1T6jbWezdeBrwLmKtBC4xoiU2
-         I7unuYdrSt/Q1On4Az055jSgBRGwh/VGeJ4Bmgxd3P1cJtiVc7kvlI9gezaYlt8L6iW5
-         0RJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=stUeq6JlpWLFXyg96f1LSeLONzeqiyJLX5utdPTxFBc=;
-        b=Ji0k0bvdPPp01oUdvg/d+Pq5xefjfnlNH2n2JC3ANrHnIpI77IPKiM8rXbXIG30O/H
-         t4pAKk7yVqX0Zd9F591O+4xL2Sda/9YVgRZLfG3QzV2YOeZiFv1pwFPDjAY0WSN7PTDJ
-         IbNA+gbmP8qVzJeg3725ekeMXI5EOrbvA7QUmN/OUqkHVspkQNs5H8UfP+SqZ53mT5SE
-         cBCtC8yvIMxI16TkPOUTbVIOY7r7G1nzk13+IENICDaFbibTGQ711Yb+xb+5clY2tdpB
-         NxXa2tUx1dhNpskDpfJ4U5hDWuIfCcCfdKf9aaOsWnkWqEG11hOOE8rY168O4+st1vcZ
-         z6EA==
-X-Gm-Message-State: APjAAAUbJv9gpbOq/rywl4VeAX03hOQLTxe+x1AGTE1oMi2YwyO8hwFf
-        ZHmY9vakx9PY98FtaEo+2FM3xVVDPhieUBcoRIs=
-X-Google-Smtp-Source: APXvYqxNyxoLcySUggUDZfaxP5Da7HAD7Adv9zfmVwgCcVpJM5x3JqZze9SC4wgB358kMmJv8LN2WzAvOoHYVEEY5wc=
-X-Received: by 2002:ac8:3021:: with SMTP id f30mr21994609qte.193.1570292991651;
- Sat, 05 Oct 2019 09:29:51 -0700 (PDT)
+        Sat, 5 Oct 2019 12:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729253AbfJEQaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 12:30:25 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59CFE20862;
+        Sat,  5 Oct 2019 16:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570293023;
+        bh=RjId2eFUhdEkkPxQZVw2HxNbbdsYUHqf1ZzcLPC/eGE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DC8Z7Fpj16jjvjnoNTphEdmhVthG2ZxIqV0xk1EiMtyhYeyDfZfvggmWUznrOD/s0
+         /3RHml599SRB8uCoIBluJXzyzQ0O1Snhh5GFoE2fyEVSVhSKgIj64Da+o2L5LjyxMw
+         KAplz6B6WmunA0ybIxBc8YzvXVYvXLT2ydkrOCTc=
+Date:   Sat, 5 Oct 2019 17:30:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 10/13] iio: cros_ec: Use triggered buffer only when EC
+ does not support FIFO
+Message-ID: <20191005173017.23751aac@archlinux>
+In-Reply-To: <20190922175021.53449-11-gwendal@chromium.org>
+References: <20190922175021.53449-1-gwendal@chromium.org>
+        <20190922175021.53449-11-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190811212315.12689-1-digetx@gmail.com> <CGME20191001211534epcas2p1e5f878969d3f68d4dfcafd82b1538487@epcas2p1.samsung.com>
- <17dabcfc-3351-13a1-b3de-81af88f64d84@gmail.com> <503b2ade-ff8e-c354-3886-3b7b511bd07e@samsung.com>
- <6967777e-b54f-8021-aa6d-8c245e529e10@gmail.com>
-In-Reply-To: <6967777e-b54f-8021-aa6d-8c245e529e10@gmail.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Sat, 5 Oct 2019 12:29:40 -0400
-Message-ID: <CAMdYzYrgvRK49ZhXfy4T6EsRmWOmB+uNK9+rumL1mX032=CdWA@mail.gmail.com>
-Subject: Re: [PATCH v6 00/19] More improvements for Tegra30 devfreq driver
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested on the Ouya (tegra30).
+On Sun, 22 Sep 2019 10:50:18 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-Tested-by: Peter Geis <pgwipeout@gmail.com>
+> When EC supports FIFO, the samples will flow from the kernel by
+> themselves.
+> When no FIFO, the user space app needs to call trigger_new, or better
+> register a high precision timer.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 
-On Wed, Oct 2, 2019 at 9:56 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 02.10.2019 03:25, Chanwoo Choi =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > Hello Dmitry and Thierry,
-> >
-> > On 19. 10. 2. =EC=98=A4=EC=A0=84 6:15, Dmitry Osipenko wrote:
-> >> 12.08.2019 00:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> Hello,
-> >>>
-> >>> This series addresses some additional review comments that were made =
-by
-> >>> Thierry Reding to [1], makes several important changes to the driver,
-> >>> fixing excessive interrupts activity, and adds new features. In the e=
-nd
-> >>> I'm proposing myself as a maintainer for the Tegra devfreq drivers.
-> >>>
-> >>> [1] https://lore.kernel.org/lkml/0fb50eb1-a173-1756-6889-2526a10ac707=
-@gmail.com/T/
-> >>>
-> >>> Changelog:
-> >>>
-> >>> v6:  Addressed review comment that was made by Chanwoo Choi to v5 by
-> >>>      squashing "Define ACTMON_DEV_CTRL_STOP" patch into the "Use CPUF=
-req
-> >>>      notifier" patch.
-> >>>
-> >>> v5:  Addressed review comments that were made by Chanwoo Choi to v4 b=
-y
-> >>>      squashing few patches, dropping some questionable patches, rewor=
-ding
-> >>>      comments to the code, restructuring the code and etc.
-> >>>
-> >>>      These patches are now dropped from the series:
-> >>>
-> >>>        PM / devfreq: tegra30: Use tracepoints for debugging
-> >>>        PM / devfreq: tegra30: Inline all one-line functions
-> >>>
-> >>>      The interrupt-optimization patches are squashed into a single pa=
-tch:
-> >>>
-> >>>        PM / devfreq: tegra30: Reduce unnecessary interrupts activity
-> >>>
-> >>>      because it's better to keep the optimizations as a separate chan=
-ge and
-> >>>      this also helps to reduce code churning, since the code changes =
-depend
-> >>>      on a previous patch in order to stay cleaner.
-> >>>
-> >>>      Fixed a lockup bug that I spotted recently, which is caused by a
-> >>>      clk-notifier->cpufreq_get()->clk_set_rate() sequence. Now a non-=
-blocking
-> >>>      variant of CPU's frequency retrieving is used, i.e. cpufreq_quic=
-k_get().
-> >>>
-> >>>      Further optimized the CPUFreq notifier by postponing the delayed
-> >>>      updating in accordance to the polling interval, this actually un=
-covered
-> >>>      the above lockup bug.
-> >>>
-> >>>      Implemented new minor driver feature in the new patch:
-> >>>
-> >>>        PM / devfreq: tegra30: Support variable polling interval
-> >>>
-> >>> v4:  Added two new patches to the series:
-> >>>
-> >>>        PM / devfreq: tegra30: Synchronize average count on target's u=
-pdate
-> >>>        PM / devfreq: tegra30: Increase sampling period to 16ms
-> >>>
-> >>>      The first patch addresses problem where governor could get stuck=
- due
-> >>>      to outdated "average count" value which is snapshoted by ISR and=
- there
-> >>>      are cases where manual update of the value is required.
-> >>>
-> >>>      The second patch is just a minor optimization.
-> >>>
-> >>> v3:  Added support for tracepoints, replacing the debug messages.
-> >>>      Fixed few more bugs with the help of tracepoints.
-> >>>
-> >>>      New patches in this version:
-> >>>
-> >>>        PM / devfreq: tegra30: Use tracepoints for debugging
-> >>>        PM / devfreq: tegra30: Optimize CPUFreq notifier
-> >>>        PM / devfreq: tegra30: Optimize upper consecutive watermark se=
-lection
-> >>>        PM / devfreq: tegra30: Optimize upper average watermark select=
-ion
-> >>>        PM / devfreq: tegra30: Include appropriate header
-> >>>
-> >>>      Some of older patches of this series also got some extra minor p=
-olish.
-> >>>
-> >>> v2:  Added more patches that are cleaning driver's code further and
-> >>>      squashing another kHz conversion bug.
-> >>>
-> >>>      The patch "Rework frequency management logic" of the v1 series i=
-s now
-> >>>      converted to "Set up watermarks properly" because I found some p=
-roblems
-> >>>      in the original patch and then realized that there is no need to=
- change
-> >>>      the logic much. So the logic mostly preserved and only got impro=
-vements.
-> >>>
-> >>>      The series is based on the today's linux-next (25 Jun) and takes=
- into
-> >>>      account minor changes that MyungJoo Ham made to the already queu=
-ed
-> >>>      patches from the first batch [1].
-> >>>
-> >>> Dmitry Osipenko (19):
-> >>>   PM / devfreq: tegra30: Change irq type to unsigned int
-> >>>   PM / devfreq: tegra30: Keep interrupt disabled while governor is
-> >>>     stopped
-> >>>   PM / devfreq: tegra30: Handle possible round-rate error
-> >>>   PM / devfreq: tegra30: Drop write-barrier
-> >>>   PM / devfreq: tegra30: Set up watermarks properly
-> >>>   PM / devfreq: tegra30: Tune up boosting thresholds
-> >>>   PM / devfreq: tegra30: Fix integer overflow on CPU's freq max out
-> >>>   PM / devfreq: tegra30: Ensure that target freq won't overflow
-> >>>   PM / devfreq: tegra30: Use kHz units uniformly in the code
-> >>>   PM / devfreq: tegra30: Reduce unnecessary interrupts activity
-> >>>   PM / devfreq: tegra30: Use CPUFreq notifier
-> >>>   PM / devfreq: tegra30: Move clk-notifier's registration to governor=
-'s
-> >>>     start
-> >>>   PM / devfreq: tegra30: Reset boosting on startup
-> >>>   PM / devfreq: tegra30: Don't enable consecutive-down interrupt on
-> >>>     startup
-> >>>   PM / devfreq: tegra30: Constify structs
-> >>>   PM / devfreq: tegra30: Include appropriate header
-> >>>   PM / devfreq: tegra30: Increase sampling period to 16ms
-> >>>   PM / devfreq: tegra30: Support variable polling interval
-> >>>   PM / devfreq: tegra20/30: Add Dmitry as a maintainer
-> >>>
-> >>>  MAINTAINERS                       |   9 +
-> >>>  drivers/devfreq/tegra30-devfreq.c | 706 +++++++++++++++++++++++-----=
---
-> >>>  2 files changed, 555 insertions(+), 160 deletions(-)
-> >>>
-> >>
-> >> Hello Chanwoo,
-> >>
-> >> I don't have any more updates in regards to this series, everything is
-> >> working flawlessly for now. Will be awesome if we could continue the
-> >> reviewing and then get the patches into linux-next to get some more te=
-sting.
-> >>
-> >>
-> >
-> > Hello Dmitry,
-> >
-> > I'm sorry for late reply. Except for patch5, I reviewed the patches.
-> > Please check my comment. Actually, It is difficult to review the patch5
-> > without any testing environment and detailed knowledge of watermark of =
-tegra.
-> > It is not familiar with me.
->
-> Thank you very much! I'll go through yours comments and reply to them.
->
-> I understand that it's not easy for you to review patch5, but probably
-> you don't need to go into details and a brief-generic review of the code
-> will be enough in that case.
->
-> The hardware is actually very simple, there are watermarks that
-> correspond to a memory activity that hardware accounts over a given
-> period of time. Once watermark is reached, hardware generates interrupt.
-> There are two types of watermarks: average and consecutive. In case of
-> the average, the memory activity is collected over a larger window of
-> time. For the consecutive case, the memory activity is collected over
-> each period (16ms by default in the driver). Memory client may breach
-> average watermark very frequently, although that may not affect much the
-> average value and for some memory clients (like CPU) it is more
-> preferred to not completely ignore those short bursts of memory
-> activity. The consecutive watermarks are used in order to detect those
-> short bursts, which we account in the driver in a form of boosting. You
-> may notice that boost_up_coeff for the CPU's memory client is set to a
-> higher value in the driver.
->
-> > Hello Thierry,
-> > If possible, Could you review the patch5 related to setting up the wate=
-rmark
-> > and other patches?
-> >
->
-> Indeed, will be very nice if Thierry could also take a look at this
-> series. Although.. I could be wrong here, but it looks to me that
-> Thierry also isn't closely familiar with this driver and the hardware.
->
-> Thierry, at least please let us know if you're interested in taking a
-> look at the patches, I'm pretty sure that you're quite busy with other
-> things ;)
+Trivial comments inline.
+
+> ---
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |  8 +--
+>  .../cros_ec_sensors/cros_ec_lid_angle.c       |  2 +-
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  8 +--
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 61 +++++++++++++++++--
+>  drivers/iio/light/cros_ec_light_prox.c        |  8 +--
+>  drivers/iio/pressure/cros_ec_baro.c           |  8 +--
+>  .../linux/iio/common/cros_ec_sensors_core.h   | 16 ++++-
+>  7 files changed, 80 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
+> index 591c0d962c44..d607fbc52c95 100644
+> --- a/drivers/iio/accel/cros_ec_accel_legacy.c
+> +++ b/drivers/iio/accel/cros_ec_accel_legacy.c
+> @@ -179,7 +179,8 @@ static int cros_ec_accel_legacy_probe(struct platform_device *pdev)
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
+> +			cros_ec_sensors_capture, cros_ec_sensors_push_data);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -199,11 +200,6 @@ static int cros_ec_accel_legacy_probe(struct platform_device *pdev)
+>  		state->sign[CROS_EC_SENSOR_Z] = -1;
+>  	}
+>  
+> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> -			cros_ec_sensors_capture, NULL);
+> -	if (ret)
+> -		return ret;
+> -
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+> index 1dcc2a16ab2d..e30a59fcf0f9 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+> @@ -97,7 +97,7 @@ static int cros_ec_lid_angle_probe(struct platform_device *pdev)
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
+> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, false, NULL, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> index a88dd8deade9..b78a942ac8e5 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> @@ -239,7 +239,8 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
+> +			cros_ec_sensors_capture, cros_ec_sensors_push_data);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -301,11 +302,6 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+>  	else
+>  		state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+>  
+> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> -			cros_ec_sensors_capture, NULL);
+> -	if (ret)
+> -		return ret;
+> -
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 43eb1d42820e..c4c37c6df301 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/kfifo_buf.h>
+>  #include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+> @@ -83,15 +84,50 @@ static void get_default_min_max_freq(enum motionsensor_type type,
+>  	}
+>  }
+>  
+> +int cros_ec_sensors_push_data(
+> +		struct iio_dev *indio_dev,
+> +		s16 *data,
+> +		s64 timestamp)
+> +{
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +	s16 *out;
+> +	unsigned int i;
+> +
+> +	/*
+> +	 * It can happen if we get a samples before the iio device is fully
+> +	 * registered.
+> +	 */
+> +	if (!st)
+> +		return 0;
+> +
+> +	/* Ignore samples if the buffer is not set. */
+> +	if (!indio_dev->active_scan_mask)
+
+Odd test.  That tests if the core has created the bitmask.
+Is the intent to check if any bits are enabled?
+
+> +		return 0;
+> +
+> +	out = (s16 *)st->samples;
+> +	for_each_set_bit(i,
+> +			 indio_dev->active_scan_mask,
+> +			 indio_dev->masklength) {
+> +		*out = data[i];
+> +		out++;
+> +	}
+
+blank line.
+
+> +	iio_push_to_buffers_with_timestamp(indio_dev, st->samples, timestamp);
+
+blank line.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_sensors_push_data);
+> +
+>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  			      struct iio_dev *indio_dev,
+> -			      bool physical_device)
+> +			      bool physical_device,
+> +			      cros_ec_sensors_capture_t trigger_capture,
+> +			      cros_ec_sensorhub_push_data_cb_t push_data)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+>  	struct cros_ec_sensorhub *sensor_hub = dev_get_drvdata(dev->parent);
+>  	struct cros_ec_dev *ec = sensor_hub->ec;
+>  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
+> +	struct iio_buffer *buffer;
+>  	u32 ver_mask;
+>  	int ret, i;
+>  
+> @@ -124,8 +160,6 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  	indio_dev->name = pdev->name;
+>  
+>  	if (physical_device) {
+> -		indio_dev->modes = INDIO_DIRECT_MODE;
+> -
+>  		state->param.cmd = MOTIONSENSE_CMD_INFO;
+>  		state->param.info.sensor_num = sensor_platform->sensor_num;
+>  		ret = cros_ec_motion_send_host_cmd(state, 0);
+> @@ -154,9 +188,26 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  			state->frequencies[2] =
+>  			    state->resp->info_3.max_frequency;
+>  		}
+> -	}
+>  
+> -	return 0;
+> +		if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
+> +			buffer = devm_iio_kfifo_allocate(dev);
+> +			if (!buffer)
+> +				return -ENOMEM;
+> +
+> +			iio_device_attach_buffer(indio_dev, buffer);
+> +			indio_dev->modes = INDIO_BUFFER_SOFTWARE;
+> +			ret = cros_ec_sensorhub_register_push_data(
+> +					sensor_hub,
+> +					sensor_platform->sensor_num,
+> +					indio_dev, push_data);
+> +		} else {
+> +			indio_dev->modes = INDIO_DIRECT_MODE;
+> +			ret = devm_iio_triggered_buffer_setup(
+> +					dev, indio_dev, NULL,
+> +					trigger_capture, NULL);
+> +		}
+> +	}
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_init);
+>  
+> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+> index c431e4d1482d..d58f010880ce 100644
+> --- a/drivers/iio/light/cros_ec_light_prox.c
+> +++ b/drivers/iio/light/cros_ec_light_prox.c
+> @@ -186,7 +186,8 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
+> +			cros_ec_sensors_capture, cros_ec_sensors_push_data);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -245,11 +246,6 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+>  
+>  	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+>  
+> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> -					      cros_ec_sensors_capture, NULL);
+> -	if (ret)
+> -		return ret;
+> -
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+> diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
+> index 2f4d6d3ab41d..c7538e93d24f 100644
+> --- a/drivers/iio/pressure/cros_ec_baro.c
+> +++ b/drivers/iio/pressure/cros_ec_baro.c
+> @@ -134,7 +134,8 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
+> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
+> +			cros_ec_sensors_capture, cros_ec_sensors_push_data);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -180,11 +181,6 @@ static int cros_ec_baro_probe(struct platform_device *pdev)
+>  
+>  	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
+>  
+> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> -					      cros_ec_sensors_capture, NULL);
+> -	if (ret)
+> -		return ret;
+> -
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> index abef66d0e884..60f78f0e4884 100644
+> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/irqreturn.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> +#include <linux/platform_data/cros_ec_sensorhub.h>
+>  
+>  enum {
+>  	CROS_EC_SENSOR_X,
+> @@ -32,6 +33,9 @@ enum {
+>  /* Minimum sampling period to use when device is suspending */
+>  #define CROS_EC_MIN_SUSPEND_SAMPLING_FREQUENCY 1000  /* 1 second */
+>  
+> +typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
+> +
+> +
+>  /**
+>   * struct cros_ec_sensors_core_state - state data for EC sensors IIO driver
+>   * @ec:				cros EC device structure
+> @@ -110,11 +114,17 @@ struct platform_device;
+>   * @pdev:		platform device created for the sensors
+>   * @indio_dev:		iio device structure of the device
+>   * @physical_device:	true if the device refers to a physical device
+> + * @trigger_capture:    function pointer to call buffer is triggered,
+> + *    for backward compatibility.
+> + * @push_data:          function to call when cros_ec_sensorhub receives
+> + *    a sample for that sensor.
+>   *
+>   * Return: 0 on success, -errno on failure.
+>   */
+>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> -			      struct iio_dev *indio_dev, bool physical_device);
+> +			      struct iio_dev *indio_dev, bool physical_device,
+> +			      cros_ec_sensors_capture_t trigger_capture,
+> +			      cros_ec_sensorhub_push_data_cb_t push_data);
+>  
+>  /* To remove association of physical device to cros_ec_sensorhub. */
+>  int cros_ec_sensors_core_clean(struct platform_device *pdev);
+> @@ -132,6 +142,10 @@ int cros_ec_sensors_core_clean(struct platform_device *pdev);
+>   * Return: IRQ_HANDLED
+>   */
+>  irqreturn_t cros_ec_sensors_capture(int irq, void *p);
+> +int cros_ec_sensors_push_data(
+> +		struct iio_dev *indio_dev,
+> +		s16 *data,
+> +		s64 timestamp);
+>  
+>  /**
+>   * cros_ec_motion_send_host_cmd() - send motion sense host command
+
