@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8EAC4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428C8C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2574222CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9E5222CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 18:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgTdm5XH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meaD6Qb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbfJEShl (ORCPT
+        id S2388462AbfJEShn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 14:37:41 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33631 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388256AbfJEShh (ORCPT
+        Sat, 5 Oct 2019 14:37:43 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34448 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388342AbfJEShk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 14:37:37 -0400
-Received: by mail-yw1-f66.google.com with SMTP id w140so1926360ywd.0;
-        Sat, 05 Oct 2019 11:37:37 -0700 (PDT)
+        Sat, 5 Oct 2019 14:37:40 -0400
+Received: by mail-yw1-f65.google.com with SMTP id d192so3582973ywa.1;
+        Sat, 05 Oct 2019 11:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WN3x14SIuSn1oRkzpsuHsfcKOnsb1pBJ4mBFw0scg+8=;
-        b=IgTdm5XHgeFCyg2dq1AHeU7gM5u2/ndKtNjiZsHA4AuH48mxcl5YSeu8MLxZ22xkO9
-         u4VSGO1bcvYeHGwCAF5Ii3JWNcdrvxmIZmqiDkwRbph0Mo7WXl3IFpvOiUrpSK04qWgs
-         jPAS/FrNvDrCOw9Szswo0rgCaqe5Hc/qxQ186Vw3FShyE5IgjUVz0paOC50lQKKr2K5b
-         iuOlmysqGXnioWEeKZNbj9OLaKMZBgT2tocQQ04IGYBcx9V9IGCkAyWlUNF06Nj222CW
-         KGTCrHZeTsRxezsBubYxWRcUDJO3qAVPvi64PyCkfQSonYqpiqhYfPfHChOh7rPgJkP0
-         zQLg==
+        bh=GAGfzyUV4XhvgurCxyCR2EqX3tIH+KR8HXshRAb1W4M=;
+        b=meaD6Qb1YIg6hcr2iqLZ8pfoGbUAfBru8ksrO1rw8GydtxqzsuPLF7PwiveLKzbKd6
+         pGlTm5zkAteFyRUT9IpSydDfW9bZXcmMdZ51zp0MUETDvKuvROgbIRIxioSCanUuQBfS
+         ExQZIAOJfwmH43UZ1ygPayLxPergba7VybdPOGyIRPEjlBJsId28lJEW1sVSyPiKMLvc
+         3lfndLlF0urpGzeYeRjZd5JhA7UFq437C/IbV5gj8hugcak0lHH7IMadiPDbhW2k5Mja
+         70sSxco3OpA3Pq6YSPEp4gD6F8PmXECwXWsqeiCHYCJUloMuUhInSBeJbwkTF0Bf4a86
+         PFRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WN3x14SIuSn1oRkzpsuHsfcKOnsb1pBJ4mBFw0scg+8=;
-        b=nZTcVEJMgBpYBxmCwp25BUADbbBcm1Dvu3G0sQo8l7zYuJKQheNMgpOP8ZRVLb8EFk
-         pf8npE/55PD3dtJJY8DSpHqPlVtSSziJ3KNkmAmLe1amBGJvTk9ADNLT1hcrgcypu12V
-         AD55JrzRQNeao/RH8wg3+eleiSME/gec73B3cSj+jZcmwCLFarAmSKWEZ/DEodNPaler
-         yGBoOmS0v1V9BG81MUQ8uRYLgaPutgjdKsn5I1UvdEBow2Z7k9oIDzljcCiJvDYwA9EJ
-         iJgVWJjGG7+59kwoHa+97ppI9yTpKlGmXMBLMMjM5rRhYUxPJ79/3RysLF2K8Sg94ui0
-         iKUQ==
-X-Gm-Message-State: APjAAAWPdklTQXWapHPmPhjze00HBXXTj6/W+UVVuPpWxg7EDMedOhIo
-        p8YuhDLZIj0a6fNIfO3j0OI=
-X-Google-Smtp-Source: APXvYqxc67NXhvThYo4YXS3hQsQp+5aVnzXCvJhxlXCaRHVa2/7J5EGDLjZnAxNjmM9LAuYs8om6pA==
-X-Received: by 2002:a0d:cccc:: with SMTP id o195mr13849672ywd.44.1570300656472;
-        Sat, 05 Oct 2019 11:37:36 -0700 (PDT)
+        bh=GAGfzyUV4XhvgurCxyCR2EqX3tIH+KR8HXshRAb1W4M=;
+        b=pmkTeuS32yzQk32x98dRjxypjRMppOqb1ayTYW23TXGvIdtWfrJh3KfgVCDqGMGYLg
+         DZClKv8s3ksMNGzar5/vg3TnRq/J4mqLsxYUkfTUvzicv2MO4mjFU90/Vji/CgXG/5vR
+         lvQ3XxceV+CidxLktvfIRNwLsUiMYZKwmyV1WKlV24T9Qmu7kOZNay+FFsmxFjpQvwQC
+         lXyjNuv3qYLX4V+qjChXmB+Mm45vjFFhooxFpA+1YnSsi3cS5vppJ/GlDBIA/FYN9yf5
+         mpOu8CbaNyGP9OM6bd6NI+qlP4BEUMYGcMvDSsAK3l5AhaRATtmsiJZ6DIj3oVXGMXBm
+         XRng==
+X-Gm-Message-State: APjAAAXlTx7sxN3YSZo9OvzdE9xizfA/8N41f2iicT3qLodDTqux/ZGv
+        9Px6qOP05u0Y/m8Ub+4JpIk=
+X-Google-Smtp-Source: APXvYqxEVBh3FLrxHXo5bgbmGdBZLrPOSPrV46xR9LTQFxsuxEXwqFrhKMSdyFzDUUS4tkuYrKJa1g==
+X-Received: by 2002:a81:f20a:: with SMTP id i10mr4094745ywm.424.1570300659142;
+        Sat, 05 Oct 2019 11:37:39 -0700 (PDT)
 Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id g128sm2376654ywb.13.2019.10.05.11.37.35
+        by smtp.gmail.com with ESMTPSA id g128sm2376654ywb.13.2019.10.05.11.37.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 11:37:35 -0700 (PDT)
+        Sat, 05 Oct 2019 11:37:38 -0700 (PDT)
 From:   William Breathitt Gray <vilhelm.gray@gmail.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
@@ -67,9 +67,9 @@ Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
         geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
         sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
         William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v15 07/14] gpio: pci-idio-16: Utilize for_each_set_clump8 macro
-Date:   Sat,  5 Oct 2019 14:37:01 -0400
-Message-Id: <7948ce563ea58902608e7dabe9f5f4ea64c690f2.1570299719.git.vilhelm.gray@gmail.com>
+Subject: [PATCH v15 09/14] gpio: uniphier: Utilize for_each_set_clump8 macro
+Date:   Sat,  5 Oct 2019 14:37:03 -0400
+Message-Id: <a1e0c618eefda5b06cc045a94e3794771dac92a0.1570299719.git.vilhelm.gray@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1570299719.git.vilhelm.gray@gmail.com>
 References: <cover.1570299719.git.vilhelm.gray@gmail.com>
@@ -80,123 +80,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace verbose implementation in get_multiple/set_multiple callbacks
-with for_each_set_clump8 macro to simplify code and improve clarity.
+Replace verbose implementation in set_multiple callback with
+for_each_set_clump8 macro to simplify code and improve clarity. An
+improvement in this case is that banks that are not masked will now be
+skipped.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
- drivers/gpio/gpio-pci-idio-16.c | 75 ++++++++++++---------------------
- 1 file changed, 27 insertions(+), 48 deletions(-)
+ drivers/gpio/gpio-uniphier.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pci-idio-16.c b/drivers/gpio/gpio-pci-idio-16.c
-index 5aa136a6a3e0..6c117e57078c 100644
---- a/drivers/gpio/gpio-pci-idio-16.c
-+++ b/drivers/gpio/gpio-pci-idio-16.c
-@@ -100,45 +100,23 @@ static int idio_16_gpio_get_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
+diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+index 93cdcc41e9fb..3e4b15d0231e 100644
+--- a/drivers/gpio/gpio-uniphier.c
++++ b/drivers/gpio/gpio-uniphier.c
+@@ -15,9 +15,6 @@
+ #include <linux/spinlock.h>
+ #include <dt-bindings/gpio/uniphier-gpio.h>
+ 
+-#define UNIPHIER_GPIO_BANK_MASK		\
+-				GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
+-
+ #define UNIPHIER_GPIO_IRQ_MAX_NUM	24
+ 
+ #define UNIPHIER_GPIO_PORT_DATA		0x0	/* data */
+@@ -147,15 +144,14 @@ static void uniphier_gpio_set(struct gpio_chip *chip,
+ static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
+ 				       unsigned long *mask, unsigned long *bits)
  {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	size_t i;
--	const unsigned int gpio_reg_size = 8;
--	unsigned int bits_offset;
--	size_t word_index;
--	unsigned int word_offset;
--	unsigned long word_mask;
--	const unsigned long port_mask = GENMASK(gpio_reg_size - 1, 0);
--	unsigned long port_state;
-+	unsigned long offset;
-+	unsigned long gpio_mask;
- 	void __iomem *ports[] = {
- 		&idio16gpio->reg->out0_7, &idio16gpio->reg->out8_15,
- 		&idio16gpio->reg->in0_7, &idio16gpio->reg->in8_15,
- 	};
-+	void __iomem *port_addr;
-+	unsigned long port_state;
+-	unsigned int bank, shift, bank_mask, bank_bits;
+-	int i;
++	unsigned long i;
++	unsigned long bank_mask;
++	unsigned long bank;
++	unsigned long bank_bits;
  
- 	/* clear bits array to a clean slate */
- 	bitmap_zero(bits, chip->ngpio);
+-	for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
++	for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
+ 		bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
+-		shift = i % BITS_PER_LONG;
+-		bank_mask = (mask[BIT_WORD(i)] >> shift) &
+-						UNIPHIER_GPIO_BANK_MASK;
+-		bank_bits = bits[BIT_WORD(i)] >> shift;
++		bank_bits = bitmap_get_value8(bits, i);
  
--	/* get bits are evaluated a gpio port register at a time */
--	for (i = 0; i < ARRAY_SIZE(ports); i++) {
--		/* gpio offset in bits array */
--		bits_offset = i * gpio_reg_size;
--
--		/* word index for bits array */
--		word_index = BIT_WORD(bits_offset);
--
--		/* gpio offset within current word of bits array */
--		word_offset = bits_offset % BITS_PER_LONG;
--
--		/* mask of get bits for current gpio within current word */
--		word_mask = mask[word_index] & (port_mask << word_offset);
--		if (!word_mask) {
--			/* no get bits in this port so skip to next one */
--			continue;
--		}
-+	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
-+		port_addr = ports[offset / 8];
-+		port_state = ioread8(port_addr) & gpio_mask;
- 
--		/* read bits from current gpio port */
--		port_state = ioread8(ports[i]);
--
--		/* store acquired bits at respective bits array offset */
--		bits[word_index] |= (port_state << word_offset) & word_mask;
-+		bitmap_set_value8(bits, port_state, offset);
- 	}
- 
- 	return 0;
-@@ -178,30 +156,31 @@ static void idio_16_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
-+	unsigned long offset;
-+	unsigned long gpio_mask;
-+	void __iomem *ports[] = {
-+		&idio16gpio->reg->out0_7, &idio16gpio->reg->out8_15,
-+	};
-+	size_t index;
-+	void __iomem *port_addr;
-+	unsigned long bitmask;
- 	unsigned long flags;
--	unsigned int out_state;
-+	unsigned long out_state;
- 
--	raw_spin_lock_irqsave(&idio16gpio->lock, flags);
-+	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
-+		index = offset / 8;
-+		port_addr = ports[index];
- 
--	/* process output lines 0-7 */
--	if (*mask & 0xFF) {
--		out_state = ioread8(&idio16gpio->reg->out0_7) & ~*mask;
--		out_state |= *mask & *bits;
--		iowrite8(out_state, &idio16gpio->reg->out0_7);
--	}
-+		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
-+
-+		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
- 
--	/* shift to next output line word */
--	*mask >>= 8;
-+		out_state = ioread8(port_addr) & ~gpio_mask;
-+		out_state |= bitmask;
-+		iowrite8(out_state, port_addr);
- 
--	/* process output lines 8-15 */
--	if (*mask & 0xFF) {
--		*bits >>= 8;
--		out_state = ioread8(&idio16gpio->reg->out8_15) & ~*mask;
--		out_state |= *mask & *bits;
--		iowrite8(out_state, &idio16gpio->reg->out8_15);
-+		raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
- 	}
--
--	raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
- }
- 
- static void idio_16_irq_ack(struct irq_data *data)
+ 		uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
+ 					 bank_mask, bank_bits);
 -- 
 2.23.0
 
