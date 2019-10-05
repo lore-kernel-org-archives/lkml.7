@@ -2,330 +2,180 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57920C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015FCC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1615C206C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC45521D81
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 00:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AnMhXUJF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pfJammvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbfJEA2c (ORCPT
+        id S1731444AbfJEAdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Oct 2019 20:28:32 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51760 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731221AbfJEA2b (ORCPT
+        Fri, 4 Oct 2019 20:33:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35685 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730400AbfJEAdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Oct 2019 20:28:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so7390856wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 17:28:28 -0700 (PDT)
+        Fri, 4 Oct 2019 20:33:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p30so2584366pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 17:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PJwesKN0Is219mNF64hfY/kw11eEsy/0j8tNwxs1DJA=;
-        b=AnMhXUJF8+z1tHPJ/FIGM3DCjkcy+X4PJ54beMEF9AtkwdC/DOMI9laxGlWaZjqVTN
-         nIeyLmUvn9iIzav2DU2x8LrjJGxKQOxnCLfMklyirLjaCI0136T+RdNhWeeQYwLvvHHM
-         StsrTa3d9+RVd7wSzgkdKdoFELxUUI9DV09w3FnFj2p734jyEFyT8CoveJIXLPbPU7T8
-         McaSLpA1fc167vTehFKxoIzA+b8j4FniXKBKAyfYRPWhxBdTKptpE8NO9UPeTCFxyQJL
-         nEl0WjnEwzafQc4JYmjgnczf9A/gaqRTJCMfVFms4Mcnpf5e3YyhaM8SSr0UAmR+kzV2
-         +JIQ==
+        bh=D46P+pVFfxgwgDsZx7SQOen52ll2cZjAnqUT3X3NgW0=;
+        b=pfJammvnqsEMehjoLkxaDxOUGpDw9sMZZncjKjevQVD06AywjDWgKxI3wf/rjLvej+
+         UMstuf7cZplWndCtVzElsJOLS9g3ywukZExpQOCwhcvJdVD/JBab/7OxMaqUq+VMf8uB
+         HAlF4ShFAU0DFBIxJWc0azVVvQ3Wy3f/oPQ9fuPzdpvWA0iIdowJ2c5Zbg/9JFOECY68
+         O0WE57VT7qGlC8/9NlRmT3cO731/aVh8fcnZ5D//mK4n1CuG+yjNV9JbOBBcB23LSygI
+         0TQKj3Hpc++fct7e7Rz4uTtgBBwkQmtKSHbbFGBlPsmvEeBSrzgLlq+QG4ouGMdfYcWZ
+         C2hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PJwesKN0Is219mNF64hfY/kw11eEsy/0j8tNwxs1DJA=;
-        b=UBJ4+TiJmR9b42b6Ep9Xt54KssElbZsXzpL5dcPdprufFchxl5WV08+xXNlpsHeN1x
-         NI/JFE0saGrcXOAr0uIXXTS1O2cK5quKGG0iq79FXvIeBLPby1Z6tp9sbbz8RUA3CWSs
-         +UET37nrICKuaYLdKjq5QGFOsVnj4CZL13m9vabLNdvgMxsxxdo1MC4KF92eIk0BS7Gt
-         3gwY5enFu+vj5w93web9OFeB/UyYzHLg3/z+0QWcWXOUxPEd5X3tqF1MsTjklFAPAMW+
-         g9I84MpXqLRM/4iryZjmn0CGownlbaWq9v0+jsCSYJQVvEWhf5DZuqgO18y1kjGP4Nzl
-         56gA==
-X-Gm-Message-State: APjAAAWk3NWR2kNAas5VO9/V38eOtGJh0QkFMiHHXdG4NgwvotIFIcIB
-        lRdRzmsdwROlqMJUg19T0Ry8FmiHk4wEOEKI77rj0Q==
-X-Google-Smtp-Source: APXvYqzI0rIG0wqXAwtaDOJKrCcsCfXxfx+Mka86mIDcf7oXXqxJStAEgz+oeCVqpjtjJlqjXM+ugYQ+pd6SDyI5+Bc=
-X-Received: by 2002:a7b:c10b:: with SMTP id w11mr12087632wmi.108.1570235306479;
- Fri, 04 Oct 2019 17:28:26 -0700 (PDT)
+        bh=D46P+pVFfxgwgDsZx7SQOen52ll2cZjAnqUT3X3NgW0=;
+        b=r/MXLz8vFooI9adtAV461W/XcRU2EnGUOasJGrNAfyMxpNgIu9ZsP79fUImwHds0Ak
+         V0RX3nz4kvzvczVgP09yQ3sphaHuOfUb5vsEpiZzmuuzJ3t3gZzMgKMuuNaMScPWU4yp
+         dTK9I1AyeAzwLwKVie5naTFhOKUgpMZCrYRUW5sNgopMadG61qs1pC/NrE4ieJiHsPNa
+         8HTQaDdPD0ItCk6QkP3M1ima940oLUm4JV9a6d7imsYchSE/lYUvNglg3A/T+rGn87vt
+         H9/R01fme3PPZIjRjqYqgQjtK7+piCeHRqltbGfVCKSkvn1+caaUR25WnivhqH+BUUl6
+         UZsg==
+X-Gm-Message-State: APjAAAVkHQXbyjInkVEIHMhkLYReyiH5TNNJTMEUAWZM/MTfp0IqjfH/
+        n3rmnzco1PdakPXeM/U4mEKGbZ4Nx/a9gDNjXt2uWA==
+X-Google-Smtp-Source: APXvYqw66A3fhEGGLREG4yw4Pr+r6ZvkAOqsm8j0EV5rRDrFLbH6NKzALIarwIy5UgNm5Ny2R6LZT6ifOs8an8aRKWI=
+X-Received: by 2002:a63:ba47:: with SMTP id l7mr17994364pgu.201.1570235599104;
+ Fri, 04 Oct 2019 17:33:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191004001243.140897-1-xueweiz@google.com> <20191004005423.GA19076@lorien.usersys.redhat.com>
- <CAPtwhKrswHQ1Ue2YO2hJi7h-Dsk6eGPiQ2UmLCq1AxGxMoHr2w@mail.gmail.com> <20191004131432.GA9498@pauld.bos.csb>
-In-Reply-To: <20191004131432.GA9498@pauld.bos.csb>
-From:   Xuewei Zhang <xueweiz@google.com>
-Date:   Fri, 4 Oct 2019 17:28:15 -0700
-Message-ID: <CAPtwhKo1YND6VG1u8brj8ZRpn33p2xH1cdSRBs-cBSEm78V=Lw@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Anton Blanchard <anton@ozlabs.org>,
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu> <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com> <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+In-Reply-To: <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 4 Oct 2019 17:33:07 -0700
+Message-ID: <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     shuah <shuah@kernel.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org, Neel Natu <neelnatu@google.com>,
-        Hao Luo <haoluo@google.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 6:14 AM Phil Auld <pauld@redhat.com> wrote:
+On Fri, Oct 4, 2019 at 4:57 PM shuah <shuah@kernel.org> wrote:
 >
-> On Thu, Oct 03, 2019 at 07:05:56PM -0700 Xuewei Zhang wrote:
-> > +cc neelnatu@google.com and haoluo@google.com, they helped a lot
-> > for this issue. Sorry I forgot to include them when sending out the patch.
+> On 10/4/19 5:52 PM, Brendan Higgins wrote:
+> > On Fri, Oct 4, 2019 at 4:30 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >>
+> >> On Fri, Oct 04, 2019 at 04:47:09PM -0600, shuah wrote:
+> >>>> However, if I encourage arbitrary tests/improvements into my KUnit
+> >>>> branch, it further diverges away from torvalds/master, and is more
+> >>>> likely that there will be a merge conflict or issue that is not related
+> >>>> to the core KUnit changes that will cause the whole thing to be
+> >>>> rejected again in v5.5.
+> >>>
+> >>> The idea is that the new development will happen based on kunit in
+> >>> linux-kselftest next. It will work just fine. As we accepts patches,
+> >>> they will go on top of kunit that is in linux-next now.
+> >>
+> >> I don't see how this would work.  If I add unit tests to ext4, they
+> >> would be in fs/ext4.  And to the extent that I need to add test mocks
+> >> to allow the unit tests to work, they will involve changes to existing
+> >> files in fs/ext4.  I can't put them in the ext4.git tree without
+> >> pulling in the kunit changes into the ext4 git tree.  And if they ext4
+> >> unit tests land in the kunit tree, it would be a receipe for large
+> >> numbers of merge conflicts.
 > >
-> > On Thu, Oct 3, 2019 at 5:55 PM Phil Auld <pauld@redhat.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Oct 03, 2019 at 05:12:43PM -0700 Xuewei Zhang wrote:
-> > > > quota/period ratio is used to ensure a child task group won't get more
-> > > > bandwidth than the parent task group, and is calculated as:
-> > > > normalized_cfs_quota() = [(quota_us << 20) / period_us]
-> > > >
-> > > > If the quota/period ratio was changed during this scaling due to
-> > > > precision loss, it will cause inconsistency between parent and child
-> > > > task groups. See below example:
-> > > > A userspace container manager (kubelet) does three operations:
-> > > > 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-> > > > 2) Create a few children cgroups.
-> > > > 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-> > > >
-> > > > These operations are expected to succeed. However, if the scaling of
-> > > > 147/128 happens before step 3), quota and period of the parent cgroup
-> > > > will be changed:
-> > > > new_quota: 1148437ns, 1148us
-> > > > new_period: 11484375ns, 11484us
-> > > >
-> > > > And when step 3) comes in, the ratio of the child cgroup will be 104857,
-> > > > which will be larger than the parent cgroup ratio (104821), and will
-> > > > fail.
-> > > >
-> > > > Scaling them by a factor of 2 will fix the problem.
-> > >
-> > > I have no issues with the concept. We went around a bit about the actual
-> > > numbers and made it an approximation.
-> > >
-> > > >
-> > > > Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-> > > > Signed-off-by: Xuewei Zhang <xueweiz@google.com>
-> > > > ---
-> > > >  kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
-> > > >  1 file changed, 22 insertions(+), 14 deletions(-)
-> > > >
-> > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > index 83ab35e2374f..b3d3d0a231cd 100644
-> > > > --- a/kernel/sched/fair.c
-> > > > +++ b/kernel/sched/fair.c
-> > > > @@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
-> > > >               if (++count > 3) {
-> > > >                       u64 new, old = ktime_to_ns(cfs_b->period);
-> > > >
-> > > > -                     new = (old * 147) / 128; /* ~115% */
-> > > > -                     new = min(new, max_cfs_quota_period);
-> > > > -
-> > > > -                     cfs_b->period = ns_to_ktime(new);
-> > > > -
-> > > > -                     /* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> > > > -                     cfs_b->quota *= new;
-> > > > -                     cfs_b->quota = div64_u64(cfs_b->quota, old);
-> > > > -
-> > > > -                     pr_warn_ratelimited(
-> > > > -     "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> > > > -                             smp_processor_id(),
-> > > > -                             div_u64(new, NSEC_PER_USEC),
-> > > > -                             div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > > > +                     /*
-> > > > +                      * Grow period by a factor of 2 to avoid lossing precision.
-> > > > +                      * Precision loss in the quota/period ratio can cause __cfs_schedulable
-> > > > +                      * to fail.
-> > > > +                      */
-> > > > +                     new = old * 2;
-> > > > +                     if (new < max_cfs_quota_period) {
-> > >
-> > > I don't like this part as much. There may be a value between
-> > > max_cfs_quota_period/2 and max_cfs_quota_period that would get us out of
-> > > the loop. Possibly in practice it won't matter but here you trigger the
-> > > warning and take no action to keep it from continuing.
-> > >
-> > > Also, if you are actually hitting this then you might want to just start at
-> > > a higher but proportional quota and period.
+> > That's where I was originally coming from.
 > >
-> > I'd like to do what you suggested. A quick idea would be to scale period to
-> > max_cfs_quota_period, and scale quota proportionally. However the naive
-> > implementation won't work under this edge case:
-> > original:
-> > quota: 500,000us  period: 570,000us
-> > after scaling:
-> > quota: 877,192us  period: 1,000,000us
-> > original ratio: 919803
-> > new ratio: 919802
+> > So here's a dumb idea: what if we merged KUnit through the ext4 tree?
+> > I imagine that could potentially get very confusing when we go back to
+> > sending changes in through the kselftest tree, but at least it means
+> > that ext4 can use it in the meantime, which means that it at least
+> > gets to be useful to one group of people. Also, since Ted seems pretty
+> > keen on using this, I imagine it is much more likely to produce real
+> > world, immediately useful tests not written by me (I'm not being lazy,
+> > I just think it is better to get other people's experiences other than
+> > my own).
 > >
-> > To do this right, the code would have to keep an eye out on the precision loss,
-> > and increase quota by 1us sometimes to cancel out the precision loss.
-> >
-> > Also, I think this case is not that important. Because if we are
-> > hitting this case, that
-> > suggests the period is already >0.5s. And if we are still hitting
-> > timeouts with a 0.5s
-> > period, scaling it to 1s probably won't help much.
-> > When this happens, I'd imagine the parent cgroup would have a LOT of child
-> > cgroups. It might make sense for the userspace to create the parent cgroup with
-> > 1s period.
-> >
-> > If you think automatically scaling 0.5s+ to 1s is still important, I'm
-> > happy to stash
-> > this patch, and send in another one that handles the 0.5+s -> 1s
-> > scaling the right
-> > way. :) Thanks!
 >
-> First let me understand your use case better. I was thinking about this more last
-> night and it doesn't make sense.
->
-> You are setting a small quota and period on the parent cgroup and then setting the
-> same small quota and period on the child. As you say to keep the child from getting
-> more quota than the parent. But that should already be the case simply by setting
-> it on the parent. The child can't get more quota than the parent.   All this does
-> is make the kernel do more work handling more period timers and such.
+> That doesn't make sense does it? The tests might not be limited to
+> fs/ext4. We might have other sub-systems that add tests.
 
-Sorry for not being clear enough. Let me provide a bit more additional context:
+Well, I have some small isolated examples that I think would probably
+work no matter what, so we can get some usage outside of ext4. Also,
+if we want to limit the number of tests, then we don't expect to get
+much usage outside of ext4 before v5.5 anyway. I just figure, it's
+better to make it work for one person than no one, right?
 
-kubelet [1] is the userspace program setting the cfs quota and period.
-kubelet is essentially a container manager for the end user. The end user
-can specify any attainable configurations for a pod (which contains multiple
-containers).
+In any case, I admit it is not a great idea. I just thought it had
+some interesting advantages over going in through linux-kselftest that
+were worth exploring.
 
-The user interface of kubelet allows end user to specify the amount of CPU
-granted to any pod or container (in the form of mCPU). And then kubelet will
-convert the spec to quota/period accepted by cgroup fs, using this rule:
-the period of any pod/container will be set to 100000us
-the quota of the pod/container will be calculated using the allowed mCPU
+> So, we will have to work to make linux-next as the base for new
+> development and limit the number of tests to where it will be
+> easier work in this mode for 5.5. We can stage the pull requests
+> so that kunit lands first followed by tests.
 
-And kubelet simply then writes the calculated period and quota to cgroup fs.
+So we are going to encourage maintainers to allow tests in their tree
+based on KUnit on the assumption that KUnit will get merged before
+there changes? That sounds like a huge burden, not just on us, but on
+other maintainers and users.
 
-It's very common to specify a pod with multiple containers, and setting
-different quota for the child containers: some granted with 5-50% of the
-bandwidth available to the parent, while some other granted with 100%. For
-simplicity, kubelet writes quota/period to cgroup fs for all pods and
-containers.
+I think if we are going to allow tests before KUnit is merged, we
+should have the tests come in through the same tree as KUnit.
 
-----
-Now back to our discussion. :)
+> We have a similar situation with kselftest as well. Sub-systems
+> send tests that depend on their tress separately.
 
-You see, the reason that kubelet write identical quota and period to parent and
-child cgroup, is not because it want to enforce that child doesn't get more
-quota than parent. It is simply because kubelet needs to manage the quota for
-all containers and pods, and it's more convenenient to just set the quota and
-period for all of them (because in many cases, child cgroups actually gets less
-bandwidth than the parent, and has to be set specifically).
-
-I agree that your suggestion would work. If a child cgroup is set to the same
-bandwidth of the parent cgroup, we could change the userspace program, and ask
-it to skip setting the child cgroup bandwidth.
-However, this logic would be a special case, and will require significant logic
-change to the userspace container managers.
-
-
-This issue is affecting many Kubernetes users, see this open issue:
-https://github.com/kubernetes/kubernetes/issues/72878
-kubelet on their machines are doing the three operations mentioned in the patch.
-I also explained them in more detail in this doc:
-https://docs.google.com/document/d/13KLD__6A935igLXpTFFomqfclATC89nAkhPOxsuKA0I/edit?usp=sharing
-
-Basically, Kubernetes is operating on the below assumption of kernel today:
-Setting the cpu quota/period of a child cgroup should not be rejected unless
-the bandwidth is exceeding what the quota/period set for the parent cgroup.
-
-I think this assumption is fair. Please let me know if you think otherwise. And
-if so, since the kernel broke this assumption today, I don't think it's the
-responsibility for the userspace to deal with the problem that kernel may change
-the quota/period ratio at any time.
-
-[1] https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet
-
->
-> Setting the child quota/period only makes sense when setting it smaller than
-> the parent.
-
-As mentioned above, in the use case of kublet, it's much easier to always
-set the child quota/period, than to only set it when it is different
-(i.e. smaller)
-than the parent.
-
->
-> Also, in order to hit this problem you need to have many hundreds of children, in
-> my experience. In that case it makes even less sense to write the same quota/preiod
-> as the parent into each of the children.
-
-Here is a problematic scenario:
-The parent cgroup have 1000 children with a small quota/period, and after a
-few minutes, kubelet wants to add one additional child with the same
-quota/period.
-This bug could prevent kubelet from setting that one additional child
-successfully.
-
-
-Thanks a lot for taking time reviewing and responding the patch Phil!
-Really appreciate it.
-
-Best regards,
-Xuewei
-
->
-> Or there is something else causing the timer to take too long to run...
->
->
-> I agree that if we are taking > 1/2s to run do_sched_cfs_period_timer() it may
-> not matter, as I said above.
->
->
-> Cheers,
-> Phil
->
-> >
-> > Best regards,
-> > Xuewei
-> >
-> > >
-> > >
-> > > Cheers,
-> > > Phil
-> > >
-> > > > +                             cfs_b->period = ns_to_ktime(new);
-> > > > +                             cfs_b->quota *= 2;
-> > > > +
-> > > > +                             pr_warn_ratelimited(
-> > > > +     "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> > > > +                                     smp_processor_id(),
-> > > > +                                     div_u64(new, NSEC_PER_USEC),
-> > > > +                                     div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > > > +                     } else {
-> > > > +                             pr_warn_ratelimited(
-> > > > +     "cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> > > > +                                     smp_processor_id(),
-> > > > +                                     div_u64(old, NSEC_PER_USEC),
-> > > > +                                     div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > > > +                     }
-> > > >
-> > > >                       /* reset count so we don't come right back in here */
-> > > >                       count = 0;
-> > > > --
-> > > > 2.23.0.581.g78d2f28ef7-goog
-> > > >
-> > >
-> > > --
->
-> --
+Well it is different if the maintainer wants to send the test in
+through their tree, right? Otherwise, it won't matter what the state
+of linux-next is and it won't matter when linux-kselftest gets merged.
+Or am I not understanding you?
