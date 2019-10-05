@@ -2,76 +2,115 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478D0C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A046C4740A
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287D8222C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E412F222C0
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 21:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4wuP4xv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbfJEV6J (ORCPT
+        id S1726131AbfJEV6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 17:58:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12245 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfJEV6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 17:58:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Oct 2019 14:58:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,261,1566889200"; 
-   d="scan'208";a="192746757"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Oct 2019 14:58:06 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iGs3y-0008fF-36; Sun, 06 Oct 2019 05:58:06 +0800
-Date:   Sun, 6 Oct 2019 05:57:27 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Biju Das <biju.das@bp.renesas.com>
-Cc:     kbuild-all@01.org, linux-usb@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [usb:usb-next 32/37] drivers/usb/typec/hd3ss3220.c:123:13: sparse:
- sparse: symbol 'hd3ss3220_irq' was not declared. Should it be static?
-Message-ID: <201910060507.cCblZmu7%lkp@intel.com>
+        Sat, 5 Oct 2019 17:58:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41331 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfJEV6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 17:58:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id n26so20909625ioj.8
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 14:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=G3GiBa1jUTyLkRA1lkNHAhMtxcRwrlIdapCLYa7uKjU=;
+        b=r4wuP4xvj41CIb0744foDaOX+cmTo+WKgHTlLTYy+YlLTYIS8wfbTtSgjBfmQhTEzc
+         HA+igB0G72DNBpejdeq2ZkSD5D9FHM5uKVXPp6MVInV4fqcSCxHQMjqGmkijai9P8Brm
+         m989hcO2OeWQss7TrXXCM5JWIYPV5uQPAGbRsH0koB/wUiUhp+Cs1UChXA6jd7dQUORa
+         5C8ZkuCjPLNAJyptUHEbVsJZ75GsJJjZWTeq7xr+W1kF2YELje1JfmqRBgLmV2nfgYTR
+         MMElMGLn50uyIFBCihMhGR5t/FInrJhPc07SUuRcz3REtOihSghZ8FdYn1dbWyFWh0vG
+         Mqbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=G3GiBa1jUTyLkRA1lkNHAhMtxcRwrlIdapCLYa7uKjU=;
+        b=f35GZ32gacd8zsKlG0wBIvs1Rdcbl2afZ9rb+YIZhzSXCcf0uxr0rohq28BuJFKgma
+         1CozDNuxa4eJBEnqn+FaLE/aDVG62aI647woS+pNnWRE2GTts550TPmnJBgMMr+eNson
+         8Fn+f3jhcBEb5Zc20IelWkebzbij9lA26/277AwEoDNMLj8eEmfxbtafbnrl89+YyQxz
+         VndOl55ZesuOCkH6TH0TjL4G54Lqf4Gw0BXIDdZlJ0MaO+oJiZ4pmLBaSsCLsRS7elLl
+         vo2CBI5cFTt0pzbnxo+PXZioNnthpDZnyS6Nsk82ADHNTfYvTmPoPp3IIeYtIBMdiyjK
+         cSnQ==
+X-Gm-Message-State: APjAAAXc+pL5B7Ltwmvg3U6bK1chbkRG+zkLng1cSVIwgwqljgjS5KdM
+        h4D9zHLMUr2DyD1Ir+foYluN87n8uokKPW2hKzQ=
+X-Google-Smtp-Source: APXvYqz44vCH9BONx7KQjbv9AZGFNrvMgpEkN/sLzw2EiiujFbKRVZiMg2lpFGS6CB5F6TBc6jSrFM1Nu//i50jwAtg=
+X-Received: by 2002:a92:c8d2:: with SMTP id c18mr9251832ilq.4.1570312693821;
+ Sat, 05 Oct 2019 14:58:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191003191354.GA4481@Serenity> <CAKcoMVC2LdcmUx6j5JzuT-TsFGz=mwQ0MsprrKR2qeXoTmQ-TQ@mail.gmail.com>
+ <e0edf48eb84fe038c2912328b28e931900684de2.camel@amazon.com>
+In-Reply-To: <e0edf48eb84fe038c2912328b28e931900684de2.camel@amazon.com>
+From:   Tyler Ramer <tyaramer@gmail.com>
+Date:   Sat, 5 Oct 2019 17:58:52 -0400
+Message-ID: <CAKcoMVBjzM6dq33DaTYBK6U32U3NQaR5mf6ppGr6iTKRuZ2KNg@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Shutdown when removing dead controller
+To:     "Singh, Balbir" <sblbir@amazon.com>
+Cc:     "kbusch@kernel.org" <kbusch@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "axboe@fb.com" <axboe@fb.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-next
-head:   905eccc6a509d2818e3dd1304c55dc5291b7ea88
-commit: 1c48c759ef4bb9031b3347277f04484e07e27d97 [32/37] usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-42-g38eda53-dirty
-        git checkout 1c48c759ef4bb9031b3347277f04484e07e27d97
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> What is the bad CSTS bit? CSTS.RDY?
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+The reset will be triggered by the result of nvme_should_reset():
+
+1196 static bool nvme_should_reset(struct nvme_dev *dev, u32 csts)
+1197 {
+1198
+1199 =E2=87=A5       /* If true, indicates loss of adapter communication, p=
+ossibly by a
+1200 =E2=87=A5        * NVMe Subsystem reset.
+1201 =E2=87=A5        */
+1202 =E2=87=A5       bool nssro =3D dev->subsystem && (csts & NVME_CSTS_NSS=
+RO);
+
+This csts value is set in nvme_timeout:
+
+1240 static enum blk_eh_timer_return nvme_timeout(struct request *req,
+bool reserved)
+1241 {
+...
+1247 =E2=87=A5       u32 csts =3D readl(dev->bar + NVME_REG_CSTS);
+...
+1256 =E2=87=A5       /*
+1257 =E2=87=A5        * Reset immediately if the controller is failed
+1258 =E2=87=A5        */
+1259 =E2=87=A5       if (nvme_should_reset(dev, csts)) {
+1260 =E2=87=A5       =E2=87=A5       nvme_warn_reset(dev, csts);
+1261 =E2=87=A5       =E2=87=A5       nvme_dev_disable(dev, false);
+1262 =E2=87=A5       =E2=87=A5       nvme_reset_ctrl(&dev->ctrl);
 
 
-sparse warnings: (new ones prefixed by >>)
+Again, here's the message printed by nvme_warn_reset:
 
->> drivers/usb/typec/hd3ss3220.c:123:13: sparse: sparse: symbol 'hd3ss3220_irq' was not declared. Should it be static?
+Aug 26 15:01:27 testhost kernel: nvme nvme4: controller is down; will
+reset: CSTS=3D0x3, PCI_STATUS=3D0x10
 
-Please review and possibly fold the followup patch.
+From  include/linux/nvme.h:
+ 105 =E2=87=A5       NVME_REG_CSTS=E2=87=A5  =3D 0x001c,=E2=87=A5      /* C=
+ontroller Status */
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+- Tyler
