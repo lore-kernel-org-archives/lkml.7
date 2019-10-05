@@ -2,197 +2,86 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E035C4740A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A67EC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3B422476
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:39:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570293552;
-	bh=muOoyHgFkIzawvNdGZkDnH+wc8CSIFaMgkHMDwpdSX0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GG01+24/KvukkLhh7ZYkmTmj6U9BoozPmb0vMnO06XJFx8+bp15X0Hg0w8NFPOlkg
-	 buoitB/3/5Pje7jPw07nAOIRth8dY+1WFEloYG7Fn6LUCasrYo9A1IyPYLyLMARYX5
-	 zJGu2bbWGf+wiZLUe4vlmWJF+bBu1sUD4coeRRj4=
+	by mail.kernel.org (Postfix) with ESMTP id 5DB7F22476
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 16:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="km/R+P3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfJEQjM (ORCPT
+        id S1729360AbfJEQj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 12:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbfJEQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 12:39:11 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BC7A22475;
-        Sat,  5 Oct 2019 16:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570293550;
-        bh=muOoyHgFkIzawvNdGZkDnH+wc8CSIFaMgkHMDwpdSX0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yrib5Ypk20BnayszcdNS5keh+ouauJNLKUBC1KHetj3IALiK+XiKc9MIXFVc2jNXA
-         qes3fUTL+Q5LmahJqdx1VjY93N8QkHXB3WyXZlGNxNM172oEUq+yMnj7z5s5GlAsbb
-         YrzReCIoGqzdgvzribuS1Om9c1HdZ+yTw0LtmEk4=
-Date:   Sat, 5 Oct 2019 17:39:03 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 13/13] iio: cros_ec: Use Hertz as unit for sampling
- frequency
-Message-ID: <20191005173903.18de9cdc@archlinux>
-In-Reply-To: <20190922175021.53449-14-gwendal@chromium.org>
-References: <20190922175021.53449-1-gwendal@chromium.org>
-        <20190922175021.53449-14-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 5 Oct 2019 12:39:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38626 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfJEQj6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 12:39:58 -0400
+Received: by mail-lj1-f196.google.com with SMTP id b20so9532570ljj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 09:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vPHHQsCm9P5lZAOoBEEQkMv+jTLHYjpWxfU2c8iJm+s=;
+        b=km/R+P3zNivGmATXsVjC0pwOaNaLVsp770WNbE2ZdpnVhPJLTNALAk1pY+eMZE8pxA
+         YkojbQcoOTs9kZM5JOF2Rv46YYNSaKgBPCmQW9HOvbS96RPuJAla8Sb2VPqcElrCO5UR
+         2/6Sh6fMfSddcEzFcz14tMESk62O3II7RDYFrnC07gcpY0285wxcVavUiG4u/u7lIT8k
+         Str8vwDdfk6qaSpKCDpAnHPxIlzLBsALXel32/ueZHebYUHkyCAb/fvINXvtN+ErP4hp
+         AyA6Qc+BWhszgGMCLMW3ME4lR8pJoWEG1nEZYcfMy0G/Z1RZcXMUMIAIqKhzlESl60G8
+         HHXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vPHHQsCm9P5lZAOoBEEQkMv+jTLHYjpWxfU2c8iJm+s=;
+        b=D5qmEwQkatdiVSMeOMVgUk1jDBfvuptg4Vu3yDI2zqj/rQSF2FRyrCg5cFxcqPKjfE
+         vMb90RpWYrFFxysBZnxlUoS8mXHgd2okx7PfpEKLPT9zuexradiknRvkxrNkWBEUtmET
+         +K6NdqMkXEUN6uyjwklOMs0K2dy9Hba5Z2OLWaVOtoVQc3LzZDNTkzM9fWy9xZkpug8c
+         TV6EJcC2CpTXreTlTcJ8HRAN6n2l1WxoSreH4HEzNaseJRTehg+EcIKl8fN0XtogVAVb
+         gpiIJ0XLrd98dIJNXPYTTgEzoMunV4VaxZ/75VF1zRj00O90Uoz9t3fZNW1QQsGh15Je
+         u7mA==
+X-Gm-Message-State: APjAAAXtMfZcgeu2mgNKAvt9DUEE2ZHpqCCgro36+ATDkmWvsv7nHCQQ
+        h5OguyOV7cD4yXbTEER+HuguHC4wWkKqoCaN7+Vc5g==
+X-Google-Smtp-Source: APXvYqwgSpaaFyzXdZShSpDLB3i/tHQGn7PDveIUsSUQrgOPp7Y4zvvhnbMGw/WaUGyUixEqB0xsj3nUp2bpy3kvhqM=
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr12889974ljk.152.1570293595719;
+ Sat, 05 Oct 2019 09:39:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191004122342.22018-1-amelie.delaunay@st.com>
+In-Reply-To: <20191004122342.22018-1-amelie.delaunay@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 5 Oct 2019 18:39:44 +0200
+Message-ID: <CACRpkdbhoAp7Zif_7pbvJLoFeLdbT9u+RRgZk94cJEH+NadBmA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix null pointer on remove
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Sep 2019 10:50:21 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
+On Fri, Oct 4, 2019 at 2:23 PM Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-> To be compliant with other sensors, set and get sensor sampling
-> frequency in Hz, not mHz.
-> 
-> Fixes: ae7b02ad2f32 ("iio: common: cros_ec_sensors: Expose
-> cros_ec_sensors frequency range via iio sysfs")
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> dev_get_platdata(&pdev->dev) returns a pointer on struct stmfx_pinctrl,
+> not on struct stmfx (platform_set_drvdata(pdev, pctl); in probe).
+> Pointer on struct stmfx is stored in driver data of pdev parent (in probe:
+> struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);).
+>
+> Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-Good catch.
+Patch applied for fixes.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 32 +++++++++++--------
->  .../linux/iio/common/cros_ec_sensors_core.h   |  6 ++--
->  2 files changed, 22 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index a32260c9bc09..f7e6827bd4cb 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -227,6 +227,7 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
->  	struct iio_buffer *buffer;
->  	u32 ver_mask;
-> +	int frequencies[ARRAY_SIZE(state->frequencies) / 2] = { 0 };
->  	int ret, i;
->  
->  	platform_set_drvdata(pdev, indio_dev);
-> @@ -275,20 +276,22 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			state->calib[i].scale = MOTION_SENSE_DEFAULT_SCALE;
->  
->  		/* 0 is a correct value used to stop the device */
-> -		state->frequencies[0] = 0;
->  		if (state->msg->version < 3) {
->  			get_default_min_max_freq(state->resp->info.type,
-> -						 &state->frequencies[1],
-> -						 &state->frequencies[2],
-> +						 &frequencies[1],
-> +						 &frequencies[2],
->  						 &state->fifo_max_event_count);
->  		} else {
-> -			state->frequencies[1] =
-> -			    state->resp->info_3.min_frequency;
-> -			state->frequencies[2] =
-> -			    state->resp->info_3.max_frequency;
-> +			frequencies[1] = state->resp->info_3.min_frequency;
-> +			frequencies[2] = state->resp->info_3.max_frequency;
->  			state->fifo_max_event_count =
->  			    state->resp->info_3.fifo_max_event_count;
->  		}
-> +		for (i = 0; i < ARRAY_SIZE(frequencies); i++) {
-> +			state->frequencies[2 * i] = frequencies[i] / 1000;
-> +			state->frequencies[2 * i + 1] =
-> +				(frequencies[i] % 1000) * 1000;
-> +		}
->  
->  		if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
->  			buffer = devm_iio_kfifo_allocate(dev);
-> @@ -653,7 +656,7 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  			  struct iio_chan_spec const *chan,
->  			  int *val, int *val2, long mask)
->  {
-> -	int ret;
-> +	int ret, frequency;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> @@ -665,8 +668,10 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  		if (ret)
->  			break;
->  
-> -		*val = st->resp->sensor_odr.ret;
-> -		ret = IIO_VAL_INT;
-> +		frequency = st->resp->sensor_odr.ret;
-> +		*val = frequency / 1000;
-> +		*val2 = (frequency % 1000) * 1000;
-> +		ret = IIO_VAL_INT_PLUS_MICRO;
->  		break;
->  	default:
->  		ret = -EINVAL;
-> @@ -690,7 +695,7 @@ int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
->  	case IIO_CHAN_INFO_SAMP_FREQ:
->  		*length = ARRAY_SIZE(state->frequencies);
->  		*vals = (const int *)&state->frequencies;
-> -		*type = IIO_VAL_INT;
-> +		*type = IIO_VAL_INT_PLUS_MICRO;
->  		return IIO_AVAIL_LIST;
->  	}
->  
-> @@ -702,12 +707,13 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->  			       struct iio_chan_spec const *chan,
->  			       int val, int val2, long mask)
->  {
-> -	int ret;
-> +	int ret, frequency;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		frequency = val * 1000 + val2 / 1000;
->  		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
-> -		st->param.sensor_odr.data = val;
-> +		st->param.sensor_odr.data = frequency;
->  
->  		/* Always roundup, so caller gets at least what it asks for. */
->  		st->param.sensor_odr.roundup = 1;
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index 2c6acbde0d02..46d5110b2fe4 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -56,6 +56,8 @@ typedef irqreturn_t (*cros_ec_sensors_capture_t)(int irq, void *p);
->   * @read_ec_sensors_data:	function used for accessing sensors values
->   * @curr_sampl_freq:		current sampling period
->   * @fifo_max_event_count:	Size of the EC sensor FIFO
-> + * @frequencies:		Table of known available frequencies:
-> + *				0, Min and Max in mHz.
->   */
->  struct cros_ec_sensors_core_state {
->  	struct cros_ec_device *ec;
-> @@ -80,9 +82,7 @@ struct cros_ec_sensors_core_state {
->  
->  	int curr_sampl_freq;
->  	u32 fifo_max_event_count;
-> -
-> -	/* Table of known available frequencies : 0, Min and Max in mHz */
-> -	int frequencies[3];
-> +	int frequencies[6];
->  };
->  
->  /**
-
+Yours,
+Linus Walleij
