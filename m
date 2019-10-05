@@ -2,135 +2,263 @@ Return-Path: <SRS0=6Pxm=X6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270D8C3E8AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D889C3E8AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA71222BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 09:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D324D20830
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 10:06:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="QI4Zpqua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfJEJxi (ORCPT
+        id S1727653AbfJEKGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 05:53:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36478 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfJEJxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 05:53:38 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9738B89AD0
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Oct 2019 09:53:37 +0000 (UTC)
-Received: by mail-ed1-f70.google.com with SMTP id c90so5664928edf.17
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 02:53:37 -0700 (PDT)
+        Sat, 5 Oct 2019 06:06:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39651 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727134AbfJEKGA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 06:06:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v17so8037118wml.4
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 03:05:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=wDC0HitaGCsDnggKGc/jN4+3DNwnqL8v1NO0UBFQAt8=;
+        b=QI4ZpquaDvZ2IbkgslRdiBgAxt0AwiPaFA30BZrOvGmYVNKwUdNlNNPNBrcPdDbZ1G
+         2DRY+FbASa+pVzpn0ruFAnTSSZQB7F4S740Yw8SFzc1rkcnZg1YaFSTWuu6sQ9weC1M+
+         MDfdTqYxouDgEUe8girpUqZdwvursYSbpZnenhcXRWGli3E1fG+GzT5HxjL6qlRZqcXt
+         pdO5QBdKZxmr8K2WOZFUE69cufCHi+eKnmUAwMOJomp8JXK/lLx78bQlWCG4Uved+DG/
+         nj+A9sl7kh1YqWCnLUJZF45zLvof9iUwJ4F7DB05rt8aBL/Q7XFpJqFmCgSSm110CMIn
+         yGag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2TT+gPwEwmW+zFxrJh0O9g568TTXNfZtDWLTnBvu+Q0=;
-        b=LDV3imh5IJb5WjE9L/NZy2Ju94bSjQLxFwvQM9ZTuktm/2sc+8/T2IycZfq3M9CuTz
-         nN5b1r5oQ8uR2M1eMTBQVFFnglUGhCIa1Aj3WwRrn8Q5xp0pSgzGmwGWqBkQb/uBIs2z
-         yRc4bxaiy7dQx3pA5q60hQNMEWv1cDvDG07lk7n3hFEsXia1UsyWejXij5X0B/A7vFoE
-         LPV5xFirNe3yAA1cYeHQzHnpOXQr2ybEDMH7IuYdoBI/416t4DAnnrmol/3Ak+ZUdLLe
-         yUhywst+sSqujdjK0NBNZI0nOSeynYNJsweCiumK9VsX69++ucVlptmQwvINGMGySJ6W
-         A/JQ==
-X-Gm-Message-State: APjAAAXRBhglwMmh6J81UdwbG+68RGjGKBXbOczI/5ydZXigTBFdMgSe
-        /pBSMnJ0F97Jk241ChI3pB4fjb+KJXfoSXrd8HspPZzUoSzHDkD3ozdbtIMzwti3mN3noPWV2Qx
-        o40zviuHyiNgqIkhc9UJzhBdG
-X-Received: by 2002:a50:ac0d:: with SMTP id v13mr19492065edc.189.1570269216293;
-        Sat, 05 Oct 2019 02:53:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyZOxlWwMcBg7l7MOzB/AEriI2yXyATuHMn4uTP960+sqT3K43d/RA7nIyKJE/vnMnlvyaS+g==
-X-Received: by 2002:a50:ac0d:: with SMTP id v13mr19492050edc.189.1570269216115;
-        Sat, 05 Oct 2019 02:53:36 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id ba28sm1752166edb.4.2019.10.05.02.53.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2019 02:53:35 -0700 (PDT)
-Subject: Re: [PATCH v7 4/8] firmware: Add new platform fallback mechanism and
- firmware_request_platform()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-5-hdegoede@redhat.com> <20191004231733.GF22365@dtor-ws>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c75ceb3a-799a-378a-dbff-c4c4f57575b4@redhat.com>
-Date:   Sat, 5 Oct 2019 11:53:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=wDC0HitaGCsDnggKGc/jN4+3DNwnqL8v1NO0UBFQAt8=;
+        b=iegovKRSgbh2fNfPMblIeRo8h5gPow8X4SKjtZNJkh1bIqMSrOVHt8hXvjdO4YFoku
+         XVBAxoTJGrb9uMYqU42Jk3dCkx6OryZoxPiIUzxmy37RV8brHfJtlZzekc6FV7lxrvSW
+         5IJHh56cgKK8dGoAGJK9mp5SbHK9jPuoqSAkS8SiOkJ0mEkQt5TNWkStAMOiLd0DzSea
+         Zcn6FVf+7BS+6jRySCUlBpx+Ss1Cl3RCKTwjK8bXZ8HN69QgL1y8BGoFhVnRSYjZqWqm
+         7bgfzm5XNvzArEO/WSJ0I7BamsdCkDGWQDgSEsk8DxftnZLpM6oiKyygbaSbO9Eohkvo
+         4D5g==
+X-Gm-Message-State: APjAAAXMMc90T7rN3qjOKWVSZMXWnSgCtjjcdqC1DVatjfwZn6QFjCEs
+        zk8PcDxNISa7Z/uE40+NhwBz6Q==
+X-Google-Smtp-Source: APXvYqwEbPt5BDPhyXKysVm+zGR6eV51bRGH9RPfk6nqiwAbpzOCRTELcPNK51ATARLsP2Pv0SpmFQ==
+X-Received: by 2002:a05:600c:2290:: with SMTP id 16mr13302557wmf.161.1570269958197;
+        Sat, 05 Oct 2019 03:05:58 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id l18sm9390053wrc.18.2019.10.05.03.05.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 05 Oct 2019 03:05:57 -0700 (PDT)
+Message-ID: <5d986b05.1c69fb81.bc6c7.9571@mx.google.com>
+Date:   Sat, 05 Oct 2019 03:05:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191004231733.GF22365@dtor-ws>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Kernel: v5.3-13271-g26e010555086
+X-Kernelci-Tree: net-next
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-collabora
+Subject: net-next/master boot bisection: v5.3-13271-g26e010555086 on
+ bcm2836-rpi-2-b
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        tomeu.vizoso@collabora.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-On 05-10-2019 01:17, Dmitry Torokhov wrote:
-> Hi Hans,
-> 
-> On Fri, Oct 04, 2019 at 04:50:52PM +0200, Hans de Goede wrote:
->> In some cases the platform's main firmware (e.g. the UEFI fw) may contain
->> an embedded copy of device firmware which needs to be (re)loaded into the
->> peripheral. Normally such firmware would be part of linux-firmware, but in
->> some cases this is not feasible, for 2 reasons:
->>
->> 1) The firmware is customized for a specific use-case of the chipset / use
->> with a specific hardware model, so we cannot have a single firmware file
->> for the chipset. E.g. touchscreen controller firmwares are compiled
->> specifically for the hardware model they are used with, as they are
->> calibrated for a specific model digitizer.
->>
->> 2) Despite repeated attempts we have failed to get permission to
->> redistribute the firmware. This is especially a problem with customized
->> firmwares, these get created by the chip vendor for a specific ODM and the
->> copyright may partially belong with the ODM, so the chip vendor cannot
->> give a blanket permission to distribute these.
->>
->> This commit adds a new platform fallback mechanism to the firmware loader
->> which will try to lookup a device fw copy embedded in the platform's main
->> firmware if direct filesystem lookup fails.
->>
->> Drivers which need such embedded fw copies can enable this fallback
->> mechanism by using the new firmware_request_platform() function.
-> 
-> Why would drivers not want to fetch firmware from system firmware if it
-> is not present on disk? I would say let driver to opt-out of this
-> fallback, but default request_firmware() should do it by default.
+net-next/master boot bisection: v5.3-13271-g26e010555086 on bcm2836-rpi-2-b
 
-Only few devices / device-drivers have / need firmware which is
-embedded in the system-fw. Checking for this introduces an extra call
-in the firmware-loader path and the firmware-loader maintainer have
-requested to make this opt-in, rather then opt-out, so that these changes
-do not impact the many many other drivers which do not need this.
+Summary:
+  Start:      26e010555086 net: dsa: sja1105: Make function sja1105_xfer_lo=
+ng_buf static
+  Details:    https://kernelci.org/boot/id/5d9823ab59b514c449857c02
+  Plain log:  https://storage.kernelci.org//net-next/master/v5.3-13271-g26e=
+010555086/arm/bcm2835_defconfig/gcc-8/lab-collabora/boot-bcm2836-rpi-2-b.txt
+  HTML log:   https://storage.kernelci.org//net-next/master/v5.3-13271-g26e=
+010555086/arm/bcm2835_defconfig/gcc-8/lab-collabora/boot-bcm2836-rpi-2-b.ht=
+ml
+  Result:     ac7c3e4ff401 compiler: enable CONFIG_OPTIMIZE_INLINING forcib=
+ly
 
-To be precise so far only the 2 touchscreen drivers for which patches
-are in this series are known to benefit from this approach. So since this
-is somewhat of a special case opt-in makes more sense then opt-out.
+Checks:
+  revert:     PASS
+  verify:     PASS
 
-Regards,
+Parameters:
+  Tree:       net-next
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.=
+git
+  Branch:     master
+  Target:     bcm2836-rpi-2-b
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     bcm2835_defconfig
+  Test suite: boot
 
-Hans
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit ac7c3e4ff401b304489a031938dbeaab585bfe0a
+Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed Sep 25 16:47:42 2019 -0700
+
+    compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+    =
+
+    Commit 9012d011660e ("compiler: allow all arches to enable
+    CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable this
+    option.  A couple of build errors were reported by randconfig, but all =
+of
+    them have been ironed out.
+    =
+
+    Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely (and it
+    will simplify the 'inline' macro in compiler_types.h), this commit chan=
+ges
+    it to always-on option.  Going forward, the compiler will always be
+    allowed to not inline functions marked 'inline'.
+    =
+
+    This is not a problem for x86 since it has been long used by
+    arch/x86/configs/{x86_64,i386}_defconfig.
+    =
+
+    I am keeping the config option just in case any problem crops up for ot=
+her
+    architectures.
+    =
+
+    The code clean-up will be done after confirming this is solid.
+    =
+
+    Link: http://lkml.kernel.org/r/20190830034304.24259-1-yamada.masahiro@s=
+ocionext.com
+    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+    Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Borislav Petkov <bp@alien8.de>
+    Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 6b1b1703a646..93d97f9b0157 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -311,7 +311,7 @@ config HEADERS_CHECK
+ 	  relevant for userspace, say 'Y'.
+ =
+
+ config OPTIMIZE_INLINING
+-	bool "Allow compiler to uninline functions marked 'inline'"
++	def_bool y
+ 	help
+ 	  This option determines if the kernel forces gcc to inline the functions
+ 	  developers have marked 'inline'. Doing so takes away freedom from gcc to
+@@ -322,8 +322,6 @@ config OPTIMIZE_INLINING
+ 	  decision will become the default in the future. Until then this option
+ 	  is there to test gcc for this.
+ =
+
+-	  If unsure, say N.
+-
+ config DEBUG_SECTION_MISMATCH
+ 	bool "Enable full Section mismatch analysis"
+ 	help
+---------------------------------------------------------------------------=
+----
 
 
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [b41dae061bbd722b9d7fa828f35d22035b218e18] Merge tag 'xfs-5.4-merge=
+-7' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+git bisect good b41dae061bbd722b9d7fa828f35d22035b218e18
+# bad: [26e0105550862a137eba701e2f4e3eeb343759e9] net: dsa: sja1105: Make f=
+unction sja1105_xfer_long_buf static
+git bisect bad 26e0105550862a137eba701e2f4e3eeb343759e9
+# good: [45824fc0da6e46cc5d563105e1eaaf3098a686f9] Merge tag 'powerpc-5.4-1=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+git bisect good 45824fc0da6e46cc5d563105e1eaaf3098a686f9
+# good: [2b38d01b4de8b1bbda7f5f7e91252609557635fc] mm/zsmalloc.c: fix a -Wu=
+nused-function warning
+git bisect good 2b38d01b4de8b1bbda7f5f7e91252609557635fc
+# bad: [7897c04ad09f815aea1f2dbb05825887d4494a74] Merge tag 'trace-v5.4-2' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
+git bisect bad 7897c04ad09f815aea1f2dbb05825887d4494a74
+# good: [3cf7487c5de713b706ca2e1f66ec5f9b27fe265a] Merge tag 'sound-fix-5.4=
+-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+git bisect good 3cf7487c5de713b706ca2e1f66ec5f9b27fe265a
+# good: [f41def397161053eb0d3ed6861ef65985efbf293] Merge tag 'ceph-for-5.4-=
+rc1' of git://github.com/ceph/ceph-client
+git bisect good f41def397161053eb0d3ed6861ef65985efbf293
+# bad: [ec56103e18c7590303c69329dd4aaadf8a898c19] Merge tag 'for-linus-5.4-=
+rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip
+git bisect bad ec56103e18c7590303c69329dd4aaadf8a898c19
+# bad: [da036ae147624b70f7d3784ff3a53bd4fda20d2a] scripts/gdb: handle split=
+ debug
+git bisect bad da036ae147624b70f7d3784ff3a53bd4fda20d2a
+# good: [5a7f4455ad321400e1361ab94fd6858c5b2fe0cf] checkpatch: remove obsol=
+ete period from "ambiguous SHA1" query
+git bisect good 5a7f4455ad321400e1361ab94fd6858c5b2fe0cf
+# good: [3e9fd5a48cb7b0ef93be097c2c1066738d37f5b7] fs/reiserfs/journal.c: r=
+emove set but not used variable
+git bisect good 3e9fd5a48cb7b0ef93be097c2c1066738d37f5b7
+# good: [7c3a6aedcd6aae0a32a527e68669f7dd667492d1] kexec: bail out upon SIG=
+KILL when allocating memory.
+git bisect good 7c3a6aedcd6aae0a32a527e68669f7dd667492d1
+# good: [9dd819a15162f8f82a6001b090caa38c18297b39] uaccess: add missing __m=
+ust_check attributes
+git bisect good 9dd819a15162f8f82a6001b090caa38c18297b39
+# bad: [7d92bda271ddcbb2d1be2f82733dcb9bf8378010] kgdb: don't use a notifie=
+r to enter kgdb at panic; call directly
+git bisect bad 7d92bda271ddcbb2d1be2f82733dcb9bf8378010
+# bad: [ac7c3e4ff401b304489a031938dbeaab585bfe0a] compiler: enable CONFIG_O=
+PTIMIZE_INLINING forcibly
+git bisect bad ac7c3e4ff401b304489a031938dbeaab585bfe0a
+# first bad commit: [ac7c3e4ff401b304489a031938dbeaab585bfe0a] compiler: en=
+able CONFIG_OPTIMIZE_INLINING forcibly
+---------------------------------------------------------------------------=
+----
