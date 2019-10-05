@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F401C47404
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 06:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD9CC47404
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 06:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDB62133F
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 06:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57560222BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Oct 2019 06:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3zjoNhd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A8GyDvLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfJEGrL (ORCPT
+        id S1727307AbfJEGtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 02:47:11 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34031 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbfJEGrK (ORCPT
+        Sat, 5 Oct 2019 02:49:03 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:40659 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfJEGtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 02:47:10 -0400
-Received: by mail-vs1-f67.google.com with SMTP id d3so5622704vsr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 23:47:10 -0700 (PDT)
+        Sat, 5 Oct 2019 02:49:03 -0400
+Received: by mail-ua1-f65.google.com with SMTP id i13so2697673uaq.7
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Oct 2019 23:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2udHRFbT/B0QsOYOJWkIvx6wejkgn+uu80P41HG+RD0=;
-        b=B3zjoNhdecTYwV78tr3bZ5Ok/Ge44VX5y47PIiM+/OldiCuhb7nCRGogLupHGVI205
-         3Ccc1Gqopzk1N//EHPK9MteWWCu3a0XJm6xbf554TstvkeB8khUtzmdJl6OM6h/eVfG+
-         dm94b8nvQ4lAS0Bm4rQhe4X6sHqVs+9nDpyKFxnAuB1f9SWlYTh/+Cuis0KV48DViNDd
-         9HzpN4nQvCyZ6hNHkI0mW9P5HESeaX6wlilX2bhCSZpoAIRJj1fP0vzbwucOE/IXGmG3
-         L7gMtscuNRjMdIsNjm4KY5w8ijtCATvMrQjO6nfvVtYyaYVCyRNOQ77wFpb53RYKv0wJ
-         Vm2Q==
+        bh=6aeDVeBVNFr/uMZ/uptXRcPQ7WzhEwoxIXaOAlc1rC8=;
+        b=A8GyDvLSv2x+M4DOuJ2wSiy0Ufq8PbA7ssUb8tigvccQfPi2CvwiTo0srd8Jl+jSji
+         xf0t3Wyh8p8aVMtw3gu8G9HxF+fexV3aZy0sIuD6amPs5aC+dzV+k+7UWvfpPfgRV/S4
+         PcEWSEj+tDWMBNZBFNMaxd/Sx9IjxWAW8ZxEW6nkq2RfYk79hquvdQMnWfy631xTPG/H
+         ymxVV5MOTxbwuw1WCEelslHYmMkbWjTAvUoxxECXBmx2aA9Kw2s0oXkkxMr2dc3yr1TG
+         5TFyNe8X5R3o0bd8Sjjm81GJoLopbux5+dSDpLudHfTooliWNW3Nx6tnf4/u/gL3JNyJ
+         ec7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2udHRFbT/B0QsOYOJWkIvx6wejkgn+uu80P41HG+RD0=;
-        b=F3NaFGpxqtTgIS/vJhRlKdm3fuzYxTmqXfBMEugT9GuZqbdOOGiHGOgkDM337bWqBP
-         dm/cpKrciYVzptbl1VWFfkfocL9Yihg1CkMagfTX3VYaeBwMcchFr1/eVYneBCJYU8Zj
-         JzZ44awIpWWwdoB5rMe7clHv0AD8VmNMOTn0YOLwvTkcvgilC0JzZ3TA5D9rRh1WEMTf
-         hncqCSzNDqRSOvXCgnw1yhum1ZJT2y8lpU2Rc5vAHSdb2TQ0wtura4/hSlfI5wzDGlka
-         eiTBcfiM1Uu8LzNB5ghk2J82Mx4IYidyW9SL8YyKOxl+Z8KkmV5/uJUODuOU5w9VdX6v
-         SqxA==
-X-Gm-Message-State: APjAAAVMW3wmJgxjop8kFD0ZHynNHPgpAM8oIjWdb/lBRaJ9QxjbibCv
-        JOUbv3ZjvV44RNbDL1IAZ7HqDn+tBn7PiznXqpB2jour
-X-Google-Smtp-Source: APXvYqxrAdMv5e5WMWhupLraklokhKb2Q9KeY7AoaBh2HCCSH04uOKRaDHNUjiGA056RtGAiswNQ8OZmfJsMp+RJCx0=
-X-Received: by 2002:a67:1802:: with SMTP id 2mr9714785vsy.236.1570258029654;
- Fri, 04 Oct 2019 23:47:09 -0700 (PDT)
+        bh=6aeDVeBVNFr/uMZ/uptXRcPQ7WzhEwoxIXaOAlc1rC8=;
+        b=IQQsIj61m30HvDF+/TgMWvY541KMU4sa4/nA4QD3l7gHy+35t4aeuwX1ER+3J3BIR0
+         Srnl1cBGTCNilvlJDUSZ6Oxhob/c7o9O1PXXZRnprFVkRmEmjTaV1fnrzrCyqJk15Pef
+         1HhwezuK1vI7Dkyp1sRInAj1wp5qfCfrn9TupsZtQ0igbvg64a7vpUgswnlWhDBmcbKM
+         H4kbLqbUgnqk0n+k9aNk/oPGTJOyu922tjPV+V/Sk0EdpLWavVijS3PhBj/g2v+o6FAb
+         XyA10WvnUCJOogI5CH1J1eZftTp/HbIkfciLf9su6WdMNF/3+q9uGjaYsm8BgrCclgyh
+         t5jA==
+X-Gm-Message-State: APjAAAUMZJNjVAX8inmJEweriR/VlwYiaf59/lt4utJUWahJqqC8hgFb
+        7F/biwr2aAHuCuJNI++EU7ndE+b+WoUfvF+AlYM=
+X-Google-Smtp-Source: APXvYqyyjdJ3ttESjO2FINu/CL51n4mItWMoNJf1ajbTADsFKCUw8LFYN87QcwixCUyqNZN2KZ6TIFs9GGh/mKpnn6s=
+X-Received: by 2002:ab0:6812:: with SMTP id z18mr8171080uar.43.1570258140412;
+ Fri, 04 Oct 2019 23:49:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002135345.22677-1-ttayar@habana.ai>
-In-Reply-To: <20191002135345.22677-1-ttayar@habana.ai>
+References: <20191003152228.28955-1-ttayar@habana.ai>
+In-Reply-To: <20191003152228.28955-1-ttayar@habana.ai>
 From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Sat, 5 Oct 2019 09:46:43 +0300
-Message-ID: <CAFCwf11aCBGBk4o17iaih=NAuaYCdaoJHGP9QwC1R11bVca+-w@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: Fix typos
+Date:   Sat, 5 Oct 2019 09:48:34 +0300
+Message-ID: <CAFCwf13mDiJzLeP8UWfh88ZshCPzkdCPaVxxM-Ur9TbWogN8ew@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] habanalabs: Mark queue as expecting to CB handle
+ or address
 To:     Tomer Tayar <ttayar@habana.ai>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -67,70 +68,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 4:53 PM Tomer Tayar <ttayar@habana.ai> wrote:
+On Thu, Oct 3, 2019 at 6:22 PM Tomer Tayar <ttayar@habana.ai> wrote:
 >
-> s/paerser/parser/
-> s/requeusted/requested/
-> s/an JOB/a JOB/
+> Jobs on some queues must be provided with a handle to a driver command
+> buffer object, while for other queues, jobs must be provided with an
+> address to a command buffer.
+> Currently the distinction is done based on the queue type, which is less
+> flexible if the same type of queue behaves differently on different
+> types of ASIC.
+> This patch adds a new queue property for this target, which is
+> configured per queue type per ASIC type.
 >
 > Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 > ---
->  drivers/misc/habanalabs/habanalabs.h | 2 +-
->  drivers/misc/habanalabs/hw_queue.c   | 4 ++--
->  include/uapi/misc/habanalabs.h       | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
+>  drivers/misc/habanalabs/command_submission.c | 4 +++-
+>  drivers/misc/habanalabs/goya/goya.c          | 3 +++
+>  drivers/misc/habanalabs/habanalabs.h         | 3 +++
+>  3 files changed, 9 insertions(+), 1 deletion(-)
 >
+> diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+> index a9ac045dcfde..f44205540520 100644
+> --- a/drivers/misc/habanalabs/command_submission.c
+> +++ b/drivers/misc/habanalabs/command_submission.c
+> @@ -414,7 +414,9 @@ static struct hl_cb *validate_queue_index(struct hl_device *hdev,
+>                         "Queue index %d is restricted for the kernel driver\n",
+>                         chunk->queue_index);
+>                 return NULL;
+> -       } else if (hw_queue_prop->type == QUEUE_TYPE_INT) {
+> +       }
+> +
+> +       if (!hw_queue_prop->requires_kernel_cb) {
+>                 *ext_queue = false;
+>                 return (struct hl_cb *) (uintptr_t) chunk->cb_handle;
+>         }
+> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+> index 09caef7642fd..71693fcffb16 100644
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -337,17 +337,20 @@ void goya_get_fixed_properties(struct hl_device *hdev)
+>         for (i = 0 ; i < NUMBER_OF_EXT_HW_QUEUES ; i++) {
+>                 prop->hw_queues_props[i].type = QUEUE_TYPE_EXT;
+>                 prop->hw_queues_props[i].driver_only = 0;
+> +               prop->hw_queues_props[i].requires_kernel_cb = 1;
+>         }
+>
+>         for (; i < NUMBER_OF_EXT_HW_QUEUES + NUMBER_OF_CPU_HW_QUEUES ; i++) {
+>                 prop->hw_queues_props[i].type = QUEUE_TYPE_CPU;
+>                 prop->hw_queues_props[i].driver_only = 1;
+> +               prop->hw_queues_props[i].requires_kernel_cb = 0;
+>         }
+>
+>         for (; i < NUMBER_OF_EXT_HW_QUEUES + NUMBER_OF_CPU_HW_QUEUES +
+>                         NUMBER_OF_INT_HW_QUEUES; i++) {
+>                 prop->hw_queues_props[i].type = QUEUE_TYPE_INT;
+>                 prop->hw_queues_props[i].driver_only = 0;
+> +               prop->hw_queues_props[i].requires_kernel_cb = 0;
+>         }
+>
+>         for (; i < HL_MAX_QUEUES; i++)
 > diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-> index 75862be53c60..c3d24ffad9fa 100644
+> index c3d24ffad9fa..f47f4b22cb6b 100644
 > --- a/drivers/misc/habanalabs/habanalabs.h
 > +++ b/drivers/misc/habanalabs/habanalabs.h
-> @@ -774,7 +774,7 @@ struct hl_cs_job {
+> @@ -98,10 +98,13 @@ enum hl_queue_type {
+>   * @type: queue type.
+>   * @driver_only: true if only the driver is allowed to send a job to this queue,
+>   *               false otherwise.
+> + * @requires_kernel_cb: true if a CB handle must be provided for jobs on this
+> + *                      queue, false otherwise (a CB address must be provided).
+>   */
+>  struct hw_queue_properties {
+>         enum hl_queue_type      type;
+>         u8                      driver_only;
+> +       u8                      requires_kernel_cb;
 >  };
 >
 >  /**
-> - * struct hl_cs_parser - command submission paerser properties.
-> + * struct hl_cs_parser - command submission parser properties.
->   * @user_cb: the CB we got from the user.
->   * @patched_cb: in case of patching, this is internal CB which is submitted on
->   *             the queue instead of the CB we got from the IOCTL.
-> diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
-> index 55b383b2a116..f733b534f738 100644
-> --- a/drivers/misc/habanalabs/hw_queue.c
-> +++ b/drivers/misc/habanalabs/hw_queue.c
-> @@ -220,7 +220,7 @@ int hl_hw_queue_send_cb_no_cmpl(struct hl_device *hdev, u32 hw_queue_id,
->  }
->
->  /*
-> - * ext_hw_queue_schedule_job - submit an JOB to an external queue
-> + * ext_hw_queue_schedule_job - submit a JOB to an external queue
->   *
->   * @job: pointer to the job that needs to be submitted to the queue
->   *
-> @@ -278,7 +278,7 @@ static void ext_hw_queue_schedule_job(struct hl_cs_job *job)
->  }
->
->  /*
-> - * int_hw_queue_schedule_job - submit an JOB to an internal queue
-> + * int_hw_queue_schedule_job - submit a JOB to an internal queue
->   *
->   * @job: pointer to the job that needs to be submitted to the queue
->   *
-> diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-> index 39c4ea51a719..53e4ff73578e 100644
-> --- a/include/uapi/misc/habanalabs.h
-> +++ b/include/uapi/misc/habanalabs.h
-> @@ -589,7 +589,7 @@ struct hl_debug_args {
->   *
->   * The user can call this IOCTL with a handle it received from the CS IOCTL
->   * to wait until the handle's CS has finished executing. The user will wait
-> - * inside the kernel until the CS has finished or until the user-requeusted
-> + * inside the kernel until the CS has finished or until the user-requested
->   * timeout has expired.
->   *
->   * The return value of the IOCTL is a standard Linux error code. The possible
 > --
 > 2.17.1
 >
 
-This patch is:
+Patches 1-4 are:
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+
+However, I'm only applying patches 1 & 2 to -next, because 3 & 4
+mostly add code which is not relevant to GOYA, without much changing
+existing code, as opposed to patches 1&2.
+
+Oded
