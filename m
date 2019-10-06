@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1681FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E031EC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0972053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA28722486
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384197;
-	bh=szCeKCu1HOCfG8Xa5dhnSRI7Vdwm04GAxX3XtKErotk=;
+	s=default; t=1570384200;
+	bh=ghPfPE3Dv9KM5BihfJgp2aHVM6ja4supiXXbg586G2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rz9Iwsu3JSL0ByFWQAP8fQxCrWp0cev6mphErEbpUGWy5XXpm/4pqumayTw6xFV0
-	 bkpW3qEtWmUz4T42HlNbyE+de4hMf+od4XPInAC8BZs1QhxOkWhQMk+dHIzEWiwo2t
-	 2G7lLe/R/m8nuHyy64ASym+qo/qLihTgAz1k8EVo=
+	b=CsTWo2Ckcqxg7I9zj3Z/c81d5Aoi1Dq5PxF5eeNTzBQxURHiF94/+rpJwHdVorINi
+	 F6u9bAfYC5xQatx0CSM7i/obJU0D6xb56Ao6xzORs08cxROE/FRcEIpqYsJQW1jLpQ
+	 5SkOk6ZIg8JZhJkdni7s0RhN2QNhOzq8pkO5qqK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbfJFRt4 (ORCPT
+        id S1731198AbfJFRlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:49:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731216AbfJFRlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:41:31 -0400
+        id S1730540AbfJFRlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:41:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2BFD2053B;
-        Sun,  6 Oct 2019 17:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0085C2053B;
+        Sun,  6 Oct 2019 17:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383690;
-        bh=szCeKCu1HOCfG8Xa5dhnSRI7Vdwm04GAxX3XtKErotk=;
+        s=default; t=1570383679;
+        bh=ghPfPE3Dv9KM5BihfJgp2aHVM6ja4supiXXbg586G2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TndFLd2zizJspZQXdgdRFSB1nN+obKjjIwBW/yn0MFgPlqm1VTWzUvPndHfFKCush
-         11lRu56lFKhdDrHCXBhWGEs3Yvg7UQIXry2mTnnm4moEocXSa0sqeeNGHyND7+8Q3G
-         RDILZBoHEU1Ri24sDrybAAplatkdq3Q4cdWF3WLI=
+        b=GbkwNFJKwUhyfg/syVNfTZgJX7zEc49Ci62Aj7RfadKBjwIhPyIlVkHcE3ABGpuFG
+         avhH3Oowg/uYtfzI896hDWu7aZUhP8fVOtq9bCrdlHt97SbGN21xErAkh9yTtk0ZAR
+         hE7hvKnLWwp4W6UIDtn2K1zxfV/KEpiLLD44+0Q0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Gustavo Romero <gromero@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 059/166] selftests/powerpc: Retry on host facility unavailable
-Date:   Sun,  6 Oct 2019 19:20:25 +0200
-Message-Id: <20191006171218.126904185@linuxfoundation.org>
+Subject: [PATCH 5.3 038/166] clk: sunxi: Dont call clk_hw_get_name() on a hw that isnt registered
+Date:   Sun,  6 Oct 2019 19:20:04 +0200
+Message-Id: <20191006171216.122051307@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.vnet.ibm.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit 6652bf6408895b09d31fd4128a1589a1a0672823 ]
+[ Upstream commit a7b85ad25a97cf897b4819a121655c483d86156f ]
 
-TM test tm-unavailable must take into account aborts due to host aborting
-a transactin because of a facility unavailable exception, just like it
-already does for aborts on reschedules (TM_CAUSE_KVM_RESCHED).
+The implementation of clk_hw_get_name() relies on the clk_core
+associated with the clk_hw pointer existing. If of_clk_hw_register()
+fails, there isn't a clk_core created yet, so calling clk_hw_get_name()
+here fails. Extract the name first so we can print it later.
 
-Reported-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1566341651-19747-1-git-send-email-gromero@linux.vnet.ibm.com
+Fixes: 1d80c14248d6 ("clk: sunxi-ng: Add common infrastructure")
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/tm/tm.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/sunxi-ng/ccu_common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/tm/tm.h b/tools/testing/selftests/powerpc/tm/tm.h
-index 97f9f491c541a..c402464b038fc 100644
---- a/tools/testing/selftests/powerpc/tm/tm.h
-+++ b/tools/testing/selftests/powerpc/tm/tm.h
-@@ -55,7 +55,8 @@ static inline bool failure_is_unavailable(void)
- static inline bool failure_is_reschedule(void)
- {
- 	if ((failure_code() & TM_CAUSE_RESCHED) == TM_CAUSE_RESCHED ||
--	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED)
-+	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED ||
-+	    (failure_code() & TM_CAUSE_KVM_FAC_UNAV) == TM_CAUSE_KVM_FAC_UNAV)
- 		return true;
+diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu_common.c
+index 7fe3ac980e5f9..2e20e650b6c01 100644
+--- a/drivers/clk/sunxi-ng/ccu_common.c
++++ b/drivers/clk/sunxi-ng/ccu_common.c
+@@ -97,14 +97,15 @@ int sunxi_ccu_probe(struct device_node *node, void __iomem *reg,
  
- 	return false;
+ 	for (i = 0; i < desc->hw_clks->num ; i++) {
+ 		struct clk_hw *hw = desc->hw_clks->hws[i];
++		const char *name;
+ 
+ 		if (!hw)
+ 			continue;
+ 
++		name = hw->init->name;
+ 		ret = of_clk_hw_register(node, hw);
+ 		if (ret) {
+-			pr_err("Couldn't register clock %d - %s\n",
+-			       i, clk_hw_get_name(hw));
++			pr_err("Couldn't register clock %d - %s\n", i, name);
+ 			goto err_clk_unreg;
+ 		}
+ 	}
 -- 
 2.20.1
 
