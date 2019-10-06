@@ -2,55 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD39ECE58F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD1CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD0B2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FDC21871
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382872;
-	bh=Ffas5AgijVqWvr/TSM4XOh15N+KI9nuJSQvvBxjlz8c=;
+	s=default; t=1570382875;
+	bh=52ktN7g6S6O2/YgpXaOMp2KB0QwgIBBBwkG1RoYasK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a7cgQF76jZ5Og4wDC2ogIbLEGz0QfpakylnBytB3QXagmBqwCcHkNMVh/iHK5BjHf
-	 uTWlwqjaxk/7RKkBRzy2TtoR7rEdWVjLDYFToN2z4RAzeb1cD4q/SBlLyjz7FD1LaV
-	 iwcwGjO/K/V4ZOqtpy866zMUyDgZRN6X0ed/iWLc=
+	b=VScWwKbKF3iN782ZLH3kXhq7wSKaVz87VOvahG2YcQpqRAFkoqOyyq4Jq5LNIAHgR
+	 30nGbraO7+qu3DYMGX5WSSrGS12GqnKxcE8+DuJ5zMROaSq93BrnuWCjFXprF/+RFy
+	 PoXSom/cNxxZqd9EzuMKpfPs0cV7QK7N7X8p2kvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfJFR1w (ORCPT
+        id S1728615AbfJFR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfJFR1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:48 -0400
+        id S1728590AbfJFR1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB2B2133F;
-        Sun,  6 Oct 2019 17:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AC282087E;
+        Sun,  6 Oct 2019 17:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382867;
-        bh=Ffas5AgijVqWvr/TSM4XOh15N+KI9nuJSQvvBxjlz8c=;
+        s=default; t=1570382870;
+        bh=52ktN7g6S6O2/YgpXaOMp2KB0QwgIBBBwkG1RoYasK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQoKv2uIIr4SsnJP+GdDMrGAhj5qUGpm99z2bMWDKT+hIpxTMlRYta6xtehfTwsgk
-         uxsGqHxh6DSYKV7sWuMJtBs1rbv5L9vDNo9jTB2bR5PY9q+H2KSKsAwUSz2SjKwbjQ
-         KY3sqpVeS2t1GyrTL+N1EOFIb+26Ff1Idua90ZAo=
+        b=HM6xhKkKi0VtuzOz6CT94gQBjGaqZ0FWzA7C5hdkGFVv/6kqi92RrzT66M3V52lq4
+         yPMo+ayfup/HX8eGXOh4CRWb+zIV8XmEJByhPJKboz/dIb/83tLwuGcwLFDHFNRH21
+         6ZhBScnAHlj6oDl5JGjx7gTt6RSB4dbVpfKbdhxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 68/68] kexec: bail out upon SIGKILL when allocating memory.
-Date:   Sun,  6 Oct 2019 19:21:44 +0200
-Message-Id: <20191006171139.593728777@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 40/68] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
+Date:   Sun,  6 Oct 2019 19:21:16 +0200
+Message-Id: <20191006171127.021772421@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -63,41 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 upstream.
+[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
 
-syzbot found that a thread can stall for minutes inside kexec_load() after
-that thread was killed by SIGKILL [1].  It turned out that the reproducer
-was trying to allocate 2408MB of memory using kimage_alloc_page() from
-kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
-allocation.
+In smack_socket_sock_rcv_skb(), there is an if statement
+on line 3920 to check whether skb is NULL:
+    if (skb && skb->secmark != 0)
 
-[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+This check indicates skb can be NULL in some cases.
 
-Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But on lines 3931 and 3932, skb is used:
+    ad.a.u.net->netif = skb->skb_iif;
+    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
 
+Thus, possible null-pointer dereferences may occur when skb is NULL.
+
+To fix these possible bugs, an if statement is added to check skb.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kexec_core.c |    2 ++
+ security/smack/smack_lsm.c | 2 ++
  1 file changed, 2 insertions(+)
 
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -301,6 +301,8 @@ static struct page *kimage_alloc_pages(g
- {
- 	struct page *pages;
- 
-+	if (fatal_signal_pending(current))
-+		return NULL;
- 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
- 	if (pages) {
- 		unsigned int count, i;
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 0d5ce7190b17e..09119c43525ed 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -4031,6 +4031,8 @@ access_check:
+ 			skp = smack_ipv6host_label(&sadd);
+ 		if (skp == NULL)
+ 			skp = smack_net_ambient;
++		if (skb == NULL)
++			break;
+ #ifdef CONFIG_AUDIT
+ 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
+ 		ad.a.u.net->family = family;
+-- 
+2.20.1
+
 
 
