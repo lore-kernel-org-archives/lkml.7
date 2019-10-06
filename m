@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A7ECE58E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DA0C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD8B22490
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152B82053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384149;
-	bh=9RTI3BxKAQ8c6bSqWTjG3ttwscWdlooxdIEWTE/1ib4=;
+	s=default; t=1570384160;
+	bh=ENY7C6ndhTKXioNw1tKj1SAOP8oceyqR21UUp1PZOIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KT1OVrv/W81AuJ8BjcJ7TOrhxz1Hv4Q1LVX3tpKW44XVh38N3RmlcdQTb+4JTYUBK
-	 kxxIDlGMC44VinDyC5DmemmtntdbvxzRQI89t4PC1FNP14qCAnAhXf5lPm6X1VZTVq
-	 bHprBkWiokY0oFFNIjo/v7qC8GPzFnQv5EmVwC+g=
+	b=Ar9Pd9tPvXI5LzDl9eA8n97YuhPJMEN8MrGSLEHR9sRAVSm7u1ittNsJztlqBfE8p
+	 B5LfvlVzyGHZ1mlsaC/3Hs8xoP0QXWj8G/stJaZ9fTX4ic20xmlBc+Swzd1wP4T9GA
+	 ePNX64EjRkVRIKCvO0V9fhfsVX+LJ13nG1h42DkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbfJFRtI (ORCPT
+        id S1731327AbfJFRmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731368AbfJFRmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:38 -0400
+        id S1730325AbfJFRmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:42:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DDFC20862;
-        Sun,  6 Oct 2019 17:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0BB2173B;
+        Sun,  6 Oct 2019 17:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383757;
-        bh=9RTI3BxKAQ8c6bSqWTjG3ttwscWdlooxdIEWTE/1ib4=;
+        s=default; t=1570383741;
+        bh=ENY7C6ndhTKXioNw1tKj1SAOP8oceyqR21UUp1PZOIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WO6xyUeeFi7meBIoj42qowvwDCaUvbGviphovwyxx+lHJKmqou2OFORgW1C7tG3YI
-         sj5sQkMYs0Ch7NtWhjRIfiyt+h8u5x9XqsSpLXRA0UbBXAWPcaOlD322rhaFZ2jfCg
-         +ieq6asuN0iOhTvod/xwAfa2NTJidNBUOFelOl8Y=
+        b=wzNkYOcuRrYbWcEFMVDeyHVufUU+xgq6OueuOUYId31j7n2Q/KNTT+ivYBtNb6UPb
+         qJRJ1cqvFTsMyc3dEKuHSDPZJFYDRj3JAUc8NoC8gk0/s1439BAfKQccEWuNimIkDh
+         RaSXLFQWCHT9HrlPtomy0UOjyPOgKVO5av6hnxzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        ralf@linux-mips.org, paul@crapouillou.net, jhogan@kernel.org,
-        malat@debian.org, tglx@linutronix.de, allison@lohutok.net,
-        syq@debian.org, chenhc@lemote.com, jiaxun.yang@flygoat.com,
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 082/166] MIPS: Ingenic: Disable broken BTB lookup optimization.
-Date:   Sun,  6 Oct 2019 19:20:48 +0200
-Message-Id: <20191006171220.408168864@linuxfoundation.org>
+Subject: [PATCH 5.3 076/166] mbox: qcom: add APCS child device for QCS404
+Date:   Sun,  6 Oct 2019 19:20:42 +0200
+Message-Id: <20191006171219.837860479@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -63,76 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhou Yanjie <zhouyanjie@zoho.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-[ Upstream commit 053951dda71ecb4b554a2cdbe26f5f6f9bee9dd2 ]
+[ Upstream commit 78c86458a440ff356073c21b568cb58ddb67b82b ]
 
-In order to further reduce power consumption, the XBurst core
-by default attempts to avoid branch target buffer lookups by
-detecting & special casing loops. This feature will cause
-BogoMIPS and lpj calculate in error. Set cp0 config7 bit 4 to
-disable this feature.
+There is clock controller functionality in the APCS hardware block of
+qcs404 devices similar to msm8916.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: ralf@linux-mips.org
-Cc: paul@crapouillou.net
-Cc: jhogan@kernel.org
-Cc: malat@debian.org
-Cc: gregkh@linuxfoundation.org
-Cc: tglx@linutronix.de
-Cc: allison@lohutok.net
-Cc: syq@debian.org
-Cc: chenhc@lemote.com
-Cc: jiaxun.yang@flygoat.com
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mipsregs.h | 4 ++++
- arch/mips/kernel/cpu-probe.c     | 7 +++++++
- 2 files changed, 11 insertions(+)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index 1e6966e8527e9..bdbdc19a2b8f8 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -689,6 +689,9 @@
- #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
- #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a5479cc..d3676fd3cf945 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -47,7 +47,6 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
  
-+/* Ingenic Config7 bits */
-+#define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
-+
- /* Config7 Bits specific to MIPS Technologies. */
+ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct qcom_apcs_ipc *apcs;
+ 	struct regmap *regmap;
+ 	struct resource *res;
+@@ -55,6 +54,11 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	unsigned long i;
+ 	int ret;
++	const struct of_device_id apcs_clk_match_table[] = {
++		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
++		{ .compatible = "qcom,qcs404-apcs-apps-global", },
++		{}
++	};
  
- /* Performance counters implemented Per TC */
-@@ -2813,6 +2816,7 @@ __BUILD_SET_C0(status)
- __BUILD_SET_C0(cause)
- __BUILD_SET_C0(config)
- __BUILD_SET_C0(config5)
-+__BUILD_SET_C0(config7)
- __BUILD_SET_C0(intcontrol)
- __BUILD_SET_C0(intctl)
- __BUILD_SET_C0(srsmap)
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 9635c1db3ae6a..e654ffc1c8a0d 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 		c->cputype = CPU_JZRISC;
- 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
- 		__cpu_name[cpu] = "Ingenic JZRISC";
-+		/*
-+		 * The XBurst core by default attempts to avoid branch target
-+		 * buffer lookups by detecting & special casing loops. This
-+		 * feature will cause BogoMIPS and lpj calculate in error.
-+		 * Set cp0 config7 bit 4 to disable this feature.
-+		 */
-+		set_c0_config7(MIPS_CONF7_BTB_LOOP_EN);
- 		break;
- 	default:
- 		panic("Unknown Ingenic Processor ID!");
+ 	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
+ 	if (!apcs)
+@@ -89,7 +93,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
++	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
+ 		apcs->clk = platform_device_register_data(&pdev->dev,
+ 							  "qcom-apcs-msm8916-clk",
+ 							  -1, NULL, 0);
 -- 
 2.20.1
 
