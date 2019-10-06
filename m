@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB30C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2733EC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC802080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F4D20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383818;
-	bh=fw70Y8GuPTIYaTwZ+t61VIeVfbkLgrEAuV3Y4OcKnl0=;
+	s=default; t=1570383821;
+	bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAVlba0CkEjaThjZBWk48LARyZSpq6LTjm4UPi6tXsfI5rnuZZTs0xAYwR96eu9YM
-	 uN4XlxSzQ5f0ibno3cELmo0lbvWcJnt4C1E1RqnQvE6iqWy8OpgAgdByDf8hl14Jrp
-	 SVXWdU+wYwFLGP1wZuZpGDHFJDk01K096koVNDeM=
+	b=N21OQtklNOXEs2qeU23c0ACDPfV9XSOiJY/V836GvEbFdI7ucYpagUUPydGUcdnBc
+	 X4q4+Zx3DA6/JbWRZcIihtCGFMrb8bQ8xw4wv72lLLeXGHVlTcXiByRD6D6jYKyLgg
+	 YnNGcof4csJb0Jp1MstQwCEu73V64s6qL8teQrhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbfJFRnh (ORCPT
+        id S1730871AbfJFRnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:43:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43504 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730946AbfJFRnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:43:32 -0400
+        id S1731543AbfJFRnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C980221479;
-        Sun,  6 Oct 2019 17:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F5B20862;
+        Sun,  6 Oct 2019 17:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383811;
-        bh=fw70Y8GuPTIYaTwZ+t61VIeVfbkLgrEAuV3Y4OcKnl0=;
+        s=default; t=1570383816;
+        bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuKlhzvKDB9CotsZyB+UI08RWt2V6WSH5RLtcdHXEzwBukUUo5AciZxHd5I174jDp
-         aMR4ECgpP8+70lIU3LpxmVexcZT3OIFXvlkMY9OKxuL3F3gF0KJx8AH2Q4j4PmtZf5
-         iLuyPz3YkydE/KTQeqHqUBgNhx2alck09ZsjAmEI=
+        b=f8ewF68drxDrLtZk0DOM9XqRjDRnf6paDaaoHXU0UyBGeKpR14g6AiXCMZjtocDCk
+         93amsvzqgEk0HmgKPdcy7/bT+e8ZKiLMAosZckSKhog7pkPQWCkk3+mQ5aleceX+uV
+         oatqw1ogRTNz2ax7S1lbytaPaAPu/GbfjqmMNckg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 104/166] HID: apple: Fix stuck function keys when using FN
-Date:   Sun,  6 Oct 2019 19:21:10 +0200
-Message-Id: <20191006171222.267311775@linuxfoundation.org>
+Subject: [PATCH 5.3 106/166] PCI: histb: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:12 +0200
+Message-Id: <20191006171222.407845245@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,109 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joao Moreno <mail@joaomoreno.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
+[ Upstream commit 8f9e1641ba445437095411d9fda2324121110d5d ]
 
-This fixes an issue in which key down events for function keys would be
-repeatedly emitted even after the user has raised the physical key. For
-example, the driver fails to emit the F5 key up event when going through
-the following steps:
-- fnmode=1: hold FN, hold F5, release FN, release F5
-- fnmode=2: hold F5, hold FN, release F5, release FN
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-The repeated F5 key down events can be easily verified using xev.
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 21 deletions(-)
+ drivers/pci/controller/dwc/pcie-histb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 81df62f48c4c3..6ac8becc2372e 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
--	DECLARE_BITMAP(pressed_fn, KEY_CNT);
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index 954bc2b74bbcd..811b5c6d62eae 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -340,8 +340,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
  
-@@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- {
- 	struct apple_sc *asc = hid_get_drvdata(hid);
- 	const struct apple_key_translation *trans, *table;
-+	bool do_translate;
-+	u16 code = 0;
- 
- 	if (usage->code == KEY_FN) {
- 		asc->fn_on = !!value;
-@@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
+ 	if (IS_ERR(hipcie->vpcie)) {
+-		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(hipcie->vpcie) != -ENODEV)
++			return PTR_ERR(hipcie->vpcie);
+ 		hipcie->vpcie = NULL;
  	}
  
- 	if (fnmode) {
--		int do_translate;
--
- 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
- 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
- 			table = macbookair_fn_keys;
-@@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		trans = apple_find_translation (table, usage->code);
- 
- 		if (trans) {
--			if (test_bit(usage->code, asc->pressed_fn))
--				do_translate = 1;
--			else if (trans->flags & APPLE_FLAG_FKEY)
--				do_translate = (fnmode == 2 && asc->fn_on) ||
--					(fnmode == 1 && !asc->fn_on);
--			else
--				do_translate = asc->fn_on;
--
--			if (do_translate) {
--				if (value)
--					set_bit(usage->code, asc->pressed_fn);
--				else
--					clear_bit(usage->code, asc->pressed_fn);
--
--				input_event(input, usage->type, trans->to,
--						value);
--
--				return 1;
-+			if (test_bit(trans->from, input->key))
-+				code = trans->from;
-+			else if (test_bit(trans->to, input->key))
-+				code = trans->to;
-+
-+			if (!code) {
-+				if (trans->flags & APPLE_FLAG_FKEY) {
-+					switch (fnmode) {
-+					case 1:
-+						do_translate = !asc->fn_on;
-+						break;
-+					case 2:
-+						do_translate = asc->fn_on;
-+						break;
-+					default:
-+						/* should never happen */
-+						do_translate = false;
-+					}
-+				} else {
-+					do_translate = asc->fn_on;
-+				}
-+
-+				code = do_translate ? trans->to : trans->from;
- 			}
-+
-+			input_event(input, usage->type, code, value);
-+			return 1;
- 		}
- 
- 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
