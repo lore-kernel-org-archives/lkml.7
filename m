@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6984CECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DF4C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8E62053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4073222492
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384131;
-	bh=YGkScx/jhGS2Nre6fZSEF/CTkWusNS3dmBmk4gEMASw=;
+	s=default; t=1570384139;
+	bh=2q6xEFHuaBCJckqpbWV8+FPNL6zSQ5+BT+Wwq/4urfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y912umqnFIHpi0M9qNzZzP3gTbOqhCO7PrPSygcws0kSVlXXFg0zNrGwhnuuJsLx+
-	 ZWkaRjoWK6Fim4fHaM1bpI3Yu16d6l+gUIOgt5V4X/ZGdc529BYl8gr1wRYCHSNI/r
-	 a1/8wFsXPKjIMdEKVrHtGPTBnLd33CEHrTxxmJUY=
+	b=TPdsMdUPo5UFedqtWgq5BOGdpuv9ECrsb/j+SiV+rXdjk2iuIxkRaGfQrJfpUp0c3
+	 DDIVna6PYE7hkTcLpsT5Ml+dpFhWoqs74N9XlhHLjPZmF7hzl48Hrt9gC1CqrcIUSI
+	 IdJOBF1TK5KDDD46Q71vr1llffx7CT0XxC46XBeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbfJFRnD (ORCPT
+        id S1729469AbfJFRs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbfJFRm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:59 -0400
+        id S1731401AbfJFRmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:42:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56ECC20862;
-        Sun,  6 Oct 2019 17:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD4B20862;
+        Sun,  6 Oct 2019 17:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383778;
-        bh=YGkScx/jhGS2Nre6fZSEF/CTkWusNS3dmBmk4gEMASw=;
+        s=default; t=1570383773;
+        bh=2q6xEFHuaBCJckqpbWV8+FPNL6zSQ5+BT+Wwq/4urfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZG9PJ9/f8ti7Yon1Q/jOOdYvzhHPLhg1DV86RgFqtLT/mAWHczWSDYP0L4QBcgVhf
-         tyTkIxiglFIZ3HwcmO0lHNAQl85nvOOHTGRmnPuaFyCQieBb5NejZd+0bPFOnXqGwH
-         z3xY9ZUgAPiA06WEr8l98sz3txULKik9mLEzUHlM=
+        b=fohcY4F6xt0IKkYA8Q42kwfO+1ZNe2QkVpw+SStqj9/RzPZV8rH7nW4NnDWmyQJ9r
+         1BjK1V8brQyMIFKTssOheT++MWMP+wugLJliT8hlxoBGCrasLV/WBE++TKPjbbrT/8
+         97RIqWDrSixlVhdIfWSJHq1ZgxmExWekEHb4lhv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org, Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 093/166] livepatch: Nullify obj->mod in klp_module_coming()s error path
-Date:   Sun,  6 Oct 2019 19:20:59 +0200
-Message-Id: <20191006171221.373380654@linuxfoundation.org>
+Subject: [PATCH 5.3 036/166] clk: sprd: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:20:02 +0200
+Message-Id: <20191006171215.967153034@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,39 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit 4ff96fb52c6964ad42e0a878be8f86a2e8052ddd ]
+[ Upstream commit f6c90df8e7e33c3dc33d4d7471bc42c232b0510e ]
 
-klp_module_coming() is called for every module appearing in the system.
-It sets obj->mod to a patched module for klp_object obj. Unfortunately
-it leaves it set even if an error happens later in the function and the
-patched module is not allowed to be loaded.
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-klp_is_object_loaded() uses obj->mod variable and could currently give a
-wrong return value. The bug is probably harmless as of now.
-
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Cc: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-8-sboyd@kernel.org
+Acked-by: Baolin Wang <baolin.wang@linaro.org>
+Acked-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/livepatch/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/sprd/common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index c4ce08f43bd63..ab4a4606d19b7 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -1175,6 +1175,7 @@ err:
- 	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
- 		patch->mod->name, obj->mod->name, obj->mod->name);
- 	mod->klp_alive = false;
-+	obj->mod = NULL;
- 	klp_cleanup_module_patches_limited(mod, patch);
- 	mutex_unlock(&klp_mutex);
+diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
+index a5bdca1de5d07..9d56eac43832a 100644
+--- a/drivers/clk/sprd/common.c
++++ b/drivers/clk/sprd/common.c
+@@ -76,16 +76,17 @@ int sprd_clk_probe(struct device *dev, struct clk_hw_onecell_data *clkhw)
+ 	struct clk_hw *hw;
  
+ 	for (i = 0; i < clkhw->num; i++) {
++		const char *name;
+ 
+ 		hw = clkhw->hws[i];
+-
+ 		if (!hw)
+ 			continue;
+ 
++		name = hw->init->name;
+ 		ret = devm_clk_hw_register(dev, hw);
+ 		if (ret) {
+ 			dev_err(dev, "Couldn't register clock %d - %s\n",
+-				i, hw->init->name);
++				i, name);
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.20.1
 
