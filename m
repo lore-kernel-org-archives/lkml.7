@@ -2,111 +2,364 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D42BC47404
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35361C47404
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555B6222C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B93D222CF
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570320423;
-	bh=y6LnQpxxpKAvVv80uNIyvQzHSDSplm9Tq5cs5I531ZI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r+NPbzs16oGJW8OzWVIUcsmgtlLCRzAlWoz01XPjtJy2Sf3PGUeqyW8scalkM2eh1
-	 +BNo4U9wj063Lz6O+uXWE7mftu3WrQAxl9WTQQoy9gEI5h6XuUuPRz81xoe8GLqzWG
-	 IXHxq2y9BL4tgdqGyoC7HcAyf/pYOwH9c0sCtQ0w=
+	s=default; t=1570320785;
+	bh=kJuxi48nJa4CAAPVH65osutY5LAiDplP0tGesjL18yw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VA1EyS3MH/5uKvMI/KUsyKJCAhHduI/QDcYui1iLBUy1I24X6eZpbHPFvg0hxloup
+	 dLYXBmLAST0O+2C6RqV32+u597+r7K7tuEcxWx/9lmas9h6vdRKag8sbKrclHrlFrS
+	 sFC7HBIzdEqCmtMUzUGCMyozVL+85R5aR/MnAosk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfJFAHC (ORCPT
+        id S1726900AbfJFANE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 20:07:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35621 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfJFAHC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 20:07:02 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so10054413lji.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 17:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KJ0vvkhrhw2X6n/kDoFhkGHBcz5tnb8C5tNHlfE7BeU=;
-        b=SfGlFFoyKKUI8igiv5lDWCKr3UL3AjRt/lV+7TxAWQ0zrg2aZKr9szbeAEDx1WvDSg
-         ex5t+wvF42EA1RdR97sdtfv067dP5Ii5YCN7oQxiXQAjbhsLfNdk7I6Z2mu1txBKJTSr
-         djuKiXJmWD/WaOcuEGu6i0/a+BJ1hMdC0yLII=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KJ0vvkhrhw2X6n/kDoFhkGHBcz5tnb8C5tNHlfE7BeU=;
-        b=EOIeDZH8H+IvO8CVSrdX6kQs5oWxqSe9Y9ACs68truWzoK5vHrOsJYe/r7EkZ+st/n
-         43yDgGYnrDwRODc27+lSvbkemj2dnNsANVlvfMcxTK5x61FqcyLgfVZCpv2iGwzFxtso
-         d1yCFm7U2lPzXj9NlaPJhSyA9bfDKbI1a9OUoQNMZR/NdOPfHDJaDMKB2sebA62KPS0I
-         JqFmg1z9nQAiacGScyKF9pTXmpePdvz/w33ndGNmaWbBCI9uym8Zv1BSUV6EzJDly2D8
-         t15TgtfULBVcfmWJpBkwL5iPskd0wij9WFb3YHRT6lXanzQvWuX2AbqI3ULA2YY4WNB0
-         ApRg==
-X-Gm-Message-State: APjAAAVWdHeBzznjYn9R4LQfmd2oUS2v4WUUbG89hsDufwdNavz0c7Oj
-        04GexO5LIAUgIzV1U+b4L8/paJQlRJ4=
-X-Google-Smtp-Source: APXvYqxqLqWtGFGXOcnFtGGO+UBpIrUwqT/mKJl18S0JiVvLmhXFlDaXbN2RJLeAYzFvd7yMFzWCiQ==
-X-Received: by 2002:a2e:4e12:: with SMTP id c18mr13494324ljb.47.1570320418361;
-        Sat, 05 Oct 2019 17:06:58 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id q14sm2138801ljc.7.2019.10.05.17.06.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2019 17:06:57 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id v24so10045122ljj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 17:06:57 -0700 (PDT)
-X-Received: by 2002:a2e:2e17:: with SMTP id u23mr14140095lju.26.1570320416860;
- Sat, 05 Oct 2019 17:06:56 -0700 (PDT)
+        Sat, 5 Oct 2019 20:13:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfJFANE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 20:13:04 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 637D7222C0;
+        Sun,  6 Oct 2019 00:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570320782;
+        bh=kJuxi48nJa4CAAPVH65osutY5LAiDplP0tGesjL18yw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ilE0BypVLJ2q8odw3kR2vc7TI+bjYK2WhITkMzQ94qAIDanYG5dcddvg3wvzdwn98
+         /bs9pqB2H5GNzH0FbsMXSqyYLx4qspBuZY/bp8k0OwuN0kqbhx09CCnBT4FPLBIubZ
+         tAa6xlsRUNz+RTlpyER2T52fXpOva1Vr7WYzZuSQ=
+Date:   Sun, 6 Oct 2019 08:12:50 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: lx2160a: add tmu device node
+Message-ID: <20191006001249.GB7150@dragon>
+References: <20190903033132.17661-1-andy.tang@nxp.com>
 MIME-Version: 1.0
-References: <20191005233227.GB25745@shell.armlinux.org.uk>
-In-Reply-To: <20191005233227.GB25745@shell.armlinux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 5 Oct 2019 17:06:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjS5uyVNR23sWFk6a1nOXO0wkLh3qttoKNmkGAcV1hOXw@mail.gmail.com>
-Message-ID: <CAHk-=wjS5uyVNR23sWFk6a1nOXO0wkLh3qttoKNmkGAcV1hOXw@mail.gmail.com>
-Subject: Re: MAP_FIXED_NOREPLACE appears to break older i386 binaries
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903033132.17661-1-andy.tang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 5, 2019 at 4:32 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> Under a 4.19 kernel (debian stable), I am surprised to find that some
-> previously working i386 binaries no longer work, whereas others are
-> fine.  ls, for example, dies with a SEGV, but bash is fine.
+On Tue, Sep 03, 2019 at 11:31:32AM +0800, Yuantian Tang wrote:
+> Add the TMU (Thermal Monitoring Unit) device node to enable
+> TMU feature.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> ---
+>  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 108 +++++++++++++++---
+>  1 file changed, 92 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index 39d497df769e..e70ddd01cd84 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -6,6 +6,7 @@
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  /memreserve/ 0x80000000 0x00010000;
+>  
+> @@ -24,7 +25,7 @@
+>  		#size-cells = <0>;
+>  
+>  		// 8 clusters having 2 Cortex-A72 cores each
+> -		cpu@0 {
+> +		cpu0: cpu@0 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -38,9 +39,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster0_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@1 {
+> +		cpu1: cpu@1 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -54,9 +56,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster0_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@100 {
+> +		cpu100: cpu@100 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -70,9 +73,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster1_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@101 {
+> +		cpu101: cpu@101 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -86,9 +90,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster1_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@200 {
+> +		cpu200: cpu@200 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -102,9 +107,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster2_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@201 {
+> +		cpu201: cpu@201 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -118,9 +124,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster2_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@300 {
+> +		cpu300: cpu@300 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -134,9 +141,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster3_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@301 {
+> +		cpu301: cpu@301 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -150,9 +158,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster3_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@400 {
+> +		cpu400: cpu@400 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -166,9 +175,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster4_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@401 {
+> +		cpu401: cpu@401 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -182,9 +192,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster4_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@500 {
+> +		cpu500: cpu@500 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -198,9 +209,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster5_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@501 {
+> +		cpu501: cpu@501 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -214,9 +226,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster5_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@600 {
+> +		cpu600: cpu@600 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -230,9 +243,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster6_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@601 {
+> +		cpu601: cpu@601 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -246,9 +260,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster6_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@700 {
+> +		cpu700: cpu@700 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -262,9 +277,10 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster7_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@701 {
+> +		cpu701: cpu@701 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a72";
+>  			enable-method = "psci";
+> @@ -278,6 +294,7 @@
+>  			i-cache-sets = <192>;
+>  			next-level-cache = <&cluster7_l2>;
+>  			cpu-idle-states = <&cpu_pw20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		cluster0_l2: l2-cache0 {
+> @@ -422,6 +439,51 @@
+>  		clock-output-names = "sysclk";
+>  	};
+>  
+> +	thermal-zones {
+> +		core_thermal1: core-thermal1 {
+> +			polling-delay-passive = <1000>;
+> +			polling-delay = <5000>;
+> +			thermal-sensors = <&tmu 0>;
+> +
+> +			trips {
+> +				core_cluster_alert: core-cluster-alert {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				core_cluster_crit: core-cluster-crit {
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&core_cluster_alert>;
+> +					cooling-device =
+> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu200 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu201 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu300 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu301 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu400 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu401 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu500 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu501 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu600 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu601 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu700 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu701 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	soc {
+>  		compatible = "simple-bus";
+>  		#address-cells = <2>;
+> @@ -689,6 +751,20 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		tmu: tmu@1f80000 {
 
-Hmm. Is this with some recent stable kernel update? Or has it been
-going on for a while and you only noticed now for some reason?
+Keep the nodes sorted in unit-address.
 
-If it's recent, I'd be inclined to blame bbdc6076d2e5 ("binfmt_elf:
-move brk out of mmap when doing direct loader exec") which afaik made
-it into 4.19.75 and might be in that debian-stable.
+> +			compatible = "fsl,qoriq-tmu";
+> +			reg = <0x0 0x1f80000 0x0 0x10000>;
+> +			interrupts = <0 23 0x4>;
 
-And if it's that, then I think that it should be fixed by 7be3cb019db1
-("binfmt_elf: Do not move brk for INTERP-less ET_EXEC") which is in
-the current queue.
+IRQ_TYPE_LEVEL_HIGH
 
-Adding Kees to the cc, in case he goes "No, silly Linus, you're being
-stupid", or can confirm that yeah, that was the behavior for the
-problem case.
+> +			fsl,tmu-range = <0x800000E6 0x8001017D>;
 
-Kees, original report with more information at
+Use lowercase for hex values.
 
-   https://lore.kernel.org/lkml/20191005233227.GB25745@shell.armlinux.org.uk/
+Shawn
 
-And if that isn't the case, maybe you can send over one of the broken
-binaries in private email for testing?
-
-                       Linus
+> +			fsl,tmu-calibration =
+> +				/* Calibration data group 1 */
+> +				<0x00000000 0x00000035
+> +				/* Calibration data group 2 */
+> +				0x00010001 0x00000154>;
+> +			little-endian;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+>  		uart0: serial@21c0000 {
+>  			compatible = "arm,sbsa-uart","arm,pl011";
+>  			reg = <0x0 0x21c0000 0x0 0x1000>;
+> -- 
+> 2.17.1
+> 
