@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FB7C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05BAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFDE214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7272080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383133;
-	bh=Bm1UclkOx45qtVBZclt5j1TdU8SQShCvKyKPr67th30=;
+	s=default; t=1570383135;
+	bh=DAmgiiSZWCuRyI8VV23ospy6jJdpUUxcp04e1vpILr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dt83B+AYU7N+5UUOnS5YFD18IxccAk38b99LWiAPPbpVt/kQzm6KKaFzh3NIxd17
-	 utYJ9kLM/nCwJk67NLg6zQOzLdT46j1k57DylWqI7ZGmRRPI5yV8eYLrgpdrZY49Zo
-	 ow+dt1Pi4PSZoK+HDTx/CjgYkbKG1gmurf+rltB4=
+	b=b1Aaa499hG0K2WCkLiayuaiUhGIS+sHprOOLmXO9CJiN1DzRq8VfuwUgOVQOuR7jH
+	 mQFvzIOPrPM7jCB4cNFPPsEICedkCUOCarAZGGJDZzOL9k1Z3xyba6ilrRTLspcgGb
+	 bPHOukJjfmQA4ChyT8K2r6wWiPo2a72InHeMnEiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfJFRcM (ORCPT
+        id S1729527AbfJFRcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:32:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58542 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfJFRcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:08 -0400
+        id S1728349AbfJFRcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:32:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EC52080F;
-        Sun,  6 Oct 2019 17:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8407E2133F;
+        Sun,  6 Oct 2019 17:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383127;
-        bh=Bm1UclkOx45qtVBZclt5j1TdU8SQShCvKyKPr67th30=;
+        s=default; t=1570383130;
+        bh=DAmgiiSZWCuRyI8VV23ospy6jJdpUUxcp04e1vpILr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqSf6fRGQ4yOwtw/3zNuoZKfj8YDYdbXi/o0hSoKkIyDSjStqElIAZLyjiK6+QyAL
-         NbfQbkE/DLgSY3hukveoXHU8zmF8SwFZZOOU3xrERJ4k1zYAuqvwqKuLn3OmgRcoc5
-         kCo/k6ANfFyvCdkmn+7Ra++MOuWf5yx3jy7MecBY=
+        b=dLGseiajWLaQg1WIC5MOv9yU8ejH1zAN1/mbPWXWXyhvPxSHZ7Ejm0PMzUr03j5dT
+         3t0q19XhyL5FKQ56qWU6Ty82TMJkaBcBJ14UWeBfVIxX2C9nI8IJ8qiwO8ZY2BcJrM
+         YldkxKPN3a2N/Var7Nt0b6pZG0J80ebpYzakL5VA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org, Hoang Le <hoang.h.le@dektech.com.au>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 097/106] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
-Date:   Sun,  6 Oct 2019 19:21:43 +0200
-Message-Id: <20191006171202.125594832@linuxfoundation.org>
+Subject: [PATCH 4.19 098/106] tipc: fix unlimited bundling of small messages
+Date:   Sun,  6 Oct 2019 19:21:44 +0200
+Message-Id: <20191006171202.606183179@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,95 +61,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-[ Upstream commit a761129e3625688310aecf26e1be9e98e85f8eb5 ]
+[ Upstream commit e95584a889e1902fdf1ded9712e2c3c3083baf96 ]
 
-xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
-to cache extra fragments. This is incorrect because the return type of
-xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
-ring buffer index.
+We have identified a problem with the "oversubscription" policy in the
+link transmission code.
 
-In the situation when the rsp_cons is approaching 0xffffffff, the return
-value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
-caller) would regard as error. As a result, queue->rx.rsp_cons is set
-incorrectly because it is updated only when there is error. If there is no
-error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
-Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
-queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
-This leads to NULL pointer access in the next iteration to process rx ring
-buffer entries.
+When small messages are transmitted, and the sending link has reached
+the transmit window limit, those messages will be bundled and put into
+the link backlog queue. However, bundles of data messages are counted
+at the 'CRITICAL' level, so that the counter for that level, instead of
+the counter for the real, bundled message's level is the one being
+increased.
+Subsequent, to-be-bundled data messages at non-CRITICAL levels continue
+to be tested against the unchanged counter for their own level, while
+contributing to an unrestrained increase at the CRITICAL backlog level.
 
-The symptom is similar to the one fixed in
-commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
-empty in error handling").
+This leaves a gap in congestion control algorithm for small messages
+that can result in starvation for other users or a "real" CRITICAL
+user. Even that eventually can lead to buffer exhaustion & link reset.
 
-This patch changes the return type of xennet_fill_frags() to indicate
-whether it is successful or failed. The queue->rx.rsp_cons will be
-always updated inside this function.
+We fix this by keeping a 'target_bskb' buffer pointer at each levels,
+then when bundling, we only bundle messages at the same importance
+level only. This way, we know exactly how many slots a certain level
+have occupied in the queue, so can manage level congestion accurately.
 
-Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+By bundling messages at the same level, we even have more benefits. Let
+consider this:
+- One socket sends 64-byte messages at the 'CRITICAL' level;
+- Another sends 4096-byte messages at the 'LOW' level;
+
+When a 64-byte message comes and is bundled the first time, we put the
+overhead of message bundle to it (+ 40-byte header, data copy, etc.)
+for later use, but the next message can be a 4096-byte one that cannot
+be bundled to the previous one. This means the last bundle carries only
+one payload message which is totally inefficient, as for the receiver
+also! Later on, another 64-byte message comes, now we make a new bundle
+and the same story repeats...
+
+With the new bundling algorithm, this will not happen, the 64-byte
+messages will be bundled together even when the 4096-byte message(s)
+comes in between. However, if the 4096-byte messages are sent at the
+same level i.e. 'CRITICAL', the bundling algorithm will again cause the
+same overhead.
+
+Also, the same will happen even with only one socket sending small
+messages at a rate close to the link transmit's one, so that, when one
+message is bundled, it's transmitted shortly. Then, another message
+comes, a new bundle is created and so on...
+
+We will solve this issue radically by another patch.
+
+Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
+Reported-by: Hoang Le <hoang.h.le@dektech.com.au>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/xen-netfront.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ net/tipc/link.c |   29 ++++++++++++++++++-----------
+ net/tipc/msg.c  |    5 +----
+ 2 files changed, 19 insertions(+), 15 deletions(-)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -890,9 +890,9 @@ static int xennet_set_skb_gso(struct sk_
- 	return 0;
- }
- 
--static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
--				  struct sk_buff *skb,
--				  struct sk_buff_head *list)
-+static int xennet_fill_frags(struct netfront_queue *queue,
-+			     struct sk_buff *skb,
-+			     struct sk_buff_head *list)
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -161,6 +161,7 @@ struct tipc_link {
+ 	struct {
+ 		u16 len;
+ 		u16 limit;
++		struct sk_buff *target_bskb;
+ 	} backlog[5];
+ 	u16 snd_nxt;
+ 	u16 last_retransm;
+@@ -846,6 +847,7 @@ static void link_prepare_wakeup(struct t
+ void tipc_link_reset(struct tipc_link *l)
  {
- 	RING_IDX cons = queue->rx.rsp_cons;
- 	struct sk_buff *nskb;
-@@ -911,7 +911,7 @@ static RING_IDX xennet_fill_frags(struct
- 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
- 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
- 			kfree_skb(nskb);
--			return ~0U;
-+			return -ENOENT;
+ 	struct sk_buff_head list;
++	u32 imp;
+ 
+ 	__skb_queue_head_init(&list);
+ 
+@@ -864,11 +866,10 @@ void tipc_link_reset(struct tipc_link *l
+ 	__skb_queue_purge(&l->transmq);
+ 	__skb_queue_purge(&l->deferdq);
+ 	__skb_queue_purge(&l->backlogq);
+-	l->backlog[TIPC_LOW_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_MEDIUM_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_HIGH_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_CRITICAL_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_SYSTEM_IMPORTANCE].len = 0;
++	for (imp = 0; imp <= TIPC_SYSTEM_IMPORTANCE; imp++) {
++		l->backlog[imp].len = 0;
++		l->backlog[imp].target_bskb = NULL;
++	}
+ 	kfree_skb(l->reasm_buf);
+ 	kfree_skb(l->failover_reasm_skb);
+ 	l->reasm_buf = NULL;
+@@ -909,7 +910,7 @@ int tipc_link_xmit(struct tipc_link *l,
+ 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
+ 	struct sk_buff_head *transmq = &l->transmq;
+ 	struct sk_buff_head *backlogq = &l->backlogq;
+-	struct sk_buff *skb, *_skb, *bskb;
++	struct sk_buff *skb, *_skb, **tskb;
+ 	int pkt_cnt = skb_queue_len(list);
+ 	int rc = 0;
+ 
+@@ -955,19 +956,21 @@ int tipc_link_xmit(struct tipc_link *l,
+ 			seqno++;
+ 			continue;
  		}
- 
- 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
-@@ -922,7 +922,9 @@ static RING_IDX xennet_fill_frags(struct
- 		kfree_skb(nskb);
+-		if (tipc_msg_bundle(skb_peek_tail(backlogq), hdr, mtu)) {
++		tskb = &l->backlog[imp].target_bskb;
++		if (tipc_msg_bundle(*tskb, hdr, mtu)) {
+ 			kfree_skb(__skb_dequeue(list));
+ 			l->stats.sent_bundled++;
+ 			continue;
+ 		}
+-		if (tipc_msg_make_bundle(&bskb, hdr, mtu, l->addr)) {
++		if (tipc_msg_make_bundle(tskb, hdr, mtu, l->addr)) {
+ 			kfree_skb(__skb_dequeue(list));
+-			__skb_queue_tail(backlogq, bskb);
+-			l->backlog[msg_importance(buf_msg(bskb))].len++;
++			__skb_queue_tail(backlogq, *tskb);
++			l->backlog[imp].len++;
+ 			l->stats.sent_bundled++;
+ 			l->stats.sent_bundles++;
+ 			continue;
+ 		}
++		l->backlog[imp].target_bskb = NULL;
+ 		l->backlog[imp].len += skb_queue_len(list);
+ 		skb_queue_splice_tail_init(list, backlogq);
  	}
+@@ -983,6 +986,7 @@ static void tipc_link_advance_backlog(st
+ 	u16 seqno = l->snd_nxt;
+ 	u16 ack = l->rcv_nxt - 1;
+ 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
++	u32 imp;
  
--	return cons;
-+	queue->rx.rsp_cons = cons;
-+
-+	return 0;
- }
- 
- static int checksum_setup(struct net_device *dev, struct sk_buff *skb)
-@@ -1048,8 +1050,7 @@ err:
- 		skb->data_len = rx->status;
- 		skb->len += rx->status;
- 
--		i = xennet_fill_frags(queue, skb, &tmpq);
--		if (unlikely(i == ~0U))
-+		if (unlikely(xennet_fill_frags(queue, skb, &tmpq)))
- 			goto err;
- 
- 		if (rx->flags & XEN_NETRXF_csum_blank)
-@@ -1059,7 +1060,7 @@ err:
- 
- 		__skb_queue_tail(&rxq, skb);
- 
--		queue->rx.rsp_cons = ++i;
-+		i = ++queue->rx.rsp_cons;
- 		work_done++;
- 	}
- 
+ 	while (skb_queue_len(&l->transmq) < l->window) {
+ 		skb = skb_peek(&l->backlogq);
+@@ -993,7 +997,10 @@ static void tipc_link_advance_backlog(st
+ 			break;
+ 		__skb_dequeue(&l->backlogq);
+ 		hdr = buf_msg(skb);
+-		l->backlog[msg_importance(hdr)].len--;
++		imp = msg_importance(hdr);
++		l->backlog[imp].len--;
++		if (unlikely(skb == l->backlog[imp].target_bskb))
++			l->backlog[imp].target_bskb = NULL;
+ 		__skb_queue_tail(&l->transmq, skb);
+ 		__skb_queue_tail(xmitq, _skb);
+ 		TIPC_SKB_CB(skb)->ackers = l->ackers;
+--- a/net/tipc/msg.c
++++ b/net/tipc/msg.c
+@@ -484,10 +484,7 @@ bool tipc_msg_make_bundle(struct sk_buff
+ 	bmsg = buf_msg(_skb);
+ 	tipc_msg_init(msg_prevnode(msg), bmsg, MSG_BUNDLER, 0,
+ 		      INT_H_SIZE, dnode);
+-	if (msg_isdata(msg))
+-		msg_set_importance(bmsg, TIPC_CRITICAL_IMPORTANCE);
+-	else
+-		msg_set_importance(bmsg, TIPC_SYSTEM_IMPORTANCE);
++	msg_set_importance(bmsg, msg_importance(msg));
+ 	msg_set_seqno(bmsg, msg_seqno(msg));
+ 	msg_set_ack(bmsg, msg_ack(msg));
+ 	msg_set_bcast_ack(bmsg, msg_bcast_ack(msg));
 
 
