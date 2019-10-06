@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7306FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F31C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3EF2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB4020700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384840;
-	bh=VZnmPg5IckIkj42+lltGSiTdBTdV0VvKLXMECgyNU+E=;
+	s=default; t=1570384842;
+	bh=QupKWh7rUQgJ8ktqyzVPLYtsgPGbrWH0XN6BQUvicMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Td9VISqe2sPdsxmU9YpF7hNqxaLdYvHgr4S9By9zPFiB3WrdtDshm5VV9Z4eE9MbH
-	 EIcqlQnz13Hmxk6t5PWXMoYR48sKJKYXZJMvDQcrTEcg/eWvYHPito2VofjBYkH18N
-	 HiVsYZKlWk9tzC6GcBeZ8FPUDig1mmluwQ8nZTrM=
+	b=nfx1rL/hJ9kDnlCINGHEOtv6NMCjsTa6g4lLzqkxLhzz9LnIH40AkeFPPhARLW2b1
+	 VBcKwbd1PuTeS5PLTa7qlrUyOmN1lRGtHRuZblNsl5KnkGo3AMNpe+OSa4B7qrjWFo
+	 vKvrV208eIJGBgqOtLiPbDtqeFEQ9eh3QbuUhWE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfJFR2k (ORCPT
+        id S1728670AbfJFSAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54260 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbfJFR2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:35 -0400
+        id S1727786AbfJFR2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99990217D6;
-        Sun,  6 Oct 2019 17:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45ED92080F;
+        Sun,  6 Oct 2019 17:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382914;
-        bh=VZnmPg5IckIkj42+lltGSiTdBTdV0VvKLXMECgyNU+E=;
+        s=default; t=1570382916;
+        bh=QupKWh7rUQgJ8ktqyzVPLYtsgPGbrWH0XN6BQUvicMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PP1+i57VwXe55SzaBmyFFBN6uC1eqlN7b6Ye4JBVOOIpuQteP5eIcjh7e+rOkLEeI
-         CMuGr2xL7xA7+PcQVWowiO4xnPO2jug/4DrDyyH/G6fJeLiHxPtHgz6SlW8KsESEcK
-         Qp8dYVWmFWfzW6Ucy2O40t+pJbnczhdlbbfksnoE=
+        b=KfRhGgmPG0zejX+fgKRlOirRMCk9MmE+xNFxiTIefV/xwRHqeJvIqh2k/wT3w0uVj
+         3ZsGQXkLb7iZTWsCkaPHkcdHMZ0uKVYnhCJnlN/IM72cLYWocA+f7O977uTp8mlb9P
+         095mX9ookbVsA79CD9hzLPiu45hvYV42rvIGTj1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        stable@vger.kernel.org, Guo Zeng <Guo.Zeng@csr.com>,
+        Barry Song <Baohua.Song@csr.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 018/106] clk: actions: Dont reference clk_init_data after registration
-Date:   Sun,  6 Oct 2019 19:20:24 +0200
-Message-Id: <20191006171132.803572044@linuxfoundation.org>
+Subject: [PATCH 4.19 019/106] clk: sirf: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:20:25 +0200
+Message-Id: <20191006171133.286486882@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -63,47 +63,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit cf9ec1fc6d7cceb73e7f1efd079d2eae173fdf57 ]
+[ Upstream commit af55dadfbce35b4f4c6247244ce3e44b2e242b84 ]
 
 A future patch is going to change semantics of clk_register() so that
 clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
 referencing this member here so that we don't run into NULL pointer
 exceptions.
 
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Guo Zeng <Guo.Zeng@csr.com>
+Cc: Barry Song <Baohua.Song@csr.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190731193517.237136-2-sboyd@kernel.org
-[sboyd@kernel.org: Move name to after checking for error or NULL hw]
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-6-sboyd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/actions/owl-common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clk/sirf/clk-common.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/actions/owl-common.c b/drivers/clk/actions/owl-common.c
-index 61c1071b5180a..e9be34b17f3f5 100644
---- a/drivers/clk/actions/owl-common.c
-+++ b/drivers/clk/actions/owl-common.c
-@@ -67,16 +67,17 @@ int owl_clk_probe(struct device *dev, struct clk_hw_onecell_data *hw_clks)
- 	struct clk_hw *hw;
+diff --git a/drivers/clk/sirf/clk-common.c b/drivers/clk/sirf/clk-common.c
+index d8f9efa5129ad..25351d6a55ba2 100644
+--- a/drivers/clk/sirf/clk-common.c
++++ b/drivers/clk/sirf/clk-common.c
+@@ -298,9 +298,10 @@ static u8 dmn_clk_get_parent(struct clk_hw *hw)
+ {
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	u32 cfg = clkc_readl(clk->regofs);
++	const char *name = clk_hw_get_name(hw);
  
- 	for (i = 0; i < hw_clks->num; i++) {
-+		const char *name;
+ 	/* parent of io domain can only be pll3 */
+-	if (strcmp(hw->init->name, "io") == 0)
++	if (strcmp(name, "io") == 0)
+ 		return 4;
  
- 		hw = hw_clks->hws[i];
--
- 		if (IS_ERR_OR_NULL(hw))
- 			continue;
+ 	WARN_ON((cfg & (BIT(3) - 1)) > 4);
+@@ -312,9 +313,10 @@ static int dmn_clk_set_parent(struct clk_hw *hw, u8 parent)
+ {
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	u32 cfg = clkc_readl(clk->regofs);
++	const char *name = clk_hw_get_name(hw);
  
-+		name = hw->init->name;
- 		ret = devm_clk_hw_register(dev, hw);
- 		if (ret) {
- 			dev_err(dev, "Couldn't register clock %d - %s\n",
--				i, hw->init->name);
-+				i, name);
- 			return ret;
- 		}
- 	}
+ 	/* parent of io domain can only be pll3 */
+-	if (strcmp(hw->init->name, "io") == 0)
++	if (strcmp(name, "io") == 0)
+ 		return -EINVAL;
+ 
+ 	cfg &= ~(BIT(3) - 1);
+@@ -354,7 +356,8 @@ static long dmn_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	unsigned long fin;
+ 	unsigned ratio, wait, hold;
+-	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
++	const char *name = clk_hw_get_name(hw);
++	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
+ 
+ 	fin = *parent_rate;
+ 	ratio = fin / rate;
+@@ -376,7 +379,8 @@ static int dmn_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	unsigned long fin;
+ 	unsigned ratio, wait, hold, reg;
+-	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
++	const char *name = clk_hw_get_name(hw);
++	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
+ 
+ 	fin = parent_rate;
+ 	ratio = fin / rate;
 -- 
 2.20.1
 
