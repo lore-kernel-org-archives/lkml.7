@@ -2,599 +2,117 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1BFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 21:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D39C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 21:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6076D2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 21:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570398211;
-	bh=557XEuyUjFbNDLwaWrtYdCfDmfcH1eMCCTJ6yh1HHpc=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=tLoL0a6yYWocJuZcjngkutpF9IZKNldPPpdfCYX0TdBoNNm6bYk0bqdcnI4spt/R0
-	 krlEUMjnUFCz1K0olyWskzTzo6JAP97U5FdWWGr2Gmgew6QzGJNMoWPGBewkvTYXdy
-	 Wq9yC5FvpgZAXoOufCuxwZt5Yv5xxKDX94738Sjs=
+	by mail.kernel.org (Postfix) with ESMTP id 5ECDF2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 21:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbfJFVna (ORCPT
+        id S1726489AbfJFVvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 17:43:30 -0400
-Received: from mail-lf1-f47.google.com ([209.85.167.47]:43567 "EHLO
-        mail-lf1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfJFVn3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 17:43:29 -0400
-Received: by mail-lf1-f47.google.com with SMTP id u3so7828896lfl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 14:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=TTLvOELeSL7Ak0z1VQVG6tBthOji67yYyNqXcnCxeMM=;
-        b=ModmaX/1S9kV8c36IYUKLZxI/PiA2npycO2Q+lZhpJ2gdYm+TsBSdyvjWFGzU0Q/18
-         xwiJ6ZEtYP8JBlCs/O59kkxsR2H+66S4o6e8qJ7DmYT3jc3G1+MnouOz6i4dBScUU1Gh
-         wMZdEjRDQ5qVuQPC2y60No9fmxLNdXcvpMro8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=TTLvOELeSL7Ak0z1VQVG6tBthOji67yYyNqXcnCxeMM=;
-        b=AxQm+5ylAdDbRAdrrmLkcuM8WyjAHOxe9GxpMA0fPWV2aMYt9fhqyUbjiw0Wv6+3R2
-         Shi1q9Pe+LqLGxPHpofn6TzH1+f7llWKIvKhQY3bEikMNZqNVq2PYcacFnGb5TYlyVTs
-         Hx+a2LZo5OLUbAMQGTi2+aznb4yA2eMmktnmh5/shEKBkrQYmynWGSrb8J7xG3bnBFVi
-         Wat0FsWsm5psaqeufMdWPLrMLTeAIZCC3ncpNt3RoTasg8EG/87OnSVYBzgIZxBq4z6v
-         3MLrCpASkGQ7BLyZOJ4wtT2x+Z9090YFUgfRQRobck5ZswKuzxIX2SG8KEDo2iXe9mYD
-         A66Q==
-X-Gm-Message-State: APjAAAWieXlI0UL61pmfLxF8kwbk685NSDucqfCMWypZT5nbwoRCQXh4
-        XgQuPRxFrJLJV9kVEsDp4BSrSeOe+MQ=
-X-Google-Smtp-Source: APXvYqwNNFzkiW2YNdBwhBsirCDsxWTbiGSv8zidwG+rP8zVdrSv/5ICyck7rC2lwBxgYTTASR0MXg==
-X-Received: by 2002:ac2:43af:: with SMTP id t15mr11824296lfl.192.1570398205464;
-        Sun, 06 Oct 2019 14:43:25 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id m21sm2354602lfh.39.2019.10.06.14.43.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2019 14:43:24 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id b20so11565861ljj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 14:43:23 -0700 (PDT)
-X-Received: by 2002:a2e:9556:: with SMTP id t22mr15992015ljh.97.1570398203484;
- Sun, 06 Oct 2019 14:43:23 -0700 (PDT)
+        Sun, 6 Oct 2019 17:51:23 -0400
+Received: from mga11.intel.com ([192.55.52.93]:30873 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbfJFVvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 17:51:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Oct 2019 14:51:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
+   d="scan'208";a="217779937"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Oct 2019 14:51:19 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iHEQx-000AgY-9V; Mon, 07 Oct 2019 05:51:19 +0800
+Date:   Mon, 7 Oct 2019 05:50:44 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     kbuild-all@01.org, netdev@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] net: stmmac: Fallback to VLAN Perfect
+ filtering if HASH is not available
+Message-ID: <201910070529.LpPdh7OD%lkp@intel.com>
+References: <3504067666a0cee6ecf636cf30081b09a6b79710.1570360411.git.Jose.Abreu@synopsys.com>
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 6 Oct 2019 14:43:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiNT4Yk+36OXMyPuesrU88cFyDG_XnjRiKwaac09PJpQw@mail.gmail.com>
-Message-ID: <CAHk-=wiNT4Yk+36OXMyPuesrU88cFyDG_XnjRiKwaac09PJpQw@mail.gmail.com>
-Subject: Linux 5.4-rc2
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3504067666a0cee6ecf636cf30081b09a6b79710.1570360411.git.Jose.Abreu@synopsys.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Back to the usual Sunday afternoon schedule, and -rc2 is out.
+Hi Jose,
 
-Nothing particularly stands out here. It's roughly one third arch
-updates, one third drivers, and one third "misc" (kvm selftests,
-networking, filesystems, core kernel, header files etc). No real
-theme, just random fixes all over the place.
+I love your patch! Perhaps something to improve:
 
-The diffstat is pretty flat too, which is just another sign of "small
-fixes all over".
+[auto build test WARNING on net-next/master]
 
-So nothing looks particularly worrisome, but usually rc2 is fairly
-calm and it takes a while for any regressions to be noticed. And this
-one was one of the nice small rc2's (5.2 and 5.3 rc2's were both
-larger than usual), but maybe it's because it was also a day shorter.
+url:    https://github.com/0day-ci/linux/commits/Jose-Abreu/net-stmmac-Improvements-for-next/20191007-013324
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-42-g38eda53-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Anyway, nothing for it but to go out and test, people. Go at it!
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-               Linus
+
+sparse warnings: (new ones prefixed by >>)
+
+   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void [noderef] <asn:2> *ioaddr @@    got void [noderef] <asn:2> *ioaddr @@
+   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17: sparse:    expected void [noderef] <asn:2> *ioaddr
+   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17: sparse:    got struct mac_device_info *hw
+>> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:4224:21: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [assigned] [usertype] vid @@    got  short [assigned] [usertype] vid @@
+>> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:4224:21: sparse:    expected unsigned short [assigned] [usertype] vid
+>> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:4224:21: sparse:    got restricted __le16 [usertype]
+
+vim +4224 drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+
+  4206	
+  4207	static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
+  4208	{
+  4209		u32 crc, hash = 0;
+  4210		int count = 0;
+  4211		u16 vid = 0;
+  4212	
+  4213		for_each_set_bit(vid, priv->active_vlans, VLAN_N_VID) {
+  4214			__le16 vid_le = cpu_to_le16(vid);
+  4215			crc = bitrev32(~stmmac_vid_crc32_le(vid_le)) >> 28;
+  4216			hash |= (1 << crc);
+  4217			count++;
+  4218		}
+  4219	
+  4220		if (!priv->dma_cap.vlhash) {
+  4221			if (count > 2) /* VID = 0 always passes filter */
+  4222				return -EOPNOTSUPP;
+  4223	
+> 4224			vid = cpu_to_le16(vid);
+  4225			hash = 0;
+  4226		}
+  4227	
+  4228		return stmmac_update_vlan_hash(priv, priv->hw, hash, vid, is_double);
+  4229	}
+  4230	
 
 ---
-
-Aaron Liu (1):
-      Revert "drm/amdgpu: disable stutter mode for renoir"
-
-Adam Ford (1):
-      ARM: omap2plus_defconfig: Enable DRM_TI_TFP410
-
-Adam Zerella (1):
-      docs: networking: Add title caret and missing doc
-
-Albert Ou (1):
-      riscv: Fix memblock reservation for device tree blob
-
-Aleksa Sarai (4):
-      lib: introduce copy_struct_from_user() helper
-      clone3: switch to copy_struct_from_user()
-      sched_setattr: switch to copy_struct_from_user()
-      perf_event_open: switch to copy_struct_from_user()
-
-Alex Deucher (1):
-      drm/amdgpu: don't increment vram lost if we are in hibernation
-
-Alex Gaynor (1):
-      kbuild: correct formatting of header in kbuild module docs
-
-Alexey Dobriyan (1):
-      net: make sock_prot_memory_pressure() return "const char *"
-
-Andrea Merello (1):
-      net: phy: allow for reset line to be tied to a sleepy GPIO controller
-
-Andrey Smirnov (1):
-      dma-mapping: fix false positivse warnings in dma_common_free_remap()
-
-Arnd Bergmann (8):
-      drm/tilcdc: include linux/pinctrl/consumer.h again
-      io_uring: use __kernel_timespec in timeout ABI
-      ionic: select CONFIG_NET_DEVLINK
-      drm/amdgpu: make pmu support optional, again
-      drm/amdgpu: hide another #warning
-      drm/amdgpu: display_mode_vba_21: remove uint typedef
-      drm/amd/display: hide an unused variable
-      drm/amd/display: fix dcn21 Makefile for clang
-
-Austin Kim (1):
-      scsi: qedf: Remove always false 'tmp_prio < 0' statement
-
-Balasubramani Vivekanandan (1):
-      tick: broadcast-hrtimer: Fix a race in bc_set_next
-
-Balbir Singh (1):
-      nvme-pci: Fix a race in controller removal
-
-Borislav Petkov (1):
-      char/random: Add a newline at the end of the file
-
-Christian Brauner (2):
-      fork: add kernel-doc for clone3
-      sched: add kernel-doc for struct clone_args
-
-Christian K=C3=B6nig (1):
-      drm/amdgpu: revert "disable bulk moves for now"
-
-Christophe JAILLET (2):
-      ieee802154: mcr20a: simplify a bit 'mcr20a_handle_rx_read_buf_complet=
-e()'
-      mips: Loongson: Fix the link time qualifier of 'serial_exit()'
-
-Dan Carpenter (1):
-      nvme: fix an error code in nvme_init_subsystem()
-
-David Ahern (3):
-      ipv6: Handle race in addrconf_dad_work
-      Revert "ipv6: Handle race in addrconf_dad_work"
-      ipv6: Handle missing host route in __ipv6_ifa_notify
-
-David Hildenbrand (4):
-      xen/balloon: Set pages PageOffline() in balloon_add_region()
-      xen/balloon: Drop __balloon_append()
-      xen/balloon: Mark pages PG_offline in balloon_append()
-      xen/balloon: Clear PG_offline in balloon_retrieve()
-
-David Howells (1):
-      rxrpc: Fix rxrpc_recvmsg tracepoint
-
-Dexuan Cui (1):
-      vsock: Fix a lockdep warning in __vsock_release()
-
-Dmitry Goldin (1):
-      kheaders: make headers archive reproducible
-
-Dongli Zhang (1):
-      xen-netfront: do not use ~0U as error return value for xennet_fill_fr=
-ags()
-
-Dotan Barak (1):
-      net/rds: Fix error handling in rds_ib_add_one()
-
-Douglas Anderson (1):
-      MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb
-
-Eric Dumazet (6):
-      sch_cbq: validate TCA_CBQ_WRROPT to avoid crash
-      tcp: adjust rto_base in retransmits_timed_out()
-      ipv6: drop incoming packets having a v4mapped source address
-      tcp: fix slab-out-of-bounds in tcp_zerocopy_receive()
-      sch_dsmark: fix potential NULL deref in dsmark_init()
-      nfc: fix memory leak in llcp_sock_bind()
-
-Eric Sandeen (1):
-      vfs: Fix EOVERFLOW testing in put_compat_statfs64
-
-Florian Westphal (1):
-      netfilter: drop bridge nf reset from nf_reset
-
-Gabriel Craciunescu (1):
-      Added QUIRKs for ADATA XPG SX8200 Pro 512GB
-
-Gao Xiang (3):
-      MAINTAINERS: erofs: complete sub-entries for erofs
-      erofs: fix erofs_get_meta_page locking due to a cleanup
-      erofs: fix mis-inplace determination related with noio chain
-
-H. Nikolaus Schaller (1):
-      DTS: ARM: gta04: introduce legacy spi-cs-high to make display work ag=
-ain
-
-Haishuang Yan (1):
-      erspan: remove the incorrect mtu limit for erspan
-
-Heiko Carstens (8):
-      s390/atomic,bitops: mark function(s) __always_inline
-      s390/cpu_mf: mark function(s) __always_inline
-      s390/jump_label: mark function(s) __always_inline
-      s390/mm: mark function(s) __always_inline
-      s390/pci: mark function(s) __always_inline
-      s390: update defconfigs
-      KVM: s390: fix __insn32_query() inline assembly
-      KVM: s390: mark __insn32_query() as __always_inline
-
-Himanshu Madhani (1):
-      scsi: qla2xxx: Silence fwdump template message
-
-Huacai Chen (1):
-      MIPS: Loongson64: Fix boot failure after dropping boot_mem_map
-
-Jacob Keller (1):
-      namespace: fix namespace.pl script to support relative paths
-
-Jakub Kicinski (1):
-      selftests/net: add nettest to .gitignore
-
-James Smart (1):
-      nvme: Add ctrl attributes for queue_count and sqsize
-
-Jan H=C3=B6ppner (1):
-      s390/dasd: Fix error handling during online processing
-
-Jian-Hong Pan (1):
-      nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T
-
-Jiaxun Yang (1):
-      MIPS: cpu-bugs64: Mark inline functions as __always_inline
-
-Jim Mattson (5):
-      kvm: x86: Fix a spurious -E2BIG in __do_cpuid_func
-      kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH
-      kvm: x86: Use AMD CPUID semantics for AMD vCPUs
-      kvm: x86: Enumerate support for CLZERO instruction
-      kvm: vmx: Limit guest PMCs to those supported on the host
-
-Jiri Kosina (1):
-      s390: mark __cpacf_query() as __always_inline
-
-Johan Hovold (2):
-      ieee802154: atusb: fix use-after-free at disconnect
-      hso: fix NULL-deref on tty open
-
-Johannes Berg (4):
-      nl80211: validate beacon head
-      cfg80211: validate SSID/MBSSID element ordering assumption
-      cfg80211: initialize on-stack chandefs
-      mac80211: keep BHs disabled while calling drv_tx_wake_queue()
-
-John Pittman (1):
-      nvmet: change ppl to lpp
-
-Jose Abreu (9):
-      net: stmmac: xgmac: Not all Unicast addresses may be available
-      net: stmmac: xgmac: Detect Hash Table size dinamically
-      net: stmmac: selftests: Always use max DMA size in Jumbo Test
-      net: stmmac: dwmac4: Always update the MAC Hash Filter
-      net: stmmac: Correctly take timestamp for PTPv2
-      net: stmmac: Do not stop PHY if WoL is enabled
-      net: stmmac: xgmac: Disable the Timestamp interrupt by default
-      net: stmmac: xgmac: Fix RSS not writing all Keys to HW
-      net: stmmac: xgmac: Fix RSS writing wrong keys
-
-Josh Hunt (2):
-      udp: fix gso_segs calculations
-      udp: only do GSO if # of segs > 1
-
-Juergen Gross (2):
-      xen/efi: have a common runtime setup function
-      xen/xenbus: fix self-deadlock after killing user process
-
-Julian Wiedmann (1):
-      s390/qdio: clarify size of the QIB parm area
-
-Kai-Heng Feng (1):
-      r8152: Set macpassthru in reset_resume callback
-
-Keerthy (1):
-      arm64/ARM: configs: Change CONFIG_REMOTEPROC from m to y
-
-Keith Busch (1):
-      nvme: Move ctrl sqsize to generic space
-
-Kevin Wang (2):
-      drm/amd/powerplay: change metrics update period from 1ms to 100ms
-      drm/amd/powerplay: add sensor lock support for smu
-
-Laurence Oberman (1):
-      scsi: bnx2fc: Handle scope bits when array returns BUSY or TSF
-
-Linus Torvalds (5):
-      timer-of: don't use conditional expression with mixed 'void' types
-      Convert filldir[64]() from __put_user() to unsafe_put_user()
-      Make filldir[64]() verify the directory entry filename is valid
-      elf: don't use MAP_FIXED_NOREPLACE for elf executable mappings
-      Linux 5.4-rc2
-
-Linus Walleij (2):
-      ARM: dts: ux500: Fix up the CPU thermal zone
-      net: dsa: rtl8366: Check VLAN ID and not ports
-
-Long Li (1):
-      scsi: storvsc: setup 1:1 mapping between hardware queue and CPU queue
-
-Lorenzo Bianconi (1):
-      net: socionext: netsec: always grab descriptor lock
-
-Lowry Li (Arm Technology China) (2):
-      drm: Free the writeback_job when it with an empty fb
-      drm: Clear the fence pointer when writeback job signaled
-
-Maarten Lankhorst (1):
-      drm/i915/dp: Fix dsc bpp calculations, v5.
-
-Marc Zyngier (3):
-      arm64: KVM: Drop hyp_alternate_select for checking for
-ARM64_WORKAROUND_834220
-      arm64: KVM: Replace hyp_alternate_select with has_vhe()
-      arm64: KVM: Kill hyp_alternate_select()
-
-Marek Ol=C5=A1=C3=A1k (1):
-      drm/amdgpu: return tcc_disabled_mask to userspace
-
-Mario Limonciello (1):
-      nvme-pci: Save PCI state before putting drive into deepest state
-
-Marta Rybczynska (1):
-      nvme: allow 64-bit results in passthru commands
-
-Martijn Coenen (1):
-      loop: change queue block size to match when using DIO
-
-Martin KaFai Lau (1):
-      net: Unpublish sk from sk_reuseport_cb before call_rcu
-
-Masahiro Yamada (11):
-      kbuild: remove ar-option and KBUILD_ARFLAGS
-      kbuild: remove SUBDIRS support
-      modpost: fix static EXPORT_SYMBOL warnings for UML build
-      block: pg: add header include guard
-      integrity: remove unneeded, broken attempt to add -fshort-wchar
-      integrity: remove pointless subdir-$(CONFIG_...)
-      video/logo: remove unneeded *.o pattern from clean-files
-      video/logo: do not generate unneeded logo C files
-      scripts/setlocalversion: clear local variable to make it work for sh
-      kbuild: two minor updates for Documentation/kbuild/modules.rst
-      kbuild: update compile-test header list for v5.4-rc2
-
-Max Gurtovoy (1):
-      nvme-rdma: Fix max_hw_sectors calculation
-
-Maxime Ripard (5):
-      dt-bindings: dsp: Fix fsl,dsp example
-      dt-bindings: media: rc: Fix redundant string
-      dt-bindings: iio: ad7192: Fix Regulator Properties
-      dt-bindings: iio: ad7192: Fix DTC warning in the example
-      dt-bindings: phy: lantiq: Fix Property Name
-
-Miaoqing Pan (2):
-      nl80211: fix null pointer dereference
-      mac80211: fix txq null pointer dereference
-
-Michal Kubecek (1):
-      mlx5: avoid 64-bit division in dr_icm_pool_mr_create()
-
-Michal Vok=C3=A1=C4=8D (1):
-      net: dsa: qca8k: Use up to 7 ports for all operations
-
-Ming Lei (2):
-      blk-mq: honor IO scheduler for multiqueue devices
-      blk-mq: apply normal plugging for HDD
-
-Nathan Chancellor (1):
-      usercopy: Add parentheses around assignment in test_copy_struct_from_=
-user
-
-Navid Emamdoost (6):
-      drm/komeda: prevent memory leak in komeda_wb_connector_add
-      ieee802154: ca8210: prevent memory leak
-      net: dsa: sja1105: Prevent leaking memory
-      drm/amdgpu: fix multiple memory leaks in acp_hw_init
-      drm/amd/display: memory leak
-      net: qlogic: Fix memory leak in ql_alloc_large_buffers
-
-Oleksij Rempel (2):
-      MIPS: dts: ar9331: fix interrupt-controller size
-      net: ag71xx: fix mdio subnode support
-
-Pablo Neira Ayuso (1):
-      netfilter: nft_connlimit: disable bh on garbage collection
-
-Palmer Dabbelt (1):
-      RISC-V: Clear load reservations while restoring hart contexts
-
-Paolo Abeni (1):
-      net: ipv4: avoid mixed n_redirects and rate_tokens usage
-
-Paolo Bonzini (6):
-      KVM: x86: assign two bits to track SPTE kinds
-      KVM: x86: fix nested guest live migration with PML
-      selftests: kvm: add test for dirty logging inside nested guests
-      kvm: x86, powerpc: do not allow clearing largepages debugfs entry
-      KVM: x86: omit absent pmu MSRs from MSR list
-      KVM: x86: omit "impossible" pmu MSRs from MSR list
-
-Patrice Chotard (1):
-      ARM: multi_v7_defconfig: Fix SPI_STM32_QSPI support
-
-Paul Burton (7):
-      MIPS: octeon: Include required header; fix octeon ethernet build
-      MIPS: Wire up clone3 syscall
-      MIPS: VDSO: Remove unused gettimeofday.c
-      MIPS: VDSO: Fix build for binutils < 2.25
-      MIPS: pmcs-msp71xx: Add missing MAX_PROM_MEM definition
-      MIPS: pmcs-msp71xx: Remove unused addr variable
-      MIPS: fw/arc: Remove unused addr variable
-
-Peng Fan (1):
-      arm: xen: mm: use __GPF_DMA32 for arm64
-
-Peter Ujfalusi (1):
-      ARM: dts: am4372: Set memory bandwidth limit for DISPC
-
-Peter Zijlstra (1):
-      membarrier: Fix RCU locking bug caused by faulty merge
-
-Qian Cai (1):
-      s390/mm: fix -Wunused-but-set-variable warnings
-
-Quinn Tran (6):
-      scsi: qla2xxx: Fix unbound sleep in fcport delete path.
-      scsi: qla2xxx: Fix stale mem access on driver unload
-      scsi: qla2xxx: Optimize NPIV tear down process
-      scsi: qla2xxx: Fix N2N link reset
-      scsi: qla2xxx: Fix N2N link up fail
-      scsi: qla2xxx: Fix Nport ID display value
-
-Randy Dunlap (3):
-      lib: textsearch: fix escapes in example code
-      block: sed-opal: fix sparse warning: obsolete array init.
-      block: sed-opal: fix sparse warning: convert __be64 data
-
-Reinhard Speyerer (1):
-      qmi_wwan: add support for Cinterion CLS8 devices
-
-Ross Lagerwall (1):
-      xen/efi: Set nonblocking callbacks
-
-Russell King (4):
-      net: phy: fix write to mii-ctrl1000 register
-      net: phy: extract link partner advertisement reading
-      net: phy: extract pause mode
-      net: phy: at803x: use operating parameters from PHY-specific status
-
-Sagi Grimberg (2):
-      nvmet-tcp: remove superflous check on request sgl
-      nvme-rdma: fix possible use-after-free in connect timeout
-
-Sean Christopherson (1):
-      KVM: nVMX: Fix consistency check on injected exception error code
-
-Sebastian Andrzej Siewior (1):
-      KVM: x86: Expose XSAVEERPTR to the guest
-
-Seth Forshee (1):
-      sched: Add __ASSEMBLY__ guards around struct clone_args
-
-Shuah Khan (2):
-      selftests: pidfd: Fix undefined reference to pthread_create()
-      selftests: kvm: Fix libkvm build error
-
-Stanley Chu (1):
-      scsi: ufs: skip shutdown if hba is not powered
-
-Stefan Haberland (1):
-      Revert "s390/dasd: Add discard support for ESE volumes"
-
-Stefano Stabellini (1):
-      ARM: xen: unexport HYPERVISOR_platform_op function
-
-Thierry Reding (1):
-      net: stmmac: Avoid deadlock on suspend/resume
-
-Thomas Bogendoerfer (2):
-      MIPS: init: Fix reservation of memory between PHYS_OFFSET and mem sta=
-rt
-      MIPS: init: Prevent adding memory before PHYS_OFFSET
-
-Thomas Richter (3):
-      s390/cpumf: Use consistant debug print format
-      s390/cpumsf: Check for CPU Measurement sampling
-      s390/cpumf: Fix indentation in sampling device driver
-
-Tomi Valkeinen (1):
-      drm/omap: fix max fclk divider for omap36xx
-
-Tony Lindgren (7):
-      clk: ti: dra7: Fix mcasp8 clock bits
-      ARM: dts: Fix wrong clocks for dra7 mcasp
-      ARM: omap2plus_defconfig: Enable more droid4 devices as loadable modu=
-les
-      ARM: dts: Fix gpio0 flags for am335x-icev2
-      ARM: OMAP2+: Fix missing reset done flag for am3 and am43
-      ARM: OMAP2+: Add missing LCDC midlemode for am335x
-      ARM: OMAP2+: Fix warnings with broken omap2_set_init_voltage()
-
-Tuong Lien (1):
-      tipc: fix unlimited bundling of small messages
-
-Vasundhara Volam (1):
-      devlink: Fix error handling in param and info_get dumpit cb
-
-Ville Syrj=C3=A4l=C3=A4 (2):
-      drm/i915: Fix g4x sprite scaling stride check with GTT remapping
-      Revert "drm/i915: Fix DP-MST crtc_mask"
-
-Vishal Kulkarni (1):
-      cxgb4:Fix out-of-bounds MSI-X info array access
-
-Vitaly Kuznetsov (1):
-      KVM: selftests: x86: clarify what is reported on KVM_GET_MSRS failure
-
-Vladimir Oltean (7):
-      net: dsa: sja1105: Ensure PTP time for rxtstamp reconstruction
-is not in the past
-      net: sched: taprio: Fix potential integer overflow in
-taprio_set_picos_per_byte
-      net: sched: taprio: Avoid division by zero on invalid link speed
-      net: sched: cbs: Avoid division by zero when calculating the port rat=
-e
-      net: dsa: sja1105: Initialize the meta_lock
-      net: dsa: sja1105: Fix sleeping while atomic in .port_hwtstamp_set
-      ptp_qoriq: Initialize the registers' spinlock before calling
-ptp_qoriq_settime
-
-Waiman Long (1):
-      KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if !X86_BUG_L1TF
-
-Wanpeng Li (2):
-      KVM: LAPIC: Loosen filter for adaptive tuning of lapic_timer_advance_=
-ns
-      KVM: X86: Fix userspace set invalid CR4
-
-Wei Yongjun (1):
-      erofs: fix return value check in erofs_read_superblock()
-
-Wen Yang (2):
-      net: mscc: ocelot: add missing of_node_put after calling
-of_get_child_by_name
-      net: dsa: rtl8366rb: add missing of_node_put after calling
-of_get_child_by_name
-
-Wunderlich, Mark (1):
-      nvme-tcp: fix wrong stop condition in io_work
-
-Xiang Chen (1):
-      scsi: megaraid: disable device when probe failed after enabled device
-
-Yizhuo (1):
-      net: hisilicon: Fix usage of uninitialized variable in function
-mdio_sc_cfg_reg_write()
-
-YueHaibing (1):
-      scsi: hisi_sas: Make three functions static
-
-Zenghui Yu (1):
-      KVM: arm/arm64: vgic: Use the appropriate TRACE_INCLUDE_PATH
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
