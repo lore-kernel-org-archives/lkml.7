@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE89ECE58B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1272ECE595
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C792173B
+	by mail.kernel.org (Postfix) with ESMTP id C96F42077B
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384501;
-	bh=axRY1t3IiJXvhDfhisGregAKW7gK5qc9mX5zwfxCozw=;
+	bh=zCKmjyZlrLC7ANRYhp/52vjRW/jBssQmM8dBavnIWww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPhWbhSXhI9Gr25BMLOyKS6xag44T9Sbd5EiOAgaQXUjL+0NF1zda1OCua0NG6rRN
-	 rdxK/8++m7zliTBbChNKj43diijvEZsyd48Rd7hNjKHpj9h+rOdT0qotdOBFON/R3a
-	 dYZNf2AjimFSbMlKVcpoUQqx8HJdX8Y5bkKC3s1U=
+	b=OmCnvuilIxkumFkYsSGfWbKZoaNQfn4uxrERYl4Lyjrj3t7RApT2Zd7UQymbuGrG1
+	 OfTMxPZiP9frXnS2uSCZkQAbV+t2w43u+y4im6j1lr9ANJ5t+/fmnsM8xGnkdYj+NF
+	 of1VAD9f3VSf61ZB3lU2MY5o99wbGOl3PrCIUjR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbfJFRyk (ORCPT
+        id S1727278AbfJFRyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51358 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727224AbfJFRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:54:30 -0400
+        id S1728277AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7096D2245B;
-        Sun,  6 Oct 2019 17:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DC36222D2;
+        Sun,  6 Oct 2019 17:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383962;
-        bh=axRY1t3IiJXvhDfhisGregAKW7gK5qc9mX5zwfxCozw=;
+        s=default; t=1570383957;
+        bh=zCKmjyZlrLC7ANRYhp/52vjRW/jBssQmM8dBavnIWww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qm1xjHJ7AiuLqtyinaGCVNn9oct4SuGtaCFe+TQHc8Hzv2gpIuZ7zmPoKNDge7G7F
-         ULGhakVnxLeLg/wDq9Mbh1z8pvDadJRJwi9YHDdVKberjsdeL64ZL+UIBJXWQdPjnK
-         jq8/YBbN2EIlBC8IKmH4Y8Tcp95B6ZyotWmP/tW4=
+        b=o1ScnQNQXs+I1VLT3AWoD/Tyz8tjKjNY/Ci2iGgcNwbDJLDH8fkfBfh7vWKYRF1lq
+         XaCSVJqotSzzVIFn/hgDntgvRTuKJT/mvzcpT3J4Td7L+sjfCUmLxP6dzjXVpwWISc
+         2yyEwnX2l7LlRMTDe2o4BeQL9rr6SlBZoj9PnaLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 5.3 159/166] smack: use GFP_NOFS while holding inode_smack::smk_lock
-Date:   Sun,  6 Oct 2019 19:22:05 +0200
-Message-Id: <20191006171226.243917600@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 131/166] ipv6: drop incoming packets having a v4mapped source address
+Date:   Sun,  6 Oct 2019 19:21:37 +0200
+Message-Id: <20191006171224.252589027@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,66 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit e5bfad3d7acc5702f32aafeb388362994f4d7bd0 upstream.
+[ Upstream commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3 ]
 
-inode_smack::smk_lock is taken during smack_d_instantiate(), which is
-called during a filesystem transaction when creating a file on ext4.
-Therefore to avoid a deadlock, all code that takes this lock must use
-GFP_NOFS, to prevent memory reclaim from waiting for the filesystem
-transaction to complete.
+This began with a syzbot report. syzkaller was injecting
+IPv6 TCP SYN packets having a v4mapped source address.
 
-Reported-by: syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+After an unsuccessful 4-tuple lookup, TCP creates a request
+socket (SYN_RECV) and calls reqsk_queue_hash_req()
+
+reqsk_queue_hash_req() calls sk_ehashfn(sk)
+
+At this point we have AF_INET6 sockets, and the heuristic
+used by sk_ehashfn() to either hash the IPv4 or IPv6 addresses
+is to use ipv6_addr_v4mapped(&sk->sk_v6_daddr)
+
+For the particular spoofed packet, we end up hashing V4 addresses
+which were not initialized by the TCP IPv6 stack, so KMSAN fired
+a warning.
+
+I first fixed sk_ehashfn() to test both source and destination addresses,
+but then faced various problems, including user-space programs
+like packetdrill that had similar assumptions.
+
+Instead of trying to fix the whole ecosystem, it is better
+to admit that we have a dual stack behavior, and that we
+can not build linux kernels without V4 stack anyway.
+
+The dual stack API automatically forces the traffic to be IPv4
+if v4mapped addresses are used at bind() or connect(), so it makes
+no sense to allow IPv6 traffic to use the same v4mapped class.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- security/smack/smack_access.c |    6 +++---
- security/smack/smack_lsm.c    |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/ipv6/ip6_input.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/security/smack/smack_access.c
-+++ b/security/smack/smack_access.c
-@@ -465,7 +465,7 @@ char *smk_parse_smack(const char *string
- 	if (i == 0 || i >= SMK_LONGLABEL)
- 		return ERR_PTR(-EINVAL);
+--- a/net/ipv6/ip6_input.c
++++ b/net/ipv6/ip6_input.c
+@@ -221,6 +221,16 @@ static struct sk_buff *ip6_rcv_core(stru
+ 	if (ipv6_addr_is_multicast(&hdr->saddr))
+ 		goto err;
  
--	smack = kzalloc(i + 1, GFP_KERNEL);
-+	smack = kzalloc(i + 1, GFP_NOFS);
- 	if (smack == NULL)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -500,7 +500,7 @@ int smk_netlbl_mls(int level, char *cats
- 			if ((m & *cp) == 0)
- 				continue;
- 			rc = netlbl_catmap_setbit(&sap->attr.mls.cat,
--						  cat, GFP_KERNEL);
-+						  cat, GFP_NOFS);
- 			if (rc < 0) {
- 				netlbl_catmap_free(sap->attr.mls.cat);
- 				return rc;
-@@ -536,7 +536,7 @@ struct smack_known *smk_import_entry(con
- 	if (skp != NULL)
- 		goto freeout;
- 
--	skp = kzalloc(sizeof(*skp), GFP_KERNEL);
-+	skp = kzalloc(sizeof(*skp), GFP_NOFS);
- 	if (skp == NULL) {
- 		skp = ERR_PTR(-ENOMEM);
- 		goto freeout;
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -288,7 +288,7 @@ static struct smack_known *smk_fetch(con
- 	if (!(ip->i_opflags & IOP_XATTR))
- 		return ERR_PTR(-EOPNOTSUPP);
- 
--	buffer = kzalloc(SMK_LONGLABEL, GFP_KERNEL);
-+	buffer = kzalloc(SMK_LONGLABEL, GFP_NOFS);
- 	if (buffer == NULL)
- 		return ERR_PTR(-ENOMEM);
++	/* While RFC4291 is not explicit about v4mapped addresses
++	 * in IPv6 headers, it seems clear linux dual-stack
++	 * model can not deal properly with these.
++	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
++	 *
++	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
++	 */
++	if (ipv6_addr_v4mapped(&hdr->saddr))
++		goto err;
++
+ 	skb->transport_header = skb->network_header + sizeof(*hdr);
+ 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
  
 
 
