@@ -4,54 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41BFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35267C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C36C20867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055152133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfJFKeP (ORCPT
+        id S1726437AbfJFKqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:34:15 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45234 "EHLO huawei.com"
+        Sun, 6 Oct 2019 06:46:55 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3259 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727264AbfJFKeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:34:13 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1EA89D08BB2E59D6385F;
-        Sun,  6 Oct 2019 18:34:09 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:34:03 +0800
+        id S1726248AbfJFKqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:46:55 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 86F66DE0B78938AA0987;
+        Sun,  6 Oct 2019 18:46:53 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:46:46 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <joel@jms.id.au>, <andrew@aj.id.au>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>, <computersforpeace@gmail.com>,
-        <gregory.0xf0@gmail.com>, <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linus.walleij@linaro.org>, <baruch@tkos.co.il>,
-        <paul@crapouillou.net>, <vz@mleia.com>, <slemieux.tyco@gmail.com>,
-        <khilman@baylibre.com>, <eddie.huang@mediatek.com>,
-        <sean.wang@mediatek.com>, <matthias.bgg@gmail.com>,
-        <patrice.chotard@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <mripard@kernel.org>, <wens@csie.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux@prisktech.co.nz>, <michal.simek@xilinx.com>
-CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-tegra@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 34/34] rtc: zynqmp: use devm_platform_ioremap_resource() to simplify code
-Date:   Sun, 6 Oct 2019 18:29:53 +0800
-Message-ID: <20191006102953.57536-35-yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <ckeepax@opensource.cirrus.com>,
+        <rf@opensource.wolfsonmicro.com>, <piotrs@opensource.cirrus.com>,
+        <enric.balletbo@collabora.com>, <paul@crapouillou.net>,
+        <srinivas.kandagatla@linaro.org>, <andradanciu1997@gmail.com>,
+        <mirq-linux@rere.qmqm.pl>, <kuninori.morimoto.gx@renesas.com>,
+        <m.felsch@pengutronix.de>, <shifu0704@thundersoft.com>,
+        <ladis@linux-mips.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] ASoc: tas2770: Fix build error without GPIOLIB
+Date:   Sun, 6 Oct 2019 18:46:31 +0800
+Message-ID: <20191006104631.60608-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20191006102953.57536-1-yuehaibing@huawei.com>
-References: <20191006102953.57536-1-yuehaibing@huawei.com>
+In-Reply-To: <20191006072241.56808-1-yuehaibing@huawei.com>
+References: <20191006072241.56808-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.133.213.239]
@@ -61,37 +51,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+If GPIOLIB is not set, building fails:
 
+sound/soc/codecs/tas2770.c: In function tas2770_reset:
+sound/soc/codecs/tas2770.c:38:3: error: implicit declaration of function gpiod_set_value_cansleep; did you mean gpio_set_value_cansleep? [-Werror=implicit-function-declaration]
+   gpiod_set_value_cansleep(tas2770->reset_gpio, 0);
+   ^~~~~~~~~~~~~~~~~~~~~~~~
+   gpio_set_value_cansleep
+sound/soc/codecs/tas2770.c: In function tas2770_i2c_probe:
+sound/soc/codecs/tas2770.c:749:24: error: implicit declaration of function devm_gpiod_get_optional; did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
+  tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
+                        ^~~~~~~~~~~~~~~~~~~~~~~
+                        devm_regulator_get_optional
+sound/soc/codecs/tas2770.c:751:13: error: GPIOD_OUT_HIGH undeclared (first use in this function); did you mean GPIOF_INIT_HIGH?
+             GPIOD_OUT_HIGH);
+             ^~~~~~~~~~~~~~
+             GPIOF_INIT_HIGH
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
+Suggested-by: Ladislav Michl <ladis@linux-mips.org>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/rtc/rtc-zynqmp.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+v2: Add missing include file
+---
+ sound/soc/codecs/tas2770.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-index 2c76275..55646e0 100644
---- a/drivers/rtc/rtc-zynqmp.c
-+++ b/drivers/rtc/rtc-zynqmp.c
-@@ -195,7 +195,6 @@ static irqreturn_t xlnx_rtc_interrupt(int irq, void *id)
- static int xlnx_rtc_probe(struct platform_device *pdev)
- {
- 	struct xlnx_rtc_dev *xrtcdev;
--	struct resource *res;
- 	int ret;
- 
- 	xrtcdev = devm_kzalloc(&pdev->dev, sizeof(*xrtcdev), GFP_KERNEL);
-@@ -211,9 +210,7 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
- 	xrtcdev->rtc->ops = &xlnx_rtc_ops;
- 	xrtcdev->rtc->range_max = U32_MAX;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	xrtcdev->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	xrtcdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(xrtcdev->reg_base))
- 		return PTR_ERR(xrtcdev->reg_base);
- 
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 9da88cc..a36d0d7 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -15,6 +15,7 @@
+ #include <linux/pm.h>
+ #include <linux/i2c.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/firmware.h>
 -- 
 2.7.4
 
