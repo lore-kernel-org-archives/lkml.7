@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23789C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B5CECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C7E2173B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED122053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383565;
-	bh=0KYDWk08WcsmjsqVyulm42NkijYLKrdWoD4u0javmU0=;
+	s=default; t=1570383566;
+	bh=TmUVAbWSEcYcj+irDhRNLuE3zHUilfSwCYvlTjdtEr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RaBPbT+K5bNRE0caylAmSFGJiEPZo2rSz5Sw+x4T8zQOS4O5q7NTDEI6uoKHtItkp
-	 mI9Y4rTc6ybIQdFd7YZZ1AHuC+BQB7oxZ60GkQddxcFv8jmkB1alQ0raotvtXxZvnU
-	 3cDjd3KtxQKSlsx87rhnTT+VesC+oH1n5czr0Q/I=
+	b=ibFdXsIt+XQxxITh6CH4kRSSlAMb+7TZrkJkjRaIUmIGGMTHmotlAVKeLrA5OQavG
+	 /4LMQdRk9LU2EA26sjjvhTpPxAtGYYKJ1fm07SLUVMeJEXp25Tq/x5TZpDk+H8ytbb
+	 uf6MpGilySMMwuiGIJWveGdtsNSM/Nb+78m1gPnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfJFRjX (ORCPT
+        id S1730787AbfJFRjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38748 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730748AbfJFRjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:17 -0400
+        id S1730762AbfJFRjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EFC620700;
-        Sun,  6 Oct 2019 17:39:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B9A20862;
+        Sun,  6 Oct 2019 17:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383557;
-        bh=0KYDWk08WcsmjsqVyulm42NkijYLKrdWoD4u0javmU0=;
+        s=default; t=1570383559;
+        bh=TmUVAbWSEcYcj+irDhRNLuE3zHUilfSwCYvlTjdtEr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HCTKwrNBLa/w95FnigZENlmuQ1sL9Pn1Vyq3YzP5eXb0dZYgwgpHQ3+1ZPuopkYla
-         dmizBWqzkQFi95MLO/OK4q5xFec16ADAG1K5N2hiUHi/j2yd4wySDgecCFdyvz3X/c
-         +b92JYizTm/UsOMgyjpRGt0/+41+2PgYipw0Xwfs=
+        b=scefugTjikU8zgudTOdW7ib37UP3d4coLtn8x/EsG1JEnKgDIj2cGzozngLh6Ogz1
+         Xqpneq/ALr2tJ4/4Hdc8WQF7IBXFd3ZIhQax8W7pGlUXPXQ0PMAbWDhNtzAu3iu7V4
+         +1ytSeRIU+bmuGD7vmqk7fp71PG9PmdsiYXo554A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marko Kohtala <marko.kohtala@okoko.fi>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 011/166] video: ssd1307fb: Start page range at page_offset
-Date:   Sun,  6 Oct 2019 19:19:37 +0200
-Message-Id: <20191006171213.549280228@linuxfoundation.org>
+Subject: [PATCH 5.3 012/166] drm/tinydrm/Kconfig: drivers: Select BACKLIGHT_CLASS_DEVICE
+Date:   Sun,  6 Oct 2019 19:19:38 +0200
+Message-Id: <20191006171213.614339206@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -65,42 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: Noralf Trønnes <noralf@tronnes.org>
 
-[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
+[ Upstream commit 3389669ac5ea598562673c04971d7bb0fab0e9f1 ]
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+The mipi_dbi helper is missing a dependency on DRM_KMS_HELPER and putting
+that in revealed this problem:
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+drivers/video/fbdev/Kconfig:12:error: recursive dependency detected!
+drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
+drivers/gpu/drm/Kconfig:75:     symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
+drivers/gpu/drm/Kconfig:69:     symbol DRM_KMS_HELPER is selected by TINYDRM_MIPI_DBI
+drivers/gpu/drm/tinydrm/Kconfig:11:     symbol TINYDRM_MIPI_DBI is selected by TINYDRM_HX8357D
+drivers/gpu/drm/tinydrm/Kconfig:15:     symbol TINYDRM_HX8357D depends on BACKLIGHT_CLASS_DEVICE
+drivers/video/backlight/Kconfig:144:    symbol BACKLIGHT_CLASS_DEVICE is selected by FB_BACKLIGHT
+drivers/video/fbdev/Kconfig:187:        symbol FB_BACKLIGHT depends on FB
+
+A symbol that selects DRM_KMS_HELPER can not depend on
+BACKLIGHT_CLASS_DEVICE. The reason for this is that DRM_KMS_FB_HELPER
+selects FB instead of depending on it.
+
+The tinydrm drivers have somehow gotten away with depending on
+BACKLIGHT_CLASS_DEVICE because DRM_TINYDRM selects DRM_KMS_HELPER and the
+drivers depend on that symbol.
+
+An audit shows that all DRM drivers that select DRM_KMS_HELPER and use
+BACKLIGHT_CLASS_DEVICE, selects it:
+  DRM_TILCDC, DRM_GMA500, DRM_SHMOBILE, DRM_NOUVEAU, DRM_FSL_DCU,
+  DRM_I915, DRM_RADEON, DRM_AMDGPU, DRM_PARADE_PS8622
+
+Documentation/kbuild/kconfig-language.txt has a note regarding select:
+1. 'select should be used with care since it doesn't visit dependencies.'
+   This is not a problem since BACKLIGHT_CLASS_DEVICE doesn't have any
+   dependencies.
+2. 'In general use select only for non-visible symbols'
+   BACKLIGHT_CLASS_DEVICE is user visible.
+
+The real solution to this would be to have DRM_KMS_FB_HELPER depend on the
+user visible symbol FB. That is a can of worms I'm not willing to tackle.
+I fear that such a change will result in me handling difficult fallouts
+for the next weeks. So I'm following DRM suite here.
+
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: David Lechner <david@lechnology.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190722104312.16184-7-noralf@tronnes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/tinydrm/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index b674948e3bb8f..3f28e1b5d4221 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -432,7 +432,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
- 
+diff --git a/drivers/gpu/drm/tinydrm/Kconfig b/drivers/gpu/drm/tinydrm/Kconfig
+index 87819c82bcce8..f2f0739d1035d 100644
+--- a/drivers/gpu/drm/tinydrm/Kconfig
++++ b/drivers/gpu/drm/tinydrm/Kconfig
+@@ -14,8 +14,8 @@ config TINYDRM_MIPI_DBI
+ config TINYDRM_HX8357D
+ 	tristate "DRM support for HX8357D display panels"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver for the following HX8357D panels:
+ 	  * YX350HV15-T 3.5" 340x350 TFT (Adafruit 3.5")
+@@ -35,8 +35,8 @@ config TINYDRM_ILI9225
+ config TINYDRM_ILI9341
+ 	tristate "DRM support for ILI9341 display panels"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver for the following Ilitek ILI9341 panels:
+ 	  * YX240QV29-T 2.4" 240x320 TFT (Adafruit 2.4")
+@@ -46,8 +46,8 @@ config TINYDRM_ILI9341
+ config TINYDRM_MI0283QT
+ 	tristate "DRM support for MI0283QT"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver for the Multi-Inno MI0283QT display panel
+ 	  If M is selected the module will be called mi0283qt.
+@@ -78,8 +78,8 @@ config TINYDRM_ST7586
+ config TINYDRM_ST7735R
+ 	tristate "DRM support for Sitronix ST7735R display panels"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver Sitronix ST7735R with one of the following LCDs:
+ 	  * JD-T18003-T01 1.8" 128x160 TFT
 -- 
 2.20.1
 
