@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670A1C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A18C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411062080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2814321479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383454;
-	bh=hkctlvyNTnBfIMJFghBmAj+o0d3mrZHtRkI+IrQdr+g=;
+	s=default; t=1570383460;
+	bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=er+DdEsSLT1OxVDnr/QyFwvJyAtSEtL0+LqMGVBtvV3Iv2rhD1lgbpkAGh7Ktg7Bs
-	 JqOGLunyAlmazV9yo95AsGCizFzAYuAVte1pn8ssTPXUkytjq/+/HUQ9Xvvf6nj57l
-	 SyyK0P8xhU5gmAm4xa1a/XOeflrMeCOJOq6KwTpE=
+	b=Qp0kW3xMFwRf57nISWxvsp1b8+8vRZSlwBrNyP96Vl5yaspxWHxFi/tcuypbr0u4i
+	 oT6MiUsW+2ufwaIAqFWV/INfqOxHaslEkQkI2khIozxPrbwEnBsLp0zaYsP/Feh/yT
+	 UTrEGz8BxBW6+8f31mMmdSeMEai1zK045svggLDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbfJFRhd (ORCPT
+        id S1730479AbfJFRhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729495AbfJFRha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:30 -0400
+        id S1730466AbfJFRhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927342080F;
-        Sun,  6 Oct 2019 17:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD232080F;
+        Sun,  6 Oct 2019 17:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383449;
-        bh=hkctlvyNTnBfIMJFghBmAj+o0d3mrZHtRkI+IrQdr+g=;
+        s=default; t=1570383457;
+        bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VEDsER8qBA3zKBW0FwJvDPjA7oUXbFJjcm6zfv9cVHhEPiBzsuxWoe0boygbnFWQc
-         V9VnkxKHkI7yxMpPNBNTVKYze9iqcNEW4T2f3CYBRO1dR+CK2eVvuzXFoQtich4N2s
-         5mMCEAHqiBAosPAM/8E0yfV6nIVWHNCH/pEFT9MI=
+        b=ynoQF/Z1Dw62LMe3KGDHmmHR1mstyFKkrSnK1knR6ltzSdI6rISJz7aK45kT3q4H+
+         jrtzTLJ5qC/KCQ4tqBh0cmezGM5K5Ni8VCKsGrBAyzjFxx0k+NE9B/QELdHWDDJXDl
+         sdSQO/2BKRuNqT1J45MBaRGYd5ru1kNvuAF9re8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 108/137] PCI: Add pci_info_ratelimited() to ratelimit PCI separately
-Date:   Sun,  6 Oct 2019 19:21:32 +0200
-Message-Id: <20191006171217.986222664@linuxfoundation.org>
+Subject: [PATCH 5.2 111/137] PCI: histb: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:35 +0200
+Message-Id: <20191006171218.315934610@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,53 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 7f1c62c443a453deb6eb3515e3c05650ffe0dcf0 ]
+[ Upstream commit 8f9e1641ba445437095411d9fda2324121110d5d ]
 
-Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the rate
-limiting state with all other callers to the printk_ratelimit().
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-Add pci_info_ratelimited() (similar to pci_notice_ratelimited() added in
-the commit a88a7b3eb076 ("vfio: Use dev_printk() when possible")) and use
-it instead of printk_ratelimit() + pci_info().
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-Link: https://lore.kernel.org/r/20190825224616.8021-1-kw@linux.com
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c   | 4 ++--
- include/linux/pci.h | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-histb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 088fcdc8d2b4d..f2ab112c0a71f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -884,8 +884,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index 954bc2b74bbcd..811b5c6d62eae 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -340,8 +340,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
  
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
--	if (dev->current_state != state && printk_ratelimit())
--		pci_info(dev, "Refused to change power state, currently in D%d\n",
-+	if (dev->current_state != state)
-+		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
- 			 dev->current_state);
+ 	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
+ 	if (IS_ERR(hipcie->vpcie)) {
+-		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(hipcie->vpcie) != -ENODEV)
++			return PTR_ERR(hipcie->vpcie);
+ 		hipcie->vpcie = NULL;
+ 	}
  
- 	/*
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index dd436da7eccc1..9feb59ac85507 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2375,4 +2375,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #define pci_notice_ratelimited(pdev, fmt, arg...) \
- 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
- 
-+#define pci_info_ratelimited(pdev, fmt, arg...) \
-+	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
-+
- #endif /* LINUX_PCI_H */
 -- 
 2.20.1
 
