@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9CFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FA9C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548E720673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23E020673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384401;
-	bh=VHqFPei1l3XYQuzGwjYB6MtsKq7T/Rtc2e+h2ot99yM=;
+	s=default; t=1570384419;
+	bh=q7LE7xSjAk2WfDmqoRiEwsDQ5sKIVq8bwyqwusRYBgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmatOZlS6IaR6hoKpZIMRGeuQvOWvgcBHDLWqSDGOO32S0ThZQhuAN4QUYPt/BmUr
-	 4qsJ/ip6a9ziwvS0Rf2E3iDQ8lMf4Rg0ieyrh6YT9ThQ11JF8V1ALw8p/pN1AimjWo
-	 DG1M8cqu1z9LVg1sXX8WQgHG3CRhau6tTlcL1Mvg=
+	b=RJwTpHThu0vkVvjH9nKun7U8LCQ5OPyt8wfVnpYkfKzPtUkeholDHZRDUg0BeCsZg
+	 8cJgE5tycP2qO9uhTNaWlLl361ZfHlnHLVHcsBoxoNCaPl7txwN4+gq6B2A9WmHIQX
+	 92GmTYhBVLgrxNUei7kfZr5O2sxRn0MpBGDw7Azo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfJFRxU (ORCPT
+        id S1727912AbfJFRhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729905AbfJFRiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:07 -0400
+        id S1730459AbfJFRhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D7B20700;
-        Sun,  6 Oct 2019 17:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8C792053B;
+        Sun,  6 Oct 2019 17:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383486;
-        bh=VHqFPei1l3XYQuzGwjYB6MtsKq7T/Rtc2e+h2ot99yM=;
+        s=default; t=1570383454;
+        bh=q7LE7xSjAk2WfDmqoRiEwsDQ5sKIVq8bwyqwusRYBgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TY2FngfMl5H2kzecF5cBk86Hv6D2gXlcNCNlztPMDL88+bhzrHqV5NDNvK/FaYvw4
-         CFXMv9l0NNrCEoGQEMks1eDSHw0pDA1GZEGdHjhln0zJ+3R1Pc+sCXYjrjvWnjL0l0
-         UlTMkYGlURA9qM5UVa88Q9mmHXqarJyr1u5P+xXE=
+        b=Owf0ASyOXQy7xkdhJYtyS/JB9hwKoHhB3MslZ0tdrqRFgFATsQjH+E++tna8c+LPN
+         35Di2Tta2L7b1Bxx8DTY+ex/fDLYYm0LebE2dFFNb4EEpiyUAjmAuj3g2hpCtHTjnh
+         I8sTQp9HtZtqTh5CN/diWdv6CGbY72rL75t9SVuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 121/137] crypto: hisilicon - Fix double free in sec_free_hw_sgl()
-Date:   Sun,  6 Oct 2019 19:21:45 +0200
-Message-Id: <20191006171219.355393263@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 110/137] PCI: rockchip: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:34 +0200
+Message-Id: <20191006171218.188547549@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,61 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 24fbf7bad888767bed952f540ac963bc57e47e15 ]
+[ Upstream commit 0e3ff0ac5f71bdb6be2a698de0ed0c7e6e738269 ]
 
-There are two problems in sec_free_hw_sgl():
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-First, when sgl_current->next is valid, @hw_sgl will be freed in the
-first loop, but it free again after the loop.
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-Second, sgl_current and sgl_current->next_sgl is not match when
-dma_pool_free() is invoked, the third parameter should be the dma
-address of sgl_current, but sgl_current->next_sgl is the dma address
-of next chain, so use sgl_current->next_sgl is wrong.
-
-Fix this by deleting the last dma_pool_free() in sec_free_hw_sgl(),
-modifying the condition for while loop, and matching the address for
-dma_pool_free().
-
-Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/hisilicon/sec/sec_algs.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-rockchip-host.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/crypto/hisilicon/sec/sec_algs.c b/drivers/crypto/hisilicon/sec/sec_algs.c
-index 02768af0dccdd..8c789b8671fc4 100644
---- a/drivers/crypto/hisilicon/sec/sec_algs.c
-+++ b/drivers/crypto/hisilicon/sec/sec_algs.c
-@@ -215,17 +215,18 @@ static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
- 			    dma_addr_t psec_sgl, struct sec_dev_info *info)
- {
- 	struct sec_hw_sgl *sgl_current, *sgl_next;
-+	dma_addr_t sgl_next_dma;
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index 8d20f1793a618..ef8e677ce9d11 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -608,29 +608,29 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
  
--	if (!hw_sgl)
--		return;
- 	sgl_current = hw_sgl;
--	while (sgl_current->next) {
-+	while (sgl_current) {
- 		sgl_next = sgl_current->next;
--		dma_pool_free(info->hw_sgl_pool, sgl_current,
--			      sgl_current->next_sgl);
-+		sgl_next_dma = sgl_current->next_sgl;
-+
-+		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
-+
- 		sgl_current = sgl_next;
-+		psec_sgl = sgl_next_dma;
+ 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+ 	if (IS_ERR(rockchip->vpcie12v)) {
+-		if (PTR_ERR(rockchip->vpcie12v) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie12v);
+ 		dev_info(dev, "no vpcie12v regulator found\n");
  	}
--	dma_pool_free(info->hw_sgl_pool, hw_sgl, psec_sgl);
- }
  
- static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
+ 	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+ 	if (IS_ERR(rockchip->vpcie3v3)) {
+-		if (PTR_ERR(rockchip->vpcie3v3) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie3v3);
+ 		dev_info(dev, "no vpcie3v3 regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie1v8 = devm_regulator_get_optional(dev, "vpcie1v8");
+ 	if (IS_ERR(rockchip->vpcie1v8)) {
+-		if (PTR_ERR(rockchip->vpcie1v8) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie1v8) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie1v8);
+ 		dev_info(dev, "no vpcie1v8 regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie0v9 = devm_regulator_get_optional(dev, "vpcie0v9");
+ 	if (IS_ERR(rockchip->vpcie0v9)) {
+-		if (PTR_ERR(rockchip->vpcie0v9) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie0v9) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie0v9);
+ 		dev_info(dev, "no vpcie0v9 regulator found\n");
+ 	}
+ 
 -- 
 2.20.1
 
