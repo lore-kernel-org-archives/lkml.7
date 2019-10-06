@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1117C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34932C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C048D20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22C72077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382400;
-	bh=wykaysPxuwQ0fYQrbjSrqse1BzOP7BsJuJ3GBhpQirg=;
+	s=default; t=1570382413;
+	bh=Q3xE3vp9phcUd5CwH9J/1cOw1zW/8mfzUm4fdP32Vy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFPwgh4tVZ7YmzOThSyh0wWmT7OmDxKwRj2BgupgnTNi/SfDBHsFn9LWIMKrodh3b
-	 zRjqcTj4d29Ed2qn6Bk7felWSruW1kBzE96lcTnwj4CG7IrUxRAw26MPkj8dQmpead
-	 wvqQl4Pws31YiViB8fr5YaTWmH71qG8i6LxG3ehQ=
+	b=CaWUljkvsg8CF+LuJG0MZIKZBao+xLz577IsurvK5HoS5OrDnR//u24vN6ZeRNMNL
+	 FmqK78eoavdGBC7cI68PbWk6G6zmYjoMWJLRF/jvIzvqU8Q1GCz5IpGWi5mSWmM8Rz
+	 4OJ6H7o69nGZiHnlnF0MzV1B3UFWAd8iNjYRImBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfJFRUA (ORCPT
+        id S1727121AbfJFRUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44882 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:20:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727011AbfJFRT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:19:56 -0400
+        id S1727097AbfJFRUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D671620835;
-        Sun,  6 Oct 2019 17:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488472077B;
+        Sun,  6 Oct 2019 17:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382395;
-        bh=wykaysPxuwQ0fYQrbjSrqse1BzOP7BsJuJ3GBhpQirg=;
+        s=default; t=1570382400;
+        bh=Q3xE3vp9phcUd5CwH9J/1cOw1zW/8mfzUm4fdP32Vy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uuc91WT2SeBN/1o6T5MV4cIqCKmcW8ggSdS9/s5thyv1IHW7nd3JbgbEHHBxQef94
-         URvbxmTu9nN8dythrDZ1uCIdbHi9zPYu8R/fun4JjNnuku60CWrx6V6IPjcgPUcJpg
-         ZiqYaTGL66CTjTbYfzN4PPPBvTaxt2KoRlI7HsXE=
+        b=X1A81EepUwN+EOWbjOZvUZ7TD1QGfkra5bTwJmV4/LcoZEu8voOgTqL3j6qs11SvD
+         ADkAVFfPZYxItWYKDxAJENqm+zmZx4h4gznjIqX7/5Mpfa1PCi8X+tIkyV+rhk3AV8
+         i4MqV4VvNOvcRL/tFIDKUWazPHvkmu7bxFnY5LFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 02/36] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
-Date:   Sun,  6 Oct 2019 19:18:44 +0200
-Message-Id: <20191006171041.813628230@linuxfoundation.org>
+Subject: [PATCH 4.4 21/36] ocfs2: wait for recovering done after direct unlock request
+Date:   Sun,  6 Oct 2019 19:19:03 +0200
+Message-Id: <20191006171053.763416052@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -60,43 +65,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Changwei Ge <gechangwei@live.cn>
 
-[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
+[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
 
-In radeon_connector_set_property(), there is an if statement on line 743
-to check whether connector->encoder is NULL:
-    if (connector->encoder)
+There is a scenario causing ocfs2 umount hang when multiple hosts are
+rebooting at the same time.
 
-When connector->encoder is NULL, it is used on line 755:
-    if (connector->encoder->crtc)
+NODE1                           NODE2               NODE3
+send unlock requset to NODE2
+                                dies
+                                                    become recovery master
+                                                    recover NODE2
+find NODE2 dead
+mark resource RECOVERING
+directly remove lock from grant list
+calculate usage but RECOVERING marked
+**miss the window of purging
+clear RECOVERING
 
-Thus, a possible null-pointer dereference may occur.
+To reproduce this issue, crash a host and then umount ocfs2
+from another node.
 
-To fix this bug, connector->encoder is checked before being used.
+To solve this, just let unlock progress wait for recovery done.
 
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
+Signed-off-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index c6bf378534f83..bebcef2ce6b88 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -758,7 +758,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
+diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
+index 2e3c9dbab68c9..d137d4692b918 100644
+--- a/fs/ocfs2/dlm/dlmunlock.c
++++ b/fs/ocfs2/dlm/dlmunlock.c
+@@ -105,7 +105,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	enum dlm_status status;
+ 	int actions = 0;
+ 	int in_use;
+-        u8 owner;
++	u8 owner;
++	int recovery_wait = 0;
  
- 		radeon_encoder->output_csc = val;
+ 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
+ 	     flags & LKM_VALBLK);
+@@ -208,9 +209,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 		}
+ 		if (flags & LKM_CANCEL)
+ 			lock->cancel_pending = 0;
+-		else
+-			lock->unlock_pending = 0;
+-
++		else {
++			if (!lock->unlock_pending)
++				recovery_wait = 1;
++			else
++				lock->unlock_pending = 0;
++		}
+ 	}
  
--		if (connector->encoder->crtc) {
-+		if (connector->encoder && connector->encoder->crtc) {
- 			struct drm_crtc *crtc  = connector->encoder->crtc;
- 			const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
- 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
+ 	/* get an extra ref on lock.  if we are just switching
+@@ -244,6 +248,17 @@ leave:
+ 	spin_unlock(&res->spinlock);
+ 	wake_up(&res->wq);
+ 
++	if (recovery_wait) {
++		spin_lock(&res->spinlock);
++		/* Unlock request will directly succeed after owner dies,
++		 * and the lock is already removed from grant list. We have to
++		 * wait for RECOVERING done or we miss the chance to purge it
++		 * since the removement is much faster than RECOVERING proc.
++		 */
++		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
++		spin_unlock(&res->spinlock);
++	}
++
+ 	/* let the caller's final dlm_lock_put handle the actual kfree */
+ 	if (actions & DLM_UNLOCK_FREE_LOCK) {
+ 		/* this should always be coupled with list removal */
 -- 
 2.20.1
 
