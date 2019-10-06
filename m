@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D331C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F44DECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0782133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076762173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383294;
-	bh=QA3A+3Ww5ZMOklyCmgg4fHcKDk+6JhqJYNEF2E2pmg8=;
+	s=default; t=1570383298;
+	bh=BwH26qSMRuY2Or+00XXUuLtnuq5qjhb/CwLUsd9ahE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kMADrxvb9Id221jp/uS/SJFWtjW3APNuGWGe9n5F9rAc7c4ArUsEXndsdP3Av3nOZ
-	 Snse3Pj9LzWyGpGfQjoAaN8eoG5K/oNwmpm8R9aKRaJSHNvB9n8nl0ibmrhWqCwpWt
-	 5hfw4rSFjpnXX76Iop74nLMBveo9CYNd5SNsXgv0=
+	b=qEGvDUwN2VU9qsPRkwS0ofR7WriFEbzUvSwGLGqM2SZX9UThyjQaPK+s0cnkU/oH0
+	 Vq838BsNmUtkio073lShUHVKXqalDIgahKbSfR/2g/nuO3kI4wxUzK8Om60SL9V2ok
+	 vCBu0KmuZu4sKyITCLk/pib+NurAG5Spdx/MIJxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfJFRet (ORCPT
+        id S1730102AbfJFRe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbfJFRem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:42 -0400
+        id S1730017AbfJFReu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:34:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A292087E;
-        Sun,  6 Oct 2019 17:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36F212133F;
+        Sun,  6 Oct 2019 17:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383281;
-        bh=QA3A+3Ww5ZMOklyCmgg4fHcKDk+6JhqJYNEF2E2pmg8=;
+        s=default; t=1570383289;
+        bh=BwH26qSMRuY2Or+00XXUuLtnuq5qjhb/CwLUsd9ahE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uODyfXcrwS92ehThqUcot2YZRLA7/e84B9Seb/t5m1zwEW34DksmTljLbY+l7badR
-         eXDlyfLXqVYx8dqY5Y45bQa3taBHpDgACm1gKwn17Jr49YmYh7aTHWvDM0jVnEFTgp
-         7UFnHFORd/KgomlDX4/XOr5v1mSgWcKy9A04/AT8=
+        b=H13CVK2qY90OPaWFG9JD1jLXblNn2Rl52m2p53Qpc1S1jQtuu9jF07u9jnVfaQCCz
+         Z5GIoJ/0L6+VzWxPLlWEd/m09RrrgZ9fohVJ/PyD285PQZ7lIu7s6UFM/KymzIi8+0
+         o82U/9Dxgc3LTvFC1ca4xrEF1SheDqBBc0tRX7sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lewis Huang <Lewis.Huang@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>, Eric Yang <eric.yang2@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Guo Zeng <Guo.Zeng@csr.com>,
+        Barry Song <Baohua.Song@csr.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 047/137] drm/amd/display: reprogram VM config when system resume
-Date:   Sun,  6 Oct 2019 19:20:31 +0200
-Message-Id: <20191006171212.788579887@linuxfoundation.org>
+Subject: [PATCH 5.2 050/137] clk: sirf: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:20:34 +0200
+Message-Id: <20191006171212.961123871@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,48 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lewis Huang <Lewis.Huang@amd.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit e5382701c3520b3ed66169a6e4aa6ce5df8c56e0 ]
+[ Upstream commit af55dadfbce35b4f4c6247244ce3e44b2e242b84 ]
 
-[Why]
-The vm config will be clear to 0 when system enter S4. It will
-cause hubbub didn't know how to fetch data when system resume.
-The flip always pending because earliest_inuse_address and
-request_address are different.
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-[How]
-Reprogram VM config when system resume
-
-Signed-off-by: Lewis Huang <Lewis.Huang@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: Guo Zeng <Guo.Zeng@csr.com>
+Cc: Barry Song <Baohua.Song@csr.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-6-sboyd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/sirf/clk-common.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 0a7adc2925e35..191f5757ded1f 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2016,6 +2016,14 @@ void dc_set_power_state(
- 		dc_resource_state_construct(dc, dc->current_state);
+diff --git a/drivers/clk/sirf/clk-common.c b/drivers/clk/sirf/clk-common.c
+index ad7951b6b285e..dcf4e25a02168 100644
+--- a/drivers/clk/sirf/clk-common.c
++++ b/drivers/clk/sirf/clk-common.c
+@@ -297,9 +297,10 @@ static u8 dmn_clk_get_parent(struct clk_hw *hw)
+ {
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	u32 cfg = clkc_readl(clk->regofs);
++	const char *name = clk_hw_get_name(hw);
  
- 		dc->hwss.init_hw(dc);
-+
-+#ifdef CONFIG_DRM_AMD_DC_DCN2_0
-+		if (dc->hwss.init_sys_ctx != NULL &&
-+			dc->vm_pa_config.valid) {
-+			dc->hwss.init_sys_ctx(dc->hwseq, dc, &dc->vm_pa_config);
-+		}
-+#endif
-+
- 		break;
- 	default:
- 		ASSERT(dc->current_state->stream_count == 0);
+ 	/* parent of io domain can only be pll3 */
+-	if (strcmp(hw->init->name, "io") == 0)
++	if (strcmp(name, "io") == 0)
+ 		return 4;
+ 
+ 	WARN_ON((cfg & (BIT(3) - 1)) > 4);
+@@ -311,9 +312,10 @@ static int dmn_clk_set_parent(struct clk_hw *hw, u8 parent)
+ {
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	u32 cfg = clkc_readl(clk->regofs);
++	const char *name = clk_hw_get_name(hw);
+ 
+ 	/* parent of io domain can only be pll3 */
+-	if (strcmp(hw->init->name, "io") == 0)
++	if (strcmp(name, "io") == 0)
+ 		return -EINVAL;
+ 
+ 	cfg &= ~(BIT(3) - 1);
+@@ -353,7 +355,8 @@ static long dmn_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	unsigned long fin;
+ 	unsigned ratio, wait, hold;
+-	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
++	const char *name = clk_hw_get_name(hw);
++	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
+ 
+ 	fin = *parent_rate;
+ 	ratio = fin / rate;
+@@ -375,7 +378,8 @@ static int dmn_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	unsigned long fin;
+ 	unsigned ratio, wait, hold, reg;
+-	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
++	const char *name = clk_hw_get_name(hw);
++	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
+ 
+ 	fin = parent_rate;
+ 	ratio = fin / rate;
 -- 
 2.20.1
 
