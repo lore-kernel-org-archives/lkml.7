@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3A5C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E55DC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1115A20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3AD21850
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384603;
-	bh=ewPDMBW4KoVWSQcUUnJMoFvsaA8/6M8dkh5FnhvZZDY=;
+	s=default; t=1570384606;
+	bh=vw8QC3vuvRyhhmM7FsufE5EY78S4mly+jhmZczP11nw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nwc0w2bzokEr8sBK/4Yv7f24LMjD4xVD5JeJQsdG0yvsCijEE4s3zY2X1jHUUfM+9
-	 nzX4VaQYcUNxR3EGhKs2A0OA6MYfSww0SDd7l5GnR/3mgm0yibLIWebvlt247vnLjq
-	 bMMZuPC1P300wTtoZYiMwAjh+kJZvBb46EO3keD8=
+	b=TGxp+pLEYtqQdoMwuyUpAlXgwVKsvPzX63GU9UwHqNQqrpsuZhXr6NIueRwwJy7u+
+	 2D3BoazsKNrWktfGO3v/hBwIM8h0r1wSP1INA4XOGqIeD1IL8fXOOZXajr32sQOMJt
+	 P0rfamAml2MAYG/cqagvsDQW5OykIQwaFhM5YuLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfJFRfA (ORCPT
+        id S1730039AbfJFR4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33346 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729999AbfJFReq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:46 -0400
+        id S1730103AbfJFRe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:34:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C09062087E;
-        Sun,  6 Oct 2019 17:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E0E12087E;
+        Sun,  6 Oct 2019 17:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383284;
-        bh=ewPDMBW4KoVWSQcUUnJMoFvsaA8/6M8dkh5FnhvZZDY=;
+        s=default; t=1570383297;
+        bh=vw8QC3vuvRyhhmM7FsufE5EY78S4mly+jhmZczP11nw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zg4hjgtveStNi7TTxxcYt0GAlB1+Zg2eO0aR5jgbXrBljXxq8hbfizwITiRloe8nj
-         hCko58s1jYYojnJz+/0drTAJn6XkY5RRH8Awh8Tt7BlOa5RpKKJthVEgRyseIrS7L5
-         /uezCR/pin/zlP71qO/dNu+3sNt7FxWLsF2HLafg=
+        b=rjrR1BiX15McoU1I1LxRzuf91P2tVwRAMEE0laooDzJzmv+9hdhYtX4KqFc+vgaAO
+         hD9EDoeRj156U15mScwXzjNYD1P7Ci4AUeXRInaQUJlmeNQlgSgwN4ULNl7Xh80dRA
+         RI915EHSAEhKxooHSsUhjAPcUUhHQAnAL6sDoSdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alistair Popple <alistair@popple.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 048/137] powerpc/powernv/ioda2: Allocate TCE table levels on demand for default DMA window
-Date:   Sun,  6 Oct 2019 19:20:32 +0200
-Message-Id: <20191006171212.845557274@linuxfoundation.org>
+Subject: [PATCH 5.2 053/137] clk: zx296718: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:20:37 +0200
+Message-Id: <20191006171213.150986275@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,259 +61,285 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit c37c792dec0929dbb6360a609fb00fa20bb16fc2 ]
+[ Upstream commit 1a4549c150e27dbc3aea762e879a88209df6d1a5 ]
 
-We allocate only the first level of multilevel TCE tables for KVM
-already (alloc_userspace_copy==true), and the rest is allocated on demand.
-This is not enabled though for bare metal.
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-This removes the KVM limitation (implicit, via the alloc_userspace_copy
-parameter) and always allocates just the first level. The on-demand
-allocation of missing levels is already implemented.
-
-As from now on DMA map might happen with disabled interrupts, this
-allocates TCEs with GFP_ATOMIC; otherwise lockdep reports errors 1].
-In practice just a single page is allocated there so chances for failure
-are quite low.
-
-To save time when creating a new clean table, this skips non-allocated
-indirect TCE entries in pnv_tce_free just like we already do in
-the VFIO IOMMU TCE driver.
-
-This changes the default level number from 1 to 2 to reduce the amount
-of memory required for the default 32bit DMA window at the boot time.
-The default window size is up to 2GB which requires 4MB of TCEs which is
-unlikely to be used entirely or at all as most devices these days are
-64bit capable so by switching to 2 levels by default we save 4032KB of
-RAM per a device.
-
-While at this, add __GFP_NOWARN to alloc_pages_node() as the userspace
-can trigger this path via VFIO, see the failure and try creating a table
-again with different parameters which might succeed.
-
-[1]:
-===
-BUG: sleeping function called from invalid context at mm/page_alloc.c:4596
-in_atomic(): 1, irqs_disabled(): 1, pid: 1038, name: scsi_eh_1
-2 locks held by scsi_eh_1/1038:
- #0: 000000005efd659a (&host->eh_mutex){+.+.}, at: ata_eh_acquire+0x34/0x80
- #1: 0000000006cf56a6 (&(&host->lock)->rlock){....}, at: ata_exec_internal_sg+0xb0/0x5c0
-irq event stamp: 500
-hardirqs last  enabled at (499): [<c000000000cb8a74>] _raw_spin_unlock_irqrestore+0x94/0xd0
-hardirqs last disabled at (500): [<c000000000cb85c4>] _raw_spin_lock_irqsave+0x44/0x120
-softirqs last  enabled at (0): [<c000000000101120>] copy_process.isra.4.part.5+0x640/0x1a80
-softirqs last disabled at (0): [<0000000000000000>] 0x0
-CPU: 73 PID: 1038 Comm: scsi_eh_1 Not tainted 5.2.0-rc6-le_nv2_aikATfstn1-p1 #634
-Call Trace:
-[c000003d064cef50] [c000000000c8e6c4] dump_stack+0xe8/0x164 (unreliable)
-[c000003d064cefa0] [c00000000014ed78] ___might_sleep+0x2f8/0x310
-[c000003d064cf020] [c0000000003ca084] __alloc_pages_nodemask+0x2a4/0x1560
-[c000003d064cf220] [c0000000000c2530] pnv_alloc_tce_level.isra.0+0x90/0x130
-[c000003d064cf290] [c0000000000c2888] pnv_tce+0x128/0x3b0
-[c000003d064cf360] [c0000000000c2c00] pnv_tce_build+0xb0/0xf0
-[c000003d064cf3c0] [c0000000000bbd9c] pnv_ioda2_tce_build+0x3c/0xb0
-[c000003d064cf400] [c00000000004cfe0] ppc_iommu_map_sg+0x210/0x550
-[c000003d064cf510] [c00000000004b7a4] dma_iommu_map_sg+0x74/0xb0
-[c000003d064cf530] [c000000000863944] ata_qc_issue+0x134/0x470
-[c000003d064cf5b0] [c000000000863ec4] ata_exec_internal_sg+0x244/0x5c0
-[c000003d064cf700] [c0000000008642d0] ata_exec_internal+0x90/0xe0
-[c000003d064cf780] [c0000000008650ac] ata_dev_read_id+0x2ec/0x640
-[c000003d064cf8d0] [c000000000878e28] ata_eh_recover+0x948/0x16d0
-[c000003d064cfa10] [c00000000087d760] sata_pmp_error_handler+0x480/0xbf0
-[c000003d064cfbc0] [c000000000884624] ahci_error_handler+0x74/0xe0
-[c000003d064cfbf0] [c000000000879fa8] ata_scsi_port_error_handler+0x2d8/0x7c0
-[c000003d064cfca0] [c00000000087a544] ata_scsi_error+0xb4/0x100
-[c000003d064cfd00] [c000000000802450] scsi_error_handler+0x120/0x510
-[c000003d064cfdb0] [c000000000140c48] kthread+0x1b8/0x1c0
-[c000003d064cfe20] [c00000000000bd8c] ret_from_kernel_thread+0x5c/0x70
-ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-irq event stamp: 2305
-
-========================================================
-hardirqs last  enabled at (2305): [<c00000000000e4c8>] fast_exc_return_irq+0x28/0x34
-hardirqs last disabled at (2303): [<c000000000cb9fd0>] __do_softirq+0x4a0/0x654
-WARNING: possible irq lock inversion dependency detected
-5.2.0-rc6-le_nv2_aikATfstn1-p1 #634 Tainted: G        W
-softirqs last  enabled at (2304): [<c000000000cba054>] __do_softirq+0x524/0x654
-softirqs last disabled at (2297): [<c00000000010f278>] irq_exit+0x128/0x180
---------------------------------------------------------
-swapper/0/0 just changed the state of lock:
-0000000006cf56a6 (&(&host->lock)->rlock){-...}, at: ahci_single_level_irq_intr+0xac/0x120
-but this lock took another, HARDIRQ-unsafe lock in the past:
- (fs_reclaim){+.+.}
-
-and interrupts could create inverse lock ordering between them.
-
-other info that might help us debug this:
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(fs_reclaim);
-                               local_irq_disable();
-                               lock(&(&host->lock)->rlock);
-                               lock(fs_reclaim);
-  <Interrupt>
-    lock(&(&host->lock)->rlock);
-
- *** DEADLOCK ***
-
-no locks held by swapper/0/0.
-
-the shortest dependencies between 2nd lock and 1st lock:
- -> (fs_reclaim){+.+.} ops: 167579 {
-    HARDIRQ-ON-W at:
-                      lock_acquire+0xf8/0x2a0
-                      fs_reclaim_acquire.part.23+0x44/0x60
-                      kmem_cache_alloc_node_trace+0x80/0x590
-                      alloc_desc+0x64/0x270
-                      __irq_alloc_descs+0x2e4/0x3a0
-                      irq_domain_alloc_descs+0xb0/0x150
-                      irq_create_mapping+0x168/0x2c0
-                      xics_smp_probe+0x2c/0x98
-                      pnv_smp_probe+0x40/0x9c
-                      smp_prepare_cpus+0x524/0x6c4
-                      kernel_init_freeable+0x1b4/0x650
-                      kernel_init+0x2c/0x148
-                      ret_from_kernel_thread+0x5c/0x70
-    SOFTIRQ-ON-W at:
-                      lock_acquire+0xf8/0x2a0
-                      fs_reclaim_acquire.part.23+0x44/0x60
-                      kmem_cache_alloc_node_trace+0x80/0x590
-                      alloc_desc+0x64/0x270
-                      __irq_alloc_descs+0x2e4/0x3a0
-                      irq_domain_alloc_descs+0xb0/0x150
-                      irq_create_mapping+0x168/0x2c0
-                      xics_smp_probe+0x2c/0x98
-                      pnv_smp_probe+0x40/0x9c
-                      smp_prepare_cpus+0x524/0x6c4
-                      kernel_init_freeable+0x1b4/0x650
-                      kernel_init+0x2c/0x148
-                      ret_from_kernel_thread+0x5c/0x70
-    INITIAL USE at:
-                     lock_acquire+0xf8/0x2a0
-                     fs_reclaim_acquire.part.23+0x44/0x60
-                     kmem_cache_alloc_node_trace+0x80/0x590
-                     alloc_desc+0x64/0x270
-                     __irq_alloc_descs+0x2e4/0x3a0
-                     irq_domain_alloc_descs+0xb0/0x150
-                     irq_create_mapping+0x168/0x2c0
-                     xics_smp_probe+0x2c/0x98
-                     pnv_smp_probe+0x40/0x9c
-                     smp_prepare_cpus+0x524/0x6c4
-                     kernel_init_freeable+0x1b4/0x650
-                     kernel_init+0x2c/0x148
-                     ret_from_kernel_thread+0x5c/0x70
-  }
-===
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Alistair Popple <alistair@popple.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190718051139.74787-4-aik@ozlabs.ru
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190815160020.183334-3-sboyd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda-tce.c | 20 +++++++++----------
- arch/powerpc/platforms/powernv/pci.h          |  2 +-
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/clk/zte/clk-zx296718.c | 109 +++++++++++++++------------------
+ 1 file changed, 49 insertions(+), 60 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda-tce.c b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-index e28f03e1eb5eb..c75ec37bf0cda 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-@@ -36,7 +36,8 @@ static __be64 *pnv_alloc_tce_level(int nid, unsigned int shift)
- 	struct page *tce_mem = NULL;
- 	__be64 *addr;
+diff --git a/drivers/clk/zte/clk-zx296718.c b/drivers/clk/zte/clk-zx296718.c
+index fd6c347bec6a7..dd7045bc48c15 100644
+--- a/drivers/clk/zte/clk-zx296718.c
++++ b/drivers/clk/zte/clk-zx296718.c
+@@ -564,6 +564,7 @@ static int __init top_clocks_init(struct device_node *np)
+ {
+ 	void __iomem *reg_base;
+ 	int i, ret;
++	const char *name;
  
--	tce_mem = alloc_pages_node(nid, GFP_KERNEL, shift - PAGE_SHIFT);
-+	tce_mem = alloc_pages_node(nid, GFP_ATOMIC | __GFP_NOWARN,
-+			shift - PAGE_SHIFT);
- 	if (!tce_mem) {
- 		pr_err("Failed to allocate a TCE memory, level shift=%d\n",
- 				shift);
-@@ -161,6 +162,9 @@ void pnv_tce_free(struct iommu_table *tbl, long index, long npages)
+ 	reg_base = of_iomap(np, 0);
+ 	if (!reg_base) {
+@@ -573,11 +574,10 @@ static int __init top_clocks_init(struct device_node *np)
  
- 		if (ptce)
- 			*ptce = cpu_to_be64(0);
-+		else
-+			/* Skip the rest of the level */
-+			i |= tbl->it_level_size - 1;
+ 	for (i = 0; i < ARRAY_SIZE(zx296718_pll_clk); i++) {
+ 		zx296718_pll_clk[i].reg_base += (uintptr_t)reg_base;
++		name = zx296718_pll_clk[i].hw.init->name;
+ 		ret = clk_hw_register(NULL, &zx296718_pll_clk[i].hw);
+-		if (ret) {
+-			pr_warn("top clk %s init error!\n",
+-				zx296718_pll_clk[i].hw.init->name);
+-		}
++		if (ret)
++			pr_warn("top clk %s init error!\n", name);
  	}
- }
  
-@@ -260,7 +264,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	unsigned int table_shift = max_t(unsigned int, entries_shift + 3,
- 			PAGE_SHIFT);
- 	const unsigned long tce_table_size = 1UL << table_shift;
--	unsigned int tmplevels = levels;
+ 	for (i = 0; i < ARRAY_SIZE(top_ffactor_clk); i++) {
+@@ -585,11 +585,10 @@ static int __init top_clocks_init(struct device_node *np)
+ 			top_hw_onecell_data.hws[top_ffactor_clk[i].id] =
+ 					&top_ffactor_clk[i].factor.hw;
  
- 	if (!levels || (levels > POWERNV_IOMMU_MAX_LEVELS))
- 		return -EINVAL;
-@@ -268,9 +271,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	if (!is_power_of_2(window_size))
- 		return -EINVAL;
- 
--	if (alloc_userspace_copy && (window_size > (1ULL << 32)))
--		tmplevels = 1;
--
- 	/* Adjust direct table size from window_size and levels */
- 	entries_shift = (entries_shift + levels - 1) / levels;
- 	level_shift = entries_shift + 3;
-@@ -281,7 +281,7 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 
- 	/* Allocate TCE table */
- 	addr = pnv_pci_ioda2_table_do_alloc_pages(nid, level_shift,
--			tmplevels, tce_table_size, &offset, &total_allocated);
-+			1, tce_table_size, &offset, &total_allocated);
- 
- 	/* addr==NULL means that the first level allocation failed */
- 	if (!addr)
-@@ -292,18 +292,18 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	 * we did not allocate as much as we wanted,
- 	 * release partially allocated table.
- 	 */
--	if (tmplevels == levels && offset < tce_table_size)
-+	if (levels == 1 && offset < tce_table_size)
- 		goto free_tces_exit;
- 
- 	/* Allocate userspace view of the TCE table */
- 	if (alloc_userspace_copy) {
- 		offset = 0;
- 		uas = pnv_pci_ioda2_table_do_alloc_pages(nid, level_shift,
--				tmplevels, tce_table_size, &offset,
-+				1, tce_table_size, &offset,
- 				&total_allocated_uas);
- 		if (!uas)
- 			goto free_tces_exit;
--		if (tmplevels == levels && (offset < tce_table_size ||
-+		if (levels == 1 && (offset < tce_table_size ||
- 				total_allocated_uas != total_allocated))
- 			goto free_uas_exit;
++		name = top_ffactor_clk[i].factor.hw.init->name;
+ 		ret = clk_hw_register(NULL, &top_ffactor_clk[i].factor.hw);
+-		if (ret) {
+-			pr_warn("top clk %s init error!\n",
+-				top_ffactor_clk[i].factor.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("top clk %s init error!\n", name);
  	}
-@@ -318,7 +318,7 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
  
- 	pr_debug("Created TCE table: ws=%08llx ts=%lx @%08llx base=%lx uas=%p levels=%d/%d\n",
- 			window_size, tce_table_size, bus_offset, tbl->it_base,
--			tbl->it_userspace, tmplevels, levels);
-+			tbl->it_userspace, 1, levels);
+ 	for (i = 0; i < ARRAY_SIZE(top_mux_clk); i++) {
+@@ -598,11 +597,10 @@ static int __init top_clocks_init(struct device_node *np)
+ 					&top_mux_clk[i].mux.hw;
  
- 	return 0;
+ 		top_mux_clk[i].mux.reg += (uintptr_t)reg_base;
++		name = top_mux_clk[i].mux.hw.init->name;
+ 		ret = clk_hw_register(NULL, &top_mux_clk[i].mux.hw);
+-		if (ret) {
+-			pr_warn("top clk %s init error!\n",
+-				top_mux_clk[i].mux.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("top clk %s init error!\n", name);
+ 	}
  
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index be26ab3d99e01..33a52114267d0 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -225,7 +225,7 @@ extern struct iommu_table_group *pnv_npu_compound_attach(
- 		struct pnv_ioda_pe *pe);
+ 	for (i = 0; i < ARRAY_SIZE(top_gate_clk); i++) {
+@@ -611,11 +609,10 @@ static int __init top_clocks_init(struct device_node *np)
+ 					&top_gate_clk[i].gate.hw;
  
- /* pci-ioda-tce.c */
--#define POWERNV_IOMMU_DEFAULT_LEVELS	1
-+#define POWERNV_IOMMU_DEFAULT_LEVELS	2
- #define POWERNV_IOMMU_MAX_LEVELS	5
+ 		top_gate_clk[i].gate.reg += (uintptr_t)reg_base;
++		name = top_gate_clk[i].gate.hw.init->name;
+ 		ret = clk_hw_register(NULL, &top_gate_clk[i].gate.hw);
+-		if (ret) {
+-			pr_warn("top clk %s init error!\n",
+-				top_gate_clk[i].gate.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("top clk %s init error!\n", name);
+ 	}
  
- extern int pnv_tce_build(struct iommu_table *tbl, long index, long npages,
+ 	for (i = 0; i < ARRAY_SIZE(top_div_clk); i++) {
+@@ -624,11 +621,10 @@ static int __init top_clocks_init(struct device_node *np)
+ 					&top_div_clk[i].div.hw;
+ 
+ 		top_div_clk[i].div.reg += (uintptr_t)reg_base;
++		name = top_div_clk[i].div.hw.init->name;
+ 		ret = clk_hw_register(NULL, &top_div_clk[i].div.hw);
+-		if (ret) {
+-			pr_warn("top clk %s init error!\n",
+-				top_div_clk[i].div.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("top clk %s init error!\n", name);
+ 	}
+ 
+ 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+@@ -754,6 +750,7 @@ static int __init lsp0_clocks_init(struct device_node *np)
+ {
+ 	void __iomem *reg_base;
+ 	int i, ret;
++	const char *name;
+ 
+ 	reg_base = of_iomap(np, 0);
+ 	if (!reg_base) {
+@@ -767,11 +764,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
+ 					&lsp0_mux_clk[i].mux.hw;
+ 
+ 		lsp0_mux_clk[i].mux.reg += (uintptr_t)reg_base;
++		name = lsp0_mux_clk[i].mux.hw.init->name;
+ 		ret = clk_hw_register(NULL, &lsp0_mux_clk[i].mux.hw);
+-		if (ret) {
+-			pr_warn("lsp0 clk %s init error!\n",
+-				lsp0_mux_clk[i].mux.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("lsp0 clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lsp0_gate_clk); i++) {
+@@ -780,11 +776,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
+ 					&lsp0_gate_clk[i].gate.hw;
+ 
+ 		lsp0_gate_clk[i].gate.reg += (uintptr_t)reg_base;
++		name = lsp0_gate_clk[i].gate.hw.init->name;
+ 		ret = clk_hw_register(NULL, &lsp0_gate_clk[i].gate.hw);
+-		if (ret) {
+-			pr_warn("lsp0 clk %s init error!\n",
+-				lsp0_gate_clk[i].gate.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("lsp0 clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lsp0_div_clk); i++) {
+@@ -793,11 +788,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
+ 					&lsp0_div_clk[i].div.hw;
+ 
+ 		lsp0_div_clk[i].div.reg += (uintptr_t)reg_base;
++		name = lsp0_div_clk[i].div.hw.init->name;
+ 		ret = clk_hw_register(NULL, &lsp0_div_clk[i].div.hw);
+-		if (ret) {
+-			pr_warn("lsp0 clk %s init error!\n",
+-				lsp0_div_clk[i].div.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("lsp0 clk %s init error!\n", name);
+ 	}
+ 
+ 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+@@ -862,6 +856,7 @@ static int __init lsp1_clocks_init(struct device_node *np)
+ {
+ 	void __iomem *reg_base;
+ 	int i, ret;
++	const char *name;
+ 
+ 	reg_base = of_iomap(np, 0);
+ 	if (!reg_base) {
+@@ -875,11 +870,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
+ 					&lsp0_mux_clk[i].mux.hw;
+ 
+ 		lsp1_mux_clk[i].mux.reg += (uintptr_t)reg_base;
++		name = lsp1_mux_clk[i].mux.hw.init->name;
+ 		ret = clk_hw_register(NULL, &lsp1_mux_clk[i].mux.hw);
+-		if (ret) {
+-			pr_warn("lsp1 clk %s init error!\n",
+-				lsp1_mux_clk[i].mux.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("lsp1 clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lsp1_gate_clk); i++) {
+@@ -888,11 +882,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
+ 					&lsp1_gate_clk[i].gate.hw;
+ 
+ 		lsp1_gate_clk[i].gate.reg += (uintptr_t)reg_base;
++		name = lsp1_gate_clk[i].gate.hw.init->name;
+ 		ret = clk_hw_register(NULL, &lsp1_gate_clk[i].gate.hw);
+-		if (ret) {
+-			pr_warn("lsp1 clk %s init error!\n",
+-				lsp1_gate_clk[i].gate.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("lsp1 clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lsp1_div_clk); i++) {
+@@ -901,11 +894,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
+ 					&lsp1_div_clk[i].div.hw;
+ 
+ 		lsp1_div_clk[i].div.reg += (uintptr_t)reg_base;
++		name = lsp1_div_clk[i].div.hw.init->name;
+ 		ret = clk_hw_register(NULL, &lsp1_div_clk[i].div.hw);
+-		if (ret) {
+-			pr_warn("lsp1 clk %s init error!\n",
+-				lsp1_div_clk[i].div.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("lsp1 clk %s init error!\n", name);
+ 	}
+ 
+ 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+@@ -979,6 +971,7 @@ static int __init audio_clocks_init(struct device_node *np)
+ {
+ 	void __iomem *reg_base;
+ 	int i, ret;
++	const char *name;
+ 
+ 	reg_base = of_iomap(np, 0);
+ 	if (!reg_base) {
+@@ -992,11 +985,10 @@ static int __init audio_clocks_init(struct device_node *np)
+ 					&audio_mux_clk[i].mux.hw;
+ 
+ 		audio_mux_clk[i].mux.reg += (uintptr_t)reg_base;
++		name = audio_mux_clk[i].mux.hw.init->name;
+ 		ret = clk_hw_register(NULL, &audio_mux_clk[i].mux.hw);
+-		if (ret) {
+-			pr_warn("audio clk %s init error!\n",
+-				audio_mux_clk[i].mux.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("audio clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(audio_adiv_clk); i++) {
+@@ -1005,11 +997,10 @@ static int __init audio_clocks_init(struct device_node *np)
+ 					&audio_adiv_clk[i].hw;
+ 
+ 		audio_adiv_clk[i].reg_base += (uintptr_t)reg_base;
++		name = audio_adiv_clk[i].hw.init->name;
+ 		ret = clk_hw_register(NULL, &audio_adiv_clk[i].hw);
+-		if (ret) {
+-			pr_warn("audio clk %s init error!\n",
+-				audio_adiv_clk[i].hw.init->name);
+-		}
++		if (ret)
++			pr_warn("audio clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(audio_div_clk); i++) {
+@@ -1018,11 +1009,10 @@ static int __init audio_clocks_init(struct device_node *np)
+ 					&audio_div_clk[i].div.hw;
+ 
+ 		audio_div_clk[i].div.reg += (uintptr_t)reg_base;
++		name = audio_div_clk[i].div.hw.init->name;
+ 		ret = clk_hw_register(NULL, &audio_div_clk[i].div.hw);
+-		if (ret) {
+-			pr_warn("audio clk %s init error!\n",
+-				audio_div_clk[i].div.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("audio clk %s init error!\n", name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(audio_gate_clk); i++) {
+@@ -1031,11 +1021,10 @@ static int __init audio_clocks_init(struct device_node *np)
+ 					&audio_gate_clk[i].gate.hw;
+ 
+ 		audio_gate_clk[i].gate.reg += (uintptr_t)reg_base;
++		name = audio_gate_clk[i].gate.hw.init->name;
+ 		ret = clk_hw_register(NULL, &audio_gate_clk[i].gate.hw);
+-		if (ret) {
+-			pr_warn("audio clk %s init error!\n",
+-				audio_gate_clk[i].gate.hw.init->name);
+-		}
++		if (ret)
++			pr_warn("audio clk %s init error!\n", name);
+ 	}
+ 
+ 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
 -- 
 2.20.1
 
