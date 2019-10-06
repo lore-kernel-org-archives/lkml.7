@@ -2,117 +2,136 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF93C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F63ECE58D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF5AA206C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BIF5Ii9L"
+	by mail.kernel.org (Postfix) with ESMTP id 0EE802133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570353588;
+	bh=RaGNb1u3bc63/uCEtd4tmegwYacTtQnWlLgt8LRv7UI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XNZ9a/daAsOhVDI2Xqwngrbt9FHyZ69t68H6GBBjEsxpVHk6W065WGeB0AOgKbcUX
+	 NLQvp3lkVygG7EUHd5KNtclJzjSBiAa9pnOWW2c+wno1PEsssEfazHUkM+FN9r2fqS
+	 aSYT2HmwPJXhPKV7AIRwcwxfd3kRG42vCGhXYxRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfJFJSz (ORCPT
+        id S1726428AbfJFJTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:18:55 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:26538 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfJFJSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:18:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1570353534; x=1601889534;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=DvFDDRFwzFZpm+9W9t8azYWL1u/Z9uXnIXeKEaiewcg=;
-  b=BIF5Ii9LHene3X6hc/jjfpm9SSQCSojXINxUEWgFs70e4y5S8hnTbZL6
-   Bc203boKAlxDlFAKf29fBOoocU5G3JQDdH1w7LcogOL87cP8Zmy63tgjX
-   zOjRtP4Z5FyShdyyvhAT7cBltdIE4b6P8s/abyeXdaoJgx/vlvoix2lfW
-   M=;
-X-IronPort-AV: E=Sophos;i="5.67,263,1566864000"; 
-   d="scan'208";a="707021097"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Oct 2019 09:11:37 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id C8E90A22EE;
-        Sun,  6 Oct 2019 09:11:05 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 6 Oct 2019 09:11:05 +0000
-Received: from [10.125.238.52] (10.43.161.192) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Sun, 6 Oct
- 2019 09:10:56 +0000
-Subject: Re: [PATCH v4 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
- POS
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        "Arnd Bergmann" <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>, <amirkl@amazon.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>
-References: <1570102361-11696-1-git-send-email-talel@amazon.com>
- <1570102361-11696-2-git-send-email-talel@amazon.com>
- <CAL_JsqJDJF7h=nSw3dkNF=H3ghJeLR=MUgrEh+qxw0jhDnfxFw@mail.gmail.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <ee5a0727-6cc0-062b-0797-20fecdf1a450@amazon.com>
-Date:   Sun, 6 Oct 2019 12:10:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sun, 6 Oct 2019 05:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbfJFJTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:19:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 770122133F;
+        Sun,  6 Oct 2019 09:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570353586;
+        bh=RaGNb1u3bc63/uCEtd4tmegwYacTtQnWlLgt8LRv7UI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mtcabC5nUydTdJS6CWumk7NLH8utjo71Z528gtRUO1xWtxtB6yf4UzbPyLCufTUTB
+         hLnCH8LAyAbqAUDrbVwZHInDhnMjPUqthF8swdEBpXSwrKr6rT3w8/LVDtMZOCsWRp
+         8MDCxxJEo54n/+57bPK+Cne2C2vEwu4m9PeHcS8I=
+Date:   Sun, 6 Oct 2019 10:19:42 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/10] iio: imu: adis: create an unlocked version of
+ adis_reset()
+Message-ID: <20191006101942.4fce6760@archlinux>
+In-Reply-To: <20190926111812.15957-6-alexandru.ardelean@analog.com>
+References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
+        <20190926111812.15957-6-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJDJF7h=nSw3dkNF=H3ghJeLR=MUgrEh+qxw0jhDnfxFw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.43.161.192]
-X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thanks for the review.
+On Thu, 26 Sep 2019 14:18:07 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-On 10/4/2019 6:05 PM, Rob Herring wrote:
-> On Thu, Oct 3, 2019 at 6:33 AM Talel Shenhar <talel@amazon.com> wrote:
->
-> Fails 'make dt_binding_check' (drop the '-'):
-ack, shall be part of v5
->
->> +
->> +examples:
->> +  - |
->> +    al_pos_edac@f0070084 {
-> edac@...
-ack, shall be part of v5
->
->> +      compatible = "amazon,al-pos-edac";
->> +      reg = <0x0 0xf0070084 0x0 0x00000008>;
->> +      interrupt-parent = <&amazon_system_fabric>;
->> +      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-> Not documented.
-
-looks good?
-
-    interrupts:
-
-     description: Interrupt for the error event.
-     maxItems: 1
-
+> The reset routine may also be important to be protected by the state-lock
+> and grouped with other operations, so create an unlocked version, so that
+> this can be done.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied
+> ---
+>  drivers/iio/imu/adis.c       |  8 ++++----
+>  include/linux/iio/imu/adis.h | 19 ++++++++++++++++++-
+>  2 files changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> index e461b9ae22a5..b14101bf34b9 100644
+> --- a/drivers/iio/imu/adis.c
+> +++ b/drivers/iio/imu/adis.c
+> @@ -309,23 +309,23 @@ int __adis_check_status(struct adis *adis)
+>  EXPORT_SYMBOL_GPL(__adis_check_status);
+>  
+>  /**
+> - * adis_reset() - Reset the device
+> + * __adis_reset() - Reset the device (unlocked version)
+>   * @adis: The adis device
+>   *
+>   * Returns 0 on success, a negative error code otherwise
+>   */
+> -int adis_reset(struct adis *adis)
+> +int __adis_reset(struct adis *adis)
+>  {
+>  	int ret;
+>  
+> -	ret = adis_write_reg_8(adis, adis->data->glob_cmd_reg,
+> +	ret = __adis_write_reg_8(adis, adis->data->glob_cmd_reg,
+>  			ADIS_GLOB_CMD_SW_RESET);
+>  	if (ret)
+>  		dev_err(&adis->spi->dev, "Failed to reset device: %d\n", ret);
+>  
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL_GPL(adis_reset);
+> +EXPORT_SYMBOL_GPL(__adis_reset);
+>  
+>  static int adis_self_test(struct adis *adis)
+>  {
+> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> index f4ffba0c36b1..966af241710f 100644
+> --- a/include/linux/iio/imu/adis.h
+> +++ b/include/linux/iio/imu/adis.h
+> @@ -73,7 +73,24 @@ struct adis {
+>  
+>  int adis_init(struct adis *adis, struct iio_dev *indio_dev,
+>  	struct spi_device *spi, const struct adis_data *data);
+> -int adis_reset(struct adis *adis);
+> +int __adis_reset(struct adis *adis);
+> +
+> +/**
+> + * adis_reset() - Reset the device
+> + * @adis: The adis device
+> + *
+> + * Returns 0 on success, a negative error code otherwise
+> + */
+> +static inline int adis_reset(struct adis *adis)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&adis->state_lock);
+> +	ret = __adis_reset(adis);
+> +	mutex_unlock(&adis->state_lock);
+> +
+> +	return ret;
+> +}
+>  
+>  int __adis_write_reg(struct adis *adis, unsigned int reg,
+>  	unsigned int val, unsigned int size);
 
