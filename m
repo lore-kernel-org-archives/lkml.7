@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85AEC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41BFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54AE2133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C36C20867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfJFKeN (ORCPT
+        id S1727297AbfJFKeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:34:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3258 "EHLO huawei.com"
+        Sun, 6 Oct 2019 06:34:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45234 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbfJFKeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:34:07 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0BF3DE12BDB1CF4DC750;
-        Sun,  6 Oct 2019 18:34:05 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:33:56 +0800
+        id S1727264AbfJFKeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:34:13 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1EA89D08BB2E59D6385F;
+        Sun,  6 Oct 2019 18:34:09 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:34:03 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
         <joel@jms.id.au>, <andrew@aj.id.au>, <nicolas.ferre@microchip.com>,
@@ -46,9 +46,9 @@ CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 32/34] rtc: vt8500: use devm_platform_ioremap_resource() to simplify code
-Date:   Sun, 6 Oct 2019 18:29:51 +0800
-Message-ID: <20191006102953.57536-33-yuehaibing@huawei.com>
+Subject: [PATCH -next 34/34] rtc: zynqmp: use devm_platform_ioremap_resource() to simplify code
+Date:   Sun, 6 Oct 2019 18:29:53 +0800
+Message-ID: <20191006102953.57536-35-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191006102953.57536-1-yuehaibing@huawei.com>
 References: <20191006102953.57536-1-yuehaibing@huawei.com>
@@ -66,30 +66,31 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/rtc/rtc-vt8500.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/rtc/rtc-zynqmp.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-vt8500.c b/drivers/rtc/rtc-vt8500.c
-index d5d14cf..11859b9 100644
---- a/drivers/rtc/rtc-vt8500.c
-+++ b/drivers/rtc/rtc-vt8500.c
-@@ -200,7 +200,6 @@ static const struct rtc_class_ops vt8500_rtc_ops = {
- static int vt8500_rtc_probe(struct platform_device *pdev)
+diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
+index 2c76275..55646e0 100644
+--- a/drivers/rtc/rtc-zynqmp.c
++++ b/drivers/rtc/rtc-zynqmp.c
+@@ -195,7 +195,6 @@ static irqreturn_t xlnx_rtc_interrupt(int irq, void *id)
+ static int xlnx_rtc_probe(struct platform_device *pdev)
  {
- 	struct vt8500_rtc *vt8500_rtc;
--	struct resource	*res;
+ 	struct xlnx_rtc_dev *xrtcdev;
+-	struct resource *res;
  	int ret;
  
- 	vt8500_rtc = devm_kzalloc(&pdev->dev,
-@@ -215,8 +214,7 @@ static int vt8500_rtc_probe(struct platform_device *pdev)
- 	if (vt8500_rtc->irq_alarm < 0)
- 		return vt8500_rtc->irq_alarm;
+ 	xrtcdev = devm_kzalloc(&pdev->dev, sizeof(*xrtcdev), GFP_KERNEL);
+@@ -211,9 +210,7 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
+ 	xrtcdev->rtc->ops = &xlnx_rtc_ops;
+ 	xrtcdev->rtc->range_max = U32_MAX;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	vt8500_rtc->regbase = devm_ioremap_resource(&pdev->dev, res);
-+	vt8500_rtc->regbase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(vt8500_rtc->regbase))
- 		return PTR_ERR(vt8500_rtc->regbase);
+-
+-	xrtcdev->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	xrtcdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(xrtcdev->reg_base))
+ 		return PTR_ERR(xrtcdev->reg_base);
  
 -- 
 2.7.4
