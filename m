@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9719CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2498120673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666AC2077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384783;
-	bh=j8Ts51ouzUORb/g+SI+XF3GofZDMGyDqpfF2SFwJASg=;
+	s=default; t=1570384791;
+	bh=S20uy8P4PRf/bzXgHQAXj8lKXo82Ek27pjMYweAOWz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+trFSbfnR+pOBVB6yKMqL81Mu5KkwQE8kYD8xLOkBvqViN7dzsauJIJUJWcC1W/j
-	 dIXfjMNEMSg3fvcUSCVG1tdplhVsPr6AvyCBVAsZXRaGyo2tJFGH2ezAeDE1rX7xxG
-	 y8uUkDPzt52a9LHc0GYjlRkJBvzZQz69cGowH0aY=
+	b=2Etz0B0kYzyUj2/ysbrWIzo/yWy9Q/WAmM5f7EAqOUQy3BCBI6qBOKmTq3abfaEBD
+	 hDHmozTAnQ3x8A1Nh14VGZ8s/Bh2/ntb7KvlCCUIAuKjM02rxpkhDG+Rw5k8YJW6rl
+	 lwuH4Lvl1OwnUb+qdn8OHcX48E50G/J2hwPszY5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfJFR7m (ORCPT
+        id S1728980AbfJFR7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:59:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbfJFRaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:16 -0400
+        id S1727178AbfJFRaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFF412133F;
-        Sun,  6 Oct 2019 17:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72AA1217F9;
+        Sun,  6 Oct 2019 17:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383016;
-        bh=j8Ts51ouzUORb/g+SI+XF3GofZDMGyDqpfF2SFwJASg=;
+        s=default; t=1570383003;
+        bh=S20uy8P4PRf/bzXgHQAXj8lKXo82Ek27pjMYweAOWz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AHsUn1zqXENJsKeZLjOfwk4Rf8DaJSraGNrDbKlrelekmY2guPNxj+ANzwuFRH0k
-         40MCh9bNszmk5WtQO7oXuuxlsr5YGKbxOFV39b2nE5axeqYlhasqdZWAFpVt1MZePp
-         +o3SW7dqHjZGOBBDnYoOosSwaiUpt/B5SwccWrn8=
+        b=Dg0mhO4x7QDzFqvBqabDVh/ubP/wlqPgf0VPrMymA1vRoN7FkfBB18MleiqmNsYaJ
+         AvzbGJhFkcC9Z45vr/UffYEK/89PNLXayhreftotU/BTwMTqFURvrRrfrb37GYpRQO
+         2Ezve8UpZqcXxqRY7OXCALp+CHoINKPOgziNyA6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/106] powerpc/pseries: correctly track irq state in default idle
-Date:   Sun,  6 Oct 2019 19:20:44 +0200
-Message-Id: <20191006171141.397412915@linuxfoundation.org>
+Subject: [PATCH 4.19 051/106] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun,  6 Oct 2019 19:20:57 +0200
+Message-Id: <20191006171144.979713490@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,57 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-prep_irq_for_idle() is intended to be called before entering
-H_CEDE (and it is used by the pseries cpuidle driver). However the
-default pseries idle routine does not call it, leading to mismanaged
-lazy irq state when the cpuidle driver isn't in use. Manifestations of
-this include:
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-* Dropped IPIs in the time immediately after a cpu comes
-  online (before it has installed the cpuidle handler), making the
-  online operation block indefinitely waiting for the new cpu to
-  respond.
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
 
-* Hitting this WARN_ON in arch_local_irq_restore():
-	/*
-	 * We should already be hard disabled here. We had bugs
-	 * where that wasn't the case so let's dbl check it and
-	 * warn if we are wrong. Only do that when IRQ tracing
-	 * is enabled as mfmsr() can be costly.
-	 */
-	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
-		__hard_irq_disable();
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
 
-Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
-result.
-
-Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/setup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/intel-lpss-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index ba1791fd3234d..67f49159ea708 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -325,6 +325,9 @@ static void pseries_lpar_idle(void)
- 	 * low power mode by ceding processor to hypervisor
- 	 */
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 0e5282fc14675..c37c8bb860685 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -39,6 +39,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
  
-+	if (!prep_irq_for_idle())
-+		return;
++	pdev->d3cold_delay = 0;
 +
- 	/* Indicate to hypervisor that we are idle. */
- 	get_lppaca()->idle = 1;
- 
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
+ 	pci_try_set_mwi(pdev);
 -- 
 2.20.1
 
