@@ -2,120 +2,155 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43C9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710A7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8675120700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A2B2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570383312;
+	bh=+MlfoAtoWLCe3LiiFPezhp7+K5aRv9eFB+47gTDeinA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o7e8O236Efxcnm+7+Uzp9jEHVh8SYloiZ0QeB1vyiZqObYxgg9LixlxmBqLKhyJWM
+	 E6VfSH8tQyRPHHPgYtgs0e0FsnoGZUjmj7DsolrSbmc8nIVlUWcC+P0099Vimb24mw
+	 jfKATmR6ecx1IFrjDdQDIQZaIwSw3IJq3qj/LRe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbfJFRfI (ORCPT
+        id S1730031AbfJFRfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:08 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53906 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730127AbfJFRfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:05 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 88382804A9; Sun,  6 Oct 2019 19:34:47 +0200 (CEST)
-Date:   Sun, 6 Oct 2019 19:35:02 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: x86/random: Speculation to the rescue
-Message-ID: <20191006173501.GA31243@amd>
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <20191006114129.GD24605@amd>
- <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
+        Sun, 6 Oct 2019 13:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730126AbfJFRfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0DE2080F;
+        Sun,  6 Oct 2019 17:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570383303;
+        bh=+MlfoAtoWLCe3LiiFPezhp7+K5aRv9eFB+47gTDeinA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U6FKPxUHmF++TT1VaJfLvviLhzq2lxPkn+bCoSzRbxeVCW6sF5mpO/DXfDFtAI7Cr
+         /+fFpxhc/eNewBmWLIft2onwKswMSR1y+u688QgGDuIxdsy88rnr/VEajWSCvhWuZO
+         FcC5r/1owpZHnLt6wlw64qy5vH7JCIahGxhozKuY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 055/137] powerpc/rtas: use device model APIs and serialization during LPM
+Date:   Sun,  6 Oct 2019 19:20:39 +0200
+Message-Id: <20191006171213.287244692@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
+References: <20191006171209.403038733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
 
-On Sun 2019-10-06 10:26:18, Linus Torvalds wrote:
-> On Sun, Oct 6, 2019 at 4:41 AM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Should we have some kind of notifier chain, so that we could utilize
-> > better random sources (spinning rust) if we had them?
->=20
-> The spinning rust will get entropy on its own just thanks to the
-> regular interrupt stuff. And the kernel tryin gto do IO is a bad
-> idea.
+The LPAR migration implementation and userspace-initiated cpu hotplug
+can interleave their executions like so:
 
-It will not: boot is now halted because systemd wants some
-entropy. Everything is idle and very little interrupts are
-happening. We have spinning rust, but it is idle, and thus not
-generating any interrupts.
+1. Set cpu 7 offline via sysfs.
 
-> Plus I think it's kind of pointless to do anythign at all for things
-> like spinning rust in this day and age. It's no longer relevant, and
-> never really was in the area where this was a problem.
->=20
-> Also, I don't really like the notion of random (sic) notifiers that
-> different drivers or things could attach to this thing. People will
-> disagree about how much entropy it has anyway, and I'd rather have
-> _one_ clear implementation that people can look at and comment on and
-> try to actually write an academic paper on and suggest improvements
-> to, than some generic "entropy notifier interface" that then gets
-> whatever input somebody decides is appropriate.
->=20
-> We already have interfaces for "I think I have interesting data":
-> add_interrupt_randomness(), add_device_randomness(),
-> add_hwgenerator_randomness() are all for different sources of
-> entropy.
+2. Begin a partition migration, whose implementation requires the OS
+   to ensure all present cpus are online; cpu 7 is onlined:
 
-I'm not suggesting the notifier would invent some entropy... I agree
-that kernel doing IO is strange, but I'm suggesting just that: if
-userspace is blocked waiting for entropy, do some I/O, and let
-interrupt randomness do its job.
+     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
 
-It will work great on spinning rust. It will also work somehow on SSDs
-and SD cards etc, because they have separate CPUs these days. They'll
-certainly generate some interrupts, and we already assign some
-randomness to that... It will let the machine boot, and entropy
-calculation rules do not need to change.
+   This sets cpu 7 online in all respects except for the cpu's
+   corresponding struct device; dev->offline remains true.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
+   already online and returns success. The driver core (device_online)
+   sets dev->offline = false.
 
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+4. The migration completes and restores cpu 7 to offline state:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
 
-iEYEARECAAYFAl2aJcUACgkQMOfwapXb+vJoQwCfVYSJea7N8MJtkKLYFp8F2PgP
-PG0AnRqDVeQLLkeq8toHSyfHc5+0kESP
-=QjAp
------END PGP SIGNATURE-----
+This leaves cpu7 in a state where the driver core considers the cpu
+device online, but in all other respects it is offline and
+unused. Attempts to online the cpu via sysfs appear to succeed but the
+driver core actually does not pass the request to the lower-level
+cpuhp support code. This makes the cpu unusable until the cpu device
+is manually set offline and then online again via sysfs.
 
---u3/rZRmxL6MmkK24--
+Instead of directly calling cpu_up/cpu_down, the migration code should
+use the higher-level device core APIs to maintain consistent state and
+serialize operations.
+
+Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/kernel/rtas.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
+index fff2eb22427d0..65cd96c3b1d60 100644
+--- a/arch/powerpc/kernel/rtas.c
++++ b/arch/powerpc/kernel/rtas.c
+@@ -871,15 +871,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
+ 		return 0;
+ 
+ 	for_each_cpu(cpu, cpus) {
++		struct device *dev = get_cpu_device(cpu);
++
+ 		switch (state) {
+ 		case DOWN:
+-			cpuret = cpu_down(cpu);
++			cpuret = device_offline(dev);
+ 			break;
+ 		case UP:
+-			cpuret = cpu_up(cpu);
++			cpuret = device_online(dev);
+ 			break;
+ 		}
+-		if (cpuret) {
++		if (cpuret < 0) {
+ 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
+ 					__func__,
+ 					((state == UP) ? "up" : "down"),
+@@ -968,6 +970,8 @@ int rtas_ibm_suspend_me(u64 handle)
+ 	data.token = rtas_token("ibm,suspend-me");
+ 	data.complete = &done;
+ 
++	lock_device_hotplug();
++
+ 	/* All present CPUs must be online */
+ 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
+ 	cpuret = rtas_online_cpus_mask(offline_mask);
+@@ -1007,6 +1011,7 @@ out_hotplug_enable:
+ 				__func__);
+ 
+ out:
++	unlock_device_hotplug();
+ 	free_cpumask_var(offline_mask);
+ 	return atomic_read(&data.error);
+ }
+-- 
+2.20.1
+
+
+
