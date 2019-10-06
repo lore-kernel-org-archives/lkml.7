@@ -4,54 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7445C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B16C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D23217F9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D632080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382892;
-	bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
+	s=default; t=1570382893;
+	bh=+uE/jBQW2nAhPbZwmWhhKdEgpP4dh01GAwNZwEB0lmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNIuRZ8x7lJoMWNQFkzBGumk7jkCDpczEqkCcDmUaEHk7Bt6f/9VhC4+DSUfAqpCW
-	 8AEJlJASOyKa620De1YEyygPN/WVR1ZW6kJm8Ipuoacht+/UXVhVxt0fSofTinCbQM
-	 DlIqqdJnbOE4gxMcwpZ4q8RpRcAiqhKgIhBuYpTw=
+	b=w35TXKBaOk26AamF1im4Z5Ax2lffhr7BcsLizU/tmCCqlPjRtvQ5cfw6YThRZSyj1
+	 hSM2/OCbd6i/a7VVzZZljOTSGK2c5708Vi4OKvJyZuGZQal8q0G9KlyPfBN+TBLelE
+	 L9goGBeFsPM/YLY/sru2oHWKF7qR3jEJWOFrJ9Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfJFR2M (ORCPT
+        id S1728706AbfJFR2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfJFR2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:08 -0400
+        id S1727127AbfJFR2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 441982133F;
-        Sun,  6 Oct 2019 17:28:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09AAF2087E;
+        Sun,  6 Oct 2019 17:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382886;
-        bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
+        s=default; t=1570382889;
+        bh=+uE/jBQW2nAhPbZwmWhhKdEgpP4dh01GAwNZwEB0lmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPaTqd5LAQWVxdz3TczeNJO2ngMtDk/W+VGsltK1Qg3rvQUs8M4YGxt0NLe9nQLOF
-         d3Lg8XEB+k8Daw+gtf+fMF2Lbi/gS696oJTE42H6NL6kMUWoa5FnrJXgpjhxrZu6Wc
-         Ea4EiyXiVHIuib4AwTvw6mq6Tbx+xNhmzaGtnvng=
+        b=m7tLKh1yn0E+NRFzTafKdQd4e053WbWyxc/7iuQxJZ0+e8eSpoXjaOmWElStWE1mY
+         Z/tzqxHXQ2+3znbRY0AL9Oz+xXE/V7BgML6zIbp/ujTtXy9VkEtt56JFPcEGP0uXjb
+         GNX28JLfhEjFyRI/ROlwJbLw5mCsfOP49N74sUmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 36/68] HID: apple: Fix stuck function keys when using FN
-Date:   Sun,  6 Oct 2019 19:21:12 +0200
-Message-Id: <20191006171125.503172493@linuxfoundation.org>
+Subject: [PATCH 4.19 001/106] tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+Date:   Sun,  6 Oct 2019 19:20:07 +0200
+Message-Id: <20191006171125.167365005@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
-References: <20191006171108.150129403@linuxfoundation.org>
+In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
+References: <20191006171124.641144086@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,109 +66,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joao Moreno <mail@joaomoreno.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
+commit 2677ca98ae377517930c183248221f69f771c921 upstream
 
-This fixes an issue in which key down events for function keys would be
-repeatedly emitted even after the user has raised the physical key. For
-example, the driver fails to emit the F5 key up event when going through
-the following steps:
-- fnmode=1: hold FN, hold F5, release FN, release F5
-- fnmode=2: hold F5, hold FN, release F5, release FN
+Use tpm_try_get_ops() in tpm-sysfs.c so that we can consider moving
+other decorations (locking, localities, power management for example)
+inside it. This direction can be of course taken only after other call
+sites for tpm_transmit() have been treated in the same way.
 
-The repeated F5 key down events can be easily verified using xev.
-
-Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Tested-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Tested-by: Alexander Steffen <Alexander.Steffen@infineon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 21 deletions(-)
+ drivers/char/tpm/tpm-sysfs.c | 134 ++++++++++++++++++++++-------------
+ 1 file changed, 83 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 1cb41992aaa1f..d0a81a03ddbdd 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -57,7 +57,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
--	DECLARE_BITMAP(pressed_fn, KEY_CNT);
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
- 
-@@ -184,6 +183,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
+index 83a77a4455380..177a60e5c6ec9 100644
+--- a/drivers/char/tpm/tpm-sysfs.c
++++ b/drivers/char/tpm/tpm-sysfs.c
+@@ -39,7 +39,6 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
  {
- 	struct apple_sc *asc = hid_get_drvdata(hid);
- 	const struct apple_key_translation *trans, *table;
-+	bool do_translate;
-+	u16 code = 0;
+ 	struct tpm_buf tpm_buf;
+ 	struct tpm_readpubek_out *out;
+-	ssize_t rc;
+ 	int i;
+ 	char *str = buf;
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
+@@ -47,19 +46,18 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
  
- 	if (usage->code == KEY_FN) {
- 		asc->fn_on = !!value;
-@@ -192,8 +193,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	memset(&anti_replay, 0, sizeof(anti_replay));
+ 
+-	rc = tpm_buf_init(&tpm_buf, TPM_TAG_RQU_COMMAND, TPM_ORD_READPUBEK);
+-	if (rc)
+-		return rc;
++	if (tpm_try_get_ops(chip))
++		return 0;
++
++	if (tpm_buf_init(&tpm_buf, TPM_TAG_RQU_COMMAND, TPM_ORD_READPUBEK))
++		goto out_ops;
+ 
+ 	tpm_buf_append(&tpm_buf, anti_replay, sizeof(anti_replay));
+ 
+-	rc = tpm_transmit_cmd(chip, NULL, tpm_buf.data, PAGE_SIZE,
++	if (tpm_transmit_cmd(chip, NULL, tpm_buf.data, PAGE_SIZE,
+ 			      READ_PUBEK_RESULT_MIN_BODY_SIZE, 0,
+-			      "attempting to read the PUBEK");
+-	if (rc) {
+-		tpm_buf_destroy(&tpm_buf);
+-		return 0;
+-	}
++			      "attempting to read the PUBEK"))
++		goto out_buf;
+ 
+ 	out = (struct tpm_readpubek_out *)&tpm_buf.data[10];
+ 	str +=
+@@ -90,9 +88,11 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
+ 			str += sprintf(str, "\n");
  	}
  
- 	if (fnmode) {
--		int do_translate;
--
- 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
- 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
- 			table = macbookair_fn_keys;
-@@ -205,25 +204,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		trans = apple_find_translation (table, usage->code);
+-	rc = str - buf;
++out_buf:
+ 	tpm_buf_destroy(&tpm_buf);
+-	return rc;
++out_ops:
++	tpm_put_ops(chip);
++	return str - buf;
+ }
+ static DEVICE_ATTR_RO(pubek);
  
- 		if (trans) {
--			if (test_bit(usage->code, asc->pressed_fn))
--				do_translate = 1;
--			else if (trans->flags & APPLE_FLAG_FKEY)
--				do_translate = (fnmode == 2 && asc->fn_on) ||
--					(fnmode == 1 && !asc->fn_on);
--			else
--				do_translate = asc->fn_on;
--
--			if (do_translate) {
--				if (value)
--					set_bit(usage->code, asc->pressed_fn);
--				else
--					clear_bit(usage->code, asc->pressed_fn);
--
--				input_event(input, usage->type, trans->to,
--						value);
--
--				return 1;
-+			if (test_bit(trans->from, input->key))
-+				code = trans->from;
-+			else if (test_bit(trans->to, input->key))
-+				code = trans->to;
-+
-+			if (!code) {
-+				if (trans->flags & APPLE_FLAG_FKEY) {
-+					switch (fnmode) {
-+					case 1:
-+						do_translate = !asc->fn_on;
-+						break;
-+					case 2:
-+						do_translate = asc->fn_on;
-+						break;
-+					default:
-+						/* should never happen */
-+						do_translate = false;
-+					}
-+				} else {
-+					do_translate = asc->fn_on;
-+				}
-+
-+				code = do_translate ? trans->to : trans->from;
- 			}
-+
-+			input_event(input, usage->type, code, value);
-+			return 1;
- 		}
+@@ -106,12 +106,16 @@ static ssize_t pcrs_show(struct device *dev, struct device_attribute *attr,
+ 	char *str = buf;
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
  
- 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+-	rc = tpm_getcap(chip, TPM_CAP_PROP_PCR, &cap,
+-			"attempting to determine the number of PCRS",
+-			sizeof(cap.num_pcrs));
+-	if (rc)
++	if (tpm_try_get_ops(chip))
+ 		return 0;
+ 
++	if (tpm_getcap(chip, TPM_CAP_PROP_PCR, &cap,
++		       "attempting to determine the number of PCRS",
++		       sizeof(cap.num_pcrs))) {
++		tpm_put_ops(chip);
++		return 0;
++	}
++
+ 	num_pcrs = be32_to_cpu(cap.num_pcrs);
+ 	for (i = 0; i < num_pcrs; i++) {
+ 		rc = tpm_pcr_read_dev(chip, i, digest);
+@@ -122,6 +126,7 @@ static ssize_t pcrs_show(struct device *dev, struct device_attribute *attr,
+ 			str += sprintf(str, "%02X ", digest[j]);
+ 		str += sprintf(str, "\n");
+ 	}
++	tpm_put_ops(chip);
+ 	return str - buf;
+ }
+ static DEVICE_ATTR_RO(pcrs);
+@@ -129,16 +134,21 @@ static DEVICE_ATTR_RO(pcrs);
+ static ssize_t enabled_show(struct device *dev, struct device_attribute *attr,
+ 		     char *buf)
+ {
++	struct tpm_chip *chip = to_tpm_chip(dev);
++	ssize_t rc = 0;
+ 	cap_t cap;
+-	ssize_t rc;
+ 
+-	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_PERM, &cap,
+-			"attempting to determine the permanent enabled state",
+-			sizeof(cap.perm_flags));
+-	if (rc)
++	if (tpm_try_get_ops(chip))
+ 		return 0;
+ 
++	if (tpm_getcap(chip, TPM_CAP_FLAG_PERM, &cap,
++		       "attempting to determine the permanent enabled state",
++		       sizeof(cap.perm_flags)))
++		goto out_ops;
++
+ 	rc = sprintf(buf, "%d\n", !cap.perm_flags.disable);
++out_ops:
++	tpm_put_ops(chip);
+ 	return rc;
+ }
+ static DEVICE_ATTR_RO(enabled);
+@@ -146,16 +156,21 @@ static DEVICE_ATTR_RO(enabled);
+ static ssize_t active_show(struct device *dev, struct device_attribute *attr,
+ 		    char *buf)
+ {
++	struct tpm_chip *chip = to_tpm_chip(dev);
++	ssize_t rc = 0;
+ 	cap_t cap;
+-	ssize_t rc;
+ 
+-	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_PERM, &cap,
+-			"attempting to determine the permanent active state",
+-			sizeof(cap.perm_flags));
+-	if (rc)
++	if (tpm_try_get_ops(chip))
+ 		return 0;
+ 
++	if (tpm_getcap(chip, TPM_CAP_FLAG_PERM, &cap,
++		       "attempting to determine the permanent active state",
++		       sizeof(cap.perm_flags)))
++		goto out_ops;
++
+ 	rc = sprintf(buf, "%d\n", !cap.perm_flags.deactivated);
++out_ops:
++	tpm_put_ops(chip);
+ 	return rc;
+ }
+ static DEVICE_ATTR_RO(active);
+@@ -163,16 +178,21 @@ static DEVICE_ATTR_RO(active);
+ static ssize_t owned_show(struct device *dev, struct device_attribute *attr,
+ 			  char *buf)
+ {
++	struct tpm_chip *chip = to_tpm_chip(dev);
++	ssize_t rc = 0;
+ 	cap_t cap;
+-	ssize_t rc;
+ 
+-	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_PROP_OWNER, &cap,
+-			"attempting to determine the owner state",
+-			sizeof(cap.owned));
+-	if (rc)
++	if (tpm_try_get_ops(chip))
+ 		return 0;
+ 
++	if (tpm_getcap(to_tpm_chip(dev), TPM_CAP_PROP_OWNER, &cap,
++		       "attempting to determine the owner state",
++		       sizeof(cap.owned)))
++		goto out_ops;
++
+ 	rc = sprintf(buf, "%d\n", cap.owned);
++out_ops:
++	tpm_put_ops(chip);
+ 	return rc;
+ }
+ static DEVICE_ATTR_RO(owned);
+@@ -180,16 +200,21 @@ static DEVICE_ATTR_RO(owned);
+ static ssize_t temp_deactivated_show(struct device *dev,
+ 				     struct device_attribute *attr, char *buf)
+ {
++	struct tpm_chip *chip = to_tpm_chip(dev);
++	ssize_t rc = 0;
+ 	cap_t cap;
+-	ssize_t rc;
+ 
+-	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_VOL, &cap,
+-			"attempting to determine the temporary state",
+-			sizeof(cap.stclear_flags));
+-	if (rc)
++	if (tpm_try_get_ops(chip))
+ 		return 0;
+ 
++	if (tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_VOL, &cap,
++		       "attempting to determine the temporary state",
++		       sizeof(cap.stclear_flags)))
++		goto out_ops;
++
+ 	rc = sprintf(buf, "%d\n", cap.stclear_flags.deactivated);
++out_ops:
++	tpm_put_ops(chip);
+ 	return rc;
+ }
+ static DEVICE_ATTR_RO(temp_deactivated);
+@@ -198,15 +223,18 @@ static ssize_t caps_show(struct device *dev, struct device_attribute *attr,
+ 			 char *buf)
+ {
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
+-	cap_t cap;
+-	ssize_t rc;
++	ssize_t rc = 0;
+ 	char *str = buf;
++	cap_t cap;
+ 
+-	rc = tpm_getcap(chip, TPM_CAP_PROP_MANUFACTURER, &cap,
+-			"attempting to determine the manufacturer",
+-			sizeof(cap.manufacturer_id));
+-	if (rc)
++	if (tpm_try_get_ops(chip))
+ 		return 0;
++
++	if (tpm_getcap(chip, TPM_CAP_PROP_MANUFACTURER, &cap,
++		       "attempting to determine the manufacturer",
++		       sizeof(cap.manufacturer_id)))
++		goto out_ops;
++
+ 	str += sprintf(str, "Manufacturer: 0x%x\n",
+ 		       be32_to_cpu(cap.manufacturer_id));
+ 
+@@ -223,20 +251,22 @@ static ssize_t caps_show(struct device *dev, struct device_attribute *attr,
+ 			       cap.tpm_version_1_2.revMinor);
+ 	} else {
+ 		/* Otherwise just use TPM_STRUCT_VER */
+-		rc = tpm_getcap(chip, TPM_CAP_VERSION_1_1, &cap,
+-				"attempting to determine the 1.1 version",
+-				sizeof(cap.tpm_version));
+-		if (rc)
+-			return 0;
++		if (tpm_getcap(chip, TPM_CAP_VERSION_1_1, &cap,
++			       "attempting to determine the 1.1 version",
++			       sizeof(cap.tpm_version)))
++			goto out_ops;
++
+ 		str += sprintf(str,
+ 			       "TCG version: %d.%d\nFirmware version: %d.%d\n",
+ 			       cap.tpm_version.Major,
+ 			       cap.tpm_version.Minor,
+ 			       cap.tpm_version.revMajor,
+ 			       cap.tpm_version.revMinor);
+-	}
+-
+-	return str - buf;
++}
++	rc = str - buf;
++out_ops:
++	tpm_put_ops(chip);
++	return rc;
+ }
+ static DEVICE_ATTR_RO(caps);
+ 
+@@ -244,10 +274,12 @@ static ssize_t cancel_store(struct device *dev, struct device_attribute *attr,
+ 			    const char *buf, size_t count)
+ {
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
+-	if (chip == NULL)
++
++	if (tpm_try_get_ops(chip))
+ 		return 0;
+ 
+ 	chip->ops->cancel(chip);
++	tpm_put_ops(chip);
+ 	return count;
+ }
+ static DEVICE_ATTR_WO(cancel);
 -- 
 2.20.1
 
