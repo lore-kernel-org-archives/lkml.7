@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B04C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9952C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EEA21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844182133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfJFI5U (ORCPT
+        id S1726460AbfJFI5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 04:57:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45774 "EHLO mx1.redhat.com"
+        Sun, 6 Oct 2019 04:57:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51598 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfJFI5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 04:57:18 -0400
+        id S1726185AbfJFI5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 04:57:33 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D72C6A44ADD;
-        Sun,  6 Oct 2019 08:57:17 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E1E0F806CD;
+        Sun,  6 Oct 2019 08:57:32 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-116-58.ams2.redhat.com [10.36.116.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B4E45B69A;
-        Sun,  6 Oct 2019 08:57:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1AC65B681;
+        Sun,  6 Oct 2019 08:57:27 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
@@ -37,104 +37,66 @@ Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@suse.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized memmaps in shrink_zone_span()
-Date:   Sun,  6 Oct 2019 10:56:40 +0200
-Message-Id: <20191006085646.5768-5-david@redhat.com>
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH v6 06/10] mm/memory_hotplug: Poison memmap in remove_pfn_range_from_zone()
+Date:   Sun,  6 Oct 2019 10:56:42 +0200
+Message-Id: <20191006085646.5768-7-david@redhat.com>
 In-Reply-To: <20191006085646.5768-1-david@redhat.com>
 References: <20191006085646.5768-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Sun, 06 Oct 2019 08:57:18 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sun, 06 Oct 2019 08:57:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's limit shrinking to !ZONE_DEVICE so we can fix the current code. We
-should never try to touch the memmap of offline sections where we could
-have uninitialized memmaps and could trigger BUGs when calling
-page_to_nid() on poisoned pages.
+Let's poison the pages similar to when adding new memory in
+sparse_add_section(). Also call remove_pfn_range_from_zone() from
+memunmap_pages(), so we can poison the memmap from there as well.
 
-There is no reliable way to distinguish an uninitialized memmap from an
-initialized memmap that belongs to ZONE_DEVICE, as we don't have
-anything like SECTION_IS_ONLINE we can use similar to
-pfn_to_online_section() for !ZONE_DEVICE memory. E.g.,
-set_zone_contiguous() similarly relies on pfn_to_online_section() and
-will therefore never set a ZONE_DEVICE zone consecutive. Stopping to
-shrink the ZONE_DEVICE therefore results in no observable changes,
-besides /proc/zoneinfo indicating different boundaries - something we
-can totally live with.
-
-Before commit d0dc12e86b31 ("mm/memory_hotplug: optimize memory
-hotplug"), the memmap was initialized with 0 and the node with the
-right value. So the zone might be wrong but not garbage. After that
-commit, both the zone and the node will be garbage when touching
-uninitialized memmaps.
+While at it, calculate the pfn in memunmap_pages() only once.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
 Cc: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
 Cc: Michal Hocko <mhocko@suse.com>
 Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/memory_hotplug.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ mm/memory_hotplug.c | 3 +++
+ mm/memremap.c       | 2 ++
+ 2 files changed, 5 insertions(+)
 
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 86b4dc18e831..f96608d24f6a 100644
+index 5b003ffa5dc9..bf5173e7913d 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -331,7 +331,7 @@ static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
- 				     unsigned long end_pfn)
- {
- 	for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SUBSECTION) {
--		if (unlikely(!pfn_valid(start_pfn)))
-+		if (unlikely(!pfn_to_online_page(start_pfn)))
- 			continue;
- 
- 		if (unlikely(pfn_to_nid(start_pfn) != nid))
-@@ -356,7 +356,7 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
- 	/* pfn is the end pfn of a memory section. */
- 	pfn = end_pfn - 1;
- 	for (; pfn >= start_pfn; pfn -= PAGES_PER_SUBSECTION) {
--		if (unlikely(!pfn_valid(pfn)))
-+		if (unlikely(!pfn_to_online_page(pfn)))
- 			continue;
- 
- 		if (unlikely(pfn_to_nid(pfn) != nid))
-@@ -415,7 +415,7 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 	 */
- 	pfn = zone_start_pfn;
- 	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
--		if (unlikely(!pfn_valid(pfn)))
-+		if (unlikely(!pfn_to_online_page(pfn)))
- 			continue;
- 
- 		if (page_zone(pfn_to_page(pfn)) != zone)
-@@ -463,6 +463,16 @@ static void __remove_zone(struct zone *zone, unsigned long start_pfn,
+@@ -464,6 +464,9 @@ void __ref remove_pfn_range_from_zone(struct zone *zone,
  	struct pglist_data *pgdat = zone->zone_pgdat;
  	unsigned long flags;
  
-+#ifdef CONFIG_ZONE_DEVICE
-+	/*
-+	 * Zone shrinking code cannot properly deal with ZONE_DEVICE. So
-+	 * we will not try to shrink the zones - which is okay as
-+	 * set_zone_contiguous() cannot deal with ZONE_DEVICE either way.
-+	 */
-+	if (zone_idx(zone) == ZONE_DEVICE)
-+		return;
-+#endif
++	/* Poison struct pages because they are now uninitialized again. */
++	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
 +
- 	pgdat_resize_lock(zone->zone_pgdat, &flags);
- 	shrink_zone_span(zone, start_pfn, start_pfn + nr_pages);
- 	update_pgdat_span(pgdat);
+ #ifdef CONFIG_ZONE_DEVICE
+ 	/*
+ 	 * Zone shrinking code cannot properly deal with ZONE_DEVICE. So
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 70263e6f093e..7fed8bd32a18 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -139,6 +139,8 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+ 	nid = page_to_nid(first_page);
+ 
+ 	mem_hotplug_begin();
++	remove_pfn_range_from_zone(page_zone(first_page), PHYS_PFN(res->start),
++				   PHYS_PFN(resource_size(res)));
+ 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+ 		__remove_pages(PHYS_PFN(res->start),
+ 			       PHYS_PFN(resource_size(res)), NULL);
 -- 
 2.21.0
 
