@@ -7,49 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D13FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B780FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF4320673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FADD20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384736;
-	bh=6U0DUglx+sJiUGe4E43ESyfD7KbgwoFb8onbvz+2Zoc=;
+	s=default; t=1570384742;
+	bh=tCk26d+T+swVc3fMXQW/oo8S60/G6LbT8f9nF49ey3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gR/S1kAJzexkOh0pIl8gMZ9Gz9k8q1uKchvIvH+wO3/kVFh1LIhv6OLUtVQCIbivZ
-	 GZXBc+XnBxbSROr1f2YBXaSOtqtfTWFdkG78uhQN/u68hjUX/j4WvbQDuRO61YYhyb
-	 GToJdD+YyZ7g46Wx2t8A0MMcg0WawMV37e16qApk=
+	b=kzxaCB0PkvmkxMIAcSAm1w4mQWCfMA5EpSz4bHtLvgBHS2bCDPzeUTsdqJ8AbQY9v
+	 lE6fstXUxE8AYsH4PVfkIHHmu5tQYNAd2yhBb4ub35qvXK3vmQ3mKxj40FmqkPGpoj
+	 KIzdCLNJQIN9VPT4PsJhtP77XAB95FXFJuaLFAzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbfJFRbd (ORCPT
+        id S1729390AbfJFRbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57648 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfJFRbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:31:25 -0400
+        id S1727473AbfJFRbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:31:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A5E2080F;
-        Sun,  6 Oct 2019 17:31:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BE7D2133F;
+        Sun,  6 Oct 2019 17:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383083;
-        bh=6U0DUglx+sJiUGe4E43ESyfD7KbgwoFb8onbvz+2Zoc=;
+        s=default; t=1570383073;
+        bh=tCk26d+T+swVc3fMXQW/oo8S60/G6LbT8f9nF49ey3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kbSlWCwfua3AAwvHFO9OL1C2mob/2Pw3clOWS28w4Yrjq1Wz0NKjZfVpGW4Du7+u
-         Ln31YxhZQnGUejceKu1S7wT5VKDh8rKyQhTjFv2b7V7e/93R99EfX+OhL2Rxlyv2t5
-         uIp4VxyIUvx7Imbmks9zoQN7qMkf7fdpMC/qTNUI=
+        b=ABqGAh9n61vwPNYvV2mFuM2X6wEFGSrYixA6Kj6nLtyWjm0ViDTxd+CI8uS5xXlF/
+         YXQ1S8OCPlv6EnWbLUXr4TnhdX5IacQmpNuqbb/I1IZEw0Maw9h5zULMGYc6owAhbS
+         2Vc+P4O/H2c3IgvK8uqml0vLH3eSsEMqMrBXnTCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Hans Holmberg <hans.holmberg@wdc.com>,
+        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/106] block: mq-deadline: Fix queue restart handling
-Date:   Sun,  6 Oct 2019 19:21:24 +0200
-Message-Id: <20191006171156.638428126@linuxfoundation.org>
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/106] mips: properly account for stack randomization and stack guard gap
+Date:   Sun,  6 Oct 2019 19:21:21 +0200
+Message-Id: <20191006171155.204874463@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -62,113 +74,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
 
-[ Upstream commit cb8acabbe33b110157955a7425ee876fb81e6bbc ]
+[ Upstream commit b1f61b5bde3a1f50392c97b4c8513d1b8efb1cf2 ]
 
-Commit 7211aef86f79 ("block: mq-deadline: Fix write completion
-handling") added a call to blk_mq_sched_mark_restart_hctx() in
-dd_dispatch_request() to make sure that write request dispatching does
-not stall when all target zones are locked. This fix left a subtle race
-when a write completion happens during a dispatch execution on another
-CPU:
+This commit takes care of stack randomization and stack guard gap when
+computing mmap base address and checks if the task asked for
+randomization.  This fixes the problem uncovered and not fixed for arm
+here: https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
 
-CPU 0: Dispatch			CPU1: write completion
-
-dd_dispatch_request()
-    lock(&dd->lock);
-    ...
-    lock(&dd->zone_lock);	dd_finish_request()
-    rq = find request		lock(&dd->zone_lock);
-    unlock(&dd->zone_lock);
-    				zone write unlock
-				unlock(&dd->zone_lock);
-				...
-				__blk_mq_free_request
-                                      check restart flag (not set)
-				      -> queue not run
-    ...
-    if (!rq && have writes)
-        blk_mq_sched_mark_restart_hctx()
-    unlock(&dd->lock)
-
-Since the dispatch context finishes after the write request completion
-handling, marking the queue as needing a restart is not seen from
-__blk_mq_free_request() and blk_mq_sched_restart() not executed leading
-to the dispatch stall under 100% write workloads.
-
-Fix this by moving the call to blk_mq_sched_mark_restart_hctx() from
-dd_dispatch_request() into dd_finish_request() under the zone lock to
-ensure full mutual exclusion between write request dispatch selection
-and zone unlock on write request completion.
-
-Fixes: 7211aef86f79 ("block: mq-deadline: Fix write completion handling")
-Cc: stable@vger.kernel.org
-Reported-by: Hans Holmberg <Hans.Holmberg@wdc.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: http://lkml.kernel.org/r/20190730055113.23635-10-alex@ghiti.fr
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Paul Burton <paul.burton@mips.com>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/mq-deadline.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ arch/mips/mm/mmap.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index d5e21ce44d2cc..69094d6410623 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -376,13 +376,6 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd)
-  * hardware queue, but we may return a request that is for a
-  * different hardware queue. This is because mq-deadline has shared
-  * state for all hardware queues, in terms of sorting, FIFOs, etc.
-- *
-- * For a zoned block device, __dd_dispatch_request() may return NULL
-- * if all the queued write requests are directed at zones that are already
-- * locked due to on-going write requests. In this case, make sure to mark
-- * the queue as needing a restart to ensure that the queue is run again
-- * and the pending writes dispatched once the target zones for the ongoing
-- * write requests are unlocked in dd_finish_request().
-  */
- static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
+diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
+index 1b705fb2f10c4..233033f99d8fc 100644
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
+ EXPORT_SYMBOL(shm_align_mask);
+ 
+ /* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
++#define MIN_GAP		(128*1024*1024UL)
++#define MAX_GAP		((TASK_SIZE)/6*5)
++#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+ 
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
  {
-@@ -391,9 +384,6 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
- 
- 	spin_lock(&dd->lock);
- 	rq = __dd_dispatch_request(dd);
--	if (!rq && blk_queue_is_zoned(hctx->queue) &&
--	    !list_empty(&dd->fifo_list[WRITE]))
--		blk_mq_sched_mark_restart_hctx(hctx);
- 	spin_unlock(&dd->lock);
- 
- 	return rq;
-@@ -559,6 +549,13 @@ static void dd_prepare_request(struct request *rq, struct bio *bio)
-  * spinlock so that the zone is never unlocked while deadline_fifo_request()
-  * or deadline_next_request() are executing. This function is called for
-  * all requests, whether or not these requests complete successfully.
-+ *
-+ * For a zoned block device, __dd_dispatch_request() may have stopped
-+ * dispatching requests if all the queued requests are write requests directed
-+ * at zones that are already locked due to on-going write requests. To ensure
-+ * write request dispatch progress in this case, mark the queue as needing a
-+ * restart to ensure that the queue is run again after completion of the
-+ * request and zones being unlocked.
-  */
- static void dd_finish_request(struct request *rq)
+@@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
  {
-@@ -570,6 +567,12 @@ static void dd_finish_request(struct request *rq)
- 
- 		spin_lock_irqsave(&dd->zone_lock, flags);
- 		blk_req_zone_write_unlock(rq);
-+		if (!list_empty(&dd->fifo_list[WRITE])) {
-+			struct blk_mq_hw_ctx *hctx;
+ 	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
 +
-+			hctx = blk_mq_map_queue(q, rq->mq_ctx->cpu);
-+			blk_mq_sched_mark_restart_hctx(hctx);
-+		}
- 		spin_unlock_irqrestore(&dd->zone_lock, flags);
- 	}
- }
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
+ 
+ 	if (gap < MIN_GAP)
+ 		gap = MIN_GAP;
 -- 
 2.20.1
 
