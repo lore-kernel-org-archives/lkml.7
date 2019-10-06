@@ -2,53 +2,55 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DF4C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A7ECE58E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4073222492
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD8B22490
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384139;
-	bh=2q6xEFHuaBCJckqpbWV8+FPNL6zSQ5+BT+Wwq/4urfg=;
+	s=default; t=1570384149;
+	bh=9RTI3BxKAQ8c6bSqWTjG3ttwscWdlooxdIEWTE/1ib4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TPdsMdUPo5UFedqtWgq5BOGdpuv9ECrsb/j+SiV+rXdjk2iuIxkRaGfQrJfpUp0c3
-	 DDIVna6PYE7hkTcLpsT5Ml+dpFhWoqs74N9XlhHLjPZmF7hzl48Hrt9gC1CqrcIUSI
-	 IdJOBF1TK5KDDD46Q71vr1llffx7CT0XxC46XBeQ=
+	b=KT1OVrv/W81AuJ8BjcJ7TOrhxz1Hv4Q1LVX3tpKW44XVh38N3RmlcdQTb+4JTYUBK
+	 kxxIDlGMC44VinDyC5DmemmtntdbvxzRQI89t4PC1FNP14qCAnAhXf5lPm6X1VZTVq
+	 bHprBkWiokY0oFFNIjo/v7qC8GPzFnQv5EmVwC+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbfJFRs6 (ORCPT
+        id S1730004AbfJFRtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42808 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbfJFRmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:54 -0400
+        id S1731368AbfJFRmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:42:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD4B20862;
-        Sun,  6 Oct 2019 17:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DDFC20862;
+        Sun,  6 Oct 2019 17:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383773;
-        bh=2q6xEFHuaBCJckqpbWV8+FPNL6zSQ5+BT+Wwq/4urfg=;
+        s=default; t=1570383757;
+        bh=9RTI3BxKAQ8c6bSqWTjG3ttwscWdlooxdIEWTE/1ib4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fohcY4F6xt0IKkYA8Q42kwfO+1ZNe2QkVpw+SStqj9/RzPZV8rH7nW4NnDWmyQJ9r
-         1BjK1V8brQyMIFKTssOheT++MWMP+wugLJliT8hlxoBGCrasLV/WBE++TKPjbbrT/8
-         97RIqWDrSixlVhdIfWSJHq1ZgxmExWekEHb4lhv4=
+        b=WO6xyUeeFi7meBIoj42qowvwDCaUvbGviphovwyxx+lHJKmqou2OFORgW1C7tG3YI
+         sj5sQkMYs0Ch7NtWhjRIfiyt+h8u5x9XqsSpLXRA0UbBXAWPcaOlD322rhaFZ2jfCg
+         +ieq6asuN0iOhTvod/xwAfa2NTJidNBUOFelOl8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        ralf@linux-mips.org, paul@crapouillou.net, jhogan@kernel.org,
+        malat@debian.org, tglx@linutronix.de, allison@lohutok.net,
+        syq@debian.org, chenhc@lemote.com, jiaxun.yang@flygoat.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 036/166] clk: sprd: Dont reference clk_init_data after registration
-Date:   Sun,  6 Oct 2019 19:20:02 +0200
-Message-Id: <20191006171215.967153034@linuxfoundation.org>
+Subject: [PATCH 5.3 082/166] MIPS: Ingenic: Disable broken BTB lookup optimization.
+Date:   Sun,  6 Oct 2019 19:20:48 +0200
+Message-Id: <20191006171220.408168864@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,50 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Zhou Yanjie <zhouyanjie@zoho.com>
 
-[ Upstream commit f6c90df8e7e33c3dc33d4d7471bc42c232b0510e ]
+[ Upstream commit 053951dda71ecb4b554a2cdbe26f5f6f9bee9dd2 ]
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+In order to further reduce power consumption, the XBurst core
+by default attempts to avoid branch target buffer lookups by
+detecting & special casing loops. This feature will cause
+BogoMIPS and lpj calculate in error. Set cp0 config7 bit 4 to
+disable this feature.
 
-Cc: Chunyan Zhang <zhang.chunyan@linaro.org>
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190731193517.237136-8-sboyd@kernel.org
-Acked-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: ralf@linux-mips.org
+Cc: paul@crapouillou.net
+Cc: jhogan@kernel.org
+Cc: malat@debian.org
+Cc: gregkh@linuxfoundation.org
+Cc: tglx@linutronix.de
+Cc: allison@lohutok.net
+Cc: syq@debian.org
+Cc: chenhc@lemote.com
+Cc: jiaxun.yang@flygoat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sprd/common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/mipsregs.h | 4 ++++
+ arch/mips/kernel/cpu-probe.c     | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
-index a5bdca1de5d07..9d56eac43832a 100644
---- a/drivers/clk/sprd/common.c
-+++ b/drivers/clk/sprd/common.c
-@@ -76,16 +76,17 @@ int sprd_clk_probe(struct device *dev, struct clk_hw_onecell_data *clkhw)
- 	struct clk_hw *hw;
+diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
+index 1e6966e8527e9..bdbdc19a2b8f8 100644
+--- a/arch/mips/include/asm/mipsregs.h
++++ b/arch/mips/include/asm/mipsregs.h
+@@ -689,6 +689,9 @@
+ #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
+ #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
  
- 	for (i = 0; i < clkhw->num; i++) {
-+		const char *name;
++/* Ingenic Config7 bits */
++#define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
++
+ /* Config7 Bits specific to MIPS Technologies. */
  
- 		hw = clkhw->hws[i];
--
- 		if (!hw)
- 			continue;
- 
-+		name = hw->init->name;
- 		ret = devm_clk_hw_register(dev, hw);
- 		if (ret) {
- 			dev_err(dev, "Couldn't register clock %d - %s\n",
--				i, hw->init->name);
-+				i, name);
- 			return ret;
- 		}
- 	}
+ /* Performance counters implemented Per TC */
+@@ -2813,6 +2816,7 @@ __BUILD_SET_C0(status)
+ __BUILD_SET_C0(cause)
+ __BUILD_SET_C0(config)
+ __BUILD_SET_C0(config5)
++__BUILD_SET_C0(config7)
+ __BUILD_SET_C0(intcontrol)
+ __BUILD_SET_C0(intctl)
+ __BUILD_SET_C0(srsmap)
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index 9635c1db3ae6a..e654ffc1c8a0d 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
+ 		c->cputype = CPU_JZRISC;
+ 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+ 		__cpu_name[cpu] = "Ingenic JZRISC";
++		/*
++		 * The XBurst core by default attempts to avoid branch target
++		 * buffer lookups by detecting & special casing loops. This
++		 * feature will cause BogoMIPS and lpj calculate in error.
++		 * Set cp0 config7 bit 4 to disable this feature.
++		 */
++		set_c0_config7(MIPS_CONF7_BTB_LOOP_EN);
+ 		break;
+ 	default:
+ 		panic("Unknown Ingenic Processor ID!");
 -- 
 2.20.1
 
