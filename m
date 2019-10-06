@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B766C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABADBECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E2A20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6742053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383604;
-	bh=UAfTYj9dSSWlNwqhJHR1m9xmDES6sax0XfOL7/szap8=;
+	s=default; t=1570383607;
+	bh=PnbnIcgZjtEdYqUlBBBWYErDr6FSx8IYXnn0vmGA5PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+oSLETCeusAk64n46WohpKAwxlDl71dyjQpNrHlVTXROVoh0FSE3t7dW4qW5Enu9
-	 oCUM1hawOUj+efBkdcsuFzU1diXWNmAaxUv8M98NcGQotejdu7wyUmgwIwcz5taM83
-	 jP4UHmqJv0/2LTktQnWApt5AoMfy5LiViqSlXtw4=
+	b=VL+a59xHsLQGEQ9FB0rLka1qCcUZEwUeguS6zet7p2hK4sw3j1WQ3folnakmocg/J
+	 eAbYKVXckgPZOWyxGYLhrVJ2B6Jd+2/OflSuZpqZDOohJVsKr5cDrg/FG0yVvVJ/dj
+	 0Hj5UWAn0FcWiiTqsN7X+gODrcgC7gSz8ysWGKXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbfJFRkD (ORCPT
+        id S1730280AbfJFRkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbfJFRkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:01 -0400
+        id S1730262AbfJFRkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC9B92087E;
-        Sun,  6 Oct 2019 17:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94FEA2053B;
+        Sun,  6 Oct 2019 17:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383600;
-        bh=UAfTYj9dSSWlNwqhJHR1m9xmDES6sax0XfOL7/szap8=;
+        s=default; t=1570383603;
+        bh=PnbnIcgZjtEdYqUlBBBWYErDr6FSx8IYXnn0vmGA5PY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cG+Re7QleUuPwYWPTGjOlV+Mt4LswALube3/NKTmJ0KekTWKj89k3Ya/OU5UbUGiZ
-         S2xgvZZcLyE0e/A7NVaTHiZjeQIw5eULn8Ko1ZWYTxOePmAC3STuocqvxI1MqBDGQh
-         upfH4rBNQuN+gmsMDIZZhzzueB4ODoCiVMc1uTyc=
+        b=Y6r/1mPbvmIR2ggNjRx//96bi0qTacFDDqAqCSZmDyeCv7CcM+RL4ldKOfDg8bV2p
+         J8CU25WMEVM/Qf1Qk09HxnY1hZCgkh4kg2keCGjlamd6V3dfmCDHNsOYBp69txMOzu
+         mqK5YxuFdlMy9tbYM5IJoHt9uQEjhHumQ0ZspBcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 026/166] clk: ingenic/jz4740: Fix "pll half" divider not read/written properly
-Date:   Sun,  6 Oct 2019 19:19:52 +0200
-Message-Id: <20191006171215.318003328@linuxfoundation.org>
+Subject: [PATCH 5.3 027/166] clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
+Date:   Sun,  6 Oct 2019 19:19:53 +0200
+Message-Id: <20191006171215.381887646@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,56 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit 568b9de48d80bcf1a92e2c4fa67651abbb8ebfe2 ]
+[ Upstream commit 720099603d1f62e37b789366d7e89824b009ca28 ]
 
-The code was setting the bit 21 of the CPCCR register to use a divider
-of 2 for the "pll half" clock, and clearing the bit to use a divider
-of 1.
+The MMC2 clock slices are currently not defined in V3s CCU driver, which
+makes MMC2 not working.
 
-This is the opposite of how this register field works: a cleared bit
-means that the /2 divider is used, and a set bit means that the divider
-is 1.
+Fix this issue.
 
-Restore the correct behaviour using the newly introduced .div_table
-field.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://lkml.kernel.org/r/20190701113606.4130-1-paul@crapouillou.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ingenic/jz4740-cgu.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 4c0a20949c2c2..9b27d75d9485c 100644
---- a/drivers/clk/ingenic/jz4740-cgu.c
-+++ b/drivers/clk/ingenic/jz4740-cgu.c
-@@ -53,6 +53,10 @@ static const u8 jz4740_cgu_cpccr_div_table[] = {
- 	1, 2, 3, 4, 6, 8, 12, 16, 24, 32,
- };
- 
-+static const u8 jz4740_cgu_pll_half_div_table[] = {
-+	2, 1,
-+};
-+
- static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
- 
- 	/* External clocks */
-@@ -86,7 +90,10 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
- 	[JZ4740_CLK_PLL_HALF] = {
- 		"pll half", CGU_CLK_DIV,
- 		.parents = { JZ4740_CLK_PLL, -1, -1, -1 },
--		.div = { CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1 },
-+		.div = {
-+			CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1,
-+			jz4740_cgu_pll_half_div_table,
-+		},
- 	},
- 
- 	[JZ4740_CLK_CCLK] = {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index 9b3939fc7faa6..5ca4d34b4094f 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -502,6 +502,9 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
+ 		[CLK_MMC1]		= &mmc1_clk.common.hw,
+ 		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
+ 		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
++		[CLK_MMC2]		= &mmc2_clk.common.hw,
++		[CLK_MMC2_SAMPLE]	= &mmc2_sample_clk.common.hw,
++		[CLK_MMC2_OUTPUT]	= &mmc2_output_clk.common.hw,
+ 		[CLK_CE]		= &ce_clk.common.hw,
+ 		[CLK_SPI0]		= &spi0_clk.common.hw,
+ 		[CLK_USB_PHY0]		= &usb_phy0_clk.common.hw,
 -- 
 2.20.1
 
