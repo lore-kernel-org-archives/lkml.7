@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7CAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF91C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224162080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60462087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382841;
-	bh=6EJhm0EbcpkgQTDBb8j7GoPXvjaTxeRmKVXhZNeWiK4=;
+	s=default; t=1570382843;
+	bh=19hy6bRgT1aVhWGV9J4lMvjQubmNFi99x5CKAAp2d+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uq9l6Wuk6eSQHXlSG6v3509gkQZ8QTs1bqoeFvjOHb6EV5cHkpWrR6AfqJbh2+kQc
-	 hCDupQ3ZW16i9DMndP51QJgCTYsRR3gFo6a5gPOXCymc/MnSUk/JP3pVUZA31zac84
-	 0/RJ15NuKMV4RmHZb/SGk3FXh2n/WiPqcVmo0T80=
+	b=oEckF+UxxTzmdY8I5UNk0P/6lKK+sPC9bfwH1BHiWhATXGoM6w5YdAFNuTGfh17dC
+	 oc+POOE+znLEXLlH4eddhRUty55FaDBYbYS65lMe/2QqIL30qMgXczJmFCcV/NTgwK
+	 FITS+9ohRUqtVBOglyDXSAC90r0KGB8s2K6j2Ilw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfJFR1U (ORCPT
+        id S1728478AbfJFR1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbfJFR1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:15 -0400
+        id S1728457AbfJFR1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB6652133F;
-        Sun,  6 Oct 2019 17:27:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF8A2087E;
+        Sun,  6 Oct 2019 17:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382835;
-        bh=6EJhm0EbcpkgQTDBb8j7GoPXvjaTxeRmKVXhZNeWiK4=;
+        s=default; t=1570382840;
+        bh=19hy6bRgT1aVhWGV9J4lMvjQubmNFi99x5CKAAp2d+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twkRI07LswZSFO7F/1IyjBhP3HfnWlSmcotJ9qfHakHIhGkENulHV5w4H6i+0YG8M
-         pVEP/kHX+75vWq4a1YKoB7n2XhV7XedzHqFmESV+Mb+Yg4ooLGk5KB3fmnh4So7oDa
-         ePZdeclHMa62Cqpk3V/6JHMFJTJrqgDyCuc0k1tU=
+        b=tWdDix5hMXUUcL/lIDjempi143jxCzGH7Wh7YZJslU3YDbAQXwXZ7mdKRT9TJ997B
+         RX/8fFGFqW1lYgLJgR1eNnevgbqr6ppFec1RqCUW476234RKToLcQ/EJJeUBttTFLB
+         n17oInJ6noOGn54+7aa6GnQu0CtD19B+KQgwFEzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 57/68] qmi_wwan: add support for Cinterion CLS8 devices
-Date:   Sun,  6 Oct 2019 19:21:33 +0200
-Message-Id: <20191006171134.358512447@linuxfoundation.org>
+Subject: [PATCH 4.14 59/68] vsock: Fix a lockdep warning in __vsock_release()
+Date:   Sun,  6 Oct 2019 19:21:35 +0200
+Message-Id: <20191006171136.030090399@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,56 +60,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinhard Speyerer <rspmn@arcor.de>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit cf74ac6db25d4002089e85cc623ad149ecc25614 ]
+[ Upstream commit 0d9138ffac24cf8b75366ede3a68c951e6dcc575 ]
 
-Add support for Cinterion CLS8 devices.
-Use QMI_QUIRK_SET_DTR as required for Qualcomm MDM9x07 chipsets.
+Lockdep is unhappy if two locks from the same class are held.
 
-T:  Bus=01 Lev=03 Prnt=05 Port=01 Cnt=02 Dev#= 25 Spd=480  MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1e2d ProdID=00b0 Rev= 3.18
-S:  Manufacturer=GEMALTO
-S:  Product=USB Modem
-C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+Fix the below warning for hyperv and virtio sockets (vmci socket code
+doesn't have the issue) by using lock_sock_nested() when __vsock_release()
+is called recursively:
 
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+============================================
+WARNING: possible recursive locking detected
+5.3.0+ #1 Not tainted
+--------------------------------------------
+server/1795 is trying to acquire lock:
+ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
+
+but task is already holding lock:
+ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(sk_lock-AF_VSOCK);
+  lock(sk_lock-AF_VSOCK);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by server/1795:
+ #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
+ #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
+
+stack backtrace:
+CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
+Call Trace:
+ dump_stack+0x67/0x90
+ __lock_acquire.cold.67+0xd2/0x20b
+ lock_acquire+0xb5/0x1c0
+ lock_sock_nested+0x6d/0x90
+ hvs_release+0x10/0x120 [hv_sock]
+ __vsock_release+0x24/0xf0 [vsock]
+ __vsock_release+0xa0/0xf0 [vsock]
+ vsock_release+0x12/0x30 [vsock]
+ __sock_release+0x37/0xa0
+ sock_close+0x14/0x20
+ __fput+0xc1/0x250
+ task_work_run+0x98/0xc0
+ do_exit+0x344/0xc60
+ do_group_exit+0x47/0xb0
+ get_signal+0x15c/0xc50
+ do_signal+0x30/0x720
+ exit_to_usermode_loop+0x50/0xa0
+ do_syscall_64+0x24e/0x270
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f4184e85f31
+
+Tested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/vmw_vsock/af_vsock.c                |   16 ++++++++++++----
+ net/vmw_vsock/hyperv_transport.c        |    2 +-
+ net/vmw_vsock/virtio_transport_common.c |    2 +-
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1275,6 +1275,7 @@ static const struct usb_device_id produc
- 	{QMI_FIXED_INTF(0x1e2d, 0x0082, 4)},	/* Cinterion PHxx,PXxx (2 RmNet) */
- 	{QMI_FIXED_INTF(0x1e2d, 0x0082, 5)},	/* Cinterion PHxx,PXxx (2 RmNet) */
- 	{QMI_FIXED_INTF(0x1e2d, 0x0083, 4)},	/* Cinterion PHxx,PXxx (1 RmNet + USB Audio)*/
-+	{QMI_QUIRK_SET_DTR(0x1e2d, 0x00b0, 4)},	/* Cinterion CLS8 */
- 	{QMI_FIXED_INTF(0x413c, 0x81a2, 8)},	/* Dell Wireless 5806 Gobi(TM) 4G LTE Mobile Broadband Card */
- 	{QMI_FIXED_INTF(0x413c, 0x81a3, 8)},	/* Dell Wireless 5570 HSPA+ (42Mbps) Mobile Broadband Card */
- 	{QMI_FIXED_INTF(0x413c, 0x81a4, 8)},	/* Dell Wireless 5570e HSPA+ (42Mbps) Mobile Broadband Card */
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -648,7 +648,7 @@ struct sock *__vsock_create(struct net *
+ }
+ EXPORT_SYMBOL_GPL(__vsock_create);
+ 
+-static void __vsock_release(struct sock *sk)
++static void __vsock_release(struct sock *sk, int level)
+ {
+ 	if (sk) {
+ 		struct sk_buff *skb;
+@@ -658,9 +658,17 @@ static void __vsock_release(struct sock
+ 		vsk = vsock_sk(sk);
+ 		pending = NULL;	/* Compiler warning. */
+ 
++		/* The release call is supposed to use lock_sock_nested()
++		 * rather than lock_sock(), if a sock lock should be acquired.
++		 */
+ 		transport->release(vsk);
+ 
+-		lock_sock(sk);
++		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
++		 * version to avoid the warning "possible recursive locking
++		 * detected". When "level" is 0, lock_sock_nested(sk, level)
++		 * is the same as lock_sock(sk).
++		 */
++		lock_sock_nested(sk, level);
+ 		sock_orphan(sk);
+ 		sk->sk_shutdown = SHUTDOWN_MASK;
+ 
+@@ -669,7 +677,7 @@ static void __vsock_release(struct sock
+ 
+ 		/* Clean up any sockets that never were accepted. */
+ 		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
+-			__vsock_release(pending);
++			__vsock_release(pending, SINGLE_DEPTH_NESTING);
+ 			sock_put(pending);
+ 		}
+ 
+@@ -718,7 +726,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space
+ 
+ static int vsock_release(struct socket *sock)
+ {
+-	__vsock_release(sock->sk);
++	__vsock_release(sock->sk, 0);
+ 	sock->sk = NULL;
+ 	sock->state = SS_FREE;
+ 
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -539,7 +539,7 @@ static void hvs_release(struct vsock_soc
+ 	struct sock *sk = sk_vsock(vsk);
+ 	bool remove_sock;
+ 
+-	lock_sock(sk);
++	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+ 	remove_sock = hvs_close_lock_held(vsk);
+ 	release_sock(sk);
+ 	if (remove_sock)
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -791,7 +791,7 @@ void virtio_transport_release(struct vso
+ 	struct sock *sk = &vsk->sk;
+ 	bool remove_sock = true;
+ 
+-	lock_sock(sk);
++	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+ 	if (sk->sk_type == SOCK_STREAM)
+ 		remove_sock = virtio_transport_close(vsk);
+ 
 
 
