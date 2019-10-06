@@ -2,54 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED0CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F34C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCF32133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8B1214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383113;
-	bh=xwr8Gf+ZGbLNOhIHlpy1MgCwANMR3tLyATZ+L+siVIk=;
+	s=default; t=1570383116;
+	bh=PN8UHtNwigitmdOdkJPPzy0Vh1N4HblG7c/fKFSVhbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSWbILn8m/Cw8Yw/AnkMDGB736Mj2573CWZO7j+Jjmaz2PdGmMEFNtfw1kGXJlUoG
-	 vsfPwUTb/9aq3WgGsV7GffDShWqfo4BM3VJ+jzZBtPNeZ/WKR7/9RBoEeHt/Gp5ESW
-	 NQH2R8sBspBh6gdfIRtOF3d8HBsup06VhLRuYZhI=
+	b=0Z9qsnb/lFhRJ1OX/zqJ97omVD6PVn4k6OUKVIghmUjZQMLYLru6K7RTTF/7xpl0F
+	 lLUyzy6QEzWzRwT/vsbrSC0NCdvaj0QITjRCvqp/074eISBCYf7o4dq2AfEUJJYP7M
+	 qoF2JRR2zC2x3/4fzUEf9Il5oC3URHO68v9sbHMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfJFRbw (ORCPT
+        id S1729524AbfJFRbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:31:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbfJFRbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:31:48 -0400
+        id S1729508AbfJFRbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:31:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCB3B21479;
-        Sun,  6 Oct 2019 17:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9213C214D9;
+        Sun,  6 Oct 2019 17:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383108;
-        bh=xwr8Gf+ZGbLNOhIHlpy1MgCwANMR3tLyATZ+L+siVIk=;
+        s=default; t=1570383111;
+        bh=PN8UHtNwigitmdOdkJPPzy0Vh1N4HblG7c/fKFSVhbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qc9437Gx7P+XPhxMDWvw245ccppvWjRvl2xw5i6a8Ea/XfZB3lVZa5pEvvAfTMeD9
-         6KNighCRHMdBlRGC6vjyPnzkMs08FxUpNR0ACGue04EYE0MTeKZtfC7SMMpqIUEYhe
-         cM1S8KE3kHRM5TVKQ3MyvVU5/S4N1Z9O0teUC6PA=
+        b=KUu9PVLRDnRbU9anjmeCg6j9oJgBY52HQxg8WmgU4W6FJ7x4HpMKp2MwxjAj1Kqyi
+         Ht0wG5aMzryCXifiIlY0sjkHIiaZHQG6Pard4u8ZU/Ig7A1F+X2JI/CK0YqFu8s4GX
+         8vbo5QqhZGitMX3eiUsT9sdYfug/eCyKcxo8iUcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Deepa Dinamani <deepa.kernel@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jeff Layton <jlayton@kernel.org>, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/106] pstore: fs superblock limits
-Date:   Sun,  6 Oct 2019 19:20:42 +0200
-Message-Id: <20191006171140.714722041@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 083/106] ipv6: drop incoming packets having a v4mapped source address
+Date:   Sun,  6 Oct 2019 19:21:29 +0200
+Message-Id: <20191006171158.031506094@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -62,52 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepa Dinamani <deepa.kernel@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 83b8a3fbe3aa82ac3c253b698ae6a9be2dbdd5e0 ]
+[ Upstream commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3 ]
 
-Leaving granularity at 1ns because it is dependent on the specific
-attached backing pstore module. ramoops has microsecond resolution.
+This began with a syzbot report. syzkaller was injecting
+IPv6 TCP SYN packets having a v4mapped source address.
 
-Fix the readback of ramoops fractional timestamp microseconds,
-which has incorrectly been reporting the value as nanoseconds.
+After an unsuccessful 4-tuple lookup, TCP creates a request
+socket (SYN_RECV) and calls reqsk_queue_hash_req()
 
-Fixes: 3f8f80f0cfeb ("pstore/ram: Read and write to the 'compressed' flag of pstore").
+reqsk_queue_hash_req() calls sk_ehashfn(sk)
 
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-Cc: anton@enomsg.org
-Cc: ccross@android.com
-Cc: keescook@chromium.org
-Cc: tony.luck@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+At this point we have AF_INET6 sockets, and the heuristic
+used by sk_ehashfn() to either hash the IPv4 or IPv6 addresses
+is to use ipv6_addr_v4mapped(&sk->sk_v6_daddr)
+
+For the particular spoofed packet, we end up hashing V4 addresses
+which were not initialized by the TCP IPv6 stack, so KMSAN fired
+a warning.
+
+I first fixed sk_ehashfn() to test both source and destination addresses,
+but then faced various problems, including user-space programs
+like packetdrill that had similar assumptions.
+
+Instead of trying to fix the whole ecosystem, it is better
+to admit that we have a dual stack behavior, and that we
+can not build linux kernels without V4 stack anyway.
+
+The dual stack API automatically forces the traffic to be IPv4
+if v4mapped addresses are used at bind() or connect(), so it makes
+no sense to allow IPv6 traffic to use the same v4mapped class.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/pstore/ram.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv6/ip6_input.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 316c16463b20f..015d74ee31a03 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -162,6 +162,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
- 	if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu-%c\n%n",
- 		   (time64_t *)&time->tv_sec, &time->tv_nsec, &data_type,
- 		   &header_length) == 3) {
-+		time->tv_nsec *= 1000;
- 		if (data_type == 'C')
- 			*compressed = true;
- 		else
-@@ -169,6 +170,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
- 	} else if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu\n%n",
- 			  (time64_t *)&time->tv_sec, &time->tv_nsec,
- 			  &header_length) == 2) {
-+		time->tv_nsec *= 1000;
- 		*compressed = false;
- 	} else {
- 		time->tv_sec = 0;
--- 
-2.20.1
-
+--- a/net/ipv6/ip6_input.c
++++ b/net/ipv6/ip6_input.c
+@@ -220,6 +220,16 @@ static struct sk_buff *ip6_rcv_core(stru
+ 	if (ipv6_addr_is_multicast(&hdr->saddr))
+ 		goto err;
+ 
++	/* While RFC4291 is not explicit about v4mapped addresses
++	 * in IPv6 headers, it seems clear linux dual-stack
++	 * model can not deal properly with these.
++	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
++	 *
++	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
++	 */
++	if (ipv6_addr_v4mapped(&hdr->saddr))
++		goto err;
++
+ 	skb->transport_header = skb->network_header + sizeof(*hdr);
+ 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
+ 
 
 
