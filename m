@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E72C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664D5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F3522486
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DDE2053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384066;
-	bh=V0IPKrrdUzrOKmKyU4GfV33KE6odZ0Zi5xhzLS4aIZY=;
+	s=default; t=1570384068;
+	bh=M2bf7Ft8fNTHC1Vhetd3p1u6IswodeWaBpJB2+Wy88g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHxAI/Nd6O040q0esomEBppH7nEipj5EJpeOxdGiUwzxpNEQ8zCZtGHVAziDLUkRX
-	 BzYAAfJQo+cSD57R0QX4p37yyQvrGDKjw3Dux8TOZ7np7c7SotUOgrNSEPF7T423nL
-	 advy0JZvOJxLa8B9o9SaWTCoXNctEYx6F2fGCSGI=
+	b=V68dudgFGt6G/vGbbIyeIWwWfSQob0TMdYwHpftf38HHaEg/BGLY1dvFgnhKPlpJg
+	 PmLJ1P2z3m95I7AIfdpnE9Jd0KPGvE9IpQFtzGGSpf0y5KoLaa0zKms8QYoDyPIfDU
+	 sm5LTMQ2hmJFu6AVT568A8ZHgiuY1PWrhxzpK9M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbfJFRrp (ORCPT
+        id S1731767AbfJFRrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:47:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731281AbfJFRpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:45:14 -0400
+        id S1730629AbfJFRpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:45:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B50A52080F;
-        Sun,  6 Oct 2019 17:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1239B20862;
+        Sun,  6 Oct 2019 17:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383914;
-        bh=V0IPKrrdUzrOKmKyU4GfV33KE6odZ0Zi5xhzLS4aIZY=;
+        s=default; t=1570383911;
+        bh=M2bf7Ft8fNTHC1Vhetd3p1u6IswodeWaBpJB2+Wy88g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1oLGhVaevEWxDC1il7RJa5pPVm/XHsJtWXPcBRsOFw08VExgcc3nFR5P9c3C2kQq
-         hJYnmhJqfqngqyX6Qcuf4xCDG7JizIDLdsq81llAmuW3VBDVcFMVfrDrEYPAbUZuQt
-         0YGLPCPZvyH+tzAweeLrwJZun8cyxydYDQKB/z38=
+        b=ehAh6Rs68XkFfDatCS9qHO0+jpb1hTGrUwtn4BWnwS3oGmVRVIqq8E8Oq/mTpwsFH
+         dpGIhm+gUS89JzzQCZiar/O28+Yp6jGSyZ/BMTmdWUP/CjEjnnlDZvxvvzwsLqjWv1
+         o/658DW9s+vXlyGgKnxGkFzW0dUq61u66JOxUl1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Hunt <johunt@akamai.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Hoang Le <hoang.h.le@dektech.com.au>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 143/166] udp: fix gso_segs calculations
-Date:   Sun,  6 Oct 2019 19:21:49 +0200
-Message-Id: <20191006171225.047363914@linuxfoundation.org>
+Subject: [PATCH 5.3 142/166] tipc: fix unlimited bundling of small messages
+Date:   Sun,  6 Oct 2019 19:21:48 +0200
+Message-Id: <20191006171224.981626967@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,47 +61,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Hunt <johunt@akamai.com>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-[ Upstream commit 44b321e5020d782ad6e8ae8183f09b163be6e6e2 ]
+[ Upstream commit e95584a889e1902fdf1ded9712e2c3c3083baf96 ]
 
-Commit dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
-added gso_segs calculation, but incorrectly got sizeof() the pointer and
-not the underlying data type. In addition let's fix the v6 case.
+We have identified a problem with the "oversubscription" policy in the
+link transmission code.
 
-Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
-Fixes: dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
-Signed-off-by: Josh Hunt <johunt@akamai.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
+When small messages are transmitted, and the sending link has reached
+the transmit window limit, those messages will be bundled and put into
+the link backlog queue. However, bundles of data messages are counted
+at the 'CRITICAL' level, so that the counter for that level, instead of
+the counter for the real, bundled message's level is the one being
+increased.
+Subsequent, to-be-bundled data messages at non-CRITICAL levels continue
+to be tested against the unchanged counter for their own level, while
+contributing to an unrestrained increase at the CRITICAL backlog level.
+
+This leaves a gap in congestion control algorithm for small messages
+that can result in starvation for other users or a "real" CRITICAL
+user. Even that eventually can lead to buffer exhaustion & link reset.
+
+We fix this by keeping a 'target_bskb' buffer pointer at each levels,
+then when bundling, we only bundle messages at the same importance
+level only. This way, we know exactly how many slots a certain level
+have occupied in the queue, so can manage level congestion accurately.
+
+By bundling messages at the same level, we even have more benefits. Let
+consider this:
+- One socket sends 64-byte messages at the 'CRITICAL' level;
+- Another sends 4096-byte messages at the 'LOW' level;
+
+When a 64-byte message comes and is bundled the first time, we put the
+overhead of message bundle to it (+ 40-byte header, data copy, etc.)
+for later use, but the next message can be a 4096-byte one that cannot
+be bundled to the previous one. This means the last bundle carries only
+one payload message which is totally inefficient, as for the receiver
+also! Later on, another 64-byte message comes, now we make a new bundle
+and the same story repeats...
+
+With the new bundling algorithm, this will not happen, the 64-byte
+messages will be bundled together even when the 4096-byte message(s)
+comes in between. However, if the 4096-byte messages are sent at the
+same level i.e. 'CRITICAL', the bundling algorithm will again cause the
+same overhead.
+
+Also, the same will happen even with only one socket sending small
+messages at a rate close to the link transmit's one, so that, when one
+message is bundled, it's transmitted shortly. Then, another message
+comes, a new bundle is created and so on...
+
+We will solve this issue radically by another patch.
+
+Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
+Reported-by: Hoang Le <hoang.h.le@dektech.com.au>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/udp.c |    2 +-
- net/ipv6/udp.c |    2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ net/tipc/link.c |   29 ++++++++++++++++++-----------
+ net/tipc/msg.c  |    5 +----
+ 2 files changed, 19 insertions(+), 15 deletions(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -856,7 +856,7 @@ static int udp_send_skb(struct sk_buff *
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -160,6 +160,7 @@ struct tipc_link {
+ 	struct {
+ 		u16 len;
+ 		u16 limit;
++		struct sk_buff *target_bskb;
+ 	} backlog[5];
+ 	u16 snd_nxt;
+ 	u16 window;
+@@ -866,6 +867,7 @@ static void link_prepare_wakeup(struct t
+ void tipc_link_reset(struct tipc_link *l)
+ {
+ 	struct sk_buff_head list;
++	u32 imp;
  
- 		skb_shinfo(skb)->gso_size = cork->gso_size;
- 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
--		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(uh),
-+		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
- 							 cork->gso_size);
- 		goto csum_partial;
+ 	__skb_queue_head_init(&list);
+ 
+@@ -887,11 +889,10 @@ void tipc_link_reset(struct tipc_link *l
+ 	__skb_queue_purge(&l->deferdq);
+ 	__skb_queue_purge(&l->backlogq);
+ 	__skb_queue_purge(&l->failover_deferdq);
+-	l->backlog[TIPC_LOW_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_MEDIUM_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_HIGH_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_CRITICAL_IMPORTANCE].len = 0;
+-	l->backlog[TIPC_SYSTEM_IMPORTANCE].len = 0;
++	for (imp = 0; imp <= TIPC_SYSTEM_IMPORTANCE; imp++) {
++		l->backlog[imp].len = 0;
++		l->backlog[imp].target_bskb = NULL;
++	}
+ 	kfree_skb(l->reasm_buf);
+ 	kfree_skb(l->failover_reasm_skb);
+ 	l->reasm_buf = NULL;
+@@ -931,7 +932,7 @@ int tipc_link_xmit(struct tipc_link *l,
+ 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
+ 	struct sk_buff_head *transmq = &l->transmq;
+ 	struct sk_buff_head *backlogq = &l->backlogq;
+-	struct sk_buff *skb, *_skb, *bskb;
++	struct sk_buff *skb, *_skb, **tskb;
+ 	int pkt_cnt = skb_queue_len(list);
+ 	int rc = 0;
+ 
+@@ -980,19 +981,21 @@ int tipc_link_xmit(struct tipc_link *l,
+ 			seqno++;
+ 			continue;
+ 		}
+-		if (tipc_msg_bundle(skb_peek_tail(backlogq), hdr, mtu)) {
++		tskb = &l->backlog[imp].target_bskb;
++		if (tipc_msg_bundle(*tskb, hdr, mtu)) {
+ 			kfree_skb(__skb_dequeue(list));
+ 			l->stats.sent_bundled++;
+ 			continue;
+ 		}
+-		if (tipc_msg_make_bundle(&bskb, hdr, mtu, l->addr)) {
++		if (tipc_msg_make_bundle(tskb, hdr, mtu, l->addr)) {
+ 			kfree_skb(__skb_dequeue(list));
+-			__skb_queue_tail(backlogq, bskb);
+-			l->backlog[msg_importance(buf_msg(bskb))].len++;
++			__skb_queue_tail(backlogq, *tskb);
++			l->backlog[imp].len++;
+ 			l->stats.sent_bundled++;
+ 			l->stats.sent_bundles++;
+ 			continue;
+ 		}
++		l->backlog[imp].target_bskb = NULL;
+ 		l->backlog[imp].len += skb_queue_len(list);
+ 		skb_queue_splice_tail_init(list, backlogq);
  	}
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -1143,6 +1143,8 @@ static int udp_v6_send_skb(struct sk_buf
+@@ -1008,6 +1011,7 @@ static void tipc_link_advance_backlog(st
+ 	u16 seqno = l->snd_nxt;
+ 	u16 ack = l->rcv_nxt - 1;
+ 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
++	u32 imp;
  
- 		skb_shinfo(skb)->gso_size = cork->gso_size;
- 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-+		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
-+							 cork->gso_size);
- 		goto csum_partial;
- 	}
- 
+ 	while (skb_queue_len(&l->transmq) < l->window) {
+ 		skb = skb_peek(&l->backlogq);
+@@ -1018,7 +1022,10 @@ static void tipc_link_advance_backlog(st
+ 			break;
+ 		__skb_dequeue(&l->backlogq);
+ 		hdr = buf_msg(skb);
+-		l->backlog[msg_importance(hdr)].len--;
++		imp = msg_importance(hdr);
++		l->backlog[imp].len--;
++		if (unlikely(skb == l->backlog[imp].target_bskb))
++			l->backlog[imp].target_bskb = NULL;
+ 		__skb_queue_tail(&l->transmq, skb);
+ 		/* next retransmit attempt */
+ 		if (link_is_bc_sndlink(l))
+--- a/net/tipc/msg.c
++++ b/net/tipc/msg.c
+@@ -484,10 +484,7 @@ bool tipc_msg_make_bundle(struct sk_buff
+ 	bmsg = buf_msg(_skb);
+ 	tipc_msg_init(msg_prevnode(msg), bmsg, MSG_BUNDLER, 0,
+ 		      INT_H_SIZE, dnode);
+-	if (msg_isdata(msg))
+-		msg_set_importance(bmsg, TIPC_CRITICAL_IMPORTANCE);
+-	else
+-		msg_set_importance(bmsg, TIPC_SYSTEM_IMPORTANCE);
++	msg_set_importance(bmsg, msg_importance(msg));
+ 	msg_set_seqno(bmsg, msg_seqno(msg));
+ 	msg_set_ack(bmsg, msg_ack(msg));
+ 	msg_set_bcast_ack(bmsg, msg_bcast_ack(msg));
 
 
