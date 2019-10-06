@@ -2,99 +2,130 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9F1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EA3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDE12077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="GqqTOVSZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1F93E21841
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570403203;
+	bh=+eD3kl6gHVpYZuSO/fbHkIqJ9INnorTYKsg2JzI5CYE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tdo0uQIHEGqkH35bvKc367mOUpsSt0UihXLdw9VP8dm3ImBQjC5pgaIcgjVRyNmFQ
+	 B3jZfgrfEPfkp0YF2MT3PQz9IFfozcKsjQT+PWrFk2Ct0u5Q5f7BjJvi0aHgwSvb3N
+	 GPR1AOX/jEckkG17ZZKaSIoKWeO5ib6SV/5/Vmp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfJFXBU (ORCPT
+        id S1726738AbfJFXGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 19:01:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53406 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfJFXBT (ORCPT
+        Sun, 6 Oct 2019 19:06:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46653 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfJFXGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 19:01:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so10583529wmd.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 16:01:17 -0700 (PDT)
+        Sun, 6 Oct 2019 19:06:38 -0400
+Received: by mail-lf1-f68.google.com with SMTP id t8so7875858lfc.13
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 16:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=5FhZ36jnVtPYp2moexL6x7c0xT4VPQ85lGFj06T19kk=;
-        b=GqqTOVSZIr3FtNHbKEemaBipI0ksciIpK94L55r6xyQADmrDCEpceNnIyI1tYgVx2a
-         CgHgEjOd51WP4RbhohV5p9r+ZCH4Wvwar7oAB7ESB/x9xACr/ZfL2qDXnXkPEYL8UL7z
-         VKxxXkKQFt6m0v7ehkLK2IseCYBT9wxWEt1a+NWLonnBbSpGlJx/2C7Blnula3CcYBXE
-         EZlU/z/XAekdeNRvIPpZSkYf0RT9g8eMHZPYs4ZE1civ1TyEzbrP5lZ3Y9OUaQGDsBcb
-         Tw7YcGaMA8IbC8EX7wlsLq9Ust2OlziR1yd2W5ogKF+Us8UtoO4+kGWb7FxT+94VbeiI
-         Vgyg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XLTnokvqrTEKp/du7ZGxWocwiLdnmjMjOhGQECeegpY=;
+        b=K6ZqWtnobAV2cuFZDrGF+QdsYZcJ5WAzg/GLhEbPt6cRFU2151jIBXEJlbzCk2qJGl
+         SNrsisuVTqPG8hOsunk4CCvoWZJmu70oxOOQ4TwoDpI8xh21WHKtIidRRHjwwa/URxgz
+         OCTqirPBIeK1iusfvpbIbuI7g53wv0JqS3/l8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=5FhZ36jnVtPYp2moexL6x7c0xT4VPQ85lGFj06T19kk=;
-        b=mRJffNBKch/8YohV/vxpD6z/+YivU3TCRycthMedgvddjHt8bED21YQ3R5Gli5HsFO
-         yVWqpL3a1J3woKm1/KLa5VxQJXu+H+hLzyOs9syGI61AZ3QpyuiFD0bfxvzLm7sQjei+
-         8Tocu/3MRUcsVufXI4HXGW/ZbulCg6SDeI36gWfrhtzuoBSOlwxZnKQvJoMv5YNynOSE
-         eKhBcXves8tYnPUJzBAWmwuuRG67aNuc310/CCD6jCJmUG9Uzm2rFpXKnfA2moGrqI0E
-         bPACv7FBy3cSfyxSJcqgBMJJXC7IlxSmBh3pQUZ5NtQtPSaugyH+oiNO9s4OK/iThqOw
-         vWjQ==
-X-Gm-Message-State: APjAAAWSzlwaxng3EHUG6M01Pp29apyMgzK0iFiIt+cH7QMZcvnX7n4C
-        GlYFwdOuquc9R+pUaj7+rl6hMR2g8TU=
-X-Google-Smtp-Source: APXvYqxVS2qrSZsKDHou5yu2ujmMsKdmvnS/UbAQbGKRBDBbKNG4Sx7mJJNRQq/Hwu9eQTUqNyjr/A==
-X-Received: by 2002:a7b:cb0e:: with SMTP id u14mr19896306wmj.115.1570402877056;
-        Sun, 06 Oct 2019 16:01:17 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id m7sm10293664wrv.40.2019.10.06.16.01.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 06 Oct 2019 16:01:16 -0700 (PDT)
-Message-ID: <5d9a723c.1c69fb81.5aa5b.d173@mx.google.com>
-Date:   Sun, 06 Oct 2019 16:01:16 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XLTnokvqrTEKp/du7ZGxWocwiLdnmjMjOhGQECeegpY=;
+        b=oU9vEyJvQzskC9+nBsgM6VgYBspQ69Mxofpd4Fn60nToyuQ+iv2eABiApEIhp9kimJ
+         1n3EThRHMwlZfwlSQF7I9OhUU/jTN/dmz7qz96OQrGSSRR15pV+xNzxjJTt9KKmR/10o
+         TcP3f3mSto8xBrmH0j5tvuTlDW7d0G/keSSd5hiy8SVZ4Jp44YMToOTORCd7tqLcFp7t
+         CP+VkjZg4HTbZOqfly2aLd1tJZj7pcQuXROjof3pitY7JraBZbdkYExN6+IRhnOO5ZPA
+         7WsvAaf6yPu8g0h9Wf/YyykXlxuC4t2R21hV1FFFIk7zOl3Q9+Cvs9d1QtdTDxOC8t+7
+         iZZA==
+X-Gm-Message-State: APjAAAVysxfYVHlInHxYaZ6mTlV3HvLGjFz9onsUaorEDGmSdbqRE+UC
+        ciX5yqoBLx+PG7qfMVrpLVOoSBKymCM=
+X-Google-Smtp-Source: APXvYqz5qIUz6yuj7NE/G3iNIGsGk5O8pchdnLgjhhx4qVPRbb5hlZPzAELIfDTfz1nUG1rnZLk8zQ==
+X-Received: by 2002:ac2:53a3:: with SMTP id j3mr15196051lfh.155.1570403193942;
+        Sun, 06 Oct 2019 16:06:33 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id b10sm2717121lji.48.2019.10.06.16.06.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Oct 2019 16:06:33 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id a22so11674580ljd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 16:06:32 -0700 (PDT)
+X-Received: by 2002:a2e:551:: with SMTP id 78mr16735500ljf.48.1570403192234;
+ Sun, 06 Oct 2019 16:06:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.147-69-gb970b501da0b
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
-References: <20191006171108.150129403@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/68] 4.14.148-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+References: <20191006222046.GA18027@roeck-us.net>
+In-Reply-To: <20191006222046.GA18027@roeck-us.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 6 Oct 2019 16:06:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+Message-ID: <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 54 boots: 0 failed, 54 passed (v4.14.147-69-gb=
-970b501da0b)
+On Sun, Oct 6, 2019 at 3:20 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> this patch causes all my sparc64 emulations to stall during boot. It causes
+> all alpha emulations to crash with [1a] and [1b] when booting from a virtual
+> disk, and one of the xtensa emulations to crash with [2].
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.147-69-gb970b501da0b/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.147-69-gb970b501da0b/
+Ho humm. I've run variations of that patch over a few years on x86,
+but obviously not on alpha/sparc.
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.147-69-gb970b501da0b
-Git Commit: b970b501da0bee5eba4e61ea7d424adab428a165
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 32 unique boards, 15 SoC families, 10 builds out of 201
+At least I should still be able to read alpha assembly, even after all
+these years. Would you mind sending me the result of
 
----
-For more info write to <info@kernelci.org>
+    make fs/readdir.s
+
+on alpha with the broken config? I'd hope that the sparc issue is the same.
+
+Actually, could you also do
+
+    make fs/readdir.o
+
+and then send me the "objdump --disassemble" of that? That way I get
+the instruction offsets without having to count by hand.
+
+> Unable to handle kernel paging request at virtual address 0000000000000004
+> rcS(47): Oops -1
+> pc = [<0000000000000004>]  ra = [<fffffc00004512e4>]  ps = 0000    Not tainted
+> pc is at 0x4
+
+That is _funky_. I'm not seeing how it could possibly jump to 0x4, but
+it clearly does.
+
+That said, are you sure it's _that_ commit? Because this pattern:
+
+> a0 = fffffc0007dbca56  a1 = 2f2f2f2f2f2f2f2f  a2 = 000000000000000a
+
+implicates the memchr('/') call in the next one. That's a word full of
+'/' characters.
+
+Of course, it could just be left-over register contents from that
+memchr(), but it makes me wonder. Particularly since it seems to
+happen early in filldir64():
+
+> ra is at filldir64+0x64/0x320
+
+which is just a fairly small handful of instructions in, and I
+wouldn't be shocked if that's the return address for the call to
+memchr.
+
+              Linus
