@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3DEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B646C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36672173B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB46221871
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383153;
-	bh=SQJ2TA1+dys19b096G1EEsqcCLyoAwdRC5caxt6qv2c=;
+	s=default; t=1570383158;
+	bh=PerffFRqonaHaOoAW5C1zA3Mgfcqrt/j7OprLkUruW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpW5FixTb/0RYAX2cmlrZQZEMbi7fBK8JDlX0zasJLC8NEPwvKAd+3TaRgD+5VgQ7
-	 IMzlH9PEIWKgdsltBJ9y9jts/W3hQ5Izex7v/RDUlFtNCbgibxNPeJYhTJictteDfx
-	 A97nBIpccfKLKu1SADOdLREJTX03H1etrMbQ9nKk=
+	b=amXgGHuPfyMz8KZEWft80ReUpX+vOAIc5iMKTrmudLpqCclotrWm4PempC7/Ibt80
+	 2UvbcfSnMUrDyLFBUkXSsNS9LeMRfDOZGdhIudTlDcJ8Fu07dsZDb/5uANkA8yOIlU
+	 ekdc27zsfw/N2IBqvc4XLcFwci/7cBWyLvMeaqn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfJFRcc (ORCPT
+        id S1728868AbfJFRcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58952 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729573AbfJFRc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:29 -0400
+        id S1729597AbfJFRce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:32:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72F3F2133F;
-        Sun,  6 Oct 2019 17:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D08B7217F9;
+        Sun,  6 Oct 2019 17:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383149;
-        bh=SQJ2TA1+dys19b096G1EEsqcCLyoAwdRC5caxt6qv2c=;
+        s=default; t=1570383154;
+        bh=PerffFRqonaHaOoAW5C1zA3Mgfcqrt/j7OprLkUruW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJOkCvGFdGVGmCLiWbhf0vI8hY+FOUX6YutoVzqwtutyRDJjx4zKR9VeIkVc0R317
-         RWa+ZMqfMTRY00V4chUsRKvOHAgI8VHqczdgYcwtOMn8XI2MRUvSJ6C9cnVybzKCH+
-         OhUaECGB29VUFH07oSt0jCnqjeHAPNwzROQ/DcgI=
+        b=ZoJvT9tS6Keg8p6YNiOIwqNHpv0+tnLBo5IyZq/BOc/5jPPLhp5obdZVg6tWQV7Am
+         u3vV55btUvA51QdiWG6zbOaugj8ZOwrJyhdr66wuUjWqrdUlKoBVVHeOTDL3Fts8Ux
+         ZMFLBP/zNVklT7uez3AJC55wszzxpeoJ+Cnf4f7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 104/106] NFC: fix attrs checks in netlink interface
-Date:   Sun,  6 Oct 2019 19:21:50 +0200
-Message-Id: <20191006171204.760312069@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>
+Subject: [PATCH 4.19 106/106] 9p/cache.c: Fix memory leak in v9fs_cache_session_get_cookie
+Date:   Sun,  6 Oct 2019 19:21:52 +0200
+Message-Id: <20191006171204.990638511@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,49 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Bharath Vedartham <linux.bhar@gmail.com>
 
-commit 18917d51472fe3b126a3a8f756c6b18085eb8130 upstream.
+commit 962a991c5de18452d6c429d99f3039387cf5cbb0 upstream.
 
-nfc_genl_deactivate_target() relies on the NFC_ATTR_TARGET_INDEX
-attribute being present, but doesn't check whether it is actually
-provided by the user. Same goes for nfc_genl_fw_download() and
-NFC_ATTR_FIRMWARE_NAME.
+v9fs_cache_session_get_cookie assigns a random cachetag to v9ses->cachetag,
+if the cachetag is not assigned previously.
 
-This patch adds appropriate checks.
+v9fs_random_cachetag allocates memory to v9ses->cachetag with kmalloc and uses
+scnprintf to fill it up with a cachetag.
 
-Found with syzkaller.
+But if scnprintf fails, v9ses->cachetag is not freed in the current
+code causing a memory leak.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by freeing v9ses->cachetag it v9fs_random_cachetag fails.
+
+This was reported by syzbot, the link to the report is below:
+https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
+
+Link: http://lkml.kernel.org/r/20190522194519.GA5313@bharath12345-Inspiron-5559
+Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/nfc/netlink.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/9p/cache.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -981,7 +981,8 @@ static int nfc_genl_dep_link_down(struct
- 	int rc;
- 	u32 idx;
- 
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_TARGET_INDEX])
- 		return -EINVAL;
- 
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
-@@ -1029,7 +1030,8 @@ static int nfc_genl_llc_get_params(struc
- 	struct sk_buff *msg = NULL;
- 	u32 idx;
- 
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_FIRMWARE_NAME])
- 		return -EINVAL;
- 
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
+--- a/fs/9p/cache.c
++++ b/fs/9p/cache.c
+@@ -66,6 +66,8 @@ void v9fs_cache_session_get_cookie(struc
+ 	if (!v9ses->cachetag) {
+ 		if (v9fs_random_cachetag(v9ses) < 0) {
+ 			v9ses->fscache = NULL;
++			kfree(v9ses->cachetag);
++			v9ses->cachetag = NULL;
+ 			return;
+ 		}
+ 	}
 
 
