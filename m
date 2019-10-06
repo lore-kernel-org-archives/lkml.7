@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B9DC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0605BC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7E020673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C347E20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384653;
-	bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
+	s=default; t=1570384657;
+	bh=W/HA4aCiOQ96V+GxcHWL51sEqCOsrOsL55HJKU5MTXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2zOoAUxr4kKMlfPVlS/cQ73fgor+4zQMMB6jpcrCO7JFZmLGA8D7PkmUx42gqbwy
-	 HCBfOxfW8GzPJVQXyVSL58ejckyJteQTZims8sfVTiCgjPjouxXAn/j8SImVCal30H
-	 LvngZO4zzDbM2H5tcpBxuOM9wIowlESpPreZBG9c=
+	b=NR2YhSArJX+uCgVFEqG2Sj28lM+OsF3wEjGsYt0k/eAkgcE6GeAeDDGdB95RD3kxj
+	 D0b4FUavurY8hA9SpOoLlp0/u4gH4zSiMbTGlK4gpLe6FBVP8ZNMynwY2S92l0ma7T
+	 lcVu/CQTE+3JQzAZKGxDq5eNjOZKaCfdnosh39i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfJFRda (ORCPT
+        id S1729185AbfJFRdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729747AbfJFRd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:33:26 -0400
+        id S1728564AbfJFRdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:33:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DDB92080F;
-        Sun,  6 Oct 2019 17:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D4EF2087E;
+        Sun,  6 Oct 2019 17:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383205;
-        bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
+        s=default; t=1570383197;
+        bh=W/HA4aCiOQ96V+GxcHWL51sEqCOsrOsL55HJKU5MTXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKhBr1Rw+iHpXK8/MhN+B2NlDuk+A41+K8FY9rERr/EL6fCc9ktNdsg5i6U8MJAr6
-         zEHoEbkpaNpsdyOP6CEojrpIfuOtJB7CYkFPI+Rc9SCsJZfbz71Jx49GXfY+LbOWO8
-         za9eAF7CzOu0jWL8xQIiEZAKfl8N2oqzL+rVrk2E=
+        b=XICHSPnzJL0Obho2PLdcRnnr5omrMfJ1IeZI7S3WNO+hZbefd3C0GgwFZIZTDzJyF
+         DYXZCm6yIrhNZcOcGnxQA5fP84bWWINrBKwu0aEPTbSrtjY1XGyyQ9mQxS52Ub6U5f
+         MuNVZh6Uddth86VMuXbRg9qPPrsMaLbNXvV3Wnlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Marek Majkowski <marek@cloudflare.com>,
+        stable@vger.kernel.org, Josh Hunt <johunt@akamai.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 019/137] tcp: adjust rto_base in retransmits_timed_out()
-Date:   Sun,  6 Oct 2019 19:20:03 +0200
-Message-Id: <20191006171210.959241083@linuxfoundation.org>
+Subject: [PATCH 5.2 016/137] udp: fix gso_segs calculations
+Date:   Sun,  6 Oct 2019 19:20:00 +0200
+Message-Id: <20191006171210.790390947@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,48 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit 3256a2d6ab1f71f9a1bd2d7f6f18eb8108c48d17 ]
+[ Upstream commit 44b321e5020d782ad6e8ae8183f09b163be6e6e2 ]
 
-The cited commit exposed an old retransmits_timed_out() bug
-which assumed it could call tcp_model_timeout() with
-TCP_RTO_MIN as rto_base for all states.
+Commit dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
+added gso_segs calculation, but incorrectly got sizeof() the pointer and
+not the underlying data type. In addition let's fix the v6 case.
 
-But flows in SYN_SENT or SYN_RECV state uses a different
-RTO base (1 sec instead of 200 ms, unless BPF choses
-another value)
-
-This caused a reduction of SYN retransmits from 6 to 4 with
-the default /proc/sys/net/ipv4/tcp_syn_retries value.
-
-Fixes: a41e8a88b06e ("tcp: better handle TCP_USER_TIMEOUT in SYN_SENT state")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Marek Majkowski <marek@cloudflare.com>
+Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
+Fixes: dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
+Signed-off-by: Josh Hunt <johunt@akamai.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_timer.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/ipv4/udp.c |    2 +-
+ net/ipv6/udp.c |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -198,8 +198,13 @@ static bool retransmits_timed_out(struct
- 		return false;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -868,7 +868,7 @@ static int udp_send_skb(struct sk_buff *
  
- 	start_ts = tcp_sk(sk)->retrans_stamp;
--	if (likely(timeout == 0))
--		timeout = tcp_model_timeout(sk, boundary, TCP_RTO_MIN);
-+	if (likely(timeout == 0)) {
-+		unsigned int rto_base = TCP_RTO_MIN;
-+
-+		if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-+			rto_base = tcp_timeout_init(sk);
-+		timeout = tcp_model_timeout(sk, boundary, rto_base);
-+	}
+ 		skb_shinfo(skb)->gso_size = cork->gso_size;
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+-		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(uh),
++		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
+ 							 cork->gso_size);
+ 		goto csum_partial;
+ 	}
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -1156,6 +1156,8 @@ static int udp_v6_send_skb(struct sk_buf
  
- 	return (s32)(tcp_time_stamp(tcp_sk(sk)) - start_ts - timeout) >= 0;
- }
+ 		skb_shinfo(skb)->gso_size = cork->gso_size;
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
++		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
++							 cork->gso_size);
+ 		goto csum_partial;
+ 	}
+ 
 
 
