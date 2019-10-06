@@ -2,100 +2,69 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D4FC47404
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE9C4740A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B5A222C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB88222CF
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570321106;
-	bh=jicYEzNGTUAwIo8QVXeU4x/JzMvL+QpqmFLNRdV6obQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E5m/By5y2ON1Mvty6NHDcLP3jUABrYNaspnRLDeHYigL3+Vlovq9yG7gcfP6yh0Jw
-	 wPzX2tJZlMATsMvGSzCzjdTsIIbRNuug5y+K1tS3ebE5N1dC786v05bu3dPa2FBtWT
-	 yFHLpTuw8hOob5ovvbInAhRGptkqmqB+rgfW2KMQ=
+	s=default; t=1570321214;
+	bh=qQ+AM7HzTxUatAdVYalvXuoGaXRz+y1gBg/GtTj6Ly0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ob5eRHIwVAjz+dLVL97ZHNYu/ibslaPc7I4qK2PqA4dSvLIdKNQTKMZZqncl6Xxh4
+	 SI/Xr2OujT0nNsyDQ0QRs58KUbR7e+WmO66ABP7C/qr3BJ8Wh20lhWksVkLq7MrNHW
+	 8ZqLliJPykcYeCtvQtOejoEpLY7SzBemB6efNVxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfJFASZ (ORCPT
+        id S1726939AbfJFAUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 20:18:25 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46145 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbfJFASZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 20:18:25 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t8so6831651lfc.13
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 17:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UreOxprw0L5jzezKy4n2+46u4wVXQnYF5JGMttCrTko=;
-        b=I6Y4dZ+y+T9nD9uRykuqzD0d1iczRw+MQh37NzJ4ydIIIx+m7Bi33rSKxn5ldajK36
-         ejECvzZGoHtKwGfWvDVWyvk+59t+7v3Tgq4K708HHHo2rz3FoXCBAjvKW9HG1LiSmeT3
-         cTUSzb5lN8pHanEtbu4p8H0sC2nx2/+pFC4Jg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UreOxprw0L5jzezKy4n2+46u4wVXQnYF5JGMttCrTko=;
-        b=aQamuwdPNdmHnZrsLadgEdHssuCRRWMTmuwaDE4Rsknou0jkK0bptGw2KN7FCaY7Fq
-         23Zr8UP2XzClfo40hWWHfg0MdpALd2NmtW5kvQWG1NjvwdXUuF54dgl8IZHUj3Y4H2WK
-         2e1X0Clw0ZTR2mV9lK1pcV4CX2kTYarYpB6UQCRwNKRzpolxb4ma8z+uBJSRWQP3zoQR
-         0vKYCgZhUr7lk8O9fykdqLsLPXlREabqAMDuOh/xkTKtMl0JZImdIOSO+1pUYhOGp/u8
-         FzBrnjVLoEzOjkNSCpCgzYO3e9eh8qVRHxAnU8dlvaCuZfiqEVdwhF7QvcC+qTo1OBuI
-         KZTg==
-X-Gm-Message-State: APjAAAU340osCIzHWAUh+oSPVdB64JBNquQXJhjUTsEM3tyA/Wk/zG58
-        Nno3w31Gm2OIdFy1m8f5fcpvisynvyU=
-X-Google-Smtp-Source: APXvYqxKPr7FB63X1oWHoE+OBg59/MR6qurf7J06MfVWvUosQ4g9iXaJgr/TkZaYx1Q080GBRDV5IA==
-X-Received: by 2002:a05:6512:419:: with SMTP id u25mr12327227lfk.165.1570321103057;
-        Sat, 05 Oct 2019 17:18:23 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id g3sm2031592lja.61.2019.10.05.17.18.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Oct 2019 17:18:22 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id t8so6831630lfc.13
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 17:18:21 -0700 (PDT)
-X-Received: by 2002:a19:f204:: with SMTP id q4mr12672652lfh.29.1570321101557;
- Sat, 05 Oct 2019 17:18:21 -0700 (PDT)
+        Sat, 5 Oct 2019 20:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbfJFAUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 20:20:11 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07CB5222C8;
+        Sun,  6 Oct 2019 00:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570321206;
+        bh=qQ+AM7HzTxUatAdVYalvXuoGaXRz+y1gBg/GtTj6Ly0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IT94Vl4UeNiaxnAbEub0yaKVQCYfGFVYkKazdQwfLNbPy/C6nLnSoqGZg/UpeeHAo
+         oHTJBQToZ94hp52JtZSPUL6MbpnnNh3x9zuyuKPaaKMtU7iPCzceU0aRvmjErAaGmh
+         GMEKwVTY/vua6Qsmu1psHg8iMLS8CJWCLdrbU+so=
+Date:   Sun, 6 Oct 2019 08:19:50 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com
+Subject: Re: [PATCH V2] arm64: dts: imx8mn-ddr4-evk: Enable GPIO LED
+Message-ID: <20191006001948.GC7150@dragon>
+References: <1567517277-30919-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <20191005233227.GB25745@shell.armlinux.org.uk>
-In-Reply-To: <20191005233227.GB25745@shell.armlinux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 5 Oct 2019 17:18:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiy9MWteoaoV15FJ7QJeRhBtCVgo6ECiLb4khuc5PxHUg@mail.gmail.com>
-Message-ID: <CAHk-=wiy9MWteoaoV15FJ7QJeRhBtCVgo6ECiLb4khuc5PxHUg@mail.gmail.com>
-Subject: Re: MAP_FIXED_NOREPLACE appears to break older i386 binaries
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567517277-30919-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Duh.
+On Tue, Sep 03, 2019 at 09:27:57AM -0400, Anson Huang wrote:
+> i.MX8MN DDR4 EVK board has a GPIO LED to indicate status,
+> add support for it.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I only looked at recent issues in this area, and overlooked your
-sentence in between the two ELF section dumps, and it appears that you
-have already biseced it to something else:
-
-On Sat, Oct 5, 2019 at 4:32 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> Seems we've broken older i386 binaries with commit ad55eac74f20
-> ("elf: enforce MAP_FIXED on overlaying elf segments").  Maybe the
-> MAP_FIXED_NOREPLACE stuff needs to have an on/off switch?
-
-I guess the "can you send people binaries for testing" ends up being
-the right thing to do, and Michal can figure it out.
-
-Sorry for the noise.
-
-              Linus
+Applied, thanks.
