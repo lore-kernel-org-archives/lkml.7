@@ -2,56 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775C4C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6F8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA1E2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356132133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382864;
-	bh=iAIYfvUKd0hsa/vMyexzWgcBLmOy2R8kyWpTrgJgQRk=;
+	s=default; t=1570382866;
+	bh=Fn6xdpVicpmIoavvVgPu3S525wzdDrcZykep2c8pD+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toxg3dtmEXfl05Vj/HnFGhyqGZnkU5GOAZJrbVabeTvDjdVFvgO1E8kvYAiFeRGNN
-	 wPndawtlOOfZrT3vNeYem+AQZJjH80fXKeYs0xBZ8DlkHiwwsaACHanGKsDu970H/B
-	 H53fpDzB1Pw3NJZuuHuhnIoMzJfJJ9IxnlIsce3U=
+	b=TM8LjgbCWnwebXIbWp1l691tEewlsBgk/i0YjOGRkQux41k3tvIrPXq2QX+ReMaYc
+	 FPJ4UTRnnu/UWzTPU39sEyX9zlkNs5WC5WlJGbX/wYUFE92WGEsNzDs25id1cPdg1+
+	 gki/VGNlnp4ANajCV0dGi9xYZpjbXOmklkD7h0dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfJFR1n (ORCPT
+        id S1728575AbfJFR1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53110 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728553AbfJFR1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:40 -0400
+        id S1727541AbfJFR1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342782087E;
-        Sun,  6 Oct 2019 17:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28D62133F;
+        Sun,  6 Oct 2019 17:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382859;
-        bh=iAIYfvUKd0hsa/vMyexzWgcBLmOy2R8kyWpTrgJgQRk=;
+        s=default; t=1570382862;
+        bh=Fn6xdpVicpmIoavvVgPu3S525wzdDrcZykep2c8pD+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yoFJbGKW2Z1THKumXZ9nqLCKX1a0I6nLtFzpvx7XTpcxe4aTBVFWWb8SOpPvN3HDJ
-         +IVYpzD50UkXQPhAZxSF7jYw+yHoFqClUatMD5vlaxOaItBz//xSuxBYtAst2fDoyW
-         6x3AVgnWnBl+oOutl5P6E4rAyBHaMQIb24Xf1bCY=
+        b=l77dlHJHGkWQZbP71bT+MmOPjWM4bWjI8Bk4+gTuWpAWTE2Z7XjhlVVsB3k0ThsTK
+         tCwjgGnKHQt6NI4mLtEkO2lACja8A6LvdtVCnQRGi6XCNs8sbaJ7e3pXZ+4um2z7DF
+         JL0EDW/tQgBvoV5dvp2kYy+W1ZHPl7LXUWFrIGQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/68] PCI: exynos: Propagate errors for optional PHYs
-Date:   Sun,  6 Oct 2019 19:21:15 +0200
-Message-Id: <20191006171126.937855506@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 4.14 66/68] smack: use GFP_NOFS while holding inode_smack::smk_lock
+Date:   Sun,  6 Oct 2019 19:21:42 +0200
+Message-Id: <20191006171138.981578804@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -64,48 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit ddd6960087d4b45759434146d681a94bbb1c54ad ]
+commit e5bfad3d7acc5702f32aafeb388362994f4d7bd0 upstream.
 
-devm_of_phy_get() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate devres structures. Propagating only -EPROBE_DEFER
-is problematic because it results in these legitimately fatal errors
-being treated as "PHY not specified in DT".
+inode_smack::smk_lock is taken during smack_d_instantiate(), which is
+called during a filesystem transaction when creating a file on ext4.
+Therefore to avoid a deadlock, all code that takes this lock must use
+GFP_NOFS, to prevent memory reclaim from waiting for the filesystem
+transaction to complete.
 
-What we really want is to ignore the optional PHYs only if they have not
-been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
-that's the special case that we need to handle. So we propagate all
-errors, except -ENODEV, so that real failures will still cause the
-driver to fail probe.
+Reported-by: syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/dwc/pci-exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/smack/smack_access.c |    6 +++---
+ security/smack/smack_lsm.c    |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/dwc/pci-exynos.c b/drivers/pci/dwc/pci-exynos.c
-index ea03f1ec12a47..01acb418d1fdb 100644
---- a/drivers/pci/dwc/pci-exynos.c
-+++ b/drivers/pci/dwc/pci-exynos.c
-@@ -683,7 +683,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+--- a/security/smack/smack_access.c
++++ b/security/smack/smack_access.c
+@@ -469,7 +469,7 @@ char *smk_parse_smack(const char *string
+ 	if (i == 0 || i >= SMK_LONGLABEL)
+ 		return ERR_PTR(-EINVAL);
  
- 	ep->phy = devm_of_phy_get(dev, np, NULL);
- 	if (IS_ERR(ep->phy)) {
--		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
-+		if (PTR_ERR(ep->phy) != -ENODEV)
- 			return PTR_ERR(ep->phy);
- 		dev_warn(dev, "Use the 'phy' property. Current DT of pci-exynos was deprecated!!\n");
- 	} else
--- 
-2.20.1
-
+-	smack = kzalloc(i + 1, GFP_KERNEL);
++	smack = kzalloc(i + 1, GFP_NOFS);
+ 	if (smack == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -504,7 +504,7 @@ int smk_netlbl_mls(int level, char *cats
+ 			if ((m & *cp) == 0)
+ 				continue;
+ 			rc = netlbl_catmap_setbit(&sap->attr.mls.cat,
+-						  cat, GFP_KERNEL);
++						  cat, GFP_NOFS);
+ 			if (rc < 0) {
+ 				netlbl_catmap_free(sap->attr.mls.cat);
+ 				return rc;
+@@ -540,7 +540,7 @@ struct smack_known *smk_import_entry(con
+ 	if (skp != NULL)
+ 		goto freeout;
+ 
+-	skp = kzalloc(sizeof(*skp), GFP_KERNEL);
++	skp = kzalloc(sizeof(*skp), GFP_NOFS);
+ 	if (skp == NULL) {
+ 		skp = ERR_PTR(-ENOMEM);
+ 		goto freeout;
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -269,7 +269,7 @@ static struct smack_known *smk_fetch(con
+ 	if (!(ip->i_opflags & IOP_XATTR))
+ 		return ERR_PTR(-EOPNOTSUPP);
+ 
+-	buffer = kzalloc(SMK_LONGLABEL, GFP_KERNEL);
++	buffer = kzalloc(SMK_LONGLABEL, GFP_NOFS);
+ 	if (buffer == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
 
 
