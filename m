@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E3DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9CFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B40020673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548E720673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384397;
-	bh=GW+r+Rf5qHmzeTuPacvUbQairqdtetqEGa1SdIDAQAY=;
+	s=default; t=1570384401;
+	bh=VHqFPei1l3XYQuzGwjYB6MtsKq7T/Rtc2e+h2ot99yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrfZhjyBMEwjl916aSf5tPdtGlvPIp4Bim6m4Aly3zYSHOKmaU+lThccnTzzcDfQA
-	 McojzJdm4D5N7kUIRS8Cr1FTyHWsoWBlxJwnCJ5SDuwcu+qVueemNYdpzA8rlaamCf
-	 pM5qq2HwAl2YMFcE6nDmbQJ92fpO7hcz3uQ+zevo=
+	b=AmatOZlS6IaR6hoKpZIMRGeuQvOWvgcBHDLWqSDGOO32S0ThZQhuAN4QUYPt/BmUr
+	 4qsJ/ip6a9ziwvS0Rf2E3iDQ8lMf4Rg0ieyrh6YT9ThQ11JF8V1ALw8p/pN1AimjWo
+	 DG1M8cqu1z9LVg1sXX8WQgHG3CRhau6tTlcL1Mvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfJFRxQ (ORCPT
+        id S1728546AbfJFRxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbfJFRiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:12 -0400
+        id S1729905AbfJFRiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:38:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 911182053B;
-        Sun,  6 Oct 2019 17:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31D7B20700;
+        Sun,  6 Oct 2019 17:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383492;
-        bh=GW+r+Rf5qHmzeTuPacvUbQairqdtetqEGa1SdIDAQAY=;
+        s=default; t=1570383486;
+        bh=VHqFPei1l3XYQuzGwjYB6MtsKq7T/Rtc2e+h2ot99yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00EV2UsVxInUAlUKEUPzr6NPDLFwUQxiE1HdYb99vHiqYk17PGeTYLmfZkL4I0f8S
-         3oBqfANfV+9DafqB5VsNuF/6jE2PKdVSsg1BoroFjlLKS86fQY6WhkD/iivHXzfxxH
-         9vTfR/g+eHWHDkrlpvURicc4dGVpHz4EMyi/FMjU=
+        b=TY2FngfMl5H2kzecF5cBk86Hv6D2gXlcNCNlztPMDL88+bhzrHqV5NDNvK/FaYvw4
+         CFXMv9l0NNrCEoGQEMks1eDSHw0pDA1GZEGdHjhln0zJ+3R1Pc+sCXYjrjvWnjL0l0
+         UlTMkYGlURA9qM5UVa88Q9mmHXqarJyr1u5P+xXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 087/137] dma-buf/sw_sync: Synchronize signal vs syncpt free
-Date:   Sun,  6 Oct 2019 19:21:11 +0200
-Message-Id: <20191006171216.070601806@linuxfoundation.org>
+Subject: [PATCH 5.2 121/137] crypto: hisilicon - Fix double free in sec_free_hw_sgl()
+Date:   Sun,  6 Oct 2019 19:21:45 +0200
+Message-Id: <20191006171219.355393263@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -63,75 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit d3c6dd1fb30d3853c2012549affe75c930f4a2f9 ]
+[ Upstream commit 24fbf7bad888767bed952f540ac963bc57e47e15 ]
 
-During release of the syncpt, we remove it from the list of syncpt and
-the tree, but only if it is not already been removed. However, during
-signaling, we first remove the syncpt from the list. So, if we
-concurrently free and signal the syncpt, the free may decide that it is
-not part of the tree and immediately free itself -- meanwhile the
-signaler goes on to use the now freed datastructure.
+There are two problems in sec_free_hw_sgl():
 
-In particular, we get struck by commit 0e2f733addbf ("dma-buf: make
-dma_fence structure a bit smaller v2") as the cb_list is immediately
-clobbered by the kfree_rcu.
+First, when sgl_current->next is valid, @hw_sgl will be freed in the
+first loop, but it free again after the loop.
 
-v2: Avoid calling into timeline_fence_release() from under the spinlock
+Second, sgl_current and sgl_current->next_sgl is not match when
+dma_pool_free() is invoked, the third parameter should be the dma
+address of sgl_current, but sgl_current->next_sgl is the dma address
+of next chain, so use sgl_current->next_sgl is wrong.
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111381
-Fixes: d3862e44daa7 ("dma-buf/sw-sync: Fix locking around sync_timeline lists")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Gustavo Padovan <gustavo@padovan.org>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: <stable@vger.kernel.org> # v4.14+
-Acked-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190812154247.20508-1-chris@chris-wilson.co.uk
+Fix this by deleting the last dma_pool_free() in sec_free_hw_sgl(),
+modifying the condition for while loop, and matching the address for
+dma_pool_free().
+
+Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma-buf/sw_sync.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/crypto/hisilicon/sec/sec_algs.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
-index 051f6c2873c7a..6713cfb1995c6 100644
---- a/drivers/dma-buf/sw_sync.c
-+++ b/drivers/dma-buf/sw_sync.c
-@@ -132,17 +132,14 @@ static void timeline_fence_release(struct dma_fence *fence)
+diff --git a/drivers/crypto/hisilicon/sec/sec_algs.c b/drivers/crypto/hisilicon/sec/sec_algs.c
+index 02768af0dccdd..8c789b8671fc4 100644
+--- a/drivers/crypto/hisilicon/sec/sec_algs.c
++++ b/drivers/crypto/hisilicon/sec/sec_algs.c
+@@ -215,17 +215,18 @@ static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
+ 			    dma_addr_t psec_sgl, struct sec_dev_info *info)
  {
- 	struct sync_pt *pt = dma_fence_to_sync_pt(fence);
- 	struct sync_timeline *parent = dma_fence_parent(fence);
-+	unsigned long flags;
+ 	struct sec_hw_sgl *sgl_current, *sgl_next;
++	dma_addr_t sgl_next_dma;
  
-+	spin_lock_irqsave(fence->lock, flags);
- 	if (!list_empty(&pt->link)) {
--		unsigned long flags;
--
--		spin_lock_irqsave(fence->lock, flags);
--		if (!list_empty(&pt->link)) {
--			list_del(&pt->link);
--			rb_erase(&pt->node, &parent->pt_tree);
--		}
--		spin_unlock_irqrestore(fence->lock, flags);
-+		list_del(&pt->link);
-+		rb_erase(&pt->node, &parent->pt_tree);
+-	if (!hw_sgl)
+-		return;
+ 	sgl_current = hw_sgl;
+-	while (sgl_current->next) {
++	while (sgl_current) {
+ 		sgl_next = sgl_current->next;
+-		dma_pool_free(info->hw_sgl_pool, sgl_current,
+-			      sgl_current->next_sgl);
++		sgl_next_dma = sgl_current->next_sgl;
++
++		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
++
+ 		sgl_current = sgl_next;
++		psec_sgl = sgl_next_dma;
  	}
-+	spin_unlock_irqrestore(fence->lock, flags);
+-	dma_pool_free(info->hw_sgl_pool, hw_sgl, psec_sgl);
+ }
  
- 	sync_timeline_put(parent);
- 	dma_fence_free(fence);
-@@ -265,7 +262,8 @@ static struct sync_pt *sync_pt_create(struct sync_timeline *obj,
- 				p = &parent->rb_left;
- 			} else {
- 				if (dma_fence_get_rcu(&other->base)) {
--					dma_fence_put(&pt->base);
-+					sync_timeline_put(obj);
-+					kfree(pt);
- 					pt = other;
- 					goto unlock;
- 				}
+ static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
 -- 
 2.20.1
 
