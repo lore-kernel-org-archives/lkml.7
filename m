@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908DDECE59A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44794ECE59E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4D421479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7EB20700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384294;
-	bh=h0E9bDafxlOExbxHUClj/mummCyEFJaSyMZs4q0U54w=;
+	s=default; t=1570384295;
+	bh=UFgLiUOs6x9PlG4jSctQ9LRTyjHREDnXiqnZJRJ+uuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/csOrHGuW5OinAaStTHrbSHTuwQSPFirNOwHeDQJ4tTii+whjCHbn1sl5i8GDAQg
-	 TJnYPLA/CcHAZKGcWYjoRpQ20Pc5FlVZ3A9NKZmWL6PPWOZcOOGhfaM54HvwIvleEF
-	 cGy6McsYc/B7yf33cAe3HiRfhmdpjnXqWCzMaKGQ=
+	b=x4jNf36GYO9sfKgGrjs92gFQzrTf6uqvk1rTFprAYGFhg603ALpa9/Y5AzFFAMc23
+	 QilW8ppMkpHB9BglakscxkyRoRs4nGlRfnkbgTK3W39JgZVlObbzhZrz7w6fSHoKam
+	 pdBcCxC4AgkH6n02tF1jdxlw/5vn9nmJ4WNeS0EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfJFRji (ORCPT
+        id S1729819AbfJFRjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730795AbfJFRje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:34 -0400
+        id S1730741AbfJFRjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D952C20700;
-        Sun,  6 Oct 2019 17:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9DE420700;
+        Sun,  6 Oct 2019 17:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383573;
-        bh=h0E9bDafxlOExbxHUClj/mummCyEFJaSyMZs4q0U54w=;
+        s=default; t=1570383554;
+        bh=UFgLiUOs6x9PlG4jSctQ9LRTyjHREDnXiqnZJRJ+uuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMbsf2RxEjuYLkuSamcKANM4CUO0lBR3mk2wKjoOsTDcK6skBj6eu6N69UR6urjCE
-         cdN1uEcBUXliD/YMr0hliBN1TntSuMVPH8PFSnfDpQB3ILX9rgUF9yGbF5lS9GLxQ3
-         Df+tdzivSS1q0vsvqNpI/SSsX3xNnBeTije5nzNU=
+        b=qDlwC+IMwUBGeC3H1L6qIw65i0CqOOOQb7+bfLdU/o+C0KywlvmOVGFYMxB8kFnu0
+         pE5d5o002KTYTWKfzLBpmmtzhp8M/qUAA1Qyqy7u/3uFqqhBWl62M5/5MuMZha9qZS
+         +nJx6KMlXWm01I6SdJ5aR3qFn30I7uYklcTbWXjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Shirish S <shirish.s@amd.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 017/166] drm/amdgpu: Fix hard hang for S/G display BOs.
-Date:   Sun,  6 Oct 2019 19:19:43 +0200
-Message-Id: <20191006171214.597824651@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersen.wu@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 010/166] drm/amd/display: Copy GSL groups when committing a new context
+Date:   Sun,  6 Oct 2019 19:19:36 +0200
+Message-Id: <20191006171213.491744259@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,73 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit e4c4073b0139d055d43a9568690fc560aab4fa5c ]
+[ Upstream commit 21ffcc94d5b3dc024fedac700f1e7f9dacf4ab4f ]
 
-HW requires for caching to be unset for scanout BO
-mappings when the BO placement is in GTT memory.
-Usually the flag to unset is passed from user mode
-but for FB mode this was missing.
+[Why]
+DC configures the GSL group for the pipe when pipe_split is enabled
+and we're switching flip types (buffered <-> immediate flip) on DCN2.
 
-v2:
-Keep all BO placement logic in amdgpu_display_supported_domains
+In order to record what GSL group the pipe is using DC stores it in
+the pipe's stream_res. DM is not aware of this internal grouping, nor
+is DC resource.
 
-Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Tested-by: Shirish S <shirish.s@amd.com>
+So when DM creates a dc_state context and passes it to DC the current
+GSL group is lost - DM never knew about it in the first place.
+
+After 3 immediate flips we run out of GSL groups and we're no longer
+able to correctly perform *any* flip for multi-pipe scenarios.
+
+[How]
+The gsl_group needs to be copied to the new context.
+
+DM has no insight into GSL grouping and could even potentially create
+a brand new context without referencing current hardware state. So this
+makes the most sense to have happen in DC.
+
+There are two places where DC can apply a new context:
+- dc_commit_state
+- dc_commit_updates_for_stream
+
+But what's shared between both of these is apply_ctx_for_surface.
+
+This logic only matters for DCN2, so it can be placed in
+dcn20_apply_ctx_for_surface. Before doing any locking (where the GSL
+group is setup) we can copy over the GSL groups before committing the
+new context.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersen.wu@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c  | 7 +++----
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 3 ++-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-index eb3569b46c1e1..430c56f9544a1 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-@@ -139,14 +139,14 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
- 						  fb_tiled);
- 	domain = amdgpu_display_supported_domains(adev);
--
- 	height = ALIGN(mode_cmd->height, 8);
- 	size = mode_cmd->pitches[0] * height;
- 	aligned_size = ALIGN(size, PAGE_SIZE);
- 	ret = amdgpu_gem_object_create(adev, aligned_size, 0, domain,
- 				       AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
--				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS |
--				       AMDGPU_GEM_CREATE_VRAM_CLEARED,
-+				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS     |
-+				       AMDGPU_GEM_CREATE_VRAM_CLEARED 	     |
-+				       AMDGPU_GEM_CREATE_CPU_GTT_USWC,
- 				       ttm_bo_type_kernel, NULL, &gobj);
- 	if (ret) {
- 		pr_err("failed to allocate framebuffer (%d)\n", aligned_size);
-@@ -168,7 +168,6 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 			dev_err(adev->dev, "FB failed to set tiling flags\n");
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+index 2627e0a98a96a..f8abe98a576be 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+@@ -1319,6 +1319,18 @@ static void dcn20_apply_ctx_for_surface(
+ 	if (!top_pipe_to_program)
+ 		return;
  
--
- 	ret = amdgpu_bo_pin(abo, domain);
- 	if (ret) {
- 		amdgpu_bo_unreserve(abo);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index 939f8305511b8..fb291366d5ade 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -747,7 +747,8 @@ int amdgpu_mode_dumb_create(struct drm_file *file_priv,
- 	struct amdgpu_device *adev = dev->dev_private;
- 	struct drm_gem_object *gobj;
- 	uint32_t handle;
--	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
-+	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
-+		    AMDGPU_GEM_CREATE_CPU_GTT_USWC;
- 	u32 domain;
- 	int r;
++	/* Carry over GSL groups in case the context is changing. */
++	for (i = 0; i < dc->res_pool->pipe_count; i++) {
++		struct pipe_ctx *pipe_ctx = &context->res_ctx.pipe_ctx[i];
++		struct pipe_ctx *old_pipe_ctx =
++			&dc->current_state->res_ctx.pipe_ctx[i];
++
++		if (pipe_ctx->stream == stream &&
++		    pipe_ctx->stream == old_pipe_ctx->stream)
++			pipe_ctx->stream_res.gsl_group =
++				old_pipe_ctx->stream_res.gsl_group;
++	}
++
+ 	tg = top_pipe_to_program->stream_res.tg;
  
+ 	interdependent_update = top_pipe_to_program->plane_state &&
 -- 
 2.20.1
 
