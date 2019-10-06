@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A633AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAB8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759022077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9022087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382818;
-	bh=XtQveHy+7t5bV9H6S02QhmT222autKJXMjgLRbyvI9s=;
+	s=default; t=1570382827;
+	bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=up841cQnLLGXTeimv/TysLb8iFajMBk5/jPIbOonCCTCSoWfDebmrdVZRHiqXEQFn
-	 xW3uhKfYa97ch5TNpW2+Lz4iuks/EQJmHiF79zwzmMWiT6QZNLNr0EIenRDnvM8idz
-	 FX72rdcPRCyKXIwQZ0qcEIcQjSGlXohoc4DGUUdQ=
+	b=cAEKQ8kdj2Lf9x5OnHVWc+IZp+ZQnjaDvjncrNqkrCRdM9hga9IH7DYjGqUs3d6SB
+	 WzzWf+MGYcAYD7YFKn6I0TGtrzQlPRi7MQyrOR4KB9QAuJ8Aw0gWJzr8XldbMjzRNM
+	 RXZDwFFag+sbWo99/lduY2/1VOkp+jIbGeGmzZpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfJFR05 (ORCPT
+        id S1727701AbfJFR1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbfJFR0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:54 -0400
+        id S1728422AbfJFR1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3066B2070B;
-        Sun,  6 Oct 2019 17:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F255F2077B;
+        Sun,  6 Oct 2019 17:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382813;
-        bh=XtQveHy+7t5bV9H6S02QhmT222autKJXMjgLRbyvI9s=;
+        s=default; t=1570382824;
+        bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMc/rdUBP94r+kQQqte16GGm4CKbbGhXDIEmUVl8fkMwkl2rUByHdltRU7XM2Q08B
-         B5dXMXT3OX+ujZg6He1JeeNOC0lrv06nrN0oYHY710wN8bWQ2welvcv+mNLhgpsqkt
-         9kX4Ucp9StlZOtSKmKeKyRlZxce0XhfKGcdyfXvg=
+        b=2m1qYlcCPmWTH73naGHBdCdDTPAtEahqm277imaQL2K1v7XN3c0W7XDrjWaesrHLZ
+         ZqDEtQOwGhWG9ALigCVUBtbuERjSWTXZ7OPDik9brN8PcB73T9LaWW1d86qMXtGMPO
+         e862ZDaxkOisfYbrCwIQSMKGxXhL9Bb71fnCqDCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 50/68] erspan: remove the incorrect mtu limit for erspan
-Date:   Sun,  6 Oct 2019 19:21:26 +0200
-Message-Id: <20191006171131.476641420@linuxfoundation.org>
+Subject: [PATCH 4.14 54/68] net: qlogic: Fix memory leak in ql_alloc_large_buffers
+Date:   Sun,  6 Oct 2019 19:21:30 +0200
+Message-Id: <20191006171132.917617857@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,45 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 0e141f757b2c78c983df893e9993313e2dc21e38 ]
+[ Upstream commit 1acb8f2a7a9f10543868ddd737e37424d5c36cf4 ]
 
-erspan driver calls ether_setup(), after commit 61e84623ace3
-("net: centralize net_device min/max MTU checking"), the range
-of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
+In ql_alloc_large_buffers, a new skb is allocated via netdev_alloc_skb.
+This skb should be released if pci_dma_mapping_error fails.
 
-It causes the dev mtu of the erspan device to not be greater
-than 1500, this limit value is not correct for ipgre tap device.
-
-Tested:
-Before patch:
-# ip link set erspan0 mtu 1600
-Error: mtu greater than device maximum.
-After patch:
-# ip link set erspan0 mtu 1600
-# ip -d link show erspan0
-21: erspan0@NONE: <BROADCAST,MULTICAST> mtu 1600 qdisc noop state DOWN
-mode DEFAULT group default qlen 1000
-    link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 0
-
-Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() in ql_release_to_lrg_buf_free_list(), ql_populate_free_queue(), ql_alloc_large_buffers(), and ql3xxx_send()")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_gre.c |    1 +
+ drivers/net/ethernet/qlogic/qla3xxx.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -1424,6 +1424,7 @@ nla_put_failure:
- static void erspan_setup(struct net_device *dev)
- {
- 	ether_setup(dev);
-+	dev->max_mtu = 0;
- 	dev->netdev_ops = &erspan_netdev_ops;
- 	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
- 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -2787,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
+ 				netdev_err(qdev->ndev,
+ 					   "PCI mapping failed with error: %d\n",
+ 					   err);
++				dev_kfree_skb_irq(skb);
+ 				ql_free_large_buffers(qdev);
+ 				return -ENOMEM;
+ 			}
 
 
