@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5256EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09339C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF202077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20B52077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382489;
-	bh=N9QFs/KP0RCjYYq/LG4A7GpA/CajXls59s95hKZ5nxw=;
+	s=default; t=1570382499;
+	bh=H1UlWTytnQ7kqdRX4mbQdL7bveS9FBSgwFgIlp3T5Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EsxGevoWmb7nLwrEyfPhZjkdl8GGT1R4+hLnssr3L3kTr3Sa1/6Q0eRHqjKdeytHe
-	 RQ3tACs4+QuW2eCxYee3sq0EGPND6pw2PMO6582WpI2MwqDxAyjce4Cs9jyYTo9X1H
-	 StkuDdLg7hPgRlQWZ4Oo8+hoOhb5jnG6qstXKM5Q=
+	b=daJqnoGjWR6P0d4Wuurft34C8TmbPsNjd3Fggo4z70xMBsJAcwK1VBEwJlFrManpu
+	 l552BZaXPF4FXieXS2ZWEk3vRyvL6T20yZaNO59nhUJDhNFfJ2KlTX+ETLOdz/Frr6
+	 L6jHi+eAJhoXNIZsA3KV84Ped4+bvbS0Ym6EzBL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfJFRUx (ORCPT
+        id S1727503AbfJFRVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbfJFRUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:50 -0400
+        id S1727255AbfJFRUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352632077B;
-        Sun,  6 Oct 2019 17:20:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5822077B;
+        Sun,  6 Oct 2019 17:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382449;
-        bh=N9QFs/KP0RCjYYq/LG4A7GpA/CajXls59s95hKZ5nxw=;
+        s=default; t=1570382433;
+        bh=H1UlWTytnQ7kqdRX4mbQdL7bveS9FBSgwFgIlp3T5Ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PkdULzdQGjq+n8szn41B2jsjnX0KU2ul+6qb2UkKWS+WkhLzlg3I+GBdRXSdeOkvU
-         dBmuaWgjN7Orxw0Ii0iYdsEV24LfLnicgj+glw7dzoV0xwJArDRnkCGRohjV6z4csf
-         DNgKS2EJcGx19xQS+v+ybS+KYn9fPgjaDEf+VMvo=
+        b=IalJrVrCPkk+jH3Y08+r+SVb7XDMINuj14zh7zQpcZXk+wS85GVNPRWLjMWOyBcAF
+         w/dRGGRZ6yX2xjCJH1fjKxd/u4eZTwoIvCWFwFaLvpWoxyQqJT5REdI6nfgp9Tb/Zn
+         CncJMbGHQlyTpp0QxNhl3t0U2TnmV/M8sxABpBhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 4.4 34/36] Smack: Dont ignore other bprm->unsafe flags if LSM_UNSAFE_PTRACE is set
-Date:   Sun,  6 Oct 2019 19:19:16 +0200
-Message-Id: <20191006171100.541305420@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 29/36] nfc: fix memory leak in llcp_sock_bind()
+Date:   Sun,  6 Oct 2019 19:19:11 +0200
+Message-Id: <20191006171058.216908056@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -59,50 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
+[ Upstream commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d ]
 
-There is a logic bug in the current smack_bprm_set_creds():
-If LSM_UNSAFE_PTRACE is set, but the ptrace state is deemed to be
-acceptable (e.g. because the ptracer detached in the meantime), the other
-->unsafe flags aren't checked. As far as I can tell, this means that
-something like the following could work (but I haven't tested it):
+sysbot reported a memory leak after a bind() has failed.
 
- - task A: create task B with fork()
- - task B: set NO_NEW_PRIVS
- - task B: install a seccomp filter that makes open() return 0 under some
-   conditions
- - task B: replace fd 0 with a malicious library
- - task A: attach to task B with PTRACE_ATTACH
- - task B: execve() a file with an SMACK64EXEC extended attribute
- - task A: while task B is still in the middle of execve(), exit (which
-   destroys the ptrace relationship)
+While we are at it, abort the operation if kmemdup() has failed.
 
-Make sure that if any flags other than LSM_UNSAFE_PTRACE are set in
-bprm->unsafe, we reject the execve().
+BUG: memory leak
+unreferenced object 0xffff888105d83ec0 (size 32):
+  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
+  hex dump (first 32 bytes):
+    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
+    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
+  backtrace:
+    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
+    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
+    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
+    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
+    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
+    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
+    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
+    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
+    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
+    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
+    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
+    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
+    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
+    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Cc: stable@vger.kernel.org
-Fixes: 5663884caab1 ("Smack: unify all ptrace accesses in the smack")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- security/smack/smack_lsm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/nfc/llcp_sock.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -932,7 +932,8 @@ static int smack_bprm_set_creds(struct l
- 
- 		if (rc != 0)
- 			return rc;
--	} else if (bprm->unsafe)
+--- a/net/nfc/llcp_sock.c
++++ b/net/nfc/llcp_sock.c
+@@ -118,9 +118,14 @@ static int llcp_sock_bind(struct socket
+ 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
+ 					  llcp_sock->service_name_len,
+ 					  GFP_KERNEL);
+-
++	if (!llcp_sock->service_name) {
++		ret = -ENOMEM;
++		goto put_dev;
 +	}
-+	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
- 		return -EPERM;
- 
- 	bsp->smk_task = isp->smk_task;
+ 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
+ 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
++		kfree(llcp_sock->service_name);
++		llcp_sock->service_name = NULL;
+ 		ret = -EADDRINUSE;
+ 		goto put_dev;
+ 	}
 
 
