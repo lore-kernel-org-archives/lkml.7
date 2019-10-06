@@ -2,128 +2,110 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7C2ECE58E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 07:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B79C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E90214AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 07:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZYwdbdlE"
+	by mail.kernel.org (Postfix) with ESMTP id E0AC92133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570349119;
+	bh=D/wd/mWjmPW54gsl+QbV0f4qahPhKTVJuxLON5hP40Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1WxRHl60yCRoqLT9fatKqGklqEUi9HVF0q+wVY+Eax7YtY606PEvggxl0krFjliE9
+	 /OFRb3ycVsdrx+aiFcDKwnL3hMizO4pmtqNp80EJUO1O9dfPfkrF0pwMYsR+zC57/5
+	 osifiY7UuxhL64S24Tc4Aq+4vAz5SiJ+owiSPfIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfJFHyY (ORCPT
+        id S1726297AbfJFIFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 03:54:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51464 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfJFHyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 03:54:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x967nKI5081017;
-        Sun, 6 Oct 2019 07:52:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=CIGl62hTxZvtRryW3VI5SN1WALWHfBPpjLitA/UZU8s=;
- b=ZYwdbdlEPC4VnRcc0shJRMn2BkpDj/SukcvmVaAsGPgi9EV+2QS3R+qNTXDu3S9JIgwj
- nWq+vvoUIVpm3UVploDg/Ba8EG2I7OGBD2Wzolq8VnrmxrVbQM6ysq/7JK1Emxd7d+B3
- yS6NLBv3qIFVl1Vb75uxHlZ/Cwyfs2kS3RbHpIVbQlSBfp0FTybaFXzwRmD10rYDM1VC
- MQ966CVvsmshx/Wio0BCyeuyhUElH5vZl4aXZ0ZfePOxDMto1a+OSlGECkisWYqkEDm/
- JCc6J+NDFc/J6dyB8TPJUo+eYLkek8FUiiukcSqz/mhE2ryDy6ip/ewe8HuwMmNX0ghD KQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2vektr2q0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 06 Oct 2019 07:52:23 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x967hu5E048615;
-        Sun, 6 Oct 2019 07:52:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2vf4pfhrqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 06 Oct 2019 07:52:22 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x967qK6f031998;
-        Sun, 6 Oct 2019 07:52:20 GMT
-Received: from [10.191.5.27] (/10.191.5.27)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 06 Oct 2019 00:52:19 -0700
-Subject: Re: [PATCH v4 3/4] xen: Mark "xen_nopvspin" parameter obsolete
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <1570111335-12731-1-git-send-email-zhenzhong.duan@oracle.com>
- <1570111335-12731-4-git-send-email-zhenzhong.duan@oracle.com>
- <2c644c4a-f562-3271-ce0b-e60a44d82d89@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <99d15788-cc14-c8e5-80b1-0dc0777a5993@oracle.com>
-Date:   Sun, 6 Oct 2019 15:52:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 6 Oct 2019 04:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbfJFIFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 04:05:18 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9139E2084D;
+        Sun,  6 Oct 2019 08:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570349117;
+        bh=D/wd/mWjmPW54gsl+QbV0f4qahPhKTVJuxLON5hP40Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aH/RzuIGYc/dOl4IhP5y4h85I95r/bQ5J8zN0qKVhvuw7vDiQ6SDlIuWnFY8pvyDj
+         6BPXid09AqnfgTnrScg6vt3UZrK1DLPUjn9POE22o09cLjLqadWcW+lG8EYTqsK45w
+         BwrEomQXQBzWyS7VxqucwOTBQsbzUkuSsV9R6a7c=
+Date:   Sun, 6 Oct 2019 16:04:44 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: etnaviv: Add #cooling-cells
+Message-ID: <20191006080442.GW7150@dragon>
+References: <cover.1568255903.git.agx@sigxcpu.org>
+ <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
+ <caf166f465465c61b70ad69d88f0634f1ca2ae64.camel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <2c644c4a-f562-3271-ce0b-e60a44d82d89@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9401 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910060079
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9401 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910060080
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <caf166f465465c61b70ad69d88f0634f1ca2ae64.camel@pengutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 04:32:55PM +0200, Lucas Stach wrote:
+> On Mi, 2019-09-11 at 19:40 -0700, Guido Günther wrote:
+> > Add #cooling-cells for when the gpu acts as a cooling device.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> 
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-On 2019/10/4 22:57, Boris Ostrovsky wrote:
-> On 10/3/19 10:02 AM, Zhenzhong Duan wrote:
->> Map "xen_nopvspin" to "nopvspin", fix stale description of "xen_nopvspin"
->> as we use qspinlock now.
->>
->> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->> Cc: Juergen Gross <jgross@suse.com>
->> Cc: Stefano Stabellini <sstabellini@kernel.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->
-> with a small nit
->
->>   void __init xen_init_spinlocks(void)
->>   {
->> +	if (nopvspin)
->> +		xen_pvspin = false;
->>   
->>   	/*  Don't need to use pvqspinlock code if there is only 1 vCPU. */
->>   	if (num_possible_cpus() == 1)
-> I'd fold the change into this 'if' statement, I think it will still be
-> clear what the comment refers to.
+Lucas,
 
-Good suggestion, will do that. Thanks
+I assume you will pick it up.
 
-Zhenzhong
+Shawn
 
+> 
+> > ---
+> >  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt          | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> > index 8def11b16a24..640592e8ab2e 100644
+> > --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> > @@ -21,6 +21,7 @@ Required properties:
+> >  Optional properties:
+> >  - power-domains: a power domain consumer specifier according to
+> >    Documentation/devicetree/bindings/power/power_domain.txt
+> > +- #cooling-cells: : If used as a cooling device, must be <2>
+> >  
+> >  example:
+> >  
+> 
