@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1658BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C49AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E286F2166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6790020862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382606;
-	bh=W6QghoyZXk8Hl3WCgfDzrIHNelWpAuCRcKjsOjXwCMg=;
+	s=default; t=1570382609;
+	bh=Qdk2g6rFXA19O83ksX68LoEMe9e94G5/RP8eW++x/4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRGVfR++MkuDFlMHOYRznX3bSetihJ63cLBwPuW5jLjx7w7EI85uWAnddtUiy+OqT
-	 Is3mvdTjImBzk8trberCldE2jXvI13m5tsEu0SkmnztC+QGLZGnXSw05teDp1Sd05b
-	 52df8HTrgdfS1ifD7frBWkMVhklVwHDEvocYztQk=
+	b=K4oTrGqIpuGLTChM+EhIE9w3qgKN/jnqm63iGA45SyenZQ31ilR6dnw7AyxNTNFCZ
+	 LNI1rE48rYpLzjrYhotcDWdxyEr9azE1SCgjha0tOhTHjkz5VDIzJuYeQlnCBV8mue
+	 mi8457DWFXFQJoQNknjnrjRTOdbzVQSfKi1XjH3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfJFRXZ (ORCPT
+        id S1727601AbfJFRX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47890 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727565AbfJFRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:23:23 -0400
+        id S1727231AbfJFRX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:23:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD36721872;
-        Sun,  6 Oct 2019 17:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A1E2077B;
+        Sun,  6 Oct 2019 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382603;
-        bh=W6QghoyZXk8Hl3WCgfDzrIHNelWpAuCRcKjsOjXwCMg=;
+        s=default; t=1570382606;
+        bh=Qdk2g6rFXA19O83ksX68LoEMe9e94G5/RP8eW++x/4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mL00tqHy7Q73H4XE9/k8pVo6OEgK8CZRhoHjCf1dKs367CjRNFcz96e8shOyFUSWi
-         tMk2FpGTc2gRSXqDZ0z8E/TrZrzOquHPTACNawdk2BTWVz9tVPwv1c4pKELZc3aImx
-         lTijSW/hZTrtX+GDKEEnOdObLeQyFzZOpgZJvQyI=
+        b=TM6ej8mD6Uv9OTK2YWFZID6LiGyGwf/Us2rMqLxrAzgFqA/ggXfvBSoX9nZbHjnsC
+         bpBKehACAtmKy/fRLXsF0ALFvToibzKeUWLq4s1VO9EnsSXv+NMgwpD96L5su+Jy5j
+         Aay9vUbY26K7c/kaQjn5ez0+KNLAjPEO73VWlS2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marko Kohtala <marko.kohtala@okoko.fi>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/47] video: ssd1307fb: Start page range at page_offset
-Date:   Sun,  6 Oct 2019 19:20:49 +0200
-Message-Id: <20191006172017.017173555@linuxfoundation.org>
+Subject: [PATCH 4.9 20/47] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun,  6 Oct 2019 19:21:07 +0200
+Message-Id: <20191006172017.950996167@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -65,41 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
+
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/intel-lpss-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 2925d5ce8d3e5..1267b93c03bd0 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -430,7 +430,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 9ff243970e93e..5b41111e62fd1 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -39,6 +39,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
  
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
++	pdev->d3cold_delay = 0;
++
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
  
 -- 
 2.20.1
