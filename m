@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAC0ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0F5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57B320673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0F821A49
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384311;
-	bh=jbJz3uGLLHAyYLPhnl1Y9VCga/2gkSJPt8N1e4A7zik=;
+	s=default; t=1570384316;
+	bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XhWxkLA//N22c3f/JXMEWIroMBLDxlBQ3f9z4NbO0khSneICtDTgyxnibRqkFzVuS
-	 fAEY46IK5dn9APHQcfileNUy1JjVyqoMDFQtb/ZA3A+MixnPaJ+u9XZ3AME6L3mBrE
-	 0x8RnMutpdwmjC1bVVJ+KRAHL3Nma7cjGvBT0NfQ=
+	b=wFHrMYkGOFdN4eUwVzhm3MrNi9l22alpyo4MlesnQ9p8GNM3pQlN2NpFJ5RYJJCIY
+	 1V5AQ9+zMXn2dVly1077yGXtth3ddBqeuKEAjL5Wn3M0tSuKwHq0ySYK+ZWaySVYYN
+	 IacFYugNhFUIfx/FW/Q3YA59UW4jrQElWTZGTjf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfJFRvu (ORCPT
+        id S1730742AbfJFRvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:50:57 -0400
+        id S1727404AbfJFRuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B2E218AC;
-        Sun,  6 Oct 2019 17:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1679F217D6;
+        Sun,  6 Oct 2019 17:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383936;
-        bh=jbJz3uGLLHAyYLPhnl1Y9VCga/2gkSJPt8N1e4A7zik=;
+        s=default; t=1570383930;
+        bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d64BrhqY2WBDmUqty3N5xOvO0pthmcN0tdSHp5UzmBBd+0hztCqgZGq/FpM+X/m0u
-         xhu5dGG4ej4dqwpq9rJzii0qbrpjAiv4ZwDJ68ZM49L4MtFgLdDUTF9tBTfdBYCgJ+
-         RSnD1W4G8EyspRg04ntDrxstKzqEXDTL5k9v0Cck=
+        b=X+aJoZRVO3+RSEVR5ctnR1YEHOAR8TIjDiUAKDpm5VNJORtP1bgYrw6u93qEfpAia
+         zot0onS2x4gO4S0HpbaR8zua7z0w/7bBaFf8JkobWFad9akw0mo1aJ03DmGoom48+c
+         bQKSz91aGx129HqoqssSlBB5SdVK8uB8OboaGaDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
+        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 150/166] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
-Date:   Sun,  6 Oct 2019 19:21:56 +0200
-Message-Id: <20191006171225.552635495@linuxfoundation.org>
+Subject: [PATCH 5.3 148/166] net/rds: Fix error handling in rds_ib_add_one()
+Date:   Sun,  6 Oct 2019 19:21:54 +0200
+Message-Id: <20191006171225.380309300@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,95 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Dotan Barak <dotanb@dev.mellanox.co.il>
 
-[ Upstream commit a761129e3625688310aecf26e1be9e98e85f8eb5 ]
+[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
 
-xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
-to cache extra fragments. This is incorrect because the return type of
-xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
-ring buffer index.
+rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
+after allocation some resources such as protection domain.
+If allocation of such resources fail, then these uninitialized
+variables are accessed in rds_ib_dev_free() in failure path. This
+can potentially crash the system. The code has been updated to
+initialize these variables very early in the function.
 
-In the situation when the rsp_cons is approaching 0xffffffff, the return
-value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
-caller) would regard as error. As a result, queue->rx.rsp_cons is set
-incorrectly because it is updated only when there is error. If there is no
-error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
-Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
-queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
-This leads to NULL pointer access in the next iteration to process rx ring
-buffer entries.
-
-The symptom is similar to the one fixed in
-commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
-empty in error handling").
-
-This patch changes the return type of xennet_fill_frags() to indicate
-whether it is successful or failed. The queue->rx.rsp_cons will be
-always updated inside this function.
-
-Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
+Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/xen-netfront.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ net/rds/ib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -887,9 +887,9 @@ static int xennet_set_skb_gso(struct sk_
- 	return 0;
- }
+--- a/net/rds/ib.c
++++ b/net/rds/ib.c
+@@ -143,6 +143,9 @@ static void rds_ib_add_one(struct ib_dev
+ 	refcount_set(&rds_ibdev->refcount, 1);
+ 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
  
--static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
--				  struct sk_buff *skb,
--				  struct sk_buff_head *list)
-+static int xennet_fill_frags(struct netfront_queue *queue,
-+			     struct sk_buff *skb,
-+			     struct sk_buff_head *list)
- {
- 	RING_IDX cons = queue->rx.rsp_cons;
- 	struct sk_buff *nskb;
-@@ -908,7 +908,7 @@ static RING_IDX xennet_fill_frags(struct
- 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
- 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
- 			kfree_skb(nskb);
--			return ~0U;
-+			return -ENOENT;
- 		}
- 
- 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
-@@ -919,7 +919,9 @@ static RING_IDX xennet_fill_frags(struct
- 		kfree_skb(nskb);
- 	}
- 
--	return cons;
-+	queue->rx.rsp_cons = cons;
++	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
++	INIT_LIST_HEAD(&rds_ibdev->conn_list);
 +
-+	return 0;
- }
+ 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
+ 	rds_ibdev->max_sge = min(device->attrs.max_send_sge, RDS_IB_MAX_SGE);
  
- static int checksum_setup(struct net_device *dev, struct sk_buff *skb)
-@@ -1045,8 +1047,7 @@ err:
- 		skb->data_len = rx->status;
- 		skb->len += rx->status;
+@@ -203,9 +206,6 @@ static void rds_ib_add_one(struct ib_dev
+ 		device->name,
+ 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
  
--		i = xennet_fill_frags(queue, skb, &tmpq);
--		if (unlikely(i == ~0U))
-+		if (unlikely(xennet_fill_frags(queue, skb, &tmpq)))
- 			goto err;
- 
- 		if (rx->flags & XEN_NETRXF_csum_blank)
-@@ -1056,7 +1057,7 @@ err:
- 
- 		__skb_queue_tail(&rxq, skb);
- 
--		queue->rx.rsp_cons = ++i;
-+		i = ++queue->rx.rsp_cons;
- 		work_done++;
- 	}
- 
+-	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
+-	INIT_LIST_HEAD(&rds_ibdev->conn_list);
+-
+ 	down_write(&rds_ib_devices_lock);
+ 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
+ 	up_write(&rds_ib_devices_lock);
 
 
