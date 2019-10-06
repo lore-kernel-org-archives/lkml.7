@@ -4,60 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAB0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23789C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C505420862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C7E2173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383557;
-	bh=TxigC21+DLiMafdGXO5lPtQ6kQiOwS68oR4xLUldI8Q=;
+	s=default; t=1570383565;
+	bh=0KYDWk08WcsmjsqVyulm42NkijYLKrdWoD4u0javmU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXCCRpKKku0OkiEoRbX7fVnnUIBYtNOI7bLXCYadiuhOSwCHgae9hNAKB0p1kdMAV
-	 UFwiyNvnxEdUSKOiQ0J8kA9glTgibPhPOzd8Gz070FEJBkMjd4e97I++UsDc7Cy6/K
-	 n5gnU+B3m7hBM3T4qv/fsutJU6NudRLTt06Y6V0w=
+	b=RaBPbT+K5bNRE0caylAmSFGJiEPZo2rSz5Sw+x4T8zQOS4O5q7NTDEI6uoKHtItkp
+	 mI9Y4rTc6ybIQdFd7YZZ1AHuC+BQB7oxZ60GkQddxcFv8jmkB1alQ0raotvtXxZvnU
+	 3cDjd3KtxQKSlsx87rhnTT+VesC+oH1n5czr0Q/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfJFRjR (ORCPT
+        id S1730773AbfJFRjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38676 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbfJFRjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:13 -0400
+        id S1730748AbfJFRjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F69E2133F;
-        Sun,  6 Oct 2019 17:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EFC620700;
+        Sun,  6 Oct 2019 17:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383551;
-        bh=TxigC21+DLiMafdGXO5lPtQ6kQiOwS68oR4xLUldI8Q=;
+        s=default; t=1570383557;
+        bh=0KYDWk08WcsmjsqVyulm42NkijYLKrdWoD4u0javmU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vexhl11JLxqydm828yc/QQPSoa8yI1ezKxaOcISGnY1LwI0LUaZw4a2i3N9jUVs6B
-         Tx9cPcIh1wL2lAIV/FadZ+AlRm5co6ITTHMVUDfY+7g8y75tn2wLx4qtIViQbWhR/T
-         8+yUYJn/O7RaDzehI7YIWWpewNuVJMTDa28IGY2g=
+        b=HCTKwrNBLa/w95FnigZENlmuQ1sL9Pn1Vyq3YzP5eXb0dZYgwgpHQ3+1ZPuopkYla
+         dmizBWqzkQFi95MLO/OK4q5xFec16ADAG1K5N2hiUHi/j2yd4wySDgecCFdyvz3X/c
+         +b92JYizTm/UsOMgyjpRGt0/+41+2PgYipw0Xwfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        stable@vger.kernel.org, Marko Kohtala <marko.kohtala@okoko.fi>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 001/166] drm/vkms: Fix crc worker races
-Date:   Sun,  6 Oct 2019 19:19:27 +0200
-Message-Id: <20191006171212.939267264@linuxfoundation.org>
+Subject: [PATCH 5.3 011/166] video: ssd1307fb: Start page range at page_offset
+Date:   Sun,  6 Oct 2019 19:19:37 +0200
+Message-Id: <20191006171213.549280228@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,147 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Marko Kohtala <marko.kohtala@okoko.fi>
 
-[ Upstream commit 18d0952a838ba559655b0cd9cf85097ad63d9bca ]
+[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
 
-The issue we have is that the crc worker might fall behind. We've
-tried to handle this by tracking both the earliest frame for which it
-still needs to compute a crc, and the last one. Plus when the
-crtc_state changes, we have a new work item, which are all run in
-order due to the ordered workqueue we allocate for each vkms crtc.
+The page_offset was only applied to the end of the page range. This caused
+the display updates to cause a scrolling effect on the display because the
+amount of data written to the display did not match the range display
+expected.
 
-Trouble is there's been a few small issues in the current code:
-- we need to capture frame_end in the vblank hrtimer, not in the
-  worker. The worker might run much later, and then we generate a lot
-  of crc for which there's already a different worker queued up.
-- frame number might be 0, so create a new crc_pending boolean to
-  track this without confusion.
-- we need to atomically grab frame_start/end and clear it, so do that
-  all in one go. This is not going to create a new race, because if we
-  race with the hrtimer then our work will be re-run.
-- only race that can happen is the following:
-  1. worker starts
-  2. hrtimer runs and updates frame_end
-  3. worker grabs frame_start/end, already reading the new frame_end,
-  and clears crc_pending
-  4. hrtimer calls queue_work()
-  5. worker completes
-  6. worker gets  re-run, crc_pending is false
-  Explain this case a bit better by rewording the comment.
-
-v2: Demote warning level output to debug when we fail to requeue, this
-is expected under high load when the crc worker can't quite keep up.
-
-Cc: Shayenne Moura <shayenneluzmoura@gmail.com>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
+Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Tested-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190606222751.32567-2-daniel.vetter@ffwll.ch
+Cc: David Airlie <airlied@linux.ie>
+Cc: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vkms/vkms_crc.c  | 27 +++++++++++++--------------
- drivers/gpu/drm/vkms/vkms_crtc.c |  9 +++++++--
- drivers/gpu/drm/vkms/vkms_drv.h  |  2 ++
- 3 files changed, 22 insertions(+), 16 deletions(-)
+ drivers/video/fbdev/ssd1307fb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
-index e66ff25c008e6..e9fb4ebb789fd 100644
---- a/drivers/gpu/drm/vkms/vkms_crc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crc.c
-@@ -166,16 +166,24 @@ void vkms_crc_work_handle(struct work_struct *work)
- 	struct drm_plane *plane;
- 	u32 crc32 = 0;
- 	u64 frame_start, frame_end;
-+	bool crc_pending;
- 	unsigned long flags;
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index b674948e3bb8f..3f28e1b5d4221 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -432,7 +432,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
  
- 	spin_lock_irqsave(&out->state_lock, flags);
- 	frame_start = crtc_state->frame_start;
- 	frame_end = crtc_state->frame_end;
-+	crc_pending = crtc_state->crc_pending;
-+	crtc_state->frame_start = 0;
-+	crtc_state->frame_end = 0;
-+	crtc_state->crc_pending = false;
- 	spin_unlock_irqrestore(&out->state_lock, flags);
+-	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
+ 	if (ret < 0)
+ 		return ret;
  
--	/* _vblank_handle() hasn't updated frame_start yet */
--	if (!frame_start || frame_start == frame_end)
--		goto out;
-+	/*
-+	 * We raced with the vblank hrtimer and previous work already computed
-+	 * the crc, nothing to do.
-+	 */
-+	if (!crc_pending)
-+		return;
- 
- 	drm_for_each_plane(plane, &vdev->drm) {
- 		struct vkms_plane_state *vplane_state;
-@@ -196,20 +204,11 @@ void vkms_crc_work_handle(struct work_struct *work)
- 	if (primary_crc)
- 		crc32 = _vkms_get_crc(primary_crc, cursor_crc);
- 
--	frame_end = drm_crtc_accurate_vblank_count(crtc);
--
--	/* queue_work can fail to schedule crc_work; add crc for
--	 * missing frames
-+	/*
-+	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
- 	 */
- 	while (frame_start <= frame_end)
- 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
--
--out:
--	/* to avoid using the same value for frame number again */
--	spin_lock_irqsave(&out->state_lock, flags);
--	crtc_state->frame_end = frame_end;
--	crtc_state->frame_start = 0;
--	spin_unlock_irqrestore(&out->state_lock, flags);
- }
- 
- static const char * const pipe_crc_sources[] = {"auto"};
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 4d11292bc6f38..f392fa13015b8 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -30,13 +30,18 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
- 		 * has read the data
- 		 */
- 		spin_lock(&output->state_lock);
--		if (!state->frame_start)
-+		if (!state->crc_pending)
- 			state->frame_start = frame;
-+		else
-+			DRM_DEBUG_DRIVER("crc worker falling behind, frame_start: %llu, frame_end: %llu\n",
-+					 state->frame_start, frame);
-+		state->frame_end = frame;
-+		state->crc_pending = true;
- 		spin_unlock(&output->state_lock);
- 
- 		ret = queue_work(output->crc_workq, &state->crc_work);
- 		if (!ret)
--			DRM_WARN("failed to queue vkms_crc_work_handle");
-+			DRM_DEBUG_DRIVER("vkms_crc_work_handle already queued\n");
- 	}
- 
- 	spin_unlock(&output->lock);
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index b92c30c66a6f2..2b37eb1062d34 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -48,6 +48,8 @@ struct vkms_plane_state {
- struct vkms_crtc_state {
- 	struct drm_crtc_state base;
- 	struct work_struct crc_work;
-+
-+	bool crc_pending;
- 	u64 frame_start;
- 	u64 frame_end;
- };
 -- 
 2.20.1
 
