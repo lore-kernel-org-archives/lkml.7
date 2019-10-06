@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25263C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A75C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDCA20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA6020862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383411;
-	bh=2r8AeKYGjMupGol4CtMYkDcX41Wu5e//UTgfixnBy/0=;
+	s=default; t=1570383415;
+	bh=OziV/mS8LL+norwroIh4Ev/SnHqGSDWNyykBDI00SGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vWgKK3QAL84K7kgjJPajFIm1rfih9G27BsUoHgYNn7W24iej19s81QZjcrbGzsyhD
-	 r5wiwN4cU0HP6/NkNQUa+Q4C/0nxVjKATEqny1XZZwSfRol0F0GtXTFsu8P2EUDMRG
-	 +VdhQUu2JaPuokCGsRx30T3PvidfmEICyXOqlXgQ=
+	b=LBp30QBJMZOVy8GYxsiuUPMzxicaaG8vLdYKqvZ14Bdrwm+oZpYodq/XlU9tcCn+I
+	 gXOPUevQovdBOOyFFDEz89cezGMr82dHjUjxYg02bA/SNMPLSMHsaxKJmeasnP8UUe
+	 mJ5NsNwzb3hxbwXMw8KKniZ2WTr7TvB8kVKDA6AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbfJFRgu (ORCPT
+        id S1730363AbfJFRgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730339AbfJFRgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:49 -0400
+        id S1728594AbfJFRgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB3112053B;
-        Sun,  6 Oct 2019 17:36:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 999F92077B;
+        Sun,  6 Oct 2019 17:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383408;
-        bh=2r8AeKYGjMupGol4CtMYkDcX41Wu5e//UTgfixnBy/0=;
+        s=default; t=1570383411;
+        bh=OziV/mS8LL+norwroIh4Ev/SnHqGSDWNyykBDI00SGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hUd+lxD4JzYJGyzFsZand6W/6W+zpMcjrxy1uYcS3yVcJELKDMl3/Fh6lXwf5a2+8
-         WvJQOGCF0BbyT8Izi4KNz73owNwOnBJN0rFBaYLYKQhifoiEJL2QnAhScAuww4PHhK
-         gtr1zrrG0XRUz6N/O5s0ob2v0ndh4yr00AIW4QYM=
+        b=Z6bUwNanSWkh1CnvQZXLIHA+Fos4o371UQsIamAhVdc3yWRRI17WhT65uFne/rbc9
+         2FzCr4b2WNJkgsKODyB+O9Wksvm6RUDmYisi1KMqeIYCEp5CY16SGseUCsxhpqkYHk
+         zXLhzI4h4Wp37aSb2jj0f5nB8WZixRs5V5LDcrN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 094/137] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun,  6 Oct 2019 19:21:18 +0200
-Message-Id: <20191006171216.696748415@linuxfoundation.org>
+Subject: [PATCH 5.2 095/137] PCI: tegra: Fix OF node reference leak
+Date:   Sun,  6 Oct 2019 19:21:19 +0200
+Message-Id: <20191006171216.780933880@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,45 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+Each iteration of for_each_child_of_node() executes of_node_put() on the
+previous node, but in some return paths in the middle of the loop
+of_node_put() is missing thus causing a reference leak.
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
+Hence stash these mid-loop return values in a variable 'err' and add a
+new label err_node_put which executes of_node_put() on the previous node
+and returns 'err' on failure.
 
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
+Change mid-loop return statements to point to jump to this label to
+fix the reference leak.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Issue found with Coccinelle.
+
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+[lorenzo.pieralisi@arm.com: rewrote commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/pci-tegra.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index aed2c04479663..3c271b14e7c6c 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -35,6 +35,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 464ba2538d526..03c42e8684f6d 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -1994,14 +1994,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
  
-+	pdev->d3cold_delay = 0;
+ 		index = PCI_SLOT(err);
+ 
+ 		if (index < 1 || index > soc->num_ports) {
+ 			dev_err(dev, "invalid port number: %d\n", index);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		index--;
+@@ -2010,12 +2011,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse # of lanes: %d\n",
+ 				err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		if (value > 16) {
+ 			dev_err(dev, "invalid # of lanes: %u\n", value);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		lanes |= value << (index << 3);
+@@ -2029,13 +2031,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		lane += value;
+ 
+ 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
+-		if (!rp)
+-			return -ENOMEM;
++		if (!rp) {
++			err = -ENOMEM;
++			goto err_node_put;
++		}
+ 
+ 		err = of_address_to_resource(port, 0, &rp->regs);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		INIT_LIST_HEAD(&rp->list);
+@@ -2062,6 +2066,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		return err;
+ 
+ 	return 0;
 +
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
++err_node_put:
++	of_node_put(port);
++	return err;
+ }
+ 
+ /*
 -- 
 2.20.1
 
