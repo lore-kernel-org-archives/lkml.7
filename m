@@ -2,174 +2,87 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E361FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC3FC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5302084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2C72084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfJFO1s (ORCPT
+        id S1726479AbfJFO2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 10:27:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35569 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfJFO1s (ORCPT
+        Sun, 6 Oct 2019 10:28:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55227 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfJFO2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 10:27:48 -0400
-Received: from localhost ([89.204.130.45]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MGQWr-1iK5WR21YD-00Gt1q; Sun, 06 Oct 2019 16:27:30 +0200
-Date:   Sun, 6 Oct 2019 16:27:25 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
-Message-ID: <20191006142715.45k64cgw7mzlekm5@arbad>
+        Sun, 6 Oct 2019 10:28:25 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iH7WI-0002R8-5q; Sun, 06 Oct 2019 14:28:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ata: pata_artop: make arrays static const, makes object smaller
+Date:   Sun,  6 Oct 2019 15:28:21 +0100
+Message-Id: <20191006142821.23249-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:hsUfaTgosEV7amE7feQIBikFio7g0T5/tjrcIq3gpeVamcNr4Tu
- YRhnnNXWe6jGB1FAC0Sk+Fpc74D3FDCvCPdZ+BvqhewFnGA3rlx3lZpBLYbr/A38oI0PSpd
- AESLUzO2xKznEQbw2gXEk4WHB8momlJrfMSFYsuIhA95KMDkMu4M+SLFaElzsDv5OzXeAY2
- v3CPwCmdT909QkEG8UmnA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8VIWqkWXIzI=:5iwjz5UfkPzhoutpLsQOr1
- ZXHhCm0/2l2eYbu7nO4KiTZ5+L+WchMcmHKDy/QhVs6ErFdFSCR9QdTK8c9FBj7onbVrAshfr
- Cu1/vKrpazuuqkxec1+sJyYwafpRTHrl6gXU/Y9uSj+8jypjGP69ErU0Iy0VOyW3k8SLQVsd3
- gz8mJHNei4sE83wT0C66N+LzE2ueIC81YUzAYePymYVZvfhLgx3hY9998lYKeXCQ+AXyKNAJ5
- G8OnsBdgUM9TsyRcUZmmKEk2f/xib5maQPbfKGBGLk6J/bclzL21zLffRjSMwr8RbFr/a8t6x
- AWoSOrt9tOKb1JWEc+6LHAQPEX4AxlIqyL6oUN77ICu+O4DkXBQafV07zsZbYxiOl+YZgsqNa
- 797TZHSRyNdzrhLoNgDWiwRPIbcc/MgVwyZRK4phVGAlZ5TCo8HbSOn2o1tsf/VhegmIxhIrD
- gfT2JImGsO9Na5zZC+SvcSA/onB9WLfI9URDOwzYvkbwe+cpZrLcJoKJ5agt9tQuykGsLeAot
- rzqpqHcSv7QKNXXYB2Ub3Ye+vDcvAsdZ1V4Vkw4+Y2plmR0PxLioY8uALQB890qGoVw+pUOFB
- P9OzWSViKAlUiDdUDwlGT9PenKP8QW+UBxvKNq0UMVLGYGEnB8B4VTU5fhEgUgLhoTisW8ND3
- gUk+50vkGW2JUc7Mu2pepGPbmotYQov122J5IwAR0Q0iZn8m+vd9+vXYFCttPGvuxSTdiiV5G
- 8KGBjyn1v9+EZKEGgsMimKpEfwRd0CIuH3N8cP5okLauszvb/U3mU0KtNSqDc3m9qnIEJzP5S
- 8KC+0+GngRayMY7LCC1c5L/0lgNCQlQiu+MdTd3hBwp235C/cCApMVsOl9suiR/PIDUVktA8j
- NLB02+r1VrHmmuLnvnnw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-from text documentation format into yaml.
+From: Colin Ian King <colin.king@canonical.com>
 
-Changes in v2:
-- removed description of reg property
-- added a line:
-  additionalProperties: false
+Don't populate the arrays on the stack but instead make them
+tatic const. Makes the object code smaller by 292 bytes.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Before:
+   text	   data	    bss	    dec	    hex	filename
+   6988	   3132	    128	  10248	   2808	drivers/ata/pata_artop.o
+
+After:
+   text	   data	    bss	    dec	    hex	filename
+   6536	   3292	    128	   9956	   26e4	drivers/ata/pata_artop.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
- .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+ drivers/ata/pata_artop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-deleted file mode 100644
-index dd1058fbe9c3..000000000000
---- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
--  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
--  for ranging
--
--Required properties:
-- - compatible:		"maxbotix,mb1202",
--			"maxbotix,mb1212",
--			"maxbotix,mb1222",
--			"maxbotix,mb1232",
--			"maxbotix,mb1242",
--			"maxbotix,mb7040" or
--			"maxbotix,mb7137"
--
-- - reg:			i2c address of the device, see also i2c/i2c.txt
--
--Optional properties:
-- - interrupts:		Interrupt used to announce the preceding reading
--			request has finished and that data is available.
--			If no interrupt is specified the device driver
--			falls back to wait a fixed amount of time until
--			data can be retrieved.
--
--Example:
--proximity@70 {
--	compatible = "maxbotix,mb1232";
--	reg = <0x70>;
--	interrupt-parent = <&gpio2>;
--	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-new file mode 100644
-index 000000000000..e2fb1f6d4dbe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-+  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-+  for ranging
-+
-+  Specifications about the devices can be found at:
-+  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxbotix,mb1202
-+      - maxbotix,mb1212
-+      - maxbotix,mb1222
-+      - maxbotix,mb1232
-+      - maxbotix,mb1242
-+      - maxbotix,mb7040
-+      - maxbotix,mb7137
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt used to announce the preceding reading request has finished
-+      and that data is available.  If no interrupt is specified the device
-+      driver falls back to wait a fixed amount of time until data can be
-+      retrieved.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    proximity@70 {
-+      compatible = "maxbotix,mb1232";
-+      reg = <0x70>;
-+      interrupt-parent = <&gpio2>;
-+      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+    };
+diff --git a/drivers/ata/pata_artop.c b/drivers/ata/pata_artop.c
+index 3aa006c5ed0c..6bd2228bb6ff 100644
+--- a/drivers/ata/pata_artop.c
++++ b/drivers/ata/pata_artop.c
+@@ -100,7 +100,7 @@ static void artop6210_load_piomode(struct ata_port *ap, struct ata_device *adev,
+ {
+ 	struct pci_dev *pdev	= to_pci_dev(ap->host->dev);
+ 	int dn = adev->devno + 2 * ap->port_no;
+-	const u16 timing[2][5] = {
++	static const u16 timing[2][5] = {
+ 		{ 0x0000, 0x000A, 0x0008, 0x0303, 0x0301 },
+ 		{ 0x0700, 0x070A, 0x0708, 0x0403, 0x0401 }
+ 
+@@ -154,7 +154,7 @@ static void artop6260_load_piomode (struct ata_port *ap, struct ata_device *adev
+ {
+ 	struct pci_dev *pdev	= to_pci_dev(ap->host->dev);
+ 	int dn = adev->devno + 2 * ap->port_no;
+-	const u8 timing[2][5] = {
++	static const u8 timing[2][5] = {
+ 		{ 0x00, 0x0A, 0x08, 0x33, 0x31 },
+ 		{ 0x70, 0x7A, 0x78, 0x43, 0x41 }
+ 
 -- 
-2.11.0
+2.20.1
+
