@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B586C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6982C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E7521479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA8B2133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382881;
-	bh=1gGCjJia8yEAWiHCMurLorhELpMT7PCKhoCa6fsupq0=;
+	s=default; t=1570382884;
+	bh=CZ9cCbOXBPrhHs4OeUR95IOMxTutnCR8uQ3Lcew8luw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlzZRHVN/H1ldqetDFbAoipTWPxgXMpaYMnu42E5aNZ7tj/J1k10XZuz7uDlwYphR
-	 cR/CtrIJhn3zQHAPn5ASnvmqkXI+Lw7T6WjLkFfxs5Yq9awX3Km1LkSJqwMmgvvgtt
-	 Hhxa4vhHEW1PWY30uAODnwoJj2yiW3D7+E9gucKo=
+	b=P+Zi/AL2s1DVLdCjkaK9R7rYlIsautETbC98ct41eMhWpNsYwgnqzgTBgi1kYJQ+m
+	 c2urD0eSlGarkJpDYjI3vOZp8X3H0NstrWbVyefpB3Ma7ON1IqqZL6DO68EmIJ9j9A
+	 N/q6xTYkaNsFhFdE/8RbEzmGjccuQ1iDK6kJLSHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbfJFR2A (ORCPT
+        id S1728668AbfJFR2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728607AbfJFR1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:53 -0400
+        id S1728643AbfJFR2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6FE6214D9;
-        Sun,  6 Oct 2019 17:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF9912087E;
+        Sun,  6 Oct 2019 17:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382873;
-        bh=1gGCjJia8yEAWiHCMurLorhELpMT7PCKhoCa6fsupq0=;
+        s=default; t=1570382881;
+        bh=CZ9cCbOXBPrhHs4OeUR95IOMxTutnCR8uQ3Lcew8luw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6gGuDP/efo5zbuVQgurbB5S0cX0bhQjT7zDYN9qHyLCSFrAxOYMOCBE/ZrbPFKkU
-         HrQjwlroIovquCvh/m1TQQgRy6ejDyK9bB8Yc10yKbakAzTGROF3kgGvGxW+4oBTaq
-         if9aUlUNViHmtttUQ+x4N/jIvsMymEJDcNINLpww=
+        b=TC2octW64266c4Dlo0zFhkJ8Q4HdrcUdcoksDdDZ+FDRwX79iCw9fuhLrZ1LtVcm/
+         kpje4e/SeyS3UXKw4JFB27roFoMSj2ezbjxlvV89iGD4x4PsCPbo7sFPEzu6knSxOx
+         pO3zP1ZinbdkVLmFKztzTosoA3WmGq5fQ4kj7KO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/68] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
-Date:   Sun,  6 Oct 2019 19:21:17 +0200
-Message-Id: <20191006171127.366967464@linuxfoundation.org>
+Subject: [PATCH 4.14 44/68] hypfs: Fix error number left in struct pointer member
+Date:   Sun,  6 Oct 2019 19:21:20 +0200
+Message-Id: <20191006171129.378600792@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,55 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <mike.rapoport@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
+[ Upstream commit b54c64f7adeb241423cd46598f458b5486b0375e ]
 
-The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
-bank 0 starts from a PMD-aligned address. However, the beginning of the
-first bank may be NOMAP memory and the start of usable memory
-will be not aligned to PMD boundary. In such case the memblock_limit will
-be set to the end of the NOMAP region, which will prevent any memblock
-allocations.
+In hypfs_fill_super(), if hypfs_create_update_file() fails,
+sbi->update_file is left holding an error number.  This is passed to
+hypfs_kill_super() which doesn't check for this.
 
-Mark the region between the end of the NOMAP area and the next PMD-aligned
-address as NOMAP as well, so that the usable memory will start at
-PMD-aligned address.
+Fix this by not setting sbi->update_value until after we've checked for
+error.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+cc: linux-s390@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/mmu.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/s390/hypfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index e46a6a446cdd2..70e560cf8ca03 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1175,6 +1175,22 @@ void __init adjust_lowmem_bounds(void)
- 	 */
- 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
+diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
+index 45eb5999110be..32f5b3fb069f3 100644
+--- a/arch/s390/hypfs/inode.c
++++ b/arch/s390/hypfs/inode.c
+@@ -269,7 +269,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
+ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	struct inode *root_inode;
+-	struct dentry *root_dentry;
++	struct dentry *root_dentry, *update_file;
+ 	int rc = 0;
+ 	struct hypfs_sb_info *sbi;
  
-+	/*
-+	 * The first usable region must be PMD aligned. Mark its start
-+	 * as MEMBLOCK_NOMAP if it isn't
-+	 */
-+	for_each_memblock(memory, reg) {
-+		if (!memblock_is_nomap(reg)) {
-+			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
-+				phys_addr_t len;
-+
-+				len = round_up(reg->base, PMD_SIZE) - reg->base;
-+				memblock_mark_nomap(reg->base, len);
-+			}
-+			break;
-+		}
-+	}
-+
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t block_start = reg->base;
- 		phys_addr_t block_end = reg->base + reg->size;
+@@ -300,9 +300,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		rc = hypfs_diag_create_files(root_dentry);
+ 	if (rc)
+ 		return rc;
+-	sbi->update_file = hypfs_create_update_file(root_dentry);
+-	if (IS_ERR(sbi->update_file))
+-		return PTR_ERR(sbi->update_file);
++	update_file = hypfs_create_update_file(root_dentry);
++	if (IS_ERR(update_file))
++		return PTR_ERR(update_file);
++	sbi->update_file = update_file;
+ 	hypfs_update_update(sb);
+ 	pr_info("Hypervisor filesystem mounted\n");
+ 	return 0;
 -- 
 2.20.1
 
