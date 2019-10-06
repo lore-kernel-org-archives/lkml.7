@@ -2,120 +2,92 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914B3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD218C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB612133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A252133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TEnZSkbF"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FQMSCljt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfJFLJr (ORCPT
+        id S1726697AbfJFLR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 07:09:47 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55433 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfJFLJr (ORCPT
+        Sun, 6 Oct 2019 07:17:29 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:50002 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726224AbfJFLR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 07:09:47 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a6so9703549wma.5
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 04:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KNc82HtJTr2S9yPplsKQ29xKge0h6KdPsl2jhs4BKZo=;
-        b=TEnZSkbFr2A7oUM78IHHed3IlgHh0tmkpH8RDssbiR0+mBCHkQe9H1Qxx+vWm2PofE
-         sGToOgCFb6hXoCRurvp2anQnTqIH03RhsFu2lxcDV8uagaxEWpHnmGBp14zXgB7Ji5DK
-         yQkA74rsANN+bsj7tBFGADqhxFVNGCwn0vccgfBJC0S4ul+XS2NGUWI8kKL36SXIEoGi
-         Ys368zcUKr4s1+elLPyEJlWSfNOLEUzVoGLdBwmiXWNtuyUiFQ1CDc8EcteynP4OG/+P
-         1JPy+3ec+C6ru4Rw7bsV4fQWWQz7c42N/jqxS6luY8aIfxhWUly2EHxSYvZRsFg+emn2
-         lNOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KNc82HtJTr2S9yPplsKQ29xKge0h6KdPsl2jhs4BKZo=;
-        b=BBPpX26xpfdi5SYjjAuGbQhS0Xjhu8xU236yXaQJkGy0XuiiVN3ZBmjt8B51ZkjAqm
-         GQLMmYes5415DtGQomBBlKRuiElx748Dl5Q+1bt+XHVrD4X7NsonbgchTAtFbI9C8XvV
-         NEpf8vCqJDCVT2KX0n5DKRlrOVkrqUe5ZkTrfITvQfu5x1W3k7xI3XeoeyW7rttexaPz
-         wOyc12EN0eP7AACLs9Xr2/1iGVbWMTAYdLrH2zvfJY+odJwVN/SLBTH0XJAIRZLIyTmJ
-         PEZYkiZpt5QyKKGtHBAD8IpUNvpXrnMDhXHWbc0SZrShCDt1t7k3mvCH2CQtGgRnNQjY
-         KENw==
-X-Gm-Message-State: APjAAAUBR0tCKGW+9cEwTxkxiR6/o/wrlt1p57KChWdTI0irXPa9JE9W
-        3DNmsz4yZUs+lRm8Tge0tLiiEg==
-X-Google-Smtp-Source: APXvYqze9DN/H2RXzVEdSmtpoum+tTRMTWdWq6wiMUONDwQ1y3I9igSwjnOhiK6Ch9ZxdQYuTaIxmA==
-X-Received: by 2002:a05:600c:2311:: with SMTP id 17mr16465507wmo.39.1570360184748;
-        Sun, 06 Oct 2019 04:09:44 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id n1sm21203796wrg.67.2019.10.06.04.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 04:09:44 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 12:09:43 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net, jeyu@kernel.org,
-        gregkh@linuxfoundation.org, yamada.masahiro@socionext.com,
-        Markus.Elfring@web.de, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts: add_namespace: Fix coccicheck failed
-Message-ID: <20191006110943.GA172281@google.com>
-References: <CAK7LNAS2K6i+s2A_xTyRq730M6_=tyjtfwHAnEHF37_nrJa4Eg@mail.gmail.com>
- <20191006044456.57608-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191006044456.57608-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 6 Oct 2019 07:17:28 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 82F25C0374;
+        Sun,  6 Oct 2019 11:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1570360648; bh=tnWdGo9LoSdCZ4UfDy75YwxsYXeRpsko+ph8h48XVjw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FQMSCljtVSk3DUGXIYL5Y/rZoAhum7g7BKll/VBVchW6bd4uyIiPqizHt5Tz/H0Ox
+         gkpXLUo9yOl4ZJlVsKbO+O0+n8C/XtkvBvzSE8HtymuTGVAp1C1FuaTmtDq+wi5cHG
+         vDrovkxteOrYGKCOsRVEl0ruoRp7k4Zy+Uhqk3qerYbcOsu0ibRLniLQd128jBzi4Q
+         ZIhze5AsgYQDM34Omxb6g8KKyFBRKzOI8xIZX1fRLPAQtTeQVrRYVILsKAN04NNwui
+         fqdWgJGVi6CJBbDeTdmPI5gEa44mT/VPKiim9ybgfazEZmTkg13y+a87ypFVWTdqoO
+         oiKNxSpv2IMAA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id DF023A005D;
+        Sun,  6 Oct 2019 11:17:19 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/3] net: stmmac: Improvements for -next
+Date:   Sun,  6 Oct 2019 13:17:11 +0200
+Message-Id: <cover.1570360411.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi YueHaibing!
+Improvements for -next. More info in commit logs.
 
-On Sun, Oct 06, 2019 at 12:44:56PM +0800, YueHaibing wrote:
->Now all scripts in scripts/coccinelle to be automatically called
->by coccicheck. However new adding add_namespace.cocci does not
->support report mode, which make coccicheck failed.
->This add "virtual report" to  make the coccicheck go ahead smoothly.
->
->Fixes: eb8305aecb95 ("scripts: Coccinelle script for namespace dependencies.")
->Acked-by: Julia Lawall <julia.lawall@lip6.fr>
->Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-Thanks for fixing this!
+Jose Abreu (3):
+  net: stmmac: Fallback to VLAN Perfect filtering if HASH is not
+    available
+  net: stmmac: selftests: Add tests for VLAN Perfect Filtering
+  net: stmmac: Implement L3/L4 Filters in GMAC4+
 
-Acked-by: Matthias Maennich <maennich@google.com>
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |  21 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  | 118 ++++++++++++++++++++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |   1 +
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  17 ++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  18 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 114 +++++++++++++-------
+ 7 files changed, 245 insertions(+), 46 deletions(-)
 
-Cheers,
-Matthias
+-- 
+2.7.4
 
->---
-> scripts/coccinelle/misc/add_namespace.cocci | 2 ++
-> 1 file changed, 2 insertions(+)
->
->diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
->index c832bb6445a8..99e93a6c2e24 100644
->--- a/scripts/coccinelle/misc/add_namespace.cocci
->+++ b/scripts/coccinelle/misc/add_namespace.cocci
->@@ -6,6 +6,8 @@
-> /// add a missing namespace tag to a module source file.
-> ///
->
->+virtual report
->+
-> @has_ns_import@
-> declarer name MODULE_IMPORT_NS;
-> identifier virtual.ns;
->-- 
->2.20.1
->
->
