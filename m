@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AD7C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5B3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DFB214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F13F21479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383862;
-	bh=0G3/eLs3KNEDlD69COogjkS7I/Hj3IAs5lEuVqVixIg=;
+	s=default; t=1570383865;
+	bh=tujCGr7UP/h6vSuTp2ArqlTn+oTyd38Cvba0/sHfhyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypVGx4eXxYmseblY8PKJT2G1ILJ3TFM/rvYeZGSRyMY/T7yL/WSRCjcryFWiWbbGH
-	 K6XGgAGziV7FBZLgVbFYtPuw2ioyIUq8fUV0lm7IlZglorufA8ItPpqijwE/TtWbNS
-	 uODo5cBeBKtaTf1S3AnjjtzTXRWxOKr0gzboR12E=
+	b=RNu5HPTY78s4yjzCBCJW5aI6J0CP3LhDvFx+VVFkI7K3UoHRx1FIX4czZvGUYVVdT
+	 W2iWU0P2Ss26TjSjm7o+7WbXmUueXqSNRUj7SixoY8fEOKhWMNizothbVrjZB8R77f
+	 4/f73fR1TyN5btisI3l/8z5Hv0aibHuQuZpRO3mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfJFRoU (ORCPT
+        id S1730837AbfJFRoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:44:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44374 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbfJFRoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:44:13 -0400
+        id S1731651AbfJFRoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:44:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 647BC2087E;
-        Sun,  6 Oct 2019 17:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6715920862;
+        Sun,  6 Oct 2019 17:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383851;
-        bh=0G3/eLs3KNEDlD69COogjkS7I/Hj3IAs5lEuVqVixIg=;
+        s=default; t=1570383859;
+        bh=tujCGr7UP/h6vSuTp2ArqlTn+oTyd38Cvba0/sHfhyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=osNR05/Evrbl8AUHJV3NvB0bbfZdUbA0f884MndNCr5GTlwzSKGjqdauRnKUepBmL
-         flyCTiNNwQxkXJ4veBqbVFQ52gKXJm8HZYsdA5Upows4r6hqjbJeAn0ntdSzzE9V53
-         OBKBqVjfNMfguhSt/8R4ORvcrJZxqQOgw9lmWTVk=
+        b=WWQm0OC1FACnNYdEOFHD1P25WDI+yfZq33XbzsihYyUHG5aztx9Ybak0/Q30Xjsz3
+         RpZiZZUTzsJuCFjcZZpRc9eX5UqBsHwh6b/mMgncD+0jQz7U2wFcBDnU60ICcJCRa9
+         ckzvE1upWDKorE1F1mXY9RX8j05GsWua3RWkwf2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Youquan Song <youquan.song@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Greg Thelen <gthelen@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 118/166] tools/power/x86/intel-speed-select: Fix high priority core mask over count
-Date:   Sun,  6 Oct 2019 19:21:24 +0200
-Message-Id: <20191006171223.241909827@linuxfoundation.org>
+Subject: [PATCH 5.3 121/166] kbuild: clean compressed initramfs image
+Date:   Sun,  6 Oct 2019 19:21:27 +0200
+Message-Id: <20191006171223.500231524@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,45 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Youquan Song <youquan.song@intel.com>
+From: Greg Thelen <gthelen@google.com>
 
-[ Upstream commit 44460efe44e05eae2f21e57d06d542bbbb792e65 ]
+[ Upstream commit 6279eb3dd7946c69346a3b98473ed13d3a44adb5 ]
 
-If the CPU package has the less logical CPU than topo_max_cpus, but un-present
-CPU's punit_cpu_core will be initiated to 0 and they will be count to core 0
+Since 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
+"make clean" leaves behind compressed initramfs images.  Example:
 
-Like below, there are only 10 high priority cores (20 logical CPUs) in the CPU
-package, but it count to 27 logic CPUs.
+  $ make defconfig
+  $ sed -i 's|CONFIG_INITRAMFS_SOURCE=""|CONFIG_INITRAMFS_SOURCE="/tmp/ir.cpio"|' .config
+  $ make olddefconfig
+  $ make -s
+  $ make -s clean
+  $ git clean -ndxf | grep initramfs
+  Would remove usr/initramfs_data.cpio.gz
 
-./intel-speed-select base-freq info -l 0 | grep mask
-        high-priority-cpu-mask:7f000179,f000179f
+clean rules do not have CONFIG_* context so they do not know which
+compression format was used.  Thus they don't know which files to delete.
 
-With the fix patch:
-./intel-speed-select base-freq info -l 0
-        high-priority-cpu-mask:00000179,f000179f
+Tell clean to delete all possible compression formats.
 
-Signed-off-by: Youquan Song <youquan.song@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Once patched usr/initramfs_data.cpio.gz and friends are deleted by
+"make clean".
+
+Link: http://lkml.kernel.org/r/20190722063251.55541-1-gthelen@google.com
+Fixes: 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
+Signed-off-by: Greg Thelen <gthelen@google.com>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 3 +++
+ usr/Makefile | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 6a10dea01eefc..696586407e83b 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -402,6 +402,9 @@ void set_cpu_mask_from_punit_coremask(int cpu, unsigned long long core_mask,
- 			int j;
+diff --git a/usr/Makefile b/usr/Makefile
+index 6a89eb019275b..e6f7cb2f81db4 100644
+--- a/usr/Makefile
++++ b/usr/Makefile
+@@ -11,6 +11,9 @@ datafile_y = initramfs_data.cpio$(suffix_y)
+ datafile_d_y = .$(datafile_y).d
+ AFLAGS_initramfs_data.o += -DINITRAMFS_IMAGE="usr/$(datafile_y)"
  
- 			for (j = 0; j < topo_max_cpus; ++j) {
-+				if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
-+					continue;
-+
- 				if (cpu_map[j].pkg_id == pkg_id &&
- 				    cpu_map[j].die_id == die_id &&
- 				    cpu_map[j].punit_cpu_core == i) {
++# clean rules do not have CONFIG_INITRAMFS_COMPRESSION.  So clean up after all
++# possible compression formats.
++clean-files += initramfs_data.cpio*
+ 
+ # Generate builtin.o based on initramfs_data.o
+ obj-$(CONFIG_BLK_DEV_INITRD) := initramfs_data.o
 -- 
 2.20.1
 
