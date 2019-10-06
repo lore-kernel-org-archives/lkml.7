@@ -2,106 +2,129 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3D9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B6EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3422084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570376948;
-	bh=9mdfWsYLSZ9xy2CW1encKQ2vvtqvSyR/W2zUZdAtbXQ=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=SpbsrAIum03HOIHw9RU2AUDuK40CqMrCGl6vWMY3NTI4KCe57viq9FL+gwcu+cm82
-	 W7mO1wXz3DB6cdwAKZNROTFuz0atY6jeJY4DlDZdnH4wT8Oe7Mp4AqLi8ZAK+qC424
-	 00OQKLs9aOSyZXk7445thd7dq3SX8ElDoBcgeZKs=
+	by mail.kernel.org (Postfix) with ESMTP id CC30A2084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:49:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FKH2eklb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfJFPtH (ORCPT
+        id S1726830AbfJFPsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:49:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44148 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfJFPtE (ORCPT
+        Sun, 6 Oct 2019 11:48:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53530 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfJFPsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:49:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so12326229wrl.11;
-        Sun, 06 Oct 2019 08:49:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gjm1dCZFYN9Q0YRQn+rV7fKQn2zR/3c5cBtHPYJQJTI=;
-        b=dTtt+iMGk2SPxBtvEBGNfc5VgROZ5ol2Od/MfXC5VkQWe2ykGK4lvyCpuzLb3T0hvk
-         NZEpvtnj/kBjmoQ1dORMw4MZ+JiFyCfPuLwq3tql4UbeU4CY7gGN12ggj8howTYQaBRp
-         KRSndC1z/ForZrHfi/QgAVHISzlpYdGuZAWlUi3hUQnwRxPr621T1oknXlVbBT/2UjxM
-         hR/uo6b4WNI/46noNQDAQM5xxqaDc9kAE8O1c0bCDUNCMa0BaU642yE5gABNv9FQg5PW
-         80o/WfFWzoMgKWRXFy9l5uV8j87lE4m2WBZsJKe6M5iCQwphT8MfzcgC3laqX7qz4r/q
-         K/fA==
-X-Gm-Message-State: APjAAAXM6OvQ+ULEDltw6gI8o2fYVKK7NSdZ2tdfulsj+v/N2lpHM2ST
-        CWIoQR8HVr8gn1/ZbnpqIAQ=
-X-Google-Smtp-Source: APXvYqzy7hw7qBX+7YQlQBBRw9ZUpQoHKBW0OQ2DhXkAPv3j2tRRGjKiNpfzHfsJ4XmI2fnvsuRIaQ==
-X-Received: by 2002:adf:e84c:: with SMTP id d12mr18308509wrn.373.1570376941723;
-        Sun, 06 Oct 2019 08:49:01 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id y18sm31455093wro.36.2019.10.06.08.48.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Oct 2019 08:49:01 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 17:48:57 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 03/10] ARM: dts: exynos: Rename SysRAM node to "sram"
-Message-ID: <20191006154857.GB29365@kozik-lap>
-References: <20191002164316.14905-1-krzk@kernel.org>
- <20191002164316.14905-3-krzk@kernel.org>
+        Sun, 6 Oct 2019 11:48:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LMjZtHXzVjeoe/ICRwzC57h0yo0UaAthgg1OY+Q7b4s=; b=FKH2eklbD6wxLp4SHkFoNmdmyM
+        oqXVC2jUyZr83aXhK2kgf8Em1mBoQCVahFve6kU0Id75/ybfeP9RLbnammP5BLE94VKI0vYEw8jvx
+        lISGJcz0SFxKzkpZdp8OWBQB092Phr+4z0SQY+FsbPORx+tP1nntyyi1Ns3da/FZn4FBHCbplVJQ+
+        F1KitkDsNuzdYfWLEKcndOdv1TG7DJsg17K3g7MzXjlV3E6k2rlcfqq9RQBS/pHkfxt0q1xxQk18H
+        DL2l4ViD/g96urp/zjpTsSuOgXn6OvAVrXX1QwRc4JKLTmnIUS891qyF2DU+HBg9mvmTuwaMyJ/dg
+        DNQmiHNA==;
+Received: from [2001:4bb8:18c:4d4a:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iH8lx-0008T6-Mx; Sun, 06 Oct 2019 15:48:38 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Brian Foster <bfoster@redhat.com>
+Subject: [PATCH 06/11] xfs: remove the readpage / readpages tracing code
+Date:   Sun,  6 Oct 2019 17:46:03 +0200
+Message-Id: <20191006154608.24738-7-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191006154608.24738-1-hch@lst.de>
+References: <20191006154608.24738-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191002164316.14905-3-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:43:09PM +0200, Krzysztof Kozlowski wrote:
-> The device node name should reflect generic class of a device so rename
-> the SysRAM node from "sysram" to "sram".  The child nodes stay as before
-> as "smp-sysram" to match their real purpose.  This will be also in sync
-> with upcoming DT schema.  No functional change.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi | 2 +-
->  arch/arm/boot/dts/exynos4210.dtsi | 2 +-
->  arch/arm/boot/dts/exynos4412.dtsi | 2 +-
->  arch/arm/boot/dts/exynos5250.dtsi | 2 +-
->  arch/arm/boot/dts/exynos54xx.dtsi | 2 +-
+The actual iomap implementations now have equivalent trace points.
 
-Applied this one to samsung-soc.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/xfs_aops.c  |  2 --
+ fs/xfs/xfs_trace.h | 26 --------------------------
+ 2 files changed, 28 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index f16d5f196c6b..b6101673c8fb 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -1160,7 +1160,6 @@ xfs_vm_readpage(
+ 	struct file		*unused,
+ 	struct page		*page)
+ {
+-	trace_xfs_vm_readpage(page->mapping->host, 1);
+ 	return iomap_readpage(page, &xfs_iomap_ops);
+ }
+ 
+@@ -1171,7 +1170,6 @@ xfs_vm_readpages(
+ 	struct list_head	*pages,
+ 	unsigned		nr_pages)
+ {
+-	trace_xfs_vm_readpages(mapping->host, nr_pages);
+ 	return iomap_readpages(mapping, pages, nr_pages, &xfs_iomap_ops);
+ }
+ 
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index eaae275ed430..eae4b29c174e 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -1197,32 +1197,6 @@ DEFINE_PAGE_EVENT(xfs_writepage);
+ DEFINE_PAGE_EVENT(xfs_releasepage);
+ DEFINE_PAGE_EVENT(xfs_invalidatepage);
+ 
+-DECLARE_EVENT_CLASS(xfs_readpage_class,
+-	TP_PROTO(struct inode *inode, int nr_pages),
+-	TP_ARGS(inode, nr_pages),
+-	TP_STRUCT__entry(
+-		__field(dev_t, dev)
+-		__field(xfs_ino_t, ino)
+-		__field(int, nr_pages)
+-	),
+-	TP_fast_assign(
+-		__entry->dev = inode->i_sb->s_dev;
+-		__entry->ino = inode->i_ino;
+-		__entry->nr_pages = nr_pages;
+-	),
+-	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
+-		  MAJOR(__entry->dev), MINOR(__entry->dev),
+-		  __entry->ino,
+-		  __entry->nr_pages)
+-)
+-
+-#define DEFINE_READPAGE_EVENT(name)		\
+-DEFINE_EVENT(xfs_readpage_class, name,	\
+-	TP_PROTO(struct inode *inode, int nr_pages), \
+-	TP_ARGS(inode, nr_pages))
+-DEFINE_READPAGE_EVENT(xfs_vm_readpage);
+-DEFINE_READPAGE_EVENT(xfs_vm_readpages);
+-
+ DECLARE_EVENT_CLASS(xfs_imap_class,
+ 	TP_PROTO(struct xfs_inode *ip, xfs_off_t offset, ssize_t count,
+ 		 int whichfork, struct xfs_bmbt_irec *irec),
+-- 
+2.20.1
 
