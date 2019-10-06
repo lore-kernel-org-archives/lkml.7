@@ -2,155 +2,153 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5DAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FB7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3EC2133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFDE214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383128;
-	bh=y24o64+df+bFr+XImQr+ZOI4HN+DUwtAyK/fL7vJzEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HKeM+lV7AGXi+v6NQwLrpg3pHEmkj/ENirI2rX0jv62s7dukdqi7Pp7oRLqp3kfcM
-	 us9tbFHrN1kacmbbmTfeilZIOpdCp21r4SOn3ZGCfk6GdBjcZqN+lrMqzPYmAFcKcA
-	 3lBkZ68MLmOGoy3Mn1Nf5+3d1fgrbW/7wqQVQr9Y=
+	s=default; t=1570383133;
+	bh=Bm1UclkOx45qtVBZclt5j1TdU8SQShCvKyKPr67th30=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1dt83B+AYU7N+5UUOnS5YFD18IxccAk38b99LWiAPPbpVt/kQzm6KKaFzh3NIxd17
+	 utYJ9kLM/nCwJk67NLg6zQOzLdT46j1k57DylWqI7ZGmRRPI5yV8eYLrgpdrZY49Zo
+	 ow+dt1Pi4PSZoK+HDTx/CjgYkbKG1gmurf+rltB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbfJFRcH (ORCPT
+        id S1727580AbfJFRcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:32:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58468 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:32:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbfJFRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:05 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        id S1727913AbfJFRcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:32:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F13E52133F;
-        Sun,  6 Oct 2019 17:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3EC52080F;
+        Sun,  6 Oct 2019 17:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383124;
-        bh=y24o64+df+bFr+XImQr+ZOI4HN+DUwtAyK/fL7vJzEc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=121vaGNXc5JT+w6LQYymQyiF+FborDuGpo6Ui2V0O43iWVlulxml28rUZ13kv/E4a
-         DoNY6rdxiTSf83cnUFu8sVhH6pPl62muoxkHCqy63gRp2TFT6A2hy4tpfwJhFuJOs5
-         8TJVRrxgdx+3GePIn8QezPRMNO+sIq8nuisUinns=
-Date:   Sun, 6 Oct 2019 10:32:02 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Martijn Coenen <maco@android.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Mattias Nissler <mnissler@chromium.org>
-Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread
- exits.
-Message-ID: <20191006173202.GA832@sol.localdomain>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Martijn Coenen <maco@android.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Mattias Nissler <mnissler@chromium.org>
-References: <20191006172016.873463083@linuxfoundation.org>
- <20191006172018.480360174@linuxfoundation.org>
+        s=default; t=1570383127;
+        bh=Bm1UclkOx45qtVBZclt5j1TdU8SQShCvKyKPr67th30=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sqSf6fRGQ4yOwtw/3zNuoZKfj8YDYdbXi/o0hSoKkIyDSjStqElIAZLyjiK6+QyAL
+         NbfQbkE/DLgSY3hukveoXHU8zmF8SwFZZOOU3xrERJ4k1zYAuqvwqKuLn3OmgRcoc5
+         kCo/k6ANfFyvCdkmn+7Ra++MOuWf5yx3jy7MecBY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 097/106] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
+Date:   Sun,  6 Oct 2019 19:21:43 +0200
+Message-Id: <20191006171202.125594832@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
+References: <20191006171124.641144086@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006172018.480360174@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 07:21:17PM +0200, Greg Kroah-Hartman wrote:
-> From: Martijn Coenen <maco@android.com>
-> 
-> commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
-> 
-> binder_poll() passes the thread->wait waitqueue that
-> can be slept on for work. When a thread that uses
-> epoll explicitly exits using BINDER_THREAD_EXIT,
-> the waitqueue is freed, but it is never removed
-> from the corresponding epoll data structure. When
-> the process subsequently exits, the epoll cleanup
-> code tries to access the waitlist, which results in
-> a use-after-free.
-> 
-> Prevent this by using POLLFREE when the thread exits.
-> 
-> Signed-off-by: Martijn Coenen <maco@android.com>
-> Reported-by: syzbot <syzkaller@googlegroups.com>
-> Cc: stable <stable@vger.kernel.org> # 4.14
-> [backport BINDER_LOOPER_STATE_POLL logic as well]
-> Signed-off-by: Mattias Nissler <mnissler@chromium.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/android/binder.c |   17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -334,7 +334,8 @@ enum {
->  	BINDER_LOOPER_STATE_EXITED      = 0x04,
->  	BINDER_LOOPER_STATE_INVALID     = 0x08,
->  	BINDER_LOOPER_STATE_WAITING     = 0x10,
-> -	BINDER_LOOPER_STATE_NEED_RETURN = 0x20
-> +	BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
-> +	BINDER_LOOPER_STATE_POLL	= 0x40,
->  };
->  
->  struct binder_thread {
-> @@ -2628,6 +2629,18 @@ static int binder_free_thread(struct bin
->  		} else
->  			BUG();
->  	}
-> +
-> +	/*
-> +	 * If this thread used poll, make sure we remove the waitqueue
-> +	 * from any epoll data structures holding it with POLLFREE.
-> +	 * waitqueue_active() is safe to use here because we're holding
-> +	 * the inner lock.
-> +	 */
-> +	if ((thread->looper & BINDER_LOOPER_STATE_POLL) &&
-> +	    waitqueue_active(&thread->wait)) {
-> +		wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
-> +	}
-> +
->  	if (send_reply)
->  		binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
->  	binder_release_work(&thread->todo);
-> @@ -2651,6 +2664,8 @@ static unsigned int binder_poll(struct f
->  		return POLLERR;
->  	}
->  
-> +	thread->looper |= BINDER_LOOPER_STATE_POLL;
-> +
->  	wait_for_proc_work = thread->transaction_stack == NULL &&
->  		list_empty(&thread->todo) && thread->return_error == BR_OK;
->  
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-Are you sure this backport is correct, given that in 4.9, binder_poll()
-sometimes uses proc->wait instead of thread->wait?:
+[ Upstream commit a761129e3625688310aecf26e1be9e98e85f8eb5 ]
 
-        wait_for_proc_work = thread->transaction_stack == NULL &&
-                list_empty(&thread->todo) && thread->return_error == BR_OK;
+xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
+to cache extra fragments. This is incorrect because the return type of
+xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
+ring buffer index.
 
-        binder_unlock(__func__);
+In the situation when the rsp_cons is approaching 0xffffffff, the return
+value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
+caller) would regard as error. As a result, queue->rx.rsp_cons is set
+incorrectly because it is updated only when there is error. If there is no
+error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
+Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
+queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
+This leads to NULL pointer access in the next iteration to process rx ring
+buffer entries.
 
-        if (wait_for_proc_work) {
-                if (binder_has_proc_work(proc, thread))
-                        return POLLIN;
-                poll_wait(filp, &proc->wait, wait);
-                if (binder_has_proc_work(proc, thread))
-                        return POLLIN;
-        } else {
-                if (binder_has_thread_work(thread))
-                        return POLLIN;
-                poll_wait(filp, &thread->wait, wait);
-                if (binder_has_thread_work(thread))
-                        return POLLIN;
-        }
-        return 0;
+The symptom is similar to the one fixed in
+commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
+empty in error handling").
+
+This patch changes the return type of xennet_fill_frags() to indicate
+whether it is successful or failed. The queue->rx.rsp_cons will be
+always updated inside this function.
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/xen-netfront.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -890,9 +890,9 @@ static int xennet_set_skb_gso(struct sk_
+ 	return 0;
+ }
+ 
+-static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
+-				  struct sk_buff *skb,
+-				  struct sk_buff_head *list)
++static int xennet_fill_frags(struct netfront_queue *queue,
++			     struct sk_buff *skb,
++			     struct sk_buff_head *list)
+ {
+ 	RING_IDX cons = queue->rx.rsp_cons;
+ 	struct sk_buff *nskb;
+@@ -911,7 +911,7 @@ static RING_IDX xennet_fill_frags(struct
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+ 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
+-			return ~0U;
++			return -ENOENT;
+ 		}
+ 
+ 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+@@ -922,7 +922,9 @@ static RING_IDX xennet_fill_frags(struct
+ 		kfree_skb(nskb);
+ 	}
+ 
+-	return cons;
++	queue->rx.rsp_cons = cons;
++
++	return 0;
+ }
+ 
+ static int checksum_setup(struct net_device *dev, struct sk_buff *skb)
+@@ -1048,8 +1050,7 @@ err:
+ 		skb->data_len = rx->status;
+ 		skb->len += rx->status;
+ 
+-		i = xennet_fill_frags(queue, skb, &tmpq);
+-		if (unlikely(i == ~0U))
++		if (unlikely(xennet_fill_frags(queue, skb, &tmpq)))
+ 			goto err;
+ 
+ 		if (rx->flags & XEN_NETRXF_csum_blank)
+@@ -1059,7 +1060,7 @@ err:
+ 
+ 		__skb_queue_tail(&rxq, skb);
+ 
+-		queue->rx.rsp_cons = ++i;
++		i = ++queue->rx.rsp_cons;
+ 		work_done++;
+ 	}
+ 
+
+
