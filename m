@@ -2,84 +2,245 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C46AC10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6030ECE58D
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342A82133F
+	by mail.kernel.org (Postfix) with ESMTP id 9DC7221479
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570355450;
-	bh=IEIOaPM0gWMqpc0zX16Dpknqo7eoR6bXroNx94NIjbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dxzy/z96ceM4S/I0YTDoSynlTscQ+DZgzEYMgZHWwDqUVsfhM2Hk/2X492HZt8wDz
-	 krBZKRC+I8hJ4m+7uowSaEXEf4HqlrL99eFyWemEq75G6+taG8ZTxIjxfZKlcX0lpM
-	 4Ht0UXIf81MI/boV1QqwznX4FvCQpZTDoteOpRSk=
+	bh=VhtuzqfBvrR81T1HFD3R8lHzSWNl+vOseLxfnzhZ5oQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n78Mv/0va77MZDMA586VxaeV7UyoH5orrYHDTe4E5VQSy7l+/Rrl27559Hm9dslA4
+	 4nM65gKpdItpJryVUQI9eQPylJIxzt3IvuTQFRbr/xfbfJBgsrLFWzf9gwVFkk3wMV
+	 zYCvuIUnwNGLZww6EsLbdPCv+8y8f8nDOX1zRB2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfJFJuq (ORCPT
+        id S1726444AbfJFJuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56490 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 05:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfJFJuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:50:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726185AbfJFJut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:50:49 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C62A20867;
-        Sun,  6 Oct 2019 09:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8BD20867;
+        Sun,  6 Oct 2019 09:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570355444;
-        bh=IEIOaPM0gWMqpc0zX16Dpknqo7eoR6bXroNx94NIjbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fDoRXRDUAh3f/Wl8m8Vf/KnM7I7dINcMPAD41WRI3EoYkS1D+NMGcmB+k9CX7T2PK
-         YOne+95KYCGaaeOr69HmTnV84fF9HvNyvZgp8P2J5UAb3spb29Ecs9IvXfWJ9wxrv7
-         gLk7BTpwXrYWdzyS2zRz5WHW2PRUyH63LCHWwe8o=
-Date:   Sun, 6 Oct 2019 11:50:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, johan@kernel.org,
-        elder@kernel.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: add blank line after declarations
-Message-ID: <20191006095042.GA2918514@kroah.com>
-References: <20191005210046.27224-1-gabrielabittencourt00@gmail.com>
+        s=default; t=1570355448;
+        bh=VhtuzqfBvrR81T1HFD3R8lHzSWNl+vOseLxfnzhZ5oQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2LJfYaN8klIOEW0ptkuZl2VyDKvqSSHAWWQVvWzOJT6fzJ4JTLes5idFbB1UYrCp5
+         O/CVzB/YIjmkfEKI4r4+Zs3woh5S9vWdEP81uz+QZoUuaAdeffpYF6DNKtnIkYb2F5
+         7j4D8w6tVvbDakgbtEVgKUPoCbcFFgUidL7XLHPU=
+Date:   Sun, 6 Oct 2019 10:50:43 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 1/4] iio: pressure: bmp280: use bulk regulator ops
+Message-ID: <20191006105043.4ad65ec3@archlinux>
+In-Reply-To: <20191002085759.13337-2-brgl@bgdev.pl>
+References: <20191002085759.13337-1-brgl@bgdev.pl>
+        <20191002085759.13337-2-brgl@bgdev.pl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005210046.27224-1-gabrielabittencourt00@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 06:00:46PM -0300, Gabriela Bittencourt wrote:
-> Fix CHECK: add blank line after declarations
+On Wed,  2 Oct 2019 10:57:56 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> The vddd and vdda supplies are always operated on together. We can
+> shrink the code a bit by using the bulk regulator helpers.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Looks good. Will pick up once I have the precursors in my branch.
+
+Thanks,
+
+Jonathan
+
 > ---
->  drivers/staging/greybus/control.h | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/iio/pressure/bmp280-core.c | 69 +++++++++++++-----------------
+>  1 file changed, 30 insertions(+), 39 deletions(-)
 > 
-> diff --git a/drivers/staging/greybus/control.h b/drivers/staging/greybus/control.h
-> index 3a29ec05f631..5a45d55349a1 100644
-> --- a/drivers/staging/greybus/control.h
-> +++ b/drivers/staging/greybus/control.h
-> @@ -24,6 +24,7 @@ struct gb_control {
->  	char *vendor_string;
->  	char *product_string;
+> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> index 8d0f15f27dc5..c21f8ce7b09c 100644
+> --- a/drivers/iio/pressure/bmp280-core.c
+> +++ b/drivers/iio/pressure/bmp280-core.c
+> @@ -74,6 +74,12 @@ struct bmp280_calib {
+>  	s8  H6;
 >  };
+>  
+> +static const char *const bmp280_supply_names[] = {
+> +	"vddd", "vdda"
+> +};
 > +
->  #define to_gb_control(d) container_of(d, struct gb_control, dev)
+> +#define BMP280_NUM_SUPPLIES ARRAY_SIZE(bmp280_supply_names)
+> +
+>  struct bmp280_data {
+>  	struct device *dev;
+>  	struct mutex lock;
+> @@ -85,8 +91,7 @@ struct bmp280_data {
+>  		struct bmp180_calib bmp180;
+>  		struct bmp280_calib bmp280;
+>  	} calib;
+> -	struct regulator *vddd;
+> -	struct regulator *vdda;
+> +	struct regulator_bulk_data supplies[BMP280_NUM_SUPPLIES];
+>  	unsigned int start_up_time; /* in microseconds */
+>  
+>  	/* log of base 2 of oversampling rate */
+> @@ -1033,27 +1038,23 @@ int bmp280_common_probe(struct device *dev,
+>  	}
+>  
+>  	/* Bring up regulators */
+> -	data->vddd = devm_regulator_get(dev, "vddd");
+> -	if (IS_ERR(data->vddd)) {
+> -		dev_err(dev, "failed to get VDDD regulator\n");
+> -		return PTR_ERR(data->vddd);
+> -	}
+> -	ret = regulator_enable(data->vddd);
+> +	regulator_bulk_set_supply_names(data->supplies,
+> +					bmp280_supply_names,
+> +					BMP280_NUM_SUPPLIES);
+> +
+> +	ret = devm_regulator_bulk_get(dev,
+> +				      BMP280_NUM_SUPPLIES, data->supplies);
+>  	if (ret) {
+> -		dev_err(dev, "failed to enable VDDD regulator\n");
+> +		dev_err(dev, "failed to get regulators\n");
+>  		return ret;
+>  	}
+> -	data->vdda = devm_regulator_get(dev, "vdda");
+> -	if (IS_ERR(data->vdda)) {
+> -		dev_err(dev, "failed to get VDDA regulator\n");
+> -		ret = PTR_ERR(data->vdda);
+> -		goto out_disable_vddd;
+> -	}
+> -	ret = regulator_enable(data->vdda);
+> +
+> +	ret = regulator_bulk_enable(BMP280_NUM_SUPPLIES, data->supplies);
+>  	if (ret) {
+> -		dev_err(dev, "failed to enable VDDA regulator\n");
+> -		goto out_disable_vddd;
+> +		dev_err(dev, "failed to enable regulators\n");
+> +		return ret;
+>  	}
+> +
+>  	/* Wait to make sure we started up properly */
+>  	usleep_range(data->start_up_time, data->start_up_time + 100);
+>  
+> @@ -1068,17 +1069,17 @@ int bmp280_common_probe(struct device *dev,
+>  	data->regmap = regmap;
+>  	ret = regmap_read(regmap, BMP280_REG_ID, &chip_id);
+>  	if (ret < 0)
+> -		goto out_disable_vdda;
+> +		goto out_disable_regulators;
+>  	if (chip_id != chip) {
+>  		dev_err(dev, "bad chip id: expected %x got %x\n",
+>  			chip, chip_id);
+>  		ret = -EINVAL;
+> -		goto out_disable_vdda;
+> +		goto out_disable_regulators;
+>  	}
+>  
+>  	ret = data->chip_info->chip_config(data);
+>  	if (ret < 0)
+> -		goto out_disable_vdda;
+> +		goto out_disable_regulators;
+>  
+>  	dev_set_drvdata(dev, indio_dev);
+>  
+> @@ -1092,14 +1093,14 @@ int bmp280_common_probe(struct device *dev,
+>  		if (ret < 0) {
+>  			dev_err(data->dev,
+>  				"failed to read calibration coefficients\n");
+> -			goto out_disable_vdda;
+> +			goto out_disable_regulators;
+>  		}
+>  	} else if (chip_id == BMP280_CHIP_ID || chip_id == BME280_CHIP_ID) {
+>  		ret = bmp280_read_calib(data, &data->calib.bmp280, chip_id);
+>  		if (ret < 0) {
+>  			dev_err(data->dev,
+>  				"failed to read calibration coefficients\n");
+> -			goto out_disable_vdda;
+> +			goto out_disable_regulators;
+>  		}
+>  	}
+>  
+> @@ -1111,7 +1112,7 @@ int bmp280_common_probe(struct device *dev,
+>  	if (irq > 0 || (chip_id  == BMP180_CHIP_ID)) {
+>  		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
+>  		if (ret)
+> -			goto out_disable_vdda;
+> +			goto out_disable_regulators;
+>  	}
+>  
+>  	/* Enable runtime PM */
+> @@ -1137,10 +1138,8 @@ int bmp280_common_probe(struct device *dev,
+>  	pm_runtime_get_sync(data->dev);
+>  	pm_runtime_put_noidle(data->dev);
+>  	pm_runtime_disable(data->dev);
+> -out_disable_vdda:
+> -	regulator_disable(data->vdda);
+> -out_disable_vddd:
+> -	regulator_disable(data->vddd);
+> +out_disable_regulators:
+> +	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(bmp280_common_probe);
+> @@ -1154,8 +1153,7 @@ int bmp280_common_remove(struct device *dev)
+>  	pm_runtime_get_sync(data->dev);
+>  	pm_runtime_put_noidle(data->dev);
+>  	pm_runtime_disable(data->dev);
+> -	regulator_disable(data->vdda);
+> -	regulator_disable(data->vddd);
+> +	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(bmp280_common_remove);
+> @@ -1165,12 +1163,8 @@ static int bmp280_runtime_suspend(struct device *dev)
+>  {
+>  	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>  	struct bmp280_data *data = iio_priv(indio_dev);
+> -	int ret;
+>  
+> -	ret = regulator_disable(data->vdda);
+> -	if (ret)
+> -		return ret;
+> -	return regulator_disable(data->vddd);
+> +	return regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+>  }
+>  
+>  static int bmp280_runtime_resume(struct device *dev)
+> @@ -1179,10 +1173,7 @@ static int bmp280_runtime_resume(struct device *dev)
+>  	struct bmp280_data *data = iio_priv(indio_dev);
+>  	int ret;
+>  
+> -	ret = regulator_enable(data->vddd);
+> -	if (ret)
+> -		return ret;
+> -	ret = regulator_enable(data->vdda);
+> +	ret = regulator_bulk_enable(BMP280_NUM_SUPPLIES, data->supplies);
+>  	if (ret)
+>  		return ret;
+>  	usleep_range(data->start_up_time, data->start_up_time + 100);
 
-No, the original code is "better" here, it's a common pattern despite
-what checkpatch.pl tells you, sorry.
-
-thanks,
-
-greg k-h
