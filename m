@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AB6ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A58C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE232067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBAF21927
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384855;
-	bh=j20aodNB6H+UN3uqmUZyleqFIstFjxvzp7Enj8fdVcE=;
+	s=default; t=1570384861;
+	bh=4cRE8BoO5Dnzu1LM5gTDzH31eoGrRlvqL7fvAltIum8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nVgV99mVC+S530SsPNTI2ayDd0A7PFcorO14m7z8imJ93qp87jHQyBbx6BIzCFeyN
-	 5xmg8rqtAB4zANML822OAmtFAzfPq4A88WRt3pwhtVjwN2TYujzsdNRxELQ2rwlSUI
-	 fkLhPfIlu8KS/IuDc91edOvXk9OcWpv+o3vuDOTc=
+	b=Z3Kb7SIXmIFQdfeRGCCq2y5+FGjhLVfs/wwFI7uZjYJUpwyNpGpASeo3C4DpxlyZt
+	 +Zi4nuRyvkFFmSBT+x341eMwg6QqDHe2Z86TcUQ+E90r0UWg+uSUEm0y0VmEu023kV
+	 ezmQ4V590+olG/F9YrEiyK26sbs52QQNrFBmS3ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfJFSAz (ORCPT
+        id S1728658AbfJFR2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:00:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbfJFR2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:18 -0400
+        id S1728631AbfJFR17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA352087E;
-        Sun,  6 Oct 2019 17:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CE4E2087E;
+        Sun,  6 Oct 2019 17:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382897;
-        bh=j20aodNB6H+UN3uqmUZyleqFIstFjxvzp7Enj8fdVcE=;
+        s=default; t=1570382878;
+        bh=4cRE8BoO5Dnzu1LM5gTDzH31eoGrRlvqL7fvAltIum8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FWS2OIMtumV6xJMmsryLfKStnXr71+x0rH4Av5NnD9WY/Wqwm7kXwRXZq6TSq/i9u
-         sVIA19W17jkm8+wEvHQXh89LLmG7/t79OlEltfiOciAHh22sE1Au9v0gDEhNdksdaW
-         aJh8UzoPYjxktAhPEAr1KoeI7iz/WKryl7HKx6bY=
+        b=gmW3t4tH50zvhNkoHeziDgwnM0XwBT+KRbZ8gcpnZTm2jm3tonh6Ref0E9iCZ/HKx
+         jjTYLY3qyIk13zOzBDoCGB6XFDKOVB9pf3/Q1iTn8rsGbrLsXnZVcg502zvlyKFGrL
+         N4MQwvlAjhcZWG9VYARkHXp3OdD9dpMMQLUi2wzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/106] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Sun,  6 Oct 2019 19:20:18 +0200
-Message-Id: <20191006171130.485953894@linuxfoundation.org>
+        stable@vger.kernel.org, Anatoly Pugachev <matorola@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 43/68] pktcdvd: remove warning on attempting to register non-passthrough dev
+Date:   Sun,  6 Oct 2019 19:21:19 +0200
+Message-Id: <20191006171128.702814317@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
-References: <20191006171124.641144086@linuxfoundation.org>
+In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
+References: <20191006171108.150129403@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,86 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+[ Upstream commit eb09b3cc464d2c3bbde9a6648603c8d599ea8582 ]
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+Anatoly reports that he gets the below warning when booting -git on
+a sparc64 box on debian unstable:
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+...
+[   13.352975] aes_sparc64: Using sparc64 aes opcodes optimized AES
+implementation
+[   13.428002] ------------[ cut here ]------------
+[   13.428081] WARNING: CPU: 21 PID: 586 at
+drivers/block/pktcdvd.c:2597 pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
+[   13.428147] Attempt to register a non-SCSI queue
+[   13.428184] Modules linked in: pktcdvd libdes cdrom aes_sparc64
+n2_rng md5_sparc64 sha512_sparc64 rng_core sha256_sparc64 flash
+sha1_sparc64 ip_tables x_tables ipv6 crc_ccitt nf_defrag_ipv6 autofs4
+ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy
+async_pq async_xor xor async_tx raid6_pq raid1 raid0 multipath linear
+md_mod crc32c_sparc64
+[   13.428452] CPU: 21 PID: 586 Comm: pktsetup Not tainted
+5.3.0-10169-g574cc4539762 #1234
+[   13.428507] Call Trace:
+[   13.428542]  [00000000004635c0] __warn+0xc0/0x100
+[   13.428582]  [0000000000463634] warn_slowpath_fmt+0x34/0x60
+[   13.428626]  [000000001045b244] pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
+[   13.428674]  [000000001045ccf4] pkt_ctl_ioctl+0x94/0x220 [pktcdvd]
+[   13.428724]  [00000000006b95c8] do_vfs_ioctl+0x628/0x6e0
+[   13.428764]  [00000000006b96c8] ksys_ioctl+0x48/0x80
+[   13.428803]  [00000000006b9714] sys_ioctl+0x14/0x40
+[   13.428847]  [0000000000406294] linux_sparc_syscall+0x34/0x44
+[   13.428890] irq event stamp: 4181
+[   13.428924] hardirqs last  enabled at (4189): [<00000000004e0a74>]
+console_unlock+0x634/0x6c0
+[   13.428984] hardirqs last disabled at (4196): [<00000000004e0540>]
+console_unlock+0x100/0x6c0
+[   13.429048] softirqs last  enabled at (3978): [<0000000000b2e2d8>]
+__do_softirq+0x498/0x520
+[   13.429110] softirqs last disabled at (3967): [<000000000042cfb4>]
+do_softirq_own_stack+0x34/0x60
+[   13.429172] ---[ end trace 2220ca468f32967d ]---
+[   13.430018] pktcdvd: setup of pktcdvd device failed
+[   13.455589] des_sparc64: Using sparc64 des opcodes optimized DES
+implementation
+[   13.515334] camellia_sparc64: Using sparc64 camellia opcodes
+optimized CAMELLIA implementation
+[   13.522856] pktcdvd: setup of pktcdvd device failed
+[   13.529327] pktcdvd: setup of pktcdvd device failed
+[   13.532932] pktcdvd: setup of pktcdvd device failed
+[   13.536165] pktcdvd: setup of pktcdvd device failed
+[   13.539372] pktcdvd: setup of pktcdvd device failed
+[   13.542834] pktcdvd: setup of pktcdvd device failed
+[   13.546536] pktcdvd: setup of pktcdvd device failed
+[   15.431071] XFS (dm-0): Mounting V5 Filesystem
+...
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
+Apparently debian auto-attaches any cdrom like device to pktcdvd, which
+can lead to the above warning. There's really no reason to warn for this
+situation, kill it.
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Reported-by: Anatoly Pugachev <matorola@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/block/pktcdvd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 75e5006f395a5..006d765256782 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -221,6 +221,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
- 
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
-+
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1013,11 +1016,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1025,8 +1037,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index 11ec92e47455a..94944d063b372 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2585,7 +2585,6 @@ static int pkt_new_dev(struct pktcdvd_device *pd, dev_t dev)
+ 	if (ret)
+ 		return ret;
+ 	if (!blk_queue_scsi_passthrough(bdev_get_queue(bdev))) {
+-		WARN_ONCE(true, "Attempt to register a non-SCSI queue\n");
+ 		blkdev_put(bdev, FMODE_READ | FMODE_NDELAY);
+ 		return -EINVAL;
  	}
- 	return 0;
- }
-@@ -1201,6 +1214,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
- 
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
- }
- 
- static void shutdown_smi(void *send_info);
 -- 
 2.20.1
 
