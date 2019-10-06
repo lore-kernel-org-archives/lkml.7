@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B095C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A17C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FB32077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AC72077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384588;
-	bh=jjrzKsPr4QB3Win3ST87QOgsLpfVIDjcJppIFbo8cC8=;
+	s=default; t=1570384597;
+	bh=Z1FFPx6rPMa1a37d/+3Howuwq5SBIclNgoWtIm1mxP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vaFGlGwgjQEytSP/vFsQS+O7uHTsqkDJXbYvxhOQ9axnCN/+92dSYoQp3wLSrWDOu
-	 SmlQdhx0hYI6Hn5rcnCJPB2M+T2zIDQy97ojwyHi9PTYotk0s5MraLkkIzeflFEvQ0
-	 DcNiCYqA6WSNIPHnzUJiiN4QzhxIbysSdjKhtkng=
+	b=Q59BcaB/L2y6RJjR2cdJqmtugyHv8jkFeaI7vF3UKGsq6z1yrn4AWikhMh6kaMiKA
+	 bBOJb/CFXVVeQPiD5otA7UdfauTlmta21h+gEfLXLy4La5RAnn0rhzq8NWmM2ZMIxp
+	 rO8oM5qVnPsE5ZTOKzqr5kkpcbY0BycYFwuOQrU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfJFR41 (ORCPT
+        id S1730017AbfJFR4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33894 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730037AbfJFRfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:15 -0400
+        id S1728970AbfJFRfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 846402080F;
-        Sun,  6 Oct 2019 17:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CBE2166E;
+        Sun,  6 Oct 2019 17:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383314;
-        bh=jjrzKsPr4QB3Win3ST87QOgsLpfVIDjcJppIFbo8cC8=;
+        s=default; t=1570383305;
+        bh=Z1FFPx6rPMa1a37d/+3Howuwq5SBIclNgoWtIm1mxP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZd62t4wf/XCIh+yj9fZMrX/9mEl7MwmbWp2Z7AsDYVNr0UEFEJFNBtWERv+QgU2k
-         upyt6B/X4pWKu0PcpYDUfq+hR4uJiP5lJS7SiXqG84IlQxspt86sK+B4jwcSGqCraG
-         rfr+UZMMCbjGFPaKdQ58+8KcJfX2cSjtm9yECP9k=
+        b=dJPHwnHpGqpAzm7ZCRWxLEchqP+ubOzPMDr1Sr29bS02WXApou4HxiROvQ6IEdgZq
+         dls6FSaREm2n+XGWOkG9gk4TNxitfvET3asuyR+mopeZKMmUp++fiAzMmjQHdDzD1G
+         IqXoNqPN5R2uc+AHU/6M2phcchk7JFbnT6qLB09g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 058/137] powerpc/pseries/mobility: use cond_resched when updating device tree
-Date:   Sun,  6 Oct 2019 19:20:42 +0200
-Message-Id: <20191006171213.448417258@linuxfoundation.org>
+Subject: [PATCH 5.2 038/137] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
+Date:   Sun,  6 Oct 2019 19:20:22 +0200
+Message-Id: <20191006171212.237302580@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,67 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit ccfb5bd71d3d1228090a8633800ae7cdf42a94ac ]
+[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
 
-After a partition migration, pseries_devicetree_update() processes
-changes to the device tree communicated from the platform to
-Linux. This is a relatively heavyweight operation, with multiple
-device tree searches, memory allocations, and conversations with
-partition firmware.
+In radeon_connector_set_property(), there is an if statement on line 743
+to check whether connector->encoder is NULL:
+    if (connector->encoder)
 
-There's a few levels of nested loops which are bounded only by
-decisions made by the platform, outside of Linux's control, and indeed
-we have seen RCU stalls on large systems while executing this call
-graph. Use cond_resched() in these loops so that the cpu is yielded
-when needed.
+When connector->encoder is NULL, it is used on line 755:
+    if (connector->encoder->crtc)
 
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-4-nathanl@linux.ibm.com
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, connector->encoder is checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index 50e7aee3c7f37..accb732dcfac7 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -9,6 +9,7 @@
- #include <linux/cpu.h>
- #include <linux/kernel.h>
- #include <linux/kobject.h>
-+#include <linux/sched.h>
- #include <linux/smp.h>
- #include <linux/stat.h>
- #include <linux/completion.h>
-@@ -206,7 +207,11 @@ static int update_dt_node(__be32 phandle, s32 scope)
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index de1745adccccb..c7f2e073a82fd 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -752,7 +752,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
  
- 				prop_data += vd;
- 			}
-+
-+			cond_resched();
- 		}
-+
-+		cond_resched();
- 	} while (rtas_rc == 1);
+ 		radeon_encoder->output_csc = val;
  
- 	of_node_put(dn);
-@@ -309,8 +314,12 @@ int pseries_devicetree_update(s32 scope)
- 					add_dt_node(phandle, drc_index);
- 					break;
- 				}
-+
-+				cond_resched();
- 			}
- 		}
-+
-+		cond_resched();
- 	} while (rc == 1);
+-		if (connector->encoder->crtc) {
++		if (connector->encoder && connector->encoder->crtc) {
+ 			struct drm_crtc *crtc  = connector->encoder->crtc;
+ 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
  
- 	kfree(rtas_buf);
 -- 
 2.20.1
 
