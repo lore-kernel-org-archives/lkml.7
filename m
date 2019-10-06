@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C431C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D392AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA772087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7B02087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfJFKdm (ORCPT
+        id S1727168AbfJFKdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:33:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57978 "EHLO huawei.com"
+        Sun, 6 Oct 2019 06:33:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58164 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727040AbfJFKdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:33:40 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B23469E9D902B5E687B3;
-        Sun,  6 Oct 2019 18:33:37 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:33:29 +0800
+        id S1727148AbfJFKdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:33:43 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0B205CD56ED0AE8C27BA;
+        Sun,  6 Oct 2019 18:33:41 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:33:32 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
         <joel@jms.id.au>, <andrew@aj.id.au>, <nicolas.ferre@microchip.com>,
@@ -46,9 +46,9 @@ CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 25/34] rtc: stk17ta8: use devm_platform_ioremap_resource() to simplify code
-Date:   Sun, 6 Oct 2019 18:29:44 +0800
-Message-ID: <20191006102953.57536-26-yuehaibing@huawei.com>
+Subject: [PATCH -next 26/34] rtc: ds1286: use devm_platform_ioremap_resource() to simplify code
+Date:   Sun, 6 Oct 2019 18:29:45 +0800
+Message-ID: <20191006102953.57536-27-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191006102953.57536-1-yuehaibing@huawei.com>
 References: <20191006102953.57536-1-yuehaibing@huawei.com>
@@ -66,31 +66,30 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/rtc/rtc-stk17ta8.c | 4 +---
+ drivers/rtc/rtc-ds1286.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-stk17ta8.c b/drivers/rtc/rtc-stk17ta8.c
-index a833ebc..01a4504 100644
---- a/drivers/rtc/rtc-stk17ta8.c
-+++ b/drivers/rtc/rtc-stk17ta8.c
-@@ -256,7 +256,6 @@ static int stk17ta8_nvram_write(void *priv, unsigned int pos, void *val,
- 
- static int stk17ta8_rtc_probe(struct platform_device *pdev)
+diff --git a/drivers/rtc/rtc-ds1286.c b/drivers/rtc/rtc-ds1286.c
+index a06508b..7acf849 100644
+--- a/drivers/rtc/rtc-ds1286.c
++++ b/drivers/rtc/rtc-ds1286.c
+@@ -323,15 +323,13 @@ static const struct rtc_class_ops ds1286_ops = {
+ static int ds1286_probe(struct platform_device *pdev)
  {
+ 	struct rtc_device *rtc;
 -	struct resource *res;
- 	unsigned int cal;
- 	unsigned int flags;
- 	struct rtc_plat_data *pdata;
-@@ -275,8 +274,7 @@ static int stk17ta8_rtc_probe(struct platform_device *pdev)
- 	if (!pdata)
+ 	struct ds1286_priv *priv;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(struct ds1286_priv), GFP_KERNEL);
+ 	if (!priv)
  		return -ENOMEM;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ioaddr = devm_ioremap_resource(&pdev->dev, res);
-+	ioaddr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ioaddr))
- 		return PTR_ERR(ioaddr);
- 	pdata->ioaddr = ioaddr;
+-	priv->rtcregs = devm_ioremap_resource(&pdev->dev, res);
++	priv->rtcregs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->rtcregs))
+ 		return PTR_ERR(priv->rtcregs);
+ 
 -- 
 2.7.4
 
