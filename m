@@ -2,128 +2,99 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D19C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 20:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C32C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 20:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C1B2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 20:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07F620862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 20:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmh.eng.br header.i=@hmh.eng.br header.b="mHHW/VKL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xrKbdHsW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOcOfoux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfJFUk6 (ORCPT
+        id S1726714AbfJFUvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 16:40:58 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:49041 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725953AbfJFUk5 (ORCPT
+        Sun, 6 Oct 2019 16:51:45 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33773 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfJFUvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 16:40:57 -0400
-X-Greylist: delayed 404 seconds by postgrey-1.27 at vger.kernel.org; Sun, 06 Oct 2019 16:40:57 EDT
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id 2110C3EC;
-        Sun,  6 Oct 2019 16:34:12 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 06 Oct 2019 16:34:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ejeoZ3ISdZsRr54JCVMXEDJt/1V
-        Fp4bSIyHVCBG50b8=; b=mHHW/VKLracUbzT5k/Yt/2zRfz6PcGuqBRiKbisrLOy
-        YtyOjbUfAq/9fJ2ZoRWnMBBouN+CtMbptke0sdVkzxgNfXNK4fXr5NwU2TCml+CD
-        Gou69jWnyqS+XBOfvhKRU2kD05KF9oMt+nDyI1osG8dEh87GchKnAKVX0nRiOoKm
-        sxjrfniejyMc2Ueh8gmQSGqhPXBOU24qLLkA3s7FyWMEhz2gIefsaJA2lLSTtP2h
-        Lpyy3Pe5qQ7U01c4eyi4jLiFlRYVFo4McCUY4tSjsj/YPAtNqs+8U6R4FpaZgMUl
-        8oGfzelTrlI0KuATIjokWOXZ+CObcXMQFKvxYUxTpng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ejeoZ3
-        ISdZsRr54JCVMXEDJt/1VFp4bSIyHVCBG50b8=; b=xrKbdHsWlLiTRqHDsYu+te
-        DiSiarnwMVNrf6IHi3Up2h6zQhhJhpn8haR3Gq5GO9iil89OWjBzN2aYNXKkxdac
-        glWTIOoHbfKXNQc8IEcNgyUt9dCulbHizKaEHIBJ3IFHbsuIRafEDxNeomAWP3bB
-        8ZYdDkafQAdN3YG+Ntf76ClDXtqAsErAPn6uUSY0nhUuEklyKT+m2t8iN1MuwWUS
-        7M6UElsmFH1H0hgHNJtXQwz8swjBa5uTQzJpXpRz9PKWCc2kwIxboDKiUHaN2kNO
-        pgrHPQfJ/XaVwiClqz9eipCUVXN7wPGFU1VadWme6yt19An6NxweIDtNJilO0w3g
-        ==
-X-ME-Sender: <xms:wk-aXeN_yLb80W7gM2wn_PJMPNouOSRQlLYjstQOY-Mn97lujsbvxA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrheehgdduheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdttddttdervdenucfhrhhomhepjfgvnhhr
-    ihhquhgvucguvgcuofhorhgrvghsucfjohhlshgthhhuhhcuoehhmhhhsehhmhhhrdgvnh
-    hgrdgsrheqnecukfhppedvtddurdekvddrgeehrddvfeegnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehhmhhhsehhmhhhrdgvnhhgrdgsrhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:wk-aXZGUKg6qynH5oJ4TvGBM5oMH6MRebWq46ZDPEpHpFGW-t3oZLw>
-    <xmx:wk-aXRHUkSVMld3VXmDDnbPWpW5wwNgLL3yjxkWFpSJB_ufBARi72g>
-    <xmx:wk-aXYAsp9RiCDTVfl25ei7mAZmx1QiUjikdouXhFSgI19j-qB4C8A>
-    <xmx:w0-aXcIlO3TIXyeKDXH7Dx4X5hbWwtpfb0RCaoJbCBvEf9ONWW06z1vw6p4>
-Received: from khazad-dum.debian.net (unknown [201.82.45.234])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8D971D60057;
-        Sun,  6 Oct 2019 16:34:10 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id 06BA2340015B;
-        Sun,  6 Oct 2019 17:34:09 -0300 (-03)
-X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
-Received: from khazad-dum.debian.net ([127.0.0.1])
-        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id imtwoQQbVsa9; Sun,  6 Oct 2019 17:34:08 -0300 (-03)
-Received: by khazad-dum.debian.net (Postfix, from userid 1000)
-        id 10243340015A; Sun,  6 Oct 2019 17:34:07 -0300 (-03)
-Date:   Sun, 6 Oct 2019 17:34:07 -0300
-From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mat King <mathewk@google.com>, rafael@kernel.org,
-        gregkh@linuxfoundation.org, Ross Zwisler <zwisler@google.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: New sysfs interface for privacy screens
-Message-ID: <20191006203407.GA14301@khazad-dum.debian.net>
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <20191002094650.3fc06a85@lwn.net>
- <87muei9r7i.fsf@intel.com>
- <20191003102254.dmwl6qimdca3dbrv@holly.lan>
+        Sun, 6 Oct 2019 16:51:45 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r5so16454569qtd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 13:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkysCBSB9fGqKPV8g/1PIAYcEKj+5HCVtkPSug6S7x4=;
+        b=cOcOfoux4Df7/s9EkUQGrbPexSBOt3WXuQ6fU4InY9ASkZfOT1H4oszYBQao6riw/k
+         VXTm3ZxkLndtrobWYJ6Wpm2gLJtAPc+YeDdEU+Vzea9fblEzy8iPj25BZtesJ3Ym0iYU
+         oelu7zpxaomQ0gRsFoW7JhZbb+sLgJgpfMykiu1tRPDtIs9bb482IsrozXiDSKZFdzNc
+         0llDAebPCIEeb6kNpWPRnSR8KRk14Vb+7cNCMLhJULK+PfNS6LGwgvgOul0UqBTL/nKs
+         UX1himK/rZtQPOMeIbSr56wvOpIUGvy737VYgOB+puIXTKwoHvSUNXoso2N3zdTWPaID
+         qanQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkysCBSB9fGqKPV8g/1PIAYcEKj+5HCVtkPSug6S7x4=;
+        b=YMFsHaNcBuYIP+HeI3R0svdbznlde3wr+0G7lppZrYP3POXlcZri70M0LmGdCk91iQ
+         Wg7jTN3jEU4eQkm/OFBozkIl3XJvSubENMiL+P9xwrk+y0K2wE96IGcdwcNIv2+3xB1F
+         N1MmKvpG7E8QUiQH5C1gFO/qb27k8OyQ/LLjheqQdvfpwdUliXnPsEmM3rObjqqcRk09
+         mm5xDRvWlq7EhbuM93NTXVBuMe3lrdy2J6llAN4eoXFkODW5lIAHKSF/drTOp5PJvhW3
+         Wxabe1hRnp/fa7NV43TH8016iQ2l3mq2jvQ95wbu9R01z86HZqFDKpA5whurikF87UWM
+         vHEQ==
+X-Gm-Message-State: APjAAAVc9yvnm4s1hNj4A+xchttSfVf2e84PGcwS34D91JG1T4VgGURm
+        PV+HVrtDYA+t1PVssxLzQFo=
+X-Google-Smtp-Source: APXvYqwR0q1/blUrqYR+XMlkhidWKj/s2ojzVV8263BY2FCeizUcrqO88TL/aFATj4L8kqpsqpyA4g==
+X-Received: by 2002:aed:2448:: with SMTP id s8mr27213725qtc.173.1570395102993;
+        Sun, 06 Oct 2019 13:51:42 -0700 (PDT)
+Received: from GBdebian.terracota.local ([177.103.155.130])
+        by smtp.gmail.com with ESMTPSA id a36sm6949492qtk.21.2019.10.06.13.51.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 13:51:42 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, Larry.Finger@lwfinger.net,
+        florian.c.schilhabel@googlemail.com, gregkh@linuxfoundation.org,
+        nishkadg.linux@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH] staging: rtl8712: align arguments with open parenthesis
+Date:   Sun,  6 Oct 2019 17:51:35 -0300
+Message-Id: <20191006205135.11791-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003102254.dmwl6qimdca3dbrv@holly.lan>
-X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
- 0BD9 E811 39CB 4807
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 03 Oct 2019, Daniel Thompson wrote:
-> I guess... although the Thinkpad code hasn't added any standard
-> interfaces (no other laptop should be placing controls for a privacy
-> screen in /proc/acpi/ibm/... ). Maybe its not too late.
+Cleans up checks of "Alignment should match open parenthesis"
 
-As far as I am concerned, it is *not* too late.  And you can always have
-a driver-private way of messing with something, and a more generic way
-of doing the same thing.
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+---
+ drivers/staging/rtl8712/recv_linux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thinkpad-acpi will always welcome patches switching to the new generic
-way (as long as we can have a deprecation period *for long-time-used
-facilities* -- which is not the case of the privacy screen, no
-deprecation period need there).
-
-The privacy thing is too new, feel free to design a generic one and
-send in a patch *switching* thinkpad-acpi to the new generic one.
-
-I would ACK that.  If the subsystem maintainer also agrees, (and nobody
-*seriously* complain about it from userspace), the private interface
-would be gone just like that.
-
+diff --git a/drivers/staging/rtl8712/recv_linux.c b/drivers/staging/rtl8712/recv_linux.c
+index 70a4dcd4a1e5..808f21c5767a 100644
+--- a/drivers/staging/rtl8712/recv_linux.c
++++ b/drivers/staging/rtl8712/recv_linux.c
+@@ -61,7 +61,7 @@ int r8712_os_recvbuf_resource_alloc(struct _adapter *padapter,
+ 
+ /*free os related resource in struct recv_buf*/
+ int r8712_os_recvbuf_resource_free(struct _adapter *padapter,
+-			     struct recv_buf *precvbuf)
++				   struct recv_buf *precvbuf)
+ {
+ 	if (precvbuf->pskb)
+ 		dev_kfree_skb_any(precvbuf->pskb);
 -- 
-  Henrique Holschuh
+2.20.1
+
