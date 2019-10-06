@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB1C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF80C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C2020700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724EB20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384343;
-	bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
+	s=default; t=1570384348;
+	bh=OebFyXabA0ERn/b/gsHcJyDaNDFID5j4xLypGKyKfnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GASMiyewpe7sFlDkGef9Tf6Cu8JJMyS6xNUlQrQm/jQEN3BSWWmRfug4g81Z/dgIT
-	 zBbba87B18Cd6Pt8oTSd6GdJLZp+47XhmweoUFy/tpSXUpv8hU8VNegu96fu2yL6iB
-	 hrDIYhZJNnlB6/uxLxfcmwFErY4OFeyIM0V91Kq4=
+	b=WXeBsBuf8XzJJg44jimcUVPgm55pn34CfGrHCu34ssrTG1AXnfXpRocIl8N2GZODM
+	 +BbB9IeGibVKv6n8zUBLho4AgebN98BlEr1OzimV8++3M16Y4SjiAyihrPFYOLmKPf
+	 tGXwCddzCaHPppIaRk9w0/xKiz+CngmIlX6FCCoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbfJFRvr (ORCPT
+        id S1730106AbfJFRvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727964AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3DBE21479;
-        Sun,  6 Oct 2019 17:45:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6072920673;
+        Sun,  6 Oct 2019 17:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383922;
-        bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
+        s=default; t=1570383954;
+        bh=OebFyXabA0ERn/b/gsHcJyDaNDFID5j4xLypGKyKfnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xSVrVXGOO5mbcMaS0YRRsmut6C/iwzt4zMYFXiCzgA1q34t2upmT2Uk9u4QUsULcJ
-         IbQKmTPqS4eG/eCI6kAtaT2EEw2dWDwz6CcpoJ4l6tdpMKXk2YxGXbzwYP6799zsX6
-         7XT7VHR73xV+2B3lZMMqWrnd1ZMbIzxA8DURHqL4=
+        b=oDkgbv5rTvCw5JMfAg+WwMmXG4ASCYtZE+9U+zq81Oo6AzX1wuqeiEERYfGKOnf3O
+         cRBpOJVK6lJmtHxBANqqjxU8DSm7o9Kg/pFY+XWVDAC50FD8AtG+JYPf+UyFW8VtiV
+         AM5X2nuuUVxuGRJZDk654W4aHVZz5LXbmiGbZItI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Marek Majkowski <marek@cloudflare.com>,
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 146/166] tcp: adjust rto_base in retransmits_timed_out()
-Date:   Sun,  6 Oct 2019 19:21:52 +0200
-Message-Id: <20191006171225.244217732@linuxfoundation.org>
+Subject: [PATCH 5.3 157/166] net: sched: taprio: Avoid division by zero on invalid link speed
+Date:   Sun,  6 Oct 2019 19:22:03 +0200
+Message-Id: <20191006171226.096259249@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,48 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit 3256a2d6ab1f71f9a1bd2d7f6f18eb8108c48d17 ]
+[ Upstream commit 9a9251a3534745d08a92abfeca0ca467b912b5f6 ]
 
-The cited commit exposed an old retransmits_timed_out() bug
-which assumed it could call tcp_model_timeout() with
-TCP_RTO_MIN as rto_base for all states.
+The check in taprio_set_picos_per_byte is currently not robust enough
+and will trigger this division by zero, due to e.g. PHYLINK not setting
+kset->base.speed when there is no PHY connected:
 
-But flows in SYN_SENT or SYN_RECV state uses a different
-RTO base (1 sec instead of 200 ms, unless BPF choses
-another value)
+[   27.109992] Division by zero in kernel.
+[   27.113842] CPU: 1 PID: 198 Comm: tc Not tainted 5.3.0-rc5-01246-gc4006b8c2637-dirty #212
+[   27.121974] Hardware name: Freescale LS1021A
+[   27.126234] [<c03132e0>] (unwind_backtrace) from [<c030d8b8>] (show_stack+0x10/0x14)
+[   27.133938] [<c030d8b8>] (show_stack) from [<c10b21b0>] (dump_stack+0xb0/0xc4)
+[   27.141124] [<c10b21b0>] (dump_stack) from [<c10af97c>] (Ldiv0_64+0x8/0x18)
+[   27.148052] [<c10af97c>] (Ldiv0_64) from [<c0700260>] (div64_u64+0xcc/0xf0)
+[   27.154978] [<c0700260>] (div64_u64) from [<c07002d0>] (div64_s64+0x4c/0x68)
+[   27.161993] [<c07002d0>] (div64_s64) from [<c0f3d890>] (taprio_set_picos_per_byte+0xe8/0xf4)
+[   27.170388] [<c0f3d890>] (taprio_set_picos_per_byte) from [<c0f3f614>] (taprio_change+0x668/0xcec)
+[   27.179302] [<c0f3f614>] (taprio_change) from [<c0f2bc24>] (qdisc_create+0x1fc/0x4f4)
+[   27.187091] [<c0f2bc24>] (qdisc_create) from [<c0f2c0c8>] (tc_modify_qdisc+0x1ac/0x6f8)
+[   27.195055] [<c0f2c0c8>] (tc_modify_qdisc) from [<c0ee9604>] (rtnetlink_rcv_msg+0x268/0x2dc)
+[   27.203449] [<c0ee9604>] (rtnetlink_rcv_msg) from [<c0f4fef0>] (netlink_rcv_skb+0xe0/0x114)
+[   27.211756] [<c0f4fef0>] (netlink_rcv_skb) from [<c0f4f6cc>] (netlink_unicast+0x1b4/0x22c)
+[   27.219977] [<c0f4f6cc>] (netlink_unicast) from [<c0f4fa84>] (netlink_sendmsg+0x284/0x340)
+[   27.228198] [<c0f4fa84>] (netlink_sendmsg) from [<c0eae5fc>] (sock_sendmsg+0x14/0x24)
+[   27.235988] [<c0eae5fc>] (sock_sendmsg) from [<c0eaedf8>] (___sys_sendmsg+0x214/0x228)
+[   27.243863] [<c0eaedf8>] (___sys_sendmsg) from [<c0eb015c>] (__sys_sendmsg+0x50/0x8c)
+[   27.251652] [<c0eb015c>] (__sys_sendmsg) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
+[   27.259524] Exception stack(0xe8045fa8 to 0xe8045ff0)
+[   27.264546] 5fa0:                   b6f608c8 000000f8 00000003 bed7e2f0 00000000 00000000
+[   27.272681] 5fc0: b6f608c8 000000f8 004ce54c 00000128 5d3ce8c7 00000000 00000026 00505c9c
+[   27.280812] 5fe0: 00000070 bed7e298 004ddd64 b6dd1e64
 
-This caused a reduction of SYN retransmits from 6 to 4 with
-the default /proc/sys/net/ipv4/tcp_syn_retries value.
+Russell King points out that the ethtool API says zero is a valid return
+value of __ethtool_get_link_ksettings:
 
-Fixes: a41e8a88b06e ("tcp: better handle TCP_USER_TIMEOUT in SYN_SENT state")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Marek Majkowski <marek@cloudflare.com>
+   * If it is enabled then they are read-only; if the link
+   * is up they represent the negotiated link mode; if the link is down,
+   * the speed is 0, %SPEED_UNKNOWN or the highest enabled speed and
+   * @duplex is %DUPLEX_UNKNOWN or the best enabled duplex mode.
+
+  So, it seems that taprio is not following the API... I'd suggest either
+  fixing taprio, or getting agreement to change the ethtool API.
+
+The chosen path was to fix taprio.
+
+Fixes: 7b9eba7ba0c1 ("net/sched: taprio: fix picos_per_byte miscalculation")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_timer.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sched/sch_taprio.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -198,8 +198,13 @@ static bool retransmits_timed_out(struct
- 		return false;
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -961,7 +961,7 @@ static void taprio_set_picos_per_byte(st
+ 	if (err < 0)
+ 		goto skip;
  
- 	start_ts = tcp_sk(sk)->retrans_stamp;
--	if (likely(timeout == 0))
--		timeout = tcp_model_timeout(sk, boundary, TCP_RTO_MIN);
-+	if (likely(timeout == 0)) {
-+		unsigned int rto_base = TCP_RTO_MIN;
-+
-+		if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-+			rto_base = tcp_timeout_init(sk);
-+		timeout = tcp_model_timeout(sk, boundary, rto_base);
-+	}
+-	if (ecmd.base.speed != SPEED_UNKNOWN)
++	if (ecmd.base.speed && ecmd.base.speed != SPEED_UNKNOWN)
+ 		speed = ecmd.base.speed;
  
- 	return (s32)(tcp_time_stamp(tcp_sk(sk)) - start_ts - timeout) >= 0;
- }
+ skip:
 
 
