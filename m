@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D907C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB30C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E927020867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A66D21835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382781;
-	bh=QAeX3pYl1wm9N0GeIoBGX1XUJSECbBcflCV8F8zifwE=;
+	s=default; t=1570382783;
+	bh=QKRCG8f/z7TmRpXy/oFC4HCqvZVx9ImvcBK7A1PeQ10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JQRKDNaJ2QoH53dRL+oPeskoZ3DkuugaRRJ3x0oMZb00Lmdwk0eONHqUrg/5fSDQa
-	 dQWFKAMJE8X2UhD1wqE+j3gBqfd02tMBgAJR1WpqZAlTNjhgtRaCC6TPLQLQDcKMqg
-	 pWEmx4VJyiuRqw5QAd1amJdM/UZ+BhEvoGyfpVjQ=
+	b=ri/5fdNd9l1kSx/FuKckmX/jiOEjg5aMDyTTb0M+1lX2vSfgAja1WPvdXik4zVRUu
+	 dJzaPTyIQNmPcz2l985ph5/vYIuGKquHTBcLthjfeCYlN5mK7Dv/SqyWFD6MHaXtme
+	 M6XYEcuo0BUyYC9WnMv1cy6c2BgM6WiDXgCxDMlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfJFR0U (ORCPT
+        id S1727513AbfJFR0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728236AbfJFR0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:17 -0400
+        id S1726806AbfJFR0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EC982077B;
-        Sun,  6 Oct 2019 17:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F300C2080F;
+        Sun,  6 Oct 2019 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382775;
-        bh=QAeX3pYl1wm9N0GeIoBGX1XUJSECbBcflCV8F8zifwE=;
+        s=default; t=1570382778;
+        bh=QKRCG8f/z7TmRpXy/oFC4HCqvZVx9ImvcBK7A1PeQ10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=agS+mN0T5crT/ZIt5E+k4wSEbeZjzgoe8rB89ntkcCQBMsx/+B2ASbQePuQmA7W+C
-         n/cTONITq2G/vCbWfSrMEvzlvBsHJzHJX+Y99RANJvn9dBChvrCv11VM+SvuEIlb/I
-         wLdKiEbqOanQ44woW8mv46iJvHpHPhETlgKynblw=
+        b=kMVc0OUZXiu083lTRy9/0lvf/TW3bPXkCSFNI/KVJ+VYNuKCSnaxjj4Fdc/NM/S0I
+         CrafPORzC8l4bVsZQfEReifnzaCxs3Eb7wgamEYDjluEdzrjoR+rycxQ9kc/7SXaWg
+         RAB8fy5vTPp2bEoeZ1qzoNzol+kOsXBJBNukNyVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/68] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
-Date:   Sun,  6 Oct 2019 19:21:10 +0200
-Message-Id: <20191006171124.524201751@linuxfoundation.org>
+Subject: [PATCH 4.14 35/68] rtc: snvs: fix possible race condition
+Date:   Sun,  6 Oct 2019 19:21:11 +0200
+Message-Id: <20191006171124.973127408@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -61,73 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
+[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
 
-Translation faults arising from cache maintenance instructions are
-rather unhelpfully reported with an FSR value where the WnR field is set
-to 1, indicating that the faulting access was a write. Since cache
-maintenance instructions on 32-bit ARM do not require any particular
-permissions, this can cause our private 'cacheflush' system call to fail
-spuriously if a translation fault is generated due to page aging when
-targetting a read-only VMA.
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in IRQ handler.
 
-In this situation, we will return -EFAULT to userspace, although this is
-unfortunately suppressed by the popular '__builtin___clear_cache()'
-intrinsic provided by GCC, which returns void.
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
 
-Although it's tempting to write this off as a userspace issue, we can
-actually do a little bit better on CPUs that support LPAE, even if the
-short-descriptor format is in use. On these CPUs, cache maintenance
-faults additionally set the CM field in the FSR, which we can use to
-suppress the write permission checks in the page fault handler and
-succeed in performing cache maintenance to read-only areas even in the
-presence of a translation fault.
-
-Reported-by: Orion Hodson <oth@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/fault.c | 4 ++--
- arch/arm/mm/fault.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-snvs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 49b1b80486358..9bb446cc135d1 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -215,7 +215,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- {
- 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
+diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
+index 71eee39520f0b..7aa2c5ea0de4f 100644
+--- a/drivers/rtc/rtc-snvs.c
++++ b/drivers/rtc/rtc-snvs.c
+@@ -280,6 +280,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
  
--	if (fsr & FSR_WRITE)
-+	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		mask = VM_WRITE;
- 	if (fsr & FSR_LNX_PF)
- 		mask = VM_EXEC;
-@@ -285,7 +285,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
++	data->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(data->rtc))
++		return PTR_ERR(data->rtc);
++
+ 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
  
- 	if (user_mode(regs))
- 		flags |= FAULT_FLAG_USER;
--	if (fsr & FSR_WRITE)
-+	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		flags |= FAULT_FLAG_WRITE;
+ 	if (IS_ERR(data->regmap)) {
+@@ -342,10 +346,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 		goto error_rtc_device_register;
+ 	}
  
- 	/*
-diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
-index c063708fa5032..9ecc2097a87a0 100644
---- a/arch/arm/mm/fault.h
-+++ b/arch/arm/mm/fault.h
-@@ -6,6 +6,7 @@
-  * Fault status register encodings.  We steal bit 31 for our own purposes.
-  */
- #define FSR_LNX_PF		(1 << 31)
-+#define FSR_CM			(1 << 13)
- #define FSR_WRITE		(1 << 11)
- #define FSR_FS4			(1 << 10)
- #define FSR_FS3_0		(15)
+-	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					&snvs_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(data->rtc)) {
+-		ret = PTR_ERR(data->rtc);
++	data->rtc->ops = &snvs_rtc_ops;
++	ret = rtc_register_device(data->rtc);
++	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+ 		goto error_rtc_device_register;
+ 	}
 -- 
 2.20.1
 
