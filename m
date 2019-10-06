@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D61DC4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9354DECE58E
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 387A520862
+	by mail.kernel.org (Postfix) with ESMTP id 63D6F214D9
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384888;
-	bh=AcwuN2HBRyI1eYM+h+mINPecMOfKwcXviV7htaH0aSs=;
+	bh=+so2JCo0KXSJCFl1b7ZFsBD+QNPfJQ+ECE6yVD6cj3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ylZwXvEoaa5xy5Uq8K0jCASBQFHAObFEtYA2MLKDaFzlJ31AzfJF9KqBW6Z97F4b9
-	 YHvJ13ArXNFRV9uS1QV9WhQRLathZlhcUmS81IB9zDR/YcceQtgv44VdnI445pJnt2
-	 Kv9T64SmqWIzcSmrhSbZOW6y+Wf1/0KJ3GvbspQo=
+	b=ic33YaGuuF4V6xYgDz005iZxtfSMKAsv7K28Vz2+Wd/q3VK6Q4TxTRC7sv+ymxsxR
+	 v/Ml80IJcCuMqCtt2r8YGR8sPtwjoXviKtO79dLGpWbKryTPuMKGEAYVmBM+gnMWvv
+	 E+qU+VKXmCImwXq/NJ6IK5z52yaD5pVJHbmwlDJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfJFR1F (ORCPT
+        id S1728417AbfJFR1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbfJFR1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:02 -0400
+        id S1728389AbfJFR04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D520217D6;
-        Sun,  6 Oct 2019 17:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E13A42133F;
+        Sun,  6 Oct 2019 17:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382821;
-        bh=AcwuN2HBRyI1eYM+h+mINPecMOfKwcXviV7htaH0aSs=;
+        s=default; t=1570382816;
+        bh=+so2JCo0KXSJCFl1b7ZFsBD+QNPfJQ+ECE6yVD6cj3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRF9HJDYhdRlSYAGfuuMav+YQaP5wVZuyR/0ML3YlOp3s62flpmdTrKFtQ9r/z85c
-         Gxzf+b9VLTre1DMZ/od+Ffq441YnpNPFWXkiw03cxwkoexAGf6Oy30PwCNN3IvF5J3
-         YT6QbjRuRAMb1A4hjaVeUieXhHiFOeTFWBEc3q7c=
+        b=b5oGU6AmrUuyTcP5+941DPiMopWEL/O6xrGj7iqRuWkrX5Zl62DuCqBfWV8CqCLGP
+         OrUTdJAc6y9nuX8GEBGHTRdCEDCblCgcSrgVrRq6+dZhGCuRLvt+9KNz/ydtzwZkWM
+         t/xuJ5dLyKV4Jjxp3Lg9yucbD++ZB0nPj/qZR8XY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 53/68] net: ipv4: avoid mixed n_redirects and rate_tokens usage
-Date:   Sun,  6 Oct 2019 19:21:29 +0200
-Message-Id: <20191006171132.572610019@linuxfoundation.org>
+Subject: [PATCH 4.14 51/68] hso: fix NULL-deref on tty open
+Date:   Sun,  6 Oct 2019 19:21:27 +0200
+Message-Id: <20191006171132.048746509@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -61,62 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit b406472b5ad79ede8d10077f0c8f05505ace8b6d ]
+[ Upstream commit 8353da9fa69722b54cba82b2ec740afd3d438748 ]
 
-Since commit c09551c6ff7f ("net: ipv4: use a dedicated counter
-for icmp_v4 redirect packets") we use 'n_redirects' to account
-for redirect packets, but we still use 'rate_tokens' to compute
-the redirect packets exponential backoff.
+Fix NULL-pointer dereference on tty open due to a failure to handle a
+missing interrupt-in endpoint when probing modem ports:
 
-If the device sent to the relevant peer any ICMP error packet
-after sending a redirect, it will also update 'rate_token' according
-to the leaking bucket schema; typically 'rate_token' will raise
-above BITS_PER_LONG and the redirect packets backoff algorithm
-will produce undefined behavior.
+	BUG: kernel NULL pointer dereference, address: 0000000000000006
+	...
+	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
+	...
+	Call Trace:
+	hso_start_serial_device+0xdc/0x140 [hso]
+	hso_serial_open+0x118/0x1b0 [hso]
+	tty_open+0xf1/0x490
 
-Fix the issue using 'n_redirects' to compute the exponential backoff
-in ip_rt_send_redirect().
-
-Note that we still clear rate_tokens after a redirect silence period,
-to avoid changing an established behaviour.
-
-The root cause predates git history; before the mentioned commit in
-the critical scenario, the kernel stopped sending redirects, after
-the mentioned commit the behavior more randomic.
-
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Fixes: c09551c6ff7f ("net: ipv4: use a dedicated counter for icmp_v4 redirect packets")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/usb/hso.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -925,16 +925,15 @@ void ip_rt_send_redirect(struct sk_buff
- 	if (peer->rate_tokens == 0 ||
- 	    time_after(jiffies,
- 		       (peer->rate_last +
--			(ip_rt_redirect_load << peer->rate_tokens)))) {
-+			(ip_rt_redirect_load << peer->n_redirects)))) {
- 		__be32 gw = rt_nexthop(rt, ip_hdr(skb)->daddr);
- 
- 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
- 		peer->rate_last = jiffies;
--		++peer->rate_tokens;
- 		++peer->n_redirects;
- #ifdef CONFIG_IP_ROUTE_VERBOSE
- 		if (log_martians &&
--		    peer->rate_tokens == ip_rt_redirect_number)
-+		    peer->n_redirects == ip_rt_redirect_number)
- 			net_warn_ratelimited("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
- 					     &ip_hdr(skb)->saddr, inet_iif(skb),
- 					     &ip_hdr(skb)->daddr, &gw);
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2633,14 +2633,18 @@ static struct hso_device *hso_create_bul
+ 		 */
+ 		if (serial->tiocmget) {
+ 			tiocmget = serial->tiocmget;
++			tiocmget->endp = hso_get_ep(interface,
++						    USB_ENDPOINT_XFER_INT,
++						    USB_DIR_IN);
++			if (!tiocmget->endp) {
++				dev_err(&interface->dev, "Failed to find INT IN ep\n");
++				goto exit;
++			}
++
+ 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
+ 			if (tiocmget->urb) {
+ 				mutex_init(&tiocmget->mutex);
+ 				init_waitqueue_head(&tiocmget->waitq);
+-				tiocmget->endp = hso_get_ep(
+-					interface,
+-					USB_ENDPOINT_XFER_INT,
+-					USB_DIR_IN);
+ 			} else
+ 				hso_free_tiomget(serial);
+ 		}
 
 
