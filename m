@@ -2,247 +2,151 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FFFC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7AFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 19:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D844A2070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 19:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DDC20867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 19:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="vlRv7BTI"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="HdT5usuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfJFT3U (ORCPT
+        id S1726828AbfJFTdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 15:29:20 -0400
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:22140 "EHLO
-        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfJFT3U (ORCPT
+        Sun, 6 Oct 2019 15:33:11 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44935 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbfJFTdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 15:29:20 -0400
-Date:   Sun, 06 Oct 2019 19:29:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1570390155;
-        bh=bUEOVhJJhOqFLKt6DTTxsqdcfaox3b9pxusoUbhoOjU=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=vlRv7BTINqQrys80aNI+aYXNP6LWcaFofks2t+Xa9IrwhQhmAxxg+Xja47IbbjuUf
-         jsLxrD17XkojrMUrC0euUVGz63a3h69wf3xtmxSiPzm15iHsPBkoNbrsfW2oxxeusj
-         vTHOjxK4tyIVpvzMiV0mjWgwtTqYlyjD12Pna/Jw=
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: Re: [PATCH v3 3/4] HID: logitech: Add feature 0x0001: FeatureSet
-Message-ID: <R1ooPQVKZmsUqlvqixQWt1oSjWQh4x9pfrGMkSKOuBhCPB2QHPSUBQKtdC3E-SVODHPXI9E4a43KCtV_q_EeXDGHMY8vjss9y23_39OfS8E=@protonmail.com>
-In-Reply-To: <e0dc8d111e1615d35da0c87b4b93b55b3bb89f23.camel@archlinux.org>
-References: <nZMYgsXB3gdFVoIR3TeMjdbHiP4STlPINtmdH7TkH-nLrHS5APVXn00Z-L89Bjnam4_EBf1GLqI5KAZDZhFnH9hyWGyCOGJQKZzpyN2tqlE=@protonmail.com>
- <e0dc8d111e1615d35da0c87b4b93b55b3bb89f23.camel@archlinux.org>
-Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
+        Sun, 6 Oct 2019 15:33:10 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r16so10435618edq.11
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 12:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r2veK1juFpJOpq2B+7dAWorW0CIcDxfoPULVB2Vc96M=;
+        b=HdT5usuhBapvf/2MvAGHQ0ZhOBP2RARClB8AMYZ+8IcaCtPcsvswtrhD7ZEy/gmCiq
+         QsbqgDr1EYHYKaQt46kBXGbpB2J0Qbdhf6FqJNFZSwcota2DHPAO0WlerDqSKdIbRd5E
+         vfY/BCxZ8wlH1m5y3N5i4DGXUUhfAkUae2ljI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r2veK1juFpJOpq2B+7dAWorW0CIcDxfoPULVB2Vc96M=;
+        b=IB7eX1nKyRJ90ZWVNDGSNDxaeFu+Uw7p9Kj6HKJWohrDbthu44xYwY8tGdWZNUUnbH
+         wVyhBV8pGE76S4ae2D6U2v5mwMuqvMcUkRnzzMA0iaz/WIOApVail1YUcBHLsklCsg2R
+         APjFtVrfvrBRS7LMop+mAmNlVof8KlaESQ36oDxxXMgqyBcjfqazemehAsoXZIEjTz1P
+         oKIa+/W0KzTPoktM34aI9yLKFU86RWipEEu1zNL7dnGB91GrZnGTJrvjYSx0xZFu0G8o
+         pTda5J5Z3lMDeRehoOKmLmRSSHb5QI8Zrd/CMurSYGq1aFGb5TzRjyrrm5WOdOHtDOxn
+         s+mw==
+X-Gm-Message-State: APjAAAXsXWN9JMrgN15bZGf3rCVLVjkkkRdnBdnrlIPE8SoZTN8n4JTl
+        Sqs9o/+7zlavqHiQkAgh68gNAkG81GuTTw==
+X-Google-Smtp-Source: APXvYqx1D4zGnHclIa27LBdJchSds9o9/dnTwTwg3jvXOqRC2EzTiJuOOBEiKmpdj1TtUKvLcKfcww==
+X-Received: by 2002:a05:6402:1a45:: with SMTP id bf5mr25206034edb.275.1570390386956;
+        Sun, 06 Oct 2019 12:33:06 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
+        by smtp.gmail.com with ESMTPSA id jo12sm1560802ejb.7.2019.10.06.12.33.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 06 Oct 2019 12:33:06 -0700 (PDT)
+Subject: Re: [PATCH v3] docs: Use make invocation's -j argument for
+ parallelism
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <201909241627.CEA19509@keescook>
+ <eb25959a-9ec4-3530-2031-d9d716b40b20@rasmusvillemoes.dk>
+ <201910040904.43B61E4@keescook>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <b95ded2e-474a-5f7b-af07-30732e8cdb41@rasmusvillemoes.dk>
+Date:   Sun, 6 Oct 2019 21:33:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <201910040904.43B61E4@keescook>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, October 6, 2019 11:25 AM, Filipe La=C3=ADns <lains@archlinux.org=
-> wrote:
+On 04/10/2019 18.08, Kees Cook wrote:
+> On Fri, Oct 04, 2019 at 11:15:46AM +0200, Rasmus Villemoes wrote:
+>> On 25/09/2019 01.29, Kees Cook wrote:
+>>> +# Extract and prepare jobserver file descriptors from envirnoment.
+>>
+>> Ah, reading more carefully you set O_NONBLOCK explicitly. Well, older
+>> Makes are going to be very unhappy about that (remember that it's a
+>> property of the file description and not file descriptor). They don't
+>> expect EAGAIN when fetching a token, so fail hard. Probably not when
+>> htmldocs is the only target, because in that case the toplevel Make just
+>> reads back the exact number of tokens it put in as a sanity check, but
+>> if it builds other targets/spawns other submakes, I think this breaks.
+> 
+> Do you mean the processes sharing the file will suddenly gain
+> O_NONBLOCK? I didn't think that was true, 
 
-> On Sun, 2019-10-06 at 01:04 +0000, Mazin Rezk wrote:
-> > This patch adds support for the 0x0001 (FeatureSet) feature. This featu=
-re
-> > is used to look up the feature ID of a feature index on a device and li=
-st
-> > the total count of features on the device.
-> >
-> > I also added the hidpp20_get_features function which iterates through a=
-ll
-> > feature indexes on the device and stores a map of them in features an
-> > hidpp_device struct. This function runs when an HID++ 2.0 device is pro=
-bed.
-> >
-> > Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > ---
-> >  drivers/hid/hid-logitech-hidpp.c | 92 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 92 insertions(+)
-> >
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
-h-hidpp.c
-> > index a0efa8a43213..64ac94c581aa 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -190,6 +190,9 @@ struct hidpp_device {
-> >
-> >  =09struct hidpp_battery battery;
-> >  =09struct hidpp_scroll_counter vertical_wheel_counter;
-> > +
-> > +=09u16 *features;
-> > +=09u8 feature_count;
-> >  };
-> >
-> >  /* HID++ 1.0 error codes */
-> > @@ -911,6 +914,84 @@ static int hidpp_root_get_protocol_version(struct =
-hidpp_device *hidpp)
-> >  =09return 0;
-> >  }
-> >
-> > +/* -------------------------------------------------------------------=
-------- */
-> > +/* 0x0001: FeatureSet                                                 =
-        */
-> > +/* -------------------------------------------------------------------=
-------- */
-> > +
-> > +#define HIDPP_PAGE_FEATURESET=09=09=09=090x0001
-> > +
-> > +#define CMD_FEATURESET_GET_COUNT=09=09=090x00
-> > +#define CMD_FEATURESET_GET_FEATURE=09=09=090x11
-> > +
-> > +static int hidpp20_featureset_get_feature(struct hidpp_device *hidpp,
->
-> Can you change this to `hidpp20_featureset_get_feature_id` please? So
-> that we keep in sync with the documentation, and to avoid minor
-> confusion as IRoot has a `get_feature` function.
+It is. Quoting man fcntl
 
-I will change this in v4, thanks.
+   File status flags
+       Each  open  file  description has certain associated status
+flags, initialized by open(2) and possibly modified by
+       fcntl().  Duplicated file descriptors (made with dup(2),
+fcntl(F_DUPFD), fork(2), etc.) refer  to  the  same  open
+       file description, and thus share the same file status flags.
 
->
-> > +=09u8 featureset_index, u8 feature_index, u16 *feature_id)
-> > +{
-> > +=09struct hidpp_report response;
-> > +=09int ret;
-> > +
-> > +=09ret =3D hidpp_send_fap_command_sync(hidpp, featureset_index,
-> > +=09=09CMD_FEATURESET_GET_FEATURE, &feature_index, 1, &response);
-> > +
-> > +=09if (ret)
-> > +=09=09return ret;
-> > +
-> > +=09*feature_id =3D (response.fap.params[0] << 8) | response.fap.params=
-[1];
-> > +
-> > +=09return ret;
-> > +}
-> > +
-> > +static int hidpp20_featureset_get_count(struct hidpp_device *hidpp,
-> > +=09u8 feature_index, u8 *count)
-> > +{
-> > +=09struct hidpp_report response;
-> > +=09int ret;
-> > +
-> > +=09ret =3D hidpp_send_fap_command_sync(hidpp, feature_index,
-> > +=09=09CMD_FEATURESET_GET_COUNT, NULL, 0, &response);
-> > +
-> > +=09if (ret)
-> > +=09=09return ret;
-> > +
-> > +=09*count =3D response.fap.params[0];
-> > +
-> > +=09return ret;
-> > +}
->
-> Just a nitpick but can we put this before
-> `hidpp20_featureset_get_feature`? This way we keep the ID order.
+...  On Linux, this  command
+              can  change  only  the O_APPEND, O_ASYNC, O_DIRECT,
+O_NOATIME, and O_NONBLOCK flags.
 
-That makes sense. I will change this in v4, thanks.
+> we could easily just restore the state before exit.
 
->
-> > +
-> > +static int hidpp20_get_features(struct hidpp_device *hidpp)
-> > +{
-> > +=09int ret;
-> > +=09u8 featureset_index, featureset_type;
-> > +=09u8 i;
-> > +
-> > +=09hidpp->feature_count =3D 0;
-> > +
-> > +=09ret =3D hidpp_root_get_feature(hidpp, HIDPP_PAGE_FEATURESET,
-> > +=09=09=09=09     &featureset_index, &featureset_type);
-> > +
-> > +=09if (ret =3D=3D -ENOENT) {
-> > +=09=09hid_warn(hidpp->hid_dev, "Unable to retrieve feature set.");
-> > +=09=09return 0;
-> > +=09}
-> > +
-> > +=09if (ret)
-> > +=09=09return ret;
-> > +
-> > +=09ret =3D hidpp20_featureset_get_count(hidpp, featureset_index,
-> > +=09=09&hidpp->feature_count);
-> > +
-> > +=09if (ret)
-> > +=09=09return ret;
-> > +
-> > +=09hidpp->features =3D devm_kzalloc(&hidpp->hid_dev->dev,
-> > +=09=09=09hidpp->feature_count * sizeof(u16), GFP_KERNEL);
-> > +
-> > +=09for (i =3D 0; i < hidpp->feature_count && !ret; i++)
-> > +=09=09ret =3D hidpp20_featureset_get_feature(hidpp, featureset_index,
-> > +=09=09=09=09i, &(hidpp->features[i]));
-> > +
-> > +=09return ret;
-> > +}
-> > +
-> >  /* -------------------------------------------------------------------=
-------- */
-> >  /* 0x0005: GetDeviceNameType                                          =
-        */
-> >  /* -------------------------------------------------------------------=
-------- */
->
-> Please use `DeviceNameType` here to keep in sync with the
-> documentation.
+That doesn't really help - and I'm a bit surprised you'd even suggest
+that. I don't know if open(/proc/self/fd/...) would give you a new
+struct file.
 
-Since I have not modified GetDeviceNameType in this patch, I will keep it
-the way it was for now. This could probably be changed in a different and
-unrelated patch.
+>>> +# Return all the reserved slots.
+>>> +os.write(writer, jobs)
+>>
+>> Well, that probably works ok for the isolated case of a toplevel "make
+>> -j12 htmldocs", but if you're building other targets ("make -j12
+>> htmldocs vmlinux") this will effectively inject however many tokens the
+>> above loop grabbed (which might not be all if the top-level make has
+>> started things related to the vmlinux target), so for the duration of
+>> the docs build, there will be more processes running than asked for.
+> 
+> That is true, yes, though I still think it's an improvement over the
+> existing case of sphinx-build getting run with -jauto which lands us in
+> the same (or worse) position.
 
->
-> > @@ -3625,6 +3706,17 @@ static int hidpp_probe(struct hid_device *hdev, =
-const struct hid_device_id *id)
-> >  =09=09hidpp_overwrite_name(hdev);
-> >  =09}
-> >
-> > +=09/* Cache feature indexes and IDs to check reports faster */
-> > +=09if (hidpp->protocol_major >=3D 2) {
-> > +=09=09if (hidpp20_get_features(hidpp)) {
-> > +=09=09=09hid_err(hdev, "%s:hidpp20_get_features returned error\n",
-> > +=09=09=09=09__func__);
-> > +=09=09=09goto hid_hw_init_fail;
-> > +=09=09}
-> > +=09} else {
-> > +=09=09hidpp->feature_count =3D 0;
-> > +=09}
->
-> I have not looked at the whole code that much but is the else really
-> needed here?
+Yes, I agree that that's not ideal either. And probably it's not a big
+problem in practice (I don't think a lot of people build the docs, let
+alone do it while also building the kernel), but it might be rather
+surprising and somewhat hard to "debug" to suddenly have a load twice
+what one expected.
 
-I wanted to initialize feature_count to 0 if the device was either
-HID++ 1.0 or did not support FeatureSet. This was so that, just in case
-its features array was accessed, it would not try to check an uninitialized
-array. Although, I could probably remove the else statement and set
-feature_count to 0 before the if statement. I would also be able to remove
-the redundant initialization statement in hidpp20_get_features.
+> The best solution would be to teach sphinx-build about the Make
+> jobserver, though I expect that would be weird. Another idea would be to
+> hold the reservation until sphinx-build finishes and THEN return the
+> slots? That would likely need to change from a utility to a sphinx-build
+> wrapper...
 
-I will make these changes in v4, thanks.
+Yes, a more general solution would be some kind of generic wrapper that
+would hog however many tokens it could get hold of and run a given
+command with a commandline slightly modified to hand over those tokens -
+then wait for that process to exit and give back the tokens. That would
+work for any command that knows about parallelism but doesn't support
+the make jobserver model. (I'd probably implement that by creating a
+pipe, fork(), then exec into the real command, while the child simply
+blocks in a read on the pipe waiting for EOF and then writes back the
+tokens, to simplify the "we have to report exit/killed-by-signal status
+to the parent).
 
->
-> > +
-> >  =09if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
-> >  =09=09ret =3D wtp_get_config(hidpp);
-> >  =09=09if (ret)
-> > --
-> > 2.23.0
-> >
-> --
-> Filipe La=C3=ADns
-> 3DCE 51D6 0930 EBA4 7858 BA41 46F6 33CB B0EB 4BF2
+Rasmus
