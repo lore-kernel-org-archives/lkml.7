@@ -2,109 +2,184 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC04C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1732C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA5521850
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86DF20867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570352786;
+	bh=JdURTiID1yp/2RP4eC0dH6NY8wSmqc9AX+HO914lYkQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P3G9++M6H40gqInG3YtNkPT9M+pl84L+5UKTaOjCcQ/SLew+GSZ1K07rYCmr3CKQc
+	 YOwEG6z9ZxvRswFLRiRHAFqd+pxxC6d/03UWwSK1KUFtd13AHpBi2hvz33Wq5nUHyz
+	 ARKJ01bR3rD3vgq6ak/NDsHdgAWLORIRTlhRUIRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfJFI5r (ORCPT
+        id S1726377AbfJFJGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 04:57:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52152 "EHLO mx1.redhat.com"
+        Sun, 6 Oct 2019 05:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfJFI5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 04:57:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726293AbfJFJGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:06:22 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75465368CF;
-        Sun,  6 Oct 2019 08:57:45 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-58.ams2.redhat.com [10.36.116.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABE055EE1D;
-        Sun,  6 Oct 2019 08:57:42 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        x86@kernel.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v6 10/10] mm/memory_hotplug: Cleanup __remove_pages()
-Date:   Sun,  6 Oct 2019 10:56:46 +0200
-Message-Id: <20191006085646.5768-11-david@redhat.com>
-In-Reply-To: <20191006085646.5768-1-david@redhat.com>
-References: <20191006085646.5768-1-david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ADDD20867;
+        Sun,  6 Oct 2019 09:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570352780;
+        bh=JdURTiID1yp/2RP4eC0dH6NY8wSmqc9AX+HO914lYkQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HctI3CIy8wDLg8OxNiN/7Jo9Ly6P7TviuX7ZjlKiDX5j5A8utPQWa0cmRUvSbRlrg
+         9LQDsadtZzSW3BViIhMk/1Hx8t0wfT4yYlQHacb1iBWv3RgdSCdPjD7l3VfcyDN24w
+         nx4I1vlgU3kQr8lIo40d26jes7ySKYPHQs33m7Ks=
+Date:   Sun, 6 Oct 2019 10:06:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] iio: imu: adis: rename txrx_lock -> state_lock
+Message-ID: <20191006100604.6425167c@archlinux>
+In-Reply-To: <20191006095333.7532cc5e@archlinux>
+References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
+        <20190926111812.15957-2-alexandru.ardelean@analog.com>
+        <20191006095333.7532cc5e@archlinux>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sun, 06 Oct 2019 08:57:45 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's drop the basically unused section stuff and simplify.
+On Sun, 6 Oct 2019 09:53:33 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-Also, let's use a shorter variant to calculate the number of pages to
-the next section boundary.
+> On Thu, 26 Sep 2019 14:18:03 +0300
+> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> 
+> > The lock can be extended a bit to protect other elements that are not
+> > particular to just TX/RX. Another idea would have been to just add a new
+> > `state_lock`, but that would mean 2 locks which would be redundant, and
+> > probably cause more potential for dead-locks.
+> > 
+> > What will be done in the next patches, will be to add some unlocked
+> > versions for read/write_reg functions.
+> > 
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> 
+> Would be good to document the scope of the lock as a comment when it
+> is defined.  What exactly is 'state' in this case?
+As this can be done as a follow up and the rest of the series is fine
+as is...
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory_hotplug.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 843481bd507d..2275240cfa10 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -490,25 +490,20 @@ static void __remove_section(unsigned long pfn, unsigned long nr_pages,
- void __remove_pages(unsigned long pfn, unsigned long nr_pages,
- 		    struct vmem_altmap *altmap)
- {
-+	const unsigned long end_pfn = pfn + nr_pages;
-+	unsigned long cur_nr_pages;
- 	unsigned long map_offset = 0;
--	unsigned long nr, start_sec, end_sec;
- 
- 	map_offset = vmem_altmap_offset(altmap);
- 
- 	if (check_pfn_span(pfn, nr_pages, "remove"))
- 		return;
- 
--	start_sec = pfn_to_section_nr(pfn);
--	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
--	for (nr = start_sec; nr <= end_sec; nr++) {
--		unsigned long pfns;
--
-+	for (; pfn < end_pfn; pfn += cur_nr_pages) {
- 		cond_resched();
--		pfns = min(nr_pages, PAGES_PER_SECTION
--				- (pfn & ~PAGE_SECTION_MASK));
--		__remove_section(pfn, pfns, map_offset, altmap);
--		pfn += pfns;
--		nr_pages -= pfns;
-+		/* Select all remaining pages up to the next section boundary */
-+		cur_nr_pages = min(end_pfn - pfn, -(pfn | PAGE_SECTION_MASK));
-+		__remove_section(pfn, cur_nr_pages, map_offset, altmap);
- 		map_offset = 0;
- 	}
- }
--- 
-2.21.0
+Thanks,
+
+Jonathan
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  drivers/iio/imu/adis.c        | 10 +++++-----
+> >  drivers/iio/imu/adis_buffer.c |  4 ++--
+> >  include/linux/iio/imu/adis.h  |  2 +-
+> >  3 files changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> > index 1631c255deab..3c2d896e3a96 100644
+> > --- a/drivers/iio/imu/adis.c
+> > +++ b/drivers/iio/imu/adis.c
+> > @@ -70,7 +70,7 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+> >  		},
+> >  	};
+> >  
+> > -	mutex_lock(&adis->txrx_lock);
+> > +	mutex_lock(&adis->state_lock);
+> >  
+> >  	spi_message_init(&msg);
+> >  
+> > @@ -114,7 +114,7 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+> >  	}
+> >  
+> >  out_unlock:
+> > -	mutex_unlock(&adis->txrx_lock);
+> > +	mutex_unlock(&adis->state_lock);
+> >  
+> >  	return ret;
+> >  }
+> > @@ -166,7 +166,7 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+> >  		},
+> >  	};
+> >  
+> > -	mutex_lock(&adis->txrx_lock);
+> > +	mutex_lock(&adis->state_lock);
+> >  	spi_message_init(&msg);
+> >  
+> >  	if (adis->current_page != page) {
+> > @@ -211,7 +211,7 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+> >  	}
+> >  
+> >  out_unlock:
+> > -	mutex_unlock(&adis->txrx_lock);
+> > +	mutex_unlock(&adis->state_lock);
+> >  
+> >  	return ret;
+> >  }
+> > @@ -437,7 +437,7 @@ EXPORT_SYMBOL_GPL(adis_single_conversion);
+> >  int adis_init(struct adis *adis, struct iio_dev *indio_dev,
+> >  	struct spi_device *spi, const struct adis_data *data)
+> >  {
+> > -	mutex_init(&adis->txrx_lock);
+> > +	mutex_init(&adis->state_lock);
+> >  	adis->spi = spi;
+> >  	adis->data = data;
+> >  	iio_device_set_drvdata(indio_dev, adis);
+> > diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+> > index 9ac8356d9a95..bf581a2c321d 100644
+> > --- a/drivers/iio/imu/adis_buffer.c
+> > +++ b/drivers/iio/imu/adis_buffer.c
+> > @@ -123,7 +123,7 @@ static irqreturn_t adis_trigger_handler(int irq, void *p)
+> >  		return -ENOMEM;
+> >  
+> >  	if (adis->data->has_paging) {
+> > -		mutex_lock(&adis->txrx_lock);
+> > +		mutex_lock(&adis->state_lock);
+> >  		if (adis->current_page != 0) {
+> >  			adis->tx[0] = ADIS_WRITE_REG(ADIS_REG_PAGE_ID);
+> >  			adis->tx[1] = 0;
+> > @@ -138,7 +138,7 @@ static irqreturn_t adis_trigger_handler(int irq, void *p)
+> >  
+> >  	if (adis->data->has_paging) {
+> >  		adis->current_page = 0;
+> > -		mutex_unlock(&adis->txrx_lock);
+> > +		mutex_unlock(&adis->state_lock);
+> >  	}
+> >  
+> >  	iio_push_to_buffers_with_timestamp(indio_dev, adis->buffer,
+> > diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> > index 4c53815bb729..3ed5eceaac2d 100644
+> > --- a/include/linux/iio/imu/adis.h
+> > +++ b/include/linux/iio/imu/adis.h
+> > @@ -61,7 +61,7 @@ struct adis {
+> >  	const struct adis_data	*data;
+> >  	struct adis_burst	*burst;
+> >  
+> > -	struct mutex		txrx_lock;
+> > +	struct mutex		state_lock;
+> >  	struct spi_message	msg;
+> >  	struct spi_transfer	*xfer;
+> >  	unsigned int		current_page;  
+> 
 
