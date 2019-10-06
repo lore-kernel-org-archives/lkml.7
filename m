@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EE1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6577CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923362133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B53121872
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383545;
-	bh=ccq2Zvw7Cswo0qu9PcmFIXaAvuTiz0QRI1+smMgNg/c=;
+	s=default; t=1570383549;
+	bh=bDeYkcfrCcYDblr5V5cTyF4lXsdHjxrarOQYWZLL9S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YswzcFg7x4vbBsYx65DNGFVdAf7l/0EU/UA9T/7C53ZZWoeFCNtKSxDltZAijKxOv
-	 TMqrvrwZOA75jH4ZQKjQcWhim8FMby9hsN54SeGZkskhbzZV/Cg9G9qdqPl/eS1iAp
-	 uV+r5jbEx47v1DcrxbgHYWc7AQqS3u/QY6BOWNKI=
+	b=OT0GNo75QjbVFROJMkb9dXK07w9d8vF28QV40LhYcE0+d8J6MIZRN5W1MDPh910FR
+	 wvYvziFhguBTkwoEPZTyavDHiQCpyWoloJZKOPX9Hn2wvLl7JfS+Pe4NQ3V8lLI5r8
+	 ojT4lr/mEToY3HYMJUemRkSJTkqwfVuLpVBX/jAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfJFRjE (ORCPT
+        id S1730126AbfJFRjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbfJFRjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:01 -0400
+        id S1730718AbfJFRjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F2D12087E;
-        Sun,  6 Oct 2019 17:39:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC7E20700;
+        Sun,  6 Oct 2019 17:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383540;
-        bh=ccq2Zvw7Cswo0qu9PcmFIXaAvuTiz0QRI1+smMgNg/c=;
+        s=default; t=1570383543;
+        bh=bDeYkcfrCcYDblr5V5cTyF4lXsdHjxrarOQYWZLL9S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PFNEX33TbloRFZULNlaVhPloTrKS9l5XLSBToNrRU+ZlFwrpt2qnlPC1xyHxlAa9z
-         75FX7QCKPhPJKLqWqkFo3qhv6deO4e+ci/koUS0g+07mcXk2UFWbDvurXEuODvPYZO
-         +I4wsa4w8gV1DSKpP+fV1AEomGqbDWU2WbG4AaxY=
+        b=15B0J/WfjomQ2kUc2CmTqQAGKgxXrXyWT81eR/TYM+K4Va+0DGPSDJOXofvyX+LD8
+         qjVjje46QecxC0M2JI46RSZwYn8jVWRX0rlG0tDj2BewlNzAo/fE4qWtRcBvY0pRaX
+         2u2ZJotvFDXcCTjpfFFQbhQyab5i2dWndWexOc68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 5.2 135/137] KVM: hyperv: Fix Direct Synthetic timers assert an interrupt w/o lapic_in_kernel
-Date:   Sun,  6 Oct 2019 19:21:59 +0200
-Message-Id: <20191006171220.642085179@linuxfoundation.org>
+        syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>
+Subject: [PATCH 5.2 136/137] 9p/cache.c: Fix memory leak in v9fs_cache_session_get_cookie
+Date:   Sun,  6 Oct 2019 19:22:00 +0200
+Message-Id: <20191006171220.725135196@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -63,73 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Bharath Vedartham <linux.bhar@gmail.com>
 
-commit a073d7e3ad687a7ef32b65affe80faa7ce89bf92 upstream.
+commit 962a991c5de18452d6c429d99f3039387cf5cbb0 upstream.
 
-Reported by syzkaller:
+v9fs_cache_session_get_cookie assigns a random cachetag to v9ses->cachetag,
+if the cachetag is not assigned previously.
 
-	kasan: GPF could be caused by NULL-ptr deref or user memory access
-	general protection fault: 0000 [#1] PREEMPT SMP KASAN
-	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
-	Call Trace:
-	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
-	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
-	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
-	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
-	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
-	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
-	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
-	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+v9fs_random_cachetag allocates memory to v9ses->cachetag with kmalloc and uses
+scnprintf to fill it up with a cachetag.
 
-The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
-in addition, there is no lapic in the kernel, the counters value are small
-enough in order that kvm_hv_process_stimers() inject this already-expired
-timer interrupt into the guest through lapic in the kernel which triggers
-the NULL deferencing. This patch fixes it by don't advertise direct mode
-synthetic timers and discarding the inject when lapic is not in kernel.
+But if scnprintf fails, v9ses->cachetag is not freed in the current
+code causing a memory leak.
 
-syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
+Fix this by freeing v9ses->cachetag it v9fs_random_cachetag fails.
 
-Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+This was reported by syzbot, the link to the report is below:
+https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
+
+Link: http://lkml.kernel.org/r/20190522194519.GA5313@bharath12345-Inspiron-5559
+Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/hyperv.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/9p/cache.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -645,7 +645,9 @@ static int stimer_notify_direct(struct k
- 		.vector = stimer->config.apic_vector
- 	};
- 
--	return !kvm_apic_set_irq(vcpu, &irq, NULL);
-+	if (lapic_in_kernel(vcpu))
-+		return !kvm_apic_set_irq(vcpu, &irq, NULL);
-+	return 0;
- }
- 
- static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
-@@ -1854,7 +1856,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct k
- 
- 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
- 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
--			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
-+
-+			/*
-+			 * Direct Synthetic timers only make sense with in-kernel
-+			 * LAPIC
-+			 */
-+			if (lapic_in_kernel(vcpu))
-+				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
- 
- 			break;
- 
+--- a/fs/9p/cache.c
++++ b/fs/9p/cache.c
+@@ -51,6 +51,8 @@ void v9fs_cache_session_get_cookie(struc
+ 	if (!v9ses->cachetag) {
+ 		if (v9fs_random_cachetag(v9ses) < 0) {
+ 			v9ses->fscache = NULL;
++			kfree(v9ses->cachetag);
++			v9ses->cachetag = NULL;
+ 			return;
+ 		}
+ 	}
 
 
