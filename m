@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333FCC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1A2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F8E20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C53920673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384429;
-	bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
+	s=default; t=1570384431;
+	bh=082BMeEI5De5r+ZXqfTJEGduL6z/t1hEjdp/Pelq80c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qa3QWx9f+0DaD+ZtNc2zAkJP4y/IJEx/mg4mcMPrBSSDsydjRnaTg6d7kYNWISC8A
-	 7MPL4+H4TEsbGhbXv+4vZhWbxZrP21Nm6Rzd5Y4d9mmXgplGExvNfnlabb4v0WMYbi
-	 O8RFSOTBZkTWAIXXYpTB6eTCYpgcCmnN69mSIk20=
+	b=BG+cnlAD0FL4iEDdnXFRtWBe1ZjvvNiHv26KBT/jSfVVUNq1KjWNI/NMuxrhyRJdb
+	 IzPIwC/0SHZO/wvkymEDKSrkCBdGrJB40VM0C5FX4qxmdZP/BD0OD8b+z/6129vU3H
+	 qjWk0vWCClvV6UefsO/OzBsxgcVENBt/t/noqmbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730421AbfJFRhU (ORCPT
+        id S1730416AbfJFRhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36158 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfJFRhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:13 -0400
+        id S1729505AbfJFRhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE7F20862;
-        Sun,  6 Oct 2019 17:37:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C3B82080F;
+        Sun,  6 Oct 2019 17:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383432;
-        bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
+        s=default; t=1570383435;
+        bh=082BMeEI5De5r+ZXqfTJEGduL6z/t1hEjdp/Pelq80c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ju6+3+1wPfCDxESChh9LBpdg7woOakPVLzb+cBAxGBN+BDlBS68PtgwjynNLoi7Uo
-         wXvjNTrXiIzITay5o/mFGhxTxhsAoP/1/4T+lyfm/HDQLRb5A50fAx2l1iu8BsL1iV
-         bOJOELSpVaIzv7/BRxbSzOLOJHZrJBbUofKoDwlw=
+        b=rOOMYWIH+Rr0o1f2FvBfxsfO35S72BSFRm5w5hWnE+3tNJ/AHFUoD7XPnsjRxrQHn
+         dsQTGOTOfhIBENz63H/m5LW2gfLIRV3aQUX17ml1CWXVRsWW4xxmPuE4Wz36rMBsBI
+         mPp4HmRev8HtPzleqwuB3aGcPvX6+/uDwo1yh8v8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 085/137] clk: sprd: add missing kfree
-Date:   Sun,  6 Oct 2019 19:21:09 +0200
-Message-Id: <20191006171215.917993913@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 103/137] soundwire: intel: fix channel number reported by hardware
+Date:   Sun,  6 Oct 2019 19:21:27 +0200
+Message-Id: <20191006171217.508937732@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,43 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 5e75ea9c67433a065b0e8595ad3c91c7c0ca0d2d ]
+[ Upstream commit 18046335643de6d21327f5ae034c8fb8463f6715 ]
 
-The number of config registers for different pll clocks probably are not
-same, so we have to use malloc, and should free the memory before return.
+On all released Intel controllers (CNL/CML/ICL), PDI2 reports an
+invalid count, force the correct hardware-supported value
 
-Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Link: https://lkml.kernel.org/r/20190905103009.27166-1-zhang.lyra@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+This may have to be revisited with platform-specific values if the
+hardware changes, but for now this is good enough.
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190806005522.22642-3-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sprd/pll.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soundwire/intel.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
-index 36b4402bf09e3..640270f51aa56 100644
---- a/drivers/clk/sprd/pll.c
-+++ b/drivers/clk/sprd/pll.c
-@@ -136,6 +136,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
- 					 k2 + refin * nint * CLK_PLL_1M;
- 	}
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 60293a00a14ee..8a670bc86c0ce 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -283,6 +283,16 @@ intel_pdi_get_ch_cap(struct sdw_intel *sdw, unsigned int pdi_num, bool pcm)
  
-+	kfree(cfg);
- 	return rate;
- }
- 
-@@ -222,6 +223,7 @@ static int _sprd_pll_set_rate(const struct sprd_pll *pll,
- 	if (!ret)
- 		udelay(pll->udelay);
- 
-+	kfree(cfg);
- 	return ret;
- }
- 
+ 	if (pcm) {
+ 		count = intel_readw(shim, SDW_SHIM_PCMSYCHC(link_id, pdi_num));
++
++		/*
++		 * WORKAROUND: on all existing Intel controllers, pdi
++		 * number 2 reports channel count as 1 even though it
++		 * supports 8 channels. Performing hardcoding for pdi
++		 * number 2.
++		 */
++		if (pdi_num == 2)
++			count = 7;
++
+ 	} else {
+ 		count = intel_readw(shim, SDW_SHIM_PDMSCAP(link_id));
+ 		count = ((count & SDW_SHIM_PDMSCAP_CPSS) >>
 -- 
 2.20.1
 
