@@ -2,112 +2,141 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F7EECE58D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80A12133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570357679;
-	bh=TxFhjrm56Pjm6MFAtGv+HR0edZ7F5tj7DSzzc+pDVPY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=P++con0d+K3R6OU0Z5i4jrFB1Fs0HFHcKdQRTib1YpRxnIdh5fTU7JpHN81VjqFRc
-	 V5jyeoHpz2NdZy9ULkXVDA+NbMNJ60wzK/Nrn410E8QJPWayVflS8cwZJl0xekfwHk
-	 HeJR2b4Or+CYWoTOEkJBaEuO+JMWbMCPEI6gNSf0=
+	by mail.kernel.org (Postfix) with ESMTP id A888220867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfJFK16 (ORCPT
+        id S1726492AbfJFKcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbfJFK15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:27:57 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D152084B;
-        Sun,  6 Oct 2019 10:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570357677;
-        bh=TxFhjrm56Pjm6MFAtGv+HR0edZ7F5tj7DSzzc+pDVPY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p5UxAnkVq5U+SIgvfQ0XBXBGLtp7FZbz09lj3vfWHDUMXK2V6oQiuYYoJG6jsyUj9
-         HXE9I3sNN5VfygfYp5Bccnyv1aNak4JZrFI9IsKFABLABfEx+JoFIJmHDQ7YUjSifk
-         49TZeCpdlESCCfpC3va1mM+Xz+gXlV+PCPczoi50=
-Date:   Sun, 6 Oct 2019 11:27:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 7/7] dt-bindings: iio: adc: max1027: Document max12xx
- series compatibles
-Message-ID: <20191006112751.775fc849@archlinux>
-In-Reply-To: <20191003173401.16343-8-miquel.raynal@bootlin.com>
-References: <20191003173401.16343-1-miquel.raynal@bootlin.com>
-        <20191003173401.16343-8-miquel.raynal@bootlin.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 6 Oct 2019 06:32:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3205 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726271AbfJFKcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:32:09 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 692D91EFCA547C100FC8;
+        Sun,  6 Oct 2019 18:32:07 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:31:58 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <joel@jms.id.au>, <andrew@aj.id.au>, <nicolas.ferre@microchip.com>,
+        <ludovic.desroches@microchip.com>, <computersforpeace@gmail.com>,
+        <gregory.0xf0@gmail.com>, <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linus.walleij@linaro.org>, <baruch@tkos.co.il>,
+        <paul@crapouillou.net>, <vz@mleia.com>, <slemieux.tyco@gmail.com>,
+        <khilman@baylibre.com>, <eddie.huang@mediatek.com>,
+        <sean.wang@mediatek.com>, <matthias.bgg@gmail.com>,
+        <patrice.chotard@st.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <mripard@kernel.org>, <wens@csie.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux@prisktech.co.nz>, <michal.simek@xilinx.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-tegra@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next 00/34] rtc: use devm_platform_ioremap_resource() to simplify code
+Date:   Sun, 6 Oct 2019 18:29:19 +0800
+Message-ID: <20191006102953.57536-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  3 Oct 2019 19:34:01 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+devm_platform_ioremap_resource() internally have platform_get_resource()
+and devm_ioremap_resource() in it. So instead of calling them separately
+use devm_platform_ioremap_resource() directly.
 
-> Update the bindings documentation with new Maxim ADCs compatibles.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+YueHaibing (34):
+  rtc: asm9260: use devm_platform_ioremap_resource() to simplify code
+  rtc: rtc-aspeed: use devm_platform_ioremap_resource() to simplify code
+  rtc: brcmstb-waketimer: use devm_platform_ioremap_resource() to
+    simplify code
+  rtc: at91sam9: use devm_platform_ioremap_resource() to simplify code
+  rtc: cadence: use devm_platform_ioremap_resource() to simplify code
+  rtc: coh901331: use devm_platform_ioremap_resource() to simplify code
+  rtc: davinci: use devm_platform_ioremap_resource() to simplify code
+  rtc: digicolor: use devm_platform_ioremap_resource() to simplify code
+  rtc: ds1216: use devm_platform_ioremap_resource() to simplify code
+  rtc: ds1511: use devm_platform_ioremap_resource() to simplify code
+  rtc: ds1553: use devm_platform_ioremap_resource() to simplify code
+  rtc: ep93xx: use devm_platform_ioremap_resource() to simplify code
+  rtc: jz4740: use devm_platform_ioremap_resource() to simplify code
+  rtc: lpc24xx: use devm_platform_ioremap_resource() to simplify code
+  rtc: lpc32xx: use devm_platform_ioremap_resource() to simplify code
+  rtc: meson: use devm_platform_ioremap_resource() to simplify code
+  rtc: mt7622: use devm_platform_ioremap_resource() to simplify code
+  rtc: mv: use devm_platform_ioremap_resource() to simplify code
+  rtc: omap: use devm_platform_ioremap_resource() to simplify code
+  rtc: pic32: use devm_platform_ioremap_resource() to simplify code
+  rtc: rtd119x: use devm_platform_ioremap_resource() to simplify code
+  rtc: s3c: use devm_platform_ioremap_resource() to simplify code
+  rtc: sa1100: use devm_platform_ioremap_resource() to simplify code
+  rtc: spear: use devm_platform_ioremap_resource() to simplify code
+  rtc: stk17ta8: use devm_platform_ioremap_resource() to simplify code
+  rtc: ds1286: use devm_platform_ioremap_resource() to simplify code
+  rtc: st-lpc: use devm_platform_ioremap_resource() to simplify code
+  rtc: stm32: use devm_platform_ioremap_resource() to simplify code
+  rtc: sunxi: use devm_platform_ioremap_resource() to simplify code
+  rtc: tegra: use devm_platform_ioremap_resource() to simplify code
+  rtc: tx4939: use devm_platform_ioremap_resource() to simplify code
+  rtc: vt8500: use devm_platform_ioremap_resource() to simplify code
+  rtc: xgene: use devm_platform_ioremap_resource() to simplify code
+  rtc: zynqmp: use devm_platform_ioremap_resource() to simplify code
 
-Both DT patches look fine to me... 
+ drivers/rtc/rtc-asm9260.c           | 4 +---
+ drivers/rtc/rtc-aspeed.c            | 4 +---
+ drivers/rtc/rtc-at91sam9.c          | 4 +---
+ drivers/rtc/rtc-brcmstb-waketimer.c | 4 +---
+ drivers/rtc/rtc-cadence.c           | 4 +---
+ drivers/rtc/rtc-coh901331.c         | 4 +---
+ drivers/rtc/rtc-davinci.c           | 4 +---
+ drivers/rtc/rtc-digicolor.c         | 4 +---
+ drivers/rtc/rtc-ds1216.c            | 4 +---
+ drivers/rtc/rtc-ds1286.c            | 4 +---
+ drivers/rtc/rtc-ds1511.c            | 4 +---
+ drivers/rtc/rtc-ds1553.c            | 4 +---
+ drivers/rtc/rtc-ep93xx.c            | 4 +---
+ drivers/rtc/rtc-jz4740.c            | 4 +---
+ drivers/rtc/rtc-lpc24xx.c           | 4 +---
+ drivers/rtc/rtc-lpc32xx.c           | 4 +---
+ drivers/rtc/rtc-meson.c             | 4 +---
+ drivers/rtc/rtc-mt7622.c            | 4 +---
+ drivers/rtc/rtc-mv.c                | 4 +---
+ drivers/rtc/rtc-omap.c              | 4 +---
+ drivers/rtc/rtc-pic32.c             | 4 +---
+ drivers/rtc/rtc-rtd119x.c           | 4 +---
+ drivers/rtc/rtc-s3c.c               | 4 +---
+ drivers/rtc/rtc-sa1100.c            | 4 +---
+ drivers/rtc/rtc-spear.c             | 4 +---
+ drivers/rtc/rtc-st-lpc.c            | 4 +---
+ drivers/rtc/rtc-stk17ta8.c          | 4 +---
+ drivers/rtc/rtc-stm32.c             | 4 +---
+ drivers/rtc/rtc-sunxi.c             | 4 +---
+ drivers/rtc/rtc-tegra.c             | 4 +---
+ drivers/rtc/rtc-tx4939.c            | 4 +---
+ drivers/rtc/rtc-vt8500.c            | 4 +---
+ drivers/rtc/rtc-xgene.c             | 4 +---
+ drivers/rtc/rtc-zynqmp.c            | 5 +----
+ 34 files changed, 34 insertions(+), 103 deletions(-)
 
-If you happened to fancy doing the yaml conversion it would be
-appreciated... :) 
+-- 
+2.7.4
 
-If not we'll get to this one one day.
-
-Anyhow, a few trivial bits in the earlier patches so v3 should be
-good to go.
-
-Thanks,
-
-Jonathan
-
-> ---
->  .../devicetree/bindings/iio/adc/max1027-adc.txt        | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> index 7b23d68f655c..1b703a01d882 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> @@ -1,7 +1,13 @@
-> -* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
-> +* Maxim 1027/1029/1031/1227/1229/1231 Analog to Digital Converter (ADC)
->  
->  Required properties:
-> -  - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
-> +  - compatible: Should be one of:
-> +    * "maxim,max1027"
-> +    * "maxim,max1029"
-> +    * "maxim,max1031"
-> +    * "maxim,max1227"
-> +    * "maxim,max1229"
-> +    * "maxim,max1231"
->    - reg: SPI chip select number for the device
->  
->  Optional properties:
 
