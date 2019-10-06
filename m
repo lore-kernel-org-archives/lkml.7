@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D28C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C66C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B81D2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E9F2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383660;
-	bh=jujcImgHDYGHQ7uDDwkXOSgG2q4SgjbpIX6MY4h8sRk=;
+	s=default; t=1570383666;
+	bh=c7zXr1QtC0TThWpH9wNCX5riuVJELFhrzHMZGgtypPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiVJUixhCw7M6S2qtbZA+Uet19w688toeMsR9QfJPYeThspcJriUD3ghIpmNXLa6G
-	 L2H3gp0xq49zyw+IeNLJpKn5RP3wBB1QoTJ3WN7Vrq/vPL5WWlWHhX4kLpMP3olkL/
-	 sTwB2H1UEFfiiW02HUN21FkG77hM4i2FlhjIIYFg=
+	b=m7i//CGA6ckIkk5KtOCkHQXs1ZrPEegV/2cD4y25lu2mpMI1HfsT6dcxuuiE+mwWR
+	 2VGVecWUIHb46JkZ+s7a5UaA6kmQ4ckKl3j5LOD6ut1qoaNBNNltwFZ4kuNtc+yf/B
+	 rdqhvDAKr7wmvKtIoJgCG4pA7IMYBecZyZh02YYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbfJFRk7 (ORCPT
+        id S1730472AbfJFRlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731104AbfJFRk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:56 -0400
+        id S1730449AbfJFRlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:41:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F36720862;
-        Sun,  6 Oct 2019 17:40:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 622B12053B;
+        Sun,  6 Oct 2019 17:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383655;
-        bh=jujcImgHDYGHQ7uDDwkXOSgG2q4SgjbpIX6MY4h8sRk=;
+        s=default; t=1570383660;
+        bh=c7zXr1QtC0TThWpH9wNCX5riuVJELFhrzHMZGgtypPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05F3owToAOijjxr87I/c+1BI8mKCliDPjJCSpDt1kB4SzdHn6avLVCcJbJK53OXTP
-         1uA8iC2csxdQ5D11MLLNQp0+n7/zw0N+DtwrccFCQVCMakGAXSBPeul2N/ARb/nCOu
-         O4MaB/p6SVolZfArHI8RyEsq8HMn31QJzMvXD0Lo=
+        b=N5nXxBlqk0xFoawvu9ehNCAMmvnmqI80vub25oN1H29uQ/sH/1XhmfQkmT15JEGDQ
+         gs1egoFVsCU1nKfLgXusfjD8g8BaelOHNiY+PuXxMQlhlijwhTSuTdaDiawLc08901
+         FO5m3+Qg3hLVLsm8gH+b9jDT/4fOdLmR0EMOzEyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 047/166] powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag
-Date:   Sun,  6 Oct 2019 19:20:13 +0200
-Message-Id: <20191006171216.961971960@linuxfoundation.org>
+Subject: [PATCH 5.3 049/166] drm/amdgpu/sdma5: fix number of sdma5 trap irq types for navi1x
+Date:   Sun,  6 Oct 2019 19:20:15 +0200
+Message-Id: <20191006171217.160867940@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,73 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Xiaojie Yuan <xiaojie.yuan@amd.com>
 
-[ Upstream commit aa06e3d60e245284d1e55497eb3108828092818d ]
+[ Upstream commit 9e48495017342c5d445b25eedd86d6fd884a6496 ]
 
-The EEH_DEV_NO_HANDLER flag is used by the EEH system to prevent the
-use of driver callbacks in drivers that have been bound part way
-through the recovery process. This is necessary to prevent later stage
-handlers from being called when the earlier stage handlers haven't,
-which can be confusing for drivers.
+v2: set num_types based on num_instances
 
-However, the flag is set for all devices that are added after boot
-time and only cleared at the end of the EEH recovery process. This
-results in hot plugged devices erroneously having the flag set during
-the first recovery after they are added (causing their driver's
-handlers to be incorrectly ignored).
+navi1x has 2 sdma engines but commit
+"e7b58d03b678 drm/amdgpu: reorganize sdma v4 code to support more instances"
+changes the max number of sdma irq types (AMDGPU_SDMA_IRQ_LAST) from 2 to 8
+which causes amdgpu_irq_gpu_reset_resume_helper() to recover irq of sdma
+engines with following logic:
 
-To remedy this, clear the flag at the beginning of recovery
-processing. The flag is still cleared at the end of recovery
-processing, although it is no longer really necessary.
+(enable irq for sdma0) * 1 time
+(enable irq for sdma1) * 1 time
+(disable irq for sdma1) * 6 times
 
-Also clear the flag during eeh_handle_special_event(), for the same
-reasons.
+as a result, after gpu reset, interrupt for sdma1 is lost.
 
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/b8ca5629d27de74c957d4f4b250177d1b6fc4bbd.1565930772.git.sbobroff@linux.ibm.com
+Signed-off-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_driver.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 89623962c7275..1fbe541856f5e 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -793,6 +793,10 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 		result = PCI_ERS_RESULT_DISCONNECT;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+index 3747c3f1f0cc8..15c371fac469e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+@@ -1583,7 +1583,8 @@ static const struct amdgpu_irq_src_funcs sdma_v5_0_illegal_inst_irq_funcs = {
  
-+	eeh_for_each_pe(pe, tmp_pe)
-+		eeh_pe_for_each_dev(tmp_pe, edev, tmp)
-+			edev->mode &= ~EEH_DEV_NO_HANDLER;
-+
- 	/* Walk the various device drivers attached to this slot through
- 	 * a reset sequence, giving each an opportunity to do what it needs
- 	 * to accomplish the reset.  Each child gets a report of the
-@@ -981,7 +985,8 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
-  */
- void eeh_handle_special_event(void)
+ static void sdma_v5_0_set_irq_funcs(struct amdgpu_device *adev)
  {
--	struct eeh_pe *pe, *phb_pe;
-+	struct eeh_pe *pe, *phb_pe, *tmp_pe;
-+	struct eeh_dev *edev, *tmp_edev;
- 	struct pci_bus *bus;
- 	struct pci_controller *hose;
- 	unsigned long flags;
-@@ -1050,6 +1055,10 @@ void eeh_handle_special_event(void)
- 				    (phb_pe->state & EEH_PE_RECOVERING))
- 					continue;
- 
-+				eeh_for_each_pe(pe, tmp_pe)
-+					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
-+						edev->mode &= ~EEH_DEV_NO_HANDLER;
-+
- 				/* Notify all devices to be down */
- 				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
- 				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
+-	adev->sdma.trap_irq.num_types = AMDGPU_SDMA_IRQ_LAST;
++	adev->sdma.trap_irq.num_types = AMDGPU_SDMA_IRQ_INSTANCE0 +
++					adev->sdma.num_instances;
+ 	adev->sdma.trap_irq.funcs = &sdma_v5_0_trap_irq_funcs;
+ 	adev->sdma.illegal_inst_irq.funcs = &sdma_v5_0_illegal_inst_irq_funcs;
+ }
 -- 
 2.20.1
 
