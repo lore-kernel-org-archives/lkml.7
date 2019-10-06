@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B646C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D4FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB46221871
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E612173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383158;
-	bh=PerffFRqonaHaOoAW5C1zA3Mgfcqrt/j7OprLkUruW0=;
+	s=default; t=1570383160;
+	bh=gdHNW3mAEvu4BnX73bfXuOIPRkCfTjZItelUJaGKSVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amXgGHuPfyMz8KZEWft80ReUpX+vOAIc5iMKTrmudLpqCclotrWm4PempC7/Ibt80
-	 2UvbcfSnMUrDyLFBUkXSsNS9LeMRfDOZGdhIudTlDcJ8Fu07dsZDb/5uANkA8yOIlU
-	 ekdc27zsfw/N2IBqvc4XLcFwci/7cBWyLvMeaqn8=
+	b=tztC5Q8VM8f3w57bHBwyD0KJq4X1juMLdZnfT4C1Ovnesouwg/KJMylGJz/X2i4/4
+	 kIkXwX3DTfHLNIn0xljjg4res4+H5a27dlFG0IAX4XEeVrd06kFcKEgQ0U/bg2kAy0
+	 teqVKyHWzUMtVecHccZ2UbAdh4ekrOdYguYCzhvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfJFRcg (ORCPT
+        id S1728443AbfJFRcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:32:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59082 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbfJFRce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:34 -0400
+        id S1729587AbfJFRch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:32:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08B7217F9;
-        Sun,  6 Oct 2019 17:32:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 759A421479;
+        Sun,  6 Oct 2019 17:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383154;
-        bh=PerffFRqonaHaOoAW5C1zA3Mgfcqrt/j7OprLkUruW0=;
+        s=default; t=1570383157;
+        bh=gdHNW3mAEvu4BnX73bfXuOIPRkCfTjZItelUJaGKSVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZoJvT9tS6Keg8p6YNiOIwqNHpv0+tnLBo5IyZq/BOc/5jPPLhp5obdZVg6tWQV7Am
-         u3vV55btUvA51QdiWG6zbOaugj8ZOwrJyhdr66wuUjWqrdUlKoBVVHeOTDL3Fts8Ux
-         ZMFLBP/zNVklT7uez3AJC55wszzxpeoJ+Cnf4f7M=
+        b=oXjpLcptemXeEC9SZPFM2O6SbAP9+bnzVQgKpjYjJCybfper5l1wMiy/EOz3vJQ3c
+         CWgsS/WR23KjMKGZLxg9FcXLMb+hc8B09+VaoDOpzaDzBzHKgwtjeEq2p2BF3yAkHO
+         Eedl5AoTZG6pPGGbrpQ6ALaZoEF4AmKXbiHB0ONk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com,
-        Bharath Vedartham <linux.bhar@gmail.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 4.19 106/106] 9p/cache.c: Fix memory leak in v9fs_cache_session_get_cookie
-Date:   Sun,  6 Oct 2019 19:21:52 +0200
-Message-Id: <20191006171204.990638511@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 085/106] net: ipv4: avoid mixed n_redirects and rate_tokens usage
+Date:   Sun,  6 Oct 2019 19:21:31 +0200
+Message-Id: <20191006171158.470390199@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,44 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharath Vedartham <linux.bhar@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 962a991c5de18452d6c429d99f3039387cf5cbb0 upstream.
+[ Upstream commit b406472b5ad79ede8d10077f0c8f05505ace8b6d ]
 
-v9fs_cache_session_get_cookie assigns a random cachetag to v9ses->cachetag,
-if the cachetag is not assigned previously.
+Since commit c09551c6ff7f ("net: ipv4: use a dedicated counter
+for icmp_v4 redirect packets") we use 'n_redirects' to account
+for redirect packets, but we still use 'rate_tokens' to compute
+the redirect packets exponential backoff.
 
-v9fs_random_cachetag allocates memory to v9ses->cachetag with kmalloc and uses
-scnprintf to fill it up with a cachetag.
+If the device sent to the relevant peer any ICMP error packet
+after sending a redirect, it will also update 'rate_token' according
+to the leaking bucket schema; typically 'rate_token' will raise
+above BITS_PER_LONG and the redirect packets backoff algorithm
+will produce undefined behavior.
 
-But if scnprintf fails, v9ses->cachetag is not freed in the current
-code causing a memory leak.
+Fix the issue using 'n_redirects' to compute the exponential backoff
+in ip_rt_send_redirect().
 
-Fix this by freeing v9ses->cachetag it v9fs_random_cachetag fails.
+Note that we still clear rate_tokens after a redirect silence period,
+to avoid changing an established behaviour.
 
-This was reported by syzbot, the link to the report is below:
-https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
+The root cause predates git history; before the mentioned commit in
+the critical scenario, the kernel stopped sending redirects, after
+the mentioned commit the behavior more randomic.
 
-Link: http://lkml.kernel.org/r/20190522194519.GA5313@bharath12345-Inspiron-5559
-Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: c09551c6ff7f ("net: ipv4: use a dedicated counter for icmp_v4 redirect packets")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/9p/cache.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/route.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/fs/9p/cache.c
-+++ b/fs/9p/cache.c
-@@ -66,6 +66,8 @@ void v9fs_cache_session_get_cookie(struc
- 	if (!v9ses->cachetag) {
- 		if (v9fs_random_cachetag(v9ses) < 0) {
- 			v9ses->fscache = NULL;
-+			kfree(v9ses->cachetag);
-+			v9ses->cachetag = NULL;
- 			return;
- 		}
- 	}
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -908,16 +908,15 @@ void ip_rt_send_redirect(struct sk_buff
+ 	if (peer->rate_tokens == 0 ||
+ 	    time_after(jiffies,
+ 		       (peer->rate_last +
+-			(ip_rt_redirect_load << peer->rate_tokens)))) {
++			(ip_rt_redirect_load << peer->n_redirects)))) {
+ 		__be32 gw = rt_nexthop(rt, ip_hdr(skb)->daddr);
+ 
+ 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
+ 		peer->rate_last = jiffies;
+-		++peer->rate_tokens;
+ 		++peer->n_redirects;
+ #ifdef CONFIG_IP_ROUTE_VERBOSE
+ 		if (log_martians &&
+-		    peer->rate_tokens == ip_rt_redirect_number)
++		    peer->n_redirects == ip_rt_redirect_number)
+ 			net_warn_ratelimited("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
+ 					     &ip_hdr(skb)->saddr, inet_iif(skb),
+ 					     &ip_hdr(skb)->daddr, &gw);
 
 
