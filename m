@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C3AECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CA0C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759252080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E051B2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383342;
-	bh=f4rcsN3ybGO/sVNQMSjrifM4UThQhI6TFoiqf0tlzng=;
+	s=default; t=1570383347;
+	bh=7yTV10pYVwJps/ArPOnO0ZAl1jLzy7XzX1J4ZuIe5xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJ0M323CSfzY/b+OE3uQKbLlsM24J1xKaO/LFFovR1kmF3DZBWrO4rebULy4MqkJY
-	 FiFEhsa8yxPvoGNCx8d9EE/iu61dZuRU3VlB00HqHycGxL+5aTwJtUv6vfN1ORwWUJ
-	 ZrUYshVVo9luuqljI4IHQwEbu5qJeqPzu8gbyX0s=
+	b=BFJkdNZIdUvpxf0ImkS55H/6vEY4rP/HMe/elxil8+cxl7AH+q1xGpxXRJNpksor7
+	 UKoYb/rVU+QisK0mYWBWxf+cocyVfbxbFKHrBUxce4p0p8BRxbCwKADB/A7JsCtpq9
+	 2EktUpn3v2F4D/14zVXuo7LxM1FSf1Mmyl0kdd/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbfJFRfl (ORCPT
+        id S1728735AbfJFRfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34272 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbfJFRfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:36 -0400
+        id S1730166AbfJFRfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DB0220700;
-        Sun,  6 Oct 2019 17:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C03EA2080F;
+        Sun,  6 Oct 2019 17:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383335;
-        bh=f4rcsN3ybGO/sVNQMSjrifM4UThQhI6TFoiqf0tlzng=;
+        s=default; t=1570383338;
+        bh=7yTV10pYVwJps/ArPOnO0ZAl1jLzy7XzX1J4ZuIe5xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1NJnYenf16qk8zCyW+1z37EzV6TJcTcUwxCaHe9FsJYH5mK1eUf4Bd22+kPD+2My2
-         SEXlAIqm3CewkFgHPGsc2uCbVZiVwGHoIOGriOSzvFsDHCqQj4aEOejz+XPsPADjdI
-         aBSGKGy9W4YAl+ZHxr2npHeZtGJQ3NvGW+2gGm9Q=
+        b=DUQjs48oo+OQRAVt7Ymaoz7hNd/6NRo2ese+sqpqf5UCcg+9MSh//5JuLIETLbTY2
+         /J1ulxdcWjSL3v/fQaRpBElFGEDeq6xZDydhBR000QadEKueXqCyrhrK04EfjfAD6f
+         Xked3B6BgMK/BJ8ghegmN5/PismKZpPVDjtglR6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 039/137] clk: imx8mq: Mark AHB clock as critical
-Date:   Sun,  6 Oct 2019 19:20:23 +0200
-Message-Id: <20191006171212.294579334@linuxfoundation.org>
+Subject: [PATCH 5.2 066/137] clk: renesas: mstp: Set GENPD_FLAG_ALWAYS_ON for clock domain
+Date:   Sun,  6 Oct 2019 19:20:50 +0200
+Message-Id: <20191006171214.598362308@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,46 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abel Vesa <abel.vesa@nxp.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 9b9c60bed562c3718ae324a86f3f30a4ff983cf8 ]
+[ Upstream commit a459a184c978ca9ad538aab93aafdde873953f30 ]
 
-Initially, the TMU_ROOT clock was marked as critical, which automatically
-made the AHB clock to stay always on. Since the TMU_ROOT clock is not
-marked as critical anymore, following commit:
+The CPG/MSTP Clock Domain driver does not implement the
+generic_pm_domain.power_{on,off}() callbacks, as the domain itself
+cannot be powered down.  Hence the domain should be marked as always-on
+by setting the GENPD_FLAG_ALWAYS_ON flag, to prevent the core PM Domain
+code from considering it for power-off, and doing unnessary processing.
 
-"clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT"
+This also gets rid of a boot warning when the Clock Domain contains an
+IRQ-safe device, e.g. on RZ/A1:
 
-all the clocks that derive from ipg_root clock (and implicitly ahb clock)
-would also have to enable, along with their own gate, the AHB clock.
+    sh_mtu2 fcff0000.timer: PM domain cpg_clocks will not be powered off
 
-But considering that AHB is actually a bus that has to be always on, we mark
-it as critical in the clock provider driver and then all the clocks that
-derive from it can be controlled through the dedicated per IP gate which
-follows after the ipg_root clock.
-
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx8mq.c | 3 ++-
+ drivers/clk/renesas/clk-mstp.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index daf1841b2adb0..f29025c99c53b 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -396,7 +396,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+diff --git a/drivers/clk/renesas/clk-mstp.c b/drivers/clk/renesas/clk-mstp.c
+index 92ece221b0d44..7f156cf1d7a64 100644
+--- a/drivers/clk/renesas/clk-mstp.c
++++ b/drivers/clk/renesas/clk-mstp.c
+@@ -338,7 +338,8 @@ void __init cpg_mstp_add_clk_domain(struct device_node *np)
+ 		return;
  
- 	/* AHB */
--	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
-+	/* AHB clock is used by the AHB bus therefore marked as critical */
-+	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
- 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
- 
- 	/* IPG */
+ 	pd->name = np->name;
+-	pd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
++	pd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ALWAYS_ON |
++		    GENPD_FLAG_ACTIVE_WAKEUP;
+ 	pd->attach_dev = cpg_mstp_attach_dev;
+ 	pd->detach_dev = cpg_mstp_detach_dev;
+ 	pm_genpd_init(pd, &pm_domain_always_on_gov, false);
 -- 
 2.20.1
 
