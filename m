@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA39ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20786C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FD420700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB57A20700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384254;
-	bh=kJPCE82rI93/+BFjcENy+vQCcMAun9/PciZCTpTNdVU=;
+	s=default; t=1570384261;
+	bh=KKjC7cI+5h5CVGidPc9+DB5Om89zRlr5+ongFW5KqAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JvBswQxw4sOU3f3D40QKh7XWwOSgsR8MJaZrZooCSEmkg/Y2zmPRxt9A/RHZmfX0c
-	 XNhfxEZLyRP2v5jpo1Js9U5ItxotNvj6MVY+S/DXTIdLD8cSEfPNclJZAaq/YH4uXZ
-	 8Wxxdqj9fS1JvCR1WvUYhTYXc728h+LOFT8oFAT4=
+	b=E/Fx6Ir15KL3Ehovh2OiAeBxJXnTqX2EuCPKna5xIA763NRdzdh632JBkuqBInmQx
+	 c6Wd5IdnNqF3F0Z5O2RwHKeYDMykzSpaoQ0ItKqf79bulQMIMZR8MdRF6qDLJRbEKi
+	 vj9tu9cLwvvAt61nuSfIoXMG3GRUQVlEFeA1XUwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbfJFRkN (ORCPT
+        id S1729921AbfJFRvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39696 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730289AbfJFRkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:10 -0400
+        id S1726984AbfJFRuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:50:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE9852053B;
-        Sun,  6 Oct 2019 17:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95173217F9;
+        Sun,  6 Oct 2019 17:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383608;
-        bh=kJPCE82rI93/+BFjcENy+vQCcMAun9/PciZCTpTNdVU=;
+        s=default; t=1570383925;
+        bh=KKjC7cI+5h5CVGidPc9+DB5Om89zRlr5+ongFW5KqAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hah6bNepqhWg0TLaOjCkDIHU5Gms2+JiPdumr+GwSr14I8cQ9djKEC+I3r6lQvtho
-         PS8bGRkkXqFZjh+dYlqnkpJZuBj6hNEkDp/FDYq2Wv99EIaGI8OXbbW9vf2h+jCgLD
-         QSGYnPwRES9aHSCPtZKPdlZAX+W0ZBP78wXcRUkY=
+        b=gZDAQruDMEJLobMPzSSdeMLpAz/tFrrMnOZKb2O9EYmvky4tYeqOBrZwrP8O7iGTW
+         JiNeKst5RWCCBdhfxGKiHS3XC29eofxQp/n9v8XyPWb+HukagBerrSQm2nTF0yUB92
+         skWOAkjtPp4GfpBFo3XtbTxnCXO+/wRYn1nuCIpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bayan Zabihiyan <bayan.zabihiyan@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 029/166] drm/amd/display: Fix frames_to_insert math
-Date:   Sun,  6 Oct 2019 19:19:55 +0200
-Message-Id: <20191006171215.490909135@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Hunt <johunt@akamai.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 147/166] udp: only do GSO if # of segs > 1
+Date:   Sun,  6 Oct 2019 19:21:53 +0200
+Message-Id: <20191006171225.311971320@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,111 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bayan Zabihiyan <bayan.zabihiyan@amd.com>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit a463b263032f7c98c5912207db43be1aa34a6438 ]
+[ Upstream commit 4094871db1d65810acab3d57f6089aa39ef7f648 ]
 
-[Why]
-The math on deciding on how many
-"frames to insert" sometimes sent us over the max refresh rate.
-Also integer overflow can occur if we have high refresh rates.
+Prior to this change an application sending <= 1MSS worth of data and
+enabling UDP GSO would fail if the system had SW GSO enabled, but the
+same send would succeed if HW GSO offload is enabled. In addition to this
+inconsistency the error in the SW GSO case does not get back to the
+application if sending out of a real device so the user is unaware of this
+failure.
 
-[How]
-Instead of clipping the  frame duration such that it doesn’t go below the min,
-just remove a frame from the number of frames to insert. +
-Use unsigned long long for intermediate calculations to prevent
-integer overflow.
+With this change we only perform GSO if the # of segments is > 1 even
+if the application has enabled segmentation. I've also updated the
+relevant udpgso selftests.
 
-Signed-off-by: Bayan Zabihiyan <bayan.zabihiyan@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
+Signed-off-by: Josh Hunt <johunt@akamai.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../amd/display/modules/freesync/freesync.c   | 27 ++++++++++++-------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ net/ipv4/udp.c                       |   11 +++++++----
+ net/ipv6/udp.c                       |   11 +++++++----
+ tools/testing/selftests/net/udpgso.c |   16 ++++------------
+ 3 files changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index 7c20171a3b6da..a53666ff6cf89 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -435,6 +435,12 @@ static void apply_below_the_range(struct core_freesync *core_freesync,
- 		/* Either we've calculated the number of frames to insert,
- 		 * or we need to insert min duration frames
- 		 */
-+		if (last_render_time_in_us / frames_to_insert <
-+				in_out_vrr->min_duration_in_us){
-+			frames_to_insert -= (frames_to_insert > 1) ?
-+					1 : 0;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -821,6 +821,7 @@ static int udp_send_skb(struct sk_buff *
+ 	int is_udplite = IS_UDPLITE(sk);
+ 	int offset = skb_transport_offset(skb);
+ 	int len = skb->len - offset;
++	int datalen = len - sizeof(*uh);
+ 	__wsum csum = 0;
+ 
+ 	/*
+@@ -854,10 +855,12 @@ static int udp_send_skb(struct sk_buff *
+ 			return -EIO;
+ 		}
+ 
+-		skb_shinfo(skb)->gso_size = cork->gso_size;
+-		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+-		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
+-							 cork->gso_size);
++		if (datalen > cork->gso_size) {
++			skb_shinfo(skb)->gso_size = cork->gso_size;
++			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
++			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
++								 cork->gso_size);
 +		}
-+
- 		if (frames_to_insert > 0)
- 			inserted_frame_duration_in_us = last_render_time_in_us /
- 							frames_to_insert;
-@@ -887,8 +893,8 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 	struct core_freesync *core_freesync = NULL;
- 	unsigned long long nominal_field_rate_in_uhz = 0;
- 	unsigned int refresh_range = 0;
--	unsigned int min_refresh_in_uhz = 0;
--	unsigned int max_refresh_in_uhz = 0;
-+	unsigned long long min_refresh_in_uhz = 0;
-+	unsigned long long max_refresh_in_uhz = 0;
+ 		goto csum_partial;
+ 	}
  
- 	if (mod_freesync == NULL)
- 		return;
-@@ -915,7 +921,7 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 		min_refresh_in_uhz = nominal_field_rate_in_uhz;
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -1109,6 +1109,7 @@ static int udp_v6_send_skb(struct sk_buf
+ 	__wsum csum = 0;
+ 	int offset = skb_transport_offset(skb);
+ 	int len = skb->len - offset;
++	int datalen = len - sizeof(*uh);
  
- 	if (!vrr_settings_require_update(core_freesync,
--			in_config, min_refresh_in_uhz, max_refresh_in_uhz,
-+			in_config, (unsigned int)min_refresh_in_uhz, (unsigned int)max_refresh_in_uhz,
- 			in_out_vrr))
- 		return;
+ 	/*
+ 	 * Create a UDP header
+@@ -1141,10 +1142,12 @@ static int udp_v6_send_skb(struct sk_buf
+ 			return -EIO;
+ 		}
  
-@@ -931,15 +937,15 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 		return;
+-		skb_shinfo(skb)->gso_size = cork->gso_size;
+-		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+-		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
+-							 cork->gso_size);
++		if (datalen > cork->gso_size) {
++			skb_shinfo(skb)->gso_size = cork->gso_size;
++			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
++			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
++								 cork->gso_size);
++		}
+ 		goto csum_partial;
+ 	}
  
- 	} else {
--		in_out_vrr->min_refresh_in_uhz = min_refresh_in_uhz;
-+		in_out_vrr->min_refresh_in_uhz = (unsigned int)min_refresh_in_uhz;
- 		in_out_vrr->max_duration_in_us =
- 				calc_duration_in_us_from_refresh_in_uhz(
--						min_refresh_in_uhz);
-+						(unsigned int)min_refresh_in_uhz);
- 
--		in_out_vrr->max_refresh_in_uhz = max_refresh_in_uhz;
-+		in_out_vrr->max_refresh_in_uhz = (unsigned int)max_refresh_in_uhz;
- 		in_out_vrr->min_duration_in_us =
- 				calc_duration_in_us_from_refresh_in_uhz(
--						max_refresh_in_uhz);
-+						(unsigned int)max_refresh_in_uhz);
- 
- 		refresh_range = in_out_vrr->max_refresh_in_uhz -
- 				in_out_vrr->min_refresh_in_uhz;
-@@ -950,17 +956,18 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 	in_out_vrr->fixed.ramping_active = in_config->ramping;
- 
- 	in_out_vrr->btr.btr_enabled = in_config->btr;
-+
- 	if (in_out_vrr->max_refresh_in_uhz <
- 			2 * in_out_vrr->min_refresh_in_uhz)
- 		in_out_vrr->btr.btr_enabled = false;
-+
- 	in_out_vrr->btr.btr_active = false;
- 	in_out_vrr->btr.inserted_duration_in_us = 0;
- 	in_out_vrr->btr.frames_to_insert = 0;
- 	in_out_vrr->btr.frame_counter = 0;
- 	in_out_vrr->btr.mid_point_in_us =
--			in_out_vrr->min_duration_in_us +
--				(in_out_vrr->max_duration_in_us -
--				in_out_vrr->min_duration_in_us) / 2;
-+				(in_out_vrr->min_duration_in_us +
-+				 in_out_vrr->max_duration_in_us) / 2;
- 
- 	if (in_out_vrr->state == VRR_STATE_UNSUPPORTED) {
- 		in_out_vrr->adjust.v_total_min = stream->timing.v_total;
--- 
-2.20.1
-
+--- a/tools/testing/selftests/net/udpgso.c
++++ b/tools/testing/selftests/net/udpgso.c
+@@ -89,12 +89,9 @@ struct testcase testcases_v4[] = {
+ 		.tfail = true,
+ 	},
+ 	{
+-		/* send a single MSS: will fail with GSO, because the segment
+-		 * logic in udp4_ufo_fragment demands a gso skb to be > MTU
+-		 */
++		/* send a single MSS: will fall back to no GSO */
+ 		.tlen = CONST_MSS_V4,
+ 		.gso_len = CONST_MSS_V4,
+-		.tfail = true,
+ 		.r_num_mss = 1,
+ 	},
+ 	{
+@@ -139,10 +136,9 @@ struct testcase testcases_v4[] = {
+ 		.tfail = true,
+ 	},
+ 	{
+-		/* send a single 1B MSS: will fail, see single MSS above */
++		/* send a single 1B MSS: will fall back to no GSO */
+ 		.tlen = 1,
+ 		.gso_len = 1,
+-		.tfail = true,
+ 		.r_num_mss = 1,
+ 	},
+ 	{
+@@ -196,12 +192,9 @@ struct testcase testcases_v6[] = {
+ 		.tfail = true,
+ 	},
+ 	{
+-		/* send a single MSS: will fail with GSO, because the segment
+-		 * logic in udp4_ufo_fragment demands a gso skb to be > MTU
+-		 */
++		/* send a single MSS: will fall back to no GSO */
+ 		.tlen = CONST_MSS_V6,
+ 		.gso_len = CONST_MSS_V6,
+-		.tfail = true,
+ 		.r_num_mss = 1,
+ 	},
+ 	{
+@@ -246,10 +239,9 @@ struct testcase testcases_v6[] = {
+ 		.tfail = true,
+ 	},
+ 	{
+-		/* send a single 1B MSS: will fail, see single MSS above */
++		/* send a single 1B MSS: will fall back to no GSO */
+ 		.tlen = 1,
+ 		.gso_len = 1,
+-		.tfail = true,
+ 		.r_num_mss = 1,
+ 	},
+ 	{
 
 
