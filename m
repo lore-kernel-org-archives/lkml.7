@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7342DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAADC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493B22133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3832080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382935;
-	bh=5lYBYQErhoDdewYb9pa08pxgaKFhrGjw/6K40H1MAkA=;
+	s=default; t=1570382939;
+	bh=5gqlC+gB7sVHqAORGtvXGvqdowvWZMUU+1LOeJQXM+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uF4kI8somI/EtXqoeNYHLqRfyBT/1zieoo5xrIyHuMWF7iEw39XBWbTpVUniSUu2O
-	 zrZQbQ5kU/wvRmq9Mnw++Z7MO6TL/PYuAgWHJ3rsmMWgo221w2alvh/s5UeayQAJpk
-	 mjnZz+idoTepwEtXYn6zMWWx/Llje9EwbaIkzsOE=
+	b=dOcgEtsclwoMid99rInNBsGmnIwtCIOxFwoUpBhUrSh+ZmOYkA/b4yd/oZZ4GjuQz
+	 Oe2UjWwtA3BwXQvQnniyPMQ2FopR+qJp1SG903yzVkqYruOLEMZhhzNc6TuL/K/KnP
+	 /w8+IW0mJeBHVhzTS3Ibc1m+AMH63qHPTk3rvjTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfJFR2y (ORCPT
+        id S1728896AbfJFR27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbfJFR2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:48 -0400
+        id S1728865AbfJFR2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2D32080F;
-        Sun,  6 Oct 2019 17:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495F921479;
+        Sun,  6 Oct 2019 17:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382927;
-        bh=5lYBYQErhoDdewYb9pa08pxgaKFhrGjw/6K40H1MAkA=;
+        s=default; t=1570382932;
+        bh=5gqlC+gB7sVHqAORGtvXGvqdowvWZMUU+1LOeJQXM+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZc68iCXulRqh5Zs90pxkhGv8guE5lv1jlsXbNxAg11e+qlPfONAlvWvuI844reyP
-         C7iS7xuM3ceRuNVKAO21pfYUfFutnjsTfiX6oNBRI/mRSqBKGXyBZShZMGkPWIpbWl
-         E8BMPrASz29Kw/pm+GP22hFhaCnj9P+vAb7x02R8=
+        b=utJplJdxLvU6/XUo052W8l8cTkWXsly9iKEFSzOTI90G1J5QzB54hO5NEWeDxPTjA
+         Fc9r1Kp4i6XDmUy0Yf4VFKU7p3hlB3nGg3pK33Sqy6GH7sauouhy53nmSdVg27z4Rb
+         TvaCureldOaacXa+F3B9di8/EdRQqqFdxNbQkAjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/106] powerpc/xmon: Check for HV mode when dumping XIVE info from OPAL
-Date:   Sun,  6 Oct 2019 19:20:28 +0200
-Message-Id: <20191006171136.250744397@linuxfoundation.org>
+Subject: [PATCH 4.19 024/106] powerpc/futex: Fix warning: oldval may be used uninitialized in this function
+Date:   Sun,  6 Oct 2019 19:20:30 +0200
+Message-Id: <20191006171137.038141022@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,51 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit c3e0dbd7f780a58c4695f1cd8fc8afde80376737 ]
+[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
 
-Currently, the xmon 'dx' command calls OPAL to dump the XIVE state in
-the OPAL logs and also outputs some of the fields of the internal XIVE
-structures in Linux. The OPAL calls can only be done on baremetal
-(PowerNV) and they crash a pseries machine. Fix by checking the
-hypervisor feature of the CPU.
+We see warnings such as:
+  kernel/futex.c: In function 'do_futex':
+  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+     return oldval == cmparg;
+                   ^
+  kernel/futex.c:1651:6: note: 'oldval' was declared here
+    int oldval, ret;
+        ^
 
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
+This is because arch_futex_atomic_op_inuser() only sets *oval if ret
+is 0 and GCC doesn't see that it will only use it when ret is 0.
+
+Anyway, the non-zero ret path is an error path that won't suffer from
+setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
+it will have no impact.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: reword change log slightly]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190814154754.23682-2-clg@kaod.org
+Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/xmon.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/futex.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 74cfc1be04d6e..bb5db7bfd8539 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -2497,13 +2497,16 @@ static void dump_pacas(void)
- static void dump_one_xive(int cpu)
- {
- 	unsigned int hwid = get_hard_smp_processor_id(cpu);
-+	bool hv = cpu_has_feature(CPU_FTR_HVMODE);
+diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
+index 94542776a62d6..2a7b01f97a56b 100644
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -59,8 +59,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
  
--	opal_xive_dump(XIVE_DUMP_TM_HYP, hwid);
--	opal_xive_dump(XIVE_DUMP_TM_POOL, hwid);
--	opal_xive_dump(XIVE_DUMP_TM_OS, hwid);
--	opal_xive_dump(XIVE_DUMP_TM_USER, hwid);
--	opal_xive_dump(XIVE_DUMP_VP, hwid);
--	opal_xive_dump(XIVE_DUMP_EMU_STATE, hwid);
-+	if (hv) {
-+		opal_xive_dump(XIVE_DUMP_TM_HYP, hwid);
-+		opal_xive_dump(XIVE_DUMP_TM_POOL, hwid);
-+		opal_xive_dump(XIVE_DUMP_TM_OS, hwid);
-+		opal_xive_dump(XIVE_DUMP_TM_USER, hwid);
-+		opal_xive_dump(XIVE_DUMP_VP, hwid);
-+		opal_xive_dump(XIVE_DUMP_EMU_STATE, hwid);
-+	}
+ 	pagefault_enable();
  
- 	if (setjmp(bus_error_jmp) != 0) {
- 		catch_memory_errors = 0;
+-	if (!ret)
+-		*oval = oldval;
++	*oval = oldval;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
