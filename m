@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46A5C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E89C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901EA20673
+	by mail.kernel.org (Postfix) with ESMTP id C4ED920700
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384500;
-	bh=xXalf5xqeX1/i6O/O50rC1iTJLzLihvL1a3MH8qpFyI=;
+	bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CcTTs9SCpjNbBGH7ka/fROraiVVvNI1xfeSO4pLB9tsWGbwNUyeUgLVuaMvBmoQW
-	 +QEIQvGk4VGmGI7tIj6qtR6HwAE5zgW9V1U7PjQSUEgkkd4gWJ1gAPfZIOAFPlBsFb
-	 gl185g3JAItHO/+aPtEjVx3zQMD8/zEkcbS7/c7c=
+	b=LWdzHYph7LUzEJZxs9Z0gxH8forfOvPP1zUo/5p6n/PoL3g6VEXEdmnfwuKO2nWmB
+	 RmKfykCnWRWi7JBPIQMP2u569bhUjpLcjjAW29r69yQeN080enM2i+2AmGQ+bRUxQh
+	 qMyZ6ypAxrjTR95CVMR+/j+jnfgEYEJjJ7EqyYBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfJFRye (ORCPT
+        id S1729294AbfJFRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728371AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2875522478;
-        Sun,  6 Oct 2019 17:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB1622477;
+        Sun,  6 Oct 2019 17:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383992;
-        bh=xXalf5xqeX1/i6O/O50rC1iTJLzLihvL1a3MH8qpFyI=;
+        s=default; t=1570383989;
+        bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C2ikIAyrdlUGkuyxuwzPJPcZzPUSTQoBd/3rCOytCcqBxrOwTDj0g6gWsa52VMKlv
-         gHABzYTrbqtCBPTwFedydmI4jLx9rfffwGhtwDU4z5/tWwDWYedWY3IbbGQuO1Ea1K
-         moFVNRat/2An1aZRy0312AZJEQt3J+PzNpDhkIOw=
+        b=1HWqxf9rMOFN8p1Rv30NKI4wlQ/JiM9igJsiblx8AWLR3dfLEvYoXqfYMQ4wNjwbQ
+         Lhg8OoXM5In0DI+gbiV4R+XYdo8KeLZufILCt9WT7CuA/ETIam1i8+EWS1Xnpg8Iz4
+         JtEFnctWQxoYAUnLFK1dfulbRdYoUKq6zzMcCKJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 135/166] net: sched: taprio: Fix potential integer overflow in taprio_set_picos_per_byte
-Date:   Sun,  6 Oct 2019 19:21:41 +0200
-Message-Id: <20191006171224.523399591@linuxfoundation.org>
+Subject: [PATCH 5.3 134/166] net: qlogic: Fix memory leak in ql_alloc_large_buffers
+Date:   Sun,  6 Oct 2019 19:21:40 +0200
+Message-Id: <20191006171224.456500506@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -63,39 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 68ce6688a5baefde30914fc07fc27292dbbe8320 ]
+[ Upstream commit 1acb8f2a7a9f10543868ddd737e37424d5c36cf4 ]
 
-The speed divisor is used in a context expecting an s64, but it is
-evaluated using 32-bit arithmetic.
+In ql_alloc_large_buffers, a new skb is allocated via netdev_alloc_skb.
+This skb should be released if pci_dma_mapping_error fails.
 
-To avoid that happening, instead of multiplying by 1,000,000 in the
-first place, simplify the fraction and do a standard 32 bit division
-instead.
-
-Fixes: f04b514c0ce2 ("taprio: Set default link speed to 10 Mbps in taprio_set_picos_per_byte")
-Reported-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() in ql_release_to_lrg_buf_free_list(), ql_populate_free_queue(), ql_alloc_large_buffers(), and ql3xxx_send()")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_taprio.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qla3xxx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -965,8 +965,7 @@ static void taprio_set_picos_per_byte(st
- 		speed = ecmd.base.speed;
- 
- skip:
--	picos_per_byte = div64_s64(NSEC_PER_SEC * 1000LL * 8,
--				   speed * 1000 * 1000);
-+	picos_per_byte = (USEC_PER_SEC * 8) / speed;
- 
- 	atomic64_set(&q->picos_per_byte, picos_per_byte);
- 	netdev_dbg(dev, "taprio: set %s's picos_per_byte to: %lld, linkspeed: %d\n",
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -2787,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
+ 				netdev_err(qdev->ndev,
+ 					   "PCI mapping failed with error: %d\n",
+ 					   err);
++				dev_kfree_skb_irq(skb);
+ 				ql_free_large_buffers(qdev);
+ 				return -ENOMEM;
+ 			}
 
 
