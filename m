@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D581EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C50C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04282053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFD92053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384115;
-	bh=F8RTzDc+fECkTRNigXyurxf3VNTlrsOpbjYpgckPm38=;
+	s=default; t=1570384119;
+	bh=PxSi+cTwfa9Lu6cGhKDYSq72x622R/OQZffxCTUfG8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IxSuFqX2cvdpWe4Gv3/kaBYG4rr9QJRTsmn71ULzqgQpDSr9u64hENR4kREBGol1M
-	 YXyVb/1N+Iq7VT8rS9FojjackGSYNWIuCA3yNhuD6qOe8f32Kvv62+lh3KH0kR6OGT
-	 ZLSUhi1+fEkw7jfTxMlbiZehm1YIeW6zBKI/XsyU=
+	b=AKPEyRc4vkQZ7TGatxVpVL6dfcHfmR+RjqkirGqPX6xu389bXS8+v9OhI0HanSZ66
+	 eNHffsA8/1O2qsXREG7Vb0u3IcWwXx0uJdQxWmCodnTj9Mu22m6vsX59ywDKXOBlmb
+	 T5bKMc24s1aDzXXsmiPaJyrpCjcKXsZksan7ep94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfJFRsf (ORCPT
+        id S1731480AbfJFRnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730545AbfJFRnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:43:24 -0400
+        id S1731455AbfJFRnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50B72087E;
-        Sun,  6 Oct 2019 17:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3862B2080F;
+        Sun,  6 Oct 2019 17:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383803;
-        bh=F8RTzDc+fECkTRNigXyurxf3VNTlrsOpbjYpgckPm38=;
+        s=default; t=1570383789;
+        bh=PxSi+cTwfa9Lu6cGhKDYSq72x622R/OQZffxCTUfG8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/p9H02V3J4l2ajVCpMia0Y7rG3w/ztBGzZH2z1OcQmHCVcyW2w0+/Yrn9zRHx4tZ
-         rRaOhI2rrNsQxExzmZaoYKyaW4ZAuQcqbiWdc9GeQZKTulfVprzF+Cx5xT6HaQyRsB
-         Hf7hf4HbXPJ1Rg0CnVEG+3miPHr1CrpQN3FFb09M=
+        b=fAizaskTFjwEoeubWexfYcyOTXekqnGxfSkMb5o1T4zunA6aoWlE/qcWbP+OFn2tD
+         /WM4uVLH/nSsGiY9zpUc6wkrHy+xujRb8gLRxJsAg1uHhN93DAnD2tz7E2H9h89ZqC
+         7XVSK9pV0AZUSUL1cNjmMaItgVYsv0nNIaB/qD00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 102/166] selinux: fix residual uses of current_security() for the SELinux blob
-Date:   Sun,  6 Oct 2019 19:21:08 +0200
-Message-Id: <20191006171222.124230285@linuxfoundation.org>
+Subject: [PATCH 5.3 097/166] PCI: mobiveil: Fix the CPU base address setup in inbound window
+Date:   Sun,  6 Oct 2019 19:21:03 +0200
+Message-Id: <20191006171221.740048947@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,79 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 169ce0c081cd85f78388bb6c1638c1ad7b81bde7 ]
+[ Upstream commit df901c85cc28b538c62f6bc20b16a8bd05fcb756 ]
 
-We need to use selinux_cred() to fetch the SELinux cred blob instead
-of directly using current->security or current_security().  There
-were a couple of lingering uses of current_security() in the SELinux code
-that were apparently missed during the earlier conversions. IIUC, this
-would only manifest as a bug if multiple security modules including
-SELinux are enabled and SELinux is not first in the lsm order. After
-this change, there appear to be no other users of current_security()
-in-tree; perhaps we should remove it altogether.
+Current code erroneously sets-up the CPU base address through the
+parameter 'pci_addr', which is passed to initialize the CPU (AXI) base
+address of the inbound window where the controller maps the PCI address
+space into CPU physical address space; furthermore, it also truncates it
+by programming only the lower 32-bit value into the inbound CPU address
+register.
 
-Fixes: bbd3662a8348 ("Infrastructure management of the cred security blob")
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fix both issues by introducing a new parameter 'u64 cpu_addr' to
+initialize both lower 32-bit and upper 32-bit of the CPU physical
+base address mapping PCI inbound transactions into CPU (AXI) ones.
+
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c          |  2 +-
- security/selinux/include/objsec.h | 20 ++++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 74dd46de01b6a..e755174647866 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3403,7 +3403,7 @@ static int selinux_inode_copy_up_xattr(const char *name)
- static int selinux_kernfs_init_security(struct kernfs_node *kn_dir,
- 					struct kernfs_node *kn)
- {
--	const struct task_security_struct *tsec = current_security();
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
- 	u32 parent_sid, newsid, clen;
- 	int rc;
- 	char *context;
-diff --git a/security/selinux/include/objsec.h b/security/selinux/include/objsec.h
-index 91c5395dd20c2..586b7abd0aa73 100644
---- a/security/selinux/include/objsec.h
-+++ b/security/selinux/include/objsec.h
-@@ -37,16 +37,6 @@ struct task_security_struct {
- 	u32 sockcreate_sid;	/* fscreate SID */
- };
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index 672e633601c78..a45a6447b01d9 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -88,6 +88,7 @@
+ #define  AMAP_CTRL_TYPE_MASK		3
  
--/*
-- * get the subjective security ID of the current task
-- */
--static inline u32 current_sid(void)
--{
--	const struct task_security_struct *tsec = current_security();
--
--	return tsec->sid;
--}
--
- enum label_initialized {
- 	LABEL_INVALID,		/* invalid or not initialized */
- 	LABEL_INITIALIZED,	/* initialized */
-@@ -185,4 +175,14 @@ static inline struct ipc_security_struct *selinux_ipc(
- 	return ipc->security + selinux_blob_sizes.lbs_ipc;
+ #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
++#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
+ #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
+ #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
+ #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
+@@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
  }
  
-+/*
-+ * get the subjective security ID of the current task
-+ */
-+static inline u32 current_sid(void)
-+{
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
-+
-+	return tsec->sid;
-+}
-+
- #endif /* _SELINUX_OBJSEC_H_ */
+ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+-			       u64 pci_addr, u32 type, u64 size)
++			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
+ {
+ 	u32 value;
+ 	u64 size64 = ~(size - 1);
+@@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	csr_writel(pcie, upper_32_bits(size64),
+ 		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 
+-	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, lower_32_bits(cpu_addr),
++		   PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, upper_32_bits(cpu_addr),
++		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+ 
+ 	csr_writel(pcie, lower_32_bits(pci_addr),
+ 		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+@@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+ 
+ 	/* memory inbound translation window */
+-	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
++	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+ 
+ 	/* Get the I/O and memory ranges from DT */
+ 	resource_list_for_each_entry(win, &pcie->resources) {
 -- 
 2.20.1
 
