@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A18C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A210C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2814321479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFFF20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383460;
-	bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
+	s=default; t=1570383464;
+	bh=mzZzbvSR0cnLcFpKkLpjIj9DLeE+vyS5ObE5/GHzwbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qp0kW3xMFwRf57nISWxvsp1b8+8vRZSlwBrNyP96Vl5yaspxWHxFi/tcuypbr0u4i
-	 oT6MiUsW+2ufwaIAqFWV/INfqOxHaslEkQkI2khIozxPrbwEnBsLp0zaYsP/Feh/yT
-	 UTrEGz8BxBW6+8f31mMmdSeMEai1zK045svggLDs=
+	b=KGIcg1QyniXYAzhBcwl2lcVFm7PMIaWEl5ce6ixrnlajldCF0AIrY1w5867OjA24t
+	 j+Bu9s/Vsb1S13GazJshReS7j6WP3gFd7Y+Vnz9EyC7kaGMlIaCQtrBYQOTb/mxCWf
+	 znlg2mAorTn2d8sLr1WnN8GAs5qSyKNyJfc/uHBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbfJFRhj (ORCPT
+        id S1730491AbfJFRhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36634 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730466AbfJFRhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:37 -0400
+        id S1729516AbfJFRhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BD232080F;
-        Sun,  6 Oct 2019 17:37:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 255D82053B;
+        Sun,  6 Oct 2019 17:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383457;
-        bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
+        s=default; t=1570383459;
+        bh=mzZzbvSR0cnLcFpKkLpjIj9DLeE+vyS5ObE5/GHzwbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ynoQF/Z1Dw62LMe3KGDHmmHR1mstyFKkrSnK1knR6ltzSdI6rISJz7aK45kT3q4H+
-         jrtzTLJ5qC/KCQ4tqBh0cmezGM5K5Ni8VCKsGrBAyzjFxx0k+NE9B/QELdHWDDJXDl
-         sdSQO/2BKRuNqT1J45MBaRGYd5ru1kNvuAF9re8A=
+        b=QT6souvEwpuM4AikvWXxuvWlYUGDGWGOcLhuQq07w9srCjxYiDP7XhU8DuZ8LLLtH
+         eGw8Fb/lADwVS5g7RJvLVvOEMfnVvvkjcYUpdibqIRPkgYTwG0a0emfrxMLg/lky4P
+         bJvIfP+J6kyi/pZ75i74OjME+PXKg9aOjsfnmeds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <andrew.murray@arm.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 111/137] PCI: histb: Propagate errors for optional regulators
-Date:   Sun,  6 Oct 2019 19:21:35 +0200
-Message-Id: <20191006171218.315934610@linuxfoundation.org>
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, kernel@pengutronix.de,
+        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 112/137] PCI: imx6: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:36 +0200
+Message-Id: <20191006171218.428047589@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -64,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 8f9e1641ba445437095411d9fda2324121110d5d ]
+[ Upstream commit 2170a09fb4b0f66e06e5bcdcbc98c9ccbf353650 ]
 
 regulator_get_optional() can fail for a number of reasons besides probe
 deferral. It can for example return -ENOMEM if it runs out of memory as
@@ -81,25 +85,31 @@ cause the driver to fail probe.
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: kernel@pengutronix.de
+Cc: linux-imx@nxp.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-histb.c | 4 ++--
+ drivers/pci/controller/dwc/pci-imx6.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-index 954bc2b74bbcd..811b5c6d62eae 100644
---- a/drivers/pci/controller/dwc/pcie-histb.c
-+++ b/drivers/pci/controller/dwc/pcie-histb.c
-@@ -340,8 +340,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 9b5cb5b703890..aabf22eaa6b91 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1173,8 +1173,8 @@ static int imx6_pcie_probe(struct platform_device *pdev)
  
- 	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
- 	if (IS_ERR(hipcie->vpcie)) {
--		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
+ 	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+ 	if (IS_ERR(imx6_pcie->vpcie)) {
+-		if (PTR_ERR(imx6_pcie->vpcie) == -EPROBE_DEFER)
 -			return -EPROBE_DEFER;
-+		if (PTR_ERR(hipcie->vpcie) != -ENODEV)
-+			return PTR_ERR(hipcie->vpcie);
- 		hipcie->vpcie = NULL;
++		if (PTR_ERR(imx6_pcie->vpcie) != -ENODEV)
++			return PTR_ERR(imx6_pcie->vpcie);
+ 		imx6_pcie->vpcie = NULL;
  	}
  
 -- 
