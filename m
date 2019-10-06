@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4669CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BACFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3E821479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA1521479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383251;
-	bh=TmUVAbWSEcYcj+irDhRNLuE3zHUilfSwCYvlTjdtEr8=;
+	s=default; t=1570383254;
+	bh=71Teq/z3em+Gqxx4C3IM9Ovs6Uia6I4586LFWmnZh5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+0PIV5HWNq06Rh6stIuwGVwXqQFMar2qs+9K2BVc1RybjTw1Xl0Yt91wWALA3tkF
-	 juvuKvZ2wnvthLXMW3iZEgrifKyvVi7H0lG4yf6SU94BpK+NX0m650jcDerFuoa3mC
-	 8STYVokbzCGKHj8SnqRd0EwK8rb4KasDH10F6QKE=
+	b=NALrb5QLtxUwKn4EOxMzFpqYao8rhS7lyoPXP1RxGAxPeeu8u3l3bNb51qaf67Buv
+	 tMtrBd+jJ8vjXJ5ibLH0h/A4gmdE+kd3xXa+If7ZYAeGv0qF+iYTFufb1ghDD3v7HR
+	 g0ho9fNPPCyCt+QCgJg6HwmGUZwhqliII8+vRUMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfJFReK (ORCPT
+        id S1729910AbfJFReN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfJFReH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:07 -0400
+        id S1729895AbfJFReJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:34:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2AA52133F;
-        Sun,  6 Oct 2019 17:34:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7DA02080F;
+        Sun,  6 Oct 2019 17:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383246;
-        bh=TmUVAbWSEcYcj+irDhRNLuE3zHUilfSwCYvlTjdtEr8=;
+        s=default; t=1570383249;
+        bh=71Teq/z3em+Gqxx4C3IM9Ovs6Uia6I4586LFWmnZh5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujulOzo3QiDolhJEBih/qVbsdLHJmoiCVeAouKOxBTyIej4SkIvCbcZYkyVX32QDR
-         WlRtq8pmguuJeN8XuBbMxBRRvryuuwrDAS86WWaWzO2giPzKTmOIFxi8t3UATvlnB2
-         m7e+vjaAKH3CAz8QNXeiUkW/Hkb+pCeJefwiT9YQ=
+        b=hcbGaHbK2EPJRvdsCHedNgM2DZWVZHTXZbH7FvbfZ/s5FOq63my48ZP75mSc17mLX
+         fpqbpa/IwlWCm3e46Nt2H5FClN7DDJzElAbdoVbD7jQH/j3offF/5F0VxU6NG72Eo1
+         gzr2oa2KKwj6IB1qUjqXwBxJ3m/szq9dBOMxEpBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 032/137] drm/tinydrm/Kconfig: drivers: Select BACKLIGHT_CLASS_DEVICE
-Date:   Sun,  6 Oct 2019 19:20:16 +0200
-Message-Id: <20191006171211.720052022@linuxfoundation.org>
+Subject: [PATCH 5.2 033/137] drm/stm: attach gem fence to atomic state
+Date:   Sun,  6 Oct 2019 19:20:17 +0200
+Message-Id: <20191006171211.782273431@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,99 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Noralf Trønnes <noralf@tronnes.org>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-[ Upstream commit 3389669ac5ea598562673c04971d7bb0fab0e9f1 ]
+[ Upstream commit 8fabc9c3109a71b3577959a05408153ae69ccd8d ]
 
-The mipi_dbi helper is missing a dependency on DRM_KMS_HELPER and putting
-that in revealed this problem:
+To properly synchronize with other devices the fence from the GEM
+object backing the framebuffer needs to be attached to the atomic
+state, so the commit work can wait on fence signaling.
 
-drivers/video/fbdev/Kconfig:12:error: recursive dependency detected!
-drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
-drivers/gpu/drm/Kconfig:75:     symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
-drivers/gpu/drm/Kconfig:69:     symbol DRM_KMS_HELPER is selected by TINYDRM_MIPI_DBI
-drivers/gpu/drm/tinydrm/Kconfig:11:     symbol TINYDRM_MIPI_DBI is selected by TINYDRM_HX8357D
-drivers/gpu/drm/tinydrm/Kconfig:15:     symbol TINYDRM_HX8357D depends on BACKLIGHT_CLASS_DEVICE
-drivers/video/backlight/Kconfig:144:    symbol BACKLIGHT_CLASS_DEVICE is selected by FB_BACKLIGHT
-drivers/video/fbdev/Kconfig:187:        symbol FB_BACKLIGHT depends on FB
-
-A symbol that selects DRM_KMS_HELPER can not depend on
-BACKLIGHT_CLASS_DEVICE. The reason for this is that DRM_KMS_FB_HELPER
-selects FB instead of depending on it.
-
-The tinydrm drivers have somehow gotten away with depending on
-BACKLIGHT_CLASS_DEVICE because DRM_TINYDRM selects DRM_KMS_HELPER and the
-drivers depend on that symbol.
-
-An audit shows that all DRM drivers that select DRM_KMS_HELPER and use
-BACKLIGHT_CLASS_DEVICE, selects it:
-  DRM_TILCDC, DRM_GMA500, DRM_SHMOBILE, DRM_NOUVEAU, DRM_FSL_DCU,
-  DRM_I915, DRM_RADEON, DRM_AMDGPU, DRM_PARADE_PS8622
-
-Documentation/kbuild/kconfig-language.txt has a note regarding select:
-1. 'select should be used with care since it doesn't visit dependencies.'
-   This is not a problem since BACKLIGHT_CLASS_DEVICE doesn't have any
-   dependencies.
-2. 'In general use select only for non-visible symbols'
-   BACKLIGHT_CLASS_DEVICE is user visible.
-
-The real solution to this would be to have DRM_KMS_FB_HELPER depend on the
-user visible symbol FB. That is a can of worms I'm not willing to tackle.
-I fear that such a change will result in me handling difficult fallouts
-for the next weeks. So I'm following DRM suite here.
-
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: David Lechner <david@lechnology.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190722104312.16184-7-noralf@tronnes.org
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Tested-by: Philippe Cornu <philippe.cornu@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190712084228.8338-1-l.stach@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tinydrm/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/stm/ltdc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/tinydrm/Kconfig b/drivers/gpu/drm/tinydrm/Kconfig
-index 87819c82bcce8..f2f0739d1035d 100644
---- a/drivers/gpu/drm/tinydrm/Kconfig
-+++ b/drivers/gpu/drm/tinydrm/Kconfig
-@@ -14,8 +14,8 @@ config TINYDRM_MIPI_DBI
- config TINYDRM_HX8357D
- 	tristate "DRM support for HX8357D display panels"
- 	depends on DRM_TINYDRM && SPI
--	depends on BACKLIGHT_CLASS_DEVICE
- 	select TINYDRM_MIPI_DBI
-+	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  DRM driver for the following HX8357D panels:
- 	  * YX350HV15-T 3.5" 340x350 TFT (Adafruit 3.5")
-@@ -35,8 +35,8 @@ config TINYDRM_ILI9225
- config TINYDRM_ILI9341
- 	tristate "DRM support for ILI9341 display panels"
- 	depends on DRM_TINYDRM && SPI
--	depends on BACKLIGHT_CLASS_DEVICE
- 	select TINYDRM_MIPI_DBI
-+	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  DRM driver for the following Ilitek ILI9341 panels:
- 	  * YX240QV29-T 2.4" 240x320 TFT (Adafruit 2.4")
-@@ -46,8 +46,8 @@ config TINYDRM_ILI9341
- config TINYDRM_MI0283QT
- 	tristate "DRM support for MI0283QT"
- 	depends on DRM_TINYDRM && SPI
--	depends on BACKLIGHT_CLASS_DEVICE
- 	select TINYDRM_MIPI_DBI
-+	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  DRM driver for the Multi-Inno MI0283QT display panel
- 	  If M is selected the module will be called mi0283qt.
-@@ -78,8 +78,8 @@ config TINYDRM_ST7586
- config TINYDRM_ST7735R
- 	tristate "DRM support for Sitronix ST7735R display panels"
- 	depends on DRM_TINYDRM && SPI
--	depends on BACKLIGHT_CLASS_DEVICE
- 	select TINYDRM_MIPI_DBI
-+	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  DRM driver Sitronix ST7735R with one of the following LCDs:
- 	  * JD-T18003-T01 1.8" 128x160 TFT
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 32fd6a3b37fb1..6f1fef76671c8 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -25,6 +25,7 @@
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_plane_helper.h>
+ #include <drm/drm_probe_helper.h>
+@@ -875,6 +876,7 @@ static const struct drm_plane_funcs ltdc_plane_funcs = {
+ };
+ 
+ static const struct drm_plane_helper_funcs ltdc_plane_helper_funcs = {
++	.prepare_fb = drm_gem_fb_prepare_fb,
+ 	.atomic_check = ltdc_plane_atomic_check,
+ 	.atomic_update = ltdc_plane_atomic_update,
+ 	.atomic_disable = ltdc_plane_atomic_disable,
 -- 
 2.20.1
 
