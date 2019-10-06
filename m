@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086DBC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6656C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2312087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB632077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382427;
-	bh=C6AbjV4f8ptNOGIJz+ANPjxCKhBIdSX/ugZ/YNSZmgY=;
+	s=default; t=1570382429;
+	bh=VciDMDhFHKDQEPxqkTGEW9Ps0wJxrDtXnrF0ZYnTnSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XXiLQlh6+QvOxIt8OdRl8AZyXCLNw8tetEY3laVy4jGDUEdUxSgQg7XRs0pCcCu6I
-	 3MUXZDbevz3sNKz3PLdZ6NL+PUrRcWYkN3evXZ07KsdY7V+tWArU2swVIa38jyYqn8
-	 igeEmQ1oMLbt4Plgp5hakVhbVU/MAv1afeyTEKtc=
+	b=eeORngF2/3nH5gE26xaDwSah9Y+xuXPMl5Tk1I1HBN82ka15rCV+TQKJU43HQRzOc
+	 gH75fgg0FErBtcbSRYl21H4Ou/xBwUgWJCB21UX4vs/WQ2DwcUe3l4iFf9AxHUoOsX
+	 AgH+pVNtyiSmE2Yn0Us0nJ/F176OK+UCtUPWqIjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfJFRUW (ORCPT
+        id S1727223AbfJFRU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45300 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfJFRUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:18 -0400
+        id S1727201AbfJFRU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF01C21835;
-        Sun,  6 Oct 2019 17:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 014A02077B;
+        Sun,  6 Oct 2019 17:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382417;
-        bh=C6AbjV4f8ptNOGIJz+ANPjxCKhBIdSX/ugZ/YNSZmgY=;
+        s=default; t=1570382425;
+        bh=VciDMDhFHKDQEPxqkTGEW9Ps0wJxrDtXnrF0ZYnTnSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHaLORJfhGXH/nu/Zyzn1DtkZPLTm5jXzSl8DZ6iwj0tnqS1bxq7T2xFIPx2XDi1F
-         f9YlccdAqVUkk2urplPZ/lzk2BO1Zv/ZwV0mnr18fsqykQW9MRk1Y8mta9atqQV525
-         1BR5J1jSXJ8qRxa9CycOddIHbpC/yaLqSyF/asIQ=
+        b=VoBk/Eb0XjDgAH1xfwz1wQwW6j1yKq2sn/pOzcI/FuUnDr0qPwEPL2UIoe5jknVqu
+         YPEiMkqE/7hxXt29+lGiCFVthk6+dArYIZEuCwQUc9F0esaQKCZR58Bg7CJuz9udkN
+         7hcZRiGGtr+rJdOcAIZNAbeu/hBmB5V1UHizyjpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
         syzbot <syzkaller@googlegroups.com>,
-        Mattias Nissler <mnissler@chromium.org>
-Subject: [PATCH 4.4 23/36] ANDROID: binder: remove waitqueue when thread exits.
-Date:   Sun,  6 Oct 2019 19:19:05 +0200
-Message-Id: <20191006171054.595539874@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 26/36] ipv6: drop incoming packets having a v4mapped source address
+Date:   Sun,  6 Oct 2019 19:19:08 +0200
+Message-Id: <20191006171056.399660362@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -60,70 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martijn Coenen <maco@android.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
+[ Upstream commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3 ]
 
-binder_poll() passes the thread->wait waitqueue that
-can be slept on for work. When a thread that uses
-epoll explicitly exits using BINDER_THREAD_EXIT,
-the waitqueue is freed, but it is never removed
-from the corresponding epoll data structure. When
-the process subsequently exits, the epoll cleanup
-code tries to access the waitlist, which results in
-a use-after-free.
+This began with a syzbot report. syzkaller was injecting
+IPv6 TCP SYN packets having a v4mapped source address.
 
-Prevent this by using POLLFREE when the thread exits.
+After an unsuccessful 4-tuple lookup, TCP creates a request
+socket (SYN_RECV) and calls reqsk_queue_hash_req()
 
-Signed-off-by: Martijn Coenen <maco@android.com>
+reqsk_queue_hash_req() calls sk_ehashfn(sk)
+
+At this point we have AF_INET6 sockets, and the heuristic
+used by sk_ehashfn() to either hash the IPv4 or IPv6 addresses
+is to use ipv6_addr_v4mapped(&sk->sk_v6_daddr)
+
+For the particular spoofed packet, we end up hashing V4 addresses
+which were not initialized by the TCP IPv6 stack, so KMSAN fired
+a warning.
+
+I first fixed sk_ehashfn() to test both source and destination addresses,
+but then faced various problems, including user-space programs
+like packetdrill that had similar assumptions.
+
+Instead of trying to fix the whole ecosystem, it is better
+to admit that we have a dual stack behavior, and that we
+can not build linux kernels without V4 stack anyway.
+
+The dual stack API automatically forces the traffic to be IPv4
+if v4mapped addresses are used at bind() or connect(), so it makes
+no sense to allow IPv6 traffic to use the same v4mapped class.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
 Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: stable <stable@vger.kernel.org> # 4.14
-[backport BINDER_LOOPER_STATE_POLL logic as well]
-Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/android/binder.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ net/ipv6/ip6_input.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -334,7 +334,8 @@ enum {
- 	BINDER_LOOPER_STATE_EXITED      = 0x04,
- 	BINDER_LOOPER_STATE_INVALID     = 0x08,
- 	BINDER_LOOPER_STATE_WAITING     = 0x10,
--	BINDER_LOOPER_STATE_NEED_RETURN = 0x20
-+	BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
-+	BINDER_LOOPER_STATE_POLL	= 0x40,
- };
+--- a/net/ipv6/ip6_input.c
++++ b/net/ipv6/ip6_input.c
+@@ -151,6 +151,16 @@ int ipv6_rcv(struct sk_buff *skb, struct
+ 	if (ipv6_addr_is_multicast(&hdr->saddr))
+ 		goto err;
  
- struct binder_thread {
-@@ -2610,6 +2611,18 @@ static int binder_free_thread(struct bin
- 		} else
- 			BUG();
- 	}
-+
-+	/*
-+	 * If this thread used poll, make sure we remove the waitqueue
-+	 * from any epoll data structures holding it with POLLFREE.
-+	 * waitqueue_active() is safe to use here because we're holding
-+	 * the inner lock.
++	/* While RFC4291 is not explicit about v4mapped addresses
++	 * in IPv6 headers, it seems clear linux dual-stack
++	 * model can not deal properly with these.
++	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
++	 *
++	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
 +	 */
-+	if ((thread->looper & BINDER_LOOPER_STATE_POLL) &&
-+	    waitqueue_active(&thread->wait)) {
-+		wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
-+	}
++	if (ipv6_addr_v4mapped(&hdr->saddr))
++		goto err;
 +
- 	if (send_reply)
- 		binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
- 	binder_release_work(&thread->todo);
-@@ -2633,6 +2646,8 @@ static unsigned int binder_poll(struct f
- 		return POLLERR;
- 	}
- 
-+	thread->looper |= BINDER_LOOPER_STATE_POLL;
-+
- 	wait_for_proc_work = thread->transaction_stack == NULL &&
- 		list_empty(&thread->todo) && thread->return_error == BR_OK;
+ 	skb->transport_header = skb->network_header + sizeof(*hdr);
+ 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
  
 
 
