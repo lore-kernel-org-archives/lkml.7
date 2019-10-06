@@ -2,102 +2,121 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7D2C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C346FC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48AF220862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8945220684
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="WVWZ2K6m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHafZmcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbfJFSlq (ORCPT
+        id S1726424AbfJFSpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:41:46 -0400
-Received: from vern.gendns.com ([98.142.107.122]:43106 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfJFSlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 14:41:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8lAJFEkwl2Q1Fvmq3UOLVFJ2OXdPmm/TVkvNTIF5e4w=; b=WVWZ2K6mbb454aWFA0kF4Y10pG
-        aLeY5X8WJQxJCsJC/9FFiDqtcHJ4LkNq5KpTo/PdReBUis0fO1xAnkayWrmyW6vOqLTvcryjo9acg
-        r+6yIB7v/uo3ynAJ+4gax3yoSysPuZET2PBL//gYy7oppDZiiuTrLxIAqrvcBZtXqPSiRRbFrK5Ue
-        BNGlzk1TFhqPmgwEFRKPvCpCTekpG7DwK9NrvWN2eOxDq4BiEuWfqfRsYnWfVRqv5sZ9w+JR2GEyU
-        lLd/PcUC+cHc1Z3k3v8ep12hFXdcPuyO5nBA+ez923v4+9EtPutpL/wWcWiv+NGZOktRCzOkA3Reg
-        ryRP6+AQ==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:54564 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1iHBTT-00024a-L0; Sun, 06 Oct 2019 14:41:43 -0400
-Subject: Re: [PATCH v4 2/2] docs: driver-api: generic-counter: Update Count
- and Signal data types
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>, jic23@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org
-References: <cover.1570377521.git.vilhelm.gray@gmail.com>
- <75a9ca9837f4d66cb4912cfa535176e27f7c219a.1570377521.git.vilhelm.gray@gmail.com>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <9850a671-2822-24b7-3c22-b4abbd6a6b37@lechnology.com>
-Date:   Sun, 6 Oct 2019 13:41:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 6 Oct 2019 14:45:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42653 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfJFSpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 14:45:09 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so12610749wrw.9
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BLRrAgbsWXih4clGwXHcgrN0r/ckYeUc4/Lev7iwj68=;
+        b=pHafZmcDa364Q+dhPwlr7nhIUd5zHshMdZyjz7Y7GDSIfFpX/YbNDhOvFAEOvj/iQ+
+         5hdLUEO95bV4YepysYlupbJSaabQV6Ehas7boCto1zLVYsaXL4DktUp7G5TC3pFHs7An
+         zp3Z22ww9U4Uq1FjK20ciIvF35SrU4VL7804N/2wa9K85nZkxiRmXVQObvcGGLQidhTE
+         qxQiW15HWzAIS55aZTFP+Yqqk3JmsllabxNfrbOfUtysj+Ai77ytuHqqsn/nJ49kROvF
+         K1GdxiPyI945K3m5B4MkqjheEpJLwlOIrf/UM5Uf2TDUHOfH74bZ5mouOwmgMOds55Jn
+         e0AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BLRrAgbsWXih4clGwXHcgrN0r/ckYeUc4/Lev7iwj68=;
+        b=NNyneGBc/JhjBego+lJheE4jRvs238li1M0CUogaU56oPm1vR2tiHBT2haLGjNiYRu
+         9mcpx6IECA4/RCLksFxVsyvrYMRnXgbcQwhL+7HjAFKXIPC4X9OKRX4yd3NR6AywkByq
+         TgDlkZQG503ndPSCKQFmw9hTOyROQq5N+PNxw7uZFU99yDxVvaXCX+xGl0TA87uvRbXh
+         PilYnC3NXZJ8JgGtBJnUYJfNgWze2SAtaNwbe7kYEFg1fPr3XU9QqEJL9SHR8adtZ0rG
+         GYlxFxMExo3Dek5TGWltChrKhnbZwHivNhwjVtmIA6BGcxjOxuH+G+NS2DFuvRegj8yB
+         GtLw==
+X-Gm-Message-State: APjAAAWK+NesFRTN7ywgn63ANd2ANyRJDL0DyjQS0NQzQBdfdsrxnwQ8
+        e566pm2yqg7tFwgMFUBiWA==
+X-Google-Smtp-Source: APXvYqyepOGf8igYvzB3AfpQ0u4G7hwVSLG3irfa8mVsmI7KDrPS/UPu3wZ+wh+hsyCmfg0oT0uC0g==
+X-Received: by 2002:adf:ce83:: with SMTP id r3mr18656090wrn.219.1570387507029;
+        Sun, 06 Oct 2019 11:45:07 -0700 (PDT)
+Received: from ninjahub.lan (host-92-15-175-166.as43234.net. [92.15.175.166])
+        by smtp.googlemail.com with ESMTPSA id a7sm28150963wra.43.2019.10.06.11.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 11:45:06 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, olsonse@umich.edu,
+        hsweeten@visionengravers.com, abbotti@mev.co.uk,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH] staging: comedi: Fix camelcase check warning
+Date:   Sun,  6 Oct 2019 19:44:53 +0100
+Message-Id: <20191006184453.11765-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <75a9ca9837f4d66cb4912cfa535176e27f7c219a.1570377521.git.vilhelm.gray@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/6/19 11:03 AM, William Breathitt Gray wrote:
-> Count data is now always represented as an unsigned integer, while
-> Signal data is either SIGNAL_LOW or SIGNAL_HIGH.
-> 
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> ---
->   Documentation/driver-api/generic-counter.rst | 22 +++++++-------------
->   1 file changed, 8 insertions(+), 14 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
-> index 8382f01a53e3..161652fc1025 100644
-> --- a/Documentation/driver-api/generic-counter.rst
-> +++ b/Documentation/driver-api/generic-counter.rst
-> @@ -39,10 +39,7 @@ There are three core components to a counter:
->   COUNT
->   -----
->   A Count represents the count data for a set of Signals. The Generic
-> -Counter interface provides the following available count data types:
-> -
-> -* COUNT_POSITION:
-> -  Unsigned integer value representing position.
-> +Counter interface represents the count data as an unsigned integer.
+Capitalize unit_ma to fix camelcase check warning.
 
-The previous patch looks like it is using unsigned long instead of
-unsigned integer.
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ drivers/staging/comedi/comedi.h    | 4 ++--
+ drivers/staging/comedi/comedidev.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/staging/comedi/comedi.h b/drivers/staging/comedi/comedi.h
+index 09a940066c0e..df770043b37d 100644
+--- a/drivers/staging/comedi/comedi.h
++++ b/drivers/staging/comedi/comedi.h
+@@ -674,7 +674,7 @@ struct comedi_rangeinfo {
+  * linear (for the purpose of describing the range), with sample value %0
+  * mapping to @min, and the 'maxdata' sample value mapping to @max.
+  *
+- * The currently defined units are %UNIT_volt (%0), %UNIT_mA (%1), and
++ * The currently defined units are %UNIT_volt (%0), %UNIT_MA (%1), and
+  * %UNIT_none (%2).  The @min and @max values are the physical range multiplied
+  * by 1e6, so a @max value of %1000000 (with %UNIT_volt) represents a maximal
+  * value of 1 volt.
+@@ -909,7 +909,7 @@ struct comedi_bufinfo {
+ #define RF_EXTERNAL		0x100
+ 
+ #define UNIT_volt		0
+-#define UNIT_mA			1
++#define UNIT_MA			1
+ #define UNIT_none		2
+ 
+ #define COMEDI_MIN_SPEED	0xffffffffu
+diff --git a/drivers/staging/comedi/comedidev.h b/drivers/staging/comedi/comedidev.h
+index 0dff1ac057cd..54c091866777 100644
+--- a/drivers/staging/comedi/comedidev.h
++++ b/drivers/staging/comedi/comedidev.h
+@@ -603,7 +603,7 @@ int comedi_check_chanlist(struct comedi_subdevice *s,
+ 
+ #define RANGE(a, b)		{(a) * 1e6, (b) * 1e6, 0}
+ #define RANGE_ext(a, b)		{(a) * 1e6, (b) * 1e6, RF_EXTERNAL}
+-#define RANGE_mA(a, b)		{(a) * 1e6, (b) * 1e6, UNIT_mA}
++#define RANGE_mA(a, b)		{(a) * 1e6, (b) * 1e6, UNIT_MA}
+ #define RANGE_unitless(a, b)	{(a) * 1e6, (b) * 1e6, 0}
+ #define BIP_RANGE(a)		{-(a) * 1e6, (a) * 1e6, 0}
+ #define UNI_RANGE(a)		{0, (a) * 1e6, 0}
+-- 
+2.21.0
 
