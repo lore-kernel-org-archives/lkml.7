@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09A3C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4452087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CA02087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383018;
-	bh=QPtqNeyMsNf02U0gseQ4oTIdZSRz1mT4OcfhwZov/V8=;
+	s=default; t=1570383022;
+	bh=3IstOCt8DF1LlC7NwUbUAu1NTRKIhaLMQQKjqiQFfpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wOzHWJy8LbWqMUHSjRwFsd1jmbH/grK6bxVPCUXmQtlPeVLIb+3IVaxeEj4EE3sat
-	 qDwtOQqMq9SjM9mpnfEMRGKZUd3fbvQ/kKMQtUwLQoOXEnMPaf/zfSaf3BQH5bZ9Ys
-	 pjBchdHur41WMtAxOCb6xAogr9spnkGPm1vxTgB0=
+	b=tVu69sft8h//iM+xuPuCDiBYRbM5Hpgps0Vsng3FBu6JYw4VLdrFscFBbon2qOQhi
+	 4sDj5RAna9ufVjT0UVAGwBsm3l3RHur3l/YoVgNhBOIHyR2gREK+D17fCX2/qnqva0
+	 JGtM1PWdUu4AqjitdAsoCm13zli11l5RTFGCrrZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfJFRaR (ORCPT
+        id S1728383AbfJFRaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbfJFRaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:09 -0400
+        id S1729196AbfJFRaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AC721479;
-        Sun,  6 Oct 2019 17:30:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BD4021479;
+        Sun,  6 Oct 2019 17:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383008;
-        bh=QPtqNeyMsNf02U0gseQ4oTIdZSRz1mT4OcfhwZov/V8=;
+        s=default; t=1570383013;
+        bh=3IstOCt8DF1LlC7NwUbUAu1NTRKIhaLMQQKjqiQFfpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kjhG8e29BhPLfAy/uE4pAffT3xPmjltDRwrZR89XVysyd3tg7/mGsWZvz68jo29PE
-         jyol5M3p8mxQtf2JuVxjbWU2zwUvp1SzdfThdeLXCJvc0lupPmFklYvlowSZ8hdb8u
-         RO0vUp6xHWbJq+8rjTj8YJdQ7WcH3vQyoyMJb6c8=
+        b=bMySIFxLDNAfTpLk9XX1fNei4g6tF8+0Wft1YKZlgRkWf0fXutNhqLBBmgpkfrtGs
+         mh0DhzZOKR3r7qn9XDFvfcnd+mkq/KYY4wVlptkys/h7fvLNM6o8M8+AUNwLRFSc4S
+         BCBKlxclzxugTxTpw4QTjLfxgthjawAqtVX03Vfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/106] HID: wacom: Fix several minor compiler warnings
-Date:   Sun,  6 Oct 2019 19:20:59 +0200
-Message-Id: <20191006171145.891032620@linuxfoundation.org>
+        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 055/106] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
+Date:   Sun,  6 Oct 2019 19:21:01 +0200
+Message-Id: <20191006171147.589399213@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,87 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 073b50bccbbf99a3b79a1913604c656d0e1a56c9 ]
+[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
 
-Addresses a few issues that were noticed when compiling with non-default
-warnings enabled. The trimmed-down warnings in the order they are fixed
-below are:
+Translation faults arising from cache maintenance instructions are
+rather unhelpfully reported with an FSR value where the WnR field is set
+to 1, indicating that the faulting access was a write. Since cache
+maintenance instructions on 32-bit ARM do not require any particular
+permissions, this can cause our private 'cacheflush' system call to fail
+spuriously if a translation fault is generated due to page aging when
+targetting a read-only VMA.
 
-* declaration of 'size' shadows a parameter
+In this situation, we will return -EFAULT to userspace, although this is
+unfortunately suppressed by the popular '__builtin___clear_cache()'
+intrinsic provided by GCC, which returns void.
 
-* '%s' directive output may be truncated writing up to 5 bytes into a
-  region of size between 1 and 64
+Although it's tempting to write this off as a userspace issue, we can
+actually do a little bit better on CPUs that support LPAE, even if the
+short-descriptor format is in use. On these CPUs, cache maintenance
+faults additionally set the CM field in the FSR, which we can use to
+suppress the write permission checks in the page fault handler and
+succeed in performing cache maintenance to read-only areas even in the
+presence of a translation fault.
 
-* pointer targets in initialization of 'char *' from 'unsigned char *'
-  differ in signedness
-
-* left shift of negative value
-
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reported-by: Orion Hodson <oth@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/wacom_sys.c | 7 ++++---
- drivers/hid/wacom_wac.c | 4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ arch/arm/mm/fault.c | 4 ++--
+ arch/arm/mm/fault.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-index 5a2d5140c1f42..3038c975e417c 100644
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -91,7 +91,7 @@ static void wacom_wac_queue_flush(struct hid_device *hdev,
- }
- 
- static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
--		struct hid_report *report, u8 *raw_data, int size)
-+		struct hid_report *report, u8 *raw_data, int report_size)
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index 3232afb6fdc00..a9ee0d9dc740a 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -216,7 +216,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
  {
- 	struct wacom *wacom = hid_get_drvdata(hdev);
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
-@@ -152,7 +152,8 @@ static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
- 	if (flush)
- 		wacom_wac_queue_flush(hdev, &wacom_wac->pen_fifo);
- 	else if (insert)
--		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo, raw_data, size);
-+		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo,
-+				       raw_data, report_size);
+ 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
  
- 	return insert && !flush;
- }
-@@ -2147,7 +2148,7 @@ static void wacom_update_name(struct wacom *wacom, const char *suffix)
- {
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
- 	struct wacom_features *features = &wacom_wac->features;
--	char name[WACOM_NAME_MAX];
-+	char name[WACOM_NAME_MAX - 20]; /* Leave some room for suffixes */
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		mask = VM_WRITE;
+ 	if (fsr & FSR_LNX_PF)
+ 		mask = VM_EXEC;
+@@ -287,7 +287,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
  
- 	/* Generic devices name unspecified */
- 	if ((features->type == HID_GENERIC) && !strcmp("Wacom HID", features->name)) {
-diff --git a/drivers/hid/wacom_wac.c b/drivers/hid/wacom_wac.c
-index 6f5c838f9d474..1df037e7f0b42 100644
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -255,7 +255,7 @@ static int wacom_dtu_irq(struct wacom_wac *wacom)
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		flags |= FAULT_FLAG_WRITE;
  
- static int wacom_dtus_irq(struct wacom_wac *wacom)
- {
--	char *data = wacom->data;
-+	unsigned char *data = wacom->data;
- 	struct input_dev *input = wacom->pen_input;
- 	unsigned short prox, pressure = 0;
- 
-@@ -576,7 +576,7 @@ static int wacom_intuos_pad(struct wacom_wac *wacom)
- 		strip2 = ((data[3] & 0x1f) << 8) | data[4];
- 	}
- 
--	prox = (buttons & ~(~0 << nbuttons)) | (keys & ~(~0 << nkeys)) |
-+	prox = (buttons & ~(~0U << nbuttons)) | (keys & ~(~0U << nkeys)) |
- 	       (ring1 & 0x80) | (ring2 & 0x80) | strip1 | strip2;
- 
- 	wacom_report_numbered_buttons(input, nbuttons, buttons);
+ 	/*
+diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
+index c063708fa5032..9ecc2097a87a0 100644
+--- a/arch/arm/mm/fault.h
++++ b/arch/arm/mm/fault.h
+@@ -6,6 +6,7 @@
+  * Fault status register encodings.  We steal bit 31 for our own purposes.
+  */
+ #define FSR_LNX_PF		(1 << 31)
++#define FSR_CM			(1 << 13)
+ #define FSR_WRITE		(1 << 11)
+ #define FSR_FS4			(1 << 10)
+ #define FSR_FS3_0		(15)
 -- 
 2.20.1
 
