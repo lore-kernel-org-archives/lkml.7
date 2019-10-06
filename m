@@ -7,47 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D873C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1D7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2224B2053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641AB22487
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384047;
-	bh=jLqHmcGJimG4CepNm67Hh12Os147e/ycQFw2SHlJX8Y=;
+	s=default; t=1570384048;
+	bh=2phXe2I4hy0lD35uuWJUDpgHRLdxGNb60n5qMD4KcjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VkezZB8DozAf6exvYUaMaYskTeXC5n1KiPkjsLi+LZmmWcvm+d6SMHPw82D97Eq8i
-	 N9s8OaFGm5JyhJXzOHEmpW9PVD26RiLxuk1n9HjUCEaIqVq7om0n79LXGMIobwaooB
-	 cxwJqx9lmgZMCGtF1n5FqgW/+p/rYmVj9KbFLc2s=
+	b=XRAjctbhqGz45Jd/OEorX4d2VhP2kTa/y7jpKjXMfeRwObBz9gR4MKvL88xch9jea
+	 1vQ9smy0+ZTTS9sGwCih4NVOPv7d75qjDMOc33HmyiI/DbbeuZCRGsCaqx7UPO/rfK
+	 ZPpObk9fzDRdNDli+dcdZTMnbLhiMHEGZDEr4E4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbfJFRoc (ORCPT
+        id S1727488AbfJFRob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:44:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:44:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731123AbfJFRo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:44:26 -0400
+        id S1731118AbfJFRo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 156732080F;
-        Sun,  6 Oct 2019 17:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BF1A20862;
+        Sun,  6 Oct 2019 17:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383865;
-        bh=jLqHmcGJimG4CepNm67Hh12Os147e/ycQFw2SHlJX8Y=;
+        s=default; t=1570383868;
+        bh=2phXe2I4hy0lD35uuWJUDpgHRLdxGNb60n5qMD4KcjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zkVBCU3MNZUCAlEDZigZI3WGQg8g3JDXWtcmtU06/1fI6DipssjbkXQM0pQWAPd0P
-         P62GyYBd76YgO0XeQqu7U9oTjSAK9E2ZTXwxkq745O8vsKImqp/N+TgAFzpCMEVLyY
-         5BYp/Ube4y6W3tMGhNeKGpDFdkzXwjw6XKCZZycU=
+        b=kg3YjmHOo6rwozGKKi5O1A9td5HpKjJG/eMmhfD9fEInPGeKPoK4p/D7kSAdZnMzZ
+         lAiit5tftEO982oWBdmbfyedAqnh0ZFMZhFxDz4x2i0qoV+u2t93sCNaJhHKXXpc/V
+         l1JNpUhLChhmWFtmpDPGulf0Bg0ib+UII78QXjXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 087/166] PCI: tegra: Fix OF node reference leak
-Date:   Sun,  6 Oct 2019 19:20:53 +0200
-Message-Id: <20191006171220.851848560@linuxfoundation.org>
+Subject: [PATCH 5.3 123/166] kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
+Date:   Sun,  6 Oct 2019 19:21:29 +0200
+Message-Id: <20191006171223.673618193@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,99 +73,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
+[ Upstream commit b751c52bb587ae66f773b15204ef7a147467f4c7 ]
 
-Each iteration of for_each_child_of_node() executes of_node_put() on the
-previous node, but in some return paths in the middle of the loop
-of_node_put() is missing thus causing a reference leak.
+The current default value (400) is too low on many systems (e.g.  some
+ARM64 platform takes up 1000+ entries).
 
-Hence stash these mid-loop return values in a variable 'err' and add a
-new label err_node_put which executes of_node_put() on the previous node
-and returns 'err' on failure.
+syzbot uses 16000 as default value, and has proved to be enough on beefy
+configurations, so let's pick that value.
 
-Change mid-loop return statements to point to jump to this label to
-fix the reference leak.
+This consumes more RAM on boot (each entry is 160 bytes, so in total
+~2.5MB of RAM), but the memory would later be freed (early_log is
+__initdata).
 
-Issue found with Coccinelle.
-
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-[lorenzo.pieralisi@arm.com: rewrote commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Link: http://lkml.kernel.org/r/20190730154027.101525-1-drinkcat@chromium.org
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-tegra.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9a917b2456f6c..673a1725ef382 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2237,14 +2237,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		err = of_pci_get_devfn(port);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		index = PCI_SLOT(err);
- 
- 		if (index < 1 || index > soc->num_ports) {
- 			dev_err(dev, "invalid port number: %d\n", index);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		index--;
-@@ -2253,12 +2254,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse # of lanes: %d\n",
- 				err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		if (value > 16) {
- 			dev_err(dev, "invalid # of lanes: %u\n", value);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		lanes |= value << (index << 3);
-@@ -2272,13 +2274,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		lane += value;
- 
- 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
--		if (!rp)
--			return -ENOMEM;
-+		if (!rp) {
-+			err = -ENOMEM;
-+			goto err_node_put;
-+		}
- 
- 		err = of_address_to_resource(port, 0, &rp->regs);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		INIT_LIST_HEAD(&rp->list);
-@@ -2330,6 +2334,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		return err;
- 
- 	return 0;
-+
-+err_node_put:
-+	of_node_put(port);
-+	return err;
- }
- 
- /*
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 5960e2980a8a0..4d39540011e2e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -596,7 +596,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+ 	int "Maximum kmemleak early log entries"
+ 	depends on DEBUG_KMEMLEAK
+ 	range 200 40000
+-	default 400
++	default 16000
+ 	help
+ 	  Kmemleak must track all the memory allocations to avoid
+ 	  reporting false positives. Since memory may be allocated or
 -- 
 2.20.1
 
