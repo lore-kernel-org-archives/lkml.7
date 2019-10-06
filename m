@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7761AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0D2C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE6E2166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041E520867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382757;
-	bh=eD6lV0qP68tXuMAX1bslxmo2XdVBf5W+00TM6BsEcZo=;
+	s=default; t=1570382761;
+	bh=WZWvLpu91GzMfveMKVhwBFKltwv+EJOdKuq185tjW3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nr349Q7S3dljjB2qLn22o9JHIbXSiUoU5s/Rpw0LY3+bWGZuEJRO/gnQp/4LgxkoQ
-	 tXFmz/jks3ebga9XTecj7o5VsL1YHVfzutsQyynOMJfO13nM6e8PLEWyRyceAWj25o
-	 E4mhDxn3VhXiUtsuw2JN5MnZRqjhpnPldRj7x5z4=
+	b=DuhKGTYW7vbyUgvh92GxLAP92vMo/kulaiZm43nWs+vAbDNjcxYR5yz6HqVyNtx2Q
+	 2R9onUz4DoIOEtxfxxKkgkAX0KXMddsUN8NG9hQMWwM0yztdc6JV7E8+9QYDGFgfU1
+	 PTwPoXGToUKSz1uencbPxOBkSLbasK6lH9VKiLko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfJFRZ4 (ORCPT
+        id S1728154AbfJFR0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50714 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbfJFRZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:25:41 -0400
+        id S1728107AbfJFRZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:25:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B1692077B;
-        Sun,  6 Oct 2019 17:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D3820867;
+        Sun,  6 Oct 2019 17:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382741;
-        bh=eD6lV0qP68tXuMAX1bslxmo2XdVBf5W+00TM6BsEcZo=;
+        s=default; t=1570382746;
+        bh=WZWvLpu91GzMfveMKVhwBFKltwv+EJOdKuq185tjW3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHa06I17eVS8WgtCb1tBrvHo/4SfqMTiBpfysnvcNvQjq7nEjwpTQqoNY2+amdPXY
-         nyaltphchW8NrLR1zQezZ9jq1B4pGFNYK6pTHWS2izz9s/XpUzFqWYCwlZfYwXWryj
-         L4m0OTUYbXsvUxCtkP9jb2cSBuCDf8V2Bp4ip9H4=
+        b=2vx7vrifXKHhenN1d0pSTYsAtJesxDnciZ1b3adfa53GgFVDLt8MChmli6ZY10jKo
+         G121WVGYjcuNPVj9/5Em5fdcrB/zW7T/kZ1IgSPBZutn1pIsyUYfm+d/SfDBOhBUbZ
+         lCmW6TVF+XJA/WcxRu3//CHyuO3PTpRrOiksZko4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Ken Wang <Qingqing.Wang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/68] drm/amdgpu/si: fix ASIC tests
-Date:   Sun,  6 Oct 2019 19:20:58 +0200
-Message-Id: <20191006171118.696415222@linuxfoundation.org>
+Subject: [PATCH 4.14 24/68] powerpc/pseries: correctly track irq state in default idle
+Date:   Sun,  6 Oct 2019 19:21:00 +0200
+Message-Id: <20191006171119.261595375@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -63,57 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
+[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
 
-Comparing adev->family with CHIP constants is not correct.
-adev->family can only be compared with AMDGPU_FAMILY constants and
-adev->asic_type is the struct member to compare with CHIP constants.
-They are separate identification spaces.
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
-Cc: Ken Wang <Qingqing.Wang@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
+
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
+
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
+
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
-index 40520a968eaca..28eea8317e87d 100644
---- a/drivers/gpu/drm/amd/amdgpu/si.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si.c
-@@ -1783,7 +1783,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
- 			if (orig != data)
- 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 6a0ad56e89b93..7a9945b350536 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -307,6 +307,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by ceding processor to hypervisor
+ 	 */
  
--			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
-+			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
- 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
- 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
- 				if (orig != data)
-@@ -1832,14 +1832,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
++	if (!prep_irq_for_idle())
++		return;
++
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
  
- 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
- 			data &= ~LS2_EXIT_TIME_MASK;
--			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
-+			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
- 				data |= LS2_EXIT_TIME(5);
- 			if (orig != data)
- 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
- 
- 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
- 			data &= ~LS2_EXIT_TIME_MASK;
--			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
-+			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
- 				data |= LS2_EXIT_TIME(5);
- 			if (orig != data)
- 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
 -- 
 2.20.1
 
