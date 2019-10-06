@@ -2,101 +2,92 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ED3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF27BECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4AF2084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570376863;
-	bh=DryS73MwEqYaEHfjk9sJrp4eJu/HbUNbnmzbPpUq0gc=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=dWCf+mwCd+/UvA+CAaaEDTDA3YFdVjbOikzocd+qbBeJZCcGWMKi8AFykIXcy0qSp
-	 Ltxyq81RnMM0ljH6eWzLzS16V1tKzUSIAc3EHf8D4pk5veGAAu5XZHuUns8oxjnUum
-	 QFPimBuBqA4wXU12G5ECiIcDRwO1feRqzG7/g/aQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9D5C32084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QgKASS/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfJFPrn (ORCPT
+        id S1726690AbfJFPs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:47:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55716 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJFPrm (ORCPT
+        Sun, 6 Oct 2019 11:48:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53478 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFPs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:47:42 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a6so10044625wma.5;
-        Sun, 06 Oct 2019 08:47:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SBpRb6qd+48zQK5uPLn0YvEluIoUY9o3FhFhGA6TXtY=;
-        b=Z37+ICp7Y2QDT49t+AdNnVTJVt76pPZFd6B69eHRoUoNZlsdtFkBCYnSdEyhWhNbuK
-         XyETKrUDNSnLU0N40QS4exLwpNzCn3/7e6RprNKgM+Qgr2l5BRucGBLAeRfUBtKOQMJ/
-         5E9krxQL8OOHlalnke9FA7tibZzAe6GFB/E4Tjd1T8SsglrBwPlPGPzr8Yl+7Mdbg35j
-         IFXYmMzgkgcDjGXuUelcoGSjezWAQjoj/QavICNDeyyyRPhrYYOc89Nr353qflFxSsn4
-         1BvgZwAEXST7N03PUH5ali/fZNJcdatPFLpTHv6qfPMQra3BvYtNieDoXbXlpO+z1NTI
-         sjXw==
-X-Gm-Message-State: APjAAAUxUmMz14TPUm0Zi7j50psy10b7VPGg5JHEvkXkDaeqENUPDqXP
-        tPZ/Wxzu3jmyhFXsDcYOxAA=
-X-Google-Smtp-Source: APXvYqwiD5w33vuIYv9624AWG0k3vsCYtE8uO59mkpTJi1G/TZQDv7OS1UJvxH3zuwZ0w6XxIwuUIQ==
-X-Received: by 2002:a1c:9988:: with SMTP id b130mr18139392wme.164.1570376858781;
-        Sun, 06 Oct 2019 08:47:38 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id o22sm31539882wra.96.2019.10.06.08.47.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Oct 2019 08:47:38 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 17:47:34 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Rename power domain nodes to
- "power-domain" in Exynos4
-Message-ID: <20191006154734.GA29365@kozik-lap>
-References: <20191002160632.11140-1-krzk@kernel.org>
- <20191002160632.11140-3-krzk@kernel.org>
+        Sun, 6 Oct 2019 11:48:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QAs/+BWA4bVLGbdXB7THsaqLie2jYrpmwgS6OGWaAB8=; b=QgKASS/rB8/myTZ9eXz+cBebd
+        cqkvzl6OdnV/P9O1NoS3sOo1pYeCV6MvSouWZwKxHKA/EeBWVNrRpucFCZyktDcBk5Ym7UHoNPEfU
+        gwXrOcXCwTHEC+sOcjZrvTAMkTY09QJY84w/3Sb4Zr+RJxaHqBwCPoFOe6pXzTmv272KQDLszxGyf
+        a8ZAAub5E1qUg7ZUkP/3/Lfi1mPs2cbge9NKA8pGAJOES0iPvR2MQnsOzqecrIbnYAm9lwNfRXDEa
+        zSuipiXTieKOY4JWtwMDPzDfdRVHY0uB01ZcC+MuufDxWHx3tV787pXXKhdU2PuGIlNxg7FZdSTb1
+        ddpWa2zGQ==;
+Received: from 089144211233.atnat0020.highway.a1.net ([89.144.211.233] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iH8li-0008Qh-Ie; Sun, 06 Oct 2019 15:48:22 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: lift the xfs writepage code into iomap v6
+Date:   Sun,  6 Oct 2019 17:45:57 +0200
+Message-Id: <20191006154608.24738-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191002160632.11140-3-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:06:32PM +0200, Krzysztof Kozlowski wrote:
-> The device node name should reflect generic class of a device so rename
-> power domain nodes to "power-domain".  No functional change.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/exynos4.dtsi    | 14 +++++++-------
->  arch/arm/boot/dts/exynos4210.dtsi |  2 +-
->  arch/arm/boot/dts/exynos4412.dtsi |  2 +-
->  3 files changed, 9 insertions(+), 9 deletions(-)
+Hi all,
 
-Applied.
+this series cleans up the xfs writepage code and then lifts it to
+fs/iomap.c so that it could be use by other file system.  I've been
+wanting to this for a while so that I could eventually convert gfs2
+over to it, but I never got to it.  Now Damien has a new zonefs
+file system for semi-raw access to zoned block devices that would
+like to use the iomap code instead of reinventing it, so I finally
+had to do the work.
 
-Best regards,
-Krzysztof
+Changes since v5:
+ - move the tracing code to fs/iomap/trace.[ch]
+ - fix a bisection issue with the tracing code
+ - add an assert that xfs_end_io now only gets "complicated" completions
+ - better document the iomap_writeback_ops methods in iomap.h
+
+Changes since v4:
+ - rebased on top 5.4-rc1
+ - drop the addition of list_pop / list_pop_entry
+ - re-split a few patches to better fit Darricks scheme of keeping the
+   iomap additions separate from the XFS switchover
+
+Changes since v3:
+ - re-split the pages to add new code to iomap and then switch xfs to
+   it later (Darrick)
+
+Changes since v2:
+ - rebased to v5.3-rc1
+ - folded in a few changes from the gfs2 enablement series
+
+Changes since v1:
+ - rebased to the latest xfs for-next tree
+ - keep the preallocated transactions for size updates
+ - rename list_pop to list_pop_entry and related cleanups
+ - better document the nofs context handling
+ - document that the iomap tracepoints are not a stable API
