@@ -2,51 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A58C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E9EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBAF21927
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A291B2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384861;
-	bh=4cRE8BoO5Dnzu1LM5gTDzH31eoGrRlvqL7fvAltIum8=;
+	s=default; t=1570384873;
+	bh=dwN7DkGYj2baReDA/IN8LzWxLGWghlHv0lcA1lpB8ZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3Kb7SIXmIFQdfeRGCCq2y5+FGjhLVfs/wwFI7uZjYJUpwyNpGpASeo3C4DpxlyZt
-	 +Zi4nuRyvkFFmSBT+x341eMwg6QqDHe2Z86TcUQ+E90r0UWg+uSUEm0y0VmEu023kV
-	 ezmQ4V590+olG/F9YrEiyK26sbs52QQNrFBmS3ho=
+	b=jTMa3SHDGDOFb4G+VaJUoy/WYvk2eK9Ls1YhREinwpeNGCMGjdd5l0qfzASJg92h8
+	 wYV4cr8cptCUx2ZMrDuY/19thQxqijTbN42C9Gv1TmAfUbG+vRy+AixaH6WxzUUOUK
+	 30CcGghkIEcBh7PytkmVAZ7nz7HNtpM+vb22ew5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfJFR2D (ORCPT
+        id S1728522AbfJFR1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53524 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfJFR17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:59 -0400
+        id S1727802AbfJFR1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CE4E2087E;
-        Sun,  6 Oct 2019 17:27:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7562133F;
+        Sun,  6 Oct 2019 17:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382878;
-        bh=4cRE8BoO5Dnzu1LM5gTDzH31eoGrRlvqL7fvAltIum8=;
+        s=default; t=1570382851;
+        bh=dwN7DkGYj2baReDA/IN8LzWxLGWghlHv0lcA1lpB8ZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmW3t4tH50zvhNkoHeziDgwnM0XwBT+KRbZ8gcpnZTm2jm3tonh6Ref0E9iCZ/HKx
-         jjTYLY3qyIk13zOzBDoCGB6XFDKOVB9pf3/Q1iTn8rsGbrLsXnZVcg502zvlyKFGrL
-         N4MQwvlAjhcZWG9VYARkHXp3OdD9dpMMQLUi2wzo=
+        b=GmKz+eDwaVTdTIFLKzj6mUYEug3i0rkro7Iu6y7tzICFb2G+KOUONJfQmUApnGkeB
+         R9d1HiWID1KcAlQSU2ye4bXRx9lQSjK7PTtfzUloARNVoKDTFbKSKdbK+zE6aByZ5G
+         MvQxJzrVNS/L/w/D3S9UhvSSoyH6NfF85gte0cAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anatoly Pugachev <matorola@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/68] pktcdvd: remove warning on attempting to register non-passthrough dev
-Date:   Sun,  6 Oct 2019 19:21:19 +0200
-Message-Id: <20191006171128.702814317@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 63/68] sch_cbq: validate TCA_CBQ_WRROPT to avoid crash
+Date:   Sun,  6 Oct 2019 19:21:39 +0200
+Message-Id: <20191006171138.008238363@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -59,87 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit eb09b3cc464d2c3bbde9a6648603c8d599ea8582 ]
+[ Upstream commit e9789c7cc182484fc031fd88097eb14cb26c4596 ]
 
-Anatoly reports that he gets the below warning when booting -git on
-a sparc64 box on debian unstable:
+syzbot reported a crash in cbq_normalize_quanta() caused
+by an out of range cl->priority.
 
-...
-[   13.352975] aes_sparc64: Using sparc64 aes opcodes optimized AES
-implementation
-[   13.428002] ------------[ cut here ]------------
-[   13.428081] WARNING: CPU: 21 PID: 586 at
-drivers/block/pktcdvd.c:2597 pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
-[   13.428147] Attempt to register a non-SCSI queue
-[   13.428184] Modules linked in: pktcdvd libdes cdrom aes_sparc64
-n2_rng md5_sparc64 sha512_sparc64 rng_core sha256_sparc64 flash
-sha1_sparc64 ip_tables x_tables ipv6 crc_ccitt nf_defrag_ipv6 autofs4
-ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy
-async_pq async_xor xor async_tx raid6_pq raid1 raid0 multipath linear
-md_mod crc32c_sparc64
-[   13.428452] CPU: 21 PID: 586 Comm: pktsetup Not tainted
-5.3.0-10169-g574cc4539762 #1234
-[   13.428507] Call Trace:
-[   13.428542]  [00000000004635c0] __warn+0xc0/0x100
-[   13.428582]  [0000000000463634] warn_slowpath_fmt+0x34/0x60
-[   13.428626]  [000000001045b244] pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
-[   13.428674]  [000000001045ccf4] pkt_ctl_ioctl+0x94/0x220 [pktcdvd]
-[   13.428724]  [00000000006b95c8] do_vfs_ioctl+0x628/0x6e0
-[   13.428764]  [00000000006b96c8] ksys_ioctl+0x48/0x80
-[   13.428803]  [00000000006b9714] sys_ioctl+0x14/0x40
-[   13.428847]  [0000000000406294] linux_sparc_syscall+0x34/0x44
-[   13.428890] irq event stamp: 4181
-[   13.428924] hardirqs last  enabled at (4189): [<00000000004e0a74>]
-console_unlock+0x634/0x6c0
-[   13.428984] hardirqs last disabled at (4196): [<00000000004e0540>]
-console_unlock+0x100/0x6c0
-[   13.429048] softirqs last  enabled at (3978): [<0000000000b2e2d8>]
-__do_softirq+0x498/0x520
-[   13.429110] softirqs last disabled at (3967): [<000000000042cfb4>]
-do_softirq_own_stack+0x34/0x60
-[   13.429172] ---[ end trace 2220ca468f32967d ]---
-[   13.430018] pktcdvd: setup of pktcdvd device failed
-[   13.455589] des_sparc64: Using sparc64 des opcodes optimized DES
-implementation
-[   13.515334] camellia_sparc64: Using sparc64 camellia opcodes
-optimized CAMELLIA implementation
-[   13.522856] pktcdvd: setup of pktcdvd device failed
-[   13.529327] pktcdvd: setup of pktcdvd device failed
-[   13.532932] pktcdvd: setup of pktcdvd device failed
-[   13.536165] pktcdvd: setup of pktcdvd device failed
-[   13.539372] pktcdvd: setup of pktcdvd device failed
-[   13.542834] pktcdvd: setup of pktcdvd device failed
-[   13.546536] pktcdvd: setup of pktcdvd device failed
-[   15.431071] XFS (dm-0): Mounting V5 Filesystem
-...
+iproute2 enforces this check, but malicious users do not.
 
-Apparently debian auto-attaches any cdrom like device to pktcdvd, which
-can lead to the above warning. There's really no reason to warn for this
-situation, kill it.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+Modules linked in:
+CPU: 1 PID: 26447 Comm: syz-executor.1 Not tainted 5.3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:cbq_normalize_quanta.part.0+0x1fd/0x430 net/sched/sch_cbq.c:902
+RSP: 0018:ffff8801a5c333b0 EFLAGS: 00010206
+RAX: 0000000020000003 RBX: 00000000fffffff8 RCX: ffffc9000712f000
+RDX: 00000000000043bf RSI: ffffffff83be8962 RDI: 0000000100000018
+RBP: ffff8801a5c33420 R08: 000000000000003a R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000002ef
+R13: ffff88018da95188 R14: dffffc0000000000 R15: 0000000000000015
+FS:  00007f37d26b1700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c7cec CR3: 00000001bcd0a006 CR4: 00000000001626f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ [<ffffffff83be9d57>] cbq_normalize_quanta include/net/pkt_sched.h:27 [inline]
+ [<ffffffff83be9d57>] cbq_addprio net/sched/sch_cbq.c:1097 [inline]
+ [<ffffffff83be9d57>] cbq_set_wrr+0x2d7/0x450 net/sched/sch_cbq.c:1115
+ [<ffffffff83bee8a7>] cbq_change_class+0x987/0x225b net/sched/sch_cbq.c:1537
+ [<ffffffff83b96985>] tc_ctl_tclass+0x555/0xcd0 net/sched/sch_api.c:2329
+ [<ffffffff83a84655>] rtnetlink_rcv_msg+0x485/0xc10 net/core/rtnetlink.c:5248
+ [<ffffffff83cadf0a>] netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2510
+ [<ffffffff83a7db6d>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5266
+ [<ffffffff83cac2c6>] netlink_unicast_kernel net/netlink/af_netlink.c:1324 [inline]
+ [<ffffffff83cac2c6>] netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1350
+ [<ffffffff83cacd4a>] netlink_sendmsg+0x89a/0xd50 net/netlink/af_netlink.c:1939
+ [<ffffffff8399d46e>] sock_sendmsg_nosec net/socket.c:673 [inline]
+ [<ffffffff8399d46e>] sock_sendmsg+0x12e/0x170 net/socket.c:684
+ [<ffffffff8399f1fd>] ___sys_sendmsg+0x81d/0x960 net/socket.c:2359
+ [<ffffffff839a2d05>] __sys_sendmsg+0x105/0x1d0 net/socket.c:2397
+ [<ffffffff839a2df9>] SYSC_sendmsg net/socket.c:2406 [inline]
+ [<ffffffff839a2df9>] SyS_sendmsg+0x29/0x30 net/socket.c:2404
+ [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
+ [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
 
-Reported-by: Anatoly Pugachev <matorola@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/pktcdvd.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/sched/sch_cbq.c |   30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 11ec92e47455a..94944d063b372 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2585,7 +2585,6 @@ static int pkt_new_dev(struct pktcdvd_device *pd, dev_t dev)
- 	if (ret)
- 		return ret;
- 	if (!blk_queue_scsi_passthrough(bdev_get_queue(bdev))) {
--		WARN_ONCE(true, "Attempt to register a non-SCSI queue\n");
- 		blkdev_put(bdev, FMODE_READ | FMODE_NDELAY);
- 		return -EINVAL;
- 	}
--- 
-2.20.1
-
+--- a/net/sched/sch_cbq.c
++++ b/net/sched/sch_cbq.c
+@@ -1131,6 +1131,26 @@ static const struct nla_policy cbq_polic
+ 	[TCA_CBQ_POLICE]	= { .len = sizeof(struct tc_cbq_police) },
+ };
+ 
++static int cbq_opt_parse(struct nlattr *tb[TCA_CBQ_MAX + 1], struct nlattr *opt)
++{
++	int err;
++
++	if (!opt)
++		return -EINVAL;
++
++	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy, NULL);
++	if (err < 0)
++		return err;
++
++	if (tb[TCA_CBQ_WRROPT]) {
++		const struct tc_cbq_wrropt *wrr = nla_data(tb[TCA_CBQ_WRROPT]);
++
++		if (wrr->priority > TC_CBQ_MAXPRIO)
++			err = -EINVAL;
++	}
++	return err;
++}
++
+ static int cbq_init(struct Qdisc *sch, struct nlattr *opt)
+ {
+ 	struct cbq_sched_data *q = qdisc_priv(sch);
+@@ -1142,10 +1162,7 @@ static int cbq_init(struct Qdisc *sch, s
+ 	hrtimer_init(&q->delay_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+ 	q->delay_timer.function = cbq_undelay;
+ 
+-	if (!opt)
+-		return -EINVAL;
+-
+-	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy, NULL);
++	err = cbq_opt_parse(tb, opt);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1459,10 +1476,7 @@ cbq_change_class(struct Qdisc *sch, u32
+ 	struct cbq_class *parent;
+ 	struct qdisc_rate_table *rtab = NULL;
+ 
+-	if (opt == NULL)
+-		return -EINVAL;
+-
+-	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy, NULL);
++	err = cbq_opt_parse(tb, opt);
+ 	if (err < 0)
+ 		return err;
+ 
 
 
