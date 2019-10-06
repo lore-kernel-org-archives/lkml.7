@@ -2,144 +2,146 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E836C4740A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8DAC47404
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C87F222C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570321974;
-	bh=yVSCUoI+lseGFR4IYqnIN8StTXuL1oZ1vQrmfXipRHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iz6pZ7QmR6D0zs6JIG72an3ZJfnuVBCGTvaUE6ExPxyAQ1fwGoZQVXE/j3hWpvX6y
-	 p6oZ79E3fZ0f04VX514YBdPGwGI4MmhIomyalasQy0foYZyTFVtUvn2jxLS2JPdqUT
-	 AzKHMUe7+xuqkCTWXvQdebKluNVby7UhEJtnui3o=
+	by mail.kernel.org (Postfix) with ESMTP id 60F66222CB
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 00:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfJFAcx (ORCPT
+        id S1726961AbfJFAjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 20:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbfJFAcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 20:32:53 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0FD222BE;
-        Sun,  6 Oct 2019 00:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570321971;
-        bh=yVSCUoI+lseGFR4IYqnIN8StTXuL1oZ1vQrmfXipRHY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D6LxZ1QuFoDIl516K2GCTZjZv4BnFdsxk8Jr9cmMguCqq9nIc8ryLQiLOhy36x0jN
-         KTPJ1AP5u5xqnbnHmec2+YhpaeZ+PD2x2/BFKC/Q3/sudiUIkJ9IGGUiSuqIVXuoP5
-         B0gOzu0wn+PcBb+I+UZrNS6/EFatxXtZ3hK81bmo=
-Date:   Sun, 6 Oct 2019 08:32:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
-Message-ID: <20191006003225.GD7150@dragon>
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
- <20190922161415.GD1999@bug>
- <DB3PR0402MB3916F48DA2A16E57C624432BF5850@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB3916F48DA2A16E57C624432BF5850@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Sat, 5 Oct 2019 20:39:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37536 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726918AbfJFAjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 20:39:04 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x960aWtx076899
+        for <linux-kernel@vger.kernel.org>; Sat, 5 Oct 2019 20:39:02 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vep00shjn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 20:39:02 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 6 Oct 2019 01:39:00 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 6 Oct 2019 01:38:56 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x960ctYr57671800
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 6 Oct 2019 00:38:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89019A4040;
+        Sun,  6 Oct 2019 00:38:55 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4502A404D;
+        Sun,  6 Oct 2019 00:38:53 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.134.152])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun,  6 Oct 2019 00:38:53 +0000 (GMT)
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Safford <david.safford@ge.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Sat, 05 Oct 2019 20:38:53 -0400
+In-Reply-To: <1570227068.17537.4.camel@HansenPartnership.com>
+References: <1570128827.5046.19.camel@linux.ibm.com>
+         <20191003215125.GA30511@linux.intel.com>
+         <20191003215743.GB30511@linux.intel.com>
+         <1570140491.5046.33.camel@linux.ibm.com>
+         <1570147177.10818.11.camel@HansenPartnership.com>
+         <20191004182216.GB6945@linux.intel.com>
+         <1570213491.3563.27.camel@HansenPartnership.com>
+         <20191004183342.y63qdvspojyf3m55@cantor>
+         <1570214574.3563.32.camel@HansenPartnership.com>
+         <20191004200728.xoj6jlgbhv57gepc@cantor>
+         <20191004201134.nuesk6hxtxajnxh2@cantor>
+         <1570227068.17537.4.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100600-0012-0000-0000-0000035467BF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100600-0013-0000-0000-0000218F7549
+Message-Id: <1570322333.5046.145.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-05_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910060003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 02:34:07AM +0000, Anson Huang wrote:
-> Hi, Pavel
-> 
-> > Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
-> > 
-> > On Tue 2019-09-03 10:03:40, Anson Huang wrote:
-> > > NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as system
-> > > controller, the system controller is in charge of system power, clock
-> > > and power key event etc. management, Linux kernel has to communicate
-> > > with system controller via MU (message unit) IPC to get power key
-> > > event, add binding doc for i.MX system controller power key driver.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > Changes since V1:
-> > > 	- remove "wakeup-source" property, as it is NOT needed for SCU
-> > interrupt;
-> > > 	- remove "status" in example.
-> > > ---
-> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14
-> > ++++++++++++++
-> > >  1 file changed, 14 insertions(+)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > index c149fad..f93e2e4 100644
-> > > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> > > @@ -157,6 +157,15 @@ Required properties:
-> > >  Optional properties:
-> > >  - timeout-sec: contains the watchdog timeout in seconds.
-> > >
-> > > +Power key bindings based on SCU Message Protocol
-> > > +------------------------------------------------------------
-> > > +
-> > > +Required properties:
-> > > +- compatible: should be:
-> > > +              "fsl,imx8qxp-sc-pwrkey"
-> > > +              followed by "fsl,imx-sc-pwrkey";
-> > > +- linux,keycodes: See
-> > > +Documentation/devicetree/bindings/input/keys.txt
-> > 
-> > Note you have keycode_s_ here, but keycode in the example and in the dts
-> > patch.
-> 
-> NOT quite understand your point, could you please provide more details?
+On Fri, 2019-10-04 at 15:11 -0700, James Bottomley wrote:
 
-The property being used in driver, DTS, and DT example in the
-bindings are all 'linux,keycode' rather than 'linux,keycodes'.
+> +
+> +/**
+> + * tpm_get_random() - get random bytes influenced by the TPM's RNG
+> + * @chip:	a &struct tpm_chip instance, %NULL for the default chip
+> + * @out:	destination buffer for the random bytes
+> + * @max:	the max number of bytes to write to @out
+> + *
+> + * Uses the TPM as a source of input to the kernel random number
+> + * generator and then takes @max bytes directly from the kernel.  In
+> + * the worst (no other entropy) case, this will return the pure TPM
+> + * random number, but if the kernel RNG has any entropy at all it will
+> + * return a mixed entropy output which doesn't rely on a single
+> + * source.
+> + *
+> + * Return: number of random bytes read or a negative error value.
+> + */
+> +int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
+> +{
+> +	int rc;
+> +
+> +	rc = __tpm_get_random(chip, out, max);
+> +	if (rc <= 0)
+> +		return rc;
+> +	/*
+> +	 * assume the TPM produces pure randomness, so the amount of
+> +	 * entropy is the number of bits returned
+> +	 */
+> +	add_hwgenerator_randomness(out, rc, rc * 8);
+> +	get_random_bytes(out, rc);
 
-Shawn
+Using the TPM as a source of input to the kernel random number
+generator is fine, but please don't change the meaning of trusted
+keys.  The trusted-encrypted keys documentation clearly states
+"Trusted Keys use a TPM both to generate and to seal the keys."
+
+If you really want to use a different random number source instead of
+the TPM, then define a new trusted key option (eg. rng=kernel), with
+the default being the TPM.
+
+Mimi
+
+
+> +
+> +	return rc;
+> +}
+>  EXPORT_SYMBOL_GPL(tpm_get_random);
+
