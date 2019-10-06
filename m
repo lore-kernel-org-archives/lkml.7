@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F3FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B22EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE892080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4962620700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383840;
-	bh=QwTcFMBesfpfRCkx9Ek6f7fseKxUhCJ26xYBuzSQOoA=;
+	s=default; t=1570383844;
+	bh=hDhef2aTdq4qR/BBdAQqoM/CUsEQJstjxEaKYJBV94I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXRdexLOV5PQijkr7h6yxWnXaIuxpee/ST7UQv2+dF6bQIGGvpEvqK/SXhN2Pn0yT
-	 Uak9zCv5o8uve0zLsn0Isv9r01fQLHtb7GfwhVMeUVROFH+SpvxXB4uIdcAbuW2PTm
-	 Uj4sqtO5hX6S0GMqqrJ7RrzKTYBtnByxucfi9D4o=
+	b=HcvAbLCjVB1J+kl3Tv92a8fXv1i1TKa0whNyKUC6QlNTrPZDmBs1+Y0YBbDJbYkxS
+	 MheFm3qfUS0mitwuvIZ5PRffUBbsJaVfgGamfd06DIIdpHIMvapFWBSOIwI2Cywhgo
+	 FhsWmHpbW951arLS/Ru9RcbZArIOsdmD22b8AeTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbfJFRn7 (ORCPT
+        id S1731611AbfJFRoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731598AbfJFRn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:43:56 -0400
+        id S1727503AbfJFRn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38E6620700;
-        Sun,  6 Oct 2019 17:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBB3220700;
+        Sun,  6 Oct 2019 17:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383835;
-        bh=QwTcFMBesfpfRCkx9Ek6f7fseKxUhCJ26xYBuzSQOoA=;
+        s=default; t=1570383838;
+        bh=hDhef2aTdq4qR/BBdAQqoM/CUsEQJstjxEaKYJBV94I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePCpmzFvJB4h3dEELh4zowM7RrMQ5bUfZ/hTH6quiTVOMyTqRubkyfB0UnjPcYd/v
-         HxW7ZeCK6Ekma3WljSNDRUEsgXNd/z7M4Jb40+NnOFPseP2871a4StxsyYmM3LEClc
-         1WF5ckXeK3L61yptNcNVnEmxd36bYX9xiSlGnRYs=
+        b=Eckmd8vqPSU1FreY5XXVVs+GVy7wXBOarUtfU7aJvWzMS6vTpD2rIJDhIDPlx0Feo
+         l3upWHHISbXBW0X+3wc3wjod7rbILbwz5ngn4YTq4rBp003HSjNVvfU0rh7ljvuXCY
+         Ue26ghzoJEV4pRg/jlYSiTKJLT2NYOD5DCvXI+cg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 086/166] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun,  6 Oct 2019 19:20:52 +0200
-Message-Id: <20191006171220.767004334@linuxfoundation.org>
+Subject: [PATCH 5.3 113/166] i2c: tegra: Move suspend handling to NOIRQ phase
+Date:   Sun,  6 Oct 2019 19:21:19 +0200
+Message-Id: <20191006171222.882052155@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,45 +61,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit 8ebf15e9c869e764b3aab4928938ee68c0e2bd6d ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+Commit acc8abcb2a9c ("i2c: tegra: Add suspend-resume support") added
+suspend support for the Tegra I2C driver and following this change on
+Tegra30 the following WARNING is seen on entering suspend ...
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
+ WARNING: CPU: 2 PID: 689 at /dvs/git/dirty/git-master_l4t-upstream/kernel/drivers/i2c/i2c-core.h:54 __i2c_transfer+0x35c/0x70c
+ i2c i2c-4: Transfer while suspended
+ Modules linked in: brcmfmac brcmutil
+ CPU: 2 PID: 689 Comm: rtcwake Not tainted 5.3.0-rc7-g089cf7f6ecb2 #1
+ Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+ [<c0112264>] (unwind_backtrace) from [<c010ca94>] (show_stack+0x10/0x14)
+ [<c010ca94>] (show_stack) from [<c0a77024>] (dump_stack+0xb4/0xc8)
+ [<c0a77024>] (dump_stack) from [<c0124198>] (__warn+0xe0/0xf8)
+ [<c0124198>] (__warn) from [<c01241f8>] (warn_slowpath_fmt+0x48/0x6c)
+ [<c01241f8>] (warn_slowpath_fmt) from [<c06f6c40>] (__i2c_transfer+0x35c/0x70c)
+ [<c06f6c40>] (__i2c_transfer) from [<c06f7048>] (i2c_transfer+0x58/0xf4)
+ [<c06f7048>] (i2c_transfer) from [<c06f7130>] (i2c_transfer_buffer_flags+0x4c/0x70)
+ [<c06f7130>] (i2c_transfer_buffer_flags) from [<c05bee78>] (regmap_i2c_write+0x14/0x30)
+ [<c05bee78>] (regmap_i2c_write) from [<c05b9cac>] (_regmap_raw_write_impl+0x35c/0x868)
+ [<c05b9cac>] (_regmap_raw_write_impl) from [<c05b984c>] (_regmap_update_bits+0xe4/0xec)
+ [<c05b984c>] (_regmap_update_bits) from [<c05bad04>] (regmap_update_bits_base+0x50/0x74)
+ [<c05bad04>] (regmap_update_bits_base) from [<c04d453c>] (regulator_disable_regmap+0x44/0x54)
+ [<c04d453c>] (regulator_disable_regmap) from [<c04cf9d4>] (_regulator_do_disable+0xf8/0x268)
+ [<c04cf9d4>] (_regulator_do_disable) from [<c04d1694>] (_regulator_disable+0xf4/0x19c)
+ [<c04d1694>] (_regulator_disable) from [<c04d1770>] (regulator_disable+0x34/0x64)
+ [<c04d1770>] (regulator_disable) from [<c04d2310>] (regulator_bulk_disable+0x28/0xb4)
+ [<c04d2310>] (regulator_bulk_disable) from [<c0495cd4>] (tegra_pcie_power_off+0x64/0xa8)
+ [<c0495cd4>] (tegra_pcie_power_off) from [<c0495f74>] (tegra_pcie_pm_suspend+0x25c/0x3f4)
+ [<c0495f74>] (tegra_pcie_pm_suspend) from [<c05af48c>] (dpm_run_callback+0x38/0x1d4)
+ [<c05af48c>] (dpm_run_callback) from [<c05afe30>] (__device_suspend_noirq+0xc0/0x2b8)
+ [<c05afe30>] (__device_suspend_noirq) from [<c05b1c24>] (dpm_noirq_suspend_devices+0x100/0x37c)
+ [<c05b1c24>] (dpm_noirq_suspend_devices) from [<c05b1ebc>] (dpm_suspend_noirq+0x1c/0x48)
+ [<c05b1ebc>] (dpm_suspend_noirq) from [<c017d2c0>] (suspend_devices_and_enter+0x1d0/0xa00)
+ [<c017d2c0>] (suspend_devices_and_enter) from [<c017dd10>] (pm_suspend+0x220/0x74c)
+ [<c017dd10>] (pm_suspend) from [<c017c2c8>] (state_store+0x6c/0xc8)
+ [<c017c2c8>] (state_store) from [<c02ef398>] (kernfs_fop_write+0xe8/0x1c4)
+ [<c02ef398>] (kernfs_fop_write) from [<c0271e38>] (__vfs_write+0x2c/0x1c4)
+ [<c0271e38>] (__vfs_write) from [<c02748dc>] (vfs_write+0xa4/0x184)
+ [<c02748dc>] (vfs_write) from [<c0274b7c>] (ksys_write+0x9c/0xdc)
+ [<c0274b7c>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x54)
+ Exception stack(0xe9f21fa8 to 0xe9f21ff0)
+ 1fa0:                   0000006c 004b2438 00000004 004b2438 00000004 00000000
+ 1fc0: 0000006c 004b2438 004b1228 00000004 00000004 00000004 0049e78c 004b1228
+ 1fe0: 00000004 be9809b8 b6f0bc0b b6e96206
 
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
+The problem is that the Tegra PCIe driver indirectly uses I2C for
+controlling some regulators and the I2C driver is now being suspended
+before the PCIe driver causing the PCIe suspend to fail. The Tegra PCIe
+driver is suspended during the NOIRQ phase and this cannot be changed
+due to other dependencies. Therefore, we also need to move the suspend
+handling for the Tegra I2C driver to the NOIRQ phase as well.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+In order to move the I2C suspend handling to the NOIRQ phase we also
+need to avoid calling pm_runtime_get/put() because per commit
+1e2ef05bb8cf ("PM: Limit race conditions between runtime PM and system
+sleep (v2)") these cannot be called early in resume. The function
+tegra_i2c_init(), called during resume, calls pm_runtime_get/put() and
+so move these calls outside of tegra_i2c_init(), so this function can
+be used during the NOIRQ resume phase.
+
+Fixes: acc8abcb2a9c ("i2c: tegra: Add suspend-resume support")
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c | 40 +++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index ade6e1ce5a983..e3a04929aaa36 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -35,6 +35,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 9fcb13beeb8f4..7a3291d91a5ee 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -713,12 +713,6 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
+ 	u32 tsu_thd;
+ 	u8 tlow, thigh;
  
-+	pdev->d3cold_delay = 0;
+-	err = pm_runtime_get_sync(i2c_dev->dev);
+-	if (err < 0) {
+-		dev_err(i2c_dev->dev, "runtime resume failed %d\n", err);
+-		return err;
+-	}
+-
+ 	reset_control_assert(i2c_dev->rst);
+ 	udelay(2);
+ 	reset_control_deassert(i2c_dev->rst);
+@@ -772,7 +766,7 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
+ 		if (err) {
+ 			dev_err(i2c_dev->dev,
+ 				"failed changing clock rate: %d\n", err);
+-			goto err;
++			return err;
+ 		}
+ 	}
+ 
+@@ -787,23 +781,21 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
+ 
+ 	err = tegra_i2c_flush_fifos(i2c_dev);
+ 	if (err)
+-		goto err;
++		return err;
+ 
+ 	if (i2c_dev->is_multimaster_mode && i2c_dev->hw->has_slcg_override_reg)
+ 		i2c_writel(i2c_dev, I2C_MST_CORE_CLKEN_OVR, I2C_CLKEN_OVERRIDE);
+ 
+ 	err = tegra_i2c_wait_for_config_load(i2c_dev);
+ 	if (err)
+-		goto err;
++		return err;
+ 
+ 	if (i2c_dev->irq_disabled) {
+ 		i2c_dev->irq_disabled = false;
+ 		enable_irq(i2c_dev->irq);
+ 	}
+ 
+-err:
+-	pm_runtime_put(i2c_dev->dev);
+-	return err;
++	return 0;
+ }
+ 
+ static int tegra_i2c_disable_packet_mode(struct tegra_i2c_dev *i2c_dev)
+@@ -1616,12 +1608,14 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	pm_runtime_enable(&pdev->dev);
+-	if (!pm_runtime_enabled(&pdev->dev)) {
++	if (!pm_runtime_enabled(&pdev->dev))
+ 		ret = tegra_i2c_runtime_resume(&pdev->dev);
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "runtime resume failed\n");
+-			goto unprepare_div_clk;
+-		}
++	else
++		ret = pm_runtime_get_sync(i2c_dev->dev);
 +
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "runtime resume failed\n");
++		goto unprepare_div_clk;
+ 	}
+ 
+ 	if (i2c_dev->is_multimaster_mode) {
+@@ -1666,6 +1660,8 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto release_dma;
+ 
++	pm_runtime_put(&pdev->dev);
++
+ 	return 0;
+ 
+ release_dma:
+@@ -1726,17 +1722,25 @@ static int tegra_i2c_resume(struct device *dev)
+ 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+ 	int err;
+ 
++	err = tegra_i2c_runtime_resume(dev);
++	if (err)
++		return err;
++
+ 	err = tegra_i2c_init(i2c_dev, false);
+ 	if (err)
+ 		return err;
+ 
++	err = tegra_i2c_runtime_suspend(dev);
++	if (err)
++		return err;
++
+ 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+ 
+ 	return 0;
+ }
+ 
+ static const struct dev_pm_ops tegra_i2c_pm = {
+-	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
+ 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
+ 			   NULL)
+ };
 -- 
 2.20.1
 
