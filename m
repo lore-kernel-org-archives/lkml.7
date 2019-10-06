@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741EEC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7445C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B99D2173B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D23217F9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382888;
-	bh=p/RHvbDV/1tIo8Or4RuVoQrBkcui4L3WwhNnxozAR/s=;
+	s=default; t=1570382892;
+	bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2fegjRqfWtcHZpf8oUIcoovYUrqSJbL/pmHBl5NbecgxdlhCDlSR5cnqbPAn4dgNm
-	 C5jxVXyEmoVpL9sYS8K0vqhYSbSQBBAxcBeK5bdUk0Hoz58KjTiqaXeqO1YiQZpNzV
-	 6WryXnQCWwy7TFhLYpPGMVArihzGZ+CqKVjDdEc0=
+	b=CNIuRZ8x7lJoMWNQFkzBGumk7jkCDpczEqkCcDmUaEHk7Bt6f/9VhC4+DSUfAqpCW
+	 8AEJlJASOyKa620De1YEyygPN/WVR1ZW6kJm8Ipuoacht+/UXVhVxt0fSofTinCbQM
+	 DlIqqdJnbOE4gxMcwpZ4q8RpRcAiqhKgIhBuYpTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfJFR2H (ORCPT
+        id S1728692AbfJFR2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53648 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbfJFR2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:04 -0400
+        id S1727646AbfJFR2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4E821479;
-        Sun,  6 Oct 2019 17:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 441982133F;
+        Sun,  6 Oct 2019 17:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382884;
-        bh=p/RHvbDV/1tIo8Or4RuVoQrBkcui4L3WwhNnxozAR/s=;
+        s=default; t=1570382886;
+        bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D2/HNBvp65qQZgtu5OzqyQ7DzByWDByzznlQIbd52hje4JTWN7AD6IIWn3dn/blmC
-         OnXJu4hkQ+MBf7ClbJfikpJQWGfdPLAO2JKW671/2XURBbxJpzVfRM49/vuQox2o7G
-         kCcNjxBspyU6X+MDew9hJcV8vFDfrTMXhQLDA+1w=
+        b=xPaTqd5LAQWVxdz3TczeNJO2ngMtDk/W+VGsltK1Qg3rvQUs8M4YGxt0NLe9nQLOF
+         d3Lg8XEB+k8Daw+gtf+fMF2Lbi/gS696oJTE42H6NL6kMUWoa5FnrJXgpjhxrZu6Wc
+         Ea4EiyXiVHIuib4AwTvw6mq6Tbx+xNhmzaGtnvng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Thelen <gthelen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/68] kbuild: clean compressed initramfs image
-Date:   Sun,  6 Oct 2019 19:21:21 +0200
-Message-Id: <20191006171129.768138686@linuxfoundation.org>
+Subject: [PATCH 4.14 36/68] HID: apple: Fix stuck function keys when using FN
+Date:   Sun,  6 Oct 2019 19:21:12 +0200
+Message-Id: <20191006171125.503172493@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -62,54 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Thelen <gthelen@google.com>
+From: Joao Moreno <mail@joaomoreno.com>
 
-[ Upstream commit 6279eb3dd7946c69346a3b98473ed13d3a44adb5 ]
+[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
 
-Since 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
-"make clean" leaves behind compressed initramfs images.  Example:
+This fixes an issue in which key down events for function keys would be
+repeatedly emitted even after the user has raised the physical key. For
+example, the driver fails to emit the F5 key up event when going through
+the following steps:
+- fnmode=1: hold FN, hold F5, release FN, release F5
+- fnmode=2: hold F5, hold FN, release F5, release FN
 
-  $ make defconfig
-  $ sed -i 's|CONFIG_INITRAMFS_SOURCE=""|CONFIG_INITRAMFS_SOURCE="/tmp/ir.cpio"|' .config
-  $ make olddefconfig
-  $ make -s
-  $ make -s clean
-  $ git clean -ndxf | grep initramfs
-  Would remove usr/initramfs_data.cpio.gz
+The repeated F5 key down events can be easily verified using xev.
 
-clean rules do not have CONFIG_* context so they do not know which
-compression format was used.  Thus they don't know which files to delete.
-
-Tell clean to delete all possible compression formats.
-
-Once patched usr/initramfs_data.cpio.gz and friends are deleted by
-"make clean".
-
-Link: http://lkml.kernel.org/r/20190722063251.55541-1-gthelen@google.com
-Fixes: 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
-Signed-off-by: Greg Thelen <gthelen@google.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- usr/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/usr/Makefile b/usr/Makefile
-index 237a028693ce9..5f1bc5b23b14c 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -11,6 +11,9 @@ datafile_y = initramfs_data.cpio$(suffix_y)
- datafile_d_y = .$(datafile_y).d
- AFLAGS_initramfs_data.o += -DINITRAMFS_IMAGE="usr/$(datafile_y)"
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 1cb41992aaa1f..d0a81a03ddbdd 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -57,7 +57,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
+-	DECLARE_BITMAP(pressed_fn, KEY_CNT);
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
  
-+# clean rules do not have CONFIG_INITRAMFS_COMPRESSION.  So clean up after all
-+# possible compression formats.
-+clean-files += initramfs_data.cpio*
+@@ -184,6 +183,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ {
+ 	struct apple_sc *asc = hid_get_drvdata(hid);
+ 	const struct apple_key_translation *trans, *table;
++	bool do_translate;
++	u16 code = 0;
  
- # Generate builtin.o based on initramfs_data.o
- obj-$(CONFIG_BLK_DEV_INITRD) := initramfs_data.o
+ 	if (usage->code == KEY_FN) {
+ 		asc->fn_on = !!value;
+@@ -192,8 +193,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	}
+ 
+ 	if (fnmode) {
+-		int do_translate;
+-
+ 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+ 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+ 			table = macbookair_fn_keys;
+@@ -205,25 +204,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 		trans = apple_find_translation (table, usage->code);
+ 
+ 		if (trans) {
+-			if (test_bit(usage->code, asc->pressed_fn))
+-				do_translate = 1;
+-			else if (trans->flags & APPLE_FLAG_FKEY)
+-				do_translate = (fnmode == 2 && asc->fn_on) ||
+-					(fnmode == 1 && !asc->fn_on);
+-			else
+-				do_translate = asc->fn_on;
+-
+-			if (do_translate) {
+-				if (value)
+-					set_bit(usage->code, asc->pressed_fn);
+-				else
+-					clear_bit(usage->code, asc->pressed_fn);
+-
+-				input_event(input, usage->type, trans->to,
+-						value);
+-
+-				return 1;
++			if (test_bit(trans->from, input->key))
++				code = trans->from;
++			else if (test_bit(trans->to, input->key))
++				code = trans->to;
++
++			if (!code) {
++				if (trans->flags & APPLE_FLAG_FKEY) {
++					switch (fnmode) {
++					case 1:
++						do_translate = !asc->fn_on;
++						break;
++					case 2:
++						do_translate = asc->fn_on;
++						break;
++					default:
++						/* should never happen */
++						do_translate = false;
++					}
++				} else {
++					do_translate = asc->fn_on;
++				}
++
++				code = do_translate ? trans->to : trans->from;
+ 			}
++
++			input_event(input, usage->type, code, value);
++			return 1;
+ 		}
+ 
+ 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
