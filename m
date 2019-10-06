@@ -2,57 +2,55 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1272ECE595
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4A0C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96F42077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8539321835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384501;
-	bh=zCKmjyZlrLC7ANRYhp/52vjRW/jBssQmM8dBavnIWww=;
+	s=default; t=1570384502;
+	bh=PWhTwKba2ZSNQzRTJqTmC99Bkw2ToZ0yxWIRCb0nwZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmCnvuilIxkumFkYsSGfWbKZoaNQfn4uxrERYl4Lyjrj3t7RApT2Zd7UQymbuGrG1
-	 OfTMxPZiP9frXnS2uSCZkQAbV+t2w43u+y4im6j1lr9ANJ5t+/fmnsM8xGnkdYj+NF
-	 of1VAD9f3VSf61ZB3lU2MY5o99wbGOl3PrCIUjR8=
+	b=QZCVdkC/3T8SV3CB3SI1BZhzmfmopsuVTxwAe4CBFB1ESHO0MDQ4NLiJaqiLgR5N9
+	 piDGeqORosS2nvIPe+XtvfVh5a5VuR6HW6n57yWX77MdET+z/dz4zC4Lnxz2JGD4+3
+	 P2LkNGPoSnnvW3hcZeDYIpB1UBR6F7Er/D17iI1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfJFRyg (ORCPT
+        id S1730171AbfJFRgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:54:29 -0400
+        id S1730058AbfJFRgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC36222D2;
-        Sun,  6 Oct 2019 17:45:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68B7F2064A;
+        Sun,  6 Oct 2019 17:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383957;
-        bh=zCKmjyZlrLC7ANRYhp/52vjRW/jBssQmM8dBavnIWww=;
+        s=default; t=1570383367;
+        bh=PWhTwKba2ZSNQzRTJqTmC99Bkw2ToZ0yxWIRCb0nwZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1ScnQNQXs+I1VLT3AWoD/Tyz8tjKjNY/Ci2iGgcNwbDJLDH8fkfBfh7vWKYRF1lq
-         XaCSVJqotSzzVIFn/hgDntgvRTuKJT/mvzcpT3J4Td7L+sjfCUmLxP6dzjXVpwWISc
-         2yyEwnX2l7LlRMTDe2o4BeQL9rr6SlBZoj9PnaLY=
+        b=Ix+wpdIWo0RfrmBGhWD89QvTyZbaS3OwFCr1TrA7y7WAwtYA6KO7rzhhMIzKuIyFb
+         JicUTZLMEoPGAtks2YFZ7xon0oXQiMAafzhzS4DECIRhSSedgaRRhp97RR1uDegNEJ
+         USnKAXNl94gm1rHHBbhLxREyxLBvqWhNIkp9kE08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 131/166] ipv6: drop incoming packets having a v4mapped source address
-Date:   Sun,  6 Oct 2019 19:21:37 +0200
-Message-Id: <20191006171224.252589027@linuxfoundation.org>
+        stable@vger.kernel.org, Otto Meier <gf435@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 076/137] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
+Date:   Sun,  6 Oct 2019 19:21:00 +0200
+Message-Id: <20191006171215.348423201@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
-References: <20191006171212.850660298@linuxfoundation.org>
+In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
+References: <20191006171209.403038733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,67 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Otto Meier <gf435@gmx.net>
 
-[ Upstream commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3 ]
+[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
 
-This began with a syzbot report. syzkaller was injecting
-IPv6 TCP SYN packets having a v4mapped source address.
+Hi i tried to use the uart_C of the the odroid-c2.
 
-After an unsuccessful 4-tuple lookup, TCP creates a request
-socket (SYN_RECV) and calls reqsk_queue_hash_req()
+I enabled it in the dts file. During boot it crashed when the
+the sdcard slot is addressed.
 
-reqsk_queue_hash_req() calls sk_ehashfn(sk)
+After long search in the net i found this:
 
-At this point we have AF_INET6 sockets, and the heuristic
-used by sk_ehashfn() to either hash the IPv4 or IPv6 addresses
-is to use ipv6_addr_v4mapped(&sk->sk_v6_daddr)
+https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
 
-For the particular spoofed packet, we end up hashing V4 addresses
-which were not initialized by the TCP IPv6 stack, so KMSAN fired
-a warning.
+After changing the pin definitions accordingly erverything works.
+Uart_c is functioning and sdcard ist working.
 
-I first fixed sk_ehashfn() to test both source and destination addresses,
-but then faced various problems, including user-space programs
-like packetdrill that had similar assumptions.
-
-Instead of trying to fix the whole ecosystem, it is better
-to admit that we have a dual stack behavior, and that we
-can not build linux kernels without V4 stack anyway.
-
-The dual stack API automatically forces the traffic to be IPv4
-if v4mapped addresses are used at bind() or connect(), so it makes
-no sense to allow IPv6 traffic to use the same v4mapped class.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
+Signed-off-by: Otto Meier <gf435@gmx.net>
+Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_input.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/ipv6/ip6_input.c
-+++ b/net/ipv6/ip6_input.c
-@@ -221,6 +221,16 @@ static struct sk_buff *ip6_rcv_core(stru
- 	if (ipv6_addr_is_multicast(&hdr->saddr))
- 		goto err;
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+index 6c640837073ef..5bfa56f3847ef 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+@@ -192,8 +192,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
  
-+	/* While RFC4291 is not explicit about v4mapped addresses
-+	 * in IPv6 headers, it seems clear linux dual-stack
-+	 * model can not deal properly with these.
-+	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
-+	 *
-+	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
-+	 */
-+	if (ipv6_addr_v4mapped(&hdr->saddr))
-+		goto err;
-+
- 	skb->transport_header = skb->network_header + sizeof(*hdr);
- 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
+ static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
+ static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
+-static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
+-static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
++static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
++static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
  
+ static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
+ static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
+@@ -439,10 +439,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
+ 	GROUP(pwm_f_x,		3,	18),
+ 
+ 	/* Bank Y */
+-	GROUP(uart_cts_c,	1,	19),
+-	GROUP(uart_rts_c,	1,	18),
+-	GROUP(uart_tx_c,	1,	17),
+-	GROUP(uart_rx_c,	1,	16),
++	GROUP(uart_cts_c,	1,	17),
++	GROUP(uart_rts_c,	1,	16),
++	GROUP(uart_tx_c,	1,	19),
++	GROUP(uart_rx_c,	1,	18),
+ 	GROUP(pwm_a_y,		1,	21),
+ 	GROUP(pwm_f_y,		1,	20),
+ 	GROUP(i2s_out_ch23_y,	1,	5),
+-- 
+2.20.1
+
 
 
