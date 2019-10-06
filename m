@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60308C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D09217F9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BBF2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382948;
-	bh=0iETnc1ZmZbUuwk8H8XexJ/KlhyEDLrIuvsdckyzRDs=;
+	s=default; t=1570382953;
+	bh=5PN5gHuZThoRxTF4pnmnlVuDVJAKrvmI1Q8ep/YnmwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcnpteYA7ZgOyVy2XTLqOgnptAdW262KMg6IaZyM4+VydTX6wsn59wtxEC4iopAX0
-	 g+jvtrG7qHPNdt0GLwbRPYJtjXs0aLWeaQ/5osvJIKwvtPO5z61hsJLoymIN/fCKrY
-	 vXbWxvsN/oGlz5LOkPYA2m5pqQtMD1T1cFO9L3WE=
+	b=dGoLJUvz2ZR+TOJA72J2KhQ1KPsJG97TBwK59QyWWVkTGCl9kBbYmm1d9vBnQy0zn
+	 tB7kc/VbEzh83TrlqJiYB8DXjySaB7cyy5WWrtOF5vr3lXVlBkqpIunLywnw2WOMbm
+	 C4gWsor3OB2Ewbugvj2GQmAbE8BPSOLnd//r7Xrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbfJFR3H (ORCPT
+        id S1728944AbfJFR3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbfJFR3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:01 -0400
+        id S1728913AbfJFR3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED212080F;
-        Sun,  6 Oct 2019 17:29:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E05882133F;
+        Sun,  6 Oct 2019 17:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382940;
-        bh=0iETnc1ZmZbUuwk8H8XexJ/KlhyEDLrIuvsdckyzRDs=;
+        s=default; t=1570382943;
+        bh=5PN5gHuZThoRxTF4pnmnlVuDVJAKrvmI1Q8ep/YnmwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7J4yR4AveAWObzaJMao2G6oe+5h+8oJheE2Y+9+S9T5ixCZvq1WH5T1oM0LkyznS
-         DsfhL7D3AGeQtVa3EEey/VD/zbNyxztneS5halgD69kjzYt11hEcWgjRCWwBubGW5Q
-         sp1Ena/WFU3nqK1THW5YT16Oi9UAKaWpBup7H8Lw=
+        b=RAObqKIjwoBz2Drc5m/s8ovA49VepZM2KVXH4UHe8akNMXf6Ti5n5K0Q+g0WC1x1D
+         R+whq/ha4/8VhrT/xoLME/ysGKAMyDSMX3zREOSbJ3e4Zye5DHXMyuJIyFx/oqJH2p
+         +McueLWCQuizfiFLAsUg3geAU2PZJEuBQOllAN+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, hexin <hexin15@baidu.com>,
+        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/106] powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag
-Date:   Sun,  6 Oct 2019 19:20:33 +0200
-Message-Id: <20191006171138.303166186@linuxfoundation.org>
+Subject: [PATCH 4.19 028/106] vfio_pci: Restore original state on release
+Date:   Sun,  6 Oct 2019 19:20:34 +0200
+Message-Id: <20191006171138.549885140@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,73 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: hexin <hexin.op@gmail.com>
 
-[ Upstream commit aa06e3d60e245284d1e55497eb3108828092818d ]
+[ Upstream commit 92c8026854c25093946e0d7fe536fd9eac440f06 ]
 
-The EEH_DEV_NO_HANDLER flag is used by the EEH system to prevent the
-use of driver callbacks in drivers that have been bound part way
-through the recovery process. This is necessary to prevent later stage
-handlers from being called when the earlier stage handlers haven't,
-which can be confusing for drivers.
+vfio_pci_enable() saves the device's initial configuration information
+with the intent that it is restored in vfio_pci_disable().  However,
+the commit referenced in Fixes: below replaced the call to
+__pci_reset_function_locked(), which is not wrapped in a state save
+and restore, with pci_try_reset_function(), which overwrites the
+restored device state with the current state before applying it to the
+device.  Reinstate use of __pci_reset_function_locked() to return to
+the desired behavior.
 
-However, the flag is set for all devices that are added after boot
-time and only cleared at the end of the EEH recovery process. This
-results in hot plugged devices erroneously having the flag set during
-the first recovery after they are added (causing their driver's
-handlers to be incorrectly ignored).
-
-To remedy this, clear the flag at the beginning of recovery
-processing. The flag is still cleared at the end of recovery
-processing, although it is no longer really necessary.
-
-Also clear the flag during eeh_handle_special_event(), for the same
-reasons.
-
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/b8ca5629d27de74c957d4f4b250177d1b6fc4bbd.1565930772.git.sbobroff@linux.ibm.com
+Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_driver.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 67619b4b3f96c..110eba400de7c 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -811,6 +811,10 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 	pr_warn("EEH: This PCI device has failed %d times in the last hour and will be permanently disabled after %d failures.\n",
- 		pe->freeze_count, eeh_max_freezes);
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 6cf00d9f512b7..a92c2868d9021 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -373,11 +373,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
  
-+	eeh_for_each_pe(pe, tmp_pe)
-+		eeh_pe_for_each_dev(tmp_pe, edev, tmp)
-+			edev->mode &= ~EEH_DEV_NO_HANDLER;
-+
- 	/* Walk the various device drivers attached to this slot through
- 	 * a reset sequence, giving each an opportunity to do what it needs
- 	 * to accomplish the reset.  Each child gets a report of the
-@@ -1004,7 +1008,8 @@ final:
-  */
- void eeh_handle_special_event(void)
- {
--	struct eeh_pe *pe, *phb_pe;
-+	struct eeh_pe *pe, *phb_pe, *tmp_pe;
-+	struct eeh_dev *edev, *tmp_edev;
- 	struct pci_bus *bus;
- 	struct pci_controller *hose;
- 	unsigned long flags;
-@@ -1075,6 +1080,10 @@ void eeh_handle_special_event(void)
- 				    (phb_pe->state & EEH_PE_RECOVERING))
- 					continue;
+ 	/*
+-	 * Try to reset the device.  The success of this is dependent on
+-	 * being able to lock the device, which is not always possible.
++	 * Try to get the locks ourselves to prevent a deadlock. The
++	 * success of this is dependent on being able to lock the device,
++	 * which is not always possible.
++	 * We can not use the "try" reset interface here, which will
++	 * overwrite the previously restored configuration information.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
  
-+				eeh_for_each_pe(pe, tmp_pe)
-+					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
-+						edev->mode &= ~EEH_DEV_NO_HANDLER;
-+
- 				/* Notify all devices to be down */
- 				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS);
- 				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
+ 	pci_restore_state(pdev);
+ out:
 -- 
 2.20.1
 
