@@ -2,57 +2,57 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E54ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1658BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3B421850
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E286F2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382604;
-	bh=bMhHC+db4nOccSOwhA0fo5dCCOAtbBpAxKWNgXMQHcw=;
+	s=default; t=1570382606;
+	bh=W6QghoyZXk8Hl3WCgfDzrIHNelWpAuCRcKjsOjXwCMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QefzY9zajuPUEnj9ZIHk9hEUO3LuTAmdpcSymxoKCinJKrY0gP9kZhCjae+4i+28w
-	 DXlijxFA1ua2JbEQHjAdtUiZ8q8SUw0g9qLj6YUelO+4Tb5dP0UWUYYsQAqgem/kXe
-	 lUMP0D3jV0ZNGrDAZrMCI40OtIdju1Gk3zSllNic=
+	b=zRGVfR++MkuDFlMHOYRznX3bSetihJ63cLBwPuW5jLjx7w7EI85uWAnddtUiy+OqT
+	 Is3mvdTjImBzk8trberCldE2jXvI13m5tsEu0SkmnztC+QGLZGnXSw05teDp1Sd05b
+	 52df8HTrgdfS1ifD7frBWkMVhklVwHDEvocYztQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfJFRXX (ORCPT
+        id S1727587AbfJFRXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47808 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727190AbfJFRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:23:21 -0400
+        id S1727565AbfJFRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:23:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2392720862;
-        Sun,  6 Oct 2019 17:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD36721872;
+        Sun,  6 Oct 2019 17:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382600;
-        bh=bMhHC+db4nOccSOwhA0fo5dCCOAtbBpAxKWNgXMQHcw=;
+        s=default; t=1570382603;
+        bh=W6QghoyZXk8Hl3WCgfDzrIHNelWpAuCRcKjsOjXwCMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+xBPV2lKlhWM12vb6TUcgupzMn4H/OTRl+X97LlL5txJZ6ity6FvVxEnSQ2UfBkJ
-         9/vc+pYab3+41nq3xvO3S6hGaYnDaxKiNNnPikxfmJ7uUEUsk8EYCui+uQoADHBZj1
-         CV6/o/1PF1D0DPCr9a3GaY5hQ9gnDBsEdxyT1xeU=
+        b=mL00tqHy7Q73H4XE9/k8pVo6OEgK8CZRhoHjCf1dKs367CjRNFcz96e8shOyFUSWi
+         tMk2FpGTc2gRSXqDZ0z8E/TrZrzOquHPTACNawdk2BTWVz9tVPwv1c4pKELZc3aImx
+         lTijSW/hZTrtX+GDKEEnOdObLeQyFzZOpgZJvQyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        stable@vger.kernel.org, Marko Kohtala <marko.kohtala@okoko.fi>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 19/47] MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a boolean
-Date:   Sun,  6 Oct 2019 19:21:06 +0200
-Message-Id: <20191006172017.899294811@linuxfoundation.org>
+Subject: [PATCH 4.9 02/47] video: ssd1307fb: Start page range at page_offset
+Date:   Sun,  6 Oct 2019 19:20:49 +0200
+Message-Id: <20191006172017.017173555@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -65,57 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marko Kohtala <marko.kohtala@okoko.fi>
 
-[ Upstream commit c59ae0a1055127dd3828a88e111a0db59b254104 ]
+[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
 
-clang warns:
+The page_offset was only applied to the end of the page range. This caused
+the display updates to cause a scrolling effect on the display because the
+amount of data written to the display did not match the range display
+expected.
 
-arch/mips/mm/tlbex.c:634:19: error: use of logical '&&' with constant
-operand [-Werror,-Wconstant-logical-operand]
-        if (cpu_has_rixi && _PAGE_NO_EXEC) {
-                         ^  ~~~~~~~~~~~~~
-arch/mips/mm/tlbex.c:634:19: note: use '&' for a bitwise operation
-        if (cpu_has_rixi && _PAGE_NO_EXEC) {
-                         ^~
-                         &
-arch/mips/mm/tlbex.c:634:19: note: remove constant to silence this
-warning
-        if (cpu_has_rixi && _PAGE_NO_EXEC) {
-                        ~^~~~~~~~~~~~~~~~
-1 error generated.
-
-Explicitly cast this value to a boolean so that clang understands we
-intend for this to be a non-zero value.
-
-Fixes: 00bf1c691d08 ("MIPS: tlbex: Avoid placing software PTE bits in Entry* PFN fields")
-Link: https://github.com/ClangBuiltLinux/linux/issues/609
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
+Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
+Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/mm/tlbex.c | 2 +-
+ drivers/video/fbdev/ssd1307fb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
-index 3cc5b2e4263c0..47d50197789be 100644
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -637,7 +637,7 @@ static __maybe_unused void build_convert_pte_to_entrylo(u32 **p,
- 		return;
- 	}
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 2925d5ce8d3e5..1267b93c03bd0 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -430,7 +430,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
  
--	if (cpu_has_rixi && _PAGE_NO_EXEC) {
-+	if (cpu_has_rixi && !!_PAGE_NO_EXEC) {
- 		if (fill_includes_sw_bits) {
- 			UASM_i_ROTR(p, reg, reg, ilog2(_PAGE_GLOBAL));
- 		} else {
+-	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.20.1
 
