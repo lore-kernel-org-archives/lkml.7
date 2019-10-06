@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2820AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB46C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F2620867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28A12077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382388;
-	bh=JWnS6eCa3vkdo1jTO8fCCNR5Mxxo+4+dhhhRNHODc+g=;
+	s=default; t=1570382391;
+	bh=fn1W6DM1VZqlD8bGq5EDAS5JqU3+VCwob7WeUZs8YE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZAn0T96PQFKHljjZc3y5UR2Gf64AweW4KYoA/d6mwHsQWye06TQj9z4LmUT8mVn1k
-	 MaSmlAYdnrm0vgbfAghp9mpbMFv3BX9+Pe3rBh34iFe0PFTue1B92ZfttKqQfQR4fF
-	 1kQRiYvvhseOLBAgEou7Cl1UyaHVSqJLX0KVna/s=
+	b=znjTm/MssMkbcjqXPTg+kUeB61X/5+Tpn+PvrLxEfam8jIJ0705hS0974cAbFFKr5
+	 s1IvMHl6+PMMEeZUQLT/eB/beWbTaFXESjrjUpeu5a7+FGuZJAPn+tLhgz7jtEk9MY
+	 75Q/9C3qWGRvooJ9UiPty5/toQozSu5NK0LpftxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfJFRTn (ORCPT
+        id S1726962AbfJFRTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44462 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfJFRTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:19:37 -0400
+        id S1726895AbfJFRTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:19:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6A420835;
-        Sun,  6 Oct 2019 17:19:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7D1D2077B;
+        Sun,  6 Oct 2019 17:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382376;
-        bh=JWnS6eCa3vkdo1jTO8fCCNR5Mxxo+4+dhhhRNHODc+g=;
+        s=default; t=1570382387;
+        bh=fn1W6DM1VZqlD8bGq5EDAS5JqU3+VCwob7WeUZs8YE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JbYtJUEmRdxeoIpPvzt3g9QKLHkmD2/Slihf/MGhQnkGVqLv5+XuJ6Ai+H3i52/wN
-         69aelOXGM1b5ULIwJjocUgsYULJTMSWxZOhD1PpH42ZGiQDXUsdG2c6+VHeNN9YXu5
-         fKaHtzK7rTPgw2fQ22Z00EPl3/g0tsAO+oSMFVFk=
+        b=ZiPRjsjZpN+J+yn/cHQt6S/ttE6Ig+3hiOzf1LY0BsHkrKg9z6FqsQQWjdnOmLudr
+         kGzVTA0gDlbhKCw/CzJJb3NjqN+yHUrciky5mtces1WBWInSRt080sOPF2Oc6I4GIA
+         SkMKzAk32RjyylmGXQJMsy2zbE6CG+QBCviDPgb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 13/36] powerpc/pseries: correctly track irq state in default idle
-Date:   Sun,  6 Oct 2019 19:18:55 +0200
-Message-Id: <20191006171049.740975554@linuxfoundation.org>
+Subject: [PATCH 4.4 17/36] HID: apple: Fix stuck function keys when using FN
+Date:   Sun,  6 Oct 2019 19:18:59 +0200
+Message-Id: <20191006171051.570514181@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -60,57 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Joao Moreno <mail@joaomoreno.com>
 
-[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
+[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
 
-prep_irq_for_idle() is intended to be called before entering
-H_CEDE (and it is used by the pseries cpuidle driver). However the
-default pseries idle routine does not call it, leading to mismanaged
-lazy irq state when the cpuidle driver isn't in use. Manifestations of
-this include:
+This fixes an issue in which key down events for function keys would be
+repeatedly emitted even after the user has raised the physical key. For
+example, the driver fails to emit the F5 key up event when going through
+the following steps:
+- fnmode=1: hold FN, hold F5, release FN, release F5
+- fnmode=2: hold F5, hold FN, release F5, release FN
 
-* Dropped IPIs in the time immediately after a cpu comes
-  online (before it has installed the cpuidle handler), making the
-  online operation block indefinitely waiting for the new cpu to
-  respond.
+The repeated F5 key down events can be easily verified using xev.
 
-* Hitting this WARN_ON in arch_local_irq_restore():
-	/*
-	 * We should already be hard disabled here. We had bugs
-	 * where that wasn't the case so let's dbl check it and
-	 * warn if we are wrong. Only do that when IRQ tracing
-	 * is enabled as mfmsr() can be costly.
-	 */
-	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
-		__hard_irq_disable();
-
-Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
-result.
-
-Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
+Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/setup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 9cc976ff7fecc..88fcf6a95fa67 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -369,6 +369,9 @@ static void pseries_lpar_idle(void)
- 	 * low power mode by cedeing processor to hypervisor
- 	 */
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 884d82f9190e2..8af87dc05f2a5 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -55,7 +55,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
+-	DECLARE_BITMAP(pressed_fn, KEY_CNT);
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
  
-+	if (!prep_irq_for_idle())
-+		return;
+@@ -182,6 +181,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ {
+ 	struct apple_sc *asc = hid_get_drvdata(hid);
+ 	const struct apple_key_translation *trans, *table;
++	bool do_translate;
++	u16 code = 0;
+ 
+ 	if (usage->code == KEY_FN) {
+ 		asc->fn_on = !!value;
+@@ -190,8 +191,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	}
+ 
+ 	if (fnmode) {
+-		int do_translate;
+-
+ 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+ 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+ 			table = macbookair_fn_keys;
+@@ -203,25 +202,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 		trans = apple_find_translation (table, usage->code);
+ 
+ 		if (trans) {
+-			if (test_bit(usage->code, asc->pressed_fn))
+-				do_translate = 1;
+-			else if (trans->flags & APPLE_FLAG_FKEY)
+-				do_translate = (fnmode == 2 && asc->fn_on) ||
+-					(fnmode == 1 && !asc->fn_on);
+-			else
+-				do_translate = asc->fn_on;
+-
+-			if (do_translate) {
+-				if (value)
+-					set_bit(usage->code, asc->pressed_fn);
+-				else
+-					clear_bit(usage->code, asc->pressed_fn);
+-
+-				input_event(input, usage->type, trans->to,
+-						value);
+-
+-				return 1;
++			if (test_bit(trans->from, input->key))
++				code = trans->from;
++			else if (test_bit(trans->to, input->key))
++				code = trans->to;
 +
- 	/* Indicate to hypervisor that we are idle. */
- 	get_lppaca()->idle = 1;
++			if (!code) {
++				if (trans->flags & APPLE_FLAG_FKEY) {
++					switch (fnmode) {
++					case 1:
++						do_translate = !asc->fn_on;
++						break;
++					case 2:
++						do_translate = asc->fn_on;
++						break;
++					default:
++						/* should never happen */
++						do_translate = false;
++					}
++				} else {
++					do_translate = asc->fn_on;
++				}
++
++				code = do_translate ? trans->to : trans->from;
+ 			}
++
++			input_event(input, usage->type, code, value);
++			return 1;
+ 		}
  
+ 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
