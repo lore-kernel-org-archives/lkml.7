@@ -2,59 +2,62 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02349C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAB0C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB902133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C505420862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383550;
-	bh=mQyM+MYzJfX0sMNye8DCPt5zXmK09F28LgbBWbDWYCw=;
+	s=default; t=1570383557;
+	bh=TxigC21+DLiMafdGXO5lPtQ6kQiOwS68oR4xLUldI8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zyLjs+W4XcCufGkqbhZaCHdy7iAE4Xpgu/I8BYD5GaqDuCl1CEXu0OX8wAVCIfg5A
-	 PHVToxCRopM+DcT+CQ+CStXNxCARTr2zbYDftdlXo7rZSxKgD2GXkqc8AiYipz2S7t
-	 Oix8dPYuwAoehx8g9XopQM3KB1qDOU2gUszq08QY=
+	b=hXCCRpKKku0OkiEoRbX7fVnnUIBYtNOI7bLXCYadiuhOSwCHgae9hNAKB0p1kdMAV
+	 UFwiyNvnxEdUSKOiQ0J8kA9glTgibPhPOzd8Gz070FEJBkMjd4e97I++UsDc7Cy6/K
+	 n5gnU+B3m7hBM3T4qv/fsutJU6NudRLTt06Y6V0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfJFRjK (ORCPT
+        id S1730749AbfJFRjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729767AbfJFRjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:07 -0400
+        id S1730137AbfJFRjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADE4222BE;
-        Sun,  6 Oct 2019 17:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F69E2133F;
+        Sun,  6 Oct 2019 17:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383546;
-        bh=mQyM+MYzJfX0sMNye8DCPt5zXmK09F28LgbBWbDWYCw=;
+        s=default; t=1570383551;
+        bh=TxigC21+DLiMafdGXO5lPtQ6kQiOwS68oR4xLUldI8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUiZ5cgOTjDAR/aAnvCPEBk+pdx+0uGQ6KJnWH0PHYB5ltx80IBEn7G3BhGAm2XNS
-         PX41yGr/108zRWPmd0xDdI7H1WlgmFKwNJV3l3zAHwF1Ywislk0Y2xPjy6YBQ/GPr3
-         3caKbNizFEG8EFw3cKZgZcvmE6rJ1OAs8XbrFDA4=
+        b=Vexhl11JLxqydm828yc/QQPSoa8yI1ezKxaOcISGnY1LwI0LUaZw4a2i3N9jUVs6B
+         Tx9cPcIh1wL2lAIV/FadZ+AlRm5co6ITTHMVUDfY+7g8y75tn2wLx4qtIViQbWhR/T
+         8+yUYJn/O7RaDzehI7YIWWpewNuVJMTDa28IGY2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+7d6a57304857423318a5@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Eric Biggers <ebiggers@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.2 137/137] vfs: set fs_context::user_ns for reconfigure
-Date:   Sun,  6 Oct 2019 19:22:01 +0200
-Message-Id: <20191006171220.808492952@linuxfoundation.org>
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 001/166] drm/vkms: Fix crc worker races
+Date:   Sun,  6 Oct 2019 19:19:27 +0200
+Message-Id: <20191006171212.939267264@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
-References: <20191006171209.403038733@linuxfoundation.org>
+In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
+References: <20191006171212.850660298@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,82 +66,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 1dd9bc08cf1420d466dd8dcfcc233777e61ca5d2 upstream.
+[ Upstream commit 18d0952a838ba559655b0cd9cf85097ad63d9bca ]
 
-fs_context::user_ns is used by fuse_parse_param(), even during remount,
-so it needs to be set to the existing value for reconfigure.
+The issue we have is that the crc worker might fall behind. We've
+tried to handle this by tracking both the earliest frame for which it
+still needs to compute a crc, and the last one. Plus when the
+crtc_state changes, we have a new work item, which are all run in
+order due to the ordered workqueue we allocate for each vkms crtc.
 
-Reproducer:
+Trouble is there's been a few small issues in the current code:
+- we need to capture frame_end in the vblank hrtimer, not in the
+  worker. The worker might run much later, and then we generate a lot
+  of crc for which there's already a different worker queued up.
+- frame number might be 0, so create a new crc_pending boolean to
+  track this without confusion.
+- we need to atomically grab frame_start/end and clear it, so do that
+  all in one go. This is not going to create a new race, because if we
+  race with the hrtimer then our work will be re-run.
+- only race that can happen is the following:
+  1. worker starts
+  2. hrtimer runs and updates frame_end
+  3. worker grabs frame_start/end, already reading the new frame_end,
+  and clears crc_pending
+  4. hrtimer calls queue_work()
+  5. worker completes
+  6. worker gets  re-run, crc_pending is false
+  Explain this case a bit better by rewording the comment.
 
-	#include <fcntl.h>
-	#include <sys/mount.h>
+v2: Demote warning level output to debug when we fail to requeue, this
+is expected under high load when the crc worker can't quite keep up.
 
-	int main()
-	{
-		char opts[128];
-		int fd = open("/dev/fuse", O_RDWR);
-
-		sprintf(opts, "fd=%d,rootmode=040000,user_id=0,group_id=0", fd);
-		mkdir("mnt", 0777);
-		mount("foo",  "mnt", "fuse.foo", 0, opts);
-		mount("foo", "mnt", "fuse.foo", MS_REMOUNT, opts);
-	}
-
-Crash:
-	BUG: kernel NULL pointer dereference, address: 0000000000000000
-	#PF: supervisor read access in kernel mode
-	#PF: error_code(0x0000) - not-present page
-	PGD 0 P4D 0
-	Oops: 0000 [#1] SMP
-	CPU: 0 PID: 129 Comm: syz_make_kuid Not tainted 5.3.0-rc5-next-20190821 #3
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-	RIP: 0010:map_id_range_down+0xb/0xc0 kernel/user_namespace.c:291
-	[...]
-	Call Trace:
-	 map_id_down kernel/user_namespace.c:312 [inline]
-	 make_kuid+0xe/0x10 kernel/user_namespace.c:389
-	 fuse_parse_param+0x116/0x210 fs/fuse/inode.c:523
-	 vfs_parse_fs_param+0xdb/0x1b0 fs/fs_context.c:145
-	 vfs_parse_fs_string+0x6a/0xa0 fs/fs_context.c:188
-	 generic_parse_monolithic+0x85/0xc0 fs/fs_context.c:228
-	 parse_monolithic_mount_data+0x1b/0x20 fs/fs_context.c:708
-	 do_remount fs/namespace.c:2525 [inline]
-	 do_mount+0x39a/0xa60 fs/namespace.c:3107
-	 ksys_mount+0x7d/0xd0 fs/namespace.c:3325
-	 __do_sys_mount fs/namespace.c:3339 [inline]
-	 __se_sys_mount fs/namespace.c:3336 [inline]
-	 __x64_sys_mount+0x20/0x30 fs/namespace.c:3336
-	 do_syscall_64+0x4a/0x1a0 arch/x86/entry/common.c:290
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: syzbot+7d6a57304857423318a5@syzkaller.appspotmail.com
-Fixes: 408cbe695350 ("vfs: Convert fuse to use the new mount API")
-Cc: David Howells <dhowells@redhat.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Shayenne Moura <shayenneluzmoura@gmail.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Tested-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190606222751.32567-2-daniel.vetter@ffwll.ch
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs_context.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/vkms/vkms_crc.c  | 27 +++++++++++++--------------
+ drivers/gpu/drm/vkms/vkms_crtc.c |  9 +++++++--
+ drivers/gpu/drm/vkms/vkms_drv.h  |  2 ++
+ 3 files changed, 22 insertions(+), 16 deletions(-)
 
---- a/fs/fs_context.c
-+++ b/fs/fs_context.c
-@@ -279,10 +279,8 @@ static struct fs_context *alloc_fs_conte
- 		fc->user_ns = get_user_ns(reference->d_sb->s_user_ns);
- 		break;
- 	case FS_CONTEXT_FOR_RECONFIGURE:
--		/* We don't pin any namespaces as the superblock's
--		 * subscriptions cannot be changed at this point.
--		 */
- 		atomic_inc(&reference->d_sb->s_active);
-+		fc->user_ns = get_user_ns(reference->d_sb->s_user_ns);
- 		fc->root = dget(reference);
- 		break;
+diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
+index e66ff25c008e6..e9fb4ebb789fd 100644
+--- a/drivers/gpu/drm/vkms/vkms_crc.c
++++ b/drivers/gpu/drm/vkms/vkms_crc.c
+@@ -166,16 +166,24 @@ void vkms_crc_work_handle(struct work_struct *work)
+ 	struct drm_plane *plane;
+ 	u32 crc32 = 0;
+ 	u64 frame_start, frame_end;
++	bool crc_pending;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&out->state_lock, flags);
+ 	frame_start = crtc_state->frame_start;
+ 	frame_end = crtc_state->frame_end;
++	crc_pending = crtc_state->crc_pending;
++	crtc_state->frame_start = 0;
++	crtc_state->frame_end = 0;
++	crtc_state->crc_pending = false;
+ 	spin_unlock_irqrestore(&out->state_lock, flags);
+ 
+-	/* _vblank_handle() hasn't updated frame_start yet */
+-	if (!frame_start || frame_start == frame_end)
+-		goto out;
++	/*
++	 * We raced with the vblank hrtimer and previous work already computed
++	 * the crc, nothing to do.
++	 */
++	if (!crc_pending)
++		return;
+ 
+ 	drm_for_each_plane(plane, &vdev->drm) {
+ 		struct vkms_plane_state *vplane_state;
+@@ -196,20 +204,11 @@ void vkms_crc_work_handle(struct work_struct *work)
+ 	if (primary_crc)
+ 		crc32 = _vkms_get_crc(primary_crc, cursor_crc);
+ 
+-	frame_end = drm_crtc_accurate_vblank_count(crtc);
+-
+-	/* queue_work can fail to schedule crc_work; add crc for
+-	 * missing frames
++	/*
++	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
+ 	 */
+ 	while (frame_start <= frame_end)
+ 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+-
+-out:
+-	/* to avoid using the same value for frame number again */
+-	spin_lock_irqsave(&out->state_lock, flags);
+-	crtc_state->frame_end = frame_end;
+-	crtc_state->frame_start = 0;
+-	spin_unlock_irqrestore(&out->state_lock, flags);
+ }
+ 
+ static const char * const pipe_crc_sources[] = {"auto"};
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 4d11292bc6f38..f392fa13015b8 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -30,13 +30,18 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+ 		 * has read the data
+ 		 */
+ 		spin_lock(&output->state_lock);
+-		if (!state->frame_start)
++		if (!state->crc_pending)
+ 			state->frame_start = frame;
++		else
++			DRM_DEBUG_DRIVER("crc worker falling behind, frame_start: %llu, frame_end: %llu\n",
++					 state->frame_start, frame);
++		state->frame_end = frame;
++		state->crc_pending = true;
+ 		spin_unlock(&output->state_lock);
+ 
+ 		ret = queue_work(output->crc_workq, &state->crc_work);
+ 		if (!ret)
+-			DRM_WARN("failed to queue vkms_crc_work_handle");
++			DRM_DEBUG_DRIVER("vkms_crc_work_handle already queued\n");
  	}
+ 
+ 	spin_unlock(&output->lock);
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index b92c30c66a6f2..2b37eb1062d34 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -48,6 +48,8 @@ struct vkms_plane_state {
+ struct vkms_crtc_state {
+ 	struct drm_crtc_state base;
+ 	struct work_struct crc_work;
++
++	bool crc_pending;
+ 	u64 frame_start;
+ 	u64 frame_end;
+ };
+-- 
+2.20.1
+
 
 
