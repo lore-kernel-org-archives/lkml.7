@@ -7,53 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18177C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D342ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E563820862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7573B2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382510;
-	bh=FRowA1mgth8qSVn5n86QD5RHhQy4jDtxItqvkVd170Y=;
+	s=default; t=1570382575;
+	bh=WvrT+YqFB9XJFBgglofhWHy2h/WI6wolVdh3GnWYFJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nG36PIPqX4QG3ctGRnNF/fvwQQhEppfE9XANgXFn7QXnCQXoaVnK8ex3WoWIXcGAW
-	 xCCceq+O7beDuIeVqGQDoNXccEiwegl07N5pF1BEQRPwM6ObKgPtsfaWYuinHffYA6
-	 Kt86urEfM/b3m0dLjws3kv1VyOlrPvbibmihSicc=
+	b=FVhNZE2BUrsV07KRv0sDXtgdLBoFSb2cDQ+xzDpMbZohsTpi2oMPCK0MvU0FBPBYh
+	 yRGNiIifma5llf8DXnjdSlP8VHJAaQBuBZgDnlbSJNq/6xbsZi+e78CbDYg8eQKkf0
+	 lwD1vxMmDSjVtgu3pqraTbJdKF7Skt5nm1ZjZD8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfJFRVs (ORCPT
+        id S1726878AbfJFRWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfJFRTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:19:42 -0400
+        id S1726514AbfJFRWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:22:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881972077B;
-        Sun,  6 Oct 2019 17:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F36F2077B;
+        Sun,  6 Oct 2019 17:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382382;
-        bh=FRowA1mgth8qSVn5n86QD5RHhQy4jDtxItqvkVd170Y=;
+        s=default; t=1570382573;
+        bh=WvrT+YqFB9XJFBgglofhWHy2h/WI6wolVdh3GnWYFJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+JzWi4haKkRNyqssaNB0/8kCTTu13cQZ9WtXD2KOcK8/D60ktqLRYiFczDMWtFmj
-         cLqexSntgliJyX5rBcNMd3LDta/lbhLnd17fhXVE8TnftENg4mpYE52Wy3nD7Q+l11
-         CGWjT0uVKtWZxE6K9KhhL5IRMXzKSvfZt54nj3v8=
+        b=yWKj9cN6BLiENxcyWbMZkQUYb01X2qEJ2WX2YIu1wpLe9KWX3OiYMqFQJ2gYcs7or
+         ifqyop04Qw26Nmo3bDTMDwmR9JZUXXc1JQiHXQN0B2vp+A3IaOjswuA5LqY4/NjEq+
+         +fKcxdLhjXySW1apCUwtwUJqATHW4xAGsBeEpy1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/36] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun,  6 Oct 2019 19:18:57 +0200
-Message-Id: <20191006171050.488742985@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/47] drm/bridge: tc358767: Increase AUX transfer length limit
+Date:   Sun,  6 Oct 2019 19:20:48 +0200
+Message-Id: <20191006172016.964736192@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
-References: <20191006171038.266461022@linuxfoundation.org>
+In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
+References: <20191006172016.873463083@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,45 +69,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+According to the datasheet tc358767 can transfer up to 16 bytes via
+its AUX channel, so the artificial limit of 8 appears to be too
+low. However only up to 15-bytes seem to be actually supported and
+trying to use 16-byte transfers results in transfers failing
+sporadically (with bogus status in case of I2C transfers), so limit it
+to 15.
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
-
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 5bfdfccbb9a1a..032c95157497f 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -38,6 +38,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
- 
-+	pdev->d3cold_delay = 0;
-+
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index 80993a8734e08..8b6f8fac92e89 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -300,7 +300,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
+ {
+ 	struct tc_data *tc = aux_to_tc(aux);
+-	size_t size = min_t(size_t, 8, msg->size);
++	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+ 	u8 *buf = msg->buffer;
+ 	u32 tmp = 0;
 -- 
 2.20.1
 
