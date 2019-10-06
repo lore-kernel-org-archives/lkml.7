@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84547C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB1C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E4020673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C2020700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384340;
-	bh=ab/650njBQ21/h5fy4o51oMZSKILe8Zt+y0PvRGsxZs=;
+	s=default; t=1570384343;
+	bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ih7KtQrF768KxMJZnntA/55qY/V4NWyUXSmnQSHrfyD34F2yBONCYeyNlwLeLS+LZ
-	 ugjAftNJMoV8uliEaNO8PqFxpDG9ZJi8lgSxHMQ/lKR9VWzoCt9iODhM3v2wYy9onN
-	 4SNuCUh05sZo6L/RTtKII22WwnFGJ0q7H/sMAjlI=
+	b=GASMiyewpe7sFlDkGef9Tf6Cu8JJMyS6xNUlQrQm/jQEN3BSWWmRfug4g81Z/dgIT
+	 zBbba87B18Cd6Pt8oTSd6GdJLZp+47XhmweoUFy/tpSXUpv8hU8VNegu96fu2yL6iB
+	 hrDIYhZJNnlB6/uxLxfcmwFErY4OFeyIM0V91Kq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbfJFRwA (ORCPT
+        id S1730715AbfJFRvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:52:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49016 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727840AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728506AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39A0E222BE;
-        Sun,  6 Oct 2019 17:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3DBE21479;
+        Sun,  6 Oct 2019 17:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383946;
-        bh=ab/650njBQ21/h5fy4o51oMZSKILe8Zt+y0PvRGsxZs=;
+        s=default; t=1570383922;
+        bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmQwcA4WePSOvK8JD/PDU2mf8J/ZpA6F34zSCBAkq5zuWba42p4SKTd7qRxf24E7q
-         Ge/ghob1BCNoehfTWSoBhS9CA9UdWXtJnCdLxWg3mnzVfayVt/TvUhAHpClUu9hhjv
-         hcuvCWOeCGvZZ/weDeVv7G4P15eyxTs+LihRFxKE=
+        b=xSVrVXGOO5mbcMaS0YRRsmut6C/iwzt4zMYFXiCzgA1q34t2upmT2Uk9u4QUsULcJ
+         IbQKmTPqS4eG/eCI6kAtaT2EEw2dWDwz6CcpoJ4l6tdpMKXk2YxGXbzwYP6799zsX6
+         7XT7VHR73xV+2B3lZMMqWrnd1ZMbIzxA8DURHqL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Marek Majkowski <marek@cloudflare.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 154/166] net: dsa: sja1105: Prevent leaking memory
-Date:   Sun,  6 Oct 2019 19:22:00 +0200
-Message-Id: <20191006171225.866005334@linuxfoundation.org>
+Subject: [PATCH 5.3 146/166] tcp: adjust rto_base in retransmits_timed_out()
+Date:   Sun,  6 Oct 2019 19:21:52 +0200
+Message-Id: <20191006171225.244217732@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,45 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 68501df92d116b760777a2cfda314789f926476f ]
+[ Upstream commit 3256a2d6ab1f71f9a1bd2d7f6f18eb8108c48d17 ]
 
-In sja1105_static_config_upload, in two cases memory is leaked: when
-static_config_buf_prepare_for_upload fails and when sja1105_inhibit_tx
-fails. In both cases config_buf should be released.
+The cited commit exposed an old retransmits_timed_out() bug
+which assumed it could call tcp_model_timeout() with
+TCP_RTO_MIN as rto_base for all states.
 
-Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
-Fixes: 1a4c69406cc1 ("net: dsa: sja1105: Prevent PHY jabbering during switch reset")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+But flows in SYN_SENT or SYN_RECV state uses a different
+RTO base (1 sec instead of 200 ms, unless BPF choses
+another value)
+
+This caused a reduction of SYN retransmits from 6 to 4 with
+the default /proc/sys/net/ipv4/tcp_syn_retries value.
+
+Fixes: a41e8a88b06e ("tcp: better handle TCP_USER_TIMEOUT in SYN_SENT state")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Yuchung Cheng <ycheng@google.com>
+Cc: Marek Majkowski <marek@cloudflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/sja1105/sja1105_spi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_timer.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/net/dsa/sja1105/sja1105_spi.c
-+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
-@@ -409,7 +409,8 @@ int sja1105_static_config_upload(struct
- 	rc = static_config_buf_prepare_for_upload(priv, config_buf, buf_len);
- 	if (rc < 0) {
- 		dev_err(dev, "Invalid config, cannot upload\n");
--		return -EINVAL;
-+		rc = -EINVAL;
-+		goto out;
- 	}
- 	/* Prevent PHY jabbering during switch reset by inhibiting
- 	 * Tx on all ports and waiting for current packet to drain.
-@@ -418,7 +419,8 @@ int sja1105_static_config_upload(struct
- 	rc = sja1105_inhibit_tx(priv, port_bitmap, true);
- 	if (rc < 0) {
- 		dev_err(dev, "Failed to inhibit Tx on ports\n");
--		return -ENXIO;
-+		rc = -ENXIO;
-+		goto out;
- 	}
- 	/* Wait for an eventual egress packet to finish transmission
- 	 * (reach IFG). It is guaranteed that a second one will not
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -198,8 +198,13 @@ static bool retransmits_timed_out(struct
+ 		return false;
+ 
+ 	start_ts = tcp_sk(sk)->retrans_stamp;
+-	if (likely(timeout == 0))
+-		timeout = tcp_model_timeout(sk, boundary, TCP_RTO_MIN);
++	if (likely(timeout == 0)) {
++		unsigned int rto_base = TCP_RTO_MIN;
++
++		if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
++			rto_base = tcp_timeout_init(sk);
++		timeout = tcp_model_timeout(sk, boundary, rto_base);
++	}
+ 
+ 	return (s32)(tcp_time_stamp(tcp_sk(sk)) - start_ts - timeout) >= 0;
+ }
 
 
