@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2B0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA3BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E88D2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5732080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383403;
-	bh=RXz6wrou/rLsSHwyEPfyPMYLuJ/X2bB/HTRQZPCvBoU=;
+	s=default; t=1570383405;
+	bh=NjzupDenoqLLyLpB0bUoEgIBSgtmb3n0NUd2iv3HQdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjdiciWSFOhM4crM+ZnYpSwllKN7x35N2CPTYeT7prhgkybKKPOhCgzSWP3EhEn+Z
-	 0vY7rg8uO+reW9OnxYRwGPkKGWleOeZnmJMmMLuK3XdqqJvfWcFaNrj8TgiIHYbA/5
-	 1nv9CVU/uNQoaK8TrakRtrOhdr1w1ChLWywLsXgE=
+	b=MxD7BIcEEV7RLCnHK87NRE4aytRWNJ/IIHykKNomtVkp/X2PcAThcLCSgij/VZZYR
+	 dnWDOvAgA7LxwmEauqL+mDG43Lx5+sWJ2suDbJ8qqecKr5E9S9YHMP8UenVt9dpDCW
+	 IUnWL8EepclL7H16KerRzykEk08YY8vxpBhvrVEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbfJFRgm (ORCPT
+        id S1730330AbfJFRgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbfJFRgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:38 -0400
+        id S1730315AbfJFRgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 148BF2080F;
-        Sun,  6 Oct 2019 17:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA4112053B;
+        Sun,  6 Oct 2019 17:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383397;
-        bh=RXz6wrou/rLsSHwyEPfyPMYLuJ/X2bB/HTRQZPCvBoU=;
+        s=default; t=1570383400;
+        bh=NjzupDenoqLLyLpB0bUoEgIBSgtmb3n0NUd2iv3HQdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVtOAKGrjuKmrdLGJaWqRnHb5B5EsB0WNKiya47GnoKz0myN3DFtOO3DG8wYRoH1I
-         13wy1STMRjT27NWaucPLMBgXuTo3akinBPy1MhKozOd5DipBFSgB1IoM8GAIBNv8bw
-         nuzs9S6gLuJ2QYMxkPpfg5BxsMjY9GUOLK//HJPw=
+        b=2tMNiPChmOiXbtxxketd8PlkmNkIEZbB/1+30VZqkdIfQk9u/izESIs1EMdSQovO2
+         8SbT3yYkVNUgpq78gwiwzykUE2EpFrksYwVaQqiDeNCCMZO7skWO2ZNaVk/FNVP40o
+         MW6p0DGXpOFWaVpoOeOL/kTEOyCyqh03dSr1txt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 045/137] drm/amd/display: fix issue where 252-255 values are clipped
-Date:   Sun,  6 Oct 2019 19:20:29 +0200
-Message-Id: <20191006171212.676664058@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Shirish S <shirish.s@amd.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 036/137] drm/amdgpu: Fix hard hang for S/G display BOs.
+Date:   Sun,  6 Oct 2019 19:20:20 +0200
+Message-Id: <20191006171212.121400912@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,44 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Koo <Anthony.Koo@amd.com>
+From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
 
-[ Upstream commit 1cbcfc975164f397b449efb17f59d81a703090db ]
+[ Upstream commit e4c4073b0139d055d43a9568690fc560aab4fa5c ]
 
-[Why]
-When endpoint is at the boundary of a region, such as at 2^0=1
-we find that the last segment has a sharp slope and some points
-are clipped at the top.
+HW requires for caching to be unset for scanout BO
+mappings when the BO placement is in GTT memory.
+Usually the flag to unset is passed from user mode
+but for FB mode this was missing.
 
-[How]
-If end point is 1, which is exactly at the 2^0 region boundary, we
-need to program an additional region beyond this point.
+v2:
+Keep all BO placement logic in amdgpu_display_supported_domains
 
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
+Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Tested-by: Shirish S <shirish.s@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c  | 7 +++----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 3 ++-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-index 7469333a2c8a5..8166fdbacd732 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-@@ -357,9 +357,10 @@ bool cm_helper_translate_curve_to_hw_format(
- 		seg_distr[7] = 4;
- 		seg_distr[8] = 4;
- 		seg_distr[9] = 4;
-+		seg_distr[10] = 1;
- 
- 		region_start = -10;
--		region_end = 0;
-+		region_end = 1;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
+index e476092188392..bf0c61baa05c7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
+@@ -137,14 +137,14 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
+ 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
+ 						  fb_tiled);
+ 	domain = amdgpu_display_supported_domains(adev);
+-
+ 	height = ALIGN(mode_cmd->height, 8);
+ 	size = mode_cmd->pitches[0] * height;
+ 	aligned_size = ALIGN(size, PAGE_SIZE);
+ 	ret = amdgpu_gem_object_create(adev, aligned_size, 0, domain,
+ 				       AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
+-				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS |
+-				       AMDGPU_GEM_CREATE_VRAM_CLEARED,
++				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS     |
++				       AMDGPU_GEM_CREATE_VRAM_CLEARED 	     |
++				       AMDGPU_GEM_CREATE_CPU_GTT_USWC,
+ 				       ttm_bo_type_kernel, NULL, &gobj);
+ 	if (ret) {
+ 		pr_err("failed to allocate framebuffer (%d)\n", aligned_size);
+@@ -166,7 +166,6 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
+ 			dev_err(adev->dev, "FB failed to set tiling flags\n");
  	}
  
- 	for (i = region_end - region_start; i < MAX_REGIONS_NUMBER ; i++)
+-
+ 	ret = amdgpu_bo_pin(abo, domain);
+ 	if (ret) {
+ 		amdgpu_bo_unreserve(abo);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+index d4fcf54754646..6fc77ac814d8e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+@@ -746,7 +746,8 @@ int amdgpu_mode_dumb_create(struct drm_file *file_priv,
+ 	struct amdgpu_device *adev = dev->dev_private;
+ 	struct drm_gem_object *gobj;
+ 	uint32_t handle;
+-	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
++	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
++		    AMDGPU_GEM_CREATE_CPU_GTT_USWC;
+ 	u32 domain;
+ 	int r;
+ 
 -- 
 2.20.1
 
