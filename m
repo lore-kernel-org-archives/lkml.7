@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB46C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2044C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28A12077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5D820867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382391;
-	bh=fn1W6DM1VZqlD8bGq5EDAS5JqU3+VCwob7WeUZs8YE4=;
+	s=default; t=1570382395;
+	bh=6WSWZ02RsQ66w1zpCEaXKB2vQXYZViz7eKNvbYXWB24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znjTm/MssMkbcjqXPTg+kUeB61X/5+Tpn+PvrLxEfam8jIJ0705hS0974cAbFFKr5
-	 s1IvMHl6+PMMEeZUQLT/eB/beWbTaFXESjrjUpeu5a7+FGuZJAPn+tLhgz7jtEk9MY
-	 75Q/9C3qWGRvooJ9UiPty5/toQozSu5NK0LpftxY=
+	b=yuvkZJ/YQZcQ18Gg9gfHDR3liU9GW99wOsXobmVbvM8MXu8zj5dsi8mBEIUKRJJx8
+	 17F4SF5ZxFgEGQNLxrosDJzqGqBpf0MPcmXn8zluoWqmuy3wJNExgt1VtJEasKUl31
+	 LcmHsSxuNd/DsVXlG41vWrSuCHHYR/QG177HH7+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfJFRTu (ORCPT
+        id S1727005AbfJFRTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:19:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbfJFRTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:19:48 -0400
+        id S1726949AbfJFRTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:19:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7D1D2077B;
-        Sun,  6 Oct 2019 17:19:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D5CB20862;
+        Sun,  6 Oct 2019 17:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382387;
-        bh=fn1W6DM1VZqlD8bGq5EDAS5JqU3+VCwob7WeUZs8YE4=;
+        s=default; t=1570382390;
+        bh=6WSWZ02RsQ66w1zpCEaXKB2vQXYZViz7eKNvbYXWB24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZiPRjsjZpN+J+yn/cHQt6S/ttE6Ig+3hiOzf1LY0BsHkrKg9z6FqsQQWjdnOmLudr
-         kGzVTA0gDlbhKCw/CzJJb3NjqN+yHUrciky5mtces1WBWInSRt080sOPF2Oc6I4GIA
-         SkMKzAk32RjyylmGXQJMsy2zbE6CG+QBCviDPgb8=
+        b=tojbrY3GX+MuheesopMFxDMFm/nJw6k/aPby5FVhMYisN8w1gVo1hfnN53R/28Rrg
+         dvXlif5mg2IptWqomvwksFaVMgyf0AeIWX+HAmNG+tcDOeLm2xYXNuZLUsVQcGZIK5
+         LYbeZAgjLfdcsx4qFPMmtV3jF43NVW4g0/LF9eQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 17/36] HID: apple: Fix stuck function keys when using FN
-Date:   Sun,  6 Oct 2019 19:18:59 +0200
-Message-Id: <20191006171051.570514181@linuxfoundation.org>
+Subject: [PATCH 4.4 18/36] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
+Date:   Sun,  6 Oct 2019 19:19:00 +0200
+Message-Id: <20191006171052.639006834@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -60,109 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joao Moreno <mail@joaomoreno.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
+[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
 
-This fixes an issue in which key down events for function keys would be
-repeatedly emitted even after the user has raised the physical key. For
-example, the driver fails to emit the F5 key up event when going through
-the following steps:
-- fnmode=1: hold FN, hold F5, release FN, release F5
-- fnmode=2: hold F5, hold FN, release F5, release FN
+In smack_socket_sock_rcv_skb(), there is an if statement
+on line 3920 to check whether skb is NULL:
+    if (skb && skb->secmark != 0)
 
-The repeated F5 key down events can be easily verified using xev.
+This check indicates skb can be NULL in some cases.
 
-Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+But on lines 3931 and 3932, skb is used:
+    ad.a.u.net->netif = skb->skb_iif;
+    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
+
+Thus, possible null-pointer dereferences may occur when skb is NULL.
+
+To fix these possible bugs, an if statement is added to check skb.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 21 deletions(-)
+ security/smack/smack_lsm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 884d82f9190e2..8af87dc05f2a5 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -55,7 +55,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
--	DECLARE_BITMAP(pressed_fn, KEY_CNT);
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
- 
-@@ -182,6 +181,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- {
- 	struct apple_sc *asc = hid_get_drvdata(hid);
- 	const struct apple_key_translation *trans, *table;
-+	bool do_translate;
-+	u16 code = 0;
- 
- 	if (usage->code == KEY_FN) {
- 		asc->fn_on = !!value;
-@@ -190,8 +191,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 	}
- 
- 	if (fnmode) {
--		int do_translate;
--
- 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
- 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
- 			table = macbookair_fn_keys;
-@@ -203,25 +202,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		trans = apple_find_translation (table, usage->code);
- 
- 		if (trans) {
--			if (test_bit(usage->code, asc->pressed_fn))
--				do_translate = 1;
--			else if (trans->flags & APPLE_FLAG_FKEY)
--				do_translate = (fnmode == 2 && asc->fn_on) ||
--					(fnmode == 1 && !asc->fn_on);
--			else
--				do_translate = asc->fn_on;
--
--			if (do_translate) {
--				if (value)
--					set_bit(usage->code, asc->pressed_fn);
--				else
--					clear_bit(usage->code, asc->pressed_fn);
--
--				input_event(input, usage->type, trans->to,
--						value);
--
--				return 1;
-+			if (test_bit(trans->from, input->key))
-+				code = trans->from;
-+			else if (test_bit(trans->to, input->key))
-+				code = trans->to;
-+
-+			if (!code) {
-+				if (trans->flags & APPLE_FLAG_FKEY) {
-+					switch (fnmode) {
-+					case 1:
-+						do_translate = !asc->fn_on;
-+						break;
-+					case 2:
-+						do_translate = asc->fn_on;
-+						break;
-+					default:
-+						/* should never happen */
-+						do_translate = false;
-+					}
-+				} else {
-+					do_translate = asc->fn_on;
-+				}
-+
-+				code = do_translate ? trans->to : trans->from;
- 			}
-+
-+			input_event(input, usage->type, code, value);
-+			return 1;
- 		}
- 
- 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 9db7c80a74aa5..b76075dbd6fc8 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -3986,6 +3986,8 @@ access_check:
+ 			skp = smack_ipv6host_label(&sadd);
+ 		if (skp == NULL)
+ 			skp = smack_net_ambient;
++		if (skb == NULL)
++			break;
+ #ifdef CONFIG_AUDIT
+ 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
+ 		ad.a.u.net->family = sk->sk_family;
 -- 
 2.20.1
 
