@@ -2,54 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10471C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B87C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4A62053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4065022486
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384169;
-	bh=OykuoBvG7eWAabm6JjGpW/J91pGbkUxRh6yTEZjST08=;
+	s=default; t=1570384179;
+	bh=RdsNbSOkE3LWk5h3UxRp2TIjnw+1N5nQg2cMQy0ytRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7FDe0y9mqbKazaUTqCn/rTHcyZ61hiMZqggI2qanIC0x440+8bcv4NzgQaLDTlrr
-	 1v9x1QEY3FB9H7K0BSDV31LB9FfI8WO+VL3k/CYaovHIVmplvxAr1fZqJ0yeNYsByJ
-	 UqK7gHEmbZYfDqCRgTSIBE3BRAFXpOpXl2XTVbWs=
+	b=fvlyMCT+JVO/kcjhrE7v4QqbXnOeKebOlChqFivvLakI/GfRQXmRh7bdieETKgYkm
+	 lmOcRoGmVL2EPZZ6xEfzz3iWW0sJIDTCFyCjzO/Y1NOyO2cY+jXvFzC67cX5V/reF4
+	 lfV6e0ER/dOlo2aUX3sCGfFSS1F72dPlTIr9Wyqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbfJFRmG (ORCPT
+        id S1730348AbfJFRti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41768 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730902AbfJFRmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:03 -0400
+        id S1730202AbfJFRlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:41:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B81482080F;
-        Sun,  6 Oct 2019 17:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0C92053B;
+        Sun,  6 Oct 2019 17:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383722;
-        bh=OykuoBvG7eWAabm6JjGpW/J91pGbkUxRh6yTEZjST08=;
+        s=default; t=1570383711;
+        bh=RdsNbSOkE3LWk5h3UxRp2TIjnw+1N5nQg2cMQy0ytRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D29NobGm5re8ei1L7ORz2E9fyMRHiKCOyeEvPk7tNYgNowDiXXAr5cgbiwKIzYrVr
-         +wylP/ZB7eftBKVFHE4A8YrFEaxZxvmHzb4Wi8RFlREPpoMzxWTo5XZ3H/PQxD5k88
-         QUr057NRhd/D1Lmv60OjQamMDwhquR3TtjfS3a1Y=
+        b=YBBaOzbVFFcdELe6rq/LAhcZp3w9MPqFegAV+93WjE1l3167gPVz++PNnA262HWPh
+         fZ51FUNcR6McP6RTcTlz6fGQ0RZnn7ANlBNoSVBXDElY4ANJN+OoGk5QA3QdzY5bx6
+         9Cqd16hRylbf4pjN89wJSjLrBFbKhySQXVikru3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 070/166] arm64: fix unreachable code issue with cmpxchg
-Date:   Sun,  6 Oct 2019 19:20:36 +0200
-Message-Id: <20191006171219.278323490@linuxfoundation.org>
+Subject: [PATCH 5.3 066/166] powerpc/pseries: correctly track irq state in default idle
+Date:   Sun,  6 Oct 2019 19:20:32 +0200
+Message-Id: <20191006171218.869799399@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,67 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 920fdab7b3ce98c14c840261e364f490f3679a62 ]
+[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
 
-On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
-when CONFIG_OPTIMIZE_INLINING is set.
-Clang then fails a compile-time assertion, because it cannot tell at
-compile time what the size of the argument is:
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-mm/memcontrol.o: In function `__cmpxchg_mb':
-memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
-memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
 
-Mark all of the cmpxchg() style functions as __always_inline to
-ensure that the compiler can see the result.
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
 
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/648
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Tested-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Will Deacon <will@kernel.org>
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
+
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cmpxchg.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-index 7a299a20f6dcc..7a8b8bc69e8d1 100644
---- a/arch/arm64/include/asm/cmpxchg.h
-+++ b/arch/arm64/include/asm/cmpxchg.h
-@@ -63,7 +63,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
- #undef __XCHG_CASE
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index f5940cc71c372..63462e96cf0ee 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -316,6 +316,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by ceding processor to hypervisor
+ 	 */
  
- #define __XCHG_GEN(sfx)							\
--static inline unsigned long __xchg##sfx(unsigned long x,		\
-+static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
- 					volatile void *ptr,		\
- 					int size)			\
- {									\
-@@ -105,7 +105,7 @@ __XCHG_GEN(_mb)
- #define arch_xchg(...)		__xchg_wrapper( _mb, __VA_ARGS__)
++	if (!prep_irq_for_idle())
++		return;
++
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
  
- #define __CMPXCHG_GEN(sfx)						\
--static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
-+static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
- 					   unsigned long old,		\
- 					   unsigned long new,		\
- 					   int size)			\
-@@ -212,7 +212,7 @@ __CMPWAIT_CASE( ,  , 64);
- #undef __CMPWAIT_CASE
- 
- #define __CMPWAIT_GEN(sfx)						\
--static inline void __cmpwait##sfx(volatile void *ptr,			\
-+static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
- 				  unsigned long val,			\
- 				  int size)				\
- {									\
 -- 
 2.20.1
 
