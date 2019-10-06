@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E55DC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A33C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3AD21850
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE90B20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384606;
-	bh=vw8QC3vuvRyhhmM7FsufE5EY78S4mly+jhmZczP11nw=;
+	s=default; t=1570384624;
+	bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGxp+pLEYtqQdoMwuyUpAlXgwVKsvPzX63GU9UwHqNQqrpsuZhXr6NIueRwwJy7u+
-	 2D3BoazsKNrWktfGO3v/hBwIM8h0r1wSP1INA4XOGqIeD1IL8fXOOZXajr32sQOMJt
-	 P0rfamAml2MAYG/cqagvsDQW5OykIQwaFhM5YuLk=
+	b=wdwpBR1BxYxoyyb67TILK1KYGLT+EY51eiNSrvZXwHI5OmFqnrbWuFT4Iwnr9xIPb
+	 zgSgTaa1n3Tgm19fZVCD1GCY/zVGchVGXxGN/LEPzZgxcawX1rvqZnr/uMqzPrxfE8
+	 HJWM4BkYLCvznwSn1ANzhvXhFoXG4A0GGRrfDJLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbfJFR4p (ORCPT
+        id S1726984AbfJFR5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730103AbfJFRe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:59 -0400
+        id S1729056AbfJFReM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:34:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E0E12087E;
-        Sun,  6 Oct 2019 17:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C4A2087E;
+        Sun,  6 Oct 2019 17:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383297;
-        bh=vw8QC3vuvRyhhmM7FsufE5EY78S4mly+jhmZczP11nw=;
+        s=default; t=1570383251;
+        bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjrR1BiX15McoU1I1LxRzuf91P2tVwRAMEE0laooDzJzmv+9hdhYtX4KqFc+vgaAO
-         hD9EDoeRj156U15mScwXzjNYD1P7Ci4AUeXRInaQUJlmeNQlgSgwN4ULNl7Xh80dRA
-         RI915EHSAEhKxooHSsUhjAPcUUhHQAnAL6sDoSdQ=
+        b=1WgbQx9erCnUZX18H/9JicJdVrjGttJ0zkfNuR66Rtdg9N6dBSfBRVcF6s18gKUUh
+         2kgw411wqYAZ4fl9gh39H6z3nU6/VYsJLDKDf890mHu4zuK/SvTYQIhzBsWkcUwNm4
+         m78aQAEEgt/lyhH18SXTD/zZdKLcvfeRIvRZiGyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 053/137] clk: zx296718: Dont reference clk_init_data after registration
-Date:   Sun,  6 Oct 2019 19:20:37 +0200
-Message-Id: <20191006171213.150986275@linuxfoundation.org>
+Subject: [PATCH 5.2 034/137] drm/panel: check failure cases in the probe func
+Date:   Sun,  6 Oct 2019 19:20:18 +0200
+Message-Id: <20191006171211.971876273@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,285 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 1a4549c150e27dbc3aea762e879a88209df6d1a5 ]
+[ Upstream commit afd6d4f5a52c16e1483328ac074abb1cde92c29f ]
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+The following function calls may fail and return NULL, so the null check
+is added.
+of_graph_get_next_endpoint
+of_graph_get_remote_port_parent
+of_graph_get_remote_port
 
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190815160020.183334-3-sboyd@kernel.org
+Update: Thanks to Sam Ravnborg, for suggession on the use of goto to avoid
+leaking endpoint.
+
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190724195534.9303-1-navid.emamdoost@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/zte/clk-zx296718.c | 109 +++++++++++++++------------------
- 1 file changed, 49 insertions(+), 60 deletions(-)
+ .../gpu/drm/panel/panel-raspberrypi-touchscreen.c   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/clk/zte/clk-zx296718.c b/drivers/clk/zte/clk-zx296718.c
-index fd6c347bec6a7..dd7045bc48c15 100644
---- a/drivers/clk/zte/clk-zx296718.c
-+++ b/drivers/clk/zte/clk-zx296718.c
-@@ -564,6 +564,7 @@ static int __init top_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
+diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+index 2c9c9722734f5..9a2cb8aeab3a4 100644
+--- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
++++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+@@ -400,7 +400,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
  
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -573,11 +574,10 @@ static int __init top_clocks_init(struct device_node *np)
- 
- 	for (i = 0; i < ARRAY_SIZE(zx296718_pll_clk); i++) {
- 		zx296718_pll_clk[i].reg_base += (uintptr_t)reg_base;
-+		name = zx296718_pll_clk[i].hw.init->name;
- 		ret = clk_hw_register(NULL, &zx296718_pll_clk[i].hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				zx296718_pll_clk[i].hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
+ 	/* Look up the DSI host.  It needs to probe before we do. */
+ 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
++	if (!endpoint)
++		return -ENODEV;
++
+ 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
++	if (!dsi_host_node)
++		goto error;
++
+ 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
+ 	of_node_put(dsi_host_node);
+ 	if (!host) {
+@@ -409,6 +415,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
  	}
  
- 	for (i = 0; i < ARRAY_SIZE(top_ffactor_clk); i++) {
-@@ -585,11 +585,10 @@ static int __init top_clocks_init(struct device_node *np)
- 			top_hw_onecell_data.hws[top_ffactor_clk[i].id] =
- 					&top_ffactor_clk[i].factor.hw;
+ 	info.node = of_graph_get_remote_port(endpoint);
++	if (!info.node)
++		goto error;
++
+ 	of_node_put(endpoint);
  
-+		name = top_ffactor_clk[i].factor.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_ffactor_clk[i].factor.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_ffactor_clk[i].factor.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
+ 	ts->dsi = mipi_dsi_device_register_full(host, &info);
+@@ -429,6 +438,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 		return ret;
  
- 	for (i = 0; i < ARRAY_SIZE(top_mux_clk); i++) {
-@@ -598,11 +597,10 @@ static int __init top_clocks_init(struct device_node *np)
- 					&top_mux_clk[i].mux.hw;
+ 	return 0;
++
++error:
++	of_node_put(endpoint);
++	return -ENODEV;
+ }
  
- 		top_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = top_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(top_gate_clk); i++) {
-@@ -611,11 +609,10 @@ static int __init top_clocks_init(struct device_node *np)
- 					&top_gate_clk[i].gate.hw;
- 
- 		top_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = top_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(top_div_clk); i++) {
-@@ -624,11 +621,10 @@ static int __init top_clocks_init(struct device_node *np)
- 					&top_div_clk[i].div.hw;
- 
- 		top_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = top_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-@@ -754,6 +750,7 @@ static int __init lsp0_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -767,11 +764,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
- 					&lsp0_mux_clk[i].mux.hw;
- 
- 		lsp0_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = lsp0_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp0_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("lsp0 clk %s init error!\n",
--				lsp0_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp0 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp0_gate_clk); i++) {
-@@ -780,11 +776,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
- 					&lsp0_gate_clk[i].gate.hw;
- 
- 		lsp0_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = lsp0_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp0_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("lsp0 clk %s init error!\n",
--				lsp0_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp0 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp0_div_clk); i++) {
-@@ -793,11 +788,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
- 					&lsp0_div_clk[i].div.hw;
- 
- 		lsp0_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = lsp0_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp0_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("lsp0 clk %s init error!\n",
--				lsp0_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp0 clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-@@ -862,6 +856,7 @@ static int __init lsp1_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -875,11 +870,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
- 					&lsp0_mux_clk[i].mux.hw;
- 
- 		lsp1_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = lsp1_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp1_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("lsp1 clk %s init error!\n",
--				lsp1_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp1 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp1_gate_clk); i++) {
-@@ -888,11 +882,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
- 					&lsp1_gate_clk[i].gate.hw;
- 
- 		lsp1_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = lsp1_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp1_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("lsp1 clk %s init error!\n",
--				lsp1_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp1 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp1_div_clk); i++) {
-@@ -901,11 +894,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
- 					&lsp1_div_clk[i].div.hw;
- 
- 		lsp1_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = lsp1_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp1_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("lsp1 clk %s init error!\n",
--				lsp1_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp1 clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-@@ -979,6 +971,7 @@ static int __init audio_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -992,11 +985,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_mux_clk[i].mux.hw;
- 
- 		audio_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = audio_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(audio_adiv_clk); i++) {
-@@ -1005,11 +997,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_adiv_clk[i].hw;
- 
- 		audio_adiv_clk[i].reg_base += (uintptr_t)reg_base;
-+		name = audio_adiv_clk[i].hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_adiv_clk[i].hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_adiv_clk[i].hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(audio_div_clk); i++) {
-@@ -1018,11 +1009,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_div_clk[i].div.hw;
- 
- 		audio_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = audio_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(audio_gate_clk); i++) {
-@@ -1031,11 +1021,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_gate_clk[i].gate.hw;
- 
- 		audio_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = audio_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+ static int rpi_touchscreen_remove(struct i2c_client *i2c)
 -- 
 2.20.1
 
