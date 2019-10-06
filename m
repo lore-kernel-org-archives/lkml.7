@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA749C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4339C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97C02133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F492133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383200;
-	bh=Pj1WsrKbE3QGlOuQcCB+vewEbuqvf4NO5sSOHCM9E2Q=;
+	s=default; t=1570383208;
+	bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VapA4rsZ1sVxEOtBZU2Z6fOqKrTG31QazVDnB557TDQSYOkJdNy8+VgV/ssNJb7nN
-	 f/FSE+FTvOFwV5zGJhUu4oeXizNbkuVT9QyR3II6NNytg0wwWeS64GPJ0TOnyDiMyM
-	 6PApwrA+TafpOR8vEpegT1AD1P1+BrjYANYS7P4o=
+	b=LVKnQpD2upu29Ylq5VNb5Vk04Pq+OEuP7K+IBLJLa4kftqyKSKctqlbZzJzIvf/uS
+	 GpVk5PjhBPkM8XAEJnfsjT+usRd8n4TR59475F7vBOrw6AIazJ5xSrMyXcNPeWG/Yp
+	 La/G+FaaxOyE/gTfCpxhGq/Uqa8ANwwSmryKtlqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfJFRdT (ORCPT
+        id S1729752AbfJFRd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59840 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729020AbfJFRdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:33:16 -0400
+        id S1729179AbfJFRdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:33:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 726512080F;
-        Sun,  6 Oct 2019 17:33:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98C82080F;
+        Sun,  6 Oct 2019 17:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383195;
-        bh=Pj1WsrKbE3QGlOuQcCB+vewEbuqvf4NO5sSOHCM9E2Q=;
+        s=default; t=1570383203;
+        bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xu52/I19CtmMKa70d5dZN5D5/jtTJ9X9kUOEFwGn0doYARf+7pHjnNE+YGUz/srxS
-         pfbggjGFOV8tRi2PDCnEh2jG/5BVATCNdNOpGdMa4HG4CHCvAXcdejhiOPXSsHC36R
-         Ly/DVTEn0w/0Mmw5KJgEdb20q9rF+QHFjKo+nHu4=
+        b=z49iXmmS3BC3N22WWCbSyN7H55SB3YjY8gf2kAUD1QQiOZQweSBaZjSPtMohZD+lo
+         yw1KcsP2zDSYJH7KM/LZI+OvHgctkD2EDtrwDaUWBcsO9LYJLu5/9rqRv8z9YF80aD
+         qWvPNsbsAf2I6l8OfZmyTh7C4gA/OHoJgZOLdPjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hoang Le <hoang.h.le@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 015/137] tipc: fix unlimited bundling of small messages
-Date:   Sun,  6 Oct 2019 19:19:59 +0200
-Message-Id: <20191006171210.719956563@linuxfoundation.org>
+Subject: [PATCH 5.2 018/137] net: dsa: rtl8366: Check VLAN ID and not ports
+Date:   Sun,  6 Oct 2019 19:20:02 +0200
+Message-Id: <20191006171210.902717793@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,171 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuong Lien <tuong.t.lien@dektech.com.au>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit e95584a889e1902fdf1ded9712e2c3c3083baf96 ]
+[ Upstream commit e8521e53cca584ddf8ec4584d3c550a6c65f88c4 ]
 
-We have identified a problem with the "oversubscription" policy in the
-link transmission code.
+There has been some confusion between the port number and
+the VLAN ID in this driver. What we need to check for
+validity is the VLAN ID, nothing else.
 
-When small messages are transmitted, and the sending link has reached
-the transmit window limit, those messages will be bundled and put into
-the link backlog queue. However, bundles of data messages are counted
-at the 'CRITICAL' level, so that the counter for that level, instead of
-the counter for the real, bundled message's level is the one being
-increased.
-Subsequent, to-be-bundled data messages at non-CRITICAL levels continue
-to be tested against the unchanged counter for their own level, while
-contributing to an unrestrained increase at the CRITICAL backlog level.
+The current confusion came from assigning a few default
+VLANs for default routing and we need to rewrite that
+properly.
 
-This leaves a gap in congestion control algorithm for small messages
-that can result in starvation for other users or a "real" CRITICAL
-user. Even that eventually can lead to buffer exhaustion & link reset.
+Instead of checking if the port number is a valid VLAN
+ID, check the actual VLAN IDs passed in to the callback
+one by one as expected.
 
-We fix this by keeping a 'target_bskb' buffer pointer at each levels,
-then when bundling, we only bundle messages at the same importance
-level only. This way, we know exactly how many slots a certain level
-have occupied in the queue, so can manage level congestion accurately.
-
-By bundling messages at the same level, we even have more benefits. Let
-consider this:
-- One socket sends 64-byte messages at the 'CRITICAL' level;
-- Another sends 4096-byte messages at the 'LOW' level;
-
-When a 64-byte message comes and is bundled the first time, we put the
-overhead of message bundle to it (+ 40-byte header, data copy, etc.)
-for later use, but the next message can be a 4096-byte one that cannot
-be bundled to the previous one. This means the last bundle carries only
-one payload message which is totally inefficient, as for the receiver
-also! Later on, another 64-byte message comes, now we make a new bundle
-and the same story repeats...
-
-With the new bundling algorithm, this will not happen, the 64-byte
-messages will be bundled together even when the 4096-byte message(s)
-comes in between. However, if the 4096-byte messages are sent at the
-same level i.e. 'CRITICAL', the bundling algorithm will again cause the
-same overhead.
-
-Also, the same will happen even with only one socket sending small
-messages at a rate close to the link transmit's one, so that, when one
-message is bundled, it's transmitted shortly. Then, another message
-comes, a new bundle is created and so on...
-
-We will solve this issue radically by another patch.
-
-Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
-Reported-by: Hoang Le <hoang.h.le@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/link.c |   29 ++++++++++++++++++-----------
- net/tipc/msg.c  |    5 +----
- 2 files changed, 19 insertions(+), 15 deletions(-)
+ drivers/net/dsa/rtl8366.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -163,6 +163,7 @@ struct tipc_link {
- 	struct {
- 		u16 len;
- 		u16 limit;
-+		struct sk_buff *target_bskb;
- 	} backlog[5];
- 	u16 snd_nxt;
- 	u16 prev_from;
-@@ -872,6 +873,7 @@ static void link_prepare_wakeup(struct t
- void tipc_link_reset(struct tipc_link *l)
+--- a/drivers/net/dsa/rtl8366.c
++++ b/drivers/net/dsa/rtl8366.c
+@@ -339,10 +339,12 @@ int rtl8366_vlan_prepare(struct dsa_swit
+ 			 const struct switchdev_obj_port_vlan *vlan)
  {
- 	struct sk_buff_head list;
-+	u32 imp;
+ 	struct realtek_smi *smi = ds->priv;
++	u16 vid;
+ 	int ret;
  
- 	__skb_queue_head_init(&list);
+-	if (!smi->ops->is_vlan_valid(smi, port))
+-		return -EINVAL;
++	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
++		if (!smi->ops->is_vlan_valid(smi, vid))
++			return -EINVAL;
  
-@@ -893,11 +895,10 @@ void tipc_link_reset(struct tipc_link *l
- 	__skb_queue_purge(&l->deferdq);
- 	__skb_queue_purge(&l->backlogq);
- 	__skb_queue_purge(&l->failover_deferdq);
--	l->backlog[TIPC_LOW_IMPORTANCE].len = 0;
--	l->backlog[TIPC_MEDIUM_IMPORTANCE].len = 0;
--	l->backlog[TIPC_HIGH_IMPORTANCE].len = 0;
--	l->backlog[TIPC_CRITICAL_IMPORTANCE].len = 0;
--	l->backlog[TIPC_SYSTEM_IMPORTANCE].len = 0;
-+	for (imp = 0; imp <= TIPC_SYSTEM_IMPORTANCE; imp++) {
-+		l->backlog[imp].len = 0;
-+		l->backlog[imp].target_bskb = NULL;
-+	}
- 	kfree_skb(l->reasm_buf);
- 	kfree_skb(l->failover_reasm_skb);
- 	l->reasm_buf = NULL;
-@@ -938,7 +939,7 @@ int tipc_link_xmit(struct tipc_link *l,
- 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
- 	struct sk_buff_head *transmq = &l->transmq;
- 	struct sk_buff_head *backlogq = &l->backlogq;
--	struct sk_buff *skb, *_skb, *bskb;
-+	struct sk_buff *skb, *_skb, **tskb;
- 	int pkt_cnt = skb_queue_len(list);
- 	int rc = 0;
+ 	dev_info(smi->dev, "prepare VLANs %04x..%04x\n",
+ 		 vlan->vid_begin, vlan->vid_end);
+@@ -370,8 +372,9 @@ void rtl8366_vlan_add(struct dsa_switch
+ 	u16 vid;
+ 	int ret;
  
-@@ -988,19 +989,21 @@ int tipc_link_xmit(struct tipc_link *l,
- 			seqno++;
- 			continue;
- 		}
--		if (tipc_msg_bundle(skb_peek_tail(backlogq), hdr, mtu)) {
-+		tskb = &l->backlog[imp].target_bskb;
-+		if (tipc_msg_bundle(*tskb, hdr, mtu)) {
- 			kfree_skb(__skb_dequeue(list));
- 			l->stats.sent_bundled++;
- 			continue;
- 		}
--		if (tipc_msg_make_bundle(&bskb, hdr, mtu, l->addr)) {
-+		if (tipc_msg_make_bundle(tskb, hdr, mtu, l->addr)) {
- 			kfree_skb(__skb_dequeue(list));
--			__skb_queue_tail(backlogq, bskb);
--			l->backlog[msg_importance(buf_msg(bskb))].len++;
-+			__skb_queue_tail(backlogq, *tskb);
-+			l->backlog[imp].len++;
- 			l->stats.sent_bundled++;
- 			l->stats.sent_bundles++;
- 			continue;
- 		}
-+		l->backlog[imp].target_bskb = NULL;
- 		l->backlog[imp].len += skb_queue_len(list);
- 		skb_queue_splice_tail_init(list, backlogq);
- 	}
-@@ -1016,6 +1019,7 @@ static void tipc_link_advance_backlog(st
- 	u16 seqno = l->snd_nxt;
- 	u16 ack = l->rcv_nxt - 1;
- 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
-+	u32 imp;
+-	if (!smi->ops->is_vlan_valid(smi, port))
+-		return;
++	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
++		if (!smi->ops->is_vlan_valid(smi, vid))
++			return;
  
- 	while (skb_queue_len(&l->transmq) < l->window) {
- 		skb = skb_peek(&l->backlogq);
-@@ -1026,7 +1030,10 @@ static void tipc_link_advance_backlog(st
- 			break;
- 		__skb_dequeue(&l->backlogq);
- 		hdr = buf_msg(skb);
--		l->backlog[msg_importance(hdr)].len--;
-+		imp = msg_importance(hdr);
-+		l->backlog[imp].len--;
-+		if (unlikely(skb == l->backlog[imp].target_bskb))
-+			l->backlog[imp].target_bskb = NULL;
- 		__skb_queue_tail(&l->transmq, skb);
- 		/* next retransmit attempt */
- 		if (link_is_bc_sndlink(l))
---- a/net/tipc/msg.c
-+++ b/net/tipc/msg.c
-@@ -484,10 +484,7 @@ bool tipc_msg_make_bundle(struct sk_buff
- 	bmsg = buf_msg(_skb);
- 	tipc_msg_init(msg_prevnode(msg), bmsg, MSG_BUNDLER, 0,
- 		      INT_H_SIZE, dnode);
--	if (msg_isdata(msg))
--		msg_set_importance(bmsg, TIPC_CRITICAL_IMPORTANCE);
--	else
--		msg_set_importance(bmsg, TIPC_SYSTEM_IMPORTANCE);
-+	msg_set_importance(bmsg, msg_importance(msg));
- 	msg_set_seqno(bmsg, msg_seqno(msg));
- 	msg_set_ack(bmsg, msg_ack(msg));
- 	msg_set_bcast_ack(bmsg, msg_bcast_ack(msg));
+ 	dev_info(smi->dev, "add VLAN on port %d, %s, %s\n",
+ 		 port,
 
 
