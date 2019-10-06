@@ -2,55 +2,58 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE887C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D25C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A954420862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5012067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384982;
-	bh=2j+/gI1kT0XXYZxN5raqCvPcTTi9Id+99HHXOsb92Q8=;
+	s=default; t=1570384984;
+	bh=N+J1JOiT3RQJX4iI4oitW5psWbsSuic/cVu2aPWEJ1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iXx3iaa1uQb1fktQdyRnsS4mOd7B7PQldHXrGV/QbYvTAvRIcJGquH7k6ifmdJ1Go
-	 5DnFj+ATshGrrc6XU51gq5V4sEkX/hGQiYGnlx5/UMLNwOoK//3/JgoxJ2xrD9MZ2f
-	 BOBusTlw/MOU7WNrT833B1CZe1pOugz+40say94Q=
+	b=BT+JDIfjvpTkd/EPHvIXfaqHxzZyFX/CepzCos7jPdaBpKGVg190xAc/IUycObrLx
+	 lWJfE89BT+kpztqXtYEUAOZiILNY+KDEKtZL+daoUXw40k/LgPjY/RJ/U+UREoybKm
+	 ZaZ8enN5nNbiqVb9UpdsAPXlPO14NahuK76HxQnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfJFRZD (ORCPT
+        id S1728945AbfJFSDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49978 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbfJFRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:59 -0400
+        id S1727261AbfJFRZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:25:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D053B20867;
-        Sun,  6 Oct 2019 17:24:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 287EE2077B;
+        Sun,  6 Oct 2019 17:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382698;
-        bh=2j+/gI1kT0XXYZxN5raqCvPcTTi9Id+99HHXOsb92Q8=;
+        s=default; t=1570382703;
+        bh=N+J1JOiT3RQJX4iI4oitW5psWbsSuic/cVu2aPWEJ1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9m+Ofo7RbgVFE0w8pKXAhc4ug9k5GdJd3sqCLsLWRLJ5XJnEDgsfXGqNpjZMcFci
-         O3G+OeLBfV6lbMGaAcr+VsRHvHD7N7j2cc40BGmAF38gHeFHWBbrCYgAaiuueSn9i3
-         i37rpQywBnh6j/BLX895xlqPJVU/D6biNwMaUVTM=
+        b=DE25HR3YeGNlgtuS5IU+/CxvXAPNuq0ZK783O5KY0Vzvmt4bWB7KIUDB6KNeGQsnU
+         C6ZbRXt2nKIw3+HstaT3MAIA771D5DRzSWvegnjLlsnpfDu8FNmm5+T7Vfc+f/xCyQ
+         EZHgHIanIvJ10MOHK8sZG6dbe2u63ZCFCOh3Bt5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 4.9 45/47] Smack: Dont ignore other bprm->unsafe flags if LSM_UNSAFE_PTRACE is set
-Date:   Sun,  6 Oct 2019 19:21:32 +0200
-Message-Id: <20191006172019.260683324@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 01/68] tpm: migrate pubek_show to struct tpm_buf
+Date:   Sun,  6 Oct 2019 19:20:37 +0200
+Message-Id: <20191006171108.940143373@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
-References: <20191006172016.873463083@linuxfoundation.org>
+In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
+References: <20191006171108.150129403@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,50 +62,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
+commit da379f3c1db0c9a1fd27b11d24c9894b5edc7c75 upstream
 
-There is a logic bug in the current smack_bprm_set_creds():
-If LSM_UNSAFE_PTRACE is set, but the ptrace state is deemed to be
-acceptable (e.g. because the ptracer detached in the meantime), the other
-->unsafe flags aren't checked. As far as I can tell, this means that
-something like the following could work (but I haven't tested it):
+Migrated pubek_show to struct tpm_buf and cleaned up its implementation.
+Previously the output parameter structure was declared but left
+completely unused. Now it is used to refer different fields of the
+output. We can move it to tpm-sysfs.c as it does not have any use
+outside of that file.
 
- - task A: create task B with fork()
- - task B: set NO_NEW_PRIVS
- - task B: install a seccomp filter that makes open() return 0 under some
-   conditions
- - task B: replace fd 0 with a malicious library
- - task A: attach to task B with PTRACE_ATTACH
- - task B: execve() a file with an SMACK64EXEC extended attribute
- - task A: while task B is still in the middle of execve(), exit (which
-   destroys the ptrace relationship)
-
-Make sure that if any flags other than LSM_UNSAFE_PTRACE are set in
-bprm->unsafe, we reject the execve().
-
-Cc: stable@vger.kernel.org
-Fixes: 5663884caab1 ("Smack: unify all ptrace accesses in the smack")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm-sysfs.c | 87 ++++++++++++++++++++----------------
+ drivers/char/tpm/tpm.h       | 13 ------
+ 2 files changed, 48 insertions(+), 52 deletions(-)
 
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -949,7 +949,8 @@ static int smack_bprm_set_creds(struct l
+diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
+index 86f38d239476a..83a77a4455380 100644
+--- a/drivers/char/tpm/tpm-sysfs.c
++++ b/drivers/char/tpm/tpm-sysfs.c
+@@ -20,44 +20,48 @@
+ #include <linux/device.h>
+ #include "tpm.h"
  
- 		if (rc != 0)
- 			return rc;
--	} else if (bprm->unsafe)
+-#define READ_PUBEK_RESULT_SIZE 314
++struct tpm_readpubek_out {
++	u8 algorithm[4];
++	u8 encscheme[2];
++	u8 sigscheme[2];
++	__be32 paramsize;
++	u8 parameters[12];
++	__be32 keysize;
++	u8 modulus[256];
++	u8 checksum[20];
++} __packed;
++
+ #define READ_PUBEK_RESULT_MIN_BODY_SIZE (28 + 256)
+ #define TPM_ORD_READPUBEK 124
+-static const struct tpm_input_header tpm_readpubek_header = {
+-	.tag = cpu_to_be16(TPM_TAG_RQU_COMMAND),
+-	.length = cpu_to_be32(30),
+-	.ordinal = cpu_to_be32(TPM_ORD_READPUBEK)
+-};
++
+ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
+ 			  char *buf)
+ {
+-	u8 *data;
+-	struct tpm_cmd_t tpm_cmd;
+-	ssize_t err;
+-	int i, rc;
++	struct tpm_buf tpm_buf;
++	struct tpm_readpubek_out *out;
++	ssize_t rc;
++	int i;
+ 	char *str = buf;
+ 	struct tpm_chip *chip = to_tpm_chip(dev);
++	char anti_replay[20];
+ 
+-	memset(&tpm_cmd, 0, sizeof(tpm_cmd));
+-
+-	tpm_cmd.header.in = tpm_readpubek_header;
+-	err = tpm_transmit_cmd(chip, NULL, &tpm_cmd, READ_PUBEK_RESULT_SIZE,
+-			       READ_PUBEK_RESULT_MIN_BODY_SIZE, 0,
+-			       "attempting to read the PUBEK");
+-	if (err)
+-		goto out;
+-
+-	/*
+-	   ignore header 10 bytes
+-	   algorithm 32 bits (1 == RSA )
+-	   encscheme 16 bits
+-	   sigscheme 16 bits
+-	   parameters (RSA 12->bytes: keybit, #primes, expbit)
+-	   keylenbytes 32 bits
+-	   256 byte modulus
+-	   ignore checksum 20 bytes
+-	 */
+-	data = tpm_cmd.params.readpubek_out_buffer;
++	memset(&anti_replay, 0, sizeof(anti_replay));
++
++	rc = tpm_buf_init(&tpm_buf, TPM_TAG_RQU_COMMAND, TPM_ORD_READPUBEK);
++	if (rc)
++		return rc;
++
++	tpm_buf_append(&tpm_buf, anti_replay, sizeof(anti_replay));
++
++	rc = tpm_transmit_cmd(chip, NULL, tpm_buf.data, PAGE_SIZE,
++			      READ_PUBEK_RESULT_MIN_BODY_SIZE, 0,
++			      "attempting to read the PUBEK");
++	if (rc) {
++		tpm_buf_destroy(&tpm_buf);
++		return 0;
 +	}
-+	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
- 		return -EPERM;
++
++	out = (struct tpm_readpubek_out *)&tpm_buf.data[10];
+ 	str +=
+ 	    sprintf(str,
+ 		    "Algorithm: %02X %02X %02X %02X\n"
+@@ -68,21 +72,26 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
+ 		    "%02X %02X %02X %02X\n"
+ 		    "Modulus length: %d\n"
+ 		    "Modulus:\n",
+-		    data[0], data[1], data[2], data[3],
+-		    data[4], data[5],
+-		    data[6], data[7],
+-		    data[12], data[13], data[14], data[15],
+-		    data[16], data[17], data[18], data[19],
+-		    data[20], data[21], data[22], data[23],
+-		    be32_to_cpu(*((__be32 *) (data + 24))));
++		    out->algorithm[0], out->algorithm[1], out->algorithm[2],
++		    out->algorithm[3],
++		    out->encscheme[0], out->encscheme[1],
++		    out->sigscheme[0], out->sigscheme[1],
++		    out->parameters[0], out->parameters[1],
++		    out->parameters[2], out->parameters[3],
++		    out->parameters[4], out->parameters[5],
++		    out->parameters[6], out->parameters[7],
++		    out->parameters[8], out->parameters[9],
++		    out->parameters[10], out->parameters[11],
++		    be32_to_cpu(out->keysize));
  
- 	bsp->smk_task = isp->smk_task;
+ 	for (i = 0; i < 256; i++) {
+-		str += sprintf(str, "%02X ", data[i + 28]);
++		str += sprintf(str, "%02X ", out->modulus[i]);
+ 		if ((i + 1) % 16 == 0)
+ 			str += sprintf(str, "\n");
+ 	}
+-out:
++
+ 	rc = str - buf;
++	tpm_buf_destroy(&tpm_buf);
+ 	return rc;
+ }
+ static DEVICE_ATTR_RO(pubek);
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index 4bb9b4aa9b49c..d53d12f3df6d6 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -351,17 +351,6 @@ enum tpm_sub_capabilities {
+ 	TPM_CAP_PROP_TIS_DURATION = 0x120,
+ };
+ 
+-struct	tpm_readpubek_params_out {
+-	u8	algorithm[4];
+-	u8	encscheme[2];
+-	u8	sigscheme[2];
+-	__be32	paramsize;
+-	u8	parameters[12]; /*assuming RSA*/
+-	__be32	keysize;
+-	u8	modulus[256];
+-	u8	checksum[20];
+-} __packed;
+-
+ typedef union {
+ 	struct	tpm_input_header in;
+ 	struct	tpm_output_header out;
+@@ -391,8 +380,6 @@ struct tpm_getrandom_in {
+ } __packed;
+ 
+ typedef union {
+-	struct	tpm_readpubek_params_out readpubek_out;
+-	u8	readpubek_out_buffer[sizeof(struct tpm_readpubek_params_out)];
+ 	struct	tpm_pcrread_in	pcrread_in;
+ 	struct	tpm_pcrread_out	pcrread_out;
+ 	struct	tpm_getrandom_in getrandom_in;
+-- 
+2.20.1
+
 
 
