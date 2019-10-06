@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBBAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E72C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8999122486
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F3522486
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384060;
-	bh=KLBHWMIMXGIh4d5zKw10HC37+Tl2RLCz896aN+C7AZc=;
+	s=default; t=1570384066;
+	bh=V0IPKrrdUzrOKmKyU4GfV33KE6odZ0Zi5xhzLS4aIZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ah/R8TPYJ/envxnBgzrfmrXGMySr0ERBoAt72jHY4CpuAN/bi3zYgUfMoXSeoLQcm
-	 mHwbVbUkJkj5Iu1Hz9IEqzKCRp8lZ+f6nucjt+CEKNSzY/y62aA1AwbIU8yBxxtaGo
-	 ykdM6o/EF845n9g2bGG/VWTCpQP9u9SgIrwgo2KM=
+	b=CHxAI/Nd6O040q0esomEBppH7nEipj5EJpeOxdGiUwzxpNEQ8zCZtGHVAziDLUkRX
+	 BzYAAfJQo+cSD57R0QX4p37yyQvrGDKjw3Dux8TOZ7np7c7SotUOgrNSEPF7T423nL
+	 advy0JZvOJxLa8B9o9SaWTCoXNctEYx6F2fGCSGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfJFRrj (ORCPT
+        id S1731784AbfJFRrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45646 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731773AbfJFRpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:45:10 -0400
+        id S1731281AbfJFRpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:45:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3277F21479;
-        Sun,  6 Oct 2019 17:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50A52080F;
+        Sun,  6 Oct 2019 17:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383908;
-        bh=KLBHWMIMXGIh4d5zKw10HC37+Tl2RLCz896aN+C7AZc=;
+        s=default; t=1570383914;
+        bh=V0IPKrrdUzrOKmKyU4GfV33KE6odZ0Zi5xhzLS4aIZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g3qMrgwziibut+1UVE/rfghCqjYqh+EiXyUA8XBJRcN2hPsMmXqWb3l0VKCd5Wgem
-         hG6Nz2FdLgJ7gYhEMKh/PZr8w7LT9EMAhzelZohyFE7gyLhg1lyN+2Xse+HSqvCBkg
-         wQc/6cfc3AQX3b/YsaseaL1mThxaS5LDTvqbCBoA=
+        b=Z1oLGhVaevEWxDC1il7RJa5pPVm/XHsJtWXPcBRsOFw08VExgcc3nFR5P9c3C2kQq
+         hJYnmhJqfqngqyX6Qcuf4xCDG7JizIDLdsq81llAmuW3VBDVcFMVfrDrEYPAbUZuQt
+         0YGLPCPZvyH+tzAweeLrwJZun8cyxydYDQKB/z38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Josh Hunt <johunt@akamai.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 141/166] sch_dsmark: fix potential NULL deref in dsmark_init()
-Date:   Sun,  6 Oct 2019 19:21:47 +0200
-Message-Id: <20191006171224.916529344@linuxfoundation.org>
+Subject: [PATCH 5.3 143/166] udp: fix gso_segs calculations
+Date:   Sun,  6 Oct 2019 19:21:49 +0200
+Message-Id: <20191006171225.047363914@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,73 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit 474f0813a3002cb299bb73a5a93aa1f537a80ca8 ]
+[ Upstream commit 44b321e5020d782ad6e8ae8183f09b163be6e6e2 ]
 
-Make sure TCA_DSMARK_INDICES was provided by the user.
+Commit dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
+added gso_segs calculation, but incorrectly got sizeof() the pointer and
+not the underlying data type. In addition let's fix the v6 case.
 
-syzbot reported :
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8799 Comm: syz-executor235 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nla_get_u16 include/net/netlink.h:1501 [inline]
-RIP: 0010:dsmark_init net/sched/sch_dsmark.c:364 [inline]
-RIP: 0010:dsmark_init+0x193/0x640 net/sched/sch_dsmark.c:339
-Code: 85 db 58 0f 88 7d 03 00 00 e8 e9 1a ac fb 48 8b 9d 70 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ca
-RSP: 0018:ffff88809426f3b8 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff85c6eb09
-RDX: 0000000000000000 RSI: ffffffff85c6eb17 RDI: 0000000000000004
-RBP: ffff88809426f4b0 R08: ffff88808c4085c0 R09: ffffed1015d26159
-R10: ffffed1015d26158 R11: ffff8880ae930ac7 R12: ffff8880a7e96940
-R13: dffffc0000000000 R14: ffff88809426f8c0 R15: 0000000000000000
-FS:  0000000001292880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000008ca1b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- qdisc_create+0x4ee/0x1210 net/sched/sch_api.c:1237
- tc_modify_qdisc+0x524/0x1c50 net/sched/sch_api.c:1653
- rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5223
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x803/0x920 net/socket.c:2311
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
- __do_sys_sendmsg net/socket.c:2365 [inline]
- __se_sys_sendmsg net/socket.c:2363 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
- do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440369
-
-Fixes: 758cc43c6d73 ("[PKT_SCHED]: Fix dsmark to apply changes consistent")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
+Fixes: dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
+Signed-off-by: Josh Hunt <johunt@akamai.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_dsmark.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/udp.c |    2 +-
+ net/ipv6/udp.c |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/sched/sch_dsmark.c
-+++ b/net/sched/sch_dsmark.c
-@@ -361,6 +361,8 @@ static int dsmark_init(struct Qdisc *sch
- 		goto errout;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -856,7 +856,7 @@ static int udp_send_skb(struct sk_buff *
  
- 	err = -EINVAL;
-+	if (!tb[TCA_DSMARK_INDICES])
-+		goto errout;
- 	indices = nla_get_u16(tb[TCA_DSMARK_INDICES]);
+ 		skb_shinfo(skb)->gso_size = cork->gso_size;
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+-		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(uh),
++		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
+ 							 cork->gso_size);
+ 		goto csum_partial;
+ 	}
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -1143,6 +1143,8 @@ static int udp_v6_send_skb(struct sk_buf
  
- 	if (hweight32(indices) != 1)
+ 		skb_shinfo(skb)->gso_size = cork->gso_size;
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
++		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
++							 cork->gso_size);
+ 		goto csum_partial;
+ 	}
+ 
 
 
