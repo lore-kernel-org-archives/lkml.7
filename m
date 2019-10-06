@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5307ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF852C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8647E20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F3820700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384763;
-	bh=Rfxn0Jyw9+iChjaphz3c7XHtw/BM1cry81LxMvSeVTo=;
+	s=default; t=1570384771;
+	bh=BlvHyFvAAZGnC7hOjDp5jrec36iSCywnYRv27tgvF7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yU8XRCxKJ/0bnT4TSN3e2MYr26bd/QrA7JS6cCHWr9K75H9heUVFqOLYfz2YsJabI
-	 +ovBEwXQGJXB9hkpYE9o/oEcC84V/njl7DWkQk1mg2oHP5UvtgVuYBB5Tz3H6m8S1W
-	 3ibusR/zrdOdjbXf6kWFZui5oMxz8VMn0lK6z8tI=
+	b=tjNhO33xOB/ZborhTjSUaSkLf/45MNU7xg9wCia0vbGIaUfdYSzYyjtDA6BsbIgum
+	 Xx2YCvHzWIaJUpuGJcdzhPzfpNGgNiohTy0JHMXxDeWaiDjVtfGT11l9+jhXWPaB6h
+	 2EQ8EhKg0MmHTlUfVwxlwfad5NFr+Z/0l5vdO23A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfJFRas (ORCPT
+        id S1728963AbfJFR7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:30:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56728 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:59:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbfJFRao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:44 -0400
+        id S1729240AbfJFRad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D858A2080F;
-        Sun,  6 Oct 2019 17:30:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2937A2133F;
+        Sun,  6 Oct 2019 17:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383043;
-        bh=Rfxn0Jyw9+iChjaphz3c7XHtw/BM1cry81LxMvSeVTo=;
+        s=default; t=1570383032;
+        bh=BlvHyFvAAZGnC7hOjDp5jrec36iSCywnYRv27tgvF7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJvk9QCtBUzNYF3bRpNu5o1UeEISY3MIxbFaR3QrledK+ZtQB2ffBdzjQx8LKB0eh
-         wg++8nl/Qyh8UuGysSxObSw7WcQOjuFTznxOUOYo/dbQvHj6KdjC1+u/7+dnHVX4XW
-         Ss7+YayGQcdoOgQGvj/eAZnSBdQ2bwri6qnzysMc=
+        b=zC6vyocBNTQwUyjpr3JgLhgtXcvztFX6aeLZdrOFrCibNBePcgfAzWbBjgJ1W4Hwu
+         2disBdBkLtiPZCIxxq9fCS4xrGwEDV/xzZMiEUS98qDfy6IUsGAflGQAwf9HNPcRGF
+         m310Mi3QndLOVjDdr5XZ4SyFX4lxTgt8JcoGpb70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/106] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
-Date:   Sun,  6 Oct 2019 19:21:11 +0200
-Message-Id: <20191006171150.857654535@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 061/106] PCI: rockchip: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:07 +0200
+Message-Id: <20191006171149.476262829@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,46 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
+[ Upstream commit 0e3ff0ac5f71bdb6be2a698de0ed0c7e6e738269 ]
 
-In smack_socket_sock_rcv_skb(), there is an if statement
-on line 3920 to check whether skb is NULL:
-    if (skb && skb->secmark != 0)
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-This check indicates skb can be NULL in some cases.
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-But on lines 3931 and 3932, skb is used:
-    ad.a.u.net->netif = skb->skb_iif;
-    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
-
-Thus, possible null-pointer dereferences may occur when skb is NULL.
-
-To fix these possible bugs, an if statement is added to check skb.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/pcie-rockchip-host.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 017c47eb795eb..120bd56e5d89e 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -4005,6 +4005,8 @@ access_check:
- 			skp = smack_ipv6host_label(&sadd);
- 		if (skp == NULL)
- 			skp = smack_net_ambient;
-+		if (skb == NULL)
-+			break;
- #ifdef CONFIG_AUDIT
- 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
- 		ad.a.u.net->family = family;
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index 1372d270764f9..5ce8e63756875 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -608,29 +608,29 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+ 
+ 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+ 	if (IS_ERR(rockchip->vpcie12v)) {
+-		if (PTR_ERR(rockchip->vpcie12v) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie12v);
+ 		dev_info(dev, "no vpcie12v regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+ 	if (IS_ERR(rockchip->vpcie3v3)) {
+-		if (PTR_ERR(rockchip->vpcie3v3) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie3v3);
+ 		dev_info(dev, "no vpcie3v3 regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie1v8 = devm_regulator_get_optional(dev, "vpcie1v8");
+ 	if (IS_ERR(rockchip->vpcie1v8)) {
+-		if (PTR_ERR(rockchip->vpcie1v8) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie1v8) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie1v8);
+ 		dev_info(dev, "no vpcie1v8 regulator found\n");
+ 	}
+ 
+ 	rockchip->vpcie0v9 = devm_regulator_get_optional(dev, "vpcie0v9");
+ 	if (IS_ERR(rockchip->vpcie0v9)) {
+-		if (PTR_ERR(rockchip->vpcie0v9) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie0v9) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie0v9);
+ 		dev_info(dev, "no vpcie0v9 regulator found\n");
+ 	}
+ 
 -- 
 2.20.1
 
