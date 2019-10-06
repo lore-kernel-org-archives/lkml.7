@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3125FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B9DC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0040A20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7E020673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384643;
-	bh=IAvCUtQoEkkm/ms8EqboKBC0qzh6TVyhRsg0uyoDaFU=;
+	s=default; t=1570384653;
+	bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fg2KnhmDRsrnVWJKHv6Mclg68QwmTACAYgoxdWXvUdeotW13XF6cdz4W/m+7mlu3y
-	 U8jftK7Qoc5YWGR+rXMCH00GpbcNxWq5rkVW4DAFXvRuLnP2lRuZz5p7osxG/09/E7
-	 08U+p0oytD9ZaFHOvE5ZBsvJZX7jbFo+fmgdRRBk=
+	b=o2zOoAUxr4kKMlfPVlS/cQ73fgor+4zQMMB6jpcrCO7JFZmLGA8D7PkmUx42gqbwy
+	 HCBfOxfW8GzPJVQXyVSL58ejckyJteQTZims8sfVTiCgjPjouxXAn/j8SImVCal30H
+	 LvngZO4zzDbM2H5tcpBxuOM9wIowlESpPreZBG9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfJFRdr (ORCPT
+        id S1729761AbfJFRda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60322 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfJFRdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:33:42 -0400
+        id S1729747AbfJFRd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:33:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 670192087E;
-        Sun,  6 Oct 2019 17:33:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDB92080F;
+        Sun,  6 Oct 2019 17:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383221;
-        bh=IAvCUtQoEkkm/ms8EqboKBC0qzh6TVyhRsg0uyoDaFU=;
+        s=default; t=1570383205;
+        bh=/MaTq+pll+q1PEJdVMBNeWdM6vcaLTRr/4d4y9623qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PHIYv1WstVnQYcQkitrKdbZKzqCXWjpx51J0wuvDcsoRi9A13Id+N4KBSqGQV1oD9
-         UPgyUQX9zv/2xV9ZxmZU4coMlpPUPhL610Kd9HacGrD5bjlwRuWQRZTLEDZraExiLK
-         eOEDLbCTVAnKQDbSgEjSJpymkYnO2FEFXOEK8Hjs=
+        b=qKhBr1Rw+iHpXK8/MhN+B2NlDuk+A41+K8FY9rERr/EL6fCc9ktNdsg5i6U8MJAr6
+         zEHoEbkpaNpsdyOP6CEojrpIfuOtJB7CYkFPI+Rc9SCsJZfbz71Jx49GXfY+LbOWO8
+         za9eAF7CzOu0jWL8xQIiEZAKfl8N2oqzL+rVrk2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Marek Majkowski <marek@cloudflare.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 024/137] net: sched: cbs: Avoid division by zero when calculating the port rate
-Date:   Sun,  6 Oct 2019 19:20:08 +0200
-Message-Id: <20191006171211.243512149@linuxfoundation.org>
+Subject: [PATCH 5.2 019/137] tcp: adjust rto_base in retransmits_timed_out()
+Date:   Sun,  6 Oct 2019 19:20:03 +0200
+Message-Id: <20191006171210.959241083@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,34 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 83c8c3cf45163f0c823db37be6ab04dfcf8ac751 ]
+[ Upstream commit 3256a2d6ab1f71f9a1bd2d7f6f18eb8108c48d17 ]
 
-As explained in the "net: sched: taprio: Avoid division by zero on
-invalid link speed" commit, it is legal for the ethtool API to return
-zero as a link speed. So guard against it to ensure we don't perform a
-division by zero in kernel.
+The cited commit exposed an old retransmits_timed_out() bug
+which assumed it could call tcp_model_timeout() with
+TCP_RTO_MIN as rto_base for all states.
 
-Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+But flows in SYN_SENT or SYN_RECV state uses a different
+RTO base (1 sec instead of 200 ms, unless BPF choses
+another value)
+
+This caused a reduction of SYN retransmits from 6 to 4 with
+the default /proc/sys/net/ipv4/tcp_syn_retries value.
+
+Fixes: a41e8a88b06e ("tcp: better handle TCP_USER_TIMEOUT in SYN_SENT state")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Yuchung Cheng <ycheng@google.com>
+Cc: Marek Majkowski <marek@cloudflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_cbs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_timer.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -306,7 +306,7 @@ static void cbs_set_port_rate(struct net
- 	if (err < 0)
- 		goto skip;
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -198,8 +198,13 @@ static bool retransmits_timed_out(struct
+ 		return false;
  
--	if (ecmd.base.speed != SPEED_UNKNOWN)
-+	if (ecmd.base.speed && ecmd.base.speed != SPEED_UNKNOWN)
- 		speed = ecmd.base.speed;
+ 	start_ts = tcp_sk(sk)->retrans_stamp;
+-	if (likely(timeout == 0))
+-		timeout = tcp_model_timeout(sk, boundary, TCP_RTO_MIN);
++	if (likely(timeout == 0)) {
++		unsigned int rto_base = TCP_RTO_MIN;
++
++		if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
++			rto_base = tcp_timeout_init(sk);
++		timeout = tcp_model_timeout(sk, boundary, rto_base);
++	}
  
- skip:
+ 	return (s32)(tcp_time_stamp(tcp_sk(sk)) - start_ts - timeout) >= 0;
+ }
 
 
