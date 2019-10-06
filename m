@@ -7,47 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF960C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A94C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B47BD20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F6820673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384381;
-	bh=VQvzdB4+euS16B1nRt9g7D9Y0DJawliTTWFFI4GaiJU=;
+	s=default; t=1570384387;
+	bh=XYxWmfkrAOzZbg8dXacVi8SYdT7TPR48wH7ingN4Pwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m25gaEFp36rJPt/N/CdDrWc651nWt09Zy6kfx56ejGKmOWwfd1dAk2yDrQnLkhGZx
-	 +uhljwQCskNPS2tUTEoI5LrKUnVRP/ixtmIKEZYqObhcgRmS1I70jxHHaTxjY8SqEP
-	 6ZAG/e1SgMbbKn9s/W1azFl5T9Iioey0at5i4bqo=
+	b=1fiA6phBAyM0KVNqF0jlH8LmeoCyfRJK3J5fDfXiWtQV3SW8jFeuATfun2YV+Tta6
+	 lLEKFINFmeUy5vCI49lLTU2ye6DrN5UlrnBzwWowRv05FyIkw7EqlJdgRZbSDaw5Cd
+	 ct7P9vxSTd81Ggo4xvu4hAY2C5i1VxKxOfIb2g+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbfJFRig (ORCPT
+        id S1730599AbfJFRiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:38:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37836 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730630AbfJFRib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:31 -0400
+        id S1730591AbfJFRiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:38:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 543BE2080F;
-        Sun,  6 Oct 2019 17:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 986B920700;
+        Sun,  6 Oct 2019 17:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383510;
-        bh=VQvzdB4+euS16B1nRt9g7D9Y0DJawliTTWFFI4GaiJU=;
+        s=default; t=1570383500;
+        bh=XYxWmfkrAOzZbg8dXacVi8SYdT7TPR48wH7ingN4Pwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nc5gYqH0oNZSiuhUTdzvLO4m+EZ74K2nhoGZ3L6oGIv/NDrLd9wA6DVWCuRpmWimE
-         eRR+E73XVLXHbgKtlV/zVG2AI4Wn01ZZj2NIPIyVhsv4V0WvTdCU/t9BkebTtM7thZ
-         XTh/aXJoN7JFaqBm7Xu89Z+dewofYX3a5gNHEH4M=
+        b=aexee1EBHtLpTUZFNh7YCSLRQNv/AloY8MyvgQaEjLHVBKRb0sopcNaa3Z1K6Wyq7
+         jLpOiMr7LkYwGWhb+bCSrHlv8sjmi2MnhtsZe9/IezhYTHDARn/YRjwzWqU7GeyeZ+
+         v4HTGhnGXLper1FarreB8ph2JqHvsUTCwv17EapY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 088/137] f2fs: fix to drop meta/node pages during umount
-Date:   Sun,  6 Oct 2019 19:21:12 +0200
-Message-Id: <20191006171216.158393309@linuxfoundation.org>
+Subject: [PATCH 5.2 125/137] arm64: consider stack randomization for mmap base only when necessary
+Date:   Sun,  6 Oct 2019 19:21:49 +0200
+Message-Id: <20191006171219.731258729@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,76 +74,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
 
-[ Upstream commit a8933b6b68f775b5774e7b075447fae13f4d01fe ]
+[ Upstream commit e8d54b62c55ab6201de6d195fc2c276294c1f6ae ]
 
-As reported in bugzilla:
+Do not offset mmap base address because of stack randomization if current
+task does not want randomization.  Note that x86 already implements this
+behaviour.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204193
-
-A null pointer dereference bug is triggered in f2fs under kernel-5.1.3.
-
- kasan_report.cold+0x5/0x32
- f2fs_write_end_io+0x215/0x650
- bio_endio+0x26e/0x320
- blk_update_request+0x209/0x5d0
- blk_mq_end_request+0x2e/0x230
- lo_complete_rq+0x12c/0x190
- blk_done_softirq+0x14a/0x1a0
- __do_softirq+0x119/0x3e5
- irq_exit+0x94/0xe0
- call_function_single_interrupt+0xf/0x20
-
-During umount, we will access NULL sbi->node_inode pointer in
-f2fs_write_end_io():
-
-	f2fs_bug_on(sbi, page->mapping == NODE_MAPPING(sbi) &&
-				page->index != nid_of_node(page));
-
-The reason is if disable_checkpoint mount option is on, meta dirty
-pages can remain during umount, and then be flushed by iput() of
-meta_inode, however node_inode has been iput()ed before
-meta_inode's iput().
-
-Since checkpoint is disabled, all meta/node datas are useless and
-should be dropped in next mount, so in umount, let's adjust
-drop_inode() to give a hint to iput_final() to drop all those dirty
-datas correctly.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Link: http://lkml.kernel.org/r/20190730055113.23635-4-alex@ghiti.fr
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/mm/mmap.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 973f1e8187706..01038aff5d8e0 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -894,7 +894,21 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
- 
- static int f2fs_drop_inode(struct inode *inode)
+diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
+index b050641b51392..8dac7110f0cb5 100644
+--- a/arch/arm64/mm/mmap.c
++++ b/arch/arm64/mm/mmap.c
+@@ -54,7 +54,11 @@ unsigned long arch_mmap_rnd(void)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
  {
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	int ret;
+ 	unsigned long gap = rlim_stack->rlim_cur;
+-	unsigned long pad = (STACK_RND_MASK << PAGE_SHIFT) + stack_guard_gap;
++	unsigned long pad = stack_guard_gap;
 +
-+	/*
-+	 * during filesystem shutdown, if checkpoint is disabled,
-+	 * drop useless meta/node dirty pages.
-+	 */
-+	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
-+		if (inode->i_ino == F2FS_NODE_INO(sbi) ||
-+			inode->i_ino == F2FS_META_INO(sbi)) {
-+			trace_f2fs_drop_inode(inode, 1);
-+			return 1;
-+		}
-+	}
-+
- 	/*
- 	 * This is to avoid a deadlock condition like below.
- 	 * writeback_single_inode(inode)
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
+ 
+ 	/* Values close to RLIM_INFINITY can overflow. */
+ 	if (gap + pad > gap)
 -- 
 2.20.1
 
