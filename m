@@ -2,53 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F11AECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E235FC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A6C2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10592077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382652;
-	bh=F0AV2r5DMBlc+V5iWCahKWm3KkH3txRZ3r87QnIBRpA=;
+	s=default; t=1570382655;
+	bh=eIVYCmBoQuGrbToR78lQuZGyISQWFjO/9AvUGHo61Xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7Xw5FdxuVdwA3WohdA2G6KhbgrvMBkmP/um9W1jFHM95byDaDJk4OuhcOcCF5t4Y
-	 rg+Pn0dF2DQLL4zKOgPDc4yiMd62icp8UjrtT55sfTKP4Srt8HXH/ojltu38act1sS
-	 JPMVyUcHbpM5ql+LjmQKkhkey5oDmx4AN6muN0JY=
+	b=tQbnFABaZX33wJJ+07mf3l+Jc0kS46jMFUe9hvMksMYT3ypvHKe47u75LFD4c0tgL
+	 hdZnSYixrLtXuXZKtloT7atzp1+iGZBr1himr4zZA7uG7T2dU9e+WCymsuTKTHgur+
+	 TixhC8fDrMM8ZrmuxtaJGbjKOp7ngFLFiyn24Awo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfJFRYL (ORCPT
+        id S1727846AbfJFRYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727798AbfJFRYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:09 -0400
+        id S1727826AbfJFRYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EB5921479;
-        Sun,  6 Oct 2019 17:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F8A2133F;
+        Sun,  6 Oct 2019 17:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382648;
-        bh=F0AV2r5DMBlc+V5iWCahKWm3KkH3txRZ3r87QnIBRpA=;
+        s=default; t=1570382651;
+        bh=eIVYCmBoQuGrbToR78lQuZGyISQWFjO/9AvUGHo61Xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCOe0ZlmCuwltWSyfBr5jGfFHhB7UrwgPftk7XO5Gk/3QXQun6Gb6UHNYTVuztpPM
-         JXWq3nMBtH2bUVbYn9tHBJv5mGLjNVWqeDdkgzuJEGoWMLCepJ5xqiZbomEFDtuG3D
-         bwwihTVOOpSUV1XnuYf5aXpEt7NZ1hnvcbtquFxI=
+        b=V9aLaLN2BghP0jgfSPQm11ezVJwzrv/3xogp9gMtLe87L3VEUaoSFaBGlJfFDQz2K
+         E+tf++PMgkxDyUYPPEXwNzfB2RIQ+SUEhtR2sNAVanyuZneaM9ckpJ7l/3hbEBFlks
+         dYvDe6DeuPPunxlLOujlmvy2IsTojw7bmFMFEJHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 35/47] net: ipv4: avoid mixed n_redirects and rate_tokens usage
-Date:   Sun,  6 Oct 2019 19:21:22 +0200
-Message-Id: <20191006172018.743249193@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 04/47] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
+Date:   Sun,  6 Oct 2019 19:20:51 +0200
+Message-Id: <20191006172017.120186425@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -61,62 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit b406472b5ad79ede8d10077f0c8f05505ace8b6d ]
+[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
 
-Since commit c09551c6ff7f ("net: ipv4: use a dedicated counter
-for icmp_v4 redirect packets") we use 'n_redirects' to account
-for redirect packets, but we still use 'rate_tokens' to compute
-the redirect packets exponential backoff.
+In radeon_connector_set_property(), there is an if statement on line 743
+to check whether connector->encoder is NULL:
+    if (connector->encoder)
 
-If the device sent to the relevant peer any ICMP error packet
-after sending a redirect, it will also update 'rate_token' according
-to the leaking bucket schema; typically 'rate_token' will raise
-above BITS_PER_LONG and the redirect packets backoff algorithm
-will produce undefined behavior.
+When connector->encoder is NULL, it is used on line 755:
+    if (connector->encoder->crtc)
 
-Fix the issue using 'n_redirects' to compute the exponential backoff
-in ip_rt_send_redirect().
+Thus, a possible null-pointer dereference may occur.
 
-Note that we still clear rate_tokens after a redirect silence period,
-to avoid changing an established behaviour.
+To fix this bug, connector->encoder is checked before being used.
 
-The root cause predates git history; before the mentioned commit in
-the critical scenario, the kernel stopped sending redirects, after
-the mentioned commit the behavior more randomic.
+This bug is found by a static analysis tool STCheck written by us.
 
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Fixes: c09551c6ff7f ("net: ipv4: use a dedicated counter for icmp_v4 redirect packets")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/route.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -903,16 +903,15 @@ void ip_rt_send_redirect(struct sk_buff
- 	if (peer->rate_tokens == 0 ||
- 	    time_after(jiffies,
- 		       (peer->rate_last +
--			(ip_rt_redirect_load << peer->rate_tokens)))) {
-+			(ip_rt_redirect_load << peer->n_redirects)))) {
- 		__be32 gw = rt_nexthop(rt, ip_hdr(skb)->daddr);
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index c5e1aa5f1d8ea..efa875120071a 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -764,7 +764,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
  
- 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
- 		peer->rate_last = jiffies;
--		++peer->rate_tokens;
- 		++peer->n_redirects;
- #ifdef CONFIG_IP_ROUTE_VERBOSE
- 		if (log_martians &&
--		    peer->rate_tokens == ip_rt_redirect_number)
-+		    peer->n_redirects == ip_rt_redirect_number)
- 			net_warn_ratelimited("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
- 					     &ip_hdr(skb)->saddr, inet_iif(skb),
- 					     &ip_hdr(skb)->daddr, &gw);
+ 		radeon_encoder->output_csc = val;
+ 
+-		if (connector->encoder->crtc) {
++		if (connector->encoder && connector->encoder->crtc) {
+ 			struct drm_crtc *crtc  = connector->encoder->crtc;
+ 			const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+ 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
+-- 
+2.20.1
+
 
 
