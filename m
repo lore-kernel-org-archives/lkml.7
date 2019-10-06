@@ -2,52 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC56ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7C8C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A942080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CAB2077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382460;
-	bh=KkVNL4aA8iQo3ozBgxTtkTE++45rL8IJDNE11cs+JUs=;
+	s=default; t=1570382462;
+	bh=/+T4HQNZEJVsUrgaWLxGFatFYUU/MSKJJI967QxELC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CaOHt3ftWW4DW9dWgmJDzCf1XPZJsF8/swz9ozrsy9Z2q32vwz8fKEMT6fw0fTWiW
-	 WlCDwPu5/I3GY6BkMrfwVkiUm6jt78AEcd81wZzJd8uUE6GHweSjBhnSwoZ07pfHWP
-	 EPuUsyZ+SwR8YYRQ0O8P9pGtiJcQ2ZEw+iSk1nCg=
+	b=aXxUnJ583gZNJtXgL2WRhuhPzF4GKyNAf1FCNfRlm1GisYJs8QILu/ZEfcnSAIupf
+	 osIcHNF+cIcueLKet4KS8gnXfTU6IwfpjI0cLWqGjcp77qMZHnJWR9YWLt2Q07h8kC
+	 PMOeevmfzlPL93uWk6zeje0fOY6bOWN/zNj7iy9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfJFRU7 (ORCPT
+        id S1727409AbfJFRVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46038 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727375AbfJFRUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:55 -0400
+        id S1727388AbfJFRU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 882902077B;
-        Sun,  6 Oct 2019 17:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41E1720862;
+        Sun,  6 Oct 2019 17:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382455;
-        bh=KkVNL4aA8iQo3ozBgxTtkTE++45rL8IJDNE11cs+JUs=;
+        s=default; t=1570382457;
+        bh=/+T4HQNZEJVsUrgaWLxGFatFYUU/MSKJJI967QxELC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smJ9aQdI/jqSHioMb8r9lvGX3HnKlxVVbhEiPPk23wcnEE5xx/Ve9WXqZmlmkYdlS
-         6g1vA0DaPHUHDr2Pzg6hEVwll1DjBupNf2CWHqrXidZgSb85uwnO1oD+6NPLoWtsza
-         JwKD8boW9YSDRm1kftxgkUO2G0rYv1xptDuCAwz4=
+        b=bRnf2kKlN4gA3TRfVb2cFl+ztotMZKeIlruzkahoiN+K0ehAqck6U0EQLMJ6tA/4H
+         fA1Xs1+rlIwVN76NA+Se05IxZuo2bIYqNjG8cSGr4XVZPw4e+TyvLtUzuk/EVmX3O8
+         k7XSE0UOxF/j/lNR63adXnnNapzN/PVsomy/77+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 36/36] NFC: fix attrs checks in netlink interface
-Date:   Sun,  6 Oct 2019 19:19:18 +0200
-Message-Id: <20191006171101.240064868@linuxfoundation.org>
+        stable@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Huckleberry <nhuck@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Scott Wood <oss@buserror.net>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/36] clk: qoriq: Fix -Wunused-const-variable
+Date:   Sun,  6 Oct 2019 19:18:46 +0200
+Message-Id: <20191006171043.480066737@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -60,49 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Nathan Huckleberry <nhuck@google.com>
 
-commit 18917d51472fe3b126a3a8f756c6b18085eb8130 upstream.
+[ Upstream commit a95fb581b144b5e73da382eaedb2e32027610597 ]
 
-nfc_genl_deactivate_target() relies on the NFC_ATTR_TARGET_INDEX
-attribute being present, but doesn't check whether it is actually
-provided by the user. Same goes for nfc_genl_fw_download() and
-NFC_ATTR_FIRMWARE_NAME.
+drivers/clk/clk-qoriq.c:138:38: warning: unused variable
+'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
+clockgen_muxinfo p5020_cmux_grp1
 
-This patch adds appropriate checks.
+drivers/clk/clk-qoriq.c:146:38: warning: unused variable
+'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
+clockgen_muxinfo p5020_cmux_grp2
 
-Found with syzkaller.
+In the definition of the p5020 chip, the p2041 chip's info was used
+instead.  The p5020 and p2041 chips have different info. This is most
+likely a typo.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://github.com/ClangBuiltLinux/linux/issues/525
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Link: https://lkml.kernel.org/r/20190627220642.78575-1-nhuck@google.com
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Scott Wood <oss@buserror.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/netlink.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/clk-qoriq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -936,7 +936,8 @@ static int nfc_genl_dep_link_down(struct
- 	int rc;
- 	u32 idx;
- 
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_TARGET_INDEX])
- 		return -EINVAL;
- 
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
-@@ -985,7 +986,8 @@ static int nfc_genl_llc_get_params(struc
- 	struct sk_buff *msg = NULL;
- 	u32 idx;
- 
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_FIRMWARE_NAME])
- 		return -EINVAL;
- 
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index a5070f9cb0d4a..7244a621c61b9 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -540,7 +540,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
+ 		.guts_compat = "fsl,qoriq-device-config-1.0",
+ 		.init_periph = p5020_init_periph,
+ 		.cmux_groups = {
+-			&p2041_cmux_grp1, &p2041_cmux_grp2
++			&p5020_cmux_grp1, &p5020_cmux_grp2
+ 		},
+ 		.cmux_to_group = {
+ 			0, 1, -1
+-- 
+2.20.1
+
 
 
