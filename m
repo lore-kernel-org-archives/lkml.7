@@ -2,55 +2,55 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4A0C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FBDECE597
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8539321835
+	by mail.kernel.org (Postfix) with ESMTP id 00C702080F
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384502;
-	bh=PWhTwKba2ZSNQzRTJqTmC99Bkw2ToZ0yxWIRCb0nwZY=;
+	bh=dTYb9XmPpGezQJA6U/RlhJTJ+F2VVzbzIQ64FdtB7Hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZCVdkC/3T8SV3CB3SI1BZhzmfmopsuVTxwAe4CBFB1ESHO0MDQ4NLiJaqiLgR5N9
-	 piDGeqORosS2nvIPe+XtvfVh5a5VuR6HW6n57yWX77MdET+z/dz4zC4Lnxz2JGD4+3
-	 P2LkNGPoSnnvW3hcZeDYIpB1UBR6F7Er/D17iI1s=
+	b=czq2KBu6xpIwuK2sp2KHnZ1KUiKCsPvEtaj7yznsg2aBRtyne7FuM9INVfSovnm5K
+	 e3Y954qHsuzYPYQqs4qcCjsQhrd2ipvbV5kDZ3iVpYUED1qvHaT4Dkl1YkKR8UkDT6
+	 D/i2C0pHbwJVpUCwBkqYQx3GkLu7SlKyXnJOLcgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbfJFRgM (ORCPT
+        id S1728845AbfJFRyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:54:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730058AbfJFRgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:09 -0400
+        id S1726918AbfJFRy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:54:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B7F2064A;
-        Sun,  6 Oct 2019 17:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8788B2247C;
+        Sun,  6 Oct 2019 17:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383367;
-        bh=PWhTwKba2ZSNQzRTJqTmC99Bkw2ToZ0yxWIRCb0nwZY=;
+        s=default; t=1570383998;
+        bh=dTYb9XmPpGezQJA6U/RlhJTJ+F2VVzbzIQ64FdtB7Hw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ix+wpdIWo0RfrmBGhWD89QvTyZbaS3OwFCr1TrA7y7WAwtYA6KO7rzhhMIzKuIyFb
-         JicUTZLMEoPGAtks2YFZ7xon0oXQiMAafzhzS4DECIRhSSedgaRRhp97RR1uDegNEJ
-         USnKAXNl94gm1rHHBbhLxREyxLBvqWhNIkp9kE08=
+        b=PiDSBSg3AYUHNaVsZx8q9Xepic1liZ6Bn269ftTzvAAOkLKaoa9/XA3y7Y25+yFOq
+         8R5M3GNRIFHJkSAYF4tVZv35O9eq8CF2A42qXAw59Nm8gas/DukERhlB+UXou42nZX
+         sMaNhstYRcVioy2M7Q8RLyWiIccm1iC+QEzO5PiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Otto Meier <gf435@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 076/137] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
-Date:   Sun,  6 Oct 2019 19:21:00 +0200
-Message-Id: <20191006171215.348423201@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 137/166] nfc: fix memory leak in llcp_sock_bind()
+Date:   Sun,  6 Oct 2019 19:21:43 +0200
+Message-Id: <20191006171224.657266919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
-References: <20191006171209.403038733@linuxfoundation.org>
+In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
+References: <20191006171212.850660298@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,63 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Otto Meier <gf435@gmx.net>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
+[ Upstream commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d ]
 
-Hi i tried to use the uart_C of the the odroid-c2.
+sysbot reported a memory leak after a bind() has failed.
 
-I enabled it in the dts file. During boot it crashed when the
-the sdcard slot is addressed.
+While we are at it, abort the operation if kmemdup() has failed.
 
-After long search in the net i found this:
+BUG: memory leak
+unreferenced object 0xffff888105d83ec0 (size 32):
+  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
+  hex dump (first 32 bytes):
+    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
+    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
+  backtrace:
+    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
+    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
+    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
+    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
+    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
+    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
+    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
+    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
+    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
+    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
+    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
+    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
+    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
+    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
-
-After changing the pin definitions accordingly erverything works.
-Uart_c is functioning and sdcard ist working.
-
-Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
-Signed-off-by: Otto Meier <gf435@gmx.net>
-Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/nfc/llcp_sock.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 6c640837073ef..5bfa56f3847ef 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -192,8 +192,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
- 
- static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
- static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
--static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
--static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
-+static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
-+static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
- 
- static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
- static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
-@@ -439,10 +439,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GROUP(pwm_f_x,		3,	18),
- 
- 	/* Bank Y */
--	GROUP(uart_cts_c,	1,	19),
--	GROUP(uart_rts_c,	1,	18),
--	GROUP(uart_tx_c,	1,	17),
--	GROUP(uart_rx_c,	1,	16),
-+	GROUP(uart_cts_c,	1,	17),
-+	GROUP(uart_rts_c,	1,	16),
-+	GROUP(uart_tx_c,	1,	19),
-+	GROUP(uart_rx_c,	1,	18),
- 	GROUP(pwm_a_y,		1,	21),
- 	GROUP(pwm_f_y,		1,	20),
- 	GROUP(i2s_out_ch23_y,	1,	5),
--- 
-2.20.1
-
+--- a/net/nfc/llcp_sock.c
++++ b/net/nfc/llcp_sock.c
+@@ -107,9 +107,14 @@ static int llcp_sock_bind(struct socket
+ 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
+ 					  llcp_sock->service_name_len,
+ 					  GFP_KERNEL);
+-
++	if (!llcp_sock->service_name) {
++		ret = -ENOMEM;
++		goto put_dev;
++	}
+ 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
+ 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
++		kfree(llcp_sock->service_name);
++		llcp_sock->service_name = NULL;
+ 		ret = -EADDRINUSE;
+ 		goto put_dev;
+ 	}
 
 
