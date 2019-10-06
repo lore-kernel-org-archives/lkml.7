@@ -2,57 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01CDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC5BC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C962E21835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736F120867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382770;
-	bh=P3WkhO3G6h+D3zdNU95Zo/yNNpyRu695qymatgVIGik=;
+	s=default; t=1570382777;
+	bh=GofdUfSQXIx0DjaZGvqWXBDxkWOXKOib6pKnwDPKu3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHT4QF45u2L/xBqZHrUCDwb5ZHOUA4Q8rerkSs9LLqRo8VsAWPCuORuk2RSv1pjnz
-	 xs457Yim3VJuFaHL0HLaM1sdPWIlXHcV0qhjUB7fqz7tFgZTNPW9fnjmDwpGpQ2NR5
-	 PvfFb6WdibPth4VAYyLTvleUJ9zxJR5++361RkNI=
+	b=SbhqZRkw7Cjub/PELJcqRkgl7gtAMFRlVmsvjKEq0tbw34XmTenTDrQtlVX1tSn/H
+	 n9JWQwepyViyCPhYbli+4fRe0+OyOGZKV7XiiwMbXo+vWIqEheDQ/yvQOsHYkKJF9Z
+	 HauJOa47nwo9iIoOr740zM4DNkBerE/ld+iMwDQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfJFR0K (ORCPT
+        id S1728242AbfJFR0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50998 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfJFR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:00 -0400
+        id S1728217AbfJFR0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB4C2077B;
-        Sun,  6 Oct 2019 17:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9786320867;
+        Sun,  6 Oct 2019 17:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382759;
-        bh=P3WkhO3G6h+D3zdNU95Zo/yNNpyRu695qymatgVIGik=;
+        s=default; t=1570382773;
+        bh=GofdUfSQXIx0DjaZGvqWXBDxkWOXKOib6pKnwDPKu3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UpE+fOHogjwZ1Tk+dnHokcEZ7teKN7WYoanStW4QDtEt0EPIqRUn4Opx5B3X1ZlLq
-         L+uyL2BLqlfABXrFgr4uDYDkrFEYde8i8SRIJd4K2F2jdEpSJy3rrL6tZabUZTpbLi
-         mxzwD8NeO+s1Ng2ZKK9L3aHUCb3unRipH0eWIvuk=
+        b=juXSnZSRA/psNmyiX5qdA6qXIousfPQLZbSxwZInnr/4wd6lFIb4FsQf84q7JqxXc
+         rMQ9x1Tl8DC0JsvP1QdruIOVcE2Iy+Iuu4VcWe7YLybOTl1zb56tCQA3a7UNVV/A5O
+         ZBKAW4TjzPI1AMveVUQvTA8r5AfqkdWJMA2vdCps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/68] MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a boolean
-Date:   Sun,  6 Oct 2019 19:21:05 +0200
-Message-Id: <20191006171121.475693129@linuxfoundation.org>
+Subject: [PATCH 4.14 33/68] livepatch: Nullify obj->mod in klp_module_coming()s error path
+Date:   Sun,  6 Oct 2019 19:21:09 +0200
+Message-Id: <20191006171124.321287020@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -65,57 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Miroslav Benes <mbenes@suse.cz>
 
-[ Upstream commit c59ae0a1055127dd3828a88e111a0db59b254104 ]
+[ Upstream commit 4ff96fb52c6964ad42e0a878be8f86a2e8052ddd ]
 
-clang warns:
+klp_module_coming() is called for every module appearing in the system.
+It sets obj->mod to a patched module for klp_object obj. Unfortunately
+it leaves it set even if an error happens later in the function and the
+patched module is not allowed to be loaded.
 
-arch/mips/mm/tlbex.c:634:19: error: use of logical '&&' with constant
-operand [-Werror,-Wconstant-logical-operand]
-        if (cpu_has_rixi && _PAGE_NO_EXEC) {
-                         ^  ~~~~~~~~~~~~~
-arch/mips/mm/tlbex.c:634:19: note: use '&' for a bitwise operation
-        if (cpu_has_rixi && _PAGE_NO_EXEC) {
-                         ^~
-                         &
-arch/mips/mm/tlbex.c:634:19: note: remove constant to silence this
-warning
-        if (cpu_has_rixi && _PAGE_NO_EXEC) {
-                        ~^~~~~~~~~~~~~~~~
-1 error generated.
+klp_is_object_loaded() uses obj->mod variable and could currently give a
+wrong return value. The bug is probably harmless as of now.
 
-Explicitly cast this value to a boolean so that clang understands we
-intend for this to be a non-zero value.
-
-Fixes: 00bf1c691d08 ("MIPS: tlbex: Avoid placing software PTE bits in Entry* PFN fields")
-Link: https://github.com/ClangBuiltLinux/linux/issues/609
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/mm/tlbex.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/livepatch/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
-index c2a6869418f77..dc495578d44d3 100644
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -634,7 +634,7 @@ static __maybe_unused void build_convert_pte_to_entrylo(u32 **p,
- 		return;
- 	}
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 88754e9790f9b..f8dc77b18962c 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -941,6 +941,7 @@ err:
+ 	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
+ 		patch->mod->name, obj->mod->name, obj->mod->name);
+ 	mod->klp_alive = false;
++	obj->mod = NULL;
+ 	klp_cleanup_module_patches_limited(mod, patch);
+ 	mutex_unlock(&klp_mutex);
  
--	if (cpu_has_rixi && _PAGE_NO_EXEC) {
-+	if (cpu_has_rixi && !!_PAGE_NO_EXEC) {
- 		if (fill_includes_sw_bits) {
- 			UASM_i_ROTR(p, reg, reg, ilog2(_PAGE_GLOBAL));
- 		} else {
 -- 
 2.20.1
 
