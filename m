@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AF4C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F249EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3B02166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD0E20867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382686;
-	bh=+BiQqXREfqedpyPZPQrqLz+Q6RzWqhu5kwykdMOrTwA=;
+	s=default; t=1570382690;
+	bh=ezbkdOij8H/eXqwrs3/HxM1hHXVRSR/KKB0D+kPZAuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAuxsQ4fyInC10E/HNLwqo7b4Ya6bupTc6RVNDXJOyNBDWMmP7IHZpOlq0lhk1qDd
-	 oKoWQVDpC9B3J4JZNH/8Gkg88Jyr+Ti8bt2r3/ouWkokXvBuXlC7s3t7tEtvmFviMQ
-	 8qu0ZSiGuaenIyqUkImUStD57+4lQdHEFhcdHcJE=
+	b=UF/xqddclGWyPKON8a2mao9o2nwtY11YpFWi2WijebCWAvThUEQQKXv/hJ33UFgrD
+	 dJKVJtitVOpujqNBUB1pVE85s/tErNJmNc9I9YvoXVgmCWKhOXr7DSDQgSMByukaGC
+	 eN6XFxrh3cOEoUcAtd5XbS4i0MlWq8K6nuLm8dkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfJFRYp (ORCPT
+        id S1727448AbfJFRYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49652 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfJFRYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:41 -0400
+        id S1727446AbfJFRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FDD2080F;
-        Sun,  6 Oct 2019 17:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087BA2133F;
+        Sun,  6 Oct 2019 17:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382681;
-        bh=+BiQqXREfqedpyPZPQrqLz+Q6RzWqhu5kwykdMOrTwA=;
+        s=default; t=1570382686;
+        bh=ezbkdOij8H/eXqwrs3/HxM1hHXVRSR/KKB0D+kPZAuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLNecweH2i+zwDEcF8e3e8pg8w/m9ZfCjqmiPrvsGorEkYBfjdry2yW6cIyYjpWu+
-         ZTIUMcAl6aYk5nmHUZhCzLKJY8fPCVmGZVGv8PRmrw/u6wryU+qTAS/cnKrO79um9h
-         xxIOtW420v/SKY46W+xLTTEA8IMi0aTRMJL8/bpU=
+        b=mMie1lrS3+2nnqkjGFsaCq1maPEfpIbYr0gHDPZmPqhME32iu7M0ZE8cnTNinl6U4
+         Qkn6S3y7Obxg8tA4WDawTb4QwvHwtPyuyW9eDhxs76M/aO3KfLLnsP2PFQR4DjMnAW
+         b1dYoXNiH5kMgC4b43MEabz42HgK2X87PbUrWshg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
+        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 39/47] qmi_wwan: add support for Cinterion CLS8 devices
-Date:   Sun,  6 Oct 2019 19:21:26 +0200
-Message-Id: <20191006172018.949703803@linuxfoundation.org>
+Subject: [PATCH 4.9 41/47] net/rds: Fix error handling in rds_ib_add_one()
+Date:   Sun,  6 Oct 2019 19:21:28 +0200
+Message-Id: <20191006172019.053341501@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -60,56 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinhard Speyerer <rspmn@arcor.de>
+From: Dotan Barak <dotanb@dev.mellanox.co.il>
 
-[ Upstream commit cf74ac6db25d4002089e85cc623ad149ecc25614 ]
+[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
 
-Add support for Cinterion CLS8 devices.
-Use QMI_QUIRK_SET_DTR as required for Qualcomm MDM9x07 chipsets.
+rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
+after allocation some resources such as protection domain.
+If allocation of such resources fail, then these uninitialized
+variables are accessed in rds_ib_dev_free() in failure path. This
+can potentially crash the system. The code has been updated to
+initialize these variables very early in the function.
 
-T:  Bus=01 Lev=03 Prnt=05 Port=01 Cnt=02 Dev#= 25 Spd=480  MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1e2d ProdID=00b0 Rev= 3.18
-S:  Manufacturer=GEMALTO
-S:  Product=USB Modem
-C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
+Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/rds/ib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -940,6 +940,7 @@ static const struct usb_device_id produc
- 	{QMI_FIXED_INTF(0x1e2d, 0x0082, 4)},	/* Cinterion PHxx,PXxx (2 RmNet) */
- 	{QMI_FIXED_INTF(0x1e2d, 0x0082, 5)},	/* Cinterion PHxx,PXxx (2 RmNet) */
- 	{QMI_FIXED_INTF(0x1e2d, 0x0083, 4)},	/* Cinterion PHxx,PXxx (1 RmNet + USB Audio)*/
-+	{QMI_QUIRK_SET_DTR(0x1e2d, 0x00b0, 4)},	/* Cinterion CLS8 */
- 	{QMI_FIXED_INTF(0x413c, 0x81a2, 8)},	/* Dell Wireless 5806 Gobi(TM) 4G LTE Mobile Broadband Card */
- 	{QMI_FIXED_INTF(0x413c, 0x81a3, 8)},	/* Dell Wireless 5570 HSPA+ (42Mbps) Mobile Broadband Card */
- 	{QMI_FIXED_INTF(0x413c, 0x81a4, 8)},	/* Dell Wireless 5570e HSPA+ (42Mbps) Mobile Broadband Card */
+--- a/net/rds/ib.c
++++ b/net/rds/ib.c
+@@ -138,6 +138,9 @@ static void rds_ib_add_one(struct ib_dev
+ 	atomic_set(&rds_ibdev->refcount, 1);
+ 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
+ 
++	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
++	INIT_LIST_HEAD(&rds_ibdev->conn_list);
++
+ 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
+ 	rds_ibdev->max_sge = min(device->attrs.max_sge, RDS_IB_MAX_SGE);
+ 
+@@ -189,9 +192,6 @@ static void rds_ib_add_one(struct ib_dev
+ 		device->name,
+ 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
+ 
+-	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
+-	INIT_LIST_HEAD(&rds_ibdev->conn_list);
+-
+ 	down_write(&rds_ib_devices_lock);
+ 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
+ 	up_write(&rds_ib_devices_lock);
 
 
