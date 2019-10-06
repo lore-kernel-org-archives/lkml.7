@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5491AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04661C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252202067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28052067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384928;
-	bh=pJHwnneEM8p0dlLItWh0qMVw+DRg7qp7TIs2I8PdD/s=;
+	s=default; t=1570384932;
+	bh=hErGe3uINxLsS7mNQ/P8aL8IKEVdLi6IrfKsbRzA1YA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fO9Hpe2OV8oG42nDoh8Y40sLK168LenJgdHEXQD/ZCn+1N08hp/J3Nkqd7aMPYqMu
-	 sAfVRAdlJSrTVbFIZ8C/F2guADL0zAvF4wOmRXHEMvh9P3ifcLMgAUx4RJ8soZRLET
-	 7sCK84mc/1lhnWiH9I6YAofJltTakr4lWNyTd+uQ=
+	b=1JpZtYk8fE4WAR2dcC3iQYYutzyPt0U4xKFJ5Hil2OsvQYfleFMhuVAmHcfWzxre+
+	 eijkx3LRSEreLggMuRNI1zuyxfFg4mHX312jGvuMuXy0G9PcgfawcYQIXNuE+tQtFt
+	 Ycnz+lTMCjCjqHvW7RcawZHXe1g6gI9/PEoKhiUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfJFR0M (ORCPT
+        id S1728516AbfJFSCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51070 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbfJFR0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:02 -0400
+        id S1728192AbfJFR0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A3A92070B;
-        Sun,  6 Oct 2019 17:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341862070B;
+        Sun,  6 Oct 2019 17:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382762;
-        bh=pJHwnneEM8p0dlLItWh0qMVw+DRg7qp7TIs2I8PdD/s=;
+        s=default; t=1570382767;
+        bh=hErGe3uINxLsS7mNQ/P8aL8IKEVdLi6IrfKsbRzA1YA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oH199PBIJxZ1w3EDJDTQv9gWuuTAI9MDv79ofc3xwmVncCvj8ze8649jZYkmQ+K8u
-         NLAnErck/K/IzorWc+NrNvdkXq5SA6dsAFa3i1cDkBhkAeBIeF0ufZgAk0dD7INm8O
-         /5kmXiL/38BhINIfqW2sHxqq83IM9PaIuLF47cjI=
+        b=KEJYmD7dAk95W2PJQxZbsyeNAmGQhJbl4EpMkuDIUNimAF2ICq115XqppTswWpyd8
+         qTyCgH/f8Tzvj6zCy4A6K3HhyrFf856ruCSXqynaLvK8yTDqvvM1hcUL0E3njbgFSu
+         Eh/+6fxS0adHUTHEp35aG84bhAk926bgxCUlFcCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 03/68] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
-Date:   Sun,  6 Oct 2019 19:20:39 +0200
-Message-Id: <20191006171109.728360643@linuxfoundation.org>
+Subject: [PATCH 4.14 31/68] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun,  6 Oct 2019 19:21:07 +0200
+Message-Id: <20191006171121.869544173@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -61,47 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Sukhomlinov <sukhomlinov@google.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-future TPM operations. TPM 1.2 behavior was different, future TPM
-operations weren't disabled, causing rare issues. This patch ensures
-that future TPM operations are disabled.
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-[dianders: resolved merge conflicts with mainline]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
+
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-chip.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mfd/intel-lpss-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 0eca20c5a80cf..dcf5bb1534955 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -158,12 +158,13 @@ static int tpm_class_shutdown(struct device *dev)
- {
- 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index d9ae983095c54..2b7e8eeaa59e9 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -39,6 +39,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
  
-+	down_write(&chip->ops_sem);
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
--		down_write(&chip->ops_sem);
- 		tpm2_shutdown(chip, TPM2_SU_CLEAR);
- 		chip->ops = NULL;
--		up_write(&chip->ops_sem);
- 	}
-+	chip->ops = NULL;
-+	up_write(&chip->ops_sem);
- 
- 	return 0;
- }
++	pdev->d3cold_delay = 0;
++
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
+ 	pci_try_set_mwi(pdev);
 -- 
 2.20.1
 
