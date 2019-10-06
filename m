@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABADBECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89C2C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6742053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735F720700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383607;
-	bh=PnbnIcgZjtEdYqUlBBBWYErDr6FSx8IYXnn0vmGA5PY=;
+	s=default; t=1570383609;
+	bh=RXz6wrou/rLsSHwyEPfyPMYLuJ/X2bB/HTRQZPCvBoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VL+a59xHsLQGEQ9FB0rLka1qCcUZEwUeguS6zet7p2hK4sw3j1WQ3folnakmocg/J
-	 eAbYKVXckgPZOWyxGYLhrVJ2B6Jd+2/OflSuZpqZDOohJVsKr5cDrg/FG0yVvVJ/dj
-	 0Hj5UWAn0FcWiiTqsN7X+gODrcgC7gSz8ysWGKXA=
+	b=OnKPiDWYjA7HKRIJDRQ32dwWnORp/SfAiNswacg4RBQrhzh/ctXFOvPkOIZFO6o+c
+	 wrwe8pe57oSD8zibzRZQAoN0dYRPsI61YC7wbZaQeHClD3jIcy/aIvOwYyrzUwAv+I
+	 3+Uz/t+NwYFkqAaCDcw0k0xba1IWLlob07g1Gxdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfJFRkH (ORCPT
+        id S1727335AbfJFRkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39570 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbfJFRkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:04 -0400
+        id S1730861AbfJFRkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94FEA2053B;
-        Sun,  6 Oct 2019 17:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E0E32087E;
+        Sun,  6 Oct 2019 17:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383603;
-        bh=PnbnIcgZjtEdYqUlBBBWYErDr6FSx8IYXnn0vmGA5PY=;
+        s=default; t=1570383605;
+        bh=RXz6wrou/rLsSHwyEPfyPMYLuJ/X2bB/HTRQZPCvBoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6r/1mPbvmIR2ggNjRx//96bi0qTacFDDqAqCSZmDyeCv7CcM+RL4ldKOfDg8bV2p
-         J8CU25WMEVM/Qf1Qk09HxnY1hZCgkh4kg2keCGjlamd6V3dfmCDHNsOYBp69txMOzu
-         mqK5YxuFdlMy9tbYM5IJoHt9uQEjhHumQ0ZspBcQ=
+        b=oRk5dfOfLyC6UxrqeVchT2t149EuQ68MH0+kfFMfLr7Xae2ASlZdE25eBgWC96BzV
+         UvDGq6EFIOZ8d5giFug/OYjUXTxgHSuX+TL85NU41KZT5meCZij8XJf9v/McYWZMVS
+         pknuOlajaLM0B80Ao6WPojQ0Qord/Zz2Bs1fiJUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 027/166] clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
-Date:   Sun,  6 Oct 2019 19:19:53 +0200
-Message-Id: <20191006171215.381887646@linuxfoundation.org>
+Subject: [PATCH 5.3 028/166] drm/amd/display: fix issue where 252-255 values are clipped
+Date:   Sun,  6 Oct 2019 19:19:54 +0200
+Message-Id: <20191006171215.436094819@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Anthony Koo <Anthony.Koo@amd.com>
 
-[ Upstream commit 720099603d1f62e37b789366d7e89824b009ca28 ]
+[ Upstream commit 1cbcfc975164f397b449efb17f59d81a703090db ]
 
-The MMC2 clock slices are currently not defined in V3s CCU driver, which
-makes MMC2 not working.
+[Why]
+When endpoint is at the boundary of a region, such as at 2^0=1
+we find that the last segment has a sharp slope and some points
+are clipped at the top.
 
-Fix this issue.
+[How]
+If end point is 1, which is exactly at the 2^0 region boundary, we
+need to program an additional region beyond this point.
 
-Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index 9b3939fc7faa6..5ca4d34b4094f 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -502,6 +502,9 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
- 		[CLK_MMC1]		= &mmc1_clk.common.hw,
- 		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
- 		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
-+		[CLK_MMC2]		= &mmc2_clk.common.hw,
-+		[CLK_MMC2_SAMPLE]	= &mmc2_sample_clk.common.hw,
-+		[CLK_MMC2_OUTPUT]	= &mmc2_output_clk.common.hw,
- 		[CLK_CE]		= &ce_clk.common.hw,
- 		[CLK_SPI0]		= &spi0_clk.common.hw,
- 		[CLK_USB_PHY0]		= &usb_phy0_clk.common.hw,
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
+index 7469333a2c8a5..8166fdbacd732 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
+@@ -357,9 +357,10 @@ bool cm_helper_translate_curve_to_hw_format(
+ 		seg_distr[7] = 4;
+ 		seg_distr[8] = 4;
+ 		seg_distr[9] = 4;
++		seg_distr[10] = 1;
+ 
+ 		region_start = -10;
+-		region_end = 0;
++		region_end = 1;
+ 	}
+ 
+ 	for (i = region_end - region_start; i < MAX_REGIONS_NUMBER ; i++)
 -- 
 2.20.1
 
