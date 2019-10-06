@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACBFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE627C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A472053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E0AE2053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384096;
-	bh=hAUa0TrWfb4X363IN8Z1okqGk+klZDY+uWc9BkkRJr4=;
+	s=default; t=1570384100;
+	bh=yTCZzXZwVj7TwL77bpaZQocofKqPjqpWLCHKbD9N8BQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXXaoWdHDE63ULKUul4pt9DIGHC16BFQbxrvd3Fwd8u6XXNpnt2W+jN5DHOPlAs3n
-	 poIU1/I3O3EgRudKmMu3GTpUwsXwrsj9BVreAjhGhQqguzN31Cr9zujuLULQFDVBoQ
-	 4Q52g83o/33I+R/lge2K1TV3yenPac0Ul3adzI3A=
+	b=DzsEJmesK7aR6zG+HtYJrMA2REwxVp4apa2POUblfd3qUQzIEhVQJQ0O/Xgedj5zZ
+	 b36kQnT62o5vIMR5ttmezQoZQUB5HkhhIEnPsY4jh50TtpzswxS6ffZUJMkdRDPt+A
+	 NcqqslMD7LonSgvqx8ymAxgTRv8SchSjmiui1zuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfJFRsP (ORCPT
+        id S1730620AbfJFRnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731589AbfJFRnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:43:53 -0400
+        id S1731565AbfJFRnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A9C2080F;
-        Sun,  6 Oct 2019 17:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0C32080F;
+        Sun,  6 Oct 2019 17:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383833;
-        bh=hAUa0TrWfb4X363IN8Z1okqGk+klZDY+uWc9BkkRJr4=;
+        s=default; t=1570383825;
+        bh=yTCZzXZwVj7TwL77bpaZQocofKqPjqpWLCHKbD9N8BQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QuHNWta3vn368odS+TncBu7rLS/FUSJka8Wk6m3rCglieoLnMYfvn0Kj12srMAJ+f
-         4VtA91SQW3dF1SuVjmIaCGDKSp3yYhejL6bjQrFn47CDJlvcQ7mEwiIF+TB3bzDLHH
-         Qg25wUocHH/lYusZ1WxrlWotov24GksbTpZVqZsU=
+        b=DJ9qoTRnUnxbeC2r1Dhufbm+L50d8ggIpzReu6Y4PNFB49flNhMt/MwFurWD6HV5u
+         TElpRSJq7IsXi2pslxWy5WCeARcEDRv3qcJAwgmGIm/7T4GaeNQQP2l73I6jfXc4Wr
+         E87OrOWl1RSkzggjerGhiRDtKFfvHWe7a1JNrsNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 112/166] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
-Date:   Sun,  6 Oct 2019 19:21:18 +0200
-Message-Id: <20191006171222.815356851@linuxfoundation.org>
+Subject: [PATCH 5.3 109/166] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
+Date:   Sun,  6 Oct 2019 19:21:15 +0200
+Message-Id: <20191006171222.612718881@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,55 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <mike.rapoport@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
+[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
 
-The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
-bank 0 starts from a PMD-aligned address. However, the beginning of the
-first bank may be NOMAP memory and the start of usable memory
-will be not aligned to PMD boundary. In such case the memblock_limit will
-be set to the end of the NOMAP region, which will prevent any memblock
-allocations.
+In smack_socket_sock_rcv_skb(), there is an if statement
+on line 3920 to check whether skb is NULL:
+    if (skb && skb->secmark != 0)
 
-Mark the region between the end of the NOMAP area and the next PMD-aligned
-address as NOMAP as well, so that the usable memory will start at
-PMD-aligned address.
+This check indicates skb can be NULL in some cases.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+But on lines 3931 and 3932, skb is used:
+    ad.a.u.net->netif = skb->skb_iif;
+    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
+
+Thus, possible null-pointer dereferences may occur when skb is NULL.
+
+To fix these possible bugs, an if statement is added to check skb.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/mmu.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ security/smack/smack_lsm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index d9a0038774a6d..d5e0b908f0bad 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1177,6 +1177,22 @@ void __init adjust_lowmem_bounds(void)
- 	 */
- 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
- 
-+	/*
-+	 * The first usable region must be PMD aligned. Mark its start
-+	 * as MEMBLOCK_NOMAP if it isn't
-+	 */
-+	for_each_memblock(memory, reg) {
-+		if (!memblock_is_nomap(reg)) {
-+			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
-+				phys_addr_t len;
-+
-+				len = round_up(reg->base, PMD_SIZE) - reg->base;
-+				memblock_mark_nomap(reg->base, len);
-+			}
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 4c5e5a438f8bd..5c9fc8ba6e572 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -3925,6 +3925,8 @@ access_check:
+ 			skp = smack_ipv6host_label(&sadd);
+ 		if (skp == NULL)
+ 			skp = smack_net_ambient;
++		if (skb == NULL)
 +			break;
-+		}
-+	}
-+
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t block_start = reg->base;
- 		phys_addr_t block_end = reg->base + reg->size;
+ #ifdef CONFIG_AUDIT
+ 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
+ 		ad.a.u.net->family = family;
 -- 
 2.20.1
 
