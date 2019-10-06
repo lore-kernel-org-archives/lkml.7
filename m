@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57756C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DFEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D1F2166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EED02087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383097;
-	bh=vTl9zJpljgQsfufSouxqoZf5478I80hsMeKWww/XdhA=;
+	s=default; t=1570383099;
+	bh=cgZgFd/MyqZp+VRVFZzQX0V4eZcpcLt7lcRV3xNctrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e30qN8OH4jfkSLwnd/XQjb2YPig12/HzVAcTYzhNeMSyYeqcrJWJWd05e6eXqgIGR
-	 etnpKC5SnHzyk0HvgKWiYN41FUNbyoO2yT6JrJAQs0Zyq2hRfm1ceM/4RZtObdbYoI
-	 xvxbxSMb/4B/C61gcG0u3RPCHJBySXGVb02TGNoI=
+	b=H158SZozTgWT8uqO0MuETsxbk6RrzgZLkXSo8XaIfVq3ReFbSYJK2Z+bHvkQR8QxM
+	 D774M40O+fhI95RGqsp1GzRJK82+Xgf8m/qSX3OqAXHbnpGEUjTm+9oYEaTOiZd6rt
+	 eTz8sTzk23rBm1s8U9xC7KT1y1uPlIvz8+788t8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbfJFRbg (ORCPT
+        id S1729462AbfJFRbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfJFRb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:31:29 -0400
+        id S1729440AbfJFRbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:31:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8E121479;
-        Sun,  6 Oct 2019 17:31:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6823321479;
+        Sun,  6 Oct 2019 17:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383089;
-        bh=vTl9zJpljgQsfufSouxqoZf5478I80hsMeKWww/XdhA=;
+        s=default; t=1570383091;
+        bh=cgZgFd/MyqZp+VRVFZzQX0V4eZcpcLt7lcRV3xNctrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bTRypMmWEiZwC8cC+zvIlDKsC553M2exT4g/4Y8MhnDxi8IUDI/IQL9j0o9XJE/D0
-         3lnYfuAAqXqERMngh+bbeCIiXuSLEj3mWOeBWrcoHw2+U1soPzkSky/QcvQRjlYZfW
-         Kdc8CKgHEPMaunu1kGKU6rZLFQC/CXm+jeGZ5mPc=
+        b=RDYCMtYYFgyQ431ffcEuF49Hbi1LDfnmk2I54E3ury3ATYtZeZpK0MY65WM9yDX6R
+         txHOavugkxhtudc0CrFO2Jyw+tfKgha8qprIX03S7UqVS+TE2bKZI0qmb5dKzNuZIH
+         eJ7juJvr8Q1/8UxqZWtaQyAhcKMVuurWLom8O73Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Shahjada Abul Husain <shahjada@chelsio.com>,
-        Vishal Kulkarni <vishal@chelsio.com>,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 080/106] cxgb4:Fix out-of-bounds MSI-X info array access
-Date:   Sun,  6 Oct 2019 19:21:26 +0200
-Message-Id: <20191006171157.282892763@linuxfoundation.org>
+Subject: [PATCH 4.19 081/106] erspan: remove the incorrect mtu limit for erspan
+Date:   Sun,  6 Oct 2019 19:21:27 +0200
+Message-Id: <20191006171157.579189883@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,51 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Kulkarni <vishal@chelsio.com>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit 6b517374f4ea5a3c6e307e1219ec5f35d42e6d00 ]
+[ Upstream commit 0e141f757b2c78c983df893e9993313e2dc21e38 ]
 
-When fetching free MSI-X vectors for ULDs, check for the error code
-before accessing MSI-X info array. Otherwise, an out-of-bounds access is
-attempted, which results in kernel panic.
+erspan driver calls ether_setup(), after commit 61e84623ace3
+("net: centralize net_device min/max MTU checking"), the range
+of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
 
-Fixes: 94cdb8bb993a ("cxgb4: Add support for dynamic allocation of resources for ULD")
-Signed-off-by: Shahjada Abul Husain <shahjada@chelsio.com>
-Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
+It causes the dev mtu of the erspan device to not be greater
+than 1500, this limit value is not correct for ipgre tap device.
+
+Tested:
+Before patch:
+# ip link set erspan0 mtu 1600
+Error: mtu greater than device maximum.
+After patch:
+# ip link set erspan0 mtu 1600
+# ip -d link show erspan0
+21: erspan0@NONE: <BROADCAST,MULTICAST> mtu 1600 qdisc noop state DOWN
+mode DEFAULT group default qlen 1000
+    link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 0
+
+Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/ipv4/ip_gre.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
-@@ -137,13 +137,12 @@ static int uldrx_handler(struct sge_rspq
- static int alloc_uld_rxqs(struct adapter *adap,
- 			  struct sge_uld_rxq_info *rxq_info, bool lro)
- {
--	struct sge *s = &adap->sge;
- 	unsigned int nq = rxq_info->nrxq + rxq_info->nciq;
-+	int i, err, msi_idx, que_idx = 0, bmap_idx = 0;
- 	struct sge_ofld_rxq *q = rxq_info->uldrxq;
- 	unsigned short *ids = rxq_info->rspq_id;
--	unsigned int bmap_idx = 0;
-+	struct sge *s = &adap->sge;
- 	unsigned int per_chan;
--	int i, err, msi_idx, que_idx = 0;
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -1531,6 +1531,7 @@ static void erspan_setup(struct net_devi
+ 	struct ip_tunnel *t = netdev_priv(dev);
  
- 	per_chan = rxq_info->nrxq / adap->params.nports;
- 
-@@ -161,6 +160,10 @@ static int alloc_uld_rxqs(struct adapter
- 
- 		if (msi_idx >= 0) {
- 			bmap_idx = get_msix_idx_from_bmap(adap);
-+			if (bmap_idx < 0) {
-+				err = -ENOSPC;
-+				goto freeout;
-+			}
- 			msi_idx = adap->msix_info_ulds[bmap_idx].idx;
- 		}
- 		err = t4_sge_alloc_rxq(adap, &q->rspq, false,
+ 	ether_setup(dev);
++	dev->max_mtu = 0;
+ 	dev->netdev_ops = &erspan_netdev_ops;
+ 	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
+ 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
 
 
