@@ -2,52 +2,58 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA10C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC3EC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85262077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CB72173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382835;
-	bh=1HkGendTTXSxnlp6Lr8nFsl4EaHWSMlfsJ0LFoC/HAw=;
+	s=default; t=1570382838;
+	bh=rqIDfpoejZDcFJ9Lx/ILUg+s18yzaiLxAcuONLtaes8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CoQhGozlyEOWGFTGikwLz9Q7d35Yo/UxhGoUFwUO2ugRe/pDTDe86frtIy05mY7/s
-	 UcvTK/UWbRJ3HNv4N6++/QGfBc3qLLJe84kJ5KEJetFv+pviN5rF425a49O/NkexXP
-	 83T+963N/QjigLwiIbD1i15BHfVsrXCVKgQUPf7o=
+	b=QYpzVenFFaJ7pQSqR2B6nNrN3B8JvbHKSy3XTgXZ+GBh1Wl5hUZAOLxna/pD3LC15
+	 pMi0nj9WyZlayAevM/NRZJQv/xswPC2O3ttFDz+NXJUlBUCGBjabTKmkFCdEMc5m77
+	 rWApO3OJdIjpJrebX+YuSRyJ6Q0AFuPy1fdU2CFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbfJFR1O (ORCPT
+        id S1728465AbfJFR1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52556 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbfJFR1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:13 -0400
+        id S1727505AbfJFR1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BF582087E;
-        Sun,  6 Oct 2019 17:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C222077B;
+        Sun,  6 Oct 2019 17:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382832;
-        bh=1HkGendTTXSxnlp6Lr8nFsl4EaHWSMlfsJ0LFoC/HAw=;
+        s=default; t=1570382829;
+        bh=rqIDfpoejZDcFJ9Lx/ILUg+s18yzaiLxAcuONLtaes8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1e2U/vsVnEvTlJoHDJloAoFZfPYHtwo0aQ36RU61eWPDrRllID+j1Un5jrLIjnVNN
-         GSh5MaPC1uZ0lqWZ1XRmtrGsshSklgwpJBGeTOxbUIYMeiVh9eldJHI5kboO7je90o
-         rwSBtfC3fIHPfD2S1FFlVBg+Bg/+EsQ+CsJ07Qic=
+        b=ETczuUAT9DaaecaOtI9S7vGXmRs5MKlgQcqsDgKlpiU1HJHr0j3FmES7WxE6Wwr9V
+         d2lBQnHaMNClscaa0x/SRKkALxFJOr05MX1b7C7vmgwwNzdTxyRZSQYCPG23zkBvTW
+         UrFZFXhHiYSae5wZGMZ6q6SJBYEj9wtK7xDWsfLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 56/68] nfc: fix memory leak in llcp_sock_bind()
-Date:   Sun,  6 Oct 2019 19:21:32 +0200
-Message-Id: <20191006171134.170525707@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, kernel@pengutronix.de,
+        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 38/68] PCI: imx6: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:14 +0200
+Message-Id: <20191006171126.248622294@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,62 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d ]
+[ Upstream commit 2170a09fb4b0f66e06e5bcdcbc98c9ccbf353650 ]
 
-sysbot reported a memory leak after a bind() has failed.
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-While we are at it, abort the operation if kmemdup() has failed.
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-BUG: memory leak
-unreferenced object 0xffff888105d83ec0 (size 32):
-  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
-  hex dump (first 32 bytes):
-    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
-    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
-  backtrace:
-    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
-    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
-    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
-    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
-    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
-    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
-    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
-    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
-    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
-    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
-    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
-    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
-    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: kernel@pengutronix.de
+Cc: linux-imx@nxp.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/llcp_sock.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/pci/dwc/pci-imx6.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -119,9 +119,14 @@ static int llcp_sock_bind(struct socket
- 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
- 					  llcp_sock->service_name_len,
- 					  GFP_KERNEL);
--
-+	if (!llcp_sock->service_name) {
-+		ret = -ENOMEM;
-+		goto put_dev;
-+	}
- 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
- 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
-+		kfree(llcp_sock->service_name);
-+		llcp_sock->service_name = NULL;
- 		ret = -EADDRINUSE;
- 		goto put_dev;
+diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
+index 1f1069b70e45a..5509b6e2de94b 100644
+--- a/drivers/pci/dwc/pci-imx6.c
++++ b/drivers/pci/dwc/pci-imx6.c
+@@ -827,8 +827,8 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 
+ 	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+ 	if (IS_ERR(imx6_pcie->vpcie)) {
+-		if (PTR_ERR(imx6_pcie->vpcie) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(imx6_pcie->vpcie) != -ENODEV)
++			return PTR_ERR(imx6_pcie->vpcie);
+ 		imx6_pcie->vpcie = NULL;
  	}
+ 
+-- 
+2.20.1
+
 
 
