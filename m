@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF06C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5C8C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67522166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA84217D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382965;
-	bh=K4T6lRYMyRRepGM0P+BdfI9+GRjzZhv/1SdRP6HK8Lo=;
+	s=default; t=1570382970;
+	bh=0ZSwGD0yIhbn+Y46gEL7KTJq9btBY1FBXRX+yBn0Ofo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HuZssFUzQBlw4EcGzrXrGBAAKbqDrC/OKUJZlOblSv/zFwbOi4q44GynVSiHc+NE7
-	 D/37g5+SjUKnJhyj8dHjTBguyta6jvq/cDUBzO7qlZX4Xd1sRT3RdkdRM52KLqi9KK
-	 BU8K6FwIYmItyb3GL7kZKWFyZikMgHNcvBkD3VFI=
+	b=2L7uM5PDM2rRDaOIJSI9xiEdHRowwKFMr6Rc67SWpyZPrwHKsnrOEwll8ZT21Ox4A
+	 wVtP10O2US2oI08MKqv3vw8YRbLcfcv+AQVh1wuxGBj85yyC/Hn4s0G0MbCFQeoHN2
+	 NuueDFXZs3SQjCCYAzvnsQLKwT8jKLY3+mCgn/Hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfJFR3Y (ORCPT
+        id S1728993AbfJFR33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbfJFR3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:20 -0400
+        id S1728969AbfJFR3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2770C217D6;
-        Sun,  6 Oct 2019 17:29:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 962992080F;
+        Sun,  6 Oct 2019 17:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382959;
-        bh=K4T6lRYMyRRepGM0P+BdfI9+GRjzZhv/1SdRP6HK8Lo=;
+        s=default; t=1570382965;
+        bh=0ZSwGD0yIhbn+Y46gEL7KTJq9btBY1FBXRX+yBn0Ofo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f96qSILktnJZ02/ghg3o1dJQgLdZ7wxfQlsVBsYMYxzxOU+/kdo+I3pt/4zZHqJio
-         DL9UmIXR1+8QKEkmPugmy0XdAENLNBg0S5IyooUR11lT4Mo0dIG1MGvVAI6QHdSocw
-         9rkOwOSr7YPq5662NJyhzzhv+gimdN2UgSc/zElI=
+        b=yFfFtjKL/rTMuqPYkvRp2illjqQMTnD1f8Y98MPgnzf4pQBxZEbxrvYXYcRtdQAsI
+         YQNHQipzjGdXKQ8wd5REGpw5LgWpQWJfCtaPtfmAD/Tsiv8gRLvBLBBFglsws7UCgy
+         GiwBVy3Kakg8xIcpvHulQnuZnsleF5/PDBRLZBM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Charlene Liu <charlene.liu@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 033/106] drm/amd/display: support spdif
-Date:   Sun,  6 Oct 2019 19:20:39 +0200
-Message-Id: <20191006171140.114447492@linuxfoundation.org>
+Subject: [PATCH 4.19 035/106] powerpc/64s/exception: machine check use correct cfar for late handler
+Date:   Sun,  6 Oct 2019 19:20:41 +0200
+Message-Id: <20191006171140.612370043@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -62,104 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charlene Liu <charlene.liu@amd.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit b5a41620bb88efb9fb31a4fa5e652e3d5bead7d4 ]
+[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
 
-[Description]
-port spdif fix to staging:
- spdif hardwired to afmt inst 1.
- spdif func pointer
- spdif resource allocation (reserve last audio endpoint for spdif only)
+Bare metal machine checks run an "early" handler in real mode before
+running the main handler which reports the event.
 
-Signed-off-by: Charlene Liu <charlene.liu@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The main handler runs exactly as a normal interrupt handler, after the
+"windup" which sets registers back as they were at interrupt entry.
+CFAR does not get restored by the windup code, so that will be wrong
+when the handler is run.
+
+Restore the CFAR to the saved value before running the late handler.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/core/dc_resource.c   | 17 ++++++++---------
- drivers/gpu/drm/amd/display/dc/dce/dce_audio.c  |  4 ++--
- 2 files changed, 10 insertions(+), 11 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-index f0d68aa7c8fcc..d440b28ee43fb 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-@@ -229,12 +229,10 @@ bool resource_construct(
- 				DC_ERR("DC: failed to create audio!\n");
- 				return false;
- 			}
--
- 			if (!aud->funcs->endpoint_valid(aud)) {
- 				aud->funcs->destroy(&aud);
- 				break;
- 			}
--
- 			pool->audios[i] = aud;
- 			pool->audio_count++;
- 		}
-@@ -1703,24 +1701,25 @@ static struct audio *find_first_free_audio(
- 		const struct resource_pool *pool,
- 		enum engine_id id)
- {
--	int i;
--	for (i = 0; i < pool->audio_count; i++) {
-+	int i, available_audio_count;
-+
-+	available_audio_count = pool->audio_count;
-+
-+	for (i = 0; i < available_audio_count; i++) {
- 		if ((res_ctx->is_audio_acquired[i] == false) && (res_ctx->is_stream_enc_acquired[i] == true)) {
- 			/*we have enough audio endpoint, find the matching inst*/
- 			if (id != i)
- 				continue;
--
- 			return pool->audios[i];
- 		}
- 	}
- 
--    /* use engine id to find free audio */
--	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
-+	/* use engine id to find free audio */
-+	if ((id < available_audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
- 		return pool->audios[id];
- 	}
--
- 	/*not found the matching one, first come first serve*/
--	for (i = 0; i < pool->audio_count; i++) {
-+	for (i = 0; i < available_audio_count; i++) {
- 		if (res_ctx->is_audio_acquired[i] == false) {
- 			return pool->audios[i];
- 		}
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
-index 7f6d724686f1a..abb559ce64085 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
-@@ -611,6 +611,8 @@ void dce_aud_az_configure(
- 
- 	AZ_REG_WRITE(AZALIA_F0_CODEC_PIN_CONTROL_SINK_INFO1,
- 		value);
-+	DC_LOG_HW_AUDIO("\n\tAUDIO:az_configure: index: %u data, 0x%x, displayName %s: \n",
-+		audio->inst, value, audio_info->display_name);
- 
- 	/*
- 	*write the port ID:
-@@ -922,7 +924,6 @@ static const struct audio_funcs funcs = {
- 	.az_configure = dce_aud_az_configure,
- 	.destroy = dce_aud_destroy,
- };
--
- void dce_aud_destroy(struct audio **audio)
- {
- 	struct dce_audio *aud = DCE_AUD(*audio);
-@@ -953,7 +954,6 @@ struct audio *dce_audio_create(
- 	audio->regs = reg;
- 	audio->shifts = shifts;
- 	audio->masks = masks;
--
- 	return &audio->base;
- }
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index 06cc77813dbb7..90af86f143a91 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -520,6 +520,10 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
+ 	RFI_TO_USER_OR_KERNEL
+ 9:
+ 	/* Deliver the machine check to host kernel in V mode. */
++BEGIN_FTR_SECTION
++	ld	r10,ORIG_GPR3(r1)
++	mtspr	SPRN_CFAR,r10
++END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	MACHINE_CHECK_HANDLER_WINDUP
+ 	b	machine_check_pSeries
  
 -- 
 2.20.1
