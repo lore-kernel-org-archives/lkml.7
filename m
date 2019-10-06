@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B3CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB79C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3F02087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D282077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382790;
-	bh=NpFt4VysNHZNSD9PF2n48smfBRcHUrmddrU3O6zZY+Y=;
+	s=default; t=1570382794;
+	bh=PLozl86nLzZNnxSAsPpoLHxyeB4nJWP2wp3oZsOA194=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=efKgsSwpvVXhV8m8WrHL3lCtUpsoLd+iBuTNdQ+46M4h67Ua74/mohknL6yJNIa4n
-	 oZf/bYnUb8/ch11JDme2R4di+9Mv017UmPF9YX4QMbgrVhkPfW4UVbQYldAuoC2Ia9
-	 tZ0UPuHwHS4L1IdB5LHw5Z+322WEMlyCQF5aWDyU=
+	b=TFXfcU2pmtuqB0L+vZ0PXShKymSeTkF5vdc1rBD3Ez7aEQUh+/9KNHVgEqL4Ywq2R
+	 Ssvae1KdHbeoADYdoUbc7NltHDfbLk80u7t/91kD5zPcOPdzibCteUUGCvFM2e97R+
+	 /F53VD0L+/+xipOpe7ZNUCvTVqeE3zQfBXtU5jJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfJFR03 (ORCPT
+        id S1728310AbfJFR0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51604 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfJFR01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:27 -0400
+        id S1728284AbfJFR0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 263CA2077B;
-        Sun,  6 Oct 2019 17:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C25BD2080F;
+        Sun,  6 Oct 2019 17:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382786;
-        bh=NpFt4VysNHZNSD9PF2n48smfBRcHUrmddrU3O6zZY+Y=;
+        s=default; t=1570382789;
+        bh=PLozl86nLzZNnxSAsPpoLHxyeB4nJWP2wp3oZsOA194=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yCak8zlGBbn2AaD9r7tcisQvp7J7fEevldpZkl4Z/6wxufe4ODvrs5aNJZttWKW6g
-         NJVfZwlL9d4ifwPBRCzs12fxNkx5IIP1soNVlqwWIWOuSAyXxZnTVyui81qnXJCZHu
-         0R0R3UIbNmXjkYMdEo/sVfmnOumbks5f74t8m/mg=
+        b=G5IeaLVYQlpPVQruGzCeSk8TX8xoCSbZFcy8HU8u4RIz1ZUSO/nm6Yq7Tkl1hiVmh
+         ZhPfVFbnHkRfHBPAW4CwRt5+ZpZ1HjQhb8soAlvHOxhesZ3LKi1w8LgrR2F7HjSA9G
+         itgrfYbMtHR0j8HCN0ZbLwLpDwh9CWBl8Zv/J75w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marko Kohtala <marko.kohtala@okoko.fi>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/68] video: ssd1307fb: Start page range at page_offset
-Date:   Sun,  6 Oct 2019 19:20:42 +0200
-Message-Id: <20191006171111.188642446@linuxfoundation.org>
+Subject: [PATCH 4.14 07/68] drm/stm: attach gem fence to atomic state
+Date:   Sun,  6 Oct 2019 19:20:43 +0200
+Message-Id: <20191006171111.820846776@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -65,42 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
+[ Upstream commit 8fabc9c3109a71b3577959a05408153ae69ccd8d ]
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+To properly synchronize with other devices the fence from the GEM
+object backing the framebuffer needs to be attached to the atomic
+state, so the commit work can wait on fence signaling.
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Tested-by: Philippe Cornu <philippe.cornu@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190712084228.8338-1-l.stach@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/stm/ltdc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index f599520374ddf..5f7dbf1c46092 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -433,7 +433,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index d394a03632c45..c3bd80b03f165 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -20,6 +20,7 @@
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_bridge.h>
+ #include <drm/drm_plane_helper.h>
+@@ -691,6 +692,7 @@ static const struct drm_plane_funcs ltdc_plane_funcs = {
+ };
  
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
- 
+ static const struct drm_plane_helper_funcs ltdc_plane_helper_funcs = {
++	.prepare_fb = drm_gem_fb_prepare_fb,
+ 	.atomic_check = ltdc_plane_atomic_check,
+ 	.atomic_update = ltdc_plane_atomic_update,
+ 	.atomic_disable = ltdc_plane_atomic_disable,
 -- 
 2.20.1
 
