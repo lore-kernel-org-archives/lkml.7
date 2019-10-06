@@ -2,116 +2,166 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8725FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1203DECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD462077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06C72133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:24:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570386277;
+	bh=txN7MuJe7LCPNmbcBl6KP9WG9kKAMumQZHAcbcAhBlE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R9ZzzQwcd1n9ZjB2FrXbirsLNHqu7uhvSNh+gSJFif1AdoFzpfGrXhvqJ+wrnGGux
+	 jJHayUqrszw78gx4XqJO8N+o+UnNK3OgiRv8D3yf7a2XH1xkBMUJjT+/M+beCD63DR
+	 iIbmatfYdKR0szu/ZmZhOd4fWrHoiv7wBJhWVQds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfJFSVG (ORCPT
+        id S1727103AbfJFSYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:21:06 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55119 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfJFSVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 14:21:06 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 0C5C6804BD; Sun,  6 Oct 2019 20:20:48 +0200 (CEST)
-Date:   Sun, 6 Oct 2019 20:21:03 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: x86/random: Speculation to the rescue
-Message-ID: <20191006182103.GA2394@amd>
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <20191006114129.GD24605@amd>
- <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
- <20191006173501.GA31243@amd>
- <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
+        Sun, 6 Oct 2019 14:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726516AbfJFSYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 14:24:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E59420700;
+        Sun,  6 Oct 2019 18:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570386275;
+        bh=txN7MuJe7LCPNmbcBl6KP9WG9kKAMumQZHAcbcAhBlE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UprVc3I+KtdbmOIjUASkc/FwIkdLRjWkCkg++D5j6MuU9FntBFtntacno2O5KioJz
+         16mAJf47JfYdK+qp1AMnNfdTT1DBcCsLV2tgINkoxKRwhWCtaT+0Ab0FjWhKhg2Uka
+         6eUbhoyaBxLxVEZENv/MRM2h+xxVFaVdhZJb8vp4=
+Date:   Sun, 6 Oct 2019 20:24:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Todd Kjos <tkjos@google.com>, Martijn Coenen <maco@android.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot <syzkaller@googlegroups.com>,
+        Mattias Nissler <mnissler@chromium.org>
+Subject: Re: [PATCH 4.9 30/47] ANDROID: binder: remove waitqueue when thread
+ exits.
+Message-ID: <20191006182433.GA217738@kroah.com>
+References: <20191006172016.873463083@linuxfoundation.org>
+ <20191006172018.480360174@linuxfoundation.org>
+ <20191006173202.GA832@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191006173202.GA832@sol.localdomain>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Oct 06, 2019 at 10:32:02AM -0700, Eric Biggers wrote:
+> On Sun, Oct 06, 2019 at 07:21:17PM +0200, Greg Kroah-Hartman wrote:
+> > From: Martijn Coenen <maco@android.com>
+> > 
+> > commit f5cb779ba16334b45ba8946d6bfa6d9834d1527f upstream.
+> > 
+> > binder_poll() passes the thread->wait waitqueue that
+> > can be slept on for work. When a thread that uses
+> > epoll explicitly exits using BINDER_THREAD_EXIT,
+> > the waitqueue is freed, but it is never removed
+> > from the corresponding epoll data structure. When
+> > the process subsequently exits, the epoll cleanup
+> > code tries to access the waitlist, which results in
+> > a use-after-free.
+> > 
+> > Prevent this by using POLLFREE when the thread exits.
+> > 
+> > Signed-off-by: Martijn Coenen <maco@android.com>
+> > Reported-by: syzbot <syzkaller@googlegroups.com>
+> > Cc: stable <stable@vger.kernel.org> # 4.14
+> > [backport BINDER_LOOPER_STATE_POLL logic as well]
+> > Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  drivers/android/binder.c |   17 ++++++++++++++++-
+> >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > --- a/drivers/android/binder.c
+> > +++ b/drivers/android/binder.c
+> > @@ -334,7 +334,8 @@ enum {
+> >  	BINDER_LOOPER_STATE_EXITED      = 0x04,
+> >  	BINDER_LOOPER_STATE_INVALID     = 0x08,
+> >  	BINDER_LOOPER_STATE_WAITING     = 0x10,
+> > -	BINDER_LOOPER_STATE_NEED_RETURN = 0x20
+> > +	BINDER_LOOPER_STATE_NEED_RETURN = 0x20,
+> > +	BINDER_LOOPER_STATE_POLL	= 0x40,
+> >  };
+> >  
+> >  struct binder_thread {
+> > @@ -2628,6 +2629,18 @@ static int binder_free_thread(struct bin
+> >  		} else
+> >  			BUG();
+> >  	}
+> > +
+> > +	/*
+> > +	 * If this thread used poll, make sure we remove the waitqueue
+> > +	 * from any epoll data structures holding it with POLLFREE.
+> > +	 * waitqueue_active() is safe to use here because we're holding
+> > +	 * the inner lock.
+> > +	 */
+> > +	if ((thread->looper & BINDER_LOOPER_STATE_POLL) &&
+> > +	    waitqueue_active(&thread->wait)) {
+> > +		wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
+> > +	}
+> > +
+> >  	if (send_reply)
+> >  		binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
+> >  	binder_release_work(&thread->todo);
+> > @@ -2651,6 +2664,8 @@ static unsigned int binder_poll(struct f
+> >  		return POLLERR;
+> >  	}
+> >  
+> > +	thread->looper |= BINDER_LOOPER_STATE_POLL;
+> > +
+> >  	wait_for_proc_work = thread->transaction_stack == NULL &&
+> >  		list_empty(&thread->todo) && thread->return_error == BR_OK;
+> >  
+> 
+> Are you sure this backport is correct, given that in 4.9, binder_poll()
+> sometimes uses proc->wait instead of thread->wait?:
+> 
+>         wait_for_proc_work = thread->transaction_stack == NULL &&
+>                 list_empty(&thread->todo) && thread->return_error == BR_OK;
+> 
+>         binder_unlock(__func__);
+> 
+>         if (wait_for_proc_work) {
+>                 if (binder_has_proc_work(proc, thread))
+>                         return POLLIN;
+>                 poll_wait(filp, &proc->wait, wait);
+>                 if (binder_has_proc_work(proc, thread))
+>                         return POLLIN;
+>         } else {
+>                 if (binder_has_thread_work(thread))
+>                         return POLLIN;
+>                 poll_wait(filp, &thread->wait, wait);
+>                 if (binder_has_thread_work(thread))
+>                         return POLLIN;
+>         }
+>         return 0;
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I _think_ the backport is correct, and I know someone has verified that
+the 4.4.y backport works properly and I don't see much difference here
+from that version.
 
-On Sun 2019-10-06 11:06:38, Linus Torvalds wrote:
-> On Sun, Oct 6, 2019 at 10:35 AM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > It will not: boot is now halted because systemd wants some
-> > entropy. Everything is idle and very little interrupts are
-> > happening. We have spinning rust, but it is idle, and thus not
-> > generating any interrupts.
->=20
-> Yes, but we have that problem now solved.
->=20
-> Except on embedded platforms that have garbage CPU's without even a
-> cycle counter.
->=20
-> But those won't have spinning rust anyway.
->=20
-> Yes, bad SSD's and MMC disks (that they do have) will generate timing
-> noise too, but in the absense of a cycle counter, that noise won't be
-> much use.
+But I will defer to Todd and Martijn here, as they know this code _WAY_
+better than I do.  The codebase has changed a lot from 4.9.y to 4.14.y
+so it makes it hard to do equal comparisons simply.
 
-Even without cycle counter... if we _know_ we are trying to generate
-entropy and have MMC available, we don't care about power and
-performance.
+Todd and Martijn, thoughts?
 
-So we can just...
+thanks,
 
-   issue read request on MMC
-   while (!interrupt_done)
-   	 i++
-	=20
-=2E..and then use i++ as poor man's version of cycle counter.
-
-[We would not want to do that in normal operation, for obvious
-reasons, just when userland is blocked and waiting for entropy.]
-
-Hmm?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2aMI8ACgkQMOfwapXb+vJTywCgnfuEma9x9CxZe2Emi8/q3o88
-fAAAn1UB+rc9fkjq94ygwBLuGjAtgcFo
-=qr1z
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
+greg k-h
