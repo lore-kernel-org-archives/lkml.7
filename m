@@ -2,52 +2,55 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE4C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F96E214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC97214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382897;
-	bh=7OIGAHIn83en4J2dXz/6WX2xRncraPreUTj7vjD+EHo=;
+	s=default; t=1570382899;
+	bh=hYVt0RUpuwd8TcWj9uwviXzVdy6fGVwf5peNzZMmb6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2WSZO+BWs8aAjrFCNqrVGe2/Ks58LhplC83I9zGvB49Kd5Qt/ePvlnzWwiNdfNQT
-	 SrJrbKg9nGttOuTXo3UlIeHEisRzQbhznXLHw3KjtRUg4Rjg/5HZ9nnwW5BvTsDyTB
-	 atkqikkaw2cBaK6bADif/jfLXPDIP5rhvXivSTmE=
+	b=y5f1G8ZA62j5rPUhOOpjnPlm3umSNNldXIG5JOelQV9YJjS2HpP4+fnDtrf+wQt5T
+	 6ZB0rg3hLpxrGnwsUKVEczKGX/cWC3UN7rGF1UqArBpRpPjBPVYRr3V3unk8owHGvd
+	 L+5wRfRgtYFXExejYVumDfEFoYJJn0kxwrLRtLPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfJFR2Q (ORCPT
+        id S1728731AbfJFR2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbfJFR2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:12 -0400
+        id S1727617AbfJFR2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B78592133F;
-        Sun,  6 Oct 2019 17:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677812080F;
+        Sun,  6 Oct 2019 17:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382892;
-        bh=7OIGAHIn83en4J2dXz/6WX2xRncraPreUTj7vjD+EHo=;
+        s=default; t=1570382894;
+        bh=hYVt0RUpuwd8TcWj9uwviXzVdy6fGVwf5peNzZMmb6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VakiIQTOBGdxim7NTtVjBkCAkQa52wEdhnwjuKel8cRmTtKJ7vW5FRDuVCWcUwUdg
-         NpgPQzMmEp5OJhQDFHlhH9g5Vs/MYPQ11KCzg52jkCSmfyZgEQB9hW4dZ5k8RGoWps
-         EjjgzeD6yEyyxGVZQhBuTauPMuG8udSLBGywuvA0=
+        b=evUKo+qZXUyiLbpcHPjb5VjKacpeqPd1upF/aZtiIEASeUcxxA7hH6wEMg69fUchO
+         GQTRThaYcS0QY5YgrwgF8L+3MeOaK5N1qaWsuFBV11Dy/vFvHBxZIA1T2QyKV0ZqQm
+         uDVZNIQs4dIPuFe6uBnJLCj8YPVIOMl+gVobkeqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Joel Savitz <jsavitz@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/106] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
-Date:   Sun,  6 Oct 2019 19:20:16 +0200
-Message-Id: <20191006171129.783390713@linuxfoundation.org>
+Subject: [PATCH 4.19 011/106] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+Date:   Sun,  6 Oct 2019 19:20:17 +0200
+Message-Id: <20191006171129.951697403@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,43 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
+[ Upstream commit 0df3e42167caaf9f8c7b64de3da40a459979afe8 ]
 
-In radeon_connector_set_property(), there is an if statement on line 743
-to check whether connector->encoder is NULL:
-    if (connector->encoder)
+When building with -Wsometimes-uninitialized, clang warns:
 
-When connector->encoder is NULL, it is used on line 755:
-    if (connector->encoder->crtc)
+drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
+used uninitialized whenever 'for' loop exits because its condition is
+false [-Wsometimes-uninitialized]
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
+here
+        if (fndit)
+            ^~~~~
+drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
+it is always true
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
+'fndit' to silence this warning
+        int j, fndit;
+                    ^
+                     = 0
 
-Thus, a possible null-pointer dereference may occur.
+fndit is only used to gate a sprintf call, which can be moved into the
+loop to simplify the code and eliminate the local variable, which will
+fix this warning.
 
-To fix this bug, connector->encoder is checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Acked-by: Joel Savitz <jsavitz@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://github.com/ClangBuiltLinux/linux/issues/504
+Link: https://lore.kernel.org/r/20190603221157.58502-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index 414642e5b7a31..de656f5553839 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -751,7 +751,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index 857c358b727b8..cc860c5f7d26f 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 	struct of_drc_info drc;
+ 	const __be32 *value;
+ 	char cell_drc_name[MAX_DRC_NAME_LEN];
+-	int j, fndit;
++	int j;
  
- 		radeon_encoder->output_csc = val;
+ 	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+ 	if (info == NULL)
+@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
  
--		if (connector->encoder->crtc) {
-+		if (connector->encoder && connector->encoder->crtc) {
- 			struct drm_crtc *crtc  = connector->encoder->crtc;
- 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
+ 		/* Should now know end of current entry */
  
+-		if (my_index > drc.last_drc_index)
+-			continue;
+-
+-		fndit = 1;
+-		break;
++		/* Found it */
++		if (my_index <= drc.last_drc_index) {
++			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
++				my_index);
++			break;
++		}
+ 	}
+-	/* Found it */
+-
+-	if (fndit)
+-		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
+-			my_index);
+ 
+ 	if (((drc_name == NULL) ||
+ 	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
 -- 
 2.20.1
 
