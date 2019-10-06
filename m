@@ -2,110 +2,78 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB3EC4740A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54663C47404
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7323222CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACDF222C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570327231;
-	bh=c+PDK9PdBWeKgicXAkks/m/JE6AGhT/LowZoiedqZro=;
+	s=default; t=1570328224;
+	bh=08IWgsYtfYEQoxuJKerHwdwPvgltMNLMDmtbgmWVK1E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mLH3lp0LZJxcSVW+VpPvUlAtK0fJbIBEYn6Sfp8ZdW+b0bjS9OXMsSd7V5NoTnB+G
-	 pL3F2neamv39ljZDNyCQwWqXEB3M2ZOXKc3khX3zgkpjJSQ3D7DuoHEXicYvqUu1f7
-	 Ds2uOKAUPuJrSRdw8MuyiffknwFoaDl25WwSatWI=
+	b=ezV4mvSqhHayAZZ/fQDP6lhXtHALekfQFlOrJBuS7pObsBu3zqBA8FMUxGPWZh37Y
+	 K7w4EhK4IMAvLf/qun2oqyBap64Ic7sYSXF/B5QZ+IKMmrLY8UKlr2vN/kRob8QZ1Q
+	 ZfYx1TDJklEzDkcgNCb8GBizB9s7MzwzAXfwbcoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfJFCAa (ORCPT
+        id S1726107AbfJFCRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 22:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
+        Sat, 5 Oct 2019 22:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfJFCAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 22:00:30 -0400
+        id S1725917AbfJFCRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Oct 2019 22:17:02 -0400
 Received: from dragon (li937-157.members.linode.com [45.56.119.157])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E53A218AC;
-        Sun,  6 Oct 2019 01:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3727222C5;
+        Sun,  6 Oct 2019 02:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570327229;
-        bh=c+PDK9PdBWeKgicXAkks/m/JE6AGhT/LowZoiedqZro=;
+        s=default; t=1570328222;
+        bh=08IWgsYtfYEQoxuJKerHwdwPvgltMNLMDmtbgmWVK1E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fR5wuOg5eKsMSOc4WOitA6WL61fR4NMKj+yAPKAo51oRtS1FuQwft2UTm46fefZWI
-         fq74W2Ux64Wiil1DSbB3MljCikBphpo5Af9hVuVpn5o0eE6SaeOcfx70RYWhq38n3+
-         m0pejNP7trXxFEtmLaMpzsYoPY/iN+/KFLlC68m4=
-Date:   Sun, 6 Oct 2019 09:59:44 +0800
+        b=IPpRYsJjzqd4LI8VNtqPHCqhhWF0MhM+wSbYfyvzxudK2sz+pwQsuZGizutKVDKHy
+         BBbis6GY9iz7IWs6e79EW3rfUP4pEy6Lh5jkw7Nnk9YJk6Y78+v4EgseYblCQA6QH0
+         aEJmeXKgO77mBDEu9gTLIif5z0Ar0WZrTAQfuNsQ=
+Date:   Sun, 6 Oct 2019 10:16:33 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Eddy Petrisor <eddy.petrisor@nxp.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: arm: fsl: Add the S32V234-EVB board
-Message-ID: <20191006015942.GK7150@dragon>
-References: <20190905115803.19565-1-stefan-gabriel.mirea@nxp.com>
- <20190905115803.19565-2-stefan-gabriel.mirea@nxp.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        abel.vesa@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
+        chen.fang@nxp.com, shengjiu.wang@nxp.com, aisheng.dong@nxp.com,
+        sfr@canb.auug.org.au, l.stach@pengutronix.de,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/2] clk: imx8mm: Move 1443X/1416X PLL clock structure
+ to common place
+Message-ID: <20191006021632.GM7150@dragon>
+References: <1567776846-6373-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190905115803.19565-2-stefan-gabriel.mirea@nxp.com>
+In-Reply-To: <1567776846-6373-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:58:32AM +0000, Stefan-gabriel Mirea wrote:
-> From: Eddy Petrișor <eddy.petrisor@nxp.com>
+On Fri, Sep 06, 2019 at 09:34:05AM -0400, Anson Huang wrote:
+> Many i.MX8M SoCs use same 1443X/1416X PLL, such as i.MX8MM,
+> i.MX8MN and later i.MX8M SoCs, moving these PLL definitions
+> to pll14xx driver can save a lot of duplicated code on each
+> platform.
 > 
-> Add entry for the NXP S32V234 Customer Evaluation Board to the board/SoC
-> bindings.
+> Meanwhile, no need to define PLL clock structure for every
+> module which uses same type of PLL, e.g., audio/video/dram use
+> 1443X PLL, arm/gpu/vpu/sys use 1416X PLL, define 2 PLL clock
+> structure for each group is enough.
 > 
-> Signed-off-by: Eddy Petrișor <eddy.petrisor@nxp.com>
-> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I'm about to apply the patches, but found the messages are using base64
-Content-Transfer-Encoding, which is difficult for me to apply patch
-from.  Please fix it and resend.
-
-Shawn
-
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 7294ac36f4c0..597c563bdec9 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -309,4 +309,10 @@ properties:
->                - fsl,ls2088a-rdb
->            - const: fsl,ls2088a
->  
-> +      - description: S32V234 based Boards
-> +        items:
-> +          - enum:
-> +              - fsl,s32v234-evb           # S32V234-EVB2 Customer Evaluation Board
-> +          - const: fsl,s32v234
-> +
->  ...
-> -- 
-> 2.22.0
-> 
+Applied both, thanks.
