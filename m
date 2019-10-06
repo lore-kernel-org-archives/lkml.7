@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F249EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD0E20867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DC62133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382690;
-	bh=ezbkdOij8H/eXqwrs3/HxM1hHXVRSR/KKB0D+kPZAuM=;
+	s=default; t=1570382694;
+	bh=EZXCOgWMcyDlbQcr4EQRifzZAxCGdL9unuxEcc414Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UF/xqddclGWyPKON8a2mao9o2nwtY11YpFWi2WijebCWAvThUEQQKXv/hJ33UFgrD
-	 dJKVJtitVOpujqNBUB1pVE85s/tErNJmNc9I9YvoXVgmCWKhOXr7DSDQgSMByukaGC
-	 eN6XFxrh3cOEoUcAtd5XbS4i0MlWq8K6nuLm8dkE=
+	b=jiDarYz0ICx3k44VB7adN8BXOKqG5XEr4eeVBSvobcDncggzuVkJ6vOzJcThjPfW1
+	 9Z0VOSoBHcYLBcXxl1Yw19sP7ZGEZEUVe/gsJp+uahkBeQlhM9hQZxv5BbKcnvzeOI
+	 4VZDqS3Gf8IJW2Gq2pzvCN1xAW3FawVO1yVZN7oY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfJFRYt (ORCPT
+        id S1727987AbfJFRYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbfJFRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:47 -0400
+        id S1727967AbfJFRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 087BA2133F;
-        Sun,  6 Oct 2019 17:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5559120867;
+        Sun,  6 Oct 2019 17:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382686;
-        bh=ezbkdOij8H/eXqwrs3/HxM1hHXVRSR/KKB0D+kPZAuM=;
+        s=default; t=1570382683;
+        bh=EZXCOgWMcyDlbQcr4EQRifzZAxCGdL9unuxEcc414Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mMie1lrS3+2nnqkjGFsaCq1maPEfpIbYr0gHDPZmPqhME32iu7M0ZE8cnTNinl6U4
-         Qkn6S3y7Obxg8tA4WDawTb4QwvHwtPyuyW9eDhxs76M/aO3KfLLnsP2PFQR4DjMnAW
-         b1dYoXNiH5kMgC4b43MEabz42HgK2X87PbUrWshg=
+        b=FrE9yWNc5NzsOYrM6MT6ld2xl0kwK4NOAaWmPviTzqmNH+g8tN8g3Fd3Yk+LO9/Z7
+         Li2ZjMCxMzM4B9EE1YNyvPL6XGnDXO2ZzxfZlHeH2obtnALRaBkf6mbqipShn2zLbO
+         yB5HDQ/g1BZV0gRI7FdbYJBDqYtwzeWSyIfuHTmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
-        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 41/47] net/rds: Fix error handling in rds_ib_add_one()
-Date:   Sun,  6 Oct 2019 19:21:28 +0200
-Message-Id: <20191006172019.053341501@linuxfoundation.org>
+Subject: [PATCH 4.9 40/47] sch_dsmark: fix potential NULL deref in dsmark_init()
+Date:   Sun,  6 Oct 2019 19:21:27 +0200
+Message-Id: <20191006172019.001134445@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -61,47 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dotan Barak <dotanb@dev.mellanox.co.il>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
+[ Upstream commit 474f0813a3002cb299bb73a5a93aa1f537a80ca8 ]
 
-rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
-after allocation some resources such as protection domain.
-If allocation of such resources fail, then these uninitialized
-variables are accessed in rds_ib_dev_free() in failure path. This
-can potentially crash the system. The code has been updated to
-initialize these variables very early in the function.
+Make sure TCA_DSMARK_INDICES was provided by the user.
 
-Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
-Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+syzbot reported :
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8799 Comm: syz-executor235 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:nla_get_u16 include/net/netlink.h:1501 [inline]
+RIP: 0010:dsmark_init net/sched/sch_dsmark.c:364 [inline]
+RIP: 0010:dsmark_init+0x193/0x640 net/sched/sch_dsmark.c:339
+Code: 85 db 58 0f 88 7d 03 00 00 e8 e9 1a ac fb 48 8b 9d 70 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ca
+RSP: 0018:ffff88809426f3b8 EFLAGS: 00010247
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff85c6eb09
+RDX: 0000000000000000 RSI: ffffffff85c6eb17 RDI: 0000000000000004
+RBP: ffff88809426f4b0 R08: ffff88808c4085c0 R09: ffffed1015d26159
+R10: ffffed1015d26158 R11: ffff8880ae930ac7 R12: ffff8880a7e96940
+R13: dffffc0000000000 R14: ffff88809426f8c0 R15: 0000000000000000
+FS:  0000000001292880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000080 CR3: 000000008ca1b000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ qdisc_create+0x4ee/0x1210 net/sched/sch_api.c:1237
+ tc_modify_qdisc+0x524/0x1c50 net/sched/sch_api.c:1653
+ rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5223
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:657
+ ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
+ __do_sys_sendmsg net/socket.c:2365 [inline]
+ __se_sys_sendmsg net/socket.c:2363 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
+ do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440369
+
+Fixes: 758cc43c6d73 ("[PKT_SCHED]: Fix dsmark to apply changes consistent")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/sched/sch_dsmark.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/rds/ib.c
-+++ b/net/rds/ib.c
-@@ -138,6 +138,9 @@ static void rds_ib_add_one(struct ib_dev
- 	atomic_set(&rds_ibdev->refcount, 1);
- 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
+--- a/net/sched/sch_dsmark.c
++++ b/net/sched/sch_dsmark.c
+@@ -346,6 +346,8 @@ static int dsmark_init(struct Qdisc *sch
+ 		goto errout;
  
-+	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
-+	INIT_LIST_HEAD(&rds_ibdev->conn_list);
-+
- 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
- 	rds_ibdev->max_sge = min(device->attrs.max_sge, RDS_IB_MAX_SGE);
+ 	err = -EINVAL;
++	if (!tb[TCA_DSMARK_INDICES])
++		goto errout;
+ 	indices = nla_get_u16(tb[TCA_DSMARK_INDICES]);
  
-@@ -189,9 +192,6 @@ static void rds_ib_add_one(struct ib_dev
- 		device->name,
- 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
- 
--	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
--	INIT_LIST_HEAD(&rds_ibdev->conn_list);
--
- 	down_write(&rds_ib_devices_lock);
- 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
- 	up_write(&rds_ib_devices_lock);
+ 	if (hweight32(indices) != 1)
 
 
