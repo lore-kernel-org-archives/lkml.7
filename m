@@ -2,55 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F5DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F3FC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80B52080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE892080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383836;
-	bh=jgjxV17hWXr5NUkzNmqQV2rMGWVCCgrhAuf9KnqIIKA=;
+	s=default; t=1570383840;
+	bh=QwTcFMBesfpfRCkx9Ek6f7fseKxUhCJ26xYBuzSQOoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rZ9uxo839598serDHw9WIMPpyIqZmjoGJqfi77/apP4GOKQNPi+YUsQg8Ae45sPpZ
-	 zx2wjuT5cogqRgA7N7nXi9uyGcK5D9hYIQip/AUIb4P/N4VVngKoHBVx78+/4YYTlI
-	 alX0hOt/3TUoVytvtxuRlJDl4/WTMVKnB4a45GyM=
+	b=bXRdexLOV5PQijkr7h6yxWnXaIuxpee/ST7UQv2+dF6bQIGGvpEvqK/SXhN2Pn0yT
+	 Uak9zCv5o8uve0zLsn0Isv9r01fQLHtb7GfwhVMeUVROFH+SpvxXB4uIdcAbuW2PTm
+	 Uj4sqtO5hX6S0GMqqrJ7RrzKTYBtnByxucfi9D4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731597AbfJFRnz (ORCPT
+        id S1731607AbfJFRn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731584AbfJFRnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:43:52 -0400
+        id S1731598AbfJFRn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC0020700;
-        Sun,  6 Oct 2019 17:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E6620700;
+        Sun,  6 Oct 2019 17:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383830;
-        bh=jgjxV17hWXr5NUkzNmqQV2rMGWVCCgrhAuf9KnqIIKA=;
+        s=default; t=1570383835;
+        bh=QwTcFMBesfpfRCkx9Ek6f7fseKxUhCJ26xYBuzSQOoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mBWR5aPu8hrFou6Yt+/vGP9AAimO1xOcIrXlgKZzfcsFv0AjqvdW99SQNTystRKRm
-         J3WF5oN2HlW2kAkCRrCFhiC9/yOywhXM/B5c9TLVpVACrdsj8EL/RdEy3gK8+Ua6AY
-         /bvq6EGrc763mBLUARaFh+TwWbmKL+MaNRilBsdo=
+        b=ePCpmzFvJB4h3dEELh4zowM7RrMQ5bUfZ/hTH6quiTVOMyTqRubkyfB0UnjPcYd/v
+         HxW7ZeCK6Ekma3WljSNDRUEsgXNd/z7M4Jb40+NnOFPseP2871a4StxsyYmM3LEClc
+         1WF5ckXeK3L61yptNcNVnEmxd36bYX9xiSlGnRYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 111/166] ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
-Date:   Sun,  6 Oct 2019 19:21:17 +0200
-Message-Id: <20191006171222.748731912@linuxfoundation.org>
+Subject: [PATCH 5.3 086/166] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun,  6 Oct 2019 19:20:52 +0200
+Message-Id: <20191006171220.767004334@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -63,77 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit b0fe66cf095016e0b238374c10ae366e1f087d11 ]
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-with clang:
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-softirq.c:(.text+0x504): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-softirq.c:(.text+0x58c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-softirq.c:(.text+0x6c8): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-softirq.c:(.text+0x75c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-softirq.c:(.text+0x840): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
 
-clang can emit a working mcount symbol, __gnu_mcount_nc, when
-'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-broken and caused the kernel not to boot with '-pg' because the
-calling convention was not correct. Always build with '-meabi gnu'
-when using clang but ensure that '-pg' (which is added with
-CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
-cannot be added with it unless this is fixed (which means using
-clang 10.0.0 and newer).
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/35
-Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig  | 2 +-
- arch/arm/Makefile | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/mfd/intel-lpss-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 5e2c68e9dd6e2..b587a3b3939ab 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -82,7 +82,7 @@ config ARM
- 	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c3624ca6c0bca..9b3d4deca9e4e 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -112,6 +112,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
- CFLAGS_ABI	+=-funwind-tables
- endif
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index ade6e1ce5a983..e3a04929aaa36 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -35,6 +35,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
  
-+ifeq ($(CONFIG_CC_IS_CLANG),y)
-+CFLAGS_ABI	+= -meabi gnu
-+endif
++	pdev->d3cold_delay = 0;
 +
- # Accept old syntax despite ".syntax unified"
- AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
- 
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
+ 	pci_try_set_mwi(pdev);
 -- 
 2.20.1
 
