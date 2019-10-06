@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09424C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1912C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E9220700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9282221835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384711;
-	bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
+	s=default; t=1570384722;
+	bh=0LPan9G7XckvOv9wlMbUmkGQNfko0u8W+m8WCmrr38c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKoHBAUyzVNrSwL/7dM/NKLCjzEVJ5NiIB0E9vvYWUJGyibhlrPy1iAFTPbSPiAgI
-	 A1Tulv9yiQhAxv2G/FwjlTGcm+96nbAwjPYMQ/ruMRT1M/oaMrOhV7km8EB1AGfFhR
-	 jvWspvpJ4lgH4pI9JIodNrTaWX/OD3y3MGj3SDSI=
+	b=f/OnWsxoo4A0gcHxu4of3qLe2NiXz9yrIHpo/55HigeCW1pWvaEkbS6F/OvXYSu15
+	 qJQYrXSxLZ2tT1LjW6y67E1QI5wqI1SLI3DVoZm0vygFugCrlHUQiF7PvIg68EPEoY
+	 hkFrJFsdHip3N9c9PeSGeN5b41on3Kuclr0Z9hXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfJFR6b (ORCPT
+        id S1728703AbfJFR6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbfJFRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:05 -0400
+        id S1727227AbfJFRby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:31:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0E4214D9;
-        Sun,  6 Oct 2019 17:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BBF021479;
+        Sun,  6 Oct 2019 17:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383124;
-        bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
+        s=default; t=1570383113;
+        bh=0LPan9G7XckvOv9wlMbUmkGQNfko0u8W+m8WCmrr38c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zx1MgU7WZsUGNr04bSLfnIDa4IIJ3Bft/25mLaoW7Dn4dwLlJckA0HPlMYpLjXU3g
-         s8p0R5qyMxV/cj/CjajZoo5zppGw82cfRjjkWeQKfdCFUtne/sMVCYdDr162Vm91Q5
-         PNGQiR06VuabL6Ph/tGCxxfXt8dFYuxu7W7UpKSw=
+        b=AGC52F2kGlJc8b/0+xnWRzpm0AfafvuPlxmZSyO+vvPEJIDUwIdgx1kdGl+Op63MT
+         rl3gTOsaD+zYcl8a2PnZZLsZS9Np2vNDNf+jUPjm6bqGtIrMhj8Rn5OMC0YRHMu92Q
+         1+OqkEVpPyfhtpH7HXYOOMM8j1rVUiwHds9ugQjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
-        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org, Josh Hunt <johunt@akamai.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 096/106] net/rds: Fix error handling in rds_ib_add_one()
-Date:   Sun,  6 Oct 2019 19:21:42 +0200
-Message-Id: <20191006171201.744213878@linuxfoundation.org>
+Subject: [PATCH 4.19 092/106] udp: fix gso_segs calculations
+Date:   Sun,  6 Oct 2019 19:21:38 +0200
+Message-Id: <20191006171200.501041275@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,47 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dotan Barak <dotanb@dev.mellanox.co.il>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
+[ Upstream commit 44b321e5020d782ad6e8ae8183f09b163be6e6e2 ]
 
-rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
-after allocation some resources such as protection domain.
-If allocation of such resources fail, then these uninitialized
-variables are accessed in rds_ib_dev_free() in failure path. This
-can potentially crash the system. The code has been updated to
-initialize these variables very early in the function.
+Commit dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
+added gso_segs calculation, but incorrectly got sizeof() the pointer and
+not the underlying data type. In addition let's fix the v6 case.
 
-Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
-Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
+Fixes: dfec0ee22c0a ("udp: Record gso_segs when supporting UDP segmentation offload")
+Signed-off-by: Josh Hunt <johunt@akamai.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/ipv4/udp.c |    2 +-
+ net/ipv6/udp.c |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/rds/ib.c
-+++ b/net/rds/ib.c
-@@ -143,6 +143,9 @@ static void rds_ib_add_one(struct ib_dev
- 	refcount_set(&rds_ibdev->refcount, 1);
- 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -810,7 +810,7 @@ static int udp_send_skb(struct sk_buff *
  
-+	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
-+	INIT_LIST_HEAD(&rds_ibdev->conn_list);
-+
- 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
- 	rds_ibdev->max_sge = min(device->attrs.max_send_sge, RDS_IB_MAX_SGE);
+ 		skb_shinfo(skb)->gso_size = cork->gso_size;
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
+-		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(uh),
++		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
+ 							 cork->gso_size);
+ 		goto csum_partial;
+ 	}
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -1081,6 +1081,8 @@ static int udp_v6_send_skb(struct sk_buf
  
-@@ -203,9 +206,6 @@ static void rds_ib_add_one(struct ib_dev
- 		device->name,
- 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
+ 		skb_shinfo(skb)->gso_size = cork->gso_size;
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
++		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
++							 cork->gso_size);
+ 		goto csum_partial;
+ 	}
  
--	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
--	INIT_LIST_HEAD(&rds_ibdev->conn_list);
--
- 	down_write(&rds_ib_devices_lock);
- 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
- 	up_write(&rds_ib_devices_lock);
 
 
