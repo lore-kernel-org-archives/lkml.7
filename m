@@ -2,173 +2,238 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91835C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779EEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607862133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+eeuu9t"
+	by mail.kernel.org (Postfix) with ESMTP id 4E17F2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570356095;
+	bh=pKw7s1workqYRM+2lrKQUKnNzQh2w7qZEa6yX1ajVRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FDiyRoGcf9Dd6L1apUKMQ5EHJ12mOa4AlkpgJ5OJf5sfek3tjmA4D/8Qalg5vsc4M
+	 rtZeWkURW7o93wA/6NfXyv86EC+hwa57EZP8MQ/j3RAmoF9+21hS0juTFbO2q2GdJ4
+	 8RDUsI91BXC7rqzNKRTpLECNh+vNsvTk37RUV7As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfJFKAp (ORCPT
+        id S1726515AbfJFKBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:00:45 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45109 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfJFKAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:00:45 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z67so9923381qkb.12
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 03:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8AJ8vN7NgW8GOge2fXRfaMsuXVib9gxqFttdl/8POdE=;
-        b=g+eeuu9tszJJePOOvtXgKF4XEHohYk9Y9gekEYtA4mBkJ0IhDk8xIIaKETGWgxjbYW
-         dpUWimg3mJoeqB/MaMIuk9RK/GiEtnvNGfQhuFpguqDQDr1VvNqCk7PcFMDxmZXP+tTM
-         yj4Kzwrjau07ZAQnPp2k4CpNhuwQItUEsCq5EfucY8pFLMzRJgk44W0B1W6Iu5x8ksq7
-         q1bPUfhPcrk17nlMQysUxcUCmHtWmDdeXYPWm777TTMDFqLqxofQb6IvgZuRAnujAJSR
-         j/2CUBkG2zwyDIWhMADs/a608RO97cCXVnd0iy7ynCudPxZ8lk1smLN3GAcGi6R+0NFw
-         HBmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8AJ8vN7NgW8GOge2fXRfaMsuXVib9gxqFttdl/8POdE=;
-        b=siS7s5F9+Yl9tAQJcF3jkVvlWtHGVEyeSMtCbfE/9iGx577ReeIzZtJ5hYmUuzpKIT
-         0LJ0CFMC8buPKAk5A+0RnPsZ4OIwYSIlyQFoPNdptGW5Ky3O57wDtykuc+w812c/l5bK
-         lN3YKS41AZCNxfLHyGxviPur5QwvFHFvMMt0SLoUZNBt5gYUWlyb3RPcTAI/QA3K2Z1l
-         Ra2ETNJ+tl2wjWx8102ZWE0NtJlKF2DVFfPj14BYp53TZaQUnEPZKPLnimToXLIPFWzh
-         faQEBaum1qyFzgHlH1n9OYKSYRdpIgYqpjABrOzr1e7ekxA4fFDFAWg9WyUCfkVUk9qX
-         nqBA==
-X-Gm-Message-State: APjAAAUR7ehkVKupElT5YrTgOK0ndl4fY4lWSde56rQMOwgcFCHgcqMU
-        RmvsOxC7BddPkMtgZ/UQ16uGqIZ9CmPXlgXj740eaw==
-X-Google-Smtp-Source: APXvYqxg3feQqdK7RdWMCji44Xw2f6fQMU8nvIR88nM9T9K8OUzdjUYleutC6vRfGbphJhTzpDQmuOtyCwyYf3e15l4=
-X-Received: by 2002:a37:d84:: with SMTP id 126mr17174005qkn.407.1570356043831;
- Sun, 06 Oct 2019 03:00:43 -0700 (PDT)
+        Sun, 6 Oct 2019 06:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbfJFKBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:01:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 038762133F;
+        Sun,  6 Oct 2019 10:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570356093;
+        bh=pKw7s1workqYRM+2lrKQUKnNzQh2w7qZEa6yX1ajVRo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G/nSFvUWTcK7PcyEYcYNM6YIeOOpvmyF9PJb02ZQz4pAAb2eqwsC7q9UE+MLrM7LU
+         zRDwd8OmhtvvqEQ1WhCkS8jNuUIXWs5BjQz4D32ZJy9luyc87xuw7i2pe94yKZ1acQ
+         P3uEAvkJR8D4Uwt6VUI64Ax7Km+L3Znx2at8Lpg8=
+Date:   Sun, 6 Oct 2019 11:01:26 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: samsung: Indent examples with four
+ spaces
+Message-ID: <20191006110126.131b0ca4@archlinux>
+In-Reply-To: <20191002160744.11307-1-krzk@kernel.org>
+References: <20191002160744.11307-1-krzk@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <0000000000009b403005942237bf@google.com> <20191005112806.13960-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20191005112806.13960-1-christian.brauner@ubuntu.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 6 Oct 2019 12:00:32 +0200
-Message-ID: <CACT4Y+YiVE52xkADKgpfzRgofHbVxtRpcbKo_RU81jjOV_0TvA@mail.gmail.com>
-Subject: Re: [PATCH] taskstats: fix data-race
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        bsingharora@gmail.com, Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 5, 2019 at 1:28 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> When assiging and testing taskstats in taskstats
-> taskstats_exit() there's a race around writing and reading sig->stats.
->
-> cpu0:
-> task calls exit()
-> do_exit()
->         -> taskstats_exit()
->                 -> taskstats_tgid_alloc()
-> The task takes sighand lock and assigns new stats to sig->stats.
->
-> cpu1:
-> task catches signal
-> do_exit()
->         -> taskstats_tgid_alloc()
->                 -> taskstats_exit()
-> The tasks reads sig->stats __without__ holding sighand lock seeing
-> garbage.
->
-> Fix this by taking sighand lock when reading sig->stats.
->
-> Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+On Wed,  2 Oct 2019 18:07:41 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
+
+> Change the indentation of examples used in json-schema bindings from two
+> to four spaces as this makes the code easier to read and seems to be
+> preferred in other files.
+> 
+
+I'm assuming Rob will pick these up given they span multiple subsystems.
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for iio
+
 > ---
->  kernel/taskstats.c | 28 +++++++++++++++++-----------
->  1 file changed, 17 insertions(+), 11 deletions(-)
->
-> diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-> index 13a0f2e6ebc2..58b145234c4a 100644
-> --- a/kernel/taskstats.c
-> +++ b/kernel/taskstats.c
-> @@ -553,26 +553,32 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
->
->  static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
->  {
-> +       int empty;
-> +       struct taskstats *stats_new, *stats = NULL;
->         struct signal_struct *sig = tsk->signal;
-> -       struct taskstats *stats;
+>  .../bindings/arm/samsung/exynos-chipid.yaml   |  4 +-
+>  .../bindings/iio/adc/samsung,exynos-adc.yaml  | 64 +++++++++----------
+>  .../bindings/power/reset/syscon-poweroff.yaml |  8 +--
+>  .../bindings/power/reset/syscon-reboot.yaml   |  8 +--
+>  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 12 ++--
+>  5 files changed, 48 insertions(+), 48 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> index 9c573ad7dc7d..ce40adabb4e8 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> @@ -20,6 +20,6 @@ properties:
+>  examples:
+>    - |
+>      chipid@10000000 {
+> -      compatible = "samsung,exynos4210-chipid";
+> -      reg = <0x10000000 0x100>;
+> +        compatible = "samsung,exynos4210-chipid";
+> +        reg = <0x10000000 0x100>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> index b4c6c26681d9..a0a9b909ac40 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> @@ -112,40 +112,40 @@ allOf:
+>  examples:
+>    - |
+>      adc: adc@12d10000 {
+> -      compatible = "samsung,exynos-adc-v1";
+> -      reg = <0x12d10000 0x100>;
+> -      interrupts = <0 106 0>;
+> -      #io-channel-cells = <1>;
+> -      io-channel-ranges;
 > -
-> -       if (sig->stats || thread_group_empty(tsk))
-> -               goto ret;
->
->         /* No problem if kmem_cache_zalloc() fails */
-> -       stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-> +       stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-
-This seems to be over-pessimistic wrt performance b/c:
-1. We always allocate the object and free it on every call, even if
-the stats are already allocated, whereas currently we don't.
-2. We always allocate the object and free it if thread_group_empty,
-whereas currently we don't.
-3. We do lock/unlock on every call.
-
-I would suggest to fix the double-checked locking properly.
-Locking is not the only correct way to synchronize things. Lock-free
-synchronization is also possible. It's more tricky, but it can be
-correct and it's supported by KCSAN/KTSAN. It just needs to be
-properly implemented and expressed. For some cases we may decide to
-switch to locking instead, but it needs to be an explicit decision.
-
-We can fix the current code by doing READ_ONCE on sig->stats (which
-implies smp_read_barrier_depends since 4.15), and storing to it with
-smp_store_release.
-
-> +       empty = thread_group_empty(tsk);
->
->         spin_lock_irq(&tsk->sighand->siglock);
-> +       if (sig->stats || empty) {
-> +               stats = sig->stats;
-> +               spin_unlock_irq(&tsk->sighand->siglock);
-> +               goto free_cache;
-> +       }
+> -      clocks = <&clock 303>;
+> -      clock-names = "adc";
+> -
+> -      vdd-supply = <&buck5_reg>;
+> -      samsung,syscon-phandle = <&pmu_system_controller>;
+> -
+> -      /* NTC thermistor is a hwmon device */
+> -      ncp15wb473@0 {
+> -        compatible = "murata,ncp15wb473";
+> -        pullup-uv = <1800000>;
+> -        pullup-ohm = <47000>;
+> -        pulldown-ohm = <0>;
+> -        io-channels = <&adc 4>;
+> -      };
+> +        compatible = "samsung,exynos-adc-v1";
+> +        reg = <0x12d10000 0x100>;
+> +        interrupts = <0 106 0>;
+> +        #io-channel-cells = <1>;
+> +        io-channel-ranges;
 > +
->         if (!sig->stats) {
-> -               sig->stats = stats;
-> -               stats = NULL;
-> +               sig->stats = stats_new;
-> +               spin_unlock_irq(&tsk->sighand->siglock);
-> +               return stats_new;
->         }
->         spin_unlock_irq(&tsk->sighand->siglock);
->
-> -       if (stats)
-> -               kmem_cache_free(taskstats_cache, stats);
-> -ret:
-> -       return sig->stats;
-> +free_cache:
-> +       kmem_cache_free(taskstats_cache, stats_new);
-> +       return stats;
->  }
->
->  /* Send pid data out on exit */
-> --
-> 2.23.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20191005112806.13960-1-christian.brauner%40ubuntu.com.
+> +        clocks = <&clock 303>;
+> +        clock-names = "adc";
+> +
+> +        vdd-supply = <&buck5_reg>;
+> +        samsung,syscon-phandle = <&pmu_system_controller>;
+> +
+> +        /* NTC thermistor is a hwmon device */
+> +        ncp15wb473@0 {
+> +            compatible = "murata,ncp15wb473";
+> +            pullup-uv = <1800000>;
+> +            pullup-ohm = <47000>;
+> +            pulldown-ohm = <0>;
+> +            io-channels = <&adc 4>;
+> +          };
+>      };
+>  
+>    - |
+>      adc@126c0000 {
+> -      compatible = "samsung,exynos3250-adc";
+> -      reg = <0x126C0000 0x100>;
+> -      interrupts = <0 137 0>;
+> -      #io-channel-cells = <1>;
+> -      io-channel-ranges;
+> -
+> -      clocks = <&cmu 0>, // CLK_TSADC
+> -               <&cmu 1>; // CLK_SCLK_TSADC
+> -      clock-names = "adc", "sclk";
+> -
+> -      vdd-supply = <&buck5_reg>;
+> -      samsung,syscon-phandle = <&pmu_system_controller>;
+> +        compatible = "samsung,exynos3250-adc";
+> +        reg = <0x126C0000 0x100>;
+> +        interrupts = <0 137 0>;
+> +        #io-channel-cells = <1>;
+> +        io-channel-ranges;
+> +
+> +        clocks = <&cmu 0>, // CLK_TSADC
+> +                 <&cmu 1>; // CLK_SCLK_TSADC
+> +        clock-names = "adc", "sclk";
+> +
+> +        vdd-supply = <&buck5_reg>;
+> +        samsung,syscon-phandle = <&pmu_system_controller>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
+> index fb812937b534..520e07e6f21b 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml
+> @@ -53,8 +53,8 @@ allOf:
+>  examples:
+>    - |
+>      poweroff {
+> -      compatible = "syscon-poweroff";
+> -      regmap = <&regmapnode>;
+> -      offset = <0x0>;
+> -      mask = <0x7a>;
+> +        compatible = "syscon-poweroff";
+> +        regmap = <&regmapnode>;
+> +        offset = <0x0>;
+> +        mask = <0x7a>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> index a7920f5eef79..d38006b1f1f4 100644
+> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> @@ -53,8 +53,8 @@ allOf:
+>  examples:
+>    - |
+>      reboot {
+> -      compatible = "syscon-reboot";
+> -      regmap = <&regmapnode>;
+> -      offset = <0x0>;
+> -      mask = <0x1>;
+> +        compatible = "syscon-reboot";
+> +        regmap = <&regmapnode>;
+> +        offset = <0x0>;
+> +        mask = <0x1>;
+>      };
+> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> index 951a6a485709..95570d7e19eb 100644
+> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> @@ -76,10 +76,10 @@ allOf:
+>  examples:
+>    - |
+>      rtc@10070000 {
+> -      compatible = "samsung,s3c6410-rtc";
+> -      reg = <0x10070000 0x100>;
+> -      interrupts = <0 44 4>, <0 45 4>;
+> -      clocks = <&clock 0>, // CLK_RTC
+> -               <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> -      clock-names = "rtc", "rtc_src";
+> +        compatible = "samsung,s3c6410-rtc";
+> +        reg = <0x10070000 0x100>;
+> +        interrupts = <0 44 4>, <0 45 4>;
+> +        clocks = <&clock 0>, // CLK_RTC
+> +                 <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> +        clock-names = "rtc", "rtc_src";
+>      };
+
