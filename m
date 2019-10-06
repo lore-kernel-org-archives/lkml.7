@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC80C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F98EC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D992080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC382080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383330;
-	bh=C/gvul4pQ/MCqY9bjfcyrpOzvUH27jWmlmQUkP3PWqs=;
+	s=default; t=1570383335;
+	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuWSmVxJdRoGSuLYTBZdATynlFaggKm3y5FObRRpNFIxb5wNAJ8PnNOGAaLxO/A4B
-	 +8D5gCc5mPaQIDjuyMkq9Ayw52XH4+pV7u3bsYorptT2p4ozsOiMh55YwKZ1A/11Hz
-	 yq837Lbw2Pp5cNDWPJevbkAZtDf94Q6wB35gFAy0=
+	b=DnnGHj9e0Dr+ZKI2DzeTVGi9sS7lwd7J9CpOQVhXOXWLUyf8O/gIl3HEgZNTle7c3
+	 sFR4ZGiu0Kbkia1eIqQA6U/G2kjqRhYFLt1IzUDdrd+o53HClBczOpGttJTWjLJrYl
+	 8uDYboRI6aZvfpj25o6zfypqvmMLwzuHP3Nbgy5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfJFRf3 (ORCPT
+        id S1730147AbfJFRfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbfJFRfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:25 -0400
+        id S1729345AbfJFRfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E6D320700;
-        Sun,  6 Oct 2019 17:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB80420700;
+        Sun,  6 Oct 2019 17:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383324;
-        bh=C/gvul4pQ/MCqY9bjfcyrpOzvUH27jWmlmQUkP3PWqs=;
+        s=default; t=1570383330;
+        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIyiXN1jAGKB7CLLGu0muG+VxM62qg5cJnRj1QcgPzfRNcfr6s0MapZipx2C3Sxsw
-         ZMowwsr7ktwf3PoRBVAP6KYookLa8wqWzhhvHWhgchFx908G/D0km0e83c9wnVaNji
-         Dcsu0UESaBOaLcnxlEfD42sS739hoIHCCUF5CCtU=
+        b=FxTgIkAEdqfHOWBPWwhR8D01bAtUaTBprTO8vob6z56tJWz30Snx/e9Jd3s9cjQKg
+         d9aPFODfeTqg7sY3y5dWfyYpzcyuSf0/XUbcZ2TXrHO/XQIUbAeSt0lQ5Y88sCuBNC
+         ZphIrhvqJYsYIuJHjF1cKdXmR+RwyktAix8v6nRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, hexin <hexin15@baidu.com>,
-        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Mark Menzynski <mmenzyns@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 062/137] vfio_pci: Restore original state on release
-Date:   Sun,  6 Oct 2019 19:20:46 +0200
-Message-Id: <20191006171213.689825178@linuxfoundation.org>
+Subject: [PATCH 5.2 064/137] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
+Date:   Sun,  6 Oct 2019 19:20:48 +0200
+Message-Id: <20191006171214.267322903@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,58 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: hexin <hexin.op@gmail.com>
+From: Mark Menzynski <mmenzyns@redhat.com>
 
-[ Upstream commit 92c8026854c25093946e0d7fe536fd9eac440f06 ]
+[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
 
-vfio_pci_enable() saves the device's initial configuration information
-with the intent that it is restored in vfio_pci_disable().  However,
-the commit referenced in Fixes: below replaced the call to
-__pci_reset_function_locked(), which is not wrapped in a state save
-and restore, with pci_try_reset_function(), which overwrites the
-restored device state with the current state before applying it to the
-device.  Reinstate use of __pci_reset_function_locked() to return to
-the desired behavior.
+Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
 
-Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-Signed-off-by: hexin <hexin15@baidu.com>
-Signed-off-by: Liu Qi <liuqi16@baidu.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
+
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 703948c9fbe10..02206162eaa9e 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
- 
- 	/*
--	 * Try to reset the device.  The success of this is dependent on
--	 * being able to lock the device, which is not always possible.
-+	 * Try to get the locks ourselves to prevent a deadlock. The
-+	 * success of this is dependent on being able to lock the device,
-+	 * which is not always possible.
-+	 * We can not use the "try" reset interface here, which will
-+	 * overwrite the previously restored configuration information.
- 	 */
--	if (vdev->reset_works && !pci_try_reset_function(pdev))
--		vdev->needs_reset = false;
-+	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
-+		if (device_trylock(&pdev->dev)) {
-+			if (!__pci_reset_function_locked(pdev))
-+				vdev->needs_reset = false;
-+			device_unlock(&pdev->dev);
-+		}
-+		pci_cfg_access_unlock(pdev);
-+	}
- 
- 	pci_restore_state(pdev);
- out:
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+index 7143ea4611aa3..33a9fb5ac5585 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
+ 		info->min     = min(info->base,
+ 				    info->base + info->step * info->vidmask);
+ 		info->max     = nvbios_rd32(bios, volt + 0x0e);
++		if (!info->max)
++			info->max = max(info->base, info->base + info->step * info->vidmask);
+ 		break;
+ 	case 0x50:
+ 		info->min     = nvbios_rd32(bios, volt + 0x0a);
 -- 
 2.20.1
 
