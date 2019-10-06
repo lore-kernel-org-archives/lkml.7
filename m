@@ -2,168 +2,161 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A86AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 12:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4505C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 13:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013E22087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 12:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392002084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 13:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dP0gvGRR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rwUHjWUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfJFMe7 (ORCPT
+        id S1726466AbfJFNJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 08:34:59 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:42147 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfJFMe6 (ORCPT
+        Sun, 6 Oct 2019 09:09:37 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34778 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfJFNJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 08:34:58 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m22so7106769vsl.9;
-        Sun, 06 Oct 2019 05:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xk0fDOteLxzScZXH/iFSGSLC2RoP4iw8G+Vw+UUIrBY=;
-        b=dP0gvGRRedRIc2u8VMmj2XI5gpeKawbKnM/SsPaPlZsSlJ2IrpzmNWgXDH3Kuu9UoP
-         n5SZEGdkEgGLoKJPgAc+D87q3FOrUe/UUPGntSpr7rASFMjB7pl1sS63PABzJJ+z5jqz
-         xfUYYD6Fx0XEBRkc2YxMjaY6jTH1M0zc4o+vhyVxW04xn6ER7XlTt/9oLv4nwqIQ01W5
-         fXCJzKxrWCFtd6+b5LsoBNbU3yVe3LNsj1nZYQ4shLFN/rOVxcPSsmM4VkqSUnBR38VM
-         sHZUAB+XEr74IMb0JLaZfMmKDhLBoSNjy9R9SoMBv3k6HobNnu1jeCIC6rICVuHN9Kd0
-         9e/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xk0fDOteLxzScZXH/iFSGSLC2RoP4iw8G+Vw+UUIrBY=;
-        b=fwQ1GufYJIN90kYFac6RPfxcMazOadWo1Jjz4kbulbH38shhygoNqtsCsxlRXtbX70
-         IgauC5ZKqc9UiB/Oj2IuXcVkxXov4K7X+HlwYg2JoeZa8UH34mpIgj2ILN96qBNkF1ba
-         vBk+H5q8k2LZsXVnSMs1Upp/WYFGpM/dxZIQACQJXgJdHDj/Kd4zC5JnaIziqh6GdxsW
-         /6F8dCoYuFifhYBSfj9tBaHAYbgM8afoF4tbxEsQwVx41HUkn/s5HEH0ekq7ZhhXSlvp
-         Uo52U41OUAidSK0nHFY+WyK/7ZeBwRuLw70A3BRRI/gbIffpRxtY+cYh9v1+8I8K2jMI
-         Zu0Q==
-X-Gm-Message-State: APjAAAWjXwKkwQ8Kb2zTJnQBBxEnNWtSd0PiDSL1l5O6SwYvV9KHAfeP
-        VQ6I9FacUsf0Yu0+SFCal7u5yNfrmRCaoklY6eo=
-X-Google-Smtp-Source: APXvYqxwljZy8fXCKMcl7/d58T+pY21rSfOUx99FETxOFa64By0hOgfwEuRYU1HoFAVGjB6cciWz0TK5ouvLSCC3p6g=
-X-Received: by 2002:a67:dc95:: with SMTP id g21mr12866406vsk.164.1570365296635;
- Sun, 06 Oct 2019 05:34:56 -0700 (PDT)
+        Sun, 6 Oct 2019 09:09:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5zJMUhh4vs1DR6oFs+4OGLIzC0493FOWFbIKOdJDxnU=; b=rwUHjWUKG3oCkozL70tgxXbZR
+        a8N0gtUUdT32tnx9MFQhfBdZigfjSiRKhASx/08EIM9aT0ht4PUsHLy+5KavPyRwUGSKDz/eiSauF
+        ywDtW52Ft/ix5Z0GLVzqXpDTVVK+EVktaQJe439Dovug8P+e6Jj7FetgURfpr2stmDNH8xi33xDlV
+        H4J8FU0bE3C+hGNwohjd5cYQVeBTvsg/YgjdLppE+Q8wJ7FvVZuOLisuHXNniRtoLVTdQ+w0eu7qv
+        G/pcweLIOsHqSxoDvz9X+t4iFLl5VmQs8N6tMS8WQD6Fbr/Wd4QaUAHldW46nHU3pu8EppR2L2bwP
+        3Fn61AADQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:48282)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iH6Hw-0000E5-3n; Sun, 06 Oct 2019 14:09:28 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iH6Hs-0004jp-Vn; Sun, 06 Oct 2019 14:09:25 +0100
+Date:   Sun, 6 Oct 2019 14:09:24 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, Michal Hocko <mhocko@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: MAP_FIXED_NOREPLACE appears to break older i386 binaries
+Message-ID: <20191006130924.GC25745@shell.armlinux.org.uk>
+References: <20191005233227.GB25745@shell.armlinux.org.uk>
+ <CAHk-=wiy9MWteoaoV15FJ7QJeRhBtCVgo6ECiLb4khuc5PxHUg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191006023254.23841-1-aford173@gmail.com> <CAGm1_ksBaEN0OWR+dTwT9SgoybtnchcCKasjXf5ybP2fZfRF7A@mail.gmail.com>
- <CAHCN7xLgTiXxLrW4njTT8Zaiib6+F4xo07wk0-sQp8h+j=E3yw@mail.gmail.com>
-In-Reply-To: <CAHCN7xLgTiXxLrW4njTT8Zaiib6+F4xo07wk0-sQp8h+j=E3yw@mail.gmail.com>
-From:   Yegor Yefremov <yegorslists@googlemail.com>
-Date:   Sun, 6 Oct 2019 14:34:45 +0200
-Message-ID: <CAGm1_kuPbOLYUfGBHp5TEf9wtF5fQOMcEfLTVCp6uSHJo-YKZQ@mail.gmail.com>
-Subject: Re: [PATCH] serial: 8250_omap: Fix gpio check for auto RTS and CTS
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-serial@vger.kernel.org, Adam Ford <adam.ford@logicpd.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Vignesh R <vigneshr@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>,
-        Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        Stefan Roese <sr@denx.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiy9MWteoaoV15FJ7QJeRhBtCVgo6ECiLb4khuc5PxHUg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 1:38 PM Adam Ford <aford173@gmail.com> wrote:
->
-> On Sun, Oct 6, 2019 at 6:21 AM Yegor Yefremov
-> <yegorslists@googlemail.com> wrote:
-> >
-> > Hi Adam,
-> >
-> > On Sun, Oct 6, 2019 at 4:33 AM Adam Ford <aford173@gmail.com> wrote:
-> > >
-> > > There are two checks to see if the manual gpio is configured, but
-> > > these the check is seeing if the structure is NULL instead it
-> > > should check to see if there are CTS and/or RTS pins defined.
-> > >
-> > > This patch uses checks for those individual pins instead of
-> > > checking for the structure itself.
-> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e682390..d5fdb71 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -1031,6 +1031,8 @@ int serial8250_register_8250_port(struct
-uart_8250_port *up)
-                        } else {
-                                uart->gpios = gpios;
-                        }
-+               } else {
-+                       uart->gpios = NULL;
+On Sat, Oct 05, 2019 at 05:18:05PM -0700, Linus Torvalds wrote:
+> Duh.
+> 
+> I only looked at recent issues in this area, and overlooked your
+> sentence in between the two ELF section dumps, and it appears that you
+> have already biseced it to something else:
+
+I hadn't - I'd looked at the changes and identified a likely culpret
+that fit with the symptoms and the layout of the binary.
+
+What I'm basically trying to do is update my laptop - it was running
+an x86_64 4.5.7 kernel but with 32-bit userland.  I've just installed
+into a separate partition Debian Stable with the view to seeing
+whether I like it, which means migrating stuff over - and I hit a
+problem with the newer Evolution not wanting to recognise the
+configuration/data from the previous version.
+
+So I thought... I can just chroot into the old setup, run up evolution
+there, export its configuration, so I can import it into the newer
+version without having to go through a reboot cycle.
+
+The chroot and exec of bin/bash in the old setup was successful, as
+was dmesg, but useful tools like ls failed with a segfault.
+
+The difference between working binaries and non-working binaries seems
+to be whether the r-x and rw- LOAD sections in the ELF program headers
+overlap on a page.  Here's bash:
+
+    LOAD off    0x00000000 vaddr 0x08047000 paddr 0x08047000 align 2**12
+         filesz 0x000bbb08 memsz 0x000bbb08 flags r-x
+    LOAD off    0x000bc000 vaddr 0x08103000 paddr 0x08103000 align 2**12
+         filesz 0x00004864 memsz 0x00009648 flags rw-
+
+So, the r-x load covers 0x08047000-0x08102b08, and the following rw-
+load covers 0x08103000 onwards - so next page.  dmesg is similar:
+
+    LOAD off    0x00000000 vaddr 0x08048000 paddr 0x08048000 align 2**12
+         filesz 0x00009c64 memsz 0x00009c64 flags r-x
+    LOAD off    0x00009e28 vaddr 0x08052e28 paddr 0x08052e28 align 2**12
+         filesz 0x000028ce memsz 0x000028ce flags rw-
+
+0x08048000-0x08051c64 vs 0x08052e28 - so next page.  In contrast, ls:
+
+    LOAD off    0x00000000 vaddr 0x08048000 paddr 0x08048000 align 2**12
+         filesz 0x0001d620 memsz 0x0001d620 flags r-x
+    LOAD off    0x0001d950 vaddr 0x08065950 paddr 0x08065950 align 2**12
+         filesz 0x00000a50 memsz 0x000016e4 flags rw-
+
+0x08048000-0x08065620 vs 0x08065950 - so same page, and fails.
+
+Looking at the commit I referred to, what we end up with is:
+
+- Initially, elf_fixed is MAP_FIXED_NOREPLACE and load_addr_set is false
+- elf_brk and elf_bss are initially zero
+- The first LOAD requests a mapping for 0x08048000 .. 0x08065fff inclusive
+- since this is an executable mapping, we use elf_fixed to set the
+  MAP_FIXED* flags, so this mapping is established with
+  MAP_FIXED_NOREPLACE.
+- load_addr_set is now set to true
+- elf_bss is set to vaddr + filesz => 0x08065620
+- elf_brk is set to vaddr + memsz => 0x08065620
+- Moving on to the second LOAD, this is a mapping starting at 0x08065950
+- Since elf_brk > elf_bss is false, we don't take that path through the
+  code, which _would_ have set elf_fixed to MAP_FIXED (that's the only
+  case which we would do - for the BSS.)
+- As load_addr_set is true, we again use elf_fixed to set the
+  MAP_FIXED* flags.  elf_fixed is still MAP_FIXED_NOREPLACE, so this
+  mapping uses MAP_FIXED_NOREPLACE.
+- Since this mapping overlaps the previous mapping, it fails with the
+  error mentioned.
+
+Since the ELF load_binary() method returns -EEXIST, we end up in this
+code path in fs/exec.c:
+
+                if (retval < 0 && !bprm->mm) {
+                        /* we got to flush_old_exec() and failed after it */
+                        read_unlock(&binfmt_lock);
+                        force_sigsegv(SIGSEGV);
+                        return retval;
                 }
 
-                serial8250_set_defaults(uart);
-> >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > >
-> > > diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> > > index c68e2b3a1634..836e736ae188 100644
-> > > --- a/drivers/tty/serial/8250/8250_omap.c
-> > > +++ b/drivers/tty/serial/8250/8250_omap.c
-> > > @@ -141,7 +141,7 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
-> > >
-> > >         serial8250_do_set_mctrl(port, mctrl);
-> > >
-> > > -       if (!up->gpios) {
-> > > +       if (!mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS)) {
-> > >                 /*
-> > >                  * Turn off autoRTS if RTS is lowered and restore autoRTS
-> > >                  * setting if RTS is raised
-> > > @@ -456,7 +456,8 @@ static void omap_8250_set_termios(struct uart_port *port,
-> > >         up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
-> > >
-> > >         if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
-> > > -           !up->gpios) {
-> > > +           !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS) &&
-> > > +           !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_CTS)) {
-> > >                 /* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
-> > >                 up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
-> > >                 priv->efr |= UART_EFR_CTS;
-> >
-> > Looks good to me but !up->gpios must remain as otherwise, we will get
-> > NULL pointer dereference. What do you think?
->
-> I was not seeing up->gpios ever NULL so the contents inside the check
-> never was executed.  When I removed the check, the performance came
-> back.  I looked at examples on how other devices checked for RTS and
-> CTS, and I noticed that the Atmel serial driver did something like the
-> above.
->
-> >
-> > Also adding some more people who can be interested in testing this approach.
->
-> I am open for ideas.  If something is better, but something is either
-> incorrectly setting up->gpios to non-NULL or the check for non-NULL is
-> wrong.
+and the program is killed with a SIGSEGV.
 
-I wonder whether we forgot to add this assignment for the ACPI systems:
+So, from a code inspection point of view, it seems that this is likely
+the culpret.
 
-diff --git a/drivers/tty/serial/8250/8250_core.c
-b/drivers/tty/serial/8250/8250_core.c
-index e682390..d5fdb71 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -1031,6 +1031,8 @@ int serial8250_register_8250_port(struct
-uart_8250_port *up)
-                        } else {
-                                uart->gpios = gpios;
-                        }
-+               } else {
-+                       uart->gpios = NULL;
-                }
+I don't yet have the debian stable system setup enough to build kernels;
+that may be today's project, but I'd first like to solve the original
+issue (migrating the evolution setup) so I can first see whether it's
+going to be worth me continuing, or whether I persist with my existing
+setup.
 
-                serial8250_set_defaults(uart);
+However, I think it _is_ worth highlighting that we seem to have broken
+binary compatibility with older i386 userspace with newer kernels.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
