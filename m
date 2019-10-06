@@ -7,61 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E16ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726B0ECE58F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601AB21835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478E42087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383882;
-	bh=w2whw1Hr/775putsFnagWM9RGPe7vXYrduAUtGNqhKA=;
+	s=default; t=1570383890;
+	bh=5CWtG3b29b2lb4NXYKOeC/Hsp5itJeKwBFIVJ43OSLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIiMAzjNeFwNMpSwA3CdFtPVGf5ZGISJhOLVGuNgJpao79Cmu55q6I5WQCGGeM1uH
-	 V2vZLTZa7M9uqvIkOvP9H5/nDZDMJedfPkfwGOcuO+oNLVdnRNkFQRJjN8SZjZ2J7J
-	 uL+6JzBEo6QoCPhLS+m85jNjw51g3fMdO1w4iOpM=
+	b=hTiV4fDtzcbH4086OJlQdqtiLc3lt2uZp+7ISlPjCwoB96s2JJ/GIhw6V8XU0Iwv6
+	 8KMnLWRQHq0Dr1NWE6X23b8HR143xxMSqAXQUpB9DmRfj5rgiT+CcfT4UuUnkAKzGj
+	 oLAiQby/RDk/JAvcjqqgBjzblOBGrEqcA9kJZT9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfJFRol (ORCPT
+        id S1731742AbfJFRot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44812 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731694AbfJFRoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:44:34 -0400
+        id S1731707AbfJFRop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:44:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA98D2087E;
-        Sun,  6 Oct 2019 17:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE4B1214D9;
+        Sun,  6 Oct 2019 17:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383873;
-        bh=w2whw1Hr/775putsFnagWM9RGPe7vXYrduAUtGNqhKA=;
+        s=default; t=1570383884;
+        bh=5CWtG3b29b2lb4NXYKOeC/Hsp5itJeKwBFIVJ43OSLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rE7Ude5h9TB2Y1O3qpmvgsi8NyEv2MCoCH0Mab+TSorU8LU5WJo57EnsVFn3LYjvd
-         zWVVb7GmmInhFNleD0a6RjoHE7XTZUHz3PradAPwNFgss1WcyiAvttEhBaxBT16yq5
-         3uYQjOf7HG2X779Q/UkMRqO6tRen9burrwGwvjU8=
+        b=a01aIYltzTeBQixhCl8dPRgRzl3BSNlNMq5fpfigImta1KhO3TTojsR0MCCAV6l8o
+         GIsVNqNnlRNcbhwgifHT9C6SbR4KrrMgKpBnfGotMZUzTxM2j/UHzBzUnyeKnn5qT1
+         B/9mJEVsJbem/uQkwM5n6t/6cbZwBxbU5+35D4WM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        kbuild test robot <lkp@intel.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 125/166] mips: properly account for stack randomization and stack guard gap
-Date:   Sun,  6 Oct 2019 19:21:31 +0200
-Message-Id: <20191006171223.824723710@linuxfoundation.org>
+Subject: [PATCH 5.3 089/166] rtc: bd70528: fix driver dependencies
+Date:   Sun,  6 Oct 2019 19:20:55 +0200
+Message-Id: <20191006171221.032766634@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -74,69 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Ghiti <alex@ghiti.fr>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-[ Upstream commit b1f61b5bde3a1f50392c97b4c8513d1b8efb1cf2 ]
+[ Upstream commit 41a8e19f47dfe9154c56b35842700ad38a7c33e0 ]
 
-This commit takes care of stack randomization and stack guard gap when
-computing mmap base address and checks if the task asked for
-randomization.  This fixes the problem uncovered and not fixed for arm
-here: https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
+With CONFIG_BD70528_WATCHDOG=m, a built-in rtc driver cannot call
+into the low-level functions that are part of the watchdog module:
 
-Link: http://lkml.kernel.org/r/20190730055113.23635-10-alex@ghiti.fr
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+drivers/rtc/rtc-bd70528.o: In function `bd70528_set_time':
+rtc-bd70528.c:(.text+0x22c): undefined reference to `bd70528_wdt_lock'
+rtc-bd70528.c:(.text+0x2a8): undefined reference to `bd70528_wdt_unlock'
+drivers/rtc/rtc-bd70528.o: In function `bd70528_set_rtc_based_timers':
+rtc-bd70528.c:(.text+0x50c): undefined reference to `bd70528_wdt_set'
+
+Add a Kconfig dependency which forces RTC to be a module if watchdog is a
+module. If watchdog is not compiled at all the stub functions for watchdog
+control are used. compiling the RTC without watchdog is fine.
+
+Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Link: https://lore.kernel.org/r/84462e01e43d39024948a3bdd24087ff87dc2255.1565591387.git.matti.vaittinen@fi.rohmeurope.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/mm/mmap.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/rtc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index d79f2b4323187..f5c778113384b 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
- EXPORT_SYMBOL(shm_align_mask);
- 
- /* gap between mmap and stack */
--#define MIN_GAP (128*1024*1024UL)
--#define MAX_GAP ((TASK_SIZE)/6*5)
-+#define MIN_GAP		(128*1024*1024UL)
-+#define MAX_GAP		((TASK_SIZE)/6*5)
-+#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
- 
- static int mmap_is_legacy(struct rlimit *rlim_stack)
- {
-@@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
- static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
- {
- 	unsigned long gap = rlim_stack->rlim_cur;
-+	unsigned long pad = stack_guard_gap;
-+
-+	/* Account for stack randomization if necessary */
-+	if (current->flags & PF_RANDOMIZE)
-+		pad += (STACK_RND_MASK << PAGE_SHIFT);
-+
-+	/* Values close to RLIM_INFINITY can overflow. */
-+	if (gap + pad > gap)
-+		gap += pad;
- 
- 	if (gap < MIN_GAP)
- 		gap = MIN_GAP;
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index e72f65b61176d..add43c3374895 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -500,6 +500,7 @@ config RTC_DRV_M41T80_WDT
+ 	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
+ config RTC_DRV_BD70528
+ 	tristate "ROHM BD70528 PMIC RTC"
++	depends on MFD_ROHM_BD70528 && (BD70528_WATCHDOG || !BD70528_WATCHDOG)
+ 	help
+ 	  If you say Y here you will get support for the RTC
+ 	  on ROHM BD70528 Power Management IC.
 -- 
 2.20.1
 
