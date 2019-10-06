@@ -2,103 +2,274 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7848AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943D8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5731920867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C57A21479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570355903;
+	bh=kwg7hcwlFdG86wZLXjCJcMQgVwgWE33kuikgfJss3wU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yM9cZuBegBs7fcC31rlgpS0F94itTjxhFF96qQzk9gzkOb0NE9Qp6/Ad5u5ajauAB
+	 nhcW/SKfy3WZqRJRk6Uq795F0YZVfuPCbKPXAAkMCnTwS6h8ZhMaRRsBsdpyzVWE1b
+	 Xsj6FTrVANY8VnR2p5qqVLfJ+BFY7ZY6T7Z8rLsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfJFJ5a (ORCPT
+        id S1726480AbfJFJ6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:57:30 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:42912 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfJFJ5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:57:30 -0400
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23990413AbfJFJ51AhgUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:57:27 +0200
-Date:   Sun, 6 Oct 2019 11:57:20 +0200
-From:   Ladislav Michl <ladis@linux-mips.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, ckeepax@opensource.cirrus.com,
-        rf@opensource.wolfsonmicro.com, piotrs@opensource.cirrus.com,
-        enric.balletbo@collabora.com, paul@crapouillou.net,
-        srinivas.kandagatla@linaro.org, andradanciu1997@gmail.com,
-        mirq-linux@rere.qmqm.pl, kuninori.morimoto.gx@renesas.com,
-        m.felsch@pengutronix.de, shifu0704@thundersoft.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [alsa-devel] [PATCH -next] ASoc: tas2770: Fix build error
- without GPIOLIB
-Message-ID: <20191006095720.GA13261@lenoch>
-References: <20191006072241.56808-1-yuehaibing@huawei.com>
+        Sun, 6 Oct 2019 05:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726185AbfJFJ6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:58:22 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A543C20867;
+        Sun,  6 Oct 2019 09:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570355901;
+        bh=kwg7hcwlFdG86wZLXjCJcMQgVwgWE33kuikgfJss3wU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WxOJ2wauu4+ys8imxUOZye9SwRfxyn54b9PpJRsAbW2wmhHdDSUJR51UohN5v4rbF
+         x5Y/PEcGxMYHTs9PO+4xLe6WPlZYjVwUVV+4jJkC4Sxl5AAjTAX0zuHp8lwp6Aao+O
+         BsKYsabc55HnlEMKLdbLlbtabzpNVeWMFQxq4hno=
+Date:   Sun, 6 Oct 2019 10:58:16 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 4/4] iio: pressure: bmp280: use devm action and remove
+ labels from probe
+Message-ID: <20191006105816.69c518c9@archlinux>
+In-Reply-To: <20191002085759.13337-5-brgl@bgdev.pl>
+References: <20191002085759.13337-1-brgl@bgdev.pl>
+        <20191002085759.13337-5-brgl@bgdev.pl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006072241.56808-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear YueHaibing,
+On Wed,  2 Oct 2019 10:57:59 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-On Sun, Oct 06, 2019 at 03:22:41PM +0800, YueHaibing wrote:
-> If GPIOLIB is not set, building fails:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> sound/soc/codecs/tas2770.c: In function tas2770_reset:
-> sound/soc/codecs/tas2770.c:38:3: error: implicit declaration of function gpiod_set_value_cansleep; did you mean gpio_set_value_cansleep? [-Werror=implicit-function-declaration]
->    gpiod_set_value_cansleep(tas2770->reset_gpio, 0);
->    ^~~~~~~~~~~~~~~~~~~~~~~~
->    gpio_set_value_cansleep
-> sound/soc/codecs/tas2770.c: In function tas2770_i2c_probe:
-> sound/soc/codecs/tas2770.c:749:24: error: implicit declaration of function devm_gpiod_get_optional; did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
->   tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
->                         ^~~~~~~~~~~~~~~~~~~~~~~
->                         devm_regulator_get_optional
-> sound/soc/codecs/tas2770.c:751:13: error: GPIOD_OUT_HIGH undeclared (first use in this function); did you mean GPIOF_INIT_HIGH?
->              GPIOD_OUT_HIGH);
->              ^~~~~~~~~~~~~~
->              GPIOF_INIT_HIGH
+> We can drop some duplicate code if we use devm_action for disabling
+> regulators and pm. This allows us to completely remove all remove()
+> callbacks from both i2c and spi code.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Ah. I should read all the patches but that would be far too much like hard
+work.  Roll this one and patch 2 together and we should have satisfied the
+issues I had with that.
+
+Thanks,
+
+Jonathan
+
 > ---
->  sound/soc/codecs/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/iio/pressure/bmp280-core.c | 61 +++++++++++++++---------------
+>  drivers/iio/pressure/bmp280-i2c.c  |  6 ---
+>  drivers/iio/pressure/bmp280-spi.c  |  6 ---
+>  drivers/iio/pressure/bmp280.h      |  1 -
+>  4 files changed, 30 insertions(+), 44 deletions(-)
 > 
-> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> index bcac957..d639f17 100644
-> --- a/sound/soc/codecs/Kconfig
-> +++ b/sound/soc/codecs/Kconfig
-> @@ -1108,6 +1108,7 @@ config SND_SOC_TAS2552
->  config SND_SOC_TAS2770
->  	tristate "Texas Instruments TAS2770 speaker amplifier"
->  	depends on I2C
-> +	select GPIOLIB
+> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> index fdbd3bc27921..79254dd26dfd 100644
+> --- a/drivers/iio/pressure/bmp280-core.c
+> +++ b/drivers/iio/pressure/bmp280-core.c
+> @@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static void bmp280_pm_disable(void *data)
+> +{
+> +	struct device *dev = data;
+> +
+> +	pm_runtime_get_sync(dev);
+> +	pm_runtime_put_noidle(dev);
+> +	pm_runtime_disable(dev);
+> +}
+> +
+> +static void bmp280_regulators_disable(void *data)
+> +{
+> +	struct regulator_bulk_data *supplies = data;
+> +
+> +	regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
+> +}
+> +
+>  int bmp280_common_probe(struct device *dev,
+>  			struct regmap *regmap,
+>  			unsigned int chip,
+> @@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
+>  		return ret;
+>  	}
+>  
+> +	ret = devm_add_action_or_reset(dev, bmp280_regulators_disable,
+> +				       data->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Wait to make sure we started up properly */
+>  	usleep_range(data->start_up_time, data->start_up_time + 100);
+>  
+> @@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
+>  	data->regmap = regmap;
+>  	ret = regmap_read(regmap, BMP280_REG_ID, &chip_id);
+>  	if (ret < 0)
+> -		goto out_disable_regulators;
+> +		return ret;
+>  	if (chip_id != chip) {
+>  		dev_err(dev, "bad chip id: expected %x got %x\n",
+>  			chip, chip_id);
+> -		ret = -EINVAL;
+> -		goto out_disable_regulators;
+> +		return -EINVAL;
+>  	}
+>  
+>  	ret = data->chip_info->chip_config(data);
+>  	if (ret < 0)
+> -		goto out_disable_regulators;
+> +		return ret;
+>  
+>  	dev_set_drvdata(dev, indio_dev);
+>  
+> @@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
+>  		if (ret < 0) {
+>  			dev_err(data->dev,
+>  				"failed to read calibration coefficients\n");
+> -			goto out_disable_regulators;
+> +			return ret;
+>  		}
+>  	} else if (chip_id == BMP280_CHIP_ID || chip_id == BME280_CHIP_ID) {
+>  		ret = bmp280_read_calib(data, &data->calib.bmp280, chip_id);
+>  		if (ret < 0) {
+>  			dev_err(data->dev,
+>  				"failed to read calibration coefficients\n");
+> -			goto out_disable_regulators;
+> +			return ret;
+>  		}
+>  	}
+>  
+> @@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
+>  	if (irq > 0 || (chip_id  == BMP180_CHIP_ID)) {
+>  		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
+>  		if (ret)
+> -			goto out_disable_regulators;
+> +			return ret;
+>  	}
+>  
+>  	/* Enable runtime PM */
+> @@ -1127,35 +1147,14 @@ int bmp280_common_probe(struct device *dev,
+>  	pm_runtime_use_autosuspend(dev);
+>  	pm_runtime_put(dev);
+>  
+> -	ret = devm_iio_device_register(dev, indio_dev);
+> +	ret = devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
+>  	if (ret)
+> -		goto out_runtime_pm_disable;
+> -
+> -	return 0;
+> +		return ret;
+>  
+> -out_runtime_pm_disable:
+> -	pm_runtime_get_sync(data->dev);
+> -	pm_runtime_put_noidle(data->dev);
+> -	pm_runtime_disable(data->dev);
+> -out_disable_regulators:
+> -	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> -	return ret;
+> +	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  EXPORT_SYMBOL(bmp280_common_probe);
+>  
+> -int bmp280_common_remove(struct device *dev)
+> -{
+> -	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> -	struct bmp280_data *data = iio_priv(indio_dev);
+> -
+> -	pm_runtime_get_sync(data->dev);
+> -	pm_runtime_put_noidle(data->dev);
+> -	pm_runtime_disable(data->dev);
+> -	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL(bmp280_common_remove);
+> -
+>  #ifdef CONFIG_PM
+>  static int bmp280_runtime_suspend(struct device *dev)
+>  {
+> diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure/bmp280-i2c.c
+> index acd9a3784fb4..3109c8e2cc11 100644
+> --- a/drivers/iio/pressure/bmp280-i2c.c
+> +++ b/drivers/iio/pressure/bmp280-i2c.c
+> @@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *client,
+>  				   client->irq);
+>  }
+>  
+> -static int bmp280_i2c_remove(struct i2c_client *client)
+> -{
+> -	return bmp280_common_remove(&client->dev);
+> -}
+> -
+>  static const struct acpi_device_id bmp280_acpi_i2c_match[] = {
+>  	{"BMP0280", BMP280_CHIP_ID },
+>  	{"BMP0180", BMP180_CHIP_ID },
+> @@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver = {
+>  		.pm = &bmp280_dev_pm_ops,
+>  	},
+>  	.probe		= bmp280_i2c_probe,
+> -	.remove		= bmp280_i2c_remove,
+>  	.id_table	= bmp280_i2c_id,
+>  };
+>  module_i2c_driver(bmp280_i2c_driver);
+> diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
+> index 9d57b7a3b134..625b86878ad8 100644
+> --- a/drivers/iio/pressure/bmp280-spi.c
+> +++ b/drivers/iio/pressure/bmp280-spi.c
+> @@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
+>  				   spi->irq);
+>  }
+>  
+> -static int bmp280_spi_remove(struct spi_device *spi)
+> -{
+> -	return bmp280_common_remove(&spi->dev);
+> -}
+> -
+>  static const struct of_device_id bmp280_of_spi_match[] = {
+>  	{ .compatible = "bosch,bmp085", },
+>  	{ .compatible = "bosch,bmp180", },
+> @@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver = {
+>  	},
+>  	.id_table = bmp280_spi_id,
+>  	.probe = bmp280_spi_probe,
+> -	.remove = bmp280_spi_remove,
+>  };
+>  module_spi_driver(bmp280_spi_driver);
+>  
+> diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
+> index eda50ef65706..57ba0e85db91 100644
+> --- a/drivers/iio/pressure/bmp280.h
+> +++ b/drivers/iio/pressure/bmp280.h
+> @@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
+>  			unsigned int chip,
+>  			const char *name,
+>  			int irq);
+> -int bmp280_common_remove(struct device *dev);
+>  
+>  /* PM ops */
+>  extern const struct dev_pm_ops bmp280_dev_pm_ops;
 
-GPIOLIB API is working perfectly fine even if GPIOLIB is not selected
-and gpiod_* functions will merely return -ENOSYS in this case.
-Please see <linux/gpio/consumer.h> and fix your patch accordingly.
-
->  config SND_SOC_TAS5086
->  	tristate "Texas Instruments TAS5086 speaker amplifier"
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
