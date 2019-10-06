@@ -2,71 +2,69 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C346FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0605DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8945220684
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D362820835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHafZmcD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MONqvAWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfJFSpJ (ORCPT
+        id S1726227AbfJFSpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:45:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42653 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfJFSpJ (ORCPT
+        Sun, 6 Oct 2019 14:45:22 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39025 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFSpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 14:45:09 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n14so12610749wrw.9
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:45:07 -0700 (PDT)
+        Sun, 6 Oct 2019 14:45:22 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n7so16132183qtb.6;
+        Sun, 06 Oct 2019 11:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BLRrAgbsWXih4clGwXHcgrN0r/ckYeUc4/Lev7iwj68=;
-        b=pHafZmcDa364Q+dhPwlr7nhIUd5zHshMdZyjz7Y7GDSIfFpX/YbNDhOvFAEOvj/iQ+
-         5hdLUEO95bV4YepysYlupbJSaabQV6Ehas7boCto1zLVYsaXL4DktUp7G5TC3pFHs7An
-         zp3Z22ww9U4Uq1FjK20ciIvF35SrU4VL7804N/2wa9K85nZkxiRmXVQObvcGGLQidhTE
-         qxQiW15HWzAIS55aZTFP+Yqqk3JmsllabxNfrbOfUtysj+Ai77ytuHqqsn/nJ49kROvF
-         K1GdxiPyI945K3m5B4MkqjheEpJLwlOIrf/UM5Uf2TDUHOfH74bZ5mouOwmgMOds55Jn
-         e0AA==
+        bh=FDtNMGd4vIkTEBG4VnbaIfDNYKUEZ4dNcxWAbUNY7uo=;
+        b=MONqvAWV2NArFHCXriHQxTaQbsAXGUnRmgCUu0KX2YD7MqciBZlmnJpiG7T3dpIScw
+         Mn6BbVydeTbNOp/4ICc1FILS5izg1W0wvsNf3f9QaRECvWj/fDOjTK6XhWWKutlZp8fv
+         w84reqYic+PpIpn6EC7Y2/DufCRjpztwJYeXsy3baD78Jjs+3DfZu7CbAxeTlbG9SuZf
+         hz/v2WFpSBkLGavhfZofgYx3ogLuymC43+RKur87RkrIs7QsxFlgSTdCEeRm2FVjkNOp
+         Jn9AQDtAA/5QiE8cLZ1cVAlwuu01nU2cmG02pEPNkbxHPAt/sUvbZhDZ0wISfzHNMojq
+         Xt1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BLRrAgbsWXih4clGwXHcgrN0r/ckYeUc4/Lev7iwj68=;
-        b=NNyneGBc/JhjBego+lJheE4jRvs238li1M0CUogaU56oPm1vR2tiHBT2haLGjNiYRu
-         9mcpx6IECA4/RCLksFxVsyvrYMRnXgbcQwhL+7HjAFKXIPC4X9OKRX4yd3NR6AywkByq
-         TgDlkZQG503ndPSCKQFmw9hTOyROQq5N+PNxw7uZFU99yDxVvaXCX+xGl0TA87uvRbXh
-         PilYnC3NXZJ8JgGtBJnUYJfNgWze2SAtaNwbe7kYEFg1fPr3XU9QqEJL9SHR8adtZ0rG
-         GYlxFxMExo3Dek5TGWltChrKhnbZwHivNhwjVtmIA6BGcxjOxuH+G+NS2DFuvRegj8yB
-         GtLw==
-X-Gm-Message-State: APjAAAWK+NesFRTN7ywgn63ANd2ANyRJDL0DyjQS0NQzQBdfdsrxnwQ8
-        e566pm2yqg7tFwgMFUBiWA==
-X-Google-Smtp-Source: APXvYqyepOGf8igYvzB3AfpQ0u4G7hwVSLG3irfa8mVsmI7KDrPS/UPu3wZ+wh+hsyCmfg0oT0uC0g==
-X-Received: by 2002:adf:ce83:: with SMTP id r3mr18656090wrn.219.1570387507029;
-        Sun, 06 Oct 2019 11:45:07 -0700 (PDT)
-Received: from ninjahub.lan (host-92-15-175-166.as43234.net. [92.15.175.166])
-        by smtp.googlemail.com with ESMTPSA id a7sm28150963wra.43.2019.10.06.11.45.05
+        bh=FDtNMGd4vIkTEBG4VnbaIfDNYKUEZ4dNcxWAbUNY7uo=;
+        b=fu9nHp2cwObLMpbdWjLpuu6geSEIW4SALWx4DwTF/X8PnsV4MbGUO46ax/AgtzOe0r
+         JB2oNXB1WMQULsF8GLbkuWik2cEinsD0/CNSNJJV9ffFFxXi8UJV3X88TWIJ2eYBo72U
+         CBNhiuI3g5qRa1ZGBBRTcsBGEHQn5cddMxqZgbdfOXZZvfGpuDgoY6cOGGr8vqvPwF3g
+         w+rDLAlFrzKuK3L3UjObETnWlwbNrQuzVWNSprtqhyceL710c/ztvbN0dtNp4MrWYUr0
+         CTgvRtGFbmRsYXijddtwhW0vpZlXtoxGuVhKwvVXxWIUIsEOxqMgEpDLHT7U2deN4a6y
+         j0CA==
+X-Gm-Message-State: APjAAAWuivZKwh+5PWNMpG9/skgYkp4vRjOeCV2GDJ5f+2lQzGCo01Po
+        e1VGa0xtWZsgkOX0vVVWYRQm1FM/
+X-Google-Smtp-Source: APXvYqzTgC0tNHX/1kg7nS97bMQhXuCqAxgVHWRofRl0lCE9xwQis8uTGV52SavGw0YEnwQZvl4PPQ==
+X-Received: by 2002:ac8:5243:: with SMTP id y3mr26218021qtn.51.1570387520605;
+        Sun, 06 Oct 2019 11:45:20 -0700 (PDT)
+Received: from localhost.localdomain ([2804:431:c7cb:21c2:d505:73c7:4df5:8eac])
+        by smtp.gmail.com with ESMTPSA id l23sm11275578qta.53.2019.10.06.11.45.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 11:45:06 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, olsonse@umich.edu,
-        hsweeten@visionengravers.com, abbotti@mev.co.uk,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH] staging: comedi: Fix camelcase check warning
-Date:   Sun,  6 Oct 2019 19:44:53 +0100
-Message-Id: <20191006184453.11765-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 06 Oct 2019 11:45:19 -0700 (PDT)
+From:   jcfaracco@gmail.com
+To:     netdev@vger.kernel.org
+Cc:     mst@redhat.com, jasowang@redhat.com, davem@davemloft.net,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, dnmendes76@gmail.com
+Subject: [PATCH RFC net-next 0/2] drivers: net: virtio_net: Implement 
+Date:   Sun,  6 Oct 2019 15:45:13 -0300
+Message-Id: <20191006184515.23048-1-jcfaracco@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,49 +72,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Capitalize unit_ma to fix camelcase check warning.
+From: Julio Faracco <jcfaracco@gmail.com>
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/staging/comedi/comedi.h    | 4 ++--
- drivers/staging/comedi/comedidev.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Driver virtio_net is not handling error events for TX provided by 
+dev_watchdog. This event is reached when transmission queue is having 
+problems to transmit packets. To enable it, driver should have 
+.ndo_tx_timeout implemented. This serie has two commits:
 
-diff --git a/drivers/staging/comedi/comedi.h b/drivers/staging/comedi/comedi.h
-index 09a940066c0e..df770043b37d 100644
---- a/drivers/staging/comedi/comedi.h
-+++ b/drivers/staging/comedi/comedi.h
-@@ -674,7 +674,7 @@ struct comedi_rangeinfo {
-  * linear (for the purpose of describing the range), with sample value %0
-  * mapping to @min, and the 'maxdata' sample value mapping to @max.
-  *
-- * The currently defined units are %UNIT_volt (%0), %UNIT_mA (%1), and
-+ * The currently defined units are %UNIT_volt (%0), %UNIT_MA (%1), and
-  * %UNIT_none (%2).  The @min and @max values are the physical range multiplied
-  * by 1e6, so a @max value of %1000000 (with %UNIT_volt) represents a maximal
-  * value of 1 volt.
-@@ -909,7 +909,7 @@ struct comedi_bufinfo {
- #define RF_EXTERNAL		0x100
- 
- #define UNIT_volt		0
--#define UNIT_mA			1
-+#define UNIT_MA			1
- #define UNIT_none		2
- 
- #define COMEDI_MIN_SPEED	0xffffffffu
-diff --git a/drivers/staging/comedi/comedidev.h b/drivers/staging/comedi/comedidev.h
-index 0dff1ac057cd..54c091866777 100644
---- a/drivers/staging/comedi/comedidev.h
-+++ b/drivers/staging/comedi/comedidev.h
-@@ -603,7 +603,7 @@ int comedi_check_chanlist(struct comedi_subdevice *s,
- 
- #define RANGE(a, b)		{(a) * 1e6, (b) * 1e6, 0}
- #define RANGE_ext(a, b)		{(a) * 1e6, (b) * 1e6, RF_EXTERNAL}
--#define RANGE_mA(a, b)		{(a) * 1e6, (b) * 1e6, UNIT_mA}
-+#define RANGE_mA(a, b)		{(a) * 1e6, (b) * 1e6, UNIT_MA}
- #define RANGE_unitless(a, b)	{(a) * 1e6, (b) * 1e6, 0}
- #define BIP_RANGE(a)		{-(a) * 1e6, (a) * 1e6, 0}
- #define UNI_RANGE(a)		{0, (a) * 1e6, 0}
+In the past, we implemented a function to recover driver state when this
+kind of event happens, but the structure was to complex for virtio_net
+that moment. Alternativelly, this skeleton should be enough for now.
+
+For further details, see thread:
+https://lkml.org/lkml/2015/6/23/691
+
+Patch 1/2:
+  Add statistic field for TX timeout events.
+
+Patch 2/2:
+  Implement a skeleton function to debug TX timeout events.
+
+Julio Faracco (2):
+  drivers: net: virtio_net: Add tx_timeout stats field
+  drivers: net: virtio_net: Add tx_timeout function
+
+ drivers/net/virtio_net.c | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
+
 -- 
 2.21.0
 
