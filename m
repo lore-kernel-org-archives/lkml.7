@@ -2,53 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50872C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8782C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257BC214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEFA20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383435;
-	bh=BPODHx9SJViM3rcdfGPO6Ypkbm/NKj/WB+7yagIecvc=;
+	s=default; t=1570383442;
+	bh=Wm5o5GS0w1SM6itP8Ry0jGS2hvCfJY2Z44Hswv46aDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdgiE4HZsUzSc8Hq5XJKgiYlJhdfg198F+mkFBSTfQbKKWZzv9seLBE7v7eL12GwN
-	 tD0gsZlES5ylJiCdm6p8z5/EJRLT8ghNSrRsG7OH7Zwhy/lmael1ucysyKjfhVjr1G
-	 JNup9thCWz8ZUsXz167A+m+iqaM4ZCgSCS4ep8ao=
+	b=mh3p6e1K18v1n8n5QlJfNIPsEcEkzrVWeLjlGuPhud/MDLRPwsTr3BMzyYBbso8r6
+	 P18858G4G4QA6t2I7WH1Bv32wTbPFgFbH5v5r8edxFoAwJr6XnPsK2tvb4N4Nk+L7u
+	 VINiHWctXdmjgyMvBFGnp7ZojwZADxkrEmqvqvNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfJFRhO (ORCPT
+        id S1730431AbfJFRhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36080 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbfJFRhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:11 -0400
+        id S1729505AbfJFRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4BD92080F;
-        Sun,  6 Oct 2019 17:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB022080F;
+        Sun,  6 Oct 2019 17:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383430;
-        bh=BPODHx9SJViM3rcdfGPO6Ypkbm/NKj/WB+7yagIecvc=;
+        s=default; t=1570383438;
+        bh=Wm5o5GS0w1SM6itP8Ry0jGS2hvCfJY2Z44Hswv46aDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wm/rXwImI5SfsJj0nJJdFep6lepcDz8QYHM1BFKxhYfh2hrngHcFAksSTswWrYZGK
-         EUELCAsAZIJ08sMGfgZGHuN82sfwqiIJHNK2+1b76EOZdcQ9R2OhaqWg0utziV/rZ+
-         4UpqF8c3gE49eVVt5bIwNOO9Id4PX15ezqEa6BKg=
+        b=AalMWeFTcYe5hP1yJrdYxGgDiqnWGfwoIYyCAsgNYt6bjNGKJTgeJf39ebxYc/sZv
+         szWRYo49/tEHpri5SOUOeYuGnQ9fLwb0gJOOyoQaPgSa5Swk9fEvcg24BNBX9T7zNw
+         8Kpm96qDcsQr3G5ws7lR6jHtLnfhBJHjkEHevnZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
-        Will Deacon <will@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 102/137] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
-Date:   Sun,  6 Oct 2019 19:21:26 +0200
-Message-Id: <20191006171217.419771424@linuxfoundation.org>
+Subject: [PATCH 5.2 104/137] ARM: 8875/1: Kconfig: default to AEABI w/ Clang
+Date:   Sun,  6 Oct 2019 19:21:28 +0200
+Message-Id: <20191006171217.601678408@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,73 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
+[ Upstream commit a05b9608456e0d4464c6f7ca8572324ace57a3f4 ]
 
-Translation faults arising from cache maintenance instructions are
-rather unhelpfully reported with an FSR value where the WnR field is set
-to 1, indicating that the faulting access was a write. Since cache
-maintenance instructions on 32-bit ARM do not require any particular
-permissions, this can cause our private 'cacheflush' system call to fail
-spuriously if a translation fault is generated due to page aging when
-targetting a read-only VMA.
+Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
+arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
+is not selected (such as when OABI_COMPAT is selected).
 
-In this situation, we will return -EFAULT to userspace, although this is
-unfortunately suppressed by the popular '__builtin___clear_cache()'
-intrinsic provided by GCC, which returns void.
+While this means that OABI userspaces wont be able to upgraded to
+kernels built with Clang, it means that boards that don't enable AEABI
+like s3c2410_defconfig will stop failing to link in KernelCI when built
+with Clang.
 
-Although it's tempting to write this off as a userspace issue, we can
-actually do a little bit better on CPUs that support LPAE, even if the
-short-descriptor format is in use. On these CPUs, cache maintenance
-faults additionally set the CM field in the FSR, which we can use to
-suppress the write permission checks in the page fault handler and
-succeed in performing cache maintenance to read-only areas even in the
-presence of a translation fault.
+Link: https://github.com/ClangBuiltLinux/linux/issues/482
+Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
 
-Reported-by: Orion Hodson <oth@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/fault.c | 4 ++--
- arch/arm/mm/fault.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 0048eadd0681a..e76155d5840bd 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -211,7 +211,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- {
- 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 8869742a85df1..3539be8700558 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1545,8 +1545,9 @@ config ARM_PATCH_IDIV
+ 	  code to do integer division.
  
--	if (fsr & FSR_WRITE)
-+	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		mask = VM_WRITE;
- 	if (fsr & FSR_LNX_PF)
- 		mask = VM_EXEC;
-@@ -282,7 +282,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 
- 	if (user_mode(regs))
- 		flags |= FAULT_FLAG_USER;
--	if (fsr & FSR_WRITE)
-+	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		flags |= FAULT_FLAG_WRITE;
- 
- 	/*
-diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
-index c063708fa5032..9ecc2097a87a0 100644
---- a/arch/arm/mm/fault.h
-+++ b/arch/arm/mm/fault.h
-@@ -6,6 +6,7 @@
-  * Fault status register encodings.  We steal bit 31 for our own purposes.
-  */
- #define FSR_LNX_PF		(1 << 31)
-+#define FSR_CM			(1 << 13)
- #define FSR_WRITE		(1 << 11)
- #define FSR_FS4			(1 << 10)
- #define FSR_FS3_0		(15)
+ config AEABI
+-	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && !CPU_V7M && !CPU_V6 && !CPU_V6K
+-	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K
++	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
++		!CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG
++	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG
+ 	help
+ 	  This option allows for the kernel to be compiled using the latest
+ 	  ARM ABI (aka EABI).  This is only useful if you are using a user
 -- 
 2.20.1
 
