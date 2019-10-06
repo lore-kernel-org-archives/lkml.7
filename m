@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7DBC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5AEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D48A20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC8220700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384521;
-	bh=tQiSvNVTkjv8Ne/BbocQ9GxSGV/1O9mRi+mOMl8LBM4=;
+	s=default; t=1570384524;
+	bh=2xcT+VGmJXBcuipPn6QtCUyE9RS/qI0oh11nGPw+dAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0RAs5yLFjsH6CCnsu94/w67fk4r032TAOs4GUVxDaPjmtTElFYfz9XcQsSDHp7nu7
-	 zURRl+Yc9rWl755udjK4UqAwcoyQypP3he22dmGpo3f8Zv9/Pn7vmusLeg6yC4wB9h
-	 ImBjUKIc53YJ0OLbiLL8q+kug8FOHf3zdHhfgEWw=
+	b=yk8joOgDX5Evr7zkCEEYK/maXwigfd/NaeDS9ofBQQGzw3Gv7aLCL4fqDr7ADOO1o
+	 XJqv9LhBLxkpjglpO8Djp82PVCEvpWR4Z9oQx6yZToZheq2o9tIErko1e36KVEqo4U
+	 EdIvcZsK1BeshiObc00CsgmbSzjw1n4Yeq0w7FaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfJFRzU (ORCPT
+        id S1730107AbfJFRzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51352 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:55:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727404AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3A9422459;
-        Sun,  6 Oct 2019 17:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E252246B;
+        Sun,  6 Oct 2019 17:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383960;
-        bh=tQiSvNVTkjv8Ne/BbocQ9GxSGV/1O9mRi+mOMl8LBM4=;
+        s=default; t=1570383973;
+        bh=2xcT+VGmJXBcuipPn6QtCUyE9RS/qI0oh11nGPw+dAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IoysWNZhRF4xeeTVy0QMREhX0WUqU4w7gP8JgiXkaeBoeGTWIpntUW/nYX0+/lsZH
-         KmNLOPHbKtcP7GtmsS0TLe6scUnwqmOyZ+AsBJt5aS5idCNL9ZNmLKg73xYevZLNc8
-         QC555pdytUOszLc4ZRWUyjYmHPUXfK+L7K8Y9nGQ=
+        b=ouCm3WsE5otx4NjaNk2/mVubec2abd6xE7Hapi8sFn0/WYDpF0FH7aU3bNOOr3G0f
+         OJ1Ys4Tlc6EIDcdbBmwO+5nbW+UMBMcXbXhLOxBdggp9y5xivugTGbuHb8Z/ntBEUH
+         3ydrUnGtXbmADV4H7x3hbnmEn2lOA6HYD3kXXBs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 5.3 158/166] Smack: Dont ignore other bprm->unsafe flags if LSM_UNSAFE_PTRACE is set
-Date:   Sun,  6 Oct 2019 19:22:04 +0200
-Message-Id: <20191006171226.169743782@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 163/166] kexec: bail out upon SIGKILL when allocating memory.
+Date:   Sun,  6 Oct 2019 19:22:09 +0200
+Message-Id: <20191006171226.582324852@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,50 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
+commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 upstream.
 
-There is a logic bug in the current smack_bprm_set_creds():
-If LSM_UNSAFE_PTRACE is set, but the ptrace state is deemed to be
-acceptable (e.g. because the ptracer detached in the meantime), the other
-->unsafe flags aren't checked. As far as I can tell, this means that
-something like the following could work (but I haven't tested it):
+syzbot found that a thread can stall for minutes inside kexec_load() after
+that thread was killed by SIGKILL [1].  It turned out that the reproducer
+was trying to allocate 2408MB of memory using kimage_alloc_page() from
+kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
+allocation.
 
- - task A: create task B with fork()
- - task B: set NO_NEW_PRIVS
- - task B: install a seccomp filter that makes open() return 0 under some
-   conditions
- - task B: replace fd 0 with a malicious library
- - task A: attach to task B with PTRACE_ATTACH
- - task B: execve() a file with an SMACK64EXEC extended attribute
- - task A: while task B is still in the middle of execve(), exit (which
-   destroys the ptrace relationship)
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
-Make sure that if any flags other than LSM_UNSAFE_PTRACE are set in
-bprm->unsafe, we reject the execve().
-
-Cc: stable@vger.kernel.org
-Fixes: 5663884caab1 ("Smack: unify all ptrace accesses in the smack")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/smack/smack_lsm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/kexec_core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -937,7 +937,8 @@ static int smack_bprm_set_creds(struct l
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -300,6 +300,8 @@ static struct page *kimage_alloc_pages(g
+ {
+ 	struct page *pages;
  
- 		if (rc != 0)
- 			return rc;
--	} else if (bprm->unsafe)
-+	}
-+	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
- 		return -EPERM;
- 
- 	bsp->smk_task = isp->smk_task;
++	if (fatal_signal_pending(current))
++		return NULL;
+ 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
+ 	if (pages) {
+ 		unsigned int count, i;
 
 
