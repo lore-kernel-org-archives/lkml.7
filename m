@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53BFECE596
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE89ECE58B
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE5D20862
+	by mail.kernel.org (Postfix) with ESMTP id 05C792173B
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384501;
-	bh=wilHd7f3424w3wg25Q+jpu88/mbdRfTrzNJ1RzgXKXA=;
+	bh=axRY1t3IiJXvhDfhisGregAKW7gK5qc9mX5zwfxCozw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BiGsXbovZXre0Kad1EsHn16pHx7dQOEb8rbLuIf61wmwummDuE+udkSh9iCSzLgqQ
-	 cgCwjCCz5j66XEHZMHJoJrTJLDOq7vn7Q/0om/smjF2DUvyptmGY0ioVSTN8ojtUav
-	 ItZlQJhPLBYdNC+BYnlPLErH46XE7dUb8LaEXRbc=
+	b=gPhWbhSXhI9Gr25BMLOyKS6xag44T9Sbd5EiOAgaQXUjL+0NF1zda1OCua0NG6rRN
+	 rdxK/8++m7zliTBbChNKj43diijvEZsyd48Rd7hNjKHpj9h+rOdT0qotdOBFON/R3a
+	 dYZNf2AjimFSbMlKVcpoUQqx8HJdX8Y5bkKC3s1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbfJFRyi (ORCPT
+        id S1729870AbfJFRyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51350 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:54:29 -0400
+        id S1727224AbfJFRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:54:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADA9422475;
-        Sun,  6 Oct 2019 17:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7096D2245B;
+        Sun,  6 Oct 2019 17:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383987;
-        bh=wilHd7f3424w3wg25Q+jpu88/mbdRfTrzNJ1RzgXKXA=;
+        s=default; t=1570383962;
+        bh=axRY1t3IiJXvhDfhisGregAKW7gK5qc9mX5zwfxCozw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKdvftyn61snBTCpySaofS0coNCxNHrTB3VAsKbDsqy476O2vung7CF/zcY67Vvt5
-         hkhCa9+aEU88mJMGF6ZA0F7ruVnPE5Cli3mYZ2EMzl+Jn9NxmkHsgE10dE+yi6wZlA
-         8k+6k6bK3MtTzx19UU/qu+t2sm0rEp348rM7JsKo=
+        b=qm1xjHJ7AiuLqtyinaGCVNn9oct4SuGtaCFe+TQHc8Hzv2gpIuZ7zmPoKNDge7G7F
+         ULGhakVnxLeLg/wDq9Mbh1z8pvDadJRJwi9YHDdVKberjsdeL64ZL+UIBJXWQdPjnK
+         jq8/YBbN2EIlBC8IKmH4Y8Tcp95B6ZyotWmP/tW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 133/166] net: ipv4: avoid mixed n_redirects and rate_tokens usage
-Date:   Sun,  6 Oct 2019 19:21:39 +0200
-Message-Id: <20191006171224.389581438@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 5.3 159/166] smack: use GFP_NOFS while holding inode_smack::smk_lock
+Date:   Sun,  6 Oct 2019 19:22:05 +0200
+Message-Id: <20191006171226.243917600@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,62 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit b406472b5ad79ede8d10077f0c8f05505ace8b6d ]
+commit e5bfad3d7acc5702f32aafeb388362994f4d7bd0 upstream.
 
-Since commit c09551c6ff7f ("net: ipv4: use a dedicated counter
-for icmp_v4 redirect packets") we use 'n_redirects' to account
-for redirect packets, but we still use 'rate_tokens' to compute
-the redirect packets exponential backoff.
+inode_smack::smk_lock is taken during smack_d_instantiate(), which is
+called during a filesystem transaction when creating a file on ext4.
+Therefore to avoid a deadlock, all code that takes this lock must use
+GFP_NOFS, to prevent memory reclaim from waiting for the filesystem
+transaction to complete.
 
-If the device sent to the relevant peer any ICMP error packet
-after sending a redirect, it will also update 'rate_token' according
-to the leaking bucket schema; typically 'rate_token' will raise
-above BITS_PER_LONG and the redirect packets backoff algorithm
-will produce undefined behavior.
-
-Fix the issue using 'n_redirects' to compute the exponential backoff
-in ip_rt_send_redirect().
-
-Note that we still clear rate_tokens after a redirect silence period,
-to avoid changing an established behaviour.
-
-The root cause predates git history; before the mentioned commit in
-the critical scenario, the kernel stopped sending redirects, after
-the mentioned commit the behavior more randomic.
-
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Fixes: c09551c6ff7f ("net: ipv4: use a dedicated counter for icmp_v4 redirect packets")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/route.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -916,16 +916,15 @@ void ip_rt_send_redirect(struct sk_buff
- 	if (peer->rate_tokens == 0 ||
- 	    time_after(jiffies,
- 		       (peer->rate_last +
--			(ip_rt_redirect_load << peer->rate_tokens)))) {
-+			(ip_rt_redirect_load << peer->n_redirects)))) {
- 		__be32 gw = rt_nexthop(rt, ip_hdr(skb)->daddr);
+---
+ security/smack/smack_access.c |    6 +++---
+ security/smack/smack_lsm.c    |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/security/smack/smack_access.c
++++ b/security/smack/smack_access.c
+@@ -465,7 +465,7 @@ char *smk_parse_smack(const char *string
+ 	if (i == 0 || i >= SMK_LONGLABEL)
+ 		return ERR_PTR(-EINVAL);
  
- 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
- 		peer->rate_last = jiffies;
--		++peer->rate_tokens;
- 		++peer->n_redirects;
- #ifdef CONFIG_IP_ROUTE_VERBOSE
- 		if (log_martians &&
--		    peer->rate_tokens == ip_rt_redirect_number)
-+		    peer->n_redirects == ip_rt_redirect_number)
- 			net_warn_ratelimited("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
- 					     &ip_hdr(skb)->saddr, inet_iif(skb),
- 					     &ip_hdr(skb)->daddr, &gw);
+-	smack = kzalloc(i + 1, GFP_KERNEL);
++	smack = kzalloc(i + 1, GFP_NOFS);
+ 	if (smack == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -500,7 +500,7 @@ int smk_netlbl_mls(int level, char *cats
+ 			if ((m & *cp) == 0)
+ 				continue;
+ 			rc = netlbl_catmap_setbit(&sap->attr.mls.cat,
+-						  cat, GFP_KERNEL);
++						  cat, GFP_NOFS);
+ 			if (rc < 0) {
+ 				netlbl_catmap_free(sap->attr.mls.cat);
+ 				return rc;
+@@ -536,7 +536,7 @@ struct smack_known *smk_import_entry(con
+ 	if (skp != NULL)
+ 		goto freeout;
+ 
+-	skp = kzalloc(sizeof(*skp), GFP_KERNEL);
++	skp = kzalloc(sizeof(*skp), GFP_NOFS);
+ 	if (skp == NULL) {
+ 		skp = ERR_PTR(-ENOMEM);
+ 		goto freeout;
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -288,7 +288,7 @@ static struct smack_known *smk_fetch(con
+ 	if (!(ip->i_opflags & IOP_XATTR))
+ 		return ERR_PTR(-EOPNOTSUPP);
+ 
+-	buffer = kzalloc(SMK_LONGLABEL, GFP_KERNEL);
++	buffer = kzalloc(SMK_LONGLABEL, GFP_NOFS);
+ 	if (buffer == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
 
 
