@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E32CC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F42C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653BB2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD8D20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383712;
-	bh=ufQvx7ZNex7e9L1n3iz0qxl2DPV4jX3rgvJ6+P7qKWY=;
+	s=default; t=1570383715;
+	bh=/P72MjB8XhN4/ZZi1bmLbv5QAnQz2BwhA6RjE5T6u/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hYag+9mxfjfHIow3qVUnPIj/uo7pG42scYFT7QYR0lsQ43nJbEF3bzL7ZmOfH3rAq
-	 WsBFVZnX/x4FLF3Jn+Wq2rtBfTHa4UfUfQ4UjpS/+CvFXcFx9um24i7/2S+AoMXwYe
-	 kg/55xs8zNZKOVBzNoRowloQRO0RB7V8mij9X8Xk=
+	b=vV/6cfyeOB0NiRE8K9M705s+LkPr/zyIKlZuSktAgIeUx4qrv3p9JaOUpuEsVb80c
+	 LFrkNN7QV6lHDQ5PnqSM/3sVMWoVU+v5L/2WmhgQe89vyisJaSTwhFVXQkmok9d+Kp
+	 N3YEdoCvzMkFFJNxV5XXFdfrsPYfel6r25qAeeIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfJFRlv (ORCPT
+        id S1731290AbfJFRlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbfJFRlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:41:47 -0400
+        id S1730904AbfJFRjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A5220700;
-        Sun,  6 Oct 2019 17:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC6F020700;
+        Sun,  6 Oct 2019 17:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383706;
-        bh=ufQvx7ZNex7e9L1n3iz0qxl2DPV4jX3rgvJ6+P7qKWY=;
+        s=default; t=1570383592;
+        bh=/P72MjB8XhN4/ZZi1bmLbv5QAnQz2BwhA6RjE5T6u/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SSYDMiOR3t3SufEsLMb6ZjPfbrZFdtHrAuB2UN681CPgFBML/Q5jSFcO6H7FPhi7F
-         kULyAcic1T5hBZDj2saGveojzN+w5Fj0vMU5ElLOGCciWfww64Olf37zMVyGb0oLZ9
-         aTsd8f61H+YMLuYHx0ETFUhmvr+zDm1+FWk27iJw=
+        b=UByN6hUw8+16soSfpBR1tScePHSYCMBpLPc+2ccI9VHDr7gF6N0OY9Gnoukqes24h
+         dM0D5oiCrf8lpMtkuCiyEuuys2YpNHzRvG1sE4GnmhCd38JpKWG+TwWwUUYoe7IaKF
+         0Pe8rSUoRSc3BxfJ1rL8l654C9x++9QE+tT0OZOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 065/166] clk: qcom: gcc-sdm845: Use floor ops for sdcc clks
-Date:   Sun,  6 Oct 2019 19:20:31 +0200
-Message-Id: <20191006171218.762161698@linuxfoundation.org>
+Subject: [PATCH 5.3 023/166] pinctrl: stmfx: update pinconf settings
+Date:   Sun,  6 Oct 2019 19:19:49 +0200
+Message-Id: <20191006171215.115873449@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,54 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-[ Upstream commit 5e4b7e82d497580bc430576c4c9bce157dd72512 ]
+[ Upstream commit a502b343ebd0eab38f3cb33fbb84011847cf5aac ]
 
-Some MMC cards fail to enumerate properly when inserted into an MMC slot
-on sdm845 devices. This is because the clk ops for qcom clks round the
-frequency up to the nearest rate instead of down to the nearest rate.
-For example, the MMC driver requests a frequency of 52MHz from
-clk_set_rate() but the qcom implementation for these clks rounds 52MHz
-up to the next supported frequency of 100MHz. The MMC driver could be
-modified to request clk rate ranges but for now we can fix this in the
-clk driver by changing the rounding policy for this clk to be round down
-instead of round up.
+According to the following tab (coming from STMFX datasheet), updates
+have to done in stmfx_pinconf_set function:
 
-Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Cc: Taniya Das <tdas@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lkml.kernel.org/r/20190830195142.103564-1-swboyd@chromium.org
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+-"type" has to be set when "bias" is configured as "pull-up or pull-down"
+-PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
+ output. There is so no need to check direction.
+
+DIR | TYPE | PUPD | MFX GPIO configuration
+----|------|------|---------------------------------------------------
+1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
+----|------|------|---------------------------------------------------
+1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
+----|------|------|---------------------------------------------------
+1   | 0    | 0/1  | OUTPUT push pull no pull
+----|------|------|---------------------------------------------------
+0   | 1    | 1    | INPUT with internal pull-up resistor
+----|------|------|---------------------------------------------------
+0   | 1    | 0    | INPUT with internal pull-down resistor
+----|------|------|---------------------------------------------------
+0   | 0    | 1    | INPUT floating
+----|------|------|---------------------------------------------------
+0   | 0    | 0    | analog (GPIO not used, default setting)
+
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/1564053416-32192-1-git-send-email-amelie.delaunay@st.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-sdm845.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index 7131dcf9b0603..95be125c3bddf 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -685,7 +685,7 @@ static struct clk_rcg2 gcc_sdcc2_apps_clk_src = {
- 		.name = "gcc_sdcc2_apps_clk_src",
- 		.parent_names = gcc_parent_names_10,
- 		.num_parents = 5,
--		.ops = &clk_rcg2_ops,
-+		.ops = &clk_rcg2_floor_ops,
- 	},
- };
- 
-@@ -709,7 +709,7 @@ static struct clk_rcg2 gcc_sdcc4_apps_clk_src = {
- 		.name = "gcc_sdcc4_apps_clk_src",
- 		.parent_names = gcc_parent_names_0,
- 		.num_parents = 4,
--		.ops = &clk_rcg2_ops,
-+		.ops = &clk_rcg2_floor_ops,
- 	},
- };
- 
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index d3332da356372..31b6e511670fc 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+ 		case PIN_CONFIG_BIAS_DISABLE:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			if (ret)
++				return ret;
++			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
++			if (ret)
++				return ret;
+ 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+-			break;
+-		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-		case PIN_CONFIG_DRIVE_PUSH_PULL:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
 2.20.1
 
