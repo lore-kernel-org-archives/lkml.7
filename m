@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977C0ECE58F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6105BECE58E
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6683720673
+	by mail.kernel.org (Postfix) with ESMTP id 313A12077B
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384501;
-	bh=QYuncw7U6eCu+v+lSMJpPfdq8LmiWt9sdzhJZ8oWmNQ=;
+	bh=vTl9zJpljgQsfufSouxqoZf5478I80hsMeKWww/XdhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fGhcuY4/qc3Baa08mud3VP7n7Fd08KjCMnyaq6VL3r4aFj2FbClwnuRy8NR0UCwq+
-	 ouVB2Wu/nl7M1SoY7Km/fiXQ0hTlbi2p8HmQpOHs19RS2U3leojEpfJiQlIzvIXQBM
-	 k1HWYCvDbLh+brv/WaB98stpzRRml/XntBN3bZYk=
+	b=VrlNREJmwFKN/JgXb0cMOyUeb9erg6SKPDHbouR03RlyZeOn0Ve/6UKFmhcTeGLrx
+	 n9dre3lBFG8QWJKoJVZzFKi57oD/mTHoXNKhn6GulLRR8EIUv76ytsJtmqcYa9rILC
+	 csyaRvFAZPByABNTCDtJDEIjDXXIxoKq4Cg1zu5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfJFRyj (ORCPT
+        id S1729939AbfJFRym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728644AbfJFRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728654AbfJFRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:54:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D6FC22469;
-        Sun,  6 Oct 2019 17:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 479032247F;
+        Sun,  6 Oct 2019 17:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383971;
-        bh=QYuncw7U6eCu+v+lSMJpPfdq8LmiWt9sdzhJZ8oWmNQ=;
+        s=default; t=1570384000;
+        bh=vTl9zJpljgQsfufSouxqoZf5478I80hsMeKWww/XdhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYoTfUH5FBdrKW6tmkzt5awG6PavgbrPFyZVt0Zu/hcgx50Ty3qDuEL9Q+YPSsvFv
-         A1EI7vzGyyNJiwDetfKZBU9z2Hmheb96bo3Ze0/fM0/Zbb2H0EO9wbRr8sAfoSNrLk
-         jdk9SAIqY6Crqr6EFxqVQXlFBHu2/b5kUphapKLo=
+        b=X656UE7n7eeOtW2ZeMwrL9K0cPE9mkh+sJO0GbIFJOkZ1KfSxRZJXbhG3SgkVGF8N
+         uavwq48llKLxEk/cUvJ+/KKJc9+W3XaJl8+Bzbfap1RUnZ/ovy6LP/2gr8Q1TZpm3l
+         rfUh1LZG5GDplrKxY18rI8CHTQUr2Lz0jcO6Uwgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Shahjada Abul Husain <shahjada@chelsio.com>,
+        Vishal Kulkarni <vishal@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 162/166] NFC: fix attrs checks in netlink interface
-Date:   Sun,  6 Oct 2019 19:22:08 +0200
-Message-Id: <20191006171226.494412163@linuxfoundation.org>
+Subject: [PATCH 5.3 128/166] cxgb4:Fix out-of-bounds MSI-X info array access
+Date:   Sun,  6 Oct 2019 19:21:34 +0200
+Message-Id: <20191006171224.041409092@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,49 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-commit 18917d51472fe3b126a3a8f756c6b18085eb8130 upstream.
+[ Upstream commit 6b517374f4ea5a3c6e307e1219ec5f35d42e6d00 ]
 
-nfc_genl_deactivate_target() relies on the NFC_ATTR_TARGET_INDEX
-attribute being present, but doesn't check whether it is actually
-provided by the user. Same goes for nfc_genl_fw_download() and
-NFC_ATTR_FIRMWARE_NAME.
+When fetching free MSI-X vectors for ULDs, check for the error code
+before accessing MSI-X info array. Otherwise, an out-of-bounds access is
+attempted, which results in kernel panic.
 
-This patch adds appropriate checks.
-
-Found with syzkaller.
-
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 94cdb8bb993a ("cxgb4: Add support for dynamic allocation of resources for ULD")
+Signed-off-by: Shahjada Abul Husain <shahjada@chelsio.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/nfc/netlink.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -970,7 +970,8 @@ static int nfc_genl_dep_link_down(struct
- 	int rc;
- 	u32 idx;
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
+@@ -137,13 +137,12 @@ static int uldrx_handler(struct sge_rspq
+ static int alloc_uld_rxqs(struct adapter *adap,
+ 			  struct sge_uld_rxq_info *rxq_info, bool lro)
+ {
+-	struct sge *s = &adap->sge;
+ 	unsigned int nq = rxq_info->nrxq + rxq_info->nciq;
++	int i, err, msi_idx, que_idx = 0, bmap_idx = 0;
+ 	struct sge_ofld_rxq *q = rxq_info->uldrxq;
+ 	unsigned short *ids = rxq_info->rspq_id;
+-	unsigned int bmap_idx = 0;
++	struct sge *s = &adap->sge;
+ 	unsigned int per_chan;
+-	int i, err, msi_idx, que_idx = 0;
  
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_TARGET_INDEX])
- 		return -EINVAL;
+ 	per_chan = rxq_info->nrxq / adap->params.nports;
  
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
-@@ -1018,7 +1019,8 @@ static int nfc_genl_llc_get_params(struc
- 	struct sk_buff *msg = NULL;
- 	u32 idx;
+@@ -161,6 +160,10 @@ static int alloc_uld_rxqs(struct adapter
  
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_FIRMWARE_NAME])
- 		return -EINVAL;
- 
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
+ 		if (msi_idx >= 0) {
+ 			bmap_idx = get_msix_idx_from_bmap(adap);
++			if (bmap_idx < 0) {
++				err = -ENOSPC;
++				goto freeout;
++			}
+ 			msi_idx = adap->msix_info_ulds[bmap_idx].idx;
+ 		}
+ 		err = t4_sge_alloc_rxq(adap, &q->rspq, false,
 
 
