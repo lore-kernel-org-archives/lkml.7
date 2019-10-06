@@ -2,71 +2,112 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDAAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 06:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77688C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 06:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F062084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 06:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551ED20835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 06:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfJFG3m (ORCPT
+        id S1726293AbfJFGfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 02:29:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39066 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726108AbfJFG3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 02:29:42 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 229DD9990E2232E5A21F;
-        Sun,  6 Oct 2019 14:29:39 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 6 Oct 2019 14:29:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Frank Shi <shifu0704@thundersoft.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] ASoC: tas2770: fix platform_no_drv_owner.cocci warnings
-Date:   Sun, 6 Oct 2019 06:29:19 +0000
-Message-ID: <20191006062919.65562-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 6 Oct 2019 02:35:48 -0400
+Received: from smtprelay0151.hostedemail.com ([216.40.44.151]:33599 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726171AbfJFGfs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 02:35:48 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id A0577182CED2A;
+        Sun,  6 Oct 2019 06:35:46 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: price21_6c2dfa516272e
+X-Filterd-Recvd-Size: 3059
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  6 Oct 2019 06:35:43 +0000 (UTC)
+Message-ID: <52794b248ba13e88ab4c30c9b6ea55a7be30df5d.camel@perches.com>
+Subject: Re: [PATCH 4/4] scripts/cvt_style.pl: Tool to reformat sources in
+ various ways
+From:   Joe Perches <joe@perches.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Date:   Sat, 05 Oct 2019 23:35:42 -0700
+In-Reply-To: <CANiq72nwDgMgXNczW=JRANzH72=f0ukwVoPaud1d7J4YQLQX=w@mail.gmail.com>
+References: <cover.1570292505.git.joe@perches.com>
+         <4a904777303fbaea75fe0875b7984c33824f4b68.1570292505.git.joe@perches.com>
+         <CANiq72nwDgMgXNczW=JRANzH72=f0ukwVoPaud1d7J4YQLQX=w@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove .owner field if calls are used which set it automatically
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+On Sat, 2019-10-05 at 19:31 +0200, Miguel Ojeda wrote:
+> Hi Joe,
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/tas2770.c | 1 -
- 1 file changed, 1 deletion(-)
+Hello.
 
-diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-index 9da88ccb1d51..dbbb21fe0548 100644
---- a/sound/soc/codecs/tas2770.c
-+++ b/sound/soc/codecs/tas2770.c
-@@ -793,7 +793,6 @@ MODULE_DEVICE_TABLE(of, tas2770_of_match);
- static struct i2c_driver tas2770_i2c_driver = {
- 	.driver = {
- 		.name   = "tas2770",
--		.owner  = THIS_MODULE,
- 		.of_match_table = of_match_ptr(tas2770_of_match),
- 	},
- 	.probe      = tas2770_i2c_probe,
+> On Sat, Oct 5, 2019 at 6:47 PM Joe Perches <joe@perches.com> wrote:
+[]
+> > As for the commit itself: while I am sure this tool is very useful
+> (and certainly you put a *lot* of effort into this tool), I don't see
+> how it is related to the fallthrough remapping (at least the
+> non-fallthrough parts).
 
+It's not particularly related.
+
+It's a 10 year old script that I just extended because it's
+convenient for me.
+
+I think I first posted it in 2011, but I started it as a
+complement to checkpatch in 2010.
+
+https://lwn.net/Articles/380161/
+
+Doing the regexes for the fallthrough conversions took me
+a couple hours.
+
+> Also, we should consider whether we want more tools like this now or
+> simply put the efforts into moving to clang-format.
+
+I think clang-format could not do this sort of conversion.
+Nor could coccinelle or checkpatch.
+
+Anyway, it's not really necessary for this particular patch
+to be applied, but it's a convenient way to show the script
+has the capability to do fallthrough comment conversions.
+
+I think it does conversions fairly reasonably but likely
+some files could not compile without adding an #include
+like:
+
+#include <linux/compiler.h>
 
 
