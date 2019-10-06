@@ -2,55 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B737C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C765BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23355214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14322053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383478;
-	bh=oRgLhrKc4k3mo0FARYlSzSkP3Mf1sLVjO6FzgjI3NpE=;
+	s=default; t=1570383480;
+	bh=mEX6m77D5xfNKL3qk0Z81bvRU50ZjzXX9ZeCSI33gmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cjsyu8teIUKmrx6fXXDKn0WKQPXDXh4jGY+yBwJkV1bjUPzGYM4QPocktczRmiPMK
-	 s+JodCsEQWfLAy2Lht/550TQ1e0J84EClOD4EhS3C/oFAdaXok5cnmkk36OT10+PM/
-	 FNzZD0HD/eBnzrdPcGUanqmrjJ0DPf1bY7WOe7Xs=
+	b=OLQQzuJU5JX+pdTMEGvzww7Jv5BUtN5m11k/UNUU4RfKqfypIduIxJbKJBnd8V3xL
+	 dyxBiOcpLLv3ssCGYN5rL8f+LzLRA0UpzSB8JHUfuZGkgE1z+kejM3gaBUIeTRaI1R
+	 eyNGuQ1uYMKXO1NLrysLehzeiR5usOt2QchxGq2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbfJFRh5 (ORCPT
+        id S1726962AbfJFRh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbfJFRhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:54 -0400
+        id S1729133AbfJFRh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7A020700;
-        Sun,  6 Oct 2019 17:37:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7220A2053B;
+        Sun,  6 Oct 2019 17:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383473;
-        bh=oRgLhrKc4k3mo0FARYlSzSkP3Mf1sLVjO6FzgjI3NpE=;
+        s=default; t=1570383475;
+        bh=mEX6m77D5xfNKL3qk0Z81bvRU50ZjzXX9ZeCSI33gmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mLdk52nBYASOlEfIvMML0ZhD9MqtpFWIgxvXvo0aoAEFd1lMMYZd2tUrD6Vmg8DmD
-         3t/v4/ZFHGdIHD/uvr5zU78hYGiZdV5pkDfYizMLnyKRrCz2Of+NkYUsCfhXVg1jgV
-         Arqr0thOBfbAlxF+YyiJL+sG8vyvGcSQOIyRSCco=
+        b=ziPO3uNaJafIo83bVBTKgLGTyO+fptOuUwtszwLwfumuuPAKsZZ5OtEOhFZvutWxS
+         ukchm2ThgVE6KWI3Ns0Bqi5tqKeb8B8c9O33t3kKbfddYcqy9ls8s9t8TChuDGfVj9
+         KmV1e2hOyI8SxjBovFDfeH/ZQjmaYIlH2VkHsyf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 116/137] ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
-Date:   Sun,  6 Oct 2019 19:21:40 +0200
-Message-Id: <20191006171218.851692845@linuxfoundation.org>
+Subject: [PATCH 5.2 117/137] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
+Date:   Sun,  6 Oct 2019 19:21:41 +0200
+Message-Id: <20191006171218.964237881@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -63,77 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Mike Rapoport <mike.rapoport@gmail.com>
 
-[ Upstream commit b0fe66cf095016e0b238374c10ae366e1f087d11 ]
+[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
 
-Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-with clang:
+The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
+bank 0 starts from a PMD-aligned address. However, the beginning of the
+first bank may be NOMAP memory and the start of usable memory
+will be not aligned to PMD boundary. In such case the memblock_limit will
+be set to the end of the NOMAP region, which will prevent any memblock
+allocations.
 
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-softirq.c:(.text+0x504): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-softirq.c:(.text+0x58c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-softirq.c:(.text+0x6c8): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-softirq.c:(.text+0x75c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-softirq.c:(.text+0x840): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
+Mark the region between the end of the NOMAP area and the next PMD-aligned
+address as NOMAP as well, so that the usable memory will start at
+PMD-aligned address.
 
-clang can emit a working mcount symbol, __gnu_mcount_nc, when
-'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-broken and caused the kernel not to boot with '-pg' because the
-calling convention was not correct. Always build with '-meabi gnu'
-when using clang but ensure that '-pg' (which is added with
-CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
-cannot be added with it unless this is fixed (which means using
-clang 10.0.0 and newer).
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/35
-Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig  | 2 +-
- arch/arm/Makefile | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/mm/mmu.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 3539be8700558..6029d324911cf 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -75,7 +75,7 @@ config ARM
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index f863c6935d0e5..c0b2783583016 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -112,6 +112,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
- CFLAGS_ABI	+=-funwind-tables
- endif
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index 1aa2586fa597b..13233c7917fe7 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1177,6 +1177,22 @@ void __init adjust_lowmem_bounds(void)
+ 	 */
+ 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
  
-+ifeq ($(CONFIG_CC_IS_CLANG),y)
-+CFLAGS_ABI	+= -meabi gnu
-+endif
++	/*
++	 * The first usable region must be PMD aligned. Mark its start
++	 * as MEMBLOCK_NOMAP if it isn't
++	 */
++	for_each_memblock(memory, reg) {
++		if (!memblock_is_nomap(reg)) {
++			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
++				phys_addr_t len;
 +
- # Accept old syntax despite ".syntax unified"
- AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
- 
++				len = round_up(reg->base, PMD_SIZE) - reg->base;
++				memblock_mark_nomap(reg->base, len);
++			}
++			break;
++		}
++	}
++
+ 	for_each_memblock(memory, reg) {
+ 		phys_addr_t block_start = reg->base;
+ 		phys_addr_t block_end = reg->base + reg->size;
 -- 
 2.20.1
 
