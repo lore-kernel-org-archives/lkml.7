@@ -2,118 +2,216 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC132C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA08C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D78E2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:34:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuGxXKri"
+	by mail.kernel.org (Postfix) with ESMTP id A29DA2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570376068;
+	bh=ub5FnWHQniRSsgAuU+7OZVcSEkJMP+Yo0VPYG7HHSag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RMzp+Rpq6DLriugy79qm8238irafz64vssfqY+LgAthC0r6aIj+eY2kG32zVj2JDP
+	 P/VyPCloFPZqkwHWPhefjrjGJ8/EZvI66lFcDQmbhZuLP5NShlZnIjw4HB0AXXOPqO
+	 OuSaK9mpMxkFVdjAVwFS6GhJA/uxNkVQbonDIx1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfJFPeL (ORCPT
+        id S1726668AbfJFPe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:34:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43614 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJFPeL (ORCPT
+        Sun, 6 Oct 2019 11:34:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41622 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFPe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:34:11 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a2so7006941pfo.10;
-        Sun, 06 Oct 2019 08:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4EQLsnEWmRKXsrWscamvfXIozdZPp3UqHIAewrp831M=;
-        b=FuGxXKri8LhCjnaN52YWE/1RoQILpF5JVBvK/LBftn3CIZUjrqKTPma/y+MzzrPBZq
-         UhlQwgJuBn0CYCFYOU9R8W/ONHoOe7ar09zwZgDURZs/5+i++cdQ8cFEFDubxv2FbxZd
-         YGJn3C9EZOZp8zhTRr0w3kRIFrPQs+gyWaM49yFyqpsyLDsFDYf8AErTp2/aQ5fKK+db
-         BsCcGuMSgx4syafg7xJVarO1PrWiC3z93MRyPLLx+o6YbKMkKenir4TdZwAmnUxqUP7w
-         a/bzUwQieDUkJAQg/zAB4fqDRzSfyjljrpe7kPgia1kbriX0fuSvYz1aZ8n/fXkXaVt9
-         ofBw==
+        Sun, 6 Oct 2019 11:34:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g13so9004763otp.8;
+        Sun, 06 Oct 2019 08:34:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4EQLsnEWmRKXsrWscamvfXIozdZPp3UqHIAewrp831M=;
-        b=ajyMXXOz+1UlL2BMLzuUGoqLmjcIWADBNsx0co0j6a3Berv6cP4FFTvCL+qbTGLALx
-         5Ls77OvPjY5BIwsT5hXGgFhbB1IluFyCLFd4S+sFT0cu1Xtr8a0JQT+p8/0J6UefkfmY
-         wlLynmyDE/qh/W+rnN/WXNlAtRlC6ZE0DfAVfpvKXUInIu0vbgX1i/+ZVmGI4EglMdno
-         QKSL2rYJ6D/Km07vbgxQcsUA4NYgmrTLdhvqthgW1HJnpapFAh11eM/NeyEE5zIChD5C
-         5IK7iRe4m6jWUMKtajcLLh8qr0Y4HVNNgSY3y2/89eWxrT869ce1njcbrvwJAC4Zg220
-         1fxA==
-X-Gm-Message-State: APjAAAWBK9Z58Zuo+wf+UjnFf4p7N91PSpSDquIz5fVRzqLdkfxd8vpm
-        AZ5vXJKXMXI/xz3Eru83zPU=
-X-Google-Smtp-Source: APXvYqzzSq63aKM+d2Ii0hhLkgvoyfa4HNqxGKmBgbMCb5H398GjWtkeFeDqRZmM/efGjioGX2zwSA==
-X-Received: by 2002:a17:90a:b108:: with SMTP id z8mr28208287pjq.64.1570376050673;
-        Sun, 06 Oct 2019 08:34:10 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p17sm12568178pfn.50.2019.10.06.08.34.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Oct 2019 08:34:10 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 08:34:09 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: abituguru: make array probe_order static, makes
- object smaller
-Message-ID: <20191006153409.GA7882@roeck-us.net>
-References: <20191006145231.24022-1-colin.king@canonical.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZpRvHMhSkMtvUwP1xP8/zh4CxYzgsJIcKXMPh4MXB5I=;
+        b=i58kjVfVKjGd3BbwnOUKbseZHmTIJBtMynuuBQPkeydjhcypJwGCfi7RhRqvyLImf5
+         65yJoShSfyhlRCkzb8q9xOa0/f9oLcSom7VJMnFJxc+Vsyel7UCRD0yobCqRP2F7KWcS
+         LHAUCYXmlGme9RqvZUgyolnHGWm1PeINZG7SS7TlcWQVdDJ0bEo4CxldOq1XvOb0sMIT
+         LstBxU7sUf1aEdllCdwgR7faO7WqYWPZ6Ui39WmfEyYycTBHUugqxyojomVbZj2eZM1f
+         L76U0HC3UjdocIuFTPRem28HsqZuzSoAV5ne36/3XSB1blz5mfwdnXOS9Nb6grxWyv1a
+         MbsA==
+X-Gm-Message-State: APjAAAU78FHYFy7r7ZLfZdoOjPVb7yakfHfgmb4NJHVhBeQcpiZQcQMN
+        eeFDf4xrTkoCAi3MM6ZvUcwqqQu4ewFL+oPcu10=
+X-Google-Smtp-Source: APXvYqy7q9sgfYqVSnfVVCMqi8eFd+CXpG3crmh1bySZ1WRxDy/+xj4KQY858higSaFglUZMBcoHU4ytn0DeV2qEv8c=
+X-Received: by 2002:a05:6830:1504:: with SMTP id k4mr4873638otp.262.1570376066195;
+ Sun, 06 Oct 2019 08:34:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006145231.24022-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <001601d57487$e1029ef0$a307dcd0$@net> <000f01d576df$a6b87a30$f4296e90$@net>
+ <CAJZ5v0gu=rALS9ZLNMDT3cw_sT2m8XCKP6+AW3488x2Q9EXM3g@mail.gmail.com> <000001d57c54$db31f8c0$9195ea40$@net>
+In-Reply-To: <000001d57c54$db31f8c0$9195ea40$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 6 Oct 2019 17:34:15 +0200
+Message-ID: <CAJZ5v0jo-KQouuE3P51THvU33kViBVtDq1WknBFx+FWUY0e=ag@mail.gmail.com>
+Subject: Re: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor
+ for tickless systems
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Chen, Hu" <hu1.chen@intel.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 03:52:31PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the array probe_order on the stack but instead make it
-> static. Makes the object code smaller by 94 bytes.
-> 
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->   41473	  13448	    320	  55241	   d7c9	drivers/hwmon/abituguru.o
-> 
-> After:
->    text	   data	    bss	    dec	    hex	filename
->   41315	  13512	    320	  55147	   d76b	drivers/hwmon/abituguru.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+On Sun, Oct 6, 2019 at 4:46 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.10.01 02:32 Rafael J. Wysocki wrote:
+> > On Sun, Sep 29, 2019 at 6:05 PM Doug Smythies <dsmythies@telus.net> wrote:
+> >> On 2019.09.26 09:32 Doug Smythies wrote:
+> >>
+> >>> If the deepest idle state is disabled, the system
+> >>> can become somewhat unstable, with anywhere between no problem
+> >>> at all, to the occasional temporary jump using a lot more
+> >>> power for a few seconds, to a permanent jump using a lot more
+> >>> power continuously. I have been unable to isolate the exact
+> >>> test load conditions under which this will occur. However,
+> >>> temporarily disabling and then enabling other idle states
+> >>> seems to make for a somewhat repeatable test. It is important
+> >>> to note that the issue occurs with only ever disabling the deepest
+> >>> idle state, just not reliably.
+> >>>
+> >>> I want to know how you want to proceed before I do a bunch of
+> >>> regression testing.
+> >>
+> >> I did some regression testing anyhow, more to create and debug
+> >> a methodology than anything else.
+> >>
+> >>> On 2018.12.11 03:50 Rafael J. Wysocki wrote:
+> >>>
+> >>>> v7 -> v8:
+> >>>>  * Apply the selection rules to the idle deepest state as well as to
+> >>>>    the shallower ones (the deepest idle state was treated differently
+> >>>>    before by mistake).
+> >>>>  * Subtract 1/2 of the exit latency from the measured idle duration
+> >>>>    in teo_update() (instead of subtracting the entire exit latency).
+> >>>>    This makes the idle state selection be slightly more performance-
+> >>>>   oriented.
+> >>>
+> >>> I have isolated the issue to a subset of the v7 to v8 changes, however
+> >>> it was not the exit latency changes.
+> >>>
+> >>> The partial revert to V7 changes I made were (on top of 5.3):
+> >>
+> >> The further testing showed a problem or two with my partial teo-v7 reversion
+> >> (I call it teo-v12) under slightly different testing conditions.
+>
+> Correction:
+> There was no problem with my partial reversion kernel (a.k.a. teo-v12). The problem
+> was confusion over which kernel I was actually running for whatever test.
+>
+> >>
+> >> I also have a 5.3 based kernel with the current teo reverted and the entire
+> >> teo-v7 put in its place. I have yet to find a idle state disabled related issue
+> >> with this kernel.
+> >>
+> >> I'll come back to this thread at a later date with better details and test results.
+> >
+> > Thanks for this work!
+> >
+> > Please also note that there is a teo patch in 5.4-rc1 that may make a
+> > difference in principle.
+>
+> Yes, actually this saga started from somewhere between kernel 5.3 and 5.4-rc1,
+> and did include those teo patches, which actually significantly increases the
+> probability of the issue occurring.
+>
+> When the deepest idle state is disabled, and the all states search loop exits
+> normally, it might incorrectly re-evaluate a previous idle state previously
+> deemed not worthy of the check. This was introduced between teo development
+> versions 7 and 8. The fix is to move the code back inside the loop.
+> (I'll submit a patch in a day or two).
 
-Applied.
+OK
 
-Thanks,
-Guenter
+> I do not think I stated it clearly before: The problem here is that some CPUs
+> seem to get stuck in idle state 0, and when they do power consumption spikes,
+> often by several hundred % and often indefinitely.
 
-> ---
->  drivers/hwmon/abituguru.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/abituguru.c b/drivers/hwmon/abituguru.c
-> index a5cf6b2a6e49..681f0623868f 100644
-> --- a/drivers/hwmon/abituguru.c
-> +++ b/drivers/hwmon/abituguru.c
-> @@ -1264,7 +1264,7 @@ static int abituguru_probe(struct platform_device *pdev)
->  	 * El weirdo probe order, to keep the sysfs order identical to the
->  	 * BIOS and window-appliction listing order.
->  	 */
-> -	const u8 probe_order[ABIT_UGURU_MAX_BANK1_SENSORS] = {
-> +	static const u8 probe_order[ABIT_UGURU_MAX_BANK1_SENSORS] = {
->  		0x00, 0x01, 0x03, 0x04, 0x0A, 0x08, 0x0E, 0x02,
->  		0x09, 0x06, 0x05, 0x0B, 0x0F, 0x0D, 0x07, 0x0C };
->  
+That indeed has not been clear to me, thanks for the clarification!
+
+> I made a hack job automated test:
+> Kernel  tests           fail rate
+> 5.4-rc1  6616           13.45%
+> 5.3              2376            4.50%
+> 5.3-teov7       12136            0.00%  <<< teo.c reverted and teov7 put in its place.
+> 5.4-rc1-ds      11168        0.00%  <<< proposed patch (> 7 hours test time)
+>
+> Proposed patch (on top of kernel 5.4-rc1):
+>
+> doug@s15:~/temp-k-git/linux$ git diff
+> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+> index b5a0e49..0502aa9 100644
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -276,8 +276,22 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>                 if (idx < 0)
+>                         idx = i; /* first enabled state */
+>
+> -               if (s->target_residency > duration_us)
+> +               if (s->target_residency > duration_us){
+> +                       /*
+> +                        * If the "hits" metric of the idle state matching the sleep length is
+> +                        * greater than its "misses" metric, that is the one to use.  Otherwise,
+> +                        * it is more likely that one of the shallower states will match the
+> +                        * idle duration observed after wakeup, so take the one with the maximum
+> +                        * "early hits" metric, but if that cannot be determined, just use the
+> +                        * state selected so far.
+> +                        */
+> +                       if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
+> +                           max_early_idx >= 0) {
+> +                               idx = max_early_idx;
+> +                               duration_us = drv->states[idx].target_residency;
+> +                       }
+>                         break;
+> +               }
+>
+>                 if (s->exit_latency > latency_req && constraint_idx > i)
+>                         constraint_idx = i;
+> @@ -293,20 +307,6 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>         }
+>
+>         /*
+> -        * If the "hits" metric of the idle state matching the sleep length is
+> -        * greater than its "misses" metric, that is the one to use.  Otherwise,
+> -        * it is more likely that one of the shallower states will match the
+> -        * idle duration observed after wakeup, so take the one with the maximum
+> -        * "early hits" metric, but if that cannot be determined, just use the
+> -        * state selected so far.
+> -        */
+> -       if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
+> -           max_early_idx >= 0) {
+> -               idx = max_early_idx;
+> -               duration_us = drv->states[idx].target_residency;
+> -       }
+> -
+> -       /*
+>          * If there is a latency constraint, it may be necessary to use a
+>          * shallower idle state than the one selected so far.
+>          */
+
+This change may cause the deepest state to be selected even if its
+"hits" metric is less than the "misses" one AFAICS, in which case the
+max_early_index state should be selected instead.
+
+It looks like the max_early_index computation is broken when the
+deepest state is disabled.
