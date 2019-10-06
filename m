@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4270BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594EFC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1522053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D862053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="JqZwTLTB"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gZhGFaql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfJFSL1 (ORCPT
+        id S1727191AbfJFSLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:11:27 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:38414 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfJFSL0 (ORCPT
+        Sun, 6 Oct 2019 14:11:44 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:39567 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfJFSLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 14:11:26 -0400
-Received: by mail-vk1-f194.google.com with SMTP id s72so2496911vkh.5;
-        Sun, 06 Oct 2019 11:11:24 -0700 (PDT)
+        Sun, 6 Oct 2019 14:11:44 -0400
+Received: by mail-ua1-f65.google.com with SMTP id b14so3401102uap.6;
+        Sun, 06 Oct 2019 11:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XvhZjKNZd7ezMcvYLdUk4d1cF2+Jz0JmAVSLszIBT2A=;
-        b=JqZwTLTBp0H21eSD9zA8Q1JSuXLhZKi7280qCXLWNDa1vX10J2yxVcXrL16QdtUBHc
-         pScVR9B4JReFA2lfJRixZS3CbtSxM72X2/JB5xyQGWhFZ7aW9lYzMHKADT0TAwuUYT6y
-         fd0q+u8xzBDFujeR4IZaTIiLWU8G6xSR1lQJI0DGMSSB8RAQC1C/CDsiE9ESKClMtWrT
-         SAnqYhCjzB6I7qKJxmJgagNFt6CU5AymX6FLNLJ5NqhdSoUxcm1CYOzOJO48EfJO5dX4
-         cuhKe2+IlBv/71jVH8LP9xRkhJl7stAqVp1WhHxKlKHi1UvXoFWdmldAdOxPPpYZ92VE
-         AYmQ==
+        bh=Xcfn+mZQOdodoxT/uHR1Hwqp6+VxlnUjvQrMHa6gp6I=;
+        b=gZhGFaqlLzCZJc2zYB7x8xXP5V8WJopVAlPrzohOA6Pk6+VCeJM92yej0SJ2a0lEK2
+         lBRhQX8hYIH6XeC4F/z8NYRkOKuXgCyzI2MfkBS4SMZ0hUur21UQ7xqZYt1hZI1twk7y
+         gxzmwTWN+FX0t3rUijC/j1/Qiv6PS4QkwyXsAzDwM7fak5n+9RoV4R8R8XHp5+8F1wKR
+         amXAQG3zoUvol7YOSWTLB9P7HAWHGyHdmxZygvdeXtrKy8yEdepFeMgkHsE4xTPVFA1D
+         ZCMOiMEajGQs9N1f4MWDav4c56wwCVwHyfZEnFxVK9WP70A21v9T7u6l88WcuWMJRDjR
+         G/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XvhZjKNZd7ezMcvYLdUk4d1cF2+Jz0JmAVSLszIBT2A=;
-        b=BcfTHUMsVu+cBYySQ9INou3NNOLk7vl/7K58R0mzLXoMmHYv5gGvpp+2Mq6MicaroE
-         PFJt6GgIyEbUY5FK7QYNEx+DcsU1ZfXzxWc5F6QqjqzVsfxLh32JA7sDGTaWufAQ24Vj
-         94NAw2NBes8OUg2OivANhK007TTaix/BxS+1ackx2l//0W1BDC0hFytDCf17M12G+349
-         MKouz2zQamv95SY50abpxeZfXI2LIABqe3zHiLVBQsMn8W5VpWbES2o2v8JXxDbqoX5j
-         ZR0soUSRcHKD67/ujq1VLf20TLT3r+t8PQIaMVBcq628bvD0HgmK3hpbSgpd5BN/DmyX
-         KrEA==
-X-Gm-Message-State: APjAAAVnOZBVNi3tMRcOCLClCqC7aTGqLt7U1niFyrzOUEEfY36t1/l6
-        7hTwa5Yn2WR66sJVJ7AJLibElm/zvT5NtL3XzUU=
-X-Google-Smtp-Source: APXvYqxuW3H8XQIumbD21ksD8zppbT4zFvS2Lqcjei2gxAhaMSAXkJ/r6UQnGb4Eyn+eJNoiJigfqPfjsFvR+e1x15o=
-X-Received: by 2002:a1f:a705:: with SMTP id q5mr12627945vke.85.1570385484250;
- Sun, 06 Oct 2019 11:11:24 -0700 (PDT)
+        bh=Xcfn+mZQOdodoxT/uHR1Hwqp6+VxlnUjvQrMHa6gp6I=;
+        b=NRyFnfXgeROZ8MzKcbpQoPif2EBXRvPtrTXwE+jg+a5DoPOEU//4DvsqjYaTGw2HAQ
+         a8ef9ibDYTk3FmOZHh0/+mf8Ze99WaHPyWvH/c9HLh6CZpl5oNMf7/TtlmpwNv8JDW8O
+         7xTSt0Hio+iBZvy0MXUAFFBp0wEJCC6i1+dODF+mg6ER1krk6+7ARDxX4NV4XdOIV25C
+         FtOamyKtxZm6VETlMRR+oXNN04cwQDjGMRDOa2VB8TdEz9drluPUXJTZBRehBsPEajIz
+         5r7+UnyGxyP3C+8vTQKxSHgQyFoLZtItHNULNzh4U7RxqBZ2KMk27xhbx2vNZillanTI
+         Mu7w==
+X-Gm-Message-State: APjAAAV87Kf8PRSLf04jF043MiP6zff96mc9Z0v4PN30iVIe6I6xPaIg
+        MjrVH0SA74xmsGbsEcMwTr5sUmEbI9qPAUm4yuw=
+X-Google-Smtp-Source: APXvYqylU/ZkQfIOgZq0eNMmCo/0/P6+jwQADlHqVpyb73E8Di8YyHYTBuaT8mNG4ZKt+wIgHxE6QjZp2lENpRvcVbc=
+X-Received: by 2002:a9f:21f6:: with SMTP id 109mr1391780uac.109.1570385503167;
+ Sun, 06 Oct 2019 11:11:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191006163314.23191-1-aford173@gmail.com>
-In-Reply-To: <20191006163314.23191-1-aford173@gmail.com>
+References: <20191006163314.23191-1-aford173@gmail.com> <20191006163314.23191-2-aford173@gmail.com>
+In-Reply-To: <20191006163314.23191-2-aford173@gmail.com>
 From:   Yegor Yefremov <yegorslists@googlemail.com>
-Date:   Sun, 6 Oct 2019 20:11:14 +0200
-Message-ID: <CAGm1_kvC7745jhRawSinTtMr4LSbTFaE7-pnoar=tpjLD2nDcQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] serial: mctrl_gpio: Check for NULL pointer
+Date:   Sun, 6 Oct 2019 20:11:32 +0200
+Message-ID: <CAGm1_kuoZ_sMDut7X_BGycsPYnb7J3K8_RWw+FdTJcYjCPjtrA@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] serial: 8250_omap: Fix gpio check for auto RTS/CTS
 To:     Adam Ford <aford173@gmail.com>
 Cc:     linux-serial@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -77,32 +77,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Oct 6, 2019 at 6:33 PM Adam Ford <aford173@gmail.com> wrote:
 >
-> When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
-> requested GPIO.  This dereferencing can break if gpios is NULL,
-> so this patch adds a NULL check before dereferencing it.  If
-> gpios is NULL, this function will also return NULL.
+> There are two checks to see if the manual gpio is configured, but
+> these the check is seeing if the structure is NULL instead it
+> should check to see if there are CTS and/or RTS pins defined.
+>
+> This patch uses checks for those individual pins instead of
+> checking for the structure itself to restore auto RTS/CTS.
 >
 > Signed-off-by: Adam Ford <aford173@gmail.com>
 
 Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
 
 > ---
-> V2:  This patch is new to the V2 of this series, so patch 2/2 can
->      work without risking a NULL dereference
-> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-> index d9074303c88e..fb4781292d40 100644
-> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-> @@ -66,6 +66,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
->  struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
->                                       enum mctrl_gpio_idx gidx)
->  {
-> +       if (gpios == NULL)
-> +               return NULL;
-> +
->         return gpios->gpio[gidx];
->  }
->  EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
+> V2:  Made the NULL dererence check from patch 1/2 come before this.
+>
+> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+> index c68e2b3a1634..836e736ae188 100644
+> --- a/drivers/tty/serial/8250/8250_omap.c
+> +++ b/drivers/tty/serial/8250/8250_omap.c
+> @@ -141,7 +141,7 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>
+>         serial8250_do_set_mctrl(port, mctrl);
+>
+> -       if (!up->gpios) {
+> +       if (!mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS)) {
+>                 /*
+>                  * Turn off autoRTS if RTS is lowered and restore autoRTS
+>                  * setting if RTS is raised
+> @@ -456,7 +456,8 @@ static void omap_8250_set_termios(struct uart_port *port,
+>         up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
+>
+>         if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
+> -           !up->gpios) {
+> +           !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS) &&
+> +           !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_CTS)) {
+>                 /* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
+>                 up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
+>                 priv->efr |= UART_EFR_CTS;
 > --
 > 2.17.1
 >
