@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC3FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F794C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2C72084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074102084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfJFO2Z (ORCPT
+        id S1726562AbfJFO36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 10:28:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55227 "EHLO
+        Sun, 6 Oct 2019 10:29:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55239 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfJFO2Z (ORCPT
+        with ESMTP id S1726481AbfJFO36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 10:28:25 -0400
+        Sun, 6 Oct 2019 10:29:58 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <colin.king@canonical.com>)
-        id 1iH7WI-0002R8-5q; Sun, 06 Oct 2019 14:28:22 +0000
+        id 1iH7Xo-0002Vh-A0; Sun, 06 Oct 2019 14:29:56 +0000
 From:   Colin King <colin.king@canonical.com>
 To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ata: pata_artop: make arrays static const, makes object smaller
-Date:   Sun,  6 Oct 2019 15:28:21 +0100
-Message-Id: <20191006142821.23249-1-colin.king@canonical.com>
+Subject: [PATCH][V2] ata: pata_artop: make arrays static const, makes object smaller
+Date:   Sun,  6 Oct 2019 15:29:56 +0100
+Message-Id: <20191006142956.23360-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -43,8 +43,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-Don't populate the arrays on the stack but instead make them
-tatic const. Makes the object code smaller by 292 bytes.
+Don't populate the const arrays on the stack but instead make them
+static. Makes the object code smaller by 292 bytes.
 
 Before:
    text	   data	    bss	    dec	    hex	filename
@@ -57,6 +57,10 @@ After:
 (gcc version 9.2.1, amd64)
 
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+
+V2: fix up commit message
+
 ---
  drivers/ata/pata_artop.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
