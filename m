@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F98EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C3AECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC382080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759252080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383335;
-	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
+	s=default; t=1570383342;
+	bh=f4rcsN3ybGO/sVNQMSjrifM4UThQhI6TFoiqf0tlzng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnnGHj9e0Dr+ZKI2DzeTVGi9sS7lwd7J9CpOQVhXOXWLUyf8O/gIl3HEgZNTle7c3
-	 sFR4ZGiu0Kbkia1eIqQA6U/G2kjqRhYFLt1IzUDdrd+o53HClBczOpGttJTWjLJrYl
-	 8uDYboRI6aZvfpj25o6zfypqvmMLwzuHP3Nbgy5k=
+	b=xJ0M323CSfzY/b+OE3uQKbLlsM24J1xKaO/LFFovR1kmF3DZBWrO4rebULy4MqkJY
+	 FiFEhsa8yxPvoGNCx8d9EE/iu61dZuRU3VlB00HqHycGxL+5aTwJtUv6vfN1ORwWUJ
+	 ZrUYshVVo9luuqljI4IHQwEbu5qJeqPzu8gbyX0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbfJFRfe (ORCPT
+        id S1729057AbfJFRfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729345AbfJFRfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:30 -0400
+        id S1730151AbfJFRfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB80420700;
-        Sun,  6 Oct 2019 17:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB0220700;
+        Sun,  6 Oct 2019 17:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383330;
-        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
+        s=default; t=1570383335;
+        bh=f4rcsN3ybGO/sVNQMSjrifM4UThQhI6TFoiqf0tlzng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxTgIkAEdqfHOWBPWwhR8D01bAtUaTBprTO8vob6z56tJWz30Snx/e9Jd3s9cjQKg
-         d9aPFODfeTqg7sY3y5dWfyYpzcyuSf0/XUbcZ2TXrHO/XQIUbAeSt0lQ5Y88sCuBNC
-         ZphIrhvqJYsYIuJHjF1cKdXmR+RwyktAix8v6nRo=
+        b=1NJnYenf16qk8zCyW+1z37EzV6TJcTcUwxCaHe9FsJYH5mK1eUf4Bd22+kPD+2My2
+         SEXlAIqm3CewkFgHPGsc2uCbVZiVwGHoIOGriOSzvFsDHCqQj4aEOejz+XPsPADjdI
+         aBSGKGy9W4YAl+ZHxr2npHeZtGJQ3NvGW+2gGm9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Mark Menzynski <mmenzyns@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 064/137] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
-Date:   Sun,  6 Oct 2019 19:20:48 +0200
-Message-Id: <20191006171214.267322903@linuxfoundation.org>
+Subject: [PATCH 5.2 039/137] clk: imx8mq: Mark AHB clock as critical
+Date:   Sun,  6 Oct 2019 19:20:23 +0200
+Message-Id: <20191006171212.294579334@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -63,36 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Menzynski <mmenzyns@redhat.com>
+From: Abel Vesa <abel.vesa@nxp.com>
 
-[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
+[ Upstream commit 9b9c60bed562c3718ae324a86f3f30a4ff983cf8 ]
 
-Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
+Initially, the TMU_ROOT clock was marked as critical, which automatically
+made the AHB clock to stay always on. Since the TMU_ROOT clock is not
+marked as critical anymore, following commit:
 
-When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
+"clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT"
 
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
-Reviewed-by: Karol Herbst <kherbst@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+all the clocks that derive from ipg_root clock (and implicitly ahb clock)
+would also have to enable, along with their own gate, the AHB clock.
+
+But considering that AHB is actually a bus that has to be always on, we mark
+it as critical in the clock provider driver and then all the clocks that
+derive from it can be controlled through the dedicated per IP gate which
+follows after the ipg_root clock.
+
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/imx/clk-imx8mq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
-index 7143ea4611aa3..33a9fb5ac5585 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
-@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
- 		info->min     = min(info->base,
- 				    info->base + info->step * info->vidmask);
- 		info->max     = nvbios_rd32(bios, volt + 0x0e);
-+		if (!info->max)
-+			info->max = max(info->base, info->base + info->step * info->vidmask);
- 		break;
- 	case 0x50:
- 		info->min     = nvbios_rd32(bios, volt + 0x0a);
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index daf1841b2adb0..f29025c99c53b 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -396,7 +396,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+ 
+ 	/* AHB */
+-	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
++	/* AHB clock is used by the AHB bus therefore marked as critical */
++	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
+ 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
+ 
+ 	/* IPG */
 -- 
 2.20.1
 
