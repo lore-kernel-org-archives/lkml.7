@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64552C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06919C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F5721835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00AA2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382658;
-	bh=pNwcDY5adZIASHbxH2YPHMcw4V0qqTCiDHEkIG00gyQ=;
+	s=default; t=1570382669;
+	bh=uzav9WMqexhDvnaLqfBJoM5xcO0X3E4XEDP/pB3N+Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sup6iVz/SifMcO9ZT4066GlaBem8W6DQSxCb1clbJZ8NG3M9Ym1fYkNSF7ZgM7ByC
-	 bmlr4WJYkuK87aqKRX6eexD/U1kTkPRFQ+bgb1ZIIaV5Fs3QyPj0TnD5DhkVGY+sRK
-	 T/9H52tzIaZ2GYkWKKHg5IN+IAwPp3tBstyoMZM4=
+	b=PT1rF9XZ2q2Bf3uLdylW5YQf/ZcynAJ0Bpji3S2hi5CYWh6YMHfWQuvgAgwYJ0bWe
+	 vyjK6jgPKG14ehS8dV5nc5WPSuJKBlSxe8rBf0/eqj+RbkIVRhdL3VeolvijF+cJiX
+	 NwruFSPUpONvNNyBWptf3h7JXxY24DysYRpzgK7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfJFRYR (ORCPT
+        id S1727903AbfJFRY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49146 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727843AbfJFRYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:14 -0400
+        id S1727831AbfJFRYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3A4720867;
-        Sun,  6 Oct 2019 17:24:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B02F92077B;
+        Sun,  6 Oct 2019 17:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382654;
-        bh=pNwcDY5adZIASHbxH2YPHMcw4V0qqTCiDHEkIG00gyQ=;
+        s=default; t=1570382662;
+        bh=uzav9WMqexhDvnaLqfBJoM5xcO0X3E4XEDP/pB3N+Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSM+KDB8rtcQ3wygW6E3jaa61vDh1EAu0NE7Avx6khlqzuD6rEdrBB4ubfPzjkCT8
-         OHH22+6Oxp7HpD5tT7VscahpqnLUmHaT3atCyNjXzJbGwT3X5myjsO8pnsOafOnJB6
-         l3a5JO0OFn99w6Z0GRSkqNCyPkQi0r5926jMF1WU=
+        b=ozU91RhPBYH6ISSguH4SsfWs6+aUlemLxzW7ASXAJRKxdF7Bung+Supc34qlHiTMZ
+         aK0xSU/VDvq1zaILtJW9Wa8Rqew5R71RojWXU/GUBhiMpf2z4/7L2oYhH505UaqVKh
+         nT6Ab0dkLZlRLS9sakdI87Kou0fzdMWos0Iszg/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/47] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Sun,  6 Oct 2019 19:20:52 +0200
-Message-Id: <20191006172017.171981686@linuxfoundation.org>
+Subject: [PATCH 4.9 08/47] powerpc/rtas: use device model APIs and serialization during LPM
+Date:   Sun,  6 Oct 2019 19:20:55 +0200
+Message-Id: <20191006172017.327218967@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -59,86 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+The LPAR migration implementation and userspace-initiated cpu hotplug
+can interleave their executions like so:
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+1. Set cpu 7 offline via sysfs.
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
+2. Begin a partition migration, whose implementation requires the OS
+   to ensure all present cpus are online; cpu 7 is onlined:
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
+
+   This sets cpu 7 online in all respects except for the cpu's
+   corresponding struct device; dev->offline remains true.
+
+3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
+   already online and returns success. The driver core (device_online)
+   sets dev->offline = false.
+
+4. The migration completes and restores cpu 7 to offline state:
+
+     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
+
+This leaves cpu7 in a state where the driver core considers the cpu
+device online, but in all other respects it is offline and
+unused. Attempts to online the cpu via sysfs appear to succeed but the
+driver core actually does not pass the request to the lower-level
+cpuhp support code. This makes the cpu unusable until the cpu device
+is manually set offline and then online again via sysfs.
+
+Instead of directly calling cpu_up/cpu_down, the migration code should
+use the higher-level device core APIs to maintain consistent state and
+serialize operations.
+
+Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/rtas.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index e0a53156b782f..82af658184444 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -283,6 +283,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
+diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
+index 6a3e5de544ce2..a309a7a29cc60 100644
+--- a/arch/powerpc/kernel/rtas.c
++++ b/arch/powerpc/kernel/rtas.c
+@@ -874,15 +874,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
+ 		return 0;
  
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
+ 	for_each_cpu(cpu, cpus) {
++		struct device *dev = get_cpu_device(cpu);
 +
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1093,11 +1096,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1105,8 +1117,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
- 	}
- 	return 0;
- }
-@@ -1285,6 +1298,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
+ 		switch (state) {
+ 		case DOWN:
+-			cpuret = cpu_down(cpu);
++			cpuret = device_offline(dev);
+ 			break;
+ 		case UP:
+-			cpuret = cpu_up(cpu);
++			cpuret = device_online(dev);
+ 			break;
+ 		}
+-		if (cpuret) {
++		if (cpuret < 0) {
+ 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
+ 					__func__,
+ 					((state == UP) ? "up" : "down"),
+@@ -971,6 +973,8 @@ int rtas_ibm_suspend_me(u64 handle)
+ 	data.token = rtas_token("ibm,suspend-me");
+ 	data.complete = &done;
  
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
- }
++	lock_device_hotplug();
++
+ 	/* All present CPUs must be online */
+ 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
+ 	cpuret = rtas_online_cpus_mask(offline_mask);
+@@ -1002,6 +1006,7 @@ int rtas_ibm_suspend_me(u64 handle)
+ 				__func__);
  
- static const struct ipmi_smi_handlers handlers = {
+ out:
++	unlock_device_hotplug();
+ 	free_cpumask_var(offline_mask);
+ 	return atomic_read(&data.error);
+ }
 -- 
 2.20.1
 
