@@ -2,137 +2,117 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938DFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF93C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D9D2173B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570353245;
-	bh=4Ao58n0YBG7JzwX6J2bssxav0wHxzNJhNBxcSQmuXf0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yUUn3ogjTCmW9lpl1716b6jcMLZ6gXVn3IehNEunQfQmaKFqSWwRE1XW8Y85V9xXR
-	 itSdErTtJjgi/gFwUUm0ZvPYLVjiBwwKSXhrl1Gn/7lAAlNtnmaqzbtC0o4nUidY0R
-	 dtzwhtuUG3ui2DkCfKblM6CI8VeK0zYeI8xsjO10=
+	by mail.kernel.org (Postfix) with ESMTP id EF5AA206C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BIF5Ii9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfJFJOE (ORCPT
+        id S1726349AbfJFJSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfJFJOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:14:04 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF9921479;
-        Sun,  6 Oct 2019 09:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570353243;
-        bh=4Ao58n0YBG7JzwX6J2bssxav0wHxzNJhNBxcSQmuXf0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aboWM/KwsWfy0RYsBPW9bGIIpZ/6ZF14Tyfh3THY/YPXfRdvZ5e68w0TzLjk7ZcJc
-         PeniIy3ztUktELGUgnbmSIXUYosGneH8O5TSpXbM0vJcja1kHGk8MxPTWXw6ijfngt
-         j4P4RF40gXJSAOA9HDtjoMuyu0NAloPSxPVgTaac=
-Date:   Sun, 6 Oct 2019 10:13:59 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/10] iio: imu: adis: create an unlocked version of
- adis_check_status()
-Message-ID: <20191006101359.1f256fd7@archlinux>
-In-Reply-To: <20190926111812.15957-5-alexandru.ardelean@analog.com>
-References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
-        <20190926111812.15957-5-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 6 Oct 2019 05:18:55 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:26538 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfJFJSy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:18:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1570353534; x=1601889534;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=DvFDDRFwzFZpm+9W9t8azYWL1u/Z9uXnIXeKEaiewcg=;
+  b=BIF5Ii9LHene3X6hc/jjfpm9SSQCSojXINxUEWgFs70e4y5S8hnTbZL6
+   Bc203boKAlxDlFAKf29fBOoocU5G3JQDdH1w7LcogOL87cP8Zmy63tgjX
+   zOjRtP4Z5FyShdyyvhAT7cBltdIE4b6P8s/abyeXdaoJgx/vlvoix2lfW
+   M=;
+X-IronPort-AV: E=Sophos;i="5.67,263,1566864000"; 
+   d="scan'208";a="707021097"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Oct 2019 09:11:37 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id C8E90A22EE;
+        Sun,  6 Oct 2019 09:11:05 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 6 Oct 2019 09:11:05 +0000
+Received: from [10.125.238.52] (10.43.161.192) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Sun, 6 Oct
+ 2019 09:10:56 +0000
+Subject: Re: [PATCH v4 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
+ POS
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "Arnd Bergmann" <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        "Hanoch, Uri" <hanochu@amazon.com>, <amirkl@amazon.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>
+References: <1570102361-11696-1-git-send-email-talel@amazon.com>
+ <1570102361-11696-2-git-send-email-talel@amazon.com>
+ <CAL_JsqJDJF7h=nSw3dkNF=H3ghJeLR=MUgrEh+qxw0jhDnfxFw@mail.gmail.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <ee5a0727-6cc0-062b-0797-20fecdf1a450@amazon.com>
+Date:   Sun, 6 Oct 2019 12:10:50 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAL_JsqJDJF7h=nSw3dkNF=H3ghJeLR=MUgrEh+qxw0jhDnfxFw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.192]
+X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 14:18:06 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+thanks for the review.
 
-> This one also gets re-used in certain operations, so it makes sense to
-> have an unlocked version of this to group it with other
-> reads/writes/operations to have a single lock for the whole state change.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.
+On 10/4/2019 6:05 PM, Rob Herring wrote:
+> On Thu, Oct 3, 2019 at 6:33 AM Talel Shenhar <talel@amazon.com> wrote:
+>
+> Fails 'make dt_binding_check' (drop the '-'):
+ack, shall be part of v5
+>
+>> +
+>> +examples:
+>> +  - |
+>> +    al_pos_edac@f0070084 {
+> edac@...
+ack, shall be part of v5
+>
+>> +      compatible = "amazon,al-pos-edac";
+>> +      reg = <0x0 0xf0070084 0x0 0x00000008>;
+>> +      interrupt-parent = <&amazon_system_fabric>;
+>> +      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
+> Not documented.
 
-Thanks,
+looks good?
 
-J
-> ---
->  drivers/iio/imu/adis.c       |  8 ++++----
->  include/linux/iio/imu/adis.h | 13 ++++++++++++-
->  2 files changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index dc30f70d36f3..e461b9ae22a5 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -277,18 +277,18 @@ int adis_enable_irq(struct adis *adis, bool enable)
->  EXPORT_SYMBOL(adis_enable_irq);
->  
->  /**
-> - * adis_check_status() - Check the device for error conditions
-> + * __adis_check_status() - Check the device for error conditions (unlocked)
->   * @adis: The adis device
->   *
->   * Returns 0 on success, a negative error code otherwise
->   */
-> -int adis_check_status(struct adis *adis)
-> +int __adis_check_status(struct adis *adis)
->  {
->  	uint16_t status;
->  	int ret;
->  	int i;
->  
-> -	ret = adis_read_reg_16(adis, adis->data->diag_stat_reg, &status);
-> +	ret = __adis_read_reg_16(adis, adis->data->diag_stat_reg, &status);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -306,7 +306,7 @@ int adis_check_status(struct adis *adis)
->  
->  	return -EIO;
->  }
-> -EXPORT_SYMBOL_GPL(adis_check_status);
-> +EXPORT_SYMBOL_GPL(__adis_check_status);
->  
->  /**
->   * adis_reset() - Reset the device
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 3a028c40e04e..f4ffba0c36b1 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -263,7 +263,18 @@ static inline int adis_read_reg_32(struct adis *adis, unsigned int reg,
->  }
->  
->  int adis_enable_irq(struct adis *adis, bool enable);
-> -int adis_check_status(struct adis *adis);
-> +int __adis_check_status(struct adis *adis);
-> +
-> +static inline int adis_check_status(struct adis *adis)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&adis->state_lock);
-> +	ret = __adis_check_status(adis);
-> +	mutex_unlock(&adis->state_lock);
-> +
-> +	return ret;
-> +}
->  
->  int adis_initial_startup(struct adis *adis);
->  
+    interrupts:
+
+     description: Interrupt for the error event.
+     maxItems: 1
+
 
