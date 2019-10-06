@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F98C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525ADC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1712133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0302087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383585;
-	bh=JJiAr0U+y5fK3GJTz/G2EY+1qfyIBZP/h1D8Vy3Euz4=;
+	s=default; t=1570383594;
+	bh=WluHTX10qG7RAA57oEeBHSjMqLz0IzntlDMWX8RpLdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=smSMjUp+hDQzAslpQkfINL96/Z/ue4hEU4911Eq7SiQBhTIMhiIv2IuYlHZar1Te8
-	 rK7N6iXNoG5LFAiOQG4vWuUnbUpNZKVwXSXjAfUdSFZqEW0n3rXBgObDE2KUItQ+Wg
-	 SB4UlfAwamp/lelvZCYnJLiix0k0+GD2cE9ctFGo=
+	b=WjimrqCq1LC02m+HaXewMcWYw+JkBXXXYm//l7xUuAmzUwHNWqvOqpCkj0MDqg5ku
+	 N+JIZASdBdu9cYeSDXQrhM82iK5xQcAoV/aGhrGerJ5pB2ecO/ibunxbpMwew1tJvP
+	 7Tg98uOqsDHdT0teuBq5Kb+tAWK5W/BjGFyuBnrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfJFRjo (ORCPT
+        id S1730864AbfJFRju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39170 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730829AbfJFRjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:42 -0400
+        id S1730849AbfJFRjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F132080F;
-        Sun,  6 Oct 2019 17:39:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 728BC2080F;
+        Sun,  6 Oct 2019 17:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383581;
-        bh=JJiAr0U+y5fK3GJTz/G2EY+1qfyIBZP/h1D8Vy3Euz4=;
+        s=default; t=1570383587;
+        bh=WluHTX10qG7RAA57oEeBHSjMqLz0IzntlDMWX8RpLdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xv7a+4y8peWBwCQ6mIRjKp5ihLBeSXt5ivc6T9LTKwMiXCaFmXibpy76Mw5nTDsff
-         /tt4MPtlxA/pn43bTa8Na0KjQU0F6s3oH2Bjo2XKILIQxVcwTVg7pXJY9nRANuuLdP
-         BQsVvg4zO624fmuhT46znQ6NSzA18p7Ie0r0RJgw=
+        b=p0+Rm69TjsofC4kxjGYVprVUCPSZpeLJsQc5xCUnqtxlHPAVsECdZBe8CeQpBoZke
+         lLMduJr2DGDNFYgLKAIBFD+BvqdUM+Z8QEb+EAs3U5BHlhTE+UitSEkHHiyC8vzYOB
+         alaI8xgbAsRVwFHzG/saL3iUqDIHMlTljobqKAak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 002/166] drm/mcde: Fix uninitialized variable
-Date:   Sun,  6 Oct 2019 19:19:28 +0200
-Message-Id: <20191006171213.003375227@linuxfoundation.org>
+Subject: [PATCH 5.3 021/166] clk: imx8mq: Mark AHB clock as critical
+Date:   Sun,  6 Oct 2019 19:19:47 +0200
+Message-Id: <20191006171214.987602009@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,46 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Abel Vesa <abel.vesa@nxp.com>
 
-[ Upstream commit ca5be902a87ddccc88144f2dea21b5f0814391ef ]
+[ Upstream commit 9b9c60bed562c3718ae324a86f3f30a4ff983cf8 ]
 
-We need to handle the case when of_drm_find_bridge() returns
-NULL.
+Initially, the TMU_ROOT clock was marked as critical, which automatically
+made the AHB clock to stay always on. Since the TMU_ROOT clock is not
+marked as critical anymore, following commit:
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618115245.13915-1-linus.walleij@linaro.org
+"clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT"
+
+all the clocks that derive from ipg_root clock (and implicitly ahb clock)
+would also have to enable, along with their own gate, the AHB clock.
+
+But considering that AHB is actually a bus that has to be always on, we mark
+it as critical in the clock provider driver and then all the clocks that
+derive from it can be controlled through the dedicated per IP gate which
+follows after the ipg_root clock.
+
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mcde/mcde_drv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx8mq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_drv.c
-index baf63fb6850a4..a810568c76df7 100644
---- a/drivers/gpu/drm/mcde/mcde_drv.c
-+++ b/drivers/gpu/drm/mcde/mcde_drv.c
-@@ -319,7 +319,7 @@ static int mcde_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct drm_device *drm;
- 	struct mcde *mcde;
--	struct component_match *match;
-+	struct component_match *match = NULL;
- 	struct resource *res;
- 	u32 pid;
- 	u32 val;
-@@ -485,6 +485,10 @@ static int mcde_probe(struct platform_device *pdev)
- 		}
- 		put_device(p);
- 	}
-+	if (!match) {
-+		dev_err(dev, "no matching components\n");
-+		return -ENODEV;
-+	}
- 	if (IS_ERR(match)) {
- 		dev_err(dev, "could not create component match\n");
- 		ret = PTR_ERR(match);
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index d407a07e7e6dd..e07c69afc3594 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -406,7 +406,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+ 
+ 	/* AHB */
+-	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
++	/* AHB clock is used by the AHB bus therefore marked as critical */
++	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
+ 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
+ 
+ 	/* IPG */
 -- 
 2.20.1
 
