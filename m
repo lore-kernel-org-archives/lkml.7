@@ -2,56 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23124C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE887C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A6E20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A954420862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384979;
-	bh=TkRXmpHdZvwNp4jqEj1dbBI2v217kXfJTlu2W7Axhqk=;
+	s=default; t=1570384982;
+	bh=2j+/gI1kT0XXYZxN5raqCvPcTTi9Id+99HHXOsb92Q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CmPpL7BoQ2hm6iaA+FpV0YIfTR8LROOI1Kj0Yijy8op/9t0QrGxKHHxRlGQ6Z63+
-	 gCmxW55Kb+zuymKhy/T5HSjaePc7Be125KsQH66SANdtW2tCgc7LN99kX0P+SVigXx
-	 IX0iYmdMgfrEZsvQ6rbiZDHfn4WybfJqZzIs06js=
+	b=iXx3iaa1uQb1fktQdyRnsS4mOd7B7PQldHXrGV/QbYvTAvRIcJGquH7k6ifmdJ1Go
+	 5DnFj+ATshGrrc6XU51gq5V4sEkX/hGQiYGnlx5/UMLNwOoK//3/JgoxJ2xrD9MZ2f
+	 BOBusTlw/MOU7WNrT833B1CZe1pOugz+40say94Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfJFRZV (ORCPT
+        id S1728037AbfJFRZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfJFRZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:25:15 -0400
+        id S1727369AbfJFRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10CA2077B;
-        Sun,  6 Oct 2019 17:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D053B20867;
+        Sun,  6 Oct 2019 17:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382714;
-        bh=TkRXmpHdZvwNp4jqEj1dbBI2v217kXfJTlu2W7Axhqk=;
+        s=default; t=1570382698;
+        bh=2j+/gI1kT0XXYZxN5raqCvPcTTi9Id+99HHXOsb92Q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFnGKSo2yBqZ4HTY0svjbAcjuZFPbM5qxm6ZXQB9O/nJR5ERrGuZVOfrqEXGa3Jax
-         lUU3IHU3YjxwO+vy97xtY9+jltY8VawjcivdpokbVhJbFajVkAb9UCAVZOemYqSUaU
-         AwfJYpwzj7uiEYgBq2hGhSZQ52B2ZsP13dPSjCT8=
+        b=d9m+Ofo7RbgVFE0w8pKXAhc4ug9k5GdJd3sqCLsLWRLJ5XJnEDgsfXGqNpjZMcFci
+         O3G+OeLBfV6lbMGaAcr+VsRHvHD7N7j2cc40BGmAF38gHeFHWBbrCYgAaiuueSn9i3
+         i37rpQywBnh6j/BLX895xlqPJVU/D6biNwMaUVTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guo Zeng <Guo.Zeng@csr.com>,
-        Barry Song <Baohua.Song@csr.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/68] clk: sirf: Dont reference clk_init_data after registration
-Date:   Sun,  6 Oct 2019 19:20:49 +0200
-Message-Id: <20191006171114.923802523@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 4.9 45/47] Smack: Dont ignore other bprm->unsafe flags if LSM_UNSAFE_PTRACE is set
+Date:   Sun,  6 Oct 2019 19:21:32 +0200
+Message-Id: <20191006172019.260683324@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
-References: <20191006171108.150129403@linuxfoundation.org>
+In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
+References: <20191006172016.873463083@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,74 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit af55dadfbce35b4f4c6247244ce3e44b2e242b84 ]
+commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+There is a logic bug in the current smack_bprm_set_creds():
+If LSM_UNSAFE_PTRACE is set, but the ptrace state is deemed to be
+acceptable (e.g. because the ptracer detached in the meantime), the other
+->unsafe flags aren't checked. As far as I can tell, this means that
+something like the following could work (but I haven't tested it):
 
-Cc: Guo Zeng <Guo.Zeng@csr.com>
-Cc: Barry Song <Baohua.Song@csr.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190731193517.237136-6-sboyd@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ - task A: create task B with fork()
+ - task B: set NO_NEW_PRIVS
+ - task B: install a seccomp filter that makes open() return 0 under some
+   conditions
+ - task B: replace fd 0 with a malicious library
+ - task A: attach to task B with PTRACE_ATTACH
+ - task B: execve() a file with an SMACK64EXEC extended attribute
+ - task A: while task B is still in the middle of execve(), exit (which
+   destroys the ptrace relationship)
+
+Make sure that if any flags other than LSM_UNSAFE_PTRACE are set in
+bprm->unsafe, we reject the execve().
+
+Cc: stable@vger.kernel.org
+Fixes: 5663884caab1 ("Smack: unify all ptrace accesses in the smack")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/clk/sirf/clk-common.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ security/smack/smack_lsm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sirf/clk-common.c b/drivers/clk/sirf/clk-common.c
-index 77e1e2491689b..edb7197cc4b4d 100644
---- a/drivers/clk/sirf/clk-common.c
-+++ b/drivers/clk/sirf/clk-common.c
-@@ -298,9 +298,10 @@ static u8 dmn_clk_get_parent(struct clk_hw *hw)
- {
- 	struct clk_dmn *clk = to_dmnclk(hw);
- 	u32 cfg = clkc_readl(clk->regofs);
-+	const char *name = clk_hw_get_name(hw);
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -949,7 +949,8 @@ static int smack_bprm_set_creds(struct l
  
- 	/* parent of io domain can only be pll3 */
--	if (strcmp(hw->init->name, "io") == 0)
-+	if (strcmp(name, "io") == 0)
- 		return 4;
+ 		if (rc != 0)
+ 			return rc;
+-	} else if (bprm->unsafe)
++	}
++	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
+ 		return -EPERM;
  
- 	WARN_ON((cfg & (BIT(3) - 1)) > 4);
-@@ -312,9 +313,10 @@ static int dmn_clk_set_parent(struct clk_hw *hw, u8 parent)
- {
- 	struct clk_dmn *clk = to_dmnclk(hw);
- 	u32 cfg = clkc_readl(clk->regofs);
-+	const char *name = clk_hw_get_name(hw);
- 
- 	/* parent of io domain can only be pll3 */
--	if (strcmp(hw->init->name, "io") == 0)
-+	if (strcmp(name, "io") == 0)
- 		return -EINVAL;
- 
- 	cfg &= ~(BIT(3) - 1);
-@@ -354,7 +356,8 @@ static long dmn_clk_round_rate(struct clk_hw *hw, unsigned long rate,
- {
- 	unsigned long fin;
- 	unsigned ratio, wait, hold;
--	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
-+	const char *name = clk_hw_get_name(hw);
-+	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
- 
- 	fin = *parent_rate;
- 	ratio = fin / rate;
-@@ -376,7 +379,8 @@ static int dmn_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	struct clk_dmn *clk = to_dmnclk(hw);
- 	unsigned long fin;
- 	unsigned ratio, wait, hold, reg;
--	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
-+	const char *name = clk_hw_get_name(hw);
-+	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
- 
- 	fin = parent_rate;
- 	ratio = fin / rate;
--- 
-2.20.1
-
+ 	bsp->smk_task = isp->smk_task;
 
 
