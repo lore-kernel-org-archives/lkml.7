@@ -4,63 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1D7C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CB1C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641AB22487
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973062053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384048;
-	bh=2phXe2I4hy0lD35uuWJUDpgHRLdxGNb60n5qMD4KcjA=;
+	s=default; t=1570384054;
+	bh=RZZgYD1fyG5xCQcGnFdd9/9L3RDH6oeyniowEFWObRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRAjctbhqGz45Jd/OEorX4d2VhP2kTa/y7jpKjXMfeRwObBz9gR4MKvL88xch9jea
-	 1vQ9smy0+ZTTS9sGwCih4NVOPv7d75qjDMOc33HmyiI/DbbeuZCRGsCaqx7UPO/rfK
-	 ZPpObk9fzDRdNDli+dcdZTMnbLhiMHEGZDEr4E4o=
+	b=FEdRX9RPcwCb8rFnh2oc3K0UHiYrCtVGySv9w5RwWM3Z8G1O9vgZ1OxykVlJBsuCH
+	 L4IA26AUErq0yDx6Cqx9ARe5eZTFK013g51adqj394bnj4imlN12pvsQbdqSmsaaeM
+	 hLPB5ZxeeoygC0MzTQJEvmFRhBQ9hX9TPeVAfzE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfJFRob (ORCPT
+        id S1729395AbfJFRrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbfJFRo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:44:29 -0400
+        id S1731784AbfJFRox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BF1A20862;
-        Sun,  6 Oct 2019 17:44:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE2C92087E;
+        Sun,  6 Oct 2019 17:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383868;
-        bh=2phXe2I4hy0lD35uuWJUDpgHRLdxGNb60n5qMD4KcjA=;
+        s=default; t=1570383892;
+        bh=RZZgYD1fyG5xCQcGnFdd9/9L3RDH6oeyniowEFWObRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kg3YjmHOo6rwozGKKi5O1A9td5HpKjJG/eMmhfD9fEInPGeKPoK4p/D7kSAdZnMzZ
-         lAiit5tftEO982oWBdmbfyedAqnh0ZFMZhFxDz4x2i0qoV+u2t93sCNaJhHKXXpc/V
-         l1JNpUhLChhmWFtmpDPGulf0Bg0ib+UII78QXjXc=
+        b=RxLQxdDLgRVtvu5CRXALq2+SCHGtHJNsPy2XYhBvl+G2xcnNrj0vI0tf4ObxBV1aQ
+         vphmRBA7chHhgy1pou5023PvN8zGhET7ZWTMW1yl6s6B6gsLX6uQSSFLxsmow358CL
+         Q1ykIW/WI5gFk0GR/TUrqCeYUeFlUfgf6Ff0kO8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 123/166] kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
-Date:   Sun,  6 Oct 2019 19:21:29 +0200
-Message-Id: <20191006171223.673618193@linuxfoundation.org>
+Subject: [PATCH 5.3 092/166] PCI: layerscape: Add the bar_fixed_64bit property to the endpoint driver
+Date:   Sun,  6 Oct 2019 19:20:58 +0200
+Message-Id: <20191006171221.289122331@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -73,55 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-[ Upstream commit b751c52bb587ae66f773b15204ef7a147467f4c7 ]
+[ Upstream commit fd5d16531a39322c3d7433d9f8a36203c9aaeddc ]
 
-The current default value (400) is too low on many systems (e.g.  some
-ARM64 platform takes up 1000+ entries).
+The layerscape PCIe controller have 4 BARs.
 
-syzbot uses 16000 as default value, and has proved to be enough on beefy
-configurations, so let's pick that value.
+ BAR0 and BAR1 are 32bit, BAR2 and BAR4 are 64bit and that's a
+fixed hardware configuration.
 
-This consumes more RAM on boot (each entry is 160 bytes, so in total
-~2.5MB of RAM), but the memory would later be freed (early_log is
-__initdata).
+Set the bar_fixed_64bit variable accordingly.
 
-Link: http://lkml.kernel.org/r/20190730154027.101525-1-drinkcat@chromium.org
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5960e2980a8a0..4d39540011e2e 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -596,7 +596,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
- 	int "Maximum kmemleak early log entries"
- 	depends on DEBUG_KMEMLEAK
- 	range 200 40000
--	default 400
-+	default 16000
- 	help
- 	  Kmemleak must track all the memory allocations to avoid
- 	  reporting false positives. Since memory may be allocated or
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96cc95ed..ca9aa4501e7e9 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
+ 
+ static const struct pci_epc_features*
 -- 
 2.20.1
 
