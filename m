@@ -2,99 +2,92 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C32C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 20:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1A8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 21:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07F620862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 20:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOcOfoux"
+	by mail.kernel.org (Postfix) with ESMTP id 066402080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 21:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570396521;
+	bh=6DP+aECEIPfgWdS3lEboMEVPdbxhdcq06tbNqZcqeBM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IVnUetvWHap3dGr2/EbHBAzaqUluIwDr9kPK3s+3eTejWMcDfiX98KTVawyW7PzvF
+	 Fr76DdAhtPT57P0N/vIN+cx5YntZNkLBUv/sGNtX28QHelrE6qNahazgxW6eHdoAzs
+	 ojDxdtKqnWAuweelyNkPmQTahAOe2JpHI22bTKQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfJFUvp (ORCPT
+        id S1726202AbfJFVPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 16:51:45 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33773 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfJFUvp (ORCPT
+        Sun, 6 Oct 2019 17:15:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38264 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfJFVPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 16:51:45 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r5so16454569qtd.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 13:51:43 -0700 (PDT)
+        Sun, 6 Oct 2019 17:15:19 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u28so7831174lfc.5
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 14:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QkysCBSB9fGqKPV8g/1PIAYcEKj+5HCVtkPSug6S7x4=;
-        b=cOcOfoux4Df7/s9EkUQGrbPexSBOt3WXuQ6fU4InY9ASkZfOT1H4oszYBQao6riw/k
-         VXTm3ZxkLndtrobWYJ6Wpm2gLJtAPc+YeDdEU+Vzea9fblEzy8iPj25BZtesJ3Ym0iYU
-         oelu7zpxaomQ0gRsFoW7JhZbb+sLgJgpfMykiu1tRPDtIs9bb482IsrozXiDSKZFdzNc
-         0llDAebPCIEeb6kNpWPRnSR8KRk14Vb+7cNCMLhJULK+PfNS6LGwgvgOul0UqBTL/nKs
-         UX1himK/rZtQPOMeIbSr56wvOpIUGvy737VYgOB+puIXTKwoHvSUNXoso2N3zdTWPaID
-         qanQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LXbxhEgAdieyKJ5fuAzsqlFn8HIyUjW9y8Ps47VX0Fg=;
+        b=TjvsohBpIUlEMZohWwfuphM7aKCJuOx1Jp6+bi7TadNzoKDl4nG3om1x1SOgVLvCDl
+         /FOzKmyhWUVcykBTKFtntJEAJWA5/5WMkYhygH/AumL61lb+JY7V7CSbKlzEhJJKLQ9b
+         Y+G+Nn1TooEF28IjZbrGbDeedH1wub5GCL1R8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QkysCBSB9fGqKPV8g/1PIAYcEKj+5HCVtkPSug6S7x4=;
-        b=YMFsHaNcBuYIP+HeI3R0svdbznlde3wr+0G7lppZrYP3POXlcZri70M0LmGdCk91iQ
-         Wg7jTN3jEU4eQkm/OFBozkIl3XJvSubENMiL+P9xwrk+y0K2wE96IGcdwcNIv2+3xB1F
-         N1MmKvpG7E8QUiQH5C1gFO/qb27k8OyQ/LLjheqQdvfpwdUliXnPsEmM3rObjqqcRk09
-         mm5xDRvWlq7EhbuM93NTXVBuMe3lrdy2J6llAN4eoXFkODW5lIAHKSF/drTOp5PJvhW3
-         Wxabe1hRnp/fa7NV43TH8016iQ2l3mq2jvQ95wbu9R01z86HZqFDKpA5whurikF87UWM
-         vHEQ==
-X-Gm-Message-State: APjAAAVc9yvnm4s1hNj4A+xchttSfVf2e84PGcwS34D91JG1T4VgGURm
-        PV+HVrtDYA+t1PVssxLzQFo=
-X-Google-Smtp-Source: APXvYqwR0q1/blUrqYR+XMlkhidWKj/s2ojzVV8263BY2FCeizUcrqO88TL/aFATj4L8kqpsqpyA4g==
-X-Received: by 2002:aed:2448:: with SMTP id s8mr27213725qtc.173.1570395102993;
-        Sun, 06 Oct 2019 13:51:42 -0700 (PDT)
-Received: from GBdebian.terracota.local ([177.103.155.130])
-        by smtp.gmail.com with ESMTPSA id a36sm6949492qtk.21.2019.10.06.13.51.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 13:51:42 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, Larry.Finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com, gregkh@linuxfoundation.org,
-        nishkadg.linux@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        trivial@kernel.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH] staging: rtl8712: align arguments with open parenthesis
-Date:   Sun,  6 Oct 2019 17:51:35 -0300
-Message-Id: <20191006205135.11791-1-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LXbxhEgAdieyKJ5fuAzsqlFn8HIyUjW9y8Ps47VX0Fg=;
+        b=OK5IvyhZvjMDCg7UhIFd5gmV8fl1Vw6gFedCgAcgI9ftFU0rZWuXuCRK6Dwid60U60
+         fTFE0fDFKHCjP4ZaQcp98+BNrs9juikxMvwBTlLaezW5wZysm7j1NutkB1uFiji+2U+u
+         B+lTAcz8fosxM5aJwkcln5xuMm0b3cFN4p5mLMVwwy520mv271j+SV+mizdFkUjwba2n
+         g1EiTOFZfuteDK/2f4Fkw/NwE1hhITYSzmwnHB83RnKhJEgkpTCaVgshtW2ofs/eWQMw
+         Ybqn/66P7plc++2Pq4aU2iUPwkLb+bApU4E13+BVg/EIe63J0+o1GrxIDioCRMpbyzYf
+         Nb8A==
+X-Gm-Message-State: APjAAAV2hpTxmOO47W3oc2XeAqZV885s0lGRUIgyMdv0/8bzMIUnRjao
+        L8ALkRh7svg9MMRjdBfG2+wOE8vk/hg=
+X-Google-Smtp-Source: APXvYqyvLRe64YUO/3qKFHmjNeqGQTT1LGes3z5U5TdkCuerSW9GPWpZZOV+hRuU/xk9FwhAJHv2AA==
+X-Received: by 2002:ac2:47e3:: with SMTP id b3mr14014075lfp.80.1570396517316;
+        Sun, 06 Oct 2019 14:15:17 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id c6sm2336572lfh.65.2019.10.06.14.15.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Oct 2019 14:15:16 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id x80so7847659lff.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 14:15:15 -0700 (PDT)
+X-Received: by 2002:a19:2489:: with SMTP id k131mr14363203lfk.52.1570396515673;
+ Sun, 06 Oct 2019 14:15:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191005233227.GB25745@shell.armlinux.org.uk> <CAHk-=wiy9MWteoaoV15FJ7QJeRhBtCVgo6ECiLb4khuc5PxHUg@mail.gmail.com>
+ <20191006130924.GC25745@shell.armlinux.org.uk> <CAHk-=wh6jhO1X3VZuZ28aA4m0k6wGhkHRRrJSQpQ69N901D7Mw@mail.gmail.com>
+In-Reply-To: <CAHk-=wh6jhO1X3VZuZ28aA4m0k6wGhkHRRrJSQpQ69N901D7Mw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 6 Oct 2019 14:14:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg14VfTec2AiW0iSVUzj2x2_PYffH9O5sDV5ZRagjQwRg@mail.gmail.com>
+Message-ID: <CAHk-=wg14VfTec2AiW0iSVUzj2x2_PYffH9O5sDV5ZRagjQwRg@mail.gmail.com>
+Subject: Re: MAP_FIXED_NOREPLACE appears to break older i386 binaries
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>, Michal Hocko <mhocko@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Alignment should match open parenthesis"
+On Sun, Oct 6, 2019 at 11:07 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Yes, we should get this fixed. But I continue to ask you to point to
+> the actual binaries for testing..
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- drivers/staging/rtl8712/recv_linux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just to bring the resolution back publicly to lkml after rmk sent me
+test binaries in private email, the end result is commit b212921b13bd
+("elf: don't use MAP_FIXED_NOREPLACE for elf executable mappings").
 
-diff --git a/drivers/staging/rtl8712/recv_linux.c b/drivers/staging/rtl8712/recv_linux.c
-index 70a4dcd4a1e5..808f21c5767a 100644
---- a/drivers/staging/rtl8712/recv_linux.c
-+++ b/drivers/staging/rtl8712/recv_linux.c
-@@ -61,7 +61,7 @@ int r8712_os_recvbuf_resource_alloc(struct _adapter *padapter,
- 
- /*free os related resource in struct recv_buf*/
- int r8712_os_recvbuf_resource_free(struct _adapter *padapter,
--			     struct recv_buf *precvbuf)
-+				   struct recv_buf *precvbuf)
- {
- 	if (precvbuf->pskb)
- 		dev_kfree_skb_any(precvbuf->pskb);
--- 
-2.20.1
-
+             Linus
