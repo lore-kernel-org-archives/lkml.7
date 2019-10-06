@@ -2,51 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939FBECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04676ECE58E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B3D2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB60D2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382440;
-	bh=QWG0Sgk+7RWxv4CesJTL0WSeRDiYchbm4cUUMDSl1a0=;
+	s=default; t=1570382445;
+	bh=J+cyFnyKLWK0/kJ1+ufnTyqwGSkc7/zvvSzD47UPj4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMRxzqz833XEw1hfq64x1MG40KnLLxlIVxo8yaNVv1HMNqbR6U0qhyt/no9KKNmQe
-	 xeFAlt3hLDu9PkR0Hs+VAMywUdL9UJvhlGeUs9hmzZXzEoHH+N1V8R1n2HYNFFe36o
-	 HyGg7u0BiguWEZm2ihe5HsZDiylMGAIbbx+d7RN0=
+	b=2UrY/HmlXJL2CvHbu1uUIrO4b+KHWJtz+xw6V6s/1GeC92kqvmiImqujr+FApUxiV
+	 94ZLNU6Gr1wkmzb9HBWcs+2904r8ecas4ZWhPYbzkW2APBdBmFk/dI/ENR43mPdu44
+	 mo5BviXHDUNi6zmew0T8wJ5y73FAJNvA+oNP7BxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfJFRUj (ORCPT
+        id S1727316AbfJFRUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45632 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:20:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbfJFRUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:36 -0400
+        id S1727300AbfJFRUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B48602080F;
-        Sun,  6 Oct 2019 17:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3002B20862;
+        Sun,  6 Oct 2019 17:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382436;
-        bh=QWG0Sgk+7RWxv4CesJTL0WSeRDiYchbm4cUUMDSl1a0=;
+        s=default; t=1570382441;
+        bh=J+cyFnyKLWK0/kJ1+ufnTyqwGSkc7/zvvSzD47UPj4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tc2tsgS2/S1uR5sRip2RGiZ5mHxCkmEJ1CB9201So0Rgpav+g+B+WlPg4kbX+0/T5
-         3Vv1NrH1Rz3vI94X+rDTJxm+W1wHZ29BCZF8Qlcm8E0wYSZ6bHiE8G/mRtRU619HE5
-         jJDQWIw1vg772V7s0Fqgrke4L8BBybYdsD3qyLgU=
+        b=Q8OTqDO+LQ6NOYe8ISJuDMNSlPQqLPEnIOzKXWWAv3+vXn31MRtO0sFDaEMyMXOKr
+         tV5z785eYePgfrhx+owsQdTcs6ey+CFhzk5ykz7W4AcBRzlQhnF1xH4XdbXrVFscsf
+         YaPn/EdoZsDkoCa5+BAvCpO9wtD2Bn8+kfUhFzN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/36] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Sun,  6 Oct 2019 19:18:45 +0200
-Message-Id: <20191006171042.264521960@linuxfoundation.org>
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 31/36] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
+Date:   Sun,  6 Oct 2019 19:19:13 +0200
+Message-Id: <20191006171059.679886068@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -59,88 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+[ Upstream commit a761129e3625688310aecf26e1be9e98e85f8eb5 ]
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
+to cache extra fragments. This is incorrect because the return type of
+xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
+ring buffer index.
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+In the situation when the rsp_cons is approaching 0xffffffff, the return
+value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
+caller) would regard as error. As a result, queue->rx.rsp_cons is set
+incorrectly because it is updated only when there is error. If there is no
+error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
+Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
+queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
+This leads to NULL pointer access in the next iteration to process rx ring
+buffer entries.
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
+The symptom is similar to the one fixed in
+commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
+empty in error handling").
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch changes the return type of xennet_fill_frags() to indicate
+whether it is successful or failed. The queue->rx.rsp_cons will be
+always updated inside this function.
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/net/xen-netfront.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 2f9abe0d04dcb..2f8ff63bbbe43 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -281,6 +281,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
- 
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
-+
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1091,11 +1094,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1103,8 +1115,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
- 	}
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -874,9 +874,9 @@ static int xennet_set_skb_gso(struct sk_
  	return 0;
  }
-@@ -1283,6 +1296,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
  
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
+-static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
+-				  struct sk_buff *skb,
+-				  struct sk_buff_head *list)
++static int xennet_fill_frags(struct netfront_queue *queue,
++			     struct sk_buff *skb,
++			     struct sk_buff_head *list)
+ {
+ 	RING_IDX cons = queue->rx.rsp_cons;
+ 	struct sk_buff *nskb;
+@@ -895,7 +895,7 @@ static RING_IDX xennet_fill_frags(struct
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+ 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
+-			return ~0U;
++			return -ENOENT;
+ 		}
+ 
+ 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+@@ -906,7 +906,9 @@ static RING_IDX xennet_fill_frags(struct
+ 		kfree_skb(nskb);
+ 	}
+ 
+-	return cons;
++	queue->rx.rsp_cons = cons;
++
++	return 0;
  }
  
- static const struct ipmi_smi_handlers handlers = {
--- 
-2.20.1
-
+ static int checksum_setup(struct net_device *dev, struct sk_buff *skb)
+@@ -1032,8 +1034,7 @@ err:
+ 		skb->data_len = rx->status;
+ 		skb->len += rx->status;
+ 
+-		i = xennet_fill_frags(queue, skb, &tmpq);
+-		if (unlikely(i == ~0U))
++		if (unlikely(xennet_fill_frags(queue, skb, &tmpq)))
+ 			goto err;
+ 
+ 		if (rx->flags & XEN_NETRXF_csum_blank)
+@@ -1043,7 +1044,7 @@ err:
+ 
+ 		__skb_queue_tail(&rxq, skb);
+ 
+-		queue->rx.rsp_cons = ++i;
++		i = ++queue->rx.rsp_cons;
+ 		work_done++;
+ 	}
+ 
 
 
