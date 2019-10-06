@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75A9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59982133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4452087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383014;
-	bh=DoSnJE+/AIJVHkubvDdh3iKIiYc9vRFb+UuVLRPUBj0=;
+	s=default; t=1570383018;
+	bh=QPtqNeyMsNf02U0gseQ4oTIdZSRz1mT4OcfhwZov/V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3encLpQdqaBQIsmFQYPTL1ck7hUTmb2XufVHw4gOTcW+fDGI6avfkTs4i4bcALJy
-	 sr1VpXBvN80l823Qukh8t8VvS90ohYNUmuS/qmK0UkrI9VEnVJIUfpZKuTE3luRXKz
-	 kxWJoiZsz7CN+HaQRzuvuyZRE1Qhw4K0IlpXVkd0=
+	b=wOzHWJy8LbWqMUHSjRwFsd1jmbH/grK6bxVPCUXmQtlPeVLIb+3IVaxeEj4EE3sat
+	 qDwtOQqMq9SjM9mpnfEMRGKZUd3fbvQ/kKMQtUwLQoOXEnMPaf/zfSaf3BQH5bZ9Ys
+	 pjBchdHur41WMtAxOCb6xAogr9spnkGPm1vxTgB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfJFRaO (ORCPT
+        id S1729208AbfJFRaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56070 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729039AbfJFRaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:11 -0400
+        id S1728091AbfJFRaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B9C2133F;
-        Sun,  6 Oct 2019 17:30:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5AC721479;
+        Sun,  6 Oct 2019 17:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383011;
-        bh=DoSnJE+/AIJVHkubvDdh3iKIiYc9vRFb+UuVLRPUBj0=;
+        s=default; t=1570383008;
+        bh=QPtqNeyMsNf02U0gseQ4oTIdZSRz1mT4OcfhwZov/V8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ah3djOm4uAHnqP3E0oxHjiW/9kU60tjOjn+PxQ+no7uDAKa1i3P/pZWNfNNdH+H7
-         UMGf4OJnDShk+CbFcP/qrPLG9dp/WUShcn1KVTkRMFWdpOEtPZfDfV87n9o+s7B2kF
-         xJHj2rxMA/tvLXmXZ2J6rImOs5brq2Cq/ERgzIMk=
+        b=kjhG8e29BhPLfAy/uE4pAffT3xPmjltDRwrZR89XVysyd3tg7/mGsWZvz68jo29PE
+         jyol5M3p8mxQtf2JuVxjbWU2zwUvp1SzdfThdeLXCJvc0lupPmFklYvlowSZ8hdb8u
+         RO0vUp6xHWbJq+8rjTj8YJdQ7WcH3vQyoyMJb6c8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/106] livepatch: Nullify obj->mod in klp_module_coming()s error path
-Date:   Sun,  6 Oct 2019 19:21:00 +0200
-Message-Id: <20191006171146.174243201@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 053/106] HID: wacom: Fix several minor compiler warnings
+Date:   Sun,  6 Oct 2019 19:20:59 +0200
+Message-Id: <20191006171145.891032620@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,39 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Jason Gerecke <killertofu@gmail.com>
 
-[ Upstream commit 4ff96fb52c6964ad42e0a878be8f86a2e8052ddd ]
+[ Upstream commit 073b50bccbbf99a3b79a1913604c656d0e1a56c9 ]
 
-klp_module_coming() is called for every module appearing in the system.
-It sets obj->mod to a patched module for klp_object obj. Unfortunately
-it leaves it set even if an error happens later in the function and the
-patched module is not allowed to be loaded.
+Addresses a few issues that were noticed when compiling with non-default
+warnings enabled. The trimmed-down warnings in the order they are fixed
+below are:
 
-klp_is_object_loaded() uses obj->mod variable and could currently give a
-wrong return value. The bug is probably harmless as of now.
+* declaration of 'size' shadows a parameter
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+* '%s' directive output may be truncated writing up to 5 bytes into a
+  region of size between 1 and 64
+
+* pointer targets in initialization of 'char *' from 'unsigned char *'
+  differ in signedness
+
+* left shift of negative value
+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/livepatch/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/wacom_sys.c | 7 ++++---
+ drivers/hid/wacom_wac.c | 4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 722c27c40e5b3..a1250ad591c1d 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -1027,6 +1027,7 @@ err:
- 	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
- 		patch->mod->name, obj->mod->name, obj->mod->name);
- 	mod->klp_alive = false;
-+	obj->mod = NULL;
- 	klp_cleanup_module_patches_limited(mod, patch);
- 	mutex_unlock(&klp_mutex);
+diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+index 5a2d5140c1f42..3038c975e417c 100644
+--- a/drivers/hid/wacom_sys.c
++++ b/drivers/hid/wacom_sys.c
+@@ -91,7 +91,7 @@ static void wacom_wac_queue_flush(struct hid_device *hdev,
+ }
  
+ static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
+-		struct hid_report *report, u8 *raw_data, int size)
++		struct hid_report *report, u8 *raw_data, int report_size)
+ {
+ 	struct wacom *wacom = hid_get_drvdata(hdev);
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+@@ -152,7 +152,8 @@ static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
+ 	if (flush)
+ 		wacom_wac_queue_flush(hdev, &wacom_wac->pen_fifo);
+ 	else if (insert)
+-		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo, raw_data, size);
++		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo,
++				       raw_data, report_size);
+ 
+ 	return insert && !flush;
+ }
+@@ -2147,7 +2148,7 @@ static void wacom_update_name(struct wacom *wacom, const char *suffix)
+ {
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+ 	struct wacom_features *features = &wacom_wac->features;
+-	char name[WACOM_NAME_MAX];
++	char name[WACOM_NAME_MAX - 20]; /* Leave some room for suffixes */
+ 
+ 	/* Generic devices name unspecified */
+ 	if ((features->type == HID_GENERIC) && !strcmp("Wacom HID", features->name)) {
+diff --git a/drivers/hid/wacom_wac.c b/drivers/hid/wacom_wac.c
+index 6f5c838f9d474..1df037e7f0b42 100644
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -255,7 +255,7 @@ static int wacom_dtu_irq(struct wacom_wac *wacom)
+ 
+ static int wacom_dtus_irq(struct wacom_wac *wacom)
+ {
+-	char *data = wacom->data;
++	unsigned char *data = wacom->data;
+ 	struct input_dev *input = wacom->pen_input;
+ 	unsigned short prox, pressure = 0;
+ 
+@@ -576,7 +576,7 @@ static int wacom_intuos_pad(struct wacom_wac *wacom)
+ 		strip2 = ((data[3] & 0x1f) << 8) | data[4];
+ 	}
+ 
+-	prox = (buttons & ~(~0 << nbuttons)) | (keys & ~(~0 << nkeys)) |
++	prox = (buttons & ~(~0U << nbuttons)) | (keys & ~(~0U << nkeys)) |
+ 	       (ring1 & 0x80) | (ring2 & 0x80) | strip1 | strip2;
+ 
+ 	wacom_report_numbered_buttons(input, nbuttons, buttons);
 -- 
 2.20.1
 
