@@ -7,58 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECAFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12331C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A9A20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF7C217F9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382369;
-	bh=kLpdyiyaKSkUkZH7ucq8Vfr+n9PdgsA9ejhy5q8h7sA=;
+	s=default; t=1570382378;
+	bh=RlYKxXdLi0iG8jA3nBMsToaPxsGq9Tnp4BjvMwYQlnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6e1Kpmq9s9WJ2nyRNJ5Lhs0K2341oNG5QgbnybY1TikpQm48vlHc1ji2EIzQEjYL
-	 k4Ec0y7Dg8ZkrLpAYcHZ5M7sQ4c7hzeT3UHWx0hHHQ6iii7a69VTj2OTbUvp9/kq5Q
-	 XPoyflXEC1gGYFCGaTm/rXtIzeZRSoJ1zN19hcnE=
+	b=nLrsFEDKviXUUK8rjoxxfnYOlX2PxMZ1sL9IiiWc8ltmVzDXEi37IDyGQJLne6/4f
+	 gMpNb0gaRtwwoNaiJmyHj4PBa8Bq0sX2nJYtb4v1Ys6BSNDxMnZqR07MsC4Yf4YjeI
+	 CDSU3yqJTcgHRn2mj1vF0edTroXgPEcNurA08+Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfJFRT2 (ORCPT
+        id S1726798AbfJFRTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbfJFRT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:19:28 -0400
+        id S1726508AbfJFRTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8700C2077B;
-        Sun,  6 Oct 2019 17:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CADFA2077B;
+        Sun,  6 Oct 2019 17:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382366;
-        bh=kLpdyiyaKSkUkZH7ucq8Vfr+n9PdgsA9ejhy5q8h7sA=;
+        s=default; t=1570382371;
+        bh=RlYKxXdLi0iG8jA3nBMsToaPxsGq9Tnp4BjvMwYQlnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=adpj7ERvN0mCHlTy6+Y9/pC1AXCgQyLrJIUvlaxO8t6UoGIU2Ia2iaK15NSYAwubN
-         203Tr1PEScbrCI0nZ/9H+5GtwhvGGyLTWjD4Yn7KYqUgkETerwn08ughXfNAh5vVHI
-         vDGQt8vSfcvyPvhSFtINRDIsHA9HAn6T4Pkt6/50=
+        b=ZFEOiwU8DE/P0n2l0WaK5YqBzdw62p/zr17AARSvIPgmVmnD4X2UDey5acI/amTp8
+         +f5zx8e+Sdssex08q3uXYA/+ZsqX3GqKvYGC63FhAVUB77p/Mg0TBLdtQqRzvt6AZg
+         GI6iy6gDzGvraGP2fVJqcpx5uKm+mBmb5fBuBHS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marko Kohtala <marko.kohtala@okoko.fi>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, hexin <hexin15@baidu.com>,
+        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/36] video: ssd1307fb: Start page range at page_offset
-Date:   Sun,  6 Oct 2019 19:18:43 +0200
-Message-Id: <20191006171041.501430611@linuxfoundation.org>
+Subject: [PATCH 4.4 11/36] vfio_pci: Restore original state on release
+Date:   Sun,  6 Oct 2019 19:18:53 +0200
+Message-Id: <20191006171048.918067947@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,42 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: hexin <hexin.op@gmail.com>
 
-[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
+[ Upstream commit 92c8026854c25093946e0d7fe536fd9eac440f06 ]
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+vfio_pci_enable() saves the device's initial configuration information
+with the intent that it is restored in vfio_pci_disable().  However,
+the commit referenced in Fixes: below replaced the call to
+__pci_reset_function_locked(), which is not wrapped in a state save
+and restore, with pci_try_reset_function(), which overwrites the
+restored device state with the current state before applying it to the
+device.  Reinstate use of __pci_reset_function_locked() to return to
+the desired behavior.
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index fa3480815cdb6..88e0763edcc72 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -421,7 +421,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 47b229fa5e8ec..4b62eb3b59233 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -221,11 +221,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
  
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
+ 	/*
+-	 * Try to reset the device.  The success of this is dependent on
+-	 * being able to lock the device, which is not always possible.
++	 * Try to get the locks ourselves to prevent a deadlock. The
++	 * success of this is dependent on being able to lock the device,
++	 * which is not always possible.
++	 * We can not use the "try" reset interface here, which will
++	 * overwrite the previously restored configuration information.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
  
+ 	pci_restore_state(pdev);
+ out:
 -- 
 2.20.1
 
