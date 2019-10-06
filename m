@@ -2,119 +2,101 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8F9ECE58D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A4AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA9C214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570354170;
-	bh=EDp/ZUvX5Z0SqZagNr/ZlDzkzQFYgPS6DAQUamBX9gg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=l9jZnXQm5LUndUGGgsYIqyxWBQXetlxygc+qVrayu3Kt7wIPAgjJJ6jVgO/WlqIN7
-	 nZCu5V3h5XLgFxO5wXhj++njc7m6pk/NZTOuZa7h0qlyv+XTPcdArNajYsdsXtkXJ1
-	 /OxIhCfxsb8NmfF/tzNsTjJoUgdevkR+lUEAuyn8=
+	by mail.kernel.org (Postfix) with ESMTP id 2A22D2084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvSavGHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfJFJ33 (ORCPT
+        id S1726377AbfJFJd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:29:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfJFJ33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:29:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC84720700;
-        Sun,  6 Oct 2019 09:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570354168;
-        bh=EDp/ZUvX5Z0SqZagNr/ZlDzkzQFYgPS6DAQUamBX9gg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yFTDwAykyEAVuqtKCZyfrDy0HyPu75DEO3JWOuWXwoK/gO/cnAy3u96+lNI1RK6tQ
-         9qadM9C6R6SBIHMbEQ8/Fpwm0siACUdpQN/vigpY8uQv96Y+GaaEI0ocOzecKP79+7
-         4coX+nhZu3+/VIOfZdM5kv1fExv+9/bNNI6ZIQAY=
-Date:   Sun, 6 Oct 2019 10:29:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        freeman.liu@unisoc.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
-        zhang.lyra@gmail.com
-Subject: Re: [PATCH] iio: adc: sc27xx: Use
- devm_hwspin_lock_request_specific() to simplify code
-Message-ID: <20191006102923.2d3e1b24@archlinux>
-In-Reply-To: <dabc353394772cd27dc64b48278e2366a763269f.1569551672.git.baolin.wang@linaro.org>
-References: <dabc353394772cd27dc64b48278e2366a763269f.1569551672.git.baolin.wang@linaro.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 6 Oct 2019 05:33:59 -0400
+Received: from mail-vs1-f41.google.com ([209.85.217.41]:45745 "EHLO
+        mail-vs1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfJFJd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:33:59 -0400
+Received: by mail-vs1-f41.google.com with SMTP id d204so6942753vsc.12
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 02:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=WR9seTF6b/AIYyFA9kvA5VJHKX1PsFFiJpEiUOjg95M=;
+        b=MvSavGHro7C5Z2eRKoTaRQKoXTMbfDcOHE3o8QtYYxcjVtcOCPUo3DqyAShmb2RhIT
+         VUuEEPNdlnFbHgMr9BOfcnlXRuPLexQV4GaFJE5HFgk87ibYcpVavdloVkwIr/TvUO2E
+         MnU/LjBipXKNpVPQ7TVIy8YQ2UX9K0k0db5CTU7IX9IgABoZV8yXeZWISzjkeavjLHpd
+         GdHp2y0BCGBmUMq3YZRUILa0uhctZxQAwCkrVxhYJdmtyGx+gDfrJI5IvtufzGYL5m/x
+         g/XmTvEXEl6ZD1d73PEZaihQKHtu4grLEaBALlFSJ2FmrtvUkHLVL74A0tn6hZEfqVcf
+         mgDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=WR9seTF6b/AIYyFA9kvA5VJHKX1PsFFiJpEiUOjg95M=;
+        b=mLT2VBPM+IUIL8lu7jLQ1VnySx+00MFImKoDZMgQNG8phW+nrYqKku36IjekOR8Q0A
+         14qHJm/5ZZhX6Ly9Ok3x1L0zSv2f88Nl28L5s8P/xS0DdCGLizKZYHJX1lLR1q++eyhw
+         WWfCHs0wrXzA5SeBGsQbW2Qk67U0N6cVHqCBmkOrst1THFazeEdTbqzU+6WJRuXO7bmd
+         LrVYP8A3KyLaFUb1xrcHrRbR3oYXFX2uOSQeMlyEHc6HF1ZPXTdW4IPzvy18bYhLXZmg
+         h6wx0WhYcQ7RI7IR9GqZ83bAGgtHd+tLmwMUQYPAC6zPHDJVVLLfMTjT+bwpz3AuD+8t
+         6emg==
+X-Gm-Message-State: APjAAAXXpZfGz7Z5Q55mmDQOxqLiEtiEERmIVbm3SwRPavOt8EtZzZfI
+        C6cmJNccrnEFyrVwCKMCTWHK+cxCCgF0FwEEf4q5Kk1b
+X-Google-Smtp-Source: APXvYqzEU7iccGRPCunyygioydjGIFrWOxrtuMdVGIIzlpGm1sWK3OYNSit8DGr/3TW89ed2dGb3Kag4XbIdCMpZ7WA=
+X-Received: by 2002:a67:dc13:: with SMTP id x19mr12309088vsj.172.1570354437780;
+ Sun, 06 Oct 2019 02:33:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAFCwf11-MzroWUmj4qOgwLTibqsdOmPP9cHJjXZmS0Pgr3bEOQ@mail.gmail.com>
+In-Reply-To: <CAFCwf11-MzroWUmj4qOgwLTibqsdOmPP9cHJjXZmS0Pgr3bEOQ@mail.gmail.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Sun, 6 Oct 2019 12:33:31 +0300
+Message-ID: <CAFCwf13AtwkWQ4Gnxi6pfKbcdEK95+X__7cFboN1FdHd1aKNQw@mail.gmail.com>
+Subject: Question about using #ifdef CONFIG_PPC64 in driver code
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Sep 2019 10:41:19 +0800
-Baolin Wang <baolin.wang@linaro.org> wrote:
+Hi Greg,
+a while ago we had an argument about identifying in my driver's code
+whether I'm running on x86 or powerpc. I tried to do something
+dynamically (based on parent pci bridge ID), and you and other people
+objected to it.
 
-> Change to use devm_hwspin_lock_request_specific() to help to simplify the
-> cleanup code for drivers requesting one hwlock.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+I see in other drivers (more then a few) that they are using #ifdef
+CONFIG_PPC64 in some places for similar things (e.g. to run code that
+is only needed in case of powerpc).
+
+e.g. from ocxl driver in misc:
+
+#ifdef CONFIG_PPC64
+static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
+...
+#endif
+and also:
+
+#ifdef CONFIG_PPC64
+if (cpu_has_feature(CPU_FTR_P9_TIDR))
+arg.flags[0] |= OCXL_IOCTL_FEATURES_FLAGS0_P9_WAIT;
+#endif
+
+Is this approach acceptable on you ?
+Can I do something similar in my driver:
+
+#ifdef CONFIG_PPC64
+      foo (64)
+#else
+      foo (48)
+#endif
 
 Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/sc27xx_adc.c |   16 +---------------
->  1 file changed, 1 insertion(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
-> index a6c0465..66b387f 100644
-> --- a/drivers/iio/adc/sc27xx_adc.c
-> +++ b/drivers/iio/adc/sc27xx_adc.c
-> @@ -477,13 +477,6 @@ static void sc27xx_adc_disable(void *_data)
->  			   SC27XX_MODULE_ADC_EN, 0);
->  }
->  
-> -static void sc27xx_adc_free_hwlock(void *_data)
-> -{
-> -	struct hwspinlock *hwlock = _data;
-> -
-> -	hwspin_lock_free(hwlock);
-> -}
-> -
->  static int sc27xx_adc_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -520,19 +513,12 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	sc27xx_data->hwlock = hwspin_lock_request_specific(ret);
-> +	sc27xx_data->hwlock = devm_hwspin_lock_request_specific(dev, ret);
->  	if (!sc27xx_data->hwlock) {
->  		dev_err(dev, "failed to request hwspinlock\n");
->  		return -ENXIO;
->  	}
->  
-> -	ret = devm_add_action_or_reset(dev, sc27xx_adc_free_hwlock,
-> -			      sc27xx_data->hwlock);
-> -	if (ret) {
-> -		dev_err(dev, "failed to add hwspinlock action\n");
-> -		return ret;
-> -	}
-> -
->  	sc27xx_data->dev = dev;
->  
->  	ret = sc27xx_adc_enable(sc27xx_data);
-
+Oded
