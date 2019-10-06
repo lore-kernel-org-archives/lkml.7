@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6310C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28357C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D6B2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9332080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382468;
-	bh=S9VyX5D8oxibpDLEdsQthcihh5UzVs7s0KhHnlTVdZo=;
+	s=default; t=1570382473;
+	bh=LuGaAk8dxLEJhNh5nwVA5StYwKCJHKTuddQbelm7ZxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHQaE2PBkb9uIUNwaduToINQABzydKwFaG1r8gUnUGS9BVBaez5pRJOkCmq3waj+g
-	 Lk0Ua24PjI0DaeHBrc0GsXnGxja0G3jN1YbW4Dw0jKuLsOS1zg0lWGkXna/GUhqykZ
-	 bdEaLmeYokmPuMTnN+43HZI1+CJbQ8M+86UUx1+k=
+	b=1oIyL309qMoJ5dXsovtZJGeF0EQOxc0kpkesLMRWqXooQ2ac/gLNSurhde1b3StIe
+	 yB2ga5+37EOT1yW0AzvBILIBF7iJtSqnTyLOByvGu6y3OQgMKbaqG/rNmM9hss1EyW
+	 ZcfTlSy7DSwLyV8QadX5uogD37k3aMmqyLwJILDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfJFRVH (ORCPT
+        id S1727456AbfJFRVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:21:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46208 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727419AbfJFRVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:21:04 -0400
+        id S1726443AbfJFRVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:21:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36902080F;
-        Sun,  6 Oct 2019 17:21:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17AC72077B;
+        Sun,  6 Oct 2019 17:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382463;
-        bh=S9VyX5D8oxibpDLEdsQthcihh5UzVs7s0KhHnlTVdZo=;
+        s=default; t=1570382468;
+        bh=LuGaAk8dxLEJhNh5nwVA5StYwKCJHKTuddQbelm7ZxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+WqXDaVYsAG/sMd04NGKXeSJ7OrXVWfzEc5jQIlHHaXbl6wHnHH4H9hZnoFFwCxr
-         wGMc48i1+fyyuo8YpVpp32+AWuqy16JWsSafokMANFpoljRVpfecWZGeE234uer6Be
-         tdpAxrkNrg6LNCjYq0BpWfXtoKdJTCF+BdUE1WNM=
+        b=oKg6nEodhEW0iL9NEd78Wu7lbMHkteL4jyp2Nrexybaxut6ixBeaAwxMdard7tcph
+         OrqKtFCcSfK6yY7e3SnjUdYD5Xzrc4w2P6Xnz0eovvB2xLavLiInHdCNOBKx3i7Azo
+         DMi4RbRSlC87NEckt6xvKwALfCZCfv2UwBIsblwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 06/36] powerpc/rtas: use device model APIs and serialization during LPM
-Date:   Sun,  6 Oct 2019 19:18:48 +0200
-Message-Id: <20191006171044.425420392@linuxfoundation.org>
+Subject: [PATCH 4.4 08/36] powerpc/pseries/mobility: use cond_resched when updating device tree
+Date:   Sun,  6 Oct 2019 19:18:50 +0200
+Message-Id: <20191006171045.639649064@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -63,92 +62,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
+[ Upstream commit ccfb5bd71d3d1228090a8633800ae7cdf42a94ac ]
 
-The LPAR migration implementation and userspace-initiated cpu hotplug
-can interleave their executions like so:
+After a partition migration, pseries_devicetree_update() processes
+changes to the device tree communicated from the platform to
+Linux. This is a relatively heavyweight operation, with multiple
+device tree searches, memory allocations, and conversations with
+partition firmware.
 
-1. Set cpu 7 offline via sysfs.
+There's a few levels of nested loops which are bounded only by
+decisions made by the platform, outside of Linux's control, and indeed
+we have seen RCU stalls on large systems while executing this call
+graph. Use cond_resched() in these loops so that the cpu is yielded
+when needed.
 
-2. Begin a partition migration, whose implementation requires the OS
-   to ensure all present cpus are online; cpu 7 is onlined:
-
-     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
-
-   This sets cpu 7 online in all respects except for the cpu's
-   corresponding struct device; dev->offline remains true.
-
-3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
-   already online and returns success. The driver core (device_online)
-   sets dev->offline = false.
-
-4. The migration completes and restores cpu 7 to offline state:
-
-     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
-
-This leaves cpu7 in a state where the driver core considers the cpu
-device online, but in all other respects it is offline and
-unused. Attempts to online the cpu via sysfs appear to succeed but the
-driver core actually does not pass the request to the lower-level
-cpuhp support code. This makes the cpu unusable until the cpu device
-is manually set offline and then online again via sysfs.
-
-Instead of directly calling cpu_up/cpu_down, the migration code should
-use the higher-level device core APIs to maintain consistent state and
-serialize operations.
-
-Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
 Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
+Link: https://lore.kernel.org/r/20190802192926.19277-4-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 5a753fae8265a..0c42e872d548b 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -857,15 +857,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
- 		return 0;
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index c773396d0969b..8d30a425a88ab 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -11,6 +11,7 @@
  
- 	for_each_cpu(cpu, cpus) {
-+		struct device *dev = get_cpu_device(cpu);
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
++#include <linux/sched.h>
+ #include <linux/smp.h>
+ #include <linux/stat.h>
+ #include <linux/completion.h>
+@@ -206,7 +207,11 @@ static int update_dt_node(__be32 phandle, s32 scope)
+ 
+ 				prop_data += vd;
+ 			}
 +
- 		switch (state) {
- 		case DOWN:
--			cpuret = cpu_down(cpu);
-+			cpuret = device_offline(dev);
- 			break;
- 		case UP:
--			cpuret = cpu_up(cpu);
-+			cpuret = device_online(dev);
- 			break;
++			cond_resched();
  		}
--		if (cpuret) {
-+		if (cpuret < 0) {
- 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
- 					__func__,
- 					((state == UP) ? "up" : "down"),
-@@ -954,6 +956,8 @@ int rtas_ibm_suspend_me(u64 handle)
- 	data.token = rtas_token("ibm,suspend-me");
- 	data.complete = &done;
- 
-+	lock_device_hotplug();
 +
- 	/* All present CPUs must be online */
- 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
- 	cpuret = rtas_online_cpus_mask(offline_mask);
-@@ -985,6 +989,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 				__func__);
++		cond_resched();
+ 	} while (rtas_rc == 1);
  
- out:
-+	unlock_device_hotplug();
- 	free_cpumask_var(offline_mask);
- 	return atomic_read(&data.error);
- }
+ 	of_node_put(dn);
+@@ -282,8 +287,12 @@ int pseries_devicetree_update(s32 scope)
+ 					add_dt_node(phandle, drc_index);
+ 					break;
+ 				}
++
++				cond_resched();
+ 			}
+ 		}
++
++		cond_resched();
+ 	} while (rc == 1);
+ 
+ 	kfree(rtas_buf);
 -- 
 2.20.1
 
