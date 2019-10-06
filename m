@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801FCC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89BCC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594F92087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BACCE2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382985;
-	bh=P+lHs+riG0EDUfKFNMgXrIoSQvmWTKxTqzK5otPhaIU=;
+	s=default; t=1570382987;
+	bh=of1QNR5HzhXjDt1fZDPwtrYQyMCUkN8V/luTjRNiZu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTsf30kfgBPmx/R6GJnwUSq2s62XHjRw06z5PAYJjOSFoaMBSnneC1XXJQfdXDSqR
-	 67xGjJn0BPMKyB4T6g968Sg1/B2IAppWp63R7GyW3MKp7AsRcMiX8yLa7u8NrNlmTm
-	 nvoINzfDUnsWLMr7MxbNk4RdQEfHB53PM39nBToU=
+	b=uCV9gGphFoYXemM3PKtvROhIGDKdzkX6GPf99KkbJ0lBbYdQJ8WLfKhzvx2gJFcqW
+	 ubh0rSnMo2yR47CoSEx2/7XiuZ7ZzPXjX4Mm3NBT5khq+2q4E7HVGU/sw6VOT7AbC2
+	 J7PVSE0iId/J3f4Ot3AQ+wUNmQw5LY886GkKaWIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfJFR3o (ORCPT
+        id S1729036AbfJFR3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfJFR3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:41 -0400
+        id S1729016AbfJFR3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C42214D9;
-        Sun,  6 Oct 2019 17:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FF92087E;
+        Sun,  6 Oct 2019 17:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382981;
-        bh=P+lHs+riG0EDUfKFNMgXrIoSQvmWTKxTqzK5otPhaIU=;
+        s=default; t=1570382978;
+        bh=of1QNR5HzhXjDt1fZDPwtrYQyMCUkN8V/luTjRNiZu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eOXyIYrv9DG1BH6ouQkUSbMgvwZZ4I7m2SAjOf9gli0Bsi+0zGqzrFPylR4Ddvsq5
-         MUJJbGUd5xN9JYDmoayW2sNOIDoQWve5d9hanIyZKVqSdNG/SLMRrk9te00dT+nxjE
-         pE2IlCDyhH9doHXhAc4GQ0XuiLpZmsqWBKFNKyw8=
+        b=T5fDbjLCU1EGP5IgJo+t1SEm8M7AYotsabrYhzEyvK0qpy0nyV9hwP6tBiEERJ9vN
+         QRQ15tvB7LdPib4iK94csSLiCUxCllYfRdzzU5YQAxvBuKvYHH9DWgxz6bSQsG9xl7
+         HaWRjbGEm98XsRbvBgbrtyJmk5OG0iJWVZXnEneo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Zain Wang <wzz@rock-chips.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 009/106] drm/radeon: Fix EEH during kexec
-Date:   Sun,  6 Oct 2019 19:20:15 +0200
-Message-Id: <20191006171129.407347932@linuxfoundation.org>
+Subject: [PATCH 4.19 008/106] drm/rockchip: Check for fast link training before enabling psr
+Date:   Sun,  6 Oct 2019 19:20:14 +0200
+Message-Id: <20191006171129.322164904@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,45 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6 ]
+[ Upstream commit ad309284a52be47c8b3126c9376358bf381861bc ]
 
-During kexec some adapters hit an EEH since they are not properly
-shut down in the radeon_pci_shutdown() function. Adding
-radeon_suspend_kms() fixes this issue.
+Once we start shutting off the link during PSR, we're going to want fast
+training to work. If the display doesn't support fast training, don't
+enable psr.
 
-Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Changes in v2:
+- None
+Changes in v3:
+- None
+Changes in v4:
+- None
+Changes in v5:
+- None
+
+Link to v1: https://patchwork.freedesktop.org/patch/msgid/20190228210939.83386-3-sean@poorly.run
+Link to v2: https://patchwork.freedesktop.org/patch/msgid/20190326204509.96515-2-sean@poorly.run
+Link to v3: https://patchwork.freedesktop.org/patch/msgid/20190502194956.218441-9-sean@poorly.run
+Link to v4: https://patchwork.freedesktop.org/patch/msgid/20190508160920.144739-8-sean@poorly.run
+
+Cc: Zain Wang <wzz@rock-chips.com>
+Cc: Tomasz Figa <tfiga@chromium.org>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190611160844.257498-8-sean@poorly.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 2a7977a23b31c..25b5407c74b5a 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -364,11 +364,19 @@ radeon_pci_remove(struct pci_dev *pdev)
- static void
- radeon_pci_shutdown(struct pci_dev *pdev)
- {
-+	struct drm_device *ddev = pci_get_drvdata(pdev);
-+
- 	/* if we are running in a VM, make sure the device
- 	 * torn down properly on reboot/shutdown
- 	 */
- 	if (radeon_device_is_virtual())
- 		radeon_pci_remove(pdev);
-+
-+	/* Some adapters need to be suspended before a
-+	* shutdown occurs in order to prevent an error
-+	* during kexec.
-+	*/
-+	radeon_suspend_kms(ddev, true, true, false);
- }
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index d68986cea1325..84abf5d6f760a 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1040,16 +1040,17 @@ static int analogix_dp_commit(struct analogix_dp_device *dp)
+ 	if (ret)
+ 		return ret;
  
- static int radeon_pmops_suspend(struct device *dev)
++	/* Check whether panel supports fast training */
++	ret = analogix_dp_fast_link_train_detection(dp);
++	if (ret)
++		dp->psr_enable = false;
++
+ 	if (dp->psr_enable) {
+ 		ret = analogix_dp_enable_sink_psr(dp);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	/* Check whether panel supports fast training */
+-	ret =  analogix_dp_fast_link_train_detection(dp);
+-	if (ret)
+-		dp->psr_enable = false;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
