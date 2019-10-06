@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC18C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593A1ECE58F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B6420673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3361720700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384831;
-	bh=idS9ft4PoldZTWTcbysRgHOMFEngjStNMRW5fk1OU7E=;
+	s=default; t=1570384832;
+	bh=sl7eYppt5JD2Oe9j+O+g6Z0CQlmLnKpi+odQ+86tqXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ak+0h4L37N7/3Kj+idaIukXD+KgETbPCawDhpvEu9c78ag5c4RtxOtbqPskCHPOoZ
-	 QaGOQ9gkyJQK7RkiEO10qDfOKLv/TvMORsdiM2nKpG/uqFVEBFAxSoDsW3d5w0M9na
-	 yE1PngdBoImKtmaD2L0ss9rZERSD12G2w1rBjhnU=
+	b=GdBeloDL30nHjwGckorIDMH+2BMkWzrwnCVVZmTggqNogFOVSeoxSt9t1JTr/D7bG
+	 eDbJCVP8L9KhoduElCDVqWrJhJUwirnzm8akPiJn6a49H3QHmCCO1rHk2gvqwqdlTA
+	 SLluN1wfsbiQCJ4sJAZYm3LIcqUC0m0CNRjm9nSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfJFR3F (ORCPT
+        id S1728910AbfJFR3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54662 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbfJFR26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:58 -0400
+        id S1728879AbfJFR24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96F142133F;
-        Sun,  6 Oct 2019 17:28:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F056B2087E;
+        Sun,  6 Oct 2019 17:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382938;
-        bh=idS9ft4PoldZTWTcbysRgHOMFEngjStNMRW5fk1OU7E=;
+        s=default; t=1570382935;
+        bh=sl7eYppt5JD2Oe9j+O+g6Z0CQlmLnKpi+odQ+86tqXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOV68vEKcLTD1B9pCw8xQBlpnMhaHUg+lSXi25bJBXH1fHmudYkjynmc3m2O3EjT2
-         jfQ3O7np+FqYwJmEGliiH9YS0E3wKtOoup6s/eW0E5FCNszresX4X3aVVfark5JHEW
-         MmNKnX8pjxl1DbJZsusX8l0duDo6sDWJIdtGW79E=
+        b=CukaWyr1+jZW+3/Sp7qqLA22xNMOPnoibV2GJLbjFbtm4DAZCoTuqkW2L+ci2fpyQ
+         StZQNAP58Zo1+9L1BS9mS4yotRZm2B7dhF9iB/H5QJA9sXz+V/6yCt5dVLUcC8P/7v
+         vHd8NnHiC5jS9IF7zmxgHuTDGODNRqB+fny893XI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/106] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Sun,  6 Oct 2019 19:20:32 +0200
-Message-Id: <20191006171137.992118437@linuxfoundation.org>
+Subject: [PATCH 4.19 025/106] powerpc/pseries/mobility: use cond_resched when updating device tree
+Date:   Sun,  6 Oct 2019 19:20:31 +0200
+Message-Id: <20191006171137.364190930@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -62,42 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
+[ Upstream commit ccfb5bd71d3d1228090a8633800ae7cdf42a94ac ]
 
-pmx_writel uses writel which inserts write barrier before the
-register write.
+After a partition migration, pseries_devicetree_update() processes
+changes to the device tree communicated from the platform to
+Linux. This is a relatively heavyweight operation, with multiple
+device tree searches, memory allocations, and conversations with
+partition firmware.
 
-This patch has fix to replace writel with writel_relaxed followed
-by a readback and memory barrier to ensure write operation is
-completed for successful pinctrl change.
+There's a few levels of nested loops which are bounded only by
+decisions made by the platform, outside of Linux's control, and indeed
+we have seen RCU stalls on large systems while executing this call
+graph. Use cond_resched() in these loops so that the cpu is yielded
+when needed.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190802192926.19277-4-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 1aba75897d147..26a3f1eb9c6bf 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -40,7 +40,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index 7b60fcf04dc47..e4ea713833832 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -12,6 +12,7 @@
+ #include <linux/cpu.h>
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
++#include <linux/sched.h>
+ #include <linux/smp.h>
+ #include <linux/stat.h>
+ #include <linux/completion.h>
+@@ -209,7 +210,11 @@ static int update_dt_node(__be32 phandle, s32 scope)
  
- static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
- {
--	writel(val, pmx->regs[bank] + reg);
-+	writel_relaxed(val, pmx->regs[bank] + reg);
-+	/* make sure pinmux register write completed */
-+	pmx_readl(pmx, bank, reg);
- }
+ 				prop_data += vd;
+ 			}
++
++			cond_resched();
+ 		}
++
++		cond_resched();
+ 	} while (rtas_rc == 1);
  
- static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ 	of_node_put(dn);
+@@ -318,8 +323,12 @@ int pseries_devicetree_update(s32 scope)
+ 					add_dt_node(phandle, drc_index);
+ 					break;
+ 				}
++
++				cond_resched();
+ 			}
+ 		}
++
++		cond_resched();
+ 	} while (rc == 1);
+ 
+ 	kfree(rtas_buf);
 -- 
 2.20.1
 
