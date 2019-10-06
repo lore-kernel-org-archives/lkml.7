@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF80C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F765ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724EB20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A80B20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384348;
-	bh=OebFyXabA0ERn/b/gsHcJyDaNDFID5j4xLypGKyKfnU=;
+	s=default; t=1570384350;
+	bh=k4xrTvtY0yDO2J2oqihcwC3dwQtRmjTOVkEiQCp45xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WXeBsBuf8XzJJg44jimcUVPgm55pn34CfGrHCu34ssrTG1AXnfXpRocIl8N2GZODM
-	 +BbB9IeGibVKv6n8zUBLho4AgebN98BlEr1OzimV8++3M16Y4SjiAyihrPFYOLmKPf
-	 tGXwCddzCaHPppIaRk9w0/xKiz+CngmIlX6FCCoQ=
+	b=Fea5GHHTkA9PRZvvwRUtwgH8PdBpsulRrLQ2gL8RIhD7Z3vqwcn/Qb7Znby+MSCHq
+	 6afSVhr3hU1WcLBaQjhHVS15JrM7m2faRRYUayYheo1iYF5daw+4Za5ZfDFQB7UPVX
+	 Swkw6ThC1Mw4s3yGoVCqoEpPgjAAFYY5QP08N2Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfJFRvo (ORCPT
+        id S1727577AbfJFRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49022 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728061AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6072920673;
-        Sun,  6 Oct 2019 17:45:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDF5D222C5;
+        Sun,  6 Oct 2019 17:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383954;
-        bh=OebFyXabA0ERn/b/gsHcJyDaNDFID5j4xLypGKyKfnU=;
+        s=default; t=1570383949;
+        bh=k4xrTvtY0yDO2J2oqihcwC3dwQtRmjTOVkEiQCp45xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oDkgbv5rTvCw5JMfAg+WwMmXG4ASCYtZE+9U+zq81Oo6AzX1wuqeiEERYfGKOnf3O
-         cRBpOJVK6lJmtHxBANqqjxU8DSm7o9Kg/pFY+XWVDAC50FD8AtG+JYPf+UyFW8VtiV
-         AM5X2nuuUVxuGRJZDk654W4aHVZz5LXbmiGbZItI=
+        b=jIcqrWbnnlXCBK9Jusz9ABzjfNiHDCadDlLvCaDxiJBzAcEjsO58zWcdiB+BD5/RB
+         DWgcNbWpnHBjegwrmeHXC2x+4ayt+IbIJHWLN1s9ktmV4zpWtBv26k1XIPD29NOxct
+         I2P+Ze6jGCGXddb+Lmg/a6Z3uUcYQPpZA5+fxuy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        stable@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 157/166] net: sched: taprio: Avoid division by zero on invalid link speed
-Date:   Sun,  6 Oct 2019 19:22:03 +0200
-Message-Id: <20191006171226.096259249@linuxfoundation.org>
+Subject: [PATCH 5.3 155/166] net: socionext: netsec: always grab descriptor lock
+Date:   Sun,  6 Oct 2019 19:22:01 +0200
+Message-Id: <20191006171225.936955929@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,71 +62,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 9a9251a3534745d08a92abfeca0ca467b912b5f6 ]
+[ Upstream commit 55131dec2b1c7417d216f861ea7a29dc7c4d2d20 ]
 
-The check in taprio_set_picos_per_byte is currently not robust enough
-and will trigger this division by zero, due to e.g. PHYLINK not setting
-kset->base.speed when there is no PHY connected:
+Always acquire tx descriptor spinlock even if a xdp program is not loaded
+on the netsec device since ndo_xdp_xmit can run concurrently with
+netsec_netdev_start_xmit and netsec_clean_tx_dring. This can happen
+loading a xdp program on a different device (e.g virtio-net) and
+xdp_do_redirect_map/xdp_do_redirect_slow can redirect to netsec even if
+we do not have a xdp program on it.
 
-[   27.109992] Division by zero in kernel.
-[   27.113842] CPU: 1 PID: 198 Comm: tc Not tainted 5.3.0-rc5-01246-gc4006b8c2637-dirty #212
-[   27.121974] Hardware name: Freescale LS1021A
-[   27.126234] [<c03132e0>] (unwind_backtrace) from [<c030d8b8>] (show_stack+0x10/0x14)
-[   27.133938] [<c030d8b8>] (show_stack) from [<c10b21b0>] (dump_stack+0xb0/0xc4)
-[   27.141124] [<c10b21b0>] (dump_stack) from [<c10af97c>] (Ldiv0_64+0x8/0x18)
-[   27.148052] [<c10af97c>] (Ldiv0_64) from [<c0700260>] (div64_u64+0xcc/0xf0)
-[   27.154978] [<c0700260>] (div64_u64) from [<c07002d0>] (div64_s64+0x4c/0x68)
-[   27.161993] [<c07002d0>] (div64_s64) from [<c0f3d890>] (taprio_set_picos_per_byte+0xe8/0xf4)
-[   27.170388] [<c0f3d890>] (taprio_set_picos_per_byte) from [<c0f3f614>] (taprio_change+0x668/0xcec)
-[   27.179302] [<c0f3f614>] (taprio_change) from [<c0f2bc24>] (qdisc_create+0x1fc/0x4f4)
-[   27.187091] [<c0f2bc24>] (qdisc_create) from [<c0f2c0c8>] (tc_modify_qdisc+0x1ac/0x6f8)
-[   27.195055] [<c0f2c0c8>] (tc_modify_qdisc) from [<c0ee9604>] (rtnetlink_rcv_msg+0x268/0x2dc)
-[   27.203449] [<c0ee9604>] (rtnetlink_rcv_msg) from [<c0f4fef0>] (netlink_rcv_skb+0xe0/0x114)
-[   27.211756] [<c0f4fef0>] (netlink_rcv_skb) from [<c0f4f6cc>] (netlink_unicast+0x1b4/0x22c)
-[   27.219977] [<c0f4f6cc>] (netlink_unicast) from [<c0f4fa84>] (netlink_sendmsg+0x284/0x340)
-[   27.228198] [<c0f4fa84>] (netlink_sendmsg) from [<c0eae5fc>] (sock_sendmsg+0x14/0x24)
-[   27.235988] [<c0eae5fc>] (sock_sendmsg) from [<c0eaedf8>] (___sys_sendmsg+0x214/0x228)
-[   27.243863] [<c0eaedf8>] (___sys_sendmsg) from [<c0eb015c>] (__sys_sendmsg+0x50/0x8c)
-[   27.251652] [<c0eb015c>] (__sys_sendmsg) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
-[   27.259524] Exception stack(0xe8045fa8 to 0xe8045ff0)
-[   27.264546] 5fa0:                   b6f608c8 000000f8 00000003 bed7e2f0 00000000 00000000
-[   27.272681] 5fc0: b6f608c8 000000f8 004ce54c 00000128 5d3ce8c7 00000000 00000026 00505c9c
-[   27.280812] 5fe0: 00000070 bed7e298 004ddd64 b6dd1e64
-
-Russell King points out that the ethtool API says zero is a valid return
-value of __ethtool_get_link_ksettings:
-
-   * If it is enabled then they are read-only; if the link
-   * is up they represent the negotiated link mode; if the link is down,
-   * the speed is 0, %SPEED_UNKNOWN or the highest enabled speed and
-   * @duplex is %DUPLEX_UNKNOWN or the best enabled duplex mode.
-
-  So, it seems that taprio is not following the API... I'd suggest either
-  fixing taprio, or getting agreement to change the ethtool API.
-
-The chosen path was to fix taprio.
-
-Fixes: 7b9eba7ba0c1 ("net/sched: taprio: fix picos_per_byte miscalculation")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Fixes: ba2b232108d3 ("net: netsec: add XDP support")
+Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_taprio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/socionext/netsec.c |   30 +++++++-----------------------
+ 1 file changed, 7 insertions(+), 23 deletions(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -961,7 +961,7 @@ static void taprio_set_picos_per_byte(st
- 	if (err < 0)
- 		goto skip;
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -282,7 +282,6 @@ struct netsec_desc_ring {
+ 	void *vaddr;
+ 	u16 head, tail;
+ 	u16 xdp_xmit; /* netsec_xdp_xmit packets */
+-	bool is_xdp;
+ 	struct page_pool *page_pool;
+ 	struct xdp_rxq_info xdp_rxq;
+ 	spinlock_t lock; /* XDP tx queue locking */
+@@ -634,8 +633,7 @@ static bool netsec_clean_tx_dring(struct
+ 	unsigned int bytes;
+ 	int cnt = 0;
  
--	if (ecmd.base.speed != SPEED_UNKNOWN)
-+	if (ecmd.base.speed && ecmd.base.speed != SPEED_UNKNOWN)
- 		speed = ecmd.base.speed;
+-	if (dring->is_xdp)
+-		spin_lock(&dring->lock);
++	spin_lock(&dring->lock);
  
- skip:
+ 	bytes = 0;
+ 	entry = dring->vaddr + DESC_SZ * tail;
+@@ -682,8 +680,8 @@ next:
+ 		entry = dring->vaddr + DESC_SZ * tail;
+ 		cnt++;
+ 	}
+-	if (dring->is_xdp)
+-		spin_unlock(&dring->lock);
++
++	spin_unlock(&dring->lock);
+ 
+ 	if (!cnt)
+ 		return false;
+@@ -799,9 +797,6 @@ static void netsec_set_tx_de(struct nets
+ 	de->data_buf_addr_lw = lower_32_bits(desc->dma_addr);
+ 	de->buf_len_info = (tx_ctrl->tcp_seg_len << 16) | desc->len;
+ 	de->attr = attr;
+-	/* under spin_lock if using XDP */
+-	if (!dring->is_xdp)
+-		dma_wmb();
+ 
+ 	dring->desc[idx] = *desc;
+ 	if (desc->buf_type == TYPE_NETSEC_SKB)
+@@ -1123,12 +1118,10 @@ static netdev_tx_t netsec_netdev_start_x
+ 	u16 tso_seg_len = 0;
+ 	int filled;
+ 
+-	if (dring->is_xdp)
+-		spin_lock_bh(&dring->lock);
++	spin_lock_bh(&dring->lock);
+ 	filled = netsec_desc_used(dring);
+ 	if (netsec_check_stop_tx(priv, filled)) {
+-		if (dring->is_xdp)
+-			spin_unlock_bh(&dring->lock);
++		spin_unlock_bh(&dring->lock);
+ 		net_warn_ratelimited("%s %s Tx queue full\n",
+ 				     dev_name(priv->dev), ndev->name);
+ 		return NETDEV_TX_BUSY;
+@@ -1161,8 +1154,7 @@ static netdev_tx_t netsec_netdev_start_x
+ 	tx_desc.dma_addr = dma_map_single(priv->dev, skb->data,
+ 					  skb_headlen(skb), DMA_TO_DEVICE);
+ 	if (dma_mapping_error(priv->dev, tx_desc.dma_addr)) {
+-		if (dring->is_xdp)
+-			spin_unlock_bh(&dring->lock);
++		spin_unlock_bh(&dring->lock);
+ 		netif_err(priv, drv, priv->ndev,
+ 			  "%s: DMA mapping failed\n", __func__);
+ 		ndev->stats.tx_dropped++;
+@@ -1177,8 +1169,7 @@ static netdev_tx_t netsec_netdev_start_x
+ 	netdev_sent_queue(priv->ndev, skb->len);
+ 
+ 	netsec_set_tx_de(priv, dring, &tx_ctrl, &tx_desc, skb);
+-	if (dring->is_xdp)
+-		spin_unlock_bh(&dring->lock);
++	spin_unlock_bh(&dring->lock);
+ 	netsec_write(priv, NETSEC_REG_NRM_TX_PKTCNT, 1); /* submit another tx */
+ 
+ 	return NETDEV_TX_OK;
+@@ -1262,7 +1253,6 @@ err:
+ static void netsec_setup_tx_dring(struct netsec_priv *priv)
+ {
+ 	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_TX];
+-	struct bpf_prog *xdp_prog = READ_ONCE(priv->xdp_prog);
+ 	int i;
+ 
+ 	for (i = 0; i < DESC_NUM; i++) {
+@@ -1275,12 +1265,6 @@ static void netsec_setup_tx_dring(struct
+ 		 */
+ 		de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
+ 	}
+-
+-	if (xdp_prog)
+-		dring->is_xdp = true;
+-	else
+-		dring->is_xdp = false;
+-
+ }
+ 
+ static int netsec_setup_rx_dring(struct netsec_priv *priv)
 
 
