@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54902C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49D8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7A72053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9982248B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384185;
-	bh=3loIcDQngfLweMnZa6U8G6TzR0+So+oYGalFp8PX9FM=;
+	s=default; t=1570384190;
+	bh=n4EK9lFlhG+7vx2FsuKOoovwxv61xtY/g7zcyr254u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F91CK9YvCRyEP2FQj+zpdWhA9ZZYtf9noAvr33ml99wCYpZ97ZcAjWqXNQd+lgyqE
-	 QVAxAwRxqb6bVuyY3hcreQjJMiDvtpQEUlmOxjWy9ohHV5kS9NfxmDv/9Wh4xP4dk0
-	 uRwwQ1CoSmrHrfLK4xNMNzsswGhRWw7hX3TzLRwY=
+	b=Es+oSOPzrDmYGqgU9RfVCndKJW7C1k5B5DU0k4FJyMg5Wf1k7DpQJbt9NrAjbkghp
+	 M78UsIW7aH5qb4C/emxTfq92r3l5x15AEntUl0REDyUBxnyqO/A0Tflp/gIVlUidRN
+	 RLdvBFj1oCPvWKybavL1v7Xe2ZcGb/LYZyYJJcmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbfJFRto (ORCPT
+        id S1731242AbfJFRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:49:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41490 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729552AbfJFRlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:41:49 -0400
+        id S1731228AbfJFRlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:41:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521AC20700;
-        Sun,  6 Oct 2019 17:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A242053B;
+        Sun,  6 Oct 2019 17:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383708;
-        bh=3loIcDQngfLweMnZa6U8G6TzR0+So+oYGalFp8PX9FM=;
+        s=default; t=1570383695;
+        bh=n4EK9lFlhG+7vx2FsuKOoovwxv61xtY/g7zcyr254u0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KpzlXiLOPGtgyYzXVpy1KTUNFegCQC9FcqOH5PBx0hKL7X9w2LynZUK9hFdDNnJH
-         PXowLGcqOPh7Qp/bcF5Ryem+vR7kVQgFMvrO4ZMnPvRdkg3jCeGCXaf7fm1ChJ9+we
-         9XDW2aXkvxNectXGXUyjTAWwit91l5bJMxJwobBk=
+        b=KFTDEWk+xriKIWc9iqi6BUvYQOCLnmlNSbUcZKfwnTKOSEXI/JQrPISq2qGM1FeEb
+         Y/7q5vA6qa4jiqTaJdmQ34iYwvB/2HmqHq3XKH30cpn7bE7eDcBTiHR4RV55xsWV1F
+         2HMwfNEbbvEdx35WRdip7cc2pPcbgv0ahCKMjE7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Ken Wang <Qingqing.Wang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 039/166] powerpc/xmon: Check for HV mode when dumping XIVE info from OPAL
-Date:   Sun,  6 Oct 2019 19:20:05 +0200
-Message-Id: <20191006171216.209559166@linuxfoundation.org>
+Subject: [PATCH 5.3 061/166] drm/amdgpu/si: fix ASIC tests
+Date:   Sun,  6 Oct 2019 19:20:27 +0200
+Message-Id: <20191006171218.320981702@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,52 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit c3e0dbd7f780a58c4695f1cd8fc8afde80376737 ]
+[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
 
-Currently, the xmon 'dx' command calls OPAL to dump the XIVE state in
-the OPAL logs and also outputs some of the fields of the internal XIVE
-structures in Linux. The OPAL calls can only be done on baremetal
-(PowerNV) and they crash a pseries machine. Fix by checking the
-hypervisor feature of the CPU.
+Comparing adev->family with CHIP constants is not correct.
+adev->family can only be compared with AMDGPU_FAMILY constants and
+adev->asic_type is the struct member to compare with CHIP constants.
+They are separate identification spaces.
 
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190814154754.23682-2-clg@kaod.org
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
+Cc: Ken Wang <Qingqing.Wang@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/xmon.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 14e56c25879fa..25d4adccf750f 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -2534,13 +2534,16 @@ static void dump_pacas(void)
- static void dump_one_xive(int cpu)
- {
- 	unsigned int hwid = get_hard_smp_processor_id(cpu);
--
--	opal_xive_dump(XIVE_DUMP_TM_HYP, hwid);
--	opal_xive_dump(XIVE_DUMP_TM_POOL, hwid);
--	opal_xive_dump(XIVE_DUMP_TM_OS, hwid);
--	opal_xive_dump(XIVE_DUMP_TM_USER, hwid);
--	opal_xive_dump(XIVE_DUMP_VP, hwid);
--	opal_xive_dump(XIVE_DUMP_EMU_STATE, hwid);
-+	bool hv = cpu_has_feature(CPU_FTR_HVMODE);
-+
-+	if (hv) {
-+		opal_xive_dump(XIVE_DUMP_TM_HYP, hwid);
-+		opal_xive_dump(XIVE_DUMP_TM_POOL, hwid);
-+		opal_xive_dump(XIVE_DUMP_TM_OS, hwid);
-+		opal_xive_dump(XIVE_DUMP_TM_USER, hwid);
-+		opal_xive_dump(XIVE_DUMP_VP, hwid);
-+		opal_xive_dump(XIVE_DUMP_EMU_STATE, hwid);
-+	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
+index 4d74453f3cfbd..602397016b641 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si.c
++++ b/drivers/gpu/drm/amd/amdgpu/si.c
+@@ -1881,7 +1881,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
  
- 	if (setjmp(bus_error_jmp) != 0) {
- 		catch_memory_errors = 0;
+-			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
++			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
+ 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
+ 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
+ 				if (orig != data)
+@@ -1930,14 +1930,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 
+ 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
+ 
+ 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
 -- 
 2.20.1
 
