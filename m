@@ -2,111 +2,118 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDC9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC132C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C0C2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D78E2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="mhOoTq3x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuGxXKri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfJFPcH (ORCPT
+        id S1726613AbfJFPeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:32:07 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:41275 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfJFPcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:32:07 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 46mSGf3048z4p;
-        Sun,  6 Oct 2019 17:30:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1570375806; bh=gGVpWXK4iH8c96Sf0pNYq0Jcb/h2p6O0QCA4k6ZIcko=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhOoTq3xIXpWE/BsUeYXIYA/6A3LtWCsoA++ru0/dvV+bWcrvjYkrbQVfj7TD+JOv
-         tdQT9OmGNubwR+1gti4hT/7zx0jnny5tqQnHBL1RSOnIP1wmrg/mrRqutjSHb78Ww+
-         a/UiYvR31pnMvb2kv7ufbdxFxPq47zpZIzbG3/CrNFiyMxF4Lk0s+BnWNkQlZXUkKt
-         HVGdLttY6UbYkoseX+HbC/AUT44b30RsGyKQYjElIBkkR868Jfi4QB2XqztE3L4NMO
-         LUm/xe228Eld5UgTpMAn4nczOoqnKOV1pxfh/0n5ZFcnX/pspP9fHz9S+uKbeiSMfR
-         IoGF/7IKIwUnw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Sun, 6 Oct 2019 17:31:58 +0200
-From:   mirq-linux@rere.qmqm.pl
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, ckeepax@opensource.cirrus.com,
-        rf@opensource.wolfsonmicro.com, piotrs@opensource.cirrus.com,
-        enric.balletbo@collabora.com, paul@crapouillou.net,
-        srinivas.kandagatla@linaro.org, andradanciu1997@gmail.com,
-        kuninori.morimoto.gx@renesas.com, m.felsch@pengutronix.de,
-        shifu0704@thundersoft.com, ladis@linux-mips.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 -next] ASoc: tas2770: Fix build error without GPIOLIB
-Message-ID: <20191006153158.GA9882@qmqm.qmqm.pl>
-References: <20191006072241.56808-1-yuehaibing@huawei.com>
- <20191006104631.60608-1-yuehaibing@huawei.com>
+        Sun, 6 Oct 2019 11:34:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43614 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFPeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 11:34:11 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a2so7006941pfo.10;
+        Sun, 06 Oct 2019 08:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4EQLsnEWmRKXsrWscamvfXIozdZPp3UqHIAewrp831M=;
+        b=FuGxXKri8LhCjnaN52YWE/1RoQILpF5JVBvK/LBftn3CIZUjrqKTPma/y+MzzrPBZq
+         UhlQwgJuBn0CYCFYOU9R8W/ONHoOe7ar09zwZgDURZs/5+i++cdQ8cFEFDubxv2FbxZd
+         YGJn3C9EZOZp8zhTRr0w3kRIFrPQs+gyWaM49yFyqpsyLDsFDYf8AErTp2/aQ5fKK+db
+         BsCcGuMSgx4syafg7xJVarO1PrWiC3z93MRyPLLx+o6YbKMkKenir4TdZwAmnUxqUP7w
+         a/bzUwQieDUkJAQg/zAB4fqDRzSfyjljrpe7kPgia1kbriX0fuSvYz1aZ8n/fXkXaVt9
+         ofBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4EQLsnEWmRKXsrWscamvfXIozdZPp3UqHIAewrp831M=;
+        b=ajyMXXOz+1UlL2BMLzuUGoqLmjcIWADBNsx0co0j6a3Berv6cP4FFTvCL+qbTGLALx
+         5Ls77OvPjY5BIwsT5hXGgFhbB1IluFyCLFd4S+sFT0cu1Xtr8a0JQT+p8/0J6UefkfmY
+         wlLynmyDE/qh/W+rnN/WXNlAtRlC6ZE0DfAVfpvKXUInIu0vbgX1i/+ZVmGI4EglMdno
+         QKSL2rYJ6D/Km07vbgxQcsUA4NYgmrTLdhvqthgW1HJnpapFAh11eM/NeyEE5zIChD5C
+         5IK7iRe4m6jWUMKtajcLLh8qr0Y4HVNNgSY3y2/89eWxrT869ce1njcbrvwJAC4Zg220
+         1fxA==
+X-Gm-Message-State: APjAAAWBK9Z58Zuo+wf+UjnFf4p7N91PSpSDquIz5fVRzqLdkfxd8vpm
+        AZ5vXJKXMXI/xz3Eru83zPU=
+X-Google-Smtp-Source: APXvYqzzSq63aKM+d2Ii0hhLkgvoyfa4HNqxGKmBgbMCb5H398GjWtkeFeDqRZmM/efGjioGX2zwSA==
+X-Received: by 2002:a17:90a:b108:: with SMTP id z8mr28208287pjq.64.1570376050673;
+        Sun, 06 Oct 2019 08:34:10 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p17sm12568178pfn.50.2019.10.06.08.34.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 06 Oct 2019 08:34:10 -0700 (PDT)
+Date:   Sun, 6 Oct 2019 08:34:09 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: abituguru: make array probe_order static, makes
+ object smaller
+Message-ID: <20191006153409.GA7882@roeck-us.net>
+References: <20191006145231.24022-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191006104631.60608-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191006145231.24022-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 06:46:31PM +0800, YueHaibing wrote:
-> If GPIOLIB is not set, building fails:
+On Sun, Oct 06, 2019 at 03:52:31PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> sound/soc/codecs/tas2770.c: In function tas2770_reset:
-> sound/soc/codecs/tas2770.c:38:3: error: implicit declaration of function gpiod_set_value_cansleep; did you mean gpio_set_value_cansleep? [-Werror=implicit-function-declaration]
->    gpiod_set_value_cansleep(tas2770->reset_gpio, 0);
->    ^~~~~~~~~~~~~~~~~~~~~~~~
->    gpio_set_value_cansleep
-> sound/soc/codecs/tas2770.c: In function tas2770_i2c_probe:
-> sound/soc/codecs/tas2770.c:749:24: error: implicit declaration of function devm_gpiod_get_optional; did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
->   tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
->                         ^~~~~~~~~~~~~~~~~~~~~~~
->                         devm_regulator_get_optional
-> sound/soc/codecs/tas2770.c:751:13: error: GPIOD_OUT_HIGH undeclared (first use in this function); did you mean GPIOF_INIT_HIGH?
->              GPIOD_OUT_HIGH);
->              ^~~~~~~~~~~~~~
->              GPIOF_INIT_HIGH
+> Don't populate the array probe_order on the stack but instead make it
+> static. Makes the object code smaller by 94 bytes.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
-> Suggested-by: Ladislav Michl <ladis@linux-mips.org>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: Add missing include file
-> ---
->  sound/soc/codecs/tas2770.c | 1 +
->  1 file changed, 1 insertion(+)
+> Before:
+>    text	   data	    bss	    dec	    hex	filename
+>   41473	  13448	    320	  55241	   d7c9	drivers/hwmon/abituguru.o
 > 
-> diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-> index 9da88cc..a36d0d7 100644
-> --- a/sound/soc/codecs/tas2770.c
-> +++ b/sound/soc/codecs/tas2770.c
-> @@ -15,6 +15,7 @@
->  #include <linux/pm.h>
->  #include <linux/i2c.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/firmware.h>
+> After:
+>    text	   data	    bss	    dec	    hex	filename
+>   41315	  13512	    320	  55147	   d76b	drivers/hwmon/abituguru.o
+> 
+> (gcc version 9.2.1, amd64)
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-The Kconfig part is missing - is this intended? If I guess correctly,
-the driver won't work without GPIOLIB, so it should either
-'select GPIOLIB' or 'depends on GPIOLIB || COMPILE_TEST' or even
-'select GPIOLIB if !COMPILE_TEST'.
+Applied.
 
-Best Regards,
-Micha³ Miros³aw
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/abituguru.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/abituguru.c b/drivers/hwmon/abituguru.c
+> index a5cf6b2a6e49..681f0623868f 100644
+> --- a/drivers/hwmon/abituguru.c
+> +++ b/drivers/hwmon/abituguru.c
+> @@ -1264,7 +1264,7 @@ static int abituguru_probe(struct platform_device *pdev)
+>  	 * El weirdo probe order, to keep the sysfs order identical to the
+>  	 * BIOS and window-appliction listing order.
+>  	 */
+> -	const u8 probe_order[ABIT_UGURU_MAX_BANK1_SENSORS] = {
+> +	static const u8 probe_order[ABIT_UGURU_MAX_BANK1_SENSORS] = {
+>  		0x00, 0x01, 0x03, 0x04, 0x0A, 0x08, 0x0E, 0x02,
+>  		0x09, 0x06, 0x05, 0x0B, 0x0F, 0x0D, 0x07, 0x0C };
+>  
