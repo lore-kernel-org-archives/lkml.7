@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60308C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479B5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BBF2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFAE2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382953;
-	bh=5PN5gHuZThoRxTF4pnmnlVuDVJAKrvmI1Q8ep/YnmwI=;
+	s=default; t=1570382959;
+	bh=iFNLHfZGTgPUdhXaraunHws1uO5Hq9xIxfd6f9z792E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dGoLJUvz2ZR+TOJA72J2KhQ1KPsJG97TBwK59QyWWVkTGCl9kBbYmm1d9vBnQy0zn
-	 tB7kc/VbEzh83TrlqJiYB8DXjySaB7cyy5WWrtOF5vr3lXVlBkqpIunLywnw2WOMbm
-	 C4gWsor3OB2Ewbugvj2GQmAbE8BPSOLnd//r7Xrg=
+	b=IA0SD5M8lkzWLs9xoJIiLlZtb1Xch6XA5qtJNWhMcBp81kfX6cCPvca7l6Cd4mn3M
+	 JdG0ofxNzus7JSK4MlPjPUQu/lOkwFZl0nIAo3mbzrJi/v0eEGviZKXDvTNZcpkb3L
+	 q/H4rPvFeLG5wWvVg1lKaR+wMDM2hHY/5HZ3ww9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfJFR3M (ORCPT
+        id S1728143AbfJFR3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54766 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728913AbfJFR3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:03 -0400
+        id S1728952AbfJFR3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05882133F;
-        Sun,  6 Oct 2019 17:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC022080F;
+        Sun,  6 Oct 2019 17:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382943;
-        bh=5PN5gHuZThoRxTF4pnmnlVuDVJAKrvmI1Q8ep/YnmwI=;
+        s=default; t=1570382954;
+        bh=iFNLHfZGTgPUdhXaraunHws1uO5Hq9xIxfd6f9z792E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RAObqKIjwoBz2Drc5m/s8ovA49VepZM2KVXH4UHe8akNMXf6Ti5n5K0Q+g0WC1x1D
-         R+whq/ha4/8VhrT/xoLME/ysGKAMyDSMX3zREOSbJ3e4Zye5DHXMyuJIyFx/oqJH2p
-         +McueLWCQuizfiFLAsUg3geAU2PZJEuBQOllAN+4=
+        b=U+uOhJOuOiV0UJOQoNXetdbzgHyWyEKEGtec+xiD+/u7R9ugFeRoedG3IYqS0tSHO
+         X9JLRjdprBH2+0hAu3b6sHuooq2QtOts2Kh3uDz2H0CXPlE/EaARCSLG1AXzDlfJbT
+         XoXFNccjKrBvtI+bFIf3uLTlZVqfbdLYMAmG0ThA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, hexin <hexin15@baidu.com>,
-        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/106] vfio_pci: Restore original state on release
-Date:   Sun,  6 Oct 2019 19:20:34 +0200
-Message-Id: <20191006171138.549885140@linuxfoundation.org>
+Subject: [PATCH 4.19 031/106] clk: renesas: mstp: Set GENPD_FLAG_ALWAYS_ON for clock domain
+Date:   Sun,  6 Oct 2019 19:20:37 +0200
+Message-Id: <20191006171139.608595417@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,58 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: hexin <hexin.op@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 92c8026854c25093946e0d7fe536fd9eac440f06 ]
+[ Upstream commit a459a184c978ca9ad538aab93aafdde873953f30 ]
 
-vfio_pci_enable() saves the device's initial configuration information
-with the intent that it is restored in vfio_pci_disable().  However,
-the commit referenced in Fixes: below replaced the call to
-__pci_reset_function_locked(), which is not wrapped in a state save
-and restore, with pci_try_reset_function(), which overwrites the
-restored device state with the current state before applying it to the
-device.  Reinstate use of __pci_reset_function_locked() to return to
-the desired behavior.
+The CPG/MSTP Clock Domain driver does not implement the
+generic_pm_domain.power_{on,off}() callbacks, as the domain itself
+cannot be powered down.  Hence the domain should be marked as always-on
+by setting the GENPD_FLAG_ALWAYS_ON flag, to prevent the core PM Domain
+code from considering it for power-off, and doing unnessary processing.
 
-Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-Signed-off-by: hexin <hexin15@baidu.com>
-Signed-off-by: Liu Qi <liuqi16@baidu.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+This also gets rid of a boot warning when the Clock Domain contains an
+IRQ-safe device, e.g. on RZ/A1:
+
+    sh_mtu2 fcff0000.timer: PM domain cpg_clocks will not be powered off
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/clk/renesas/clk-mstp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 6cf00d9f512b7..a92c2868d9021 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -373,11 +373,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+diff --git a/drivers/clk/renesas/clk-mstp.c b/drivers/clk/renesas/clk-mstp.c
+index e82adcb16a52a..45d94fb9703d2 100644
+--- a/drivers/clk/renesas/clk-mstp.c
++++ b/drivers/clk/renesas/clk-mstp.c
+@@ -341,7 +341,8 @@ void __init cpg_mstp_add_clk_domain(struct device_node *np)
+ 		return;
  
- 	/*
--	 * Try to reset the device.  The success of this is dependent on
--	 * being able to lock the device, which is not always possible.
-+	 * Try to get the locks ourselves to prevent a deadlock. The
-+	 * success of this is dependent on being able to lock the device,
-+	 * which is not always possible.
-+	 * We can not use the "try" reset interface here, which will
-+	 * overwrite the previously restored configuration information.
- 	 */
--	if (vdev->reset_works && !pci_try_reset_function(pdev))
--		vdev->needs_reset = false;
-+	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
-+		if (device_trylock(&pdev->dev)) {
-+			if (!__pci_reset_function_locked(pdev))
-+				vdev->needs_reset = false;
-+			device_unlock(&pdev->dev);
-+		}
-+		pci_cfg_access_unlock(pdev);
-+	}
- 
- 	pci_restore_state(pdev);
- out:
+ 	pd->name = np->name;
+-	pd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
++	pd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ALWAYS_ON |
++		    GENPD_FLAG_ACTIVE_WAKEUP;
+ 	pd->attach_dev = cpg_mstp_attach_dev;
+ 	pd->detach_dev = cpg_mstp_detach_dev;
+ 	pm_genpd_init(pd, &pm_domain_always_on_gov, false);
 -- 
 2.20.1
 
