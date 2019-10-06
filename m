@@ -2,139 +2,165 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7490ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6D1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DEA21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621CD21479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Duz0PvB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfJFWjI (ORCPT
+        id S1726739AbfJFWjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 18:39:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7113 "EHLO mga03.intel.com"
+        Sun, 6 Oct 2019 18:39:44 -0400
+Received: from mout.gmx.net ([212.227.17.20]:59337 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfJFWjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 18:39:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Oct 2019 15:39:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
-   d="scan'208";a="392855637"
-Received: from dnlarsen-mobl4.amr.corp.intel.com (HELO localhost) ([10.252.3.159])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Oct 2019 15:39:02 -0700
-Date:   Mon, 7 Oct 2019 01:39:00 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v7 0/6] tpm: Add driver for cr50
-Message-ID: <20191006223831.GA10397@linux.intel.com>
-References: <20190920183240.181420-1-swboyd@chromium.org>
+        id S1726150AbfJFWjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 18:39:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570401534;
+        bh=HQioVg0fLiB703pC94Q5CJrHeDjz8YSULyFi62pu9m0=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Duz0PvB2qX4L8giiwuDvx5SsbWVQkb8MNecGicQqT5uyuTsSprcb4szvkk+FyF308
+         T8DlnhoKCH/OKa212mngd7IOBBUBNriW+dQD/sJLRXWBvhuZc1HMtk5iSxIdv46jut
+         AsHL66iTBj3HOm50gcjLz6rKv8wQRSbpJ9aIRN2E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTAFb-1ig9bd1brD-00Uabf; Mon, 07
+ Oct 2019 00:38:54 +0200
+Date:   Mon, 7 Oct 2019 00:38:48 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
+        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] ARM: dts: add Netronix E60K02 board common file
+Message-ID: <20191006223848.GE19803@latitude>
+References: <20190930194332.12246-1-andreas@kemnade.info>
+ <20190930194332.12246-3-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
 Content-Disposition: inline
-In-Reply-To: <20190920183240.181420-1-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190930194332.12246-3-andreas@kemnade.info>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:J4irto3tAosr7xHmcWxuJ3ndP76ZbpNdsbSVgPvdRBbyvC87GJw
+ aihi+iczLukRIoJQMVNUx900ERyIMFo4pEOlHqGD9/GlFKFWHdmSMQMKFuEFr7ab1pSvKaB
+ PCTNYdwLfqAYjoUal33EWnA8HpQaRIF9NQk/HqOjZ9Bg8I6iw5rRkIGWpJ0NN0XKfsgS5bT
+ jH6ius3PpesaQmI65q7yQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pNfCcJIi9Yg=:jVzGatRezPDUqXoRMuTiCK
+ WikGS7YNtIWvBa/qyr/BVMfmnZjb9pRnm60iEVgst2Q0b5BzmrnXuyUb1FvlAF/uWqZYmg1+q
+ CFSzTGbf2pYkYlT1qlrqNx7DD9mouXUZ8pzket/2gn2UDWtBNqBvOi7kVvhxFeJRhjGCZzahu
+ M5qs7+I2OBeCuhhzkNNVLlJ5TNzhgmGjylo6WKoNC1UaRUTOOxm/+o6lkw5GoaYP6/irlMnqe
+ bQK4OzU56aIAiSsIhkQPYSbJEjIupxPhldWu0LS8OKw2TfrXfzJsh6tL2+Tp/gKEfgk+KBvdr
+ AsvXWv2AvUioCIfVMqjIzTUJpVoOf47CbJzwomtd6uieXgJIzPM2QXNaSb9vAh/UYpPvX+iHU
+ ZBVIE6t1LFOpY/10M8Rl5ImuKyacdAAiXXbArWFyTxkRxndcoXo80p2tCai3HhXcPnIozoTSC
+ UzRfgdcAPlVB9B+V4OQFRcXk4/2VVNifgvfYAaq+8u7+C71lxEUnODJ65Bu1p1ZXMdf5/beA3
+ iY+MYzm9yM4xBlVpPdpz4Vp3q0ZPfk2ju73GIoKyewH0lH2W60sfAokDffg/UkSabsSnOq64j
+ Kg8NLayxxqQAYNMOcyye0jaXw+GoeDkU7lxxxm7TDkKToZviztmG2gDbiL5iLreSroXfH0cZZ
+ 4vZrHoJZJ8Sj61SpRYdDZJ4MknKH28XRQW5ISijP5O9ZeiOspgabrgEqkML1E9ARcZXo159JY
+ G5TlSvYgb33saya+tVqZ9UoRiwsAaIy9q+sZMpGNPLXfgkKYbApfDsGSCO6tz8n72KyXdr+ed
+ ozjFUkYXZL6Bk6v03PFNVpYsxf4d5ZBiujCtJJ2MGqibQB3u5s624pxfQQNA1fiA5NKHBUswC
+ 0JwbFANOUgZhYZdg1w4hKdKtjN1A6KSEiFXKotRwJddHOiiiR/rm4wHqy9Xv8CoRyv7IQWOzw
+ LD62IibRULWlTF2hOIjgHabvUAeaCbMAd3d08Fq0q/5fKkP0idx9oEflKmK6QMybjh7k0tF4E
+ NNS4FpuHZBTPeZu6amVeiEOxnR5Ww3gsFKkllSVxRMRLTD2MaBHoBH7JIvT/QMKw+1JZAQ73O
+ Z7nj7OK8dRans0lONpWYYru7/zGHG58Ws8NFy81e0OAzIOnpI8/izMHzjilLtlB5erIv/W07e
+ rvSp08//+XL4Qq8XtRAtSipEneG03z4fF3cMc0DoT+x0Jrq/rwUb45LPXRoWTJXaaWeW0+CgV
+ g54ivdND9+lGWgCLeBLfsp/MlwQFrI5mn+yICXlXuWqfDdUlpr3jkeJH/EnI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:32:34AM -0700, Stephen Boyd wrote:
-> This patch series adds support for the H1 secure microcontroller
-> running cr50 firmware found on various recent Chromebooks. This driver
-> is necessary to boot into a ChromeOS userspace environment. It
-> implements support for several functions, including TPM-like
-> functionality over a SPI interface.
-> 
-> The last time this was series sent looks to be [1]. I've looked over the
-> patches and review comments and tried to address any feedback that
-> Andrey didn't address (really minor things like newlines). I've reworked
-> the patches from the last version to layer on top of the existing TPM
-> TIS SPI implementation in tpm_tis_spi.c. Hopefully this is more
-> palatable than combining the two drivers together into one file.
-> 
-> Please review so we can get the approach to supporting this device
-> sorted out.
-> 
-> [1] https://lkml.kernel.org/r/1469757314-116169-1-git-send-email-apronin@chromium.org
-> 
-> TODO:
->  * Add a patch to spit out WARN_ON() when TPM is suspended and some
->    kernel code attempts to use it
->  * Rework the i2c driver per Alexander's comments on v2
-> 
-> Changes from v6 (https://lkml.kernel.org/r/20190829224110.91103-1-swboyd@chromium.org):
->  * Two new patches to cleanup includes and module usage
->  * Moved cr50 C file to tpm_tis_spi_cr50.c
->  * Used the tpm_tis_spi_mod target approach to make the module work
->  * Brought back Kconfig option to allow user to disable cr50 code
->  * Rebased to v5.3
-> 
-> Changes from v5 (https://lkml.kernel.org/r/20190828082150.42194-1-swboyd@chromium.org):
->  * Picked up Jarkko's ack/review tags
->  * Fixed bug with irqs happening before completion is initialized
->  * Dropped is_cr50 bool
->  * Moved wake_after to tpm_tis_spi struct
->  * Changed authorship of main cr50 patch to Andrey as I'm just shuffling
->    code here
-> 
-> Changes from v4 (https://lkml.kernel.org/r/20190812223622.73297-1-swboyd@chromium.org):
->  * Dropped the 'pre-transfer' hook patch and added a 'ready' member instead
->  * Combined cr50_spi and tpm_tis_spi into one kernel module
->  * Introduced a swizzle in tpm_tis_spi probe routine to jump to cr50
->    probe path
->  * Moved binding to start of the thread
->  * Picked up Jarkko reviewed-by tag on new flag for suspend/resume
->  * Added a comment to flow control patch indicating what it's all about
-> 
-> Changes from v3:
->  * Split out hooks into separate patches
->  * Update commit text to not say "libify"
->  * Collapse if statement into one for first patch
->  * Update commit text on first patch to mention flag
->  * Drop TIS_IS_CR50 as it's unused
-> 
-> Changes from v2:
->  * Sent khwrng thread patch separately
->  * New patch to expose TPM SPI functionality from tpm_tis_spi.c
->  * Usage of that new patch in cr50 SPI driver
->  * Drop i2c version of cr50 SPI driver for now (will resend later)
->  * New patch to add a TPM chip flag indicating TPM shouldn't be reset
->    over suspend. Allows us to get rid of the cr50 suspend/resume functions
->    that are mostly generic
-> 
-> Changes from v1:
->  * Dropped symlink and sysfs patches
->  * Removed 'is_suspended' bits
->  * Added new patch to freeze khwrng thread
->  * Moved binding to google,cr50.txt and added Reviewed-by tag from Rob
-> 
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Duncan Laurie <dlaurie@chromium.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
 
-OK, so, I put these to my master in hopes to get testing exposure.
-I think the changes are in great shape now. Thank you.
+--BZaMRJmqxGScZ8Mx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-/Jarkko
+Thanks for CCing me on this patchset. Nice to see more e-book reader
+related work!
+
+A few comments and questions below.
+
+On Mon, Sep 30, 2019 at 09:43:31PM +0200, Andreas Kemnade wrote:
+> The Netronix board E60K02 can be found some several Ebook-Readers,
+> at least the Kobo Clara HD and the Tolino Shine 3. The board
+> is equipped with different SoCs requiring different pinmuxes.
+
+Do I understand it correctly that i.MX6SL and i.MX6SLL are pin-
+compatible so we can use the same pin numbers and GPIO handles in the
+DT?
+
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_led>;
+> +
+> +		GLED {
+
+What does "GLED" mean? It's not obvious to me.
+What user-visible purpose does this LED have, or where is it on the
+board?
+
+> +			gpios =3D <&gpio5 7 GPIO_ACTIVE_LOW>;
+> +			linux,default-trigger =3D "timer";
+> +		};
+> +	};
+> +
+> +	memory {
+> +		reg =3D <0x80000000 0x80000000>;
+
+2 GiB of memory?
+
+> +			/* Core3_3V3 */
+
+What are these labels (Core3_3V3, Core4_1V2, etc.)?
+
+> +			dcdc2_reg: DCDC2 {
+> +				regulator-name =3D "DCDC2";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-max-microvolt =3D <3300000>;
+> +					regulator-suspend-min-microvolt =3D <3300000>;
+> +				};
+> +			};
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--BZaMRJmqxGScZ8Mx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl2abPEACgkQCDBEmo7z
+X9uKtxAAzzgCu+n9jH9hNCttJ3lG5alFog0lO+dd69DN/EG3wH4NCQNnkfL0eTUQ
+ePZWqAlCuXMrFgJUrL0RDEw926fYD558I9RBtJGI1yPlKq4Qhs0ENpkNI9bOSZyG
+s4UI1iLsalte+sGFZwPcTfWv5mgD5FSoLPIQleDaaHvCoRh9+PP7Nn3svxyToGcY
+OE7WtpBAwA+gawwKGWZJUxXLMGQKwyg3f8TcFkugLh5VefyiNgTpRcWnilUbZ3mI
+uU1hZc4cC/dcoCs0blZZwO24MAIDN/686fwViySRjzKE411dp1XZDz9LqQdr9OLW
+NKMyFCSsjhn5TFMPoo6rux88KLBujHPRiu7e+EXSVgYZH4nRsxUqPTxnGzimotrx
+1IoN+Dkg+hx5hxVntHrKktH5kvwuN7mKcgGqHNtkQgyhS4dWa+83R0C0E+uEi/ZM
+mH+ht5CK/J6BbCXyUans1T+tIs1xL5xYHsw/ZKZtiYIwGrVVMiIbLf/OW+9llrc4
+wt0KQkqUudaQj8i6PCihRudCi371QWQbcGholaDqkn4HFEGYRC8pzsCHr7sU6Gdf
+J/5fw3n4lQv5H2RBLgzQBqNWB9CkRdJOTTR3Zj95Gaz1HizSWwyk22aoVKdD/f9R
+jQ8CI9hIEMXx1iGEmBAltMHzwtfAzlwp9esITOahR7Sd3ZK0Hyc=
+=YsCq
+-----END PGP SIGNATURE-----
+
+--BZaMRJmqxGScZ8Mx--
