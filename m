@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C6FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DADC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FEC21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBA6217D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384563;
-	bh=rw0M3hU1/HSB1mQjLr2buYFplI2O1DdSeXSivKzTA9w=;
+	s=default; t=1570384568;
+	bh=3LtsCDgG2wyB0+Zp2EqzJWjVdQVP2cXvkkS19JZpOP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3Qa0RspRE7rL3vzK+vRHt1+69QymGXSz2rvTSH/tSY91+PC3F6st/vOlDMewBIhD
-	 0q3LqKUj1svC5kfR91leds7zUefa0YBQM/h1BKNGAEUSIyqr8LRM/vKob5QqpKE3rC
-	 uSzFRpizXsg6r1lrAuH9D6gc8rkBmRw/tlnQJhWs=
+	b=DPTbR0Ej4fvzIkodk4KxS+McGmkU6u/pqIuskktfVPrsggoyfi5Jsnzt6m036id3t
+	 PAaoMfXLfmIQpv3fQaolVnZBXIDmhXpcuY4L1EdYxs7eGhxB8vGyvqkjvhCEgmjoQ9
+	 gXBN883lnt2bEIcNql6iSisiGqUe+2JnqqeFTwuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfJFR4C (ORCPT
+        id S1729947AbfJFR4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730197AbfJFRfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:52 -0400
+        id S1730176AbfJFRft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50CC420700;
-        Sun,  6 Oct 2019 17:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79AD62080F;
+        Sun,  6 Oct 2019 17:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383351;
-        bh=rw0M3hU1/HSB1mQjLr2buYFplI2O1DdSeXSivKzTA9w=;
+        s=default; t=1570383349;
+        bh=3LtsCDgG2wyB0+Zp2EqzJWjVdQVP2cXvkkS19JZpOP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofGjXst+7oqGoFCmA+FjeTnI6htHKUQ0KsFgahDBGkxCBnoTHYI6teJwfVycvtJJ6
-         nCRfXKyq8b+1WeGkHQhoWQbI5E3rw4yz7kxkkRmnwXBc11czBc9C95rQcaq/GgdV0k
-         kTq/X/BblCxc6mcyzViRew+XU4qTdzHoR5F2qGB8=
+        b=IToYLT5BOsijvhu02fQDIKUT6YalbHjFdNQnA0Bab9VUWeYe+EOTkrVkyPtReOPLX
+         hCrhIM4+5FrlF+5T5OfOVecTxw9rt3/rS21jlGvw8QQH6NZ7ib9NYPIOkICYgkFBun
+         yQEK1H2dSwQYFvVW5p6jlj7BHmDEfJJy2Pfisr6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Ken Wang <Qingqing.Wang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 071/137] powerpc/64s/exception: machine check use correct cfar for late handler
-Date:   Sun,  6 Oct 2019 19:20:55 +0200
-Message-Id: <20191006171215.062022750@linuxfoundation.org>
+Subject: [PATCH 5.2 070/137] drm/amdgpu/si: fix ASIC tests
+Date:   Sun,  6 Oct 2019 19:20:54 +0200
+Message-Id: <20191006171214.985222700@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,43 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
+[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
 
-Bare metal machine checks run an "early" handler in real mode before
-running the main handler which reports the event.
+Comparing adev->family with CHIP constants is not correct.
+adev->family can only be compared with AMDGPU_FAMILY constants and
+adev->asic_type is the struct member to compare with CHIP constants.
+They are separate identification spaces.
 
-The main handler runs exactly as a normal interrupt handler, after the
-"windup" which sets registers back as they were at interrupt entry.
-CFAR does not get restored by the windup code, so that will be wrong
-when the handler is run.
-
-Restore the CFAR to the saved value before running the late handler.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
+Cc: Ken Wang <Qingqing.Wang@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 6c51aa845bcee..3e564536a237f 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -556,6 +556,10 @@ FTR_SECTION_ELSE
- ALT_FTR_SECTION_END_IFSET(CPU_FTR_HVMODE)
- 9:
- 	/* Deliver the machine check to host kernel in V mode. */
-+BEGIN_FTR_SECTION
-+	ld	r10,ORIG_GPR3(r1)
-+	mtspr	SPRN_CFAR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	MACHINE_CHECK_HANDLER_WINDUP
- 	SET_SCRATCH0(r13)		/* save r13 */
- 	EXCEPTION_PROLOG_0(PACA_EXMC)
+diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
+index 9d8df68893b9d..1e34dfc143556 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si.c
++++ b/drivers/gpu/drm/amd/amdgpu/si.c
+@@ -1867,7 +1867,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
+ 
+-			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
++			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
+ 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
+ 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
+ 				if (orig != data)
+@@ -1916,14 +1916,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 
+ 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
+ 
+ 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
 -- 
 2.20.1
 
