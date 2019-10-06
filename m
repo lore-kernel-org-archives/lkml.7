@@ -7,49 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE19DECE595
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC98ECE58E
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DA021927
+	by mail.kernel.org (Postfix) with ESMTP id 7CFC4214D9
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570382415;
-	bh=A7GZAnfAyDSBIRqcMyz/rqC9/Sv2BmrCZAvB7h4kXBI=;
+	bh=WJKHsHBGnPsbTeLW4pe0ZnE9hwyn18ncCskMJuf8L3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=noXx1lF7zluhAdC7r5kF7f78SALUcE5ywImIRhMZZK+xQCHMmZ2dN9VRb9eAroEki
-	 bSPtaFrrPM6Igql7m3xqYhYiWM+h259/q2utzd4cY5oyIBnokBPH+1/9LRo3awGh+M
-	 /Grx0FSjfOpQ966nho/U5w7ooai0MCai1lVmVH84=
+	b=rydFk7E5TlwaBKsYy1sC6+siDJ8n1BMQYakryAz/SMhW621so3hVaVq0itlmA9acW
+	 gG4Tu7L8vU9yZ1NxEbPoa2Q8VPHdfGy92ZtQGChsqFLxblOwglfQMZRluyKjYC7fuy
+	 5WUBrd/VhSwmvD9w1ZXOwlsO+yprywqeQ5P43DTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfJFRUJ (ORCPT
+        id S1727163AbfJFRUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:20:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfJFRT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:19:58 -0400
+        id S1727127AbfJFRUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908C220835;
-        Sun,  6 Oct 2019 17:19:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDB0820862;
+        Sun,  6 Oct 2019 17:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382398;
-        bh=A7GZAnfAyDSBIRqcMyz/rqC9/Sv2BmrCZAvB7h4kXBI=;
+        s=default; t=1570382403;
+        bh=WJKHsHBGnPsbTeLW4pe0ZnE9hwyn18ncCskMJuf8L3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RG3Fq4nAJ6QQxm859k6y6w7KmOsVUlYDTt8gIwTicg6kkdZPE5oWuabUF9BbZKQZ8
-         CGKuLew4jxQDUA0MCQhhKbHp30WBKJfpBf+IqH8y9qrqWLH6Ftg+yZHTKISLfh2cmg
-         ZTnIMYYAdnZDZxFhoSKSHJiHtfsOHseATycQD0kg=
+        b=1alKuid5hRrvIOzodQ7SYhX3SbTMRzUuDC8+XaN9yv0P0hCBc0FFVRCN7VCaHyjag
+         9RWkMvU6bF1BHrDZrKgarkXMGeiSxVgPF8haveikC2lwKesaofsOYoiE6wVWuZ3wGq
+         fG2F9jV/mHspTV0mL9VmApBnFPLQutIbOZSc6lGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 20/36] hypfs: Fix error number left in struct pointer member
-Date:   Sun,  6 Oct 2019 19:19:02 +0200
-Message-Id: <20191006171053.385844992@linuxfoundation.org>
+Subject: [PATCH 4.4 22/36] kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
+Date:   Sun,  6 Oct 2019 19:19:04 +0200
+Message-Id: <20191006171053.978216514@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -62,55 +73,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit b54c64f7adeb241423cd46598f458b5486b0375e ]
+[ Upstream commit b751c52bb587ae66f773b15204ef7a147467f4c7 ]
 
-In hypfs_fill_super(), if hypfs_create_update_file() fails,
-sbi->update_file is left holding an error number.  This is passed to
-hypfs_kill_super() which doesn't check for this.
+The current default value (400) is too low on many systems (e.g.  some
+ARM64 platform takes up 1000+ entries).
 
-Fix this by not setting sbi->update_value until after we've checked for
-error.
+syzbot uses 16000 as default value, and has proved to be enough on beefy
+configurations, so let's pick that value.
 
-Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-cc: linux-s390@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+This consumes more RAM on boot (each entry is 160 bytes, so in total
+~2.5MB of RAM), but the memory would later be freed (early_log is
+__initdata).
+
+Link: http://lkml.kernel.org/r/20190730154027.101525-1-drinkcat@chromium.org
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/hypfs/inode.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
-index c670279b33f0c..1de3fdfc35378 100644
---- a/arch/s390/hypfs/inode.c
-+++ b/arch/s390/hypfs/inode.c
-@@ -267,7 +267,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
- static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
- {
- 	struct inode *root_inode;
--	struct dentry *root_dentry;
-+	struct dentry *root_dentry, *update_file;
- 	int rc = 0;
- 	struct hypfs_sb_info *sbi;
- 
-@@ -298,9 +298,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
- 		rc = hypfs_diag_create_files(root_dentry);
- 	if (rc)
- 		return rc;
--	sbi->update_file = hypfs_create_update_file(root_dentry);
--	if (IS_ERR(sbi->update_file))
--		return PTR_ERR(sbi->update_file);
-+	update_file = hypfs_create_update_file(root_dentry);
-+	if (IS_ERR(update_file))
-+		return PTR_ERR(update_file);
-+	sbi->update_file = update_file;
- 	hypfs_update_update(sb);
- 	pr_info("Hypervisor filesystem mounted\n");
- 	return 0;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index fd1205a3dbdbc..7b9d7328f189e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -521,7 +521,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+ 	int "Maximum kmemleak early log entries"
+ 	depends on DEBUG_KMEMLEAK
+ 	range 200 40000
+-	default 400
++	default 16000
+ 	help
+ 	  Kmemleak must track all the memory allocations to avoid
+ 	  reporting false positives. Since memory may be allocated or
 -- 
 2.20.1
 
