@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7151C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6740C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F8E2053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C4E2053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384123;
-	bh=fDMWIJ2q2yQifpis9eqvA9OLwFuD2uX2kyQjV7oQPDc=;
+	s=default; t=1570384125;
+	bh=I9IKwRqNjBya+//XLi4G7RG1Q/fT+hMum9Ow+lED6E8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ic4asnUYzNjOJK+Evwu/oxAniF+/aOi89S/+PS+DDyhs0cV21GC5oArMrjskv+XkY
-	 Z8T+XmonWnqQUEJYV43ytOZi0L3+rHo/q7REtLxuLmGftetOzN3L6pIdNfS+VCbEZk
-	 DSSbEN8Q3NPNo2Z3zxjRDYWHNa3+9dkeknqExPMY=
+	b=m3c8O8kU+B3yQuk3dc6WsBz/1LXy0vE6RaNGZI4/4b5mjlF8hlogY07n3ZGefkO03
+	 7OBly5sJOv7c4NJXaV2wc7h0yWxYgWlSq4Y11MZxMNeKOeDwA00V4pJ5slvtkahtQ4
+	 jV6eD4zDx2wS7bcssZMeG5FKvL6Lbeqf6HovzDbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfJFRnK (ORCPT
+        id S1731451AbfJFRnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43004 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730184AbfJFRnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:43:05 -0400
+        id S1731428AbfJFRnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2F432080F;
-        Sun,  6 Oct 2019 17:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F072087E;
+        Sun,  6 Oct 2019 17:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383784;
-        bh=fDMWIJ2q2yQifpis9eqvA9OLwFuD2uX2kyQjV7oQPDc=;
+        s=default; t=1570383781;
+        bh=I9IKwRqNjBya+//XLi4G7RG1Q/fT+hMum9Ow+lED6E8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dkA2jyquem22cWSs/P1dw3ot47v/WBCXZDBJvvyhdPLeUA3aTK+WmQnbW5zU2nhQl
-         lXgTTEhhXcQ+PHsiWKlbBDYOkZDPCGeBPNejnoBoiRLUtkqKUf55AofZAXja6K8yRF
-         1Z1dG7HPhxFIh+G7f7Lv10U/9I74FpFUSPAjegHQ=
+        b=0lZV0J9sA7yxmEbYJ/TailQpH6dzNxUPaAhFtQZeWtRhuPI+4Gg/67fkd1Ik2+xSg
+         +ovhENSgg000GN9xYybhB8Iz2GGhEtWuqDD4un2dXxeUO3P4iBR/HwtQMcAp7YikTq
+         pOAM2r1pasD3DmEAMht0APgkz8lGuV8/DYOF8Jtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Paul Burton <paul.burton@mips.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 095/166] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
-Date:   Sun,  6 Oct 2019 19:21:01 +0200
-Message-Id: <20191006171221.562399005@linuxfoundation.org>
+Subject: [PATCH 5.3 094/166] mips/atomic: Fix smp_mb__{before,after}_atomic()
+Date:   Sun,  6 Oct 2019 19:21:00 +0200
+Message-Id: <20191006171221.470441612@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,73 +62,335 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
+[ Upstream commit 42344113ba7a1ed7b5654cd5270af0d5698d8521 ]
 
-Translation faults arising from cache maintenance instructions are
-rather unhelpfully reported with an FSR value where the WnR field is set
-to 1, indicating that the faulting access was a write. Since cache
-maintenance instructions on 32-bit ARM do not require any particular
-permissions, this can cause our private 'cacheflush' system call to fail
-spuriously if a translation fault is generated due to page aging when
-targetting a read-only VMA.
+Recent probing at the Linux Kernel Memory Model uncovered a
+'surprise'. Strongly ordered architectures where the atomic RmW
+primitive implies full memory ordering and
+smp_mb__{before,after}_atomic() are a simple barrier() (such as MIPS
+without WEAK_REORDERING_BEYOND_LLSC) fail for:
 
-In this situation, we will return -EFAULT to userspace, although this is
-unfortunately suppressed by the popular '__builtin___clear_cache()'
-intrinsic provided by GCC, which returns void.
+	*x = 1;
+	atomic_inc(u);
+	smp_mb__after_atomic();
+	r0 = *y;
 
-Although it's tempting to write this off as a userspace issue, we can
-actually do a little bit better on CPUs that support LPAE, even if the
-short-descriptor format is in use. On these CPUs, cache maintenance
-faults additionally set the CM field in the FSR, which we can use to
-suppress the write permission checks in the page fault handler and
-succeed in performing cache maintenance to read-only areas even in the
-presence of a translation fault.
+Because, while the atomic_inc() implies memory order, it
+(surprisingly) does not provide a compiler barrier. This then allows
+the compiler to re-order like so:
 
-Reported-by: Orion Hodson <oth@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+	atomic_inc(u);
+	*x = 1;
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Which the CPU is then allowed to re-order (under TSO rules) like:
+
+	atomic_inc(u);
+	r0 = *y;
+	*x = 1;
+
+And this very much was not intended. Therefore strengthen the atomic
+RmW ops to include a compiler barrier.
+
+Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/fault.c | 4 ++--
- arch/arm/mm/fault.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/atomic.h  | 14 +++++------
+ arch/mips/include/asm/barrier.h | 12 ++++++++--
+ arch/mips/include/asm/bitops.h  | 42 ++++++++++++++++++++-------------
+ arch/mips/include/asm/cmpxchg.h |  6 ++---
+ 4 files changed, 45 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 890eeaac3cbba..bd0f4821f7e11 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -191,7 +191,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- {
- 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
+diff --git a/arch/mips/include/asm/atomic.h b/arch/mips/include/asm/atomic.h
+index 190f1b6151221..bb8658cc7f126 100644
+--- a/arch/mips/include/asm/atomic.h
++++ b/arch/mips/include/asm/atomic.h
+@@ -68,7 +68,7 @@ static __inline__ void atomic_##op(int i, atomic_t * v)			      \
+ 		"\t" __scbeqz "	%0, 1b					\n"   \
+ 		"	.set	pop					\n"   \
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (v->counter)	      \
+-		: "Ir" (i));						      \
++		: "Ir" (i) : __LLSC_CLOBBER);				      \
+ 	} else {							      \
+ 		unsigned long flags;					      \
+ 									      \
+@@ -98,7 +98,7 @@ static __inline__ int atomic_##op##_return_relaxed(int i, atomic_t * v)	      \
+ 		"	.set	pop					\n"   \
+ 		: "=&r" (result), "=&r" (temp),				      \
+ 		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+-		: "Ir" (i));						      \
++		: "Ir" (i) : __LLSC_CLOBBER);				      \
+ 	} else {							      \
+ 		unsigned long flags;					      \
+ 									      \
+@@ -132,7 +132,7 @@ static __inline__ int atomic_fetch_##op##_relaxed(int i, atomic_t * v)	      \
+ 		"	move	%0, %1					\n"   \
+ 		: "=&r" (result), "=&r" (temp),				      \
+ 		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+-		: "Ir" (i));						      \
++		: "Ir" (i) : __LLSC_CLOBBER);				      \
+ 	} else {							      \
+ 		unsigned long flags;					      \
+ 									      \
+@@ -210,7 +210,7 @@ static __inline__ int atomic_sub_if_positive(int i, atomic_t * v)
+ 		"	.set	pop					\n"
+ 		: "=&r" (result), "=&r" (temp),
+ 		  "+" GCC_OFF_SMALL_ASM() (v->counter)
+-		: "Ir" (i));
++		: "Ir" (i) : __LLSC_CLOBBER);
+ 	} else {
+ 		unsigned long flags;
  
--	if (fsr & FSR_WRITE)
-+	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		mask = VM_WRITE;
- 	if (fsr & FSR_LNX_PF)
- 		mask = VM_EXEC;
-@@ -262,7 +262,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+@@ -270,7 +270,7 @@ static __inline__ void atomic64_##op(s64 i, atomic64_t * v)		      \
+ 		"\t" __scbeqz "	%0, 1b					\n"   \
+ 		"	.set	pop					\n"   \
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (v->counter)	      \
+-		: "Ir" (i));						      \
++		: "Ir" (i) : __LLSC_CLOBBER);				      \
+ 	} else {							      \
+ 		unsigned long flags;					      \
+ 									      \
+@@ -300,7 +300,7 @@ static __inline__ s64 atomic64_##op##_return_relaxed(s64 i, atomic64_t * v)   \
+ 		"	.set	pop					\n"   \
+ 		: "=&r" (result), "=&r" (temp),				      \
+ 		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+-		: "Ir" (i));						      \
++		: "Ir" (i) : __LLSC_CLOBBER);				      \
+ 	} else {							      \
+ 		unsigned long flags;					      \
+ 									      \
+@@ -334,7 +334,7 @@ static __inline__ s64 atomic64_fetch_##op##_relaxed(s64 i, atomic64_t * v)    \
+ 		"	.set	pop					\n"   \
+ 		: "=&r" (result), "=&r" (temp),				      \
+ 		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+-		: "Ir" (i));						      \
++		: "Ir" (i) : __LLSC_CLOBBER);				      \
+ 	} else {							      \
+ 		unsigned long flags;					      \
+ 									      \
+diff --git a/arch/mips/include/asm/barrier.h b/arch/mips/include/asm/barrier.h
+index f9a6da96aae12..9228f73862205 100644
+--- a/arch/mips/include/asm/barrier.h
++++ b/arch/mips/include/asm/barrier.h
+@@ -211,14 +211,22 @@
+ #define __smp_wmb()	barrier()
+ #endif
  
- 	if (user_mode(regs))
- 		flags |= FAULT_FLAG_USER;
--	if (fsr & FSR_WRITE)
-+	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		flags |= FAULT_FLAG_WRITE;
++/*
++ * When LL/SC does imply order, it must also be a compiler barrier to avoid the
++ * compiler from reordering where the CPU will not. When it does not imply
++ * order, the compiler is also free to reorder across the LL/SC loop and
++ * ordering will be done by smp_llsc_mb() and friends.
++ */
+ #if defined(CONFIG_WEAK_REORDERING_BEYOND_LLSC) && defined(CONFIG_SMP)
+ #define __WEAK_LLSC_MB		"	sync	\n"
++#define smp_llsc_mb()		__asm__ __volatile__(__WEAK_LLSC_MB : : :"memory")
++#define __LLSC_CLOBBER
+ #else
+ #define __WEAK_LLSC_MB		"		\n"
++#define smp_llsc_mb()		do { } while (0)
++#define __LLSC_CLOBBER		"memory"
+ #endif
  
- 	/*
-diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
-index c063708fa5032..9ecc2097a87a0 100644
---- a/arch/arm/mm/fault.h
-+++ b/arch/arm/mm/fault.h
-@@ -6,6 +6,7 @@
-  * Fault status register encodings.  We steal bit 31 for our own purposes.
-  */
- #define FSR_LNX_PF		(1 << 31)
-+#define FSR_CM			(1 << 13)
- #define FSR_WRITE		(1 << 11)
- #define FSR_FS4			(1 << 10)
- #define FSR_FS3_0		(15)
+-#define smp_llsc_mb()	__asm__ __volatile__(__WEAK_LLSC_MB : : :"memory")
+-
+ #ifdef CONFIG_CPU_CAVIUM_OCTEON
+ #define smp_mb__before_llsc() smp_wmb()
+ #define __smp_mb__before_llsc() __smp_wmb()
+diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
+index 7bd35e5e2a9e4..985d6a02f9ea1 100644
+--- a/arch/mips/include/asm/bitops.h
++++ b/arch/mips/include/asm/bitops.h
+@@ -66,7 +66,8 @@ static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
+ 		"	beqzl	%0, 1b					\n"
+ 		"	.set	pop					\n"
+ 		: "=&r" (temp), "=" GCC_OFF_SMALL_ASM() (*m)
+-		: "ir" (1UL << bit), GCC_OFF_SMALL_ASM() (*m));
++		: "ir" (1UL << bit), GCC_OFF_SMALL_ASM() (*m)
++		: __LLSC_CLOBBER);
+ #if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+ 	} else if (kernel_uses_llsc && __builtin_constant_p(bit)) {
+ 		loongson_llsc_mb();
+@@ -76,7 +77,8 @@ static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
+ 			"	" __INS "%0, %3, %2, 1			\n"
+ 			"	" __SC "%0, %1				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (bit), "r" (~0));
++			: "ir" (bit), "r" (~0)
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ #endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
+ 	} else if (kernel_uses_llsc) {
+@@ -90,7 +92,8 @@ static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
+ 			"	" __SC	"%0, %1				\n"
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (1UL << bit));
++			: "ir" (1UL << bit)
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 	} else
+ 		__mips_set_bit(nr, addr);
+@@ -122,7 +125,8 @@ static inline void clear_bit(unsigned long nr, volatile unsigned long *addr)
+ 		"	beqzl	%0, 1b					\n"
+ 		"	.set	pop					\n"
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-		: "ir" (~(1UL << bit)));
++		: "ir" (~(1UL << bit))
++		: __LLSC_CLOBBER);
+ #if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+ 	} else if (kernel_uses_llsc && __builtin_constant_p(bit)) {
+ 		loongson_llsc_mb();
+@@ -132,7 +136,8 @@ static inline void clear_bit(unsigned long nr, volatile unsigned long *addr)
+ 			"	" __INS "%0, $0, %2, 1			\n"
+ 			"	" __SC "%0, %1				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (bit));
++			: "ir" (bit)
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ #endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
+ 	} else if (kernel_uses_llsc) {
+@@ -146,7 +151,8 @@ static inline void clear_bit(unsigned long nr, volatile unsigned long *addr)
+ 			"	" __SC "%0, %1				\n"
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (~(1UL << bit)));
++			: "ir" (~(1UL << bit))
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 	} else
+ 		__mips_clear_bit(nr, addr);
+@@ -192,7 +198,8 @@ static inline void change_bit(unsigned long nr, volatile unsigned long *addr)
+ 		"	beqzl	%0, 1b				\n"
+ 		"	.set	pop				\n"
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-		: "ir" (1UL << bit));
++		: "ir" (1UL << bit)
++		: __LLSC_CLOBBER);
+ 	} else if (kernel_uses_llsc) {
+ 		unsigned long *m = ((unsigned long *) addr) + (nr >> SZLONG_LOG);
+ 		unsigned long temp;
+@@ -207,7 +214,8 @@ static inline void change_bit(unsigned long nr, volatile unsigned long *addr)
+ 			"	" __SC	"%0, %1				\n"
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (1UL << bit));
++			: "ir" (1UL << bit)
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 	} else
+ 		__mips_change_bit(nr, addr);
+@@ -244,7 +252,7 @@ static inline int test_and_set_bit(unsigned long nr,
+ 		"	.set	pop					\n"
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 		: "r" (1UL << bit)
+-		: "memory");
++		: __LLSC_CLOBBER);
+ 	} else if (kernel_uses_llsc) {
+ 		unsigned long *m = ((unsigned long *) addr) + (nr >> SZLONG_LOG);
+ 		unsigned long temp;
+@@ -260,7 +268,7 @@ static inline int test_and_set_bit(unsigned long nr,
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 			: "r" (1UL << bit)
+-			: "memory");
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!res));
+ 
+ 		res = temp & (1UL << bit);
+@@ -301,7 +309,7 @@ static inline int test_and_set_bit_lock(unsigned long nr,
+ 		"	.set	pop					\n"
+ 		: "=&r" (temp), "+m" (*m), "=&r" (res)
+ 		: "r" (1UL << bit)
+-		: "memory");
++		: __LLSC_CLOBBER);
+ 	} else if (kernel_uses_llsc) {
+ 		unsigned long *m = ((unsigned long *) addr) + (nr >> SZLONG_LOG);
+ 		unsigned long temp;
+@@ -317,7 +325,7 @@ static inline int test_and_set_bit_lock(unsigned long nr,
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 			: "r" (1UL << bit)
+-			: "memory");
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!res));
+ 
+ 		res = temp & (1UL << bit);
+@@ -360,7 +368,7 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 		"	.set	pop					\n"
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 		: "r" (1UL << bit)
+-		: "memory");
++		: __LLSC_CLOBBER);
+ #if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+ 	} else if (kernel_uses_llsc && __builtin_constant_p(nr)) {
+ 		unsigned long *m = ((unsigned long *) addr) + (nr >> SZLONG_LOG);
+@@ -375,7 +383,7 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 			"	" __SC	"%0, %1				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 			: "ir" (bit)
+-			: "memory");
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ #endif
+ 	} else if (kernel_uses_llsc) {
+@@ -394,7 +402,7 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 			: "r" (1UL << bit)
+-			: "memory");
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!res));
+ 
+ 		res = temp & (1UL << bit);
+@@ -437,7 +445,7 @@ static inline int test_and_change_bit(unsigned long nr,
+ 		"	.set	pop					\n"
+ 		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 		: "r" (1UL << bit)
+-		: "memory");
++		: __LLSC_CLOBBER);
+ 	} else if (kernel_uses_llsc) {
+ 		unsigned long *m = ((unsigned long *) addr) + (nr >> SZLONG_LOG);
+ 		unsigned long temp;
+@@ -453,7 +461,7 @@ static inline int test_and_change_bit(unsigned long nr,
+ 			"	.set	pop				\n"
+ 			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=&r" (res)
+ 			: "r" (1UL << bit)
+-			: "memory");
++			: __LLSC_CLOBBER);
+ 		} while (unlikely(!res));
+ 
+ 		res = temp & (1UL << bit);
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index f5994a332673b..c8a47d18f6288 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -61,7 +61,7 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
+ 		"	.set	pop				\n"	\
+ 		: "=&r" (__ret), "=" GCC_OFF_SMALL_ASM() (*m)		\
+ 		: GCC_OFF_SMALL_ASM() (*m), "Jr" (val)			\
+-		: "memory");						\
++		: __LLSC_CLOBBER);					\
+ 	} else {							\
+ 		unsigned long __flags;					\
+ 									\
+@@ -134,8 +134,8 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+ 		"	.set	pop				\n"	\
+ 		"2:						\n"	\
+ 		: "=&r" (__ret), "=" GCC_OFF_SMALL_ASM() (*m)		\
+-		: GCC_OFF_SMALL_ASM() (*m), "Jr" (old), "Jr" (new)		\
+-		: "memory");						\
++		: GCC_OFF_SMALL_ASM() (*m), "Jr" (old), "Jr" (new)	\
++		: __LLSC_CLOBBER);					\
+ 		loongson_llsc_mb();					\
+ 	} else {							\
+ 		unsigned long __flags;					\
 -- 
 2.20.1
 
