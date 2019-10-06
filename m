@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0F5C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7DDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0F821A49
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7A620673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384316;
-	bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
+	s=default; t=1570384319;
+	bh=2wb1uq+QHh0LuGSRjL9ECKM78xBue/wLBVnlI1ciBn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFHrMYkGOFdN4eUwVzhm3MrNi9l22alpyo4MlesnQ9p8GNM3pQlN2NpFJ5RYJJCIY
-	 1V5AQ9+zMXn2dVly1077yGXtth3ddBqeuKEAjL5Wn3M0tSuKwHq0ySYK+ZWaySVYYN
-	 IacFYugNhFUIfx/FW/Q3YA59UW4jrQElWTZGTjf8=
+	b=hRxzCndtVXSlHd9n7fh0VpfCqew4EEbXH8J7m3zgngJDWVCqSOkFBN8WulStZqTSE
+	 wc3mQjgwxij6Cvmn/qQMIwsr/6rj87/LDtsCvlUJEMTfEEM8fLdIp22igNeKWq1AEJ
+	 KqYZd0QW36veO45c7+wilsMiiQN33kQDu1O29djw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbfJFRvy (ORCPT
+        id S1730775AbfJFRv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48966 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727404AbfJFRuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:50:54 -0400
+        id S1727931AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1679F217D6;
-        Sun,  6 Oct 2019 17:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B8E521835;
+        Sun,  6 Oct 2019 17:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383930;
-        bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
+        s=default; t=1570383927;
+        bh=2wb1uq+QHh0LuGSRjL9ECKM78xBue/wLBVnlI1ciBn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+aJoZRVO3+RSEVR5ctnR1YEHOAR8TIjDiUAKDpm5VNJORtP1bgYrw6u93qEfpAia
-         zot0onS2x4gO4S0HpbaR8zua7z0w/7bBaFf8JkobWFad9akw0mo1aJ03DmGoom48+c
-         bQKSz91aGx129HqoqssSlBB5SdVK8uB8OboaGaDk=
+        b=s0SESXCO031fTDNSBiebgGzDXmCnXug+/tZCjQyDD57R6Bp5+KgKbP5Wh8njUzX7g
+         41lUArrKNEVJtuE4PAAVpl09q/ozAX+4s935NDuHVXQNefDKBZBDmQe/Yk1xPa5QGl
+         76OFvAXFstbbaa17RLztIvrq1pprKXl/Na7EdUGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
-        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 148/166] net/rds: Fix error handling in rds_ib_add_one()
-Date:   Sun,  6 Oct 2019 19:21:54 +0200
-Message-Id: <20191006171225.380309300@linuxfoundation.org>
+Subject: [PATCH 5.3 130/166] hso: fix NULL-deref on tty open
+Date:   Sun,  6 Oct 2019 19:21:36 +0200
+Message-Id: <20191006171224.182792306@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,47 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dotan Barak <dotanb@dev.mellanox.co.il>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
+[ Upstream commit 8353da9fa69722b54cba82b2ec740afd3d438748 ]
 
-rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
-after allocation some resources such as protection domain.
-If allocation of such resources fail, then these uninitialized
-variables are accessed in rds_ib_dev_free() in failure path. This
-can potentially crash the system. The code has been updated to
-initialize these variables very early in the function.
+Fix NULL-pointer dereference on tty open due to a failure to handle a
+missing interrupt-in endpoint when probing modem ports:
 
-Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
-Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+	BUG: kernel NULL pointer dereference, address: 0000000000000006
+	...
+	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
+	...
+	Call Trace:
+	hso_start_serial_device+0xdc/0x140 [hso]
+	hso_serial_open+0x118/0x1b0 [hso]
+	tty_open+0xf1/0x490
+
+Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/usb/hso.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/net/rds/ib.c
-+++ b/net/rds/ib.c
-@@ -143,6 +143,9 @@ static void rds_ib_add_one(struct ib_dev
- 	refcount_set(&rds_ibdev->refcount, 1);
- 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
- 
-+	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
-+	INIT_LIST_HEAD(&rds_ibdev->conn_list);
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2620,14 +2620,18 @@ static struct hso_device *hso_create_bul
+ 		 */
+ 		if (serial->tiocmget) {
+ 			tiocmget = serial->tiocmget;
++			tiocmget->endp = hso_get_ep(interface,
++						    USB_ENDPOINT_XFER_INT,
++						    USB_DIR_IN);
++			if (!tiocmget->endp) {
++				dev_err(&interface->dev, "Failed to find INT IN ep\n");
++				goto exit;
++			}
 +
- 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
- 	rds_ibdev->max_sge = min(device->attrs.max_send_sge, RDS_IB_MAX_SGE);
- 
-@@ -203,9 +206,6 @@ static void rds_ib_add_one(struct ib_dev
- 		device->name,
- 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
- 
--	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
--	INIT_LIST_HEAD(&rds_ibdev->conn_list);
--
- 	down_write(&rds_ib_devices_lock);
- 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
- 	up_write(&rds_ib_devices_lock);
+ 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
+ 			if (tiocmget->urb) {
+ 				mutex_init(&tiocmget->mutex);
+ 				init_waitqueue_head(&tiocmget->waitq);
+-				tiocmget->endp = hso_get_ep(
+-					interface,
+-					USB_ENDPOINT_XFER_INT,
+-					USB_DIR_IN);
+ 			} else
+ 				hso_free_tiomget(serial);
+ 		}
 
 
