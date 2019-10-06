@@ -2,142 +2,122 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3D2ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01CDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEBE2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C962E21835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382768;
-	bh=GgYWA7qaSXBEzwDAqMRbYTM4YhmvkMNZCj6QzTkCgts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jLxujhSgWAZ8PVANqGbfiDffsoK48qwg1tGjh3q8F5ms6t/X3QK4bu4flz9DrS7cG
-	 N9PWCdvzDCqg+uWAJeSlmLLKWht6GxqEvJegLhzxkjuFau2t2DGRXswHlTO5KUOTyn
-	 gO2meTZencsVGla8sl2nghT1OFQZASDvMMUxaprw=
+	s=default; t=1570382770;
+	bh=P3WkhO3G6h+D3zdNU95Zo/yNNpyRu695qymatgVIGik=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JHT4QF45u2L/xBqZHrUCDwb5ZHOUA4Q8rerkSs9LLqRo8VsAWPCuORuk2RSv1pjnz
+	 xs457Yim3VJuFaHL0HLaM1sdPWIlXHcV0qhjUB7fqz7tFgZTNPW9fnjmDwpGpQ2NR5
+	 PvfFb6WdibPth4VAYyLTvleUJ9zxJR5++361RkNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfJFR0H (ORCPT
+        id S1728201AbfJFR0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46993 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbfJFRZ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:25:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d1so11197871ljl.13
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 10:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nqhtcbRfDvEQJJkAJFzv4RBTuiXKftvmCXLEi1f3srQ=;
-        b=RFX9iEr5oOWgtzp3IBXT04OndQR1DU0EDSHmP2z8P81qc5WnlH3q3z+H6Fn+Q2bRDQ
-         H0mj8t0g+mmdm8jwf4l9ysW9y9jx14fPTmNboT3xsSFw9Hg+XXFMXj7P26RjheVyaX4i
-         ysqZhaJqY2V93IZXO8nKnxagXIV7guXuOEkKQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nqhtcbRfDvEQJJkAJFzv4RBTuiXKftvmCXLEi1f3srQ=;
-        b=KDkq4dXVfcQAmh3CxOXiGrUz+y7Z/dwsNFT42lbYESyKbpfwYfnkMzweIsUByTLJnq
-         BMSYRqj4VkN+a6//ODZsrLSuaT6blHCMbAhVFSRtazgMwc2LrO1ZPkdQCHahHm4YfZVP
-         W/c9AeCvcHwFwb8a5Oq9XezUEgMRbyrvGpkoZXZI4cWYSYj9pUYEDe07Yv9jafDjFChE
-         NB6fOQ+X4iwho5mBkTu9Jom6LvSuOEQccVwV7fkVJ2r3uaZPhpjOVhXny3KTV6USWARh
-         mOcMDOOYFymNZIBVUirCmRKij3K33qIFLIgJfu0x53niRdhu/Or7P10XFSr9Dm/pWoSy
-         0ciA==
-X-Gm-Message-State: APjAAAV4bk9ywIhLjm9cxtCRR2r7YJ6HUK9B0x4prjNHRWBoVBEUxrb9
-        GVTXAlwNOSePHD26xv/cblCaq7EivnA=
-X-Google-Smtp-Source: APXvYqyAnrFodHfkM8l4Eg7mw1G8tK3kI1Os9G/St1/DCnh/0cBbQ1Ig/ViDhTbzCFNJnmqr+KeKgQ==
-X-Received: by 2002:a2e:8789:: with SMTP id n9mr15842634lji.52.1570382754121;
-        Sun, 06 Oct 2019 10:25:54 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id e29sm2561636ljb.105.2019.10.06.10.25.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2019 10:25:53 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id x80so7654791lff.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 10:25:53 -0700 (PDT)
-X-Received: by 2002:a19:741a:: with SMTP id v26mr14509292lfe.79.1570382307072;
- Sun, 06 Oct 2019 10:18:27 -0700 (PDT)
+        Sun, 6 Oct 2019 13:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728151AbfJFR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB4C2077B;
+        Sun,  6 Oct 2019 17:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570382759;
+        bh=P3WkhO3G6h+D3zdNU95Zo/yNNpyRu695qymatgVIGik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UpE+fOHogjwZ1Tk+dnHokcEZ7teKN7WYoanStW4QDtEt0EPIqRUn4Opx5B3X1ZlLq
+         L+uyL2BLqlfABXrFgr4uDYDkrFEYde8i8SRIJd4K2F2jdEpSJy3rrL6tZabUZTpbLi
+         mxzwD8NeO+s1Ng2ZKK9L3aHUCb3unRipH0eWIvuk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 29/68] MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a boolean
+Date:   Sun,  6 Oct 2019 19:21:05 +0200
+Message-Id: <20191006171121.475693129@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
+References: <20191006171108.150129403@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
- <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org> <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
- <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org> <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
- <20191006165436.GA29585@mit.edu>
-In-Reply-To: <20191006165436.GA29585@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 6 Oct 2019 10:18:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
-Message-ID: <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        shuah <shuah@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 9:55 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> Well, one thing we *can* do is if (a) if we can create a kselftest
-> branch which we know is stable and won't change, and (b) we can get
-> assurances that Linus *will* accept that branch during the next merge
-> window, those subsystems which want to use kself test can simply pull
-> it into their tree.
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-Yes.
+[ Upstream commit c59ae0a1055127dd3828a88e111a0db59b254104 ]
 
-At the same time, I don't think it needs to be even that fancy. Even
-if it's not a stable branch that gets shared between different
-developers, it would be good to just have people do a "let's try this"
-throw-away branch to use the kunit functionality and verify that
-"yeah, this is fairly convenient for ext4".
+clang warns:
 
-It doesn't have to be merged in that form, but just confirmation that
-the infrastructure is helpful before it gets merged would be good.
+arch/mips/mm/tlbex.c:634:19: error: use of logical '&&' with constant
+operand [-Werror,-Wconstant-logical-operand]
+        if (cpu_has_rixi && _PAGE_NO_EXEC) {
+                         ^  ~~~~~~~~~~~~~
+arch/mips/mm/tlbex.c:634:19: note: use '&' for a bitwise operation
+        if (cpu_has_rixi && _PAGE_NO_EXEC) {
+                         ^~
+                         &
+arch/mips/mm/tlbex.c:634:19: note: remove constant to silence this
+warning
+        if (cpu_has_rixi && _PAGE_NO_EXEC) {
+                        ~^~~~~~~~~~~~~~~~
+1 error generated.
 
-               Linus
+Explicitly cast this value to a boolean so that clang understands we
+intend for this to be a non-zero value.
+
+Fixes: 00bf1c691d08 ("MIPS: tlbex: Avoid placing software PTE bits in Entry* PFN fields")
+Link: https://github.com/ClangBuiltLinux/linux/issues/609
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/mm/tlbex.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
+index c2a6869418f77..dc495578d44d3 100644
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -634,7 +634,7 @@ static __maybe_unused void build_convert_pte_to_entrylo(u32 **p,
+ 		return;
+ 	}
+ 
+-	if (cpu_has_rixi && _PAGE_NO_EXEC) {
++	if (cpu_has_rixi && !!_PAGE_NO_EXEC) {
+ 		if (fill_includes_sw_bits) {
+ 			UASM_i_ROTR(p, reg, reg, ilog2(_PAGE_GLOBAL));
+ 		} else {
+-- 
+2.20.1
+
+
+
