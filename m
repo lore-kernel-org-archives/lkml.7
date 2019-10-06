@@ -2,51 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934AAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77946ECE58E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602D420700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486AC2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384292;
-	bh=13uzURmxxxIWX1FXpgkisWa47mmY45csoVlRHGI7GxI=;
+	s=default; t=1570384293;
+	bh=bNCnRboeCVn87mOl7ww26nNSv6sQjpBOKLRnr2WZNgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sL6RV2oG7njlQ1WjNNF2qAj42C5Ree06y6bjNJu2RU/0RBB1l0j4Ru57LIvrwYulQ
-	 nEgS961dUnmFh6/RvInXUu+QYDv4or99eXRvgzAmOJdpYabxbASRdPrNEp9RDOI3Ir
-	 Xm3Q+5QaLhfzdskf11OJDW/8/rV5JdDkqnA66l5k=
+	b=wdR+YIj7tb1/Wk9/RLv6nwr3O7rKicuFWolIS9wNBUzVhCSJVHQB/Kmrk7h6wV9Ev
+	 gxZOel2r/gDf2a7Nr9rGxPSzZuZJiMnjAQgoc47mlt8sjz3UGPN/NfoTisYWSkWo1j
+	 z/nM34qkuV3/4bVZBI9bgX3Q5VSN2PGjvKntxs08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfJFRu6 (ORCPT
+        id S1730971AbfJFRkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48974 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbfJFRuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:50:55 -0400
+        id S1730956AbfJFRj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28CE3214D9;
-        Sun,  6 Oct 2019 17:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3298820700;
+        Sun,  6 Oct 2019 17:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383938;
-        bh=13uzURmxxxIWX1FXpgkisWa47mmY45csoVlRHGI7GxI=;
+        s=default; t=1570383597;
+        bh=bNCnRboeCVn87mOl7ww26nNSv6sQjpBOKLRnr2WZNgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpE3Hhd41v9UHNjNxomYYOrmxW/rAcbHNSSrxdkTxFxq7HvqrK/yLt82CTLtpGA8h
-         M9vXpfVpvHStiVzVrj6In7BCzng8+CHEEwSeOdJGLQoPXufRWM4bvUvp4A4IzXi8+k
-         Fb5gzDXmXNVhYVHHxT4pEsLt0Bb7ACM6l0d/KkNc=
+        b=brvip0M5BkFXEnZLFwM6Z+h1WLLAY2K+RY2A7nt65HQN3M9MFmZjTjVJ8RKm8FOLQ
+         l/TANzw3O81Ysh+QrCpq54B1qrg6UplCaV0ljuu/7dfAdVfZwxN2rgOwtRrcyrlvRF
+         xzU57Us/5Q9lruHnVNuq2we42jPT7QQwigfHTy14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 151/166] net: dsa: sja1105: Fix sleeping while atomic in .port_hwtstamp_set
-Date:   Sun,  6 Oct 2019 19:21:57 +0200
-Message-Id: <20191006171225.622979998@linuxfoundation.org>
+        stable@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Huckleberry <nhuck@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Scott Wood <oss@buserror.net>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 025/166] clk: qoriq: Fix -Wunused-const-variable
+Date:   Sun,  6 Oct 2019 19:19:51 +0200
+Message-Id: <20191006171215.243938906@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,155 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit 3e8db7e56082156a37b71d7334860c10fcea8025 ]
+[ Upstream commit a95fb581b144b5e73da382eaedb2e32027610597 ]
 
-Currently this stack trace can be seen with CONFIG_DEBUG_ATOMIC_SLEEP=y:
+drivers/clk/clk-qoriq.c:138:38: warning: unused variable
+'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
+clockgen_muxinfo p5020_cmux_grp1
 
-[   41.568348] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:909
-[   41.576757] in_atomic(): 1, irqs_disabled(): 0, pid: 208, name: ptp4l
-[   41.583212] INFO: lockdep is turned off.
-[   41.587123] CPU: 1 PID: 208 Comm: ptp4l Not tainted 5.3.0-rc6-01445-ge950f2d4bc7f-dirty #1827
-[   41.599873] [<c0313d7c>] (unwind_backtrace) from [<c030e13c>] (show_stack+0x10/0x14)
-[   41.607584] [<c030e13c>] (show_stack) from [<c1212d50>] (dump_stack+0xd4/0x100)
-[   41.614863] [<c1212d50>] (dump_stack) from [<c037dfc8>] (___might_sleep+0x1c8/0x2b4)
-[   41.622574] [<c037dfc8>] (___might_sleep) from [<c122ea90>] (__mutex_lock+0x48/0xab8)
-[   41.630368] [<c122ea90>] (__mutex_lock) from [<c122f51c>] (mutex_lock_nested+0x1c/0x24)
-[   41.638340] [<c122f51c>] (mutex_lock_nested) from [<c0c6fe08>] (sja1105_static_config_reload+0x30/0x27c)
-[   41.647779] [<c0c6fe08>] (sja1105_static_config_reload) from [<c0c7015c>] (sja1105_hwtstamp_set+0x108/0x1cc)
-[   41.657562] [<c0c7015c>] (sja1105_hwtstamp_set) from [<c0feb650>] (dev_ifsioc+0x18c/0x330)
-[   41.665788] [<c0feb650>] (dev_ifsioc) from [<c0febbd8>] (dev_ioctl+0x320/0x6e8)
-[   41.673064] [<c0febbd8>] (dev_ioctl) from [<c0f8b1f4>] (sock_ioctl+0x334/0x5e8)
-[   41.680340] [<c0f8b1f4>] (sock_ioctl) from [<c05404a8>] (do_vfs_ioctl+0xb0/0xa10)
-[   41.687789] [<c05404a8>] (do_vfs_ioctl) from [<c0540e3c>] (ksys_ioctl+0x34/0x58)
-[   41.695151] [<c0540e3c>] (ksys_ioctl) from [<c0301000>] (ret_fast_syscall+0x0/0x28)
-[   41.702768] Exception stack(0xe8495fa8 to 0xe8495ff0)
-[   41.707796] 5fa0:                   beff4a8c 00000001 00000011 000089b0 beff4a8c beff4a80
-[   41.715933] 5fc0: beff4a8c 00000001 0000000c 00000036 b6fa98c8 004e19c1 00000001 00000000
-[   41.724069] 5fe0: 004dcedc beff4a6c 004c0738 b6e7af4c
-[   41.729860] BUG: scheduling while atomic: ptp4l/208/0x00000002
-[   41.735682] INFO: lockdep is turned off.
+drivers/clk/clk-qoriq.c:146:38: warning: unused variable
+'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
+clockgen_muxinfo p5020_cmux_grp2
 
-Enabling RX timestamping will logically disturb the fastpath (processing
-of meta frames). Replace bool hwts_rx_en with a bit that is checked
-atomically from the fastpath and temporarily unset from the sleepable
-context during a change of the RX timestamping process (a destructive
-operation anyways, requires switch reset).
-If found unset, the fastpath (net/dsa/tag_sja1105.c) will just drop any
-received meta frame and not take the meta_lock at all.
+In the definition of the p5020 chip, the p2041 chip's info was used
+instead.  The p5020 and p2041 chips have different info. This is most
+likely a typo.
 
-Fixes: a602afd200f5 ("net: dsa: sja1105: Expose PTP timestamping ioctls to userspace")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/525
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Link: https://lkml.kernel.org/r/20190627220642.78575-1-nhuck@google.com
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Scott Wood <oss@buserror.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c |   19 +++++++++++--------
- include/linux/dsa/sja1105.h            |    4 +++-
- net/dsa/tag_sja1105.c                  |   12 +++++++++++-
- 3 files changed, 25 insertions(+), 10 deletions(-)
+ drivers/clk/clk-qoriq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1875,7 +1875,9 @@ static int sja1105_set_ageing_time(struc
- 	return sja1105_static_config_reload(priv);
- }
- 
--/* Caller must hold priv->tagger_data.meta_lock */
-+/* Must be called only with priv->tagger_data.state bit
-+ * SJA1105_HWTS_RX_EN cleared
-+ */
- static int sja1105_change_rxtstamping(struct sja1105_private *priv,
- 				      bool on)
- {
-@@ -1932,16 +1934,17 @@ static int sja1105_hwtstamp_set(struct d
- 		break;
- 	}
- 
--	if (rx_on != priv->tagger_data.hwts_rx_en) {
--		spin_lock(&priv->tagger_data.meta_lock);
-+	if (rx_on != test_bit(SJA1105_HWTS_RX_EN, &priv->tagger_data.state)) {
-+		clear_bit(SJA1105_HWTS_RX_EN, &priv->tagger_data.state);
-+
- 		rc = sja1105_change_rxtstamping(priv, rx_on);
--		spin_unlock(&priv->tagger_data.meta_lock);
- 		if (rc < 0) {
- 			dev_err(ds->dev,
- 				"Failed to change RX timestamping: %d\n", rc);
--			return -EFAULT;
-+			return rc;
- 		}
--		priv->tagger_data.hwts_rx_en = rx_on;
-+		if (rx_on)
-+			set_bit(SJA1105_HWTS_RX_EN, &priv->tagger_data.state);
- 	}
- 
- 	if (copy_to_user(ifr->ifr_data, &config, sizeof(config)))
-@@ -1960,7 +1963,7 @@ static int sja1105_hwtstamp_get(struct d
- 		config.tx_type = HWTSTAMP_TX_ON;
- 	else
- 		config.tx_type = HWTSTAMP_TX_OFF;
--	if (priv->tagger_data.hwts_rx_en)
-+	if (test_bit(SJA1105_HWTS_RX_EN, &priv->tagger_data.state))
- 		config.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
- 	else
- 		config.rx_filter = HWTSTAMP_FILTER_NONE;
-@@ -2009,7 +2012,7 @@ static bool sja1105_port_rxtstamp(struct
- 	struct sja1105_private *priv = ds->priv;
- 	struct sja1105_tagger_data *data = &priv->tagger_data;
- 
--	if (!data->hwts_rx_en)
-+	if (!test_bit(SJA1105_HWTS_RX_EN, &data->state))
- 		return false;
- 
- 	/* We need to read the full PTP clock to reconstruct the Rx
---- a/include/linux/dsa/sja1105.h
-+++ b/include/linux/dsa/sja1105.h
-@@ -31,6 +31,8 @@
- #define SJA1105_META_SMAC			0x222222222222ull
- #define SJA1105_META_DMAC			0x0180C200000Eull
- 
-+#define SJA1105_HWTS_RX_EN			0
-+
- /* Global tagger data: each struct sja1105_port has a reference to
-  * the structure defined in struct sja1105_private.
-  */
-@@ -42,7 +44,7 @@ struct sja1105_tagger_data {
- 	 * from taggers running on multiple ports on SMP systems
- 	 */
- 	spinlock_t meta_lock;
--	bool hwts_rx_en;
-+	unsigned long state;
- };
- 
- struct sja1105_skb_cb {
---- a/net/dsa/tag_sja1105.c
-+++ b/net/dsa/tag_sja1105.c
-@@ -155,7 +155,11 @@ static struct sk_buff
- 	/* Step 1: A timestampable frame was received.
- 	 * Buffer it until we get its meta frame.
- 	 */
--	if (is_link_local && sp->data->hwts_rx_en) {
-+	if (is_link_local) {
-+		if (!test_bit(SJA1105_HWTS_RX_EN, &sp->data->state))
-+			/* Do normal processing. */
-+			return skb;
-+
- 		spin_lock(&sp->data->meta_lock);
- 		/* Was this a link-local frame instead of the meta
- 		 * that we were expecting?
-@@ -186,6 +190,12 @@ static struct sk_buff
- 	} else if (is_meta) {
- 		struct sk_buff *stampable_skb;
- 
-+		/* Drop the meta frame if we're not in the right state
-+		 * to process it.
-+		 */
-+		if (!test_bit(SJA1105_HWTS_RX_EN, &sp->data->state))
-+			return NULL;
-+
- 		spin_lock(&sp->data->meta_lock);
- 
- 		stampable_skb = sp->data->stampable_skb;
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index 07f3b252f3e0c..bed140f7375f0 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -686,7 +686,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
+ 		.guts_compat = "fsl,qoriq-device-config-1.0",
+ 		.init_periph = p5020_init_periph,
+ 		.cmux_groups = {
+-			&p2041_cmux_grp1, &p2041_cmux_grp2
++			&p5020_cmux_grp1, &p5020_cmux_grp2
+ 		},
+ 		.cmux_to_group = {
+ 			0, 1, -1
+-- 
+2.20.1
+
 
 
