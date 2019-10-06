@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CAFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAC0ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB5620673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57B320673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384308;
-	bh=SsmMWj3jspdVYymTd9rWSZYZZF4Otthg7BZ/+Oq09qg=;
+	s=default; t=1570384311;
+	bh=jbJz3uGLLHAyYLPhnl1Y9VCga/2gkSJPt8N1e4A7zik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8iAymLH9tj0QkpZPNQwCXYB8kCts4Ovq2F9PsE7RUbEg/C/Gu6/t7PseLNA9Eh4u
-	 Y6jzW9FqwQVXVQfBGprwN3dIBAyEUWgcXpaHozDpNEZvV5RE7gtyBybkjmbHT4fArP
-	 N8zCsBLUcPYOgbZCRlQn9aQ0hSrvRSkbTSUSsXyM=
+	b=XhWxkLA//N22c3f/JXMEWIroMBLDxlBQ3f9z4NbO0khSneICtDTgyxnibRqkFzVuS
+	 fAEY46IK5dn9APHQcfileNUy1JjVyqoMDFQtb/ZA3A+MixnPaJ+u9XZ3AME6L3mBrE
+	 0x8RnMutpdwmjC1bVVJ+KRAHL3Nma7cjGvBT0NfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbfJFRvp (ORCPT
+        id S1726878AbfJFRvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49020 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727631AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728010AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1B5021850;
-        Sun,  6 Oct 2019 17:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B2E218AC;
+        Sun,  6 Oct 2019 17:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383933;
-        bh=SsmMWj3jspdVYymTd9rWSZYZZF4Otthg7BZ/+Oq09qg=;
+        s=default; t=1570383936;
+        bh=jbJz3uGLLHAyYLPhnl1Y9VCga/2gkSJPt8N1e4A7zik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hDd3+RZcSjwoRrWEqlWMxtLVjN0meuXReyL4v2BaO6T/W/ay0w8mPzgX30NZv/Z9c
-         2fIG2cOH9oKTDW974hbIk/Ewwv48ZP2hciX+IYql81gWZBBnkAIRoZuO3kUlTMLX9+
-         iU0X0EBh0X9YJ17dhKbhNetSkN5Q7j3FXkGMrNIo=
+        b=d64BrhqY2WBDmUqty3N5xOvO0pthmcN0tdSHp5UzmBBd+0hztCqgZGq/FpM+X/m0u
+         xhu5dGG4ej4dqwpq9rJzii0qbrpjAiv4ZwDJ68ZM49L4MtFgLdDUTF9tBTfdBYCgJ+
+         RSnD1W4G8EyspRg04ntDrxstKzqEXDTL5k9v0Cck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 149/166] net: dsa: sja1105: Initialize the meta_lock
-Date:   Sun,  6 Oct 2019 19:21:55 +0200
-Message-Id: <20191006171225.464320750@linuxfoundation.org>
+Subject: [PATCH 5.3 150/166] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
+Date:   Sun,  6 Oct 2019 19:21:56 +0200
+Message-Id: <20191006171225.552635495@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,63 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit d6530e5ad45089c018c3cc5b5957a34721249f6f ]
+[ Upstream commit a761129e3625688310aecf26e1be9e98e85f8eb5 ]
 
-Otherwise, with CONFIG_DEBUG_SPINLOCK=y, this stack trace gets printed
-when enabling RX timestamping and receiving a PTP frame:
+xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
+to cache extra fragments. This is incorrect because the return type of
+xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
+ring buffer index.
 
-[  318.537078] INFO: trying to register non-static key.
-[  318.542040] the code is fine but needs lockdep annotation.
-[  318.547500] turning off the locking correctness validator.
-[  318.552972] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-13257-g0825b0669811-dirty #1962
-[  318.561283] Hardware name: Freescale LS1021A
-[  318.565566] [<c03144bc>] (unwind_backtrace) from [<c030e164>] (show_stack+0x10/0x14)
-[  318.573289] [<c030e164>] (show_stack) from [<c11b9f50>] (dump_stack+0xd4/0x100)
-[  318.580579] [<c11b9f50>] (dump_stack) from [<c03b9b40>] (register_lock_class+0x728/0x734)
-[  318.588731] [<c03b9b40>] (register_lock_class) from [<c03b60c4>] (__lock_acquire+0x78/0x25cc)
-[  318.597227] [<c03b60c4>] (__lock_acquire) from [<c03b8ef8>] (lock_acquire+0xd8/0x234)
-[  318.605033] [<c03b8ef8>] (lock_acquire) from [<c11db934>] (_raw_spin_lock+0x44/0x54)
-[  318.612755] [<c11db934>] (_raw_spin_lock) from [<c1164370>] (sja1105_rcv+0x1f8/0x4e8)
-[  318.620561] [<c1164370>] (sja1105_rcv) from [<c115d7cc>] (dsa_switch_rcv+0x80/0x204)
-[  318.628283] [<c115d7cc>] (dsa_switch_rcv) from [<c0f58c80>] (__netif_receive_skb_one_core+0x50/0x6c)
-[  318.637386] [<c0f58c80>] (__netif_receive_skb_one_core) from [<c0f58f04>] (netif_receive_skb_internal+0xac/0x264)
-[  318.647611] [<c0f58f04>] (netif_receive_skb_internal) from [<c0f59e98>] (napi_gro_receive+0x1d8/0x338)
-[  318.656887] [<c0f59e98>] (napi_gro_receive) from [<c0c298a4>] (gfar_clean_rx_ring+0x328/0x724)
-[  318.665472] [<c0c298a4>] (gfar_clean_rx_ring) from [<c0c29e60>] (gfar_poll_rx_sq+0x34/0x94)
-[  318.673795] [<c0c29e60>] (gfar_poll_rx_sq) from [<c0f5b40c>] (net_rx_action+0x128/0x4f8)
-[  318.681860] [<c0f5b40c>] (net_rx_action) from [<c03022f0>] (__do_softirq+0x148/0x5ac)
-[  318.689666] [<c03022f0>] (__do_softirq) from [<c0355af4>] (irq_exit+0x160/0x170)
-[  318.697040] [<c0355af4>] (irq_exit) from [<c03c6818>] (__handle_domain_irq+0x60/0xb4)
-[  318.704847] [<c03c6818>] (__handle_domain_irq) from [<c07e9440>] (gic_handle_irq+0x58/0x9c)
-[  318.713172] [<c07e9440>] (gic_handle_irq) from [<c0301a70>] (__irq_svc+0x70/0x98)
-[  318.720622] Exception stack(0xc2001f18 to 0xc2001f60)
-[  318.725656] 1f00:                                                       00000001 00000006
-[  318.733805] 1f20: 00000000 c20165c0 ffffe000 c2010cac c2010cf4 00000001 00000000 c2010c88
-[  318.741955] 1f40: c1f7a5a8 00000000 00000000 c2001f68 c03ba140 c030a288 200e0013 ffffffff
-[  318.750110] [<c0301a70>] (__irq_svc) from [<c030a288>] (arch_cpu_idle+0x24/0x3c)
-[  318.757486] [<c030a288>] (arch_cpu_idle) from [<c038a480>] (do_idle+0x1b8/0x2a4)
-[  318.764859] [<c038a480>] (do_idle) from [<c038a94c>] (cpu_startup_entry+0x18/0x1c)
-[  318.772407] [<c038a94c>] (cpu_startup_entry) from [<c1e00f10>] (start_kernel+0x4cc/0x4fc)
+In the situation when the rsp_cons is approaching 0xffffffff, the return
+value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
+caller) would regard as error. As a result, queue->rx.rsp_cons is set
+incorrectly because it is updated only when there is error. If there is no
+error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
+Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
+queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
+This leads to NULL pointer access in the next iteration to process rx ring
+buffer entries.
 
-Fixes: 844d7edc6a34 ("net: dsa: sja1105: Add a global sja1105_tagger_data structure")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+The symptom is similar to the one fixed in
+commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
+empty in error handling").
+
+This patch changes the return type of xennet_fill_frags() to indicate
+whether it is successful or failed. The queue->rx.rsp_cons will be
+always updated inside this function.
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/xen-netfront.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -2165,6 +2165,7 @@ static int sja1105_probe(struct spi_devi
- 	tagger_data = &priv->tagger_data;
- 	skb_queue_head_init(&tagger_data->skb_rxtstamp_queue);
- 	INIT_WORK(&tagger_data->rxtstamp_work, sja1105_rxtstamp_work);
-+	spin_lock_init(&tagger_data->meta_lock);
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -887,9 +887,9 @@ static int xennet_set_skb_gso(struct sk_
+ 	return 0;
+ }
  
- 	/* Connections between dsa_port and sja1105_port */
- 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+-static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
+-				  struct sk_buff *skb,
+-				  struct sk_buff_head *list)
++static int xennet_fill_frags(struct netfront_queue *queue,
++			     struct sk_buff *skb,
++			     struct sk_buff_head *list)
+ {
+ 	RING_IDX cons = queue->rx.rsp_cons;
+ 	struct sk_buff *nskb;
+@@ -908,7 +908,7 @@ static RING_IDX xennet_fill_frags(struct
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+ 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
+-			return ~0U;
++			return -ENOENT;
+ 		}
+ 
+ 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+@@ -919,7 +919,9 @@ static RING_IDX xennet_fill_frags(struct
+ 		kfree_skb(nskb);
+ 	}
+ 
+-	return cons;
++	queue->rx.rsp_cons = cons;
++
++	return 0;
+ }
+ 
+ static int checksum_setup(struct net_device *dev, struct sk_buff *skb)
+@@ -1045,8 +1047,7 @@ err:
+ 		skb->data_len = rx->status;
+ 		skb->len += rx->status;
+ 
+-		i = xennet_fill_frags(queue, skb, &tmpq);
+-		if (unlikely(i == ~0U))
++		if (unlikely(xennet_fill_frags(queue, skb, &tmpq)))
+ 			goto err;
+ 
+ 		if (rx->flags & XEN_NETRXF_csum_blank)
+@@ -1056,7 +1057,7 @@ err:
+ 
+ 		__skb_queue_tail(&rxq, skb);
+ 
+-		queue->rx.rsp_cons = ++i;
++		i = ++queue->rx.rsp_cons;
+ 		work_done++;
+ 	}
+ 
 
 
