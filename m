@@ -2,155 +2,116 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,GAPPY_SUBJECT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF94ECE58B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFED5ECE58F
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427F420862
+	by mail.kernel.org (Postfix) with ESMTP id 9811D20862
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCaLLOHA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRCGlzEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfJFQsj (ORCPT
+        id S1726758AbfJFQth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 12:48:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44564 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJFQsj (ORCPT
+        Sun, 6 Oct 2019 12:49:37 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44067 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFQth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 12:48:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q15so5658271pll.11
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 09:48:39 -0700 (PDT)
+        Sun, 6 Oct 2019 12:49:37 -0400
+Received: by mail-io1-f65.google.com with SMTP id w12so23545798iol.11;
+        Sun, 06 Oct 2019 09:49:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=TxLT9bpNl4jFVPAGhPpjPn1KDoP3vrxyC3V+3rCVHuM=;
-        b=GCaLLOHABMVDzUOh3ZA+xjsSzoVnMe1OSpprvlXKbr3FidW133qVKYOkb5FIceNKPQ
-         KHhGro4dl3fmL0QQgtMMhd1SRJuyWdL4b+DvJoTt3w+PgN2TNUg6wKYwvtQljvsSvTX+
-         a9JGo1FzYyiUJpewUjM7DGB6A/K63HuuJywazIzk6RwHxuUldu3Z7NftG8FGsWMjylMR
-         QD7wgrgxUP2OrnU60tW2CAlbjcUtBPr5N3Op+7EcZrL4s0mcrzwJvlQuoSvl7TFaN1bS
-         411vNbPX7EZ9NkFNpKzsRMq5VLeHv+Vw77dlAZnGXIps6/nwZRNi/mO+jjHLTxt450TN
-         ++BA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gitR6prE2tnQKW2d8vwg8C75oWlKUdv67rXVU7q0QOQ=;
+        b=DRCGlzEtnAKAXsK/2hn1rAPa+00ur0pwb7bfnsPV4inoX1EZo9f+x/DVaJh3kTSbvi
+         EwRDB6fUbQk1/rsy5egGmgH7bYlcXmGHzRajWercwPT1mZvXWa4HpuUmfY4pFtU0/3IC
+         Somjz9/4ecpl/+/yIkZ7GAORqGj8k8bdBaTZWXsRp4KXVc2ycIcMdGM2IbFKi+Pxg31W
+         kFatCmY+0Dy9QUmOdHaVpCrY2A2KPq+lIYzAbToHi0nxs6dptrLB9wgohM3H3Zr/nZm/
+         PVEq146Ba46kpeaoXCqP1UbN7ZSRrQsxVJailmMq0xQbY9qTMOUGx0WvMQvJoH86IJJl
+         s7ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=TxLT9bpNl4jFVPAGhPpjPn1KDoP3vrxyC3V+3rCVHuM=;
-        b=jPif5b1bwPmIewJFp3OimaNzp7OgLaJKtFDrZgmgAiryA1t/dlcczC1dOPtN8nUfMl
-         Kg4AAEp7BGb/4VE30F4D63Wce730T6w94m1TDgbsJtPgVHNeWt8iWJTEbCrg38kQPjCG
-         rANuAWM7oktEgiMm7H1ZQp4/+NoYna7Zf2juvWe9AzBFIKHJAbkxkXU3cnV84cpoQRSD
-         zb8vEdxQaWW0BPPIGKHr+KZuQyks5A2cWLtpo4CMqIhJaxjCJXZZrG7W9Ob4Jz081RLN
-         Olq5bm3BNnZU9Cqhh0KjAcMeADDh4Wh3+BVA14U8vPLh6SWlnM+Hkgz8FYxyaDxi8vVZ
-         VHcw==
-X-Gm-Message-State: APjAAAV9UM8jBOK3mehqHCYU/d8OSqa+qAiihsaEsi1lo2G2dBb4Vza8
-        Mws7ib1Y8N2kHlQ4K+JZo3o=
-X-Google-Smtp-Source: APXvYqzmjl+mcprCJRZxez82R7Yc8QkQNXYtyYVkQIbk7eqcboNITANQlLm+Tif+J1GnDnyYzSmYPg==
-X-Received: by 2002:a17:902:563:: with SMTP id 90mr24478184plf.13.1570380518616;
-        Sun, 06 Oct 2019 09:48:38 -0700 (PDT)
-Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id h2sm20378814pfq.108.2019.10.06.09.48.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 06 Oct 2019 09:48:37 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Pavel Machek <pavel@denx.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        "alex@alexanderweb.de" <alex@alexanderweb.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-CC:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mat King <mathewk@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Ross Zwisler <zwisler@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: New sysfs interface for privacy screens
-Thread-Topic: New sysfs interface for privacy screens
-Thread-Index: AXdoTmVTBb+NyICdEDRjYqdq56nWEjUwLjQwZmZpcml2Y2w1MDUyNTEwse7NLzw=
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Sun, 6 Oct 2019 16:48:31 +0000
-Message-ID: <SL2P216MB01055AE2F23BB2546DC93708AA980@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <20191002094650.3fc06a85@lwn.net>
- <87muei9r7i.fsf@intel.com>
- <20191003102254.dmwl6qimdca3dbrv@holly.lan>
- <20191006110455.GC24605@amd>
-In-Reply-To: <20191006110455.GC24605@amd>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gitR6prE2tnQKW2d8vwg8C75oWlKUdv67rXVU7q0QOQ=;
+        b=pMdL3V28vLn9ZtqkpSocDzFkeHmnRkYHTo7s4Dp0k5RbeiFlfgOgA64/gsssRKKfVe
+         uLrd6hEZgZx1O2YtJUgowLJmW8ysPmY3YqGJ+UNVdHW11Y2SaPiTAKXeN8CZn8oVIVOI
+         mBfKerZCaR6ysnXFx7SVz/j0ph6IrNELmSUZvo7zmj1w5Q/OIQss7cw8GuWuUsp8UfZt
+         nUFb8P2z4JgX71E+ZJSG19eii4hppneJgBvQqsIDjBXSAiDFSE5v7a6cUMiQZp7sEd7J
+         ISlpJZtWbNJiK1U8X+hQZuBDE4+BeiwkceskIfcyU8w7T3iLEjteEcKYYwR7TXSrBD34
+         hjWA==
+X-Gm-Message-State: APjAAAUa/JM2JkZNE/nimvipfWYLG+SWlJwHE9eGooIxW4IdmnbEIHfs
+        Quqh6ha6AMo7H1aIkYmkccKyz1R1DMAAxPbJ/Kg=
+X-Google-Smtp-Source: APXvYqzGZYdzHVT/2p6rnwPtcBhy8+JdFhrM+z5AfNJSgF/qYn5iG9mbEGZsWcc2vspca5ATINmbfjn4WGtO7qG9mW4=
+X-Received: by 2002:a05:6602:10d:: with SMTP id s13mr12183510iot.244.1570380576506;
+ Sun, 06 Oct 2019 09:49:36 -0700 (PDT)
 MIME-Version: 1.0
+References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
+ <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com> <CAG48ez35oJhey5WNzMQR14ko6RPJUJp+nCuAHVUJqX7EPPPokA@mail.gmail.com>
+ <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com>
+In-Reply-To: <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com>
+From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
+Date:   Sun, 6 Oct 2019 17:49:24 +0100
+Message-ID: <CAJHCu1JobL7aj51=4gvaoXPfWH8aNdYXgcBDq90wV4_jN2iUfw@mail.gmail.com>
+Subject: Re: [PATCH v5 04/12] S.A.R.A.: generic DFA for string matching
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Brad Spengler <spender@grsecurity.net>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        PaX Team <pageexec@freemail.hu>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        James Morris <jmorris@namei.org>,
+        John Johansen <john.johansen@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On 10/6/19, 7:04 AM, Pavel Machek wrote:
+Salvatore Mesoraca <s.mesoraca16@gmail.com> wrote:
 >
-> Hi!
+> Jann Horn <jannh@google.com> wrote:
+> >
+> > On Sat, Jul 6, 2019 at 12:55 PM Salvatore Mesoraca
+> > <s.mesoraca16@gmail.com> wrote:
+> > > Creation of a generic Discrete Finite Automata implementation
+> > > for string matching. The transition tables have to be produced
+> > > in user-space.
+> > > This allows us to possibly support advanced string matching
+> > > patterns like regular expressions, but they need to be supported
+> > > by user-space tools.
+> >
+> > AppArmor already has a DFA implementation that takes a DFA machine
+> > from userspace and runs it against file paths; see e.g.
+> > aa_dfa_match(). Did you look into whether you could move their DFA to
+> > some place like lib/ and reuse it instead of adding yet another
+> > generic rule interface to the kernel?
 >
-> > > >> I have been looking into adding Linux support for electronic priva=
-cy
-> > > >> screens which is a feature on some new laptops which is built into=
- the
-> > > >> display and allows users to turn it on instead of needing to use a
-> > > >> physical privacy filter. In discussions with my colleagues the ide=
-a of
-> > > >> using either /sys/class/backlight or /sys/class/leds but this new
-> > > >> feature does not seem to quite fit into either of those classes.
-> > > >
-> > > > FWIW, it seems that you're not alone in this; 5.4 got some support =
-for
-> > > > such screens if I understand things correctly:
-> > > >
-> > > >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/commit/?id=3D110ea1d833ad
-> > >=20
-> > > Oh, I didn't realize it got merged already, I thought this was
-> > > related...
-> > >=20
-> > > So we've already replicated the backlight sysfs interface problem for
-> > > privacy screens. :(
-> >=20
-> > I guess... although the Thinkpad code hasn't added any standard
-> > interfaces (no other laptop should be placing controls for a privacy
-> > screen in /proc/acpi/ibm/... ). Maybe its not too late.
->
-> There's new interface for controlling privacyguard... but perhaps we
-> need better solution than what went in 5.4. Perhaps it should be
-> reconsidered?
+> Yes, using AppArmor DFA cloud be a possibility.
+> Though, I didn't know how AppArmor's maintainers feel about this.
+> I thought that was easier to just implement my own.
+> Anyway I understand that re-using that code would be the optimal solution.
+> I'm adding in CC AppArmor's maintainers, let's see what they think about this.
 
-I agree with your opinion. I also think that better solution can be conside=
-red,
-although there is already something in 5.4.
+I don't want this to prevent SARA from being up-streamed.
+Do you think that having another DFA here could be acceptable anyway?
+Would it be better if I just drop the DFA an go back to simple string
+matching to speed up things?
 
-Best regards,
-Jingoo Han
+Thank you,
 
->
-> Best regards,
->									Pavel
-> --=20
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
-log.html
+Salvatore
