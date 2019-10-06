@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34932C4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE19DECE595
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22C72077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DA021927
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382413;
-	bh=Q3xE3vp9phcUd5CwH9J/1cOw1zW/8mfzUm4fdP32Vy4=;
+	s=default; t=1570382415;
+	bh=A7GZAnfAyDSBIRqcMyz/rqC9/Sv2BmrCZAvB7h4kXBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CaWUljkvsg8CF+LuJG0MZIKZBao+xLz577IsurvK5HoS5OrDnR//u24vN6ZeRNMNL
-	 FmqK78eoavdGBC7cI68PbWk6G6zmYjoMWJLRF/jvIzvqU8Q1GCz5IpGWi5mSWmM8Rz
-	 4OJ6H7o69nGZiHnlnF0MzV1B3UFWAd8iNjYRImBU=
+	b=noXx1lF7zluhAdC7r5kF7f78SALUcE5ywImIRhMZZK+xQCHMmZ2dN9VRb9eAroEki
+	 bSPtaFrrPM6Igql7m3xqYhYiWM+h259/q2utzd4cY5oyIBnokBPH+1/9LRo3awGh+M
+	 /Grx0FSjfOpQ966nho/U5w7ooai0MCai1lVmVH84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfJFRUE (ORCPT
+        id S1727129AbfJFRUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfJFRUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:01 -0400
+        id S1726992AbfJFRT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:19:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488472077B;
-        Sun,  6 Oct 2019 17:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 908C220835;
+        Sun,  6 Oct 2019 17:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382400;
-        bh=Q3xE3vp9phcUd5CwH9J/1cOw1zW/8mfzUm4fdP32Vy4=;
+        s=default; t=1570382398;
+        bh=A7GZAnfAyDSBIRqcMyz/rqC9/Sv2BmrCZAvB7h4kXBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X1A81EepUwN+EOWbjOZvUZ7TD1QGfkra5bTwJmV4/LcoZEu8voOgTqL3j6qs11SvD
-         ADkAVFfPZYxItWYKDxAJENqm+zmZx4h4gznjIqX7/5Mpfa1PCi8X+tIkyV+rhk3AV8
-         i4MqV4VvNOvcRL/tFIDKUWazPHvkmu7bxFnY5LFY=
+        b=RG3Fq4nAJ6QQxm859k6y6w7KmOsVUlYDTt8gIwTicg6kkdZPE5oWuabUF9BbZKQZ8
+         CGKuLew4jxQDUA0MCQhhKbHp30WBKJfpBf+IqH8y9qrqWLH6Ftg+yZHTKISLfh2cmg
+         ZTnIMYYAdnZDZxFhoSKSHJiHtfsOHseATycQD0kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changwei Ge <gechangwei@live.cn>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 21/36] ocfs2: wait for recovering done after direct unlock request
-Date:   Sun,  6 Oct 2019 19:19:03 +0200
-Message-Id: <20191006171053.763416052@linuxfoundation.org>
+Subject: [PATCH 4.4 20/36] hypfs: Fix error number left in struct pointer member
+Date:   Sun,  6 Oct 2019 19:19:02 +0200
+Message-Id: <20191006171053.385844992@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -65,92 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <gechangwei@live.cn>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
+[ Upstream commit b54c64f7adeb241423cd46598f458b5486b0375e ]
 
-There is a scenario causing ocfs2 umount hang when multiple hosts are
-rebooting at the same time.
+In hypfs_fill_super(), if hypfs_create_update_file() fails,
+sbi->update_file is left holding an error number.  This is passed to
+hypfs_kill_super() which doesn't check for this.
 
-NODE1                           NODE2               NODE3
-send unlock requset to NODE2
-                                dies
-                                                    become recovery master
-                                                    recover NODE2
-find NODE2 dead
-mark resource RECOVERING
-directly remove lock from grant list
-calculate usage but RECOVERING marked
-**miss the window of purging
-clear RECOVERING
+Fix this by not setting sbi->update_value until after we've checked for
+error.
 
-To reproduce this issue, crash a host and then umount ocfs2
-from another node.
-
-To solve this, just let unlock progress wait for recovery done.
-
-Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
-Signed-off-by: Changwei Ge <gechangwei@live.cn>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+cc: linux-s390@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ arch/s390/hypfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
-index 2e3c9dbab68c9..d137d4692b918 100644
---- a/fs/ocfs2/dlm/dlmunlock.c
-+++ b/fs/ocfs2/dlm/dlmunlock.c
-@@ -105,7 +105,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 	enum dlm_status status;
- 	int actions = 0;
- 	int in_use;
--        u8 owner;
-+	u8 owner;
-+	int recovery_wait = 0;
+diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
+index c670279b33f0c..1de3fdfc35378 100644
+--- a/arch/s390/hypfs/inode.c
++++ b/arch/s390/hypfs/inode.c
+@@ -267,7 +267,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
+ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	struct inode *root_inode;
+-	struct dentry *root_dentry;
++	struct dentry *root_dentry, *update_file;
+ 	int rc = 0;
+ 	struct hypfs_sb_info *sbi;
  
- 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
- 	     flags & LKM_VALBLK);
-@@ -208,9 +209,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 		}
- 		if (flags & LKM_CANCEL)
- 			lock->cancel_pending = 0;
--		else
--			lock->unlock_pending = 0;
--
-+		else {
-+			if (!lock->unlock_pending)
-+				recovery_wait = 1;
-+			else
-+				lock->unlock_pending = 0;
-+		}
- 	}
- 
- 	/* get an extra ref on lock.  if we are just switching
-@@ -244,6 +248,17 @@ leave:
- 	spin_unlock(&res->spinlock);
- 	wake_up(&res->wq);
- 
-+	if (recovery_wait) {
-+		spin_lock(&res->spinlock);
-+		/* Unlock request will directly succeed after owner dies,
-+		 * and the lock is already removed from grant list. We have to
-+		 * wait for RECOVERING done or we miss the chance to purge it
-+		 * since the removement is much faster than RECOVERING proc.
-+		 */
-+		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
-+		spin_unlock(&res->spinlock);
-+	}
-+
- 	/* let the caller's final dlm_lock_put handle the actual kfree */
- 	if (actions & DLM_UNLOCK_FREE_LOCK) {
- 		/* this should always be coupled with list removal */
+@@ -298,9 +298,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		rc = hypfs_diag_create_files(root_dentry);
+ 	if (rc)
+ 		return rc;
+-	sbi->update_file = hypfs_create_update_file(root_dentry);
+-	if (IS_ERR(sbi->update_file))
+-		return PTR_ERR(sbi->update_file);
++	update_file = hypfs_create_update_file(root_dentry);
++	if (IS_ERR(update_file))
++		return PTR_ERR(update_file);
++	sbi->update_file = update_file;
+ 	hypfs_update_update(sb);
+ 	pr_info("Hypervisor filesystem mounted\n");
+ 	return 0;
 -- 
 2.20.1
 
