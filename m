@@ -2,114 +2,111 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53110C4740A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D9EC47404
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65FC222C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CDD222C5
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wVKBzv/i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXbR5lRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfJFC1H (ORCPT
+        id S1726191AbfJFC3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 22:27:07 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:26134 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfJFC1G (ORCPT
+        Sat, 5 Oct 2019 22:29:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46167 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfJFC3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 22:27:06 -0400
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x962R0ZZ019679
-        for <linux-kernel@vger.kernel.org>; Sun, 6 Oct 2019 11:27:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x962R0ZZ019679
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570328821;
-        bh=Zwa7ZYrRM42iQB+mkyBG2Fb39lSv6+kwOgrD7wa5OmY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wVKBzv/iOZks4ISSt6WX9U4IyGCE4oVlRwVe9645VpGmw3O605wo3mGLuAzEW9wXc
-         2nZYjiHt0D9f+mZFqJBxNrTL2v2NWZTD1DtA2lkAW8pl3oGgO1cFNBLoD30bzScHZK
-         5eskc36ax7oSkdWyRlVxCP7r2gBuHLCnqaN1Dd1lp6MiIvia6mgYBlJusciZOSqLhL
-         NSWoHu8Tyj/NWfb3jyppDHAckFJHNz17fbae8duDsEgqOJPgmWF+KFGfBttzu3rJGF
-         SKmc2jWDB9V5AQFsv1379/l2SmQ6h48ReDxeBucjr3qu9kiMuAz47b/mm5Vwr3sz3o
-         4UwuK5XUwCsfg==
-X-Nifty-SrcIP: [209.85.221.175]
-Received: by mail-vk1-f175.google.com with SMTP id q25so2253333vkn.12
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 19:27:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAUzUAQjej9To0ZmNgcMz3FFdebY5fqFsFdXxSdWDfQ5TAdQUhwp
-        0ddjnq/1jskcCwqcdn1W3DWCK7BzE3dPYVapCMQ=
-X-Google-Smtp-Source: APXvYqxAcl3ui4KK4AcJ5t15tFYtaN1Gx1mYNOs1pfEznTUT7Se1kAV8xawW66Hv2AU8XCaMf2zCJ44PSRZPEjuS9Fg=
-X-Received: by 2002:a1f:5f51:: with SMTP id t78mr11652117vkb.66.1570328819687;
- Sat, 05 Oct 2019 19:26:59 -0700 (PDT)
+        Sat, 5 Oct 2019 22:29:52 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so11203836wrv.13
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 19:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YGXf9idAJ+CJ9q4yeCvmnDfU8PF8I7CxRLbmXUnGvaE=;
+        b=bXbR5lRlZwWTXVwvK015DgZNC+gXgMsDlm5stxRvBjFYfgSjZrLk1/gDpV5MWxUr4V
+         foOM8irTZsUCyvzu7zQaH5tnxXU7lbho45WPbYYlJOZ12WnBymVvmCfVWU4gRJ6wsnoz
+         toLpbD5R53JK/imQA6T4vwVRqF5FhgLSnwSBLii8itUaBoYiVJtIh8ytJNbNi87k16f/
+         lrZsfLFqg0Y3OEV7sisBz3AIg9+hKLKYfX6AZ+UhzM5F2ohQKK4jii7OStNX6WNSi1HR
+         gyOAVTAEspNzDwu+TqI1JElFNIo6ZXsqlB6svs2rbqEa0Bj7ZPpDVXWAXKFjJTpcNNfC
+         GIOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YGXf9idAJ+CJ9q4yeCvmnDfU8PF8I7CxRLbmXUnGvaE=;
+        b=EN8Te1fTOAy0YtZD9NphBEtAOJoEvXfhfhkRS8+RsgCLPkJQ2rzoc2ii0y28KbgsVq
+         lqwlAvhJVMRbBSMUxqdgU7RuuoiI5kt8lTMcZzQqukuRKHpzy38vCpIJjAb60mr7aw2p
+         g+4M5aFjZamOF65OZgUK+4GB8mom3R331fq+RVlEY1rVA1zoq7IA2E0H4hnbluFC14hF
+         k4Tkd/nCZuqSpONT/y9yK0HnklexkfXOd6eHmcDIHkGQJ163Nk9dR7PNwnyqfzXkq1Mn
+         yed7e1ZiqmVbGdr6Woh68yr/oyXQ2xcuGKGz4Wwd0MnpOWsAOtZ1l9lnyQf6Tsv3np84
+         HeHw==
+X-Gm-Message-State: APjAAAWcGd4KizRmULE/da1CKkBW3JW6KmoztCZiZThml/7tsTfRwMNB
+        7iJM8dsl5yPAMcKwBq/D4jU=
+X-Google-Smtp-Source: APXvYqwYQEIzRU2OOoOL/M1kz1QfCVsYvxsYYZynX93oCN+/Z9SdM15Qdv6y6grRKFvRgKDzQpeJXg==
+X-Received: by 2002:a5d:4d4f:: with SMTP id a15mr17546051wru.267.1570328990269;
+        Sat, 05 Oct 2019 19:29:50 -0700 (PDT)
+Received: from mail.google.com ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id w3sm828162wru.5.2019.10.05.19.29.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 19:29:49 -0700 (PDT)
+Date:   Sun, 6 Oct 2019 10:29:43 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mm: determine whether the fault address is canonical
+Message-ID: <20191006022941.pvwldrjyhl4z5inu@mail.google.com>
+References: <20191004134501.30651-1-changbin.du@gmail.com>
+ <CALCETrWEhNCWDz7OVpbYJceJ5eShsWWhuyuAQQSzAdKncUo7zA@mail.gmail.com>
+ <2d078dbc-73ca-0868-71f8-16e413ebdbf4@intel.com>
 MIME-Version: 1.0
-References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190811184938.1796-1-rikard.falkeborn@gmail.com> <20190811184938.1796-3-rikard.falkeborn@gmail.com>
-In-Reply-To: <20190811184938.1796-3-rikard.falkeborn@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 6 Oct 2019 11:26:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARvyRgPWVzbG_9xoJUebJx46phwEp9-nJFVQYYZBsxJdw@mail.gmail.com>
-Message-ID: <CAK7LNARvyRgPWVzbG_9xoJUebJx46phwEp9-nJFVQYYZBsxJdw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] linux/build_bug.h: Change type to int
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d078dbc-73ca-0868-71f8-16e413ebdbf4@intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 3:50 AM Rikard Falkeborn
-<rikard.falkeborn@gmail.com> wrote:
->
-> Having BUILD_BUG_ON_ZERO produce a value of type size_t leads to awkward
-> casts in cases where the result needs to be signed, or of smaller type
-> than size_t. To avoid this, cast the value to int instead and rely on
-> implicit type conversions when a larger or unsigned type is needed.
->
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-> Changes in v3:
->   - This patch is new in v3
->
->  include/linux/build_bug.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
-> index 0fe5426f2bdc..e3a0be2c90ad 100644
-> --- a/include/linux/build_bug.h
-> +++ b/include/linux/build_bug.h
-> @@ -9,11 +9,11 @@
->  #else /* __CHECKER__ */
->  /*
->   * Force a compilation error if condition is true, but also produce a
-> - * result (of value 0 and type size_t), so the expression can be used
-> + * result (of value 0 and type int), so the expression can be used
->   * e.g. in a structure initializer (or where-ever else comma expressions
->   * aren't permitted).
->   */
-> -#define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:(-!!(e)); }))
-> +#define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
->  #endif /* __CHECKER__ */
->
->  /* Force a compilation error if a constant expression is not a power of 2 */
-> --
-> 2.22.0
->
-
+On Fri, Oct 04, 2019 at 08:14:25AM -0700, Dave Hansen wrote:
+> On 10/4/19 7:59 AM, Andy Lutomirski wrote:
+> >> @@ -123,7 +125,8 @@ __visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
+> >>                                   unsigned long error_code,
+> >>                                   unsigned long fault_addr)
+> >>  {
+> >> -       WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
+> >> +       WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault at %s address in user access.",
+> >> +                 is_canonical_addr(fault_addr) ? "canonical" : "non-canonical");
+> > Unless the hardware behaves rather differently from the way I think it
+> > does, fault_addr is garbage for anything other than #PF and sometimes
+> > for #DF.  (And maybe the virtualization faults?)  I don't believe that
+> > #GP fills in CR2.
+> 
+> For #GP, we do:
+> 
+> do_general_protection(struct pt_regs *regs, long error_code)
+> {
+> ...
+>         if (!user_mode(regs)) {
+>                 if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
+>                         return;
+> 
+> Where the 0 is 'fault_addr'.  I'm not sure any other way that
+> ex_handler_uaccess() can get called with trapnr == X86_TRAP_GP.  0 is
+> canonical last I checked, which would make this patch a bit academic. :)
+My fault. I thought the 'fault_addr' is filled with a valid value. So we really
+don't know the answer without decoding the instruction which causes this #GP. :)
 
 -- 
-Best Regards
-Masahiro Yamada
+Cheers,
+Changbin Du
