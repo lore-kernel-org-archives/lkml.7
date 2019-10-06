@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB311C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C382C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962602080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA8F2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382909;
-	bh=8+Q61p1nO2TGy2yeA+CnpmaJNs2+Q8eCuUlUoLVx6KI=;
+	s=default; t=1570382913;
+	bh=ZW7DZIoYB8ha0qMnMTt72e6WQLNti6SiK+zXWEE454I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yY7yZp0JMBj3GoLTZ+M761cfMIEdQXMbXRqQsz3ZfQCKQE5i9l3YxjKYT2cIETTSU
-	 AzrlvxiEKaxK/j2rVsbddznM1GpLHDEvGsUyQlnVBi2x2EnwUUZC3lpp0BALQ5zQ2N
-	 fqLEjhXF4AGbJVUKv7ajfjyOPlXvt9oluexIHXDQ=
+	b=iSZs7nBH/vyKm+SPhui8kay267BiqDNITXibylEwyVSsD/9svyvuK6EHdIN8rFhg3
+	 VGFsgy/7Cu2fqb+9CNTAkp8vIoOa9TljPp6oljWXdYG3Mf+ST/NDhwSca0Fe1KTC0n
+	 NhRI1nb7CxA7s5+49vhD8qnOBh0Q8EIb3+RcXyag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbfJFR23 (ORCPT
+        id S1727799AbfJFR2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54106 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728767AbfJFR21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:27 -0400
+        id S1728786AbfJFR22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3318E217F9;
-        Sun,  6 Oct 2019 17:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7422080F;
+        Sun,  6 Oct 2019 17:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382905;
-        bh=8+Q61p1nO2TGy2yeA+CnpmaJNs2+Q8eCuUlUoLVx6KI=;
+        s=default; t=1570382908;
+        bh=ZW7DZIoYB8ha0qMnMTt72e6WQLNti6SiK+zXWEE454I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qY4tri+osMuad9EiyHj2KEPkz8BMpZFzc+571U9F8TcaP0m5xJK4LYRmfvYwARqtf
-         XPm0C2pdFP0nfl9yBGvat/1RQMU9zq2lskrFy4RkhlZuAMYj1vYQnopdq38470oJwf
-         bfI9iU9i2eJmPemZ59Ltd+SRw1BRLcqOJqDvfkds=
+        b=W3tdDIjibp2E6LDgp/GinA+WXfmY5DL6SeCOW7Xqt9M2Fq0g15UueepCtpw3bznJZ
+         FkIjc94jhsj/14bZDlj3TUgIxOPtb9nYk0WMI0HQLEP7vMWW3NUtgvh90jktKGexU0
+         KSCJiyC27IP8+ju4ghQGPrYmY/fUAwjLcdiQ/c+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        stable@vger.kernel.org, Lewis Huang <Lewis.Huang@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>, Eric Yang <eric.yang2@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/106] drm/amd/display: fix issue where 252-255 values are clipped
-Date:   Sun,  6 Oct 2019 19:20:21 +0200
-Message-Id: <20191006171131.463239141@linuxfoundation.org>
+Subject: [PATCH 4.19 016/106] drm/amd/display: reprogram VM config when system resume
+Date:   Sun,  6 Oct 2019 19:20:22 +0200
+Message-Id: <20191006171132.047808506@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,44 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Koo <Anthony.Koo@amd.com>
+From: Lewis Huang <Lewis.Huang@amd.com>
 
-[ Upstream commit 1cbcfc975164f397b449efb17f59d81a703090db ]
+[ Upstream commit e5382701c3520b3ed66169a6e4aa6ce5df8c56e0 ]
 
 [Why]
-When endpoint is at the boundary of a region, such as at 2^0=1
-we find that the last segment has a sharp slope and some points
-are clipped at the top.
+The vm config will be clear to 0 when system enter S4. It will
+cause hubbub didn't know how to fetch data when system resume.
+The flip always pending because earliest_inuse_address and
+request_address are different.
 
 [How]
-If end point is 1, which is exactly at the 2^0 region boundary, we
-need to program an additional region beyond this point.
+Reprogram VM config when system resume
 
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Signed-off-by: Lewis Huang <Lewis.Huang@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Eric Yang <eric.yang2@amd.com>
 Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-index 5d95a997fd9f9..f8904f73f57b0 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-@@ -292,9 +292,10 @@ bool cm_helper_translate_curve_to_hw_format(
- 		seg_distr[7] = 4;
- 		seg_distr[8] = 4;
- 		seg_distr[9] = 4;
-+		seg_distr[10] = 1;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index f4b89d1ea6f6f..2b2efe443c36d 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1585,6 +1585,14 @@ void dc_set_power_state(
+ 		dc_resource_state_construct(dc, dc->current_state);
  
- 		region_start = -10;
--		region_end = 0;
-+		region_end = 1;
- 	}
+ 		dc->hwss.init_hw(dc);
++
++#ifdef CONFIG_DRM_AMD_DC_DCN2_0
++		if (dc->hwss.init_sys_ctx != NULL &&
++			dc->vm_pa_config.valid) {
++			dc->hwss.init_sys_ctx(dc->hwseq, dc, &dc->vm_pa_config);
++		}
++#endif
++
+ 		break;
+ 	default:
  
- 	for (i = region_end - region_start; i < MAX_REGIONS_NUMBER ; i++)
 -- 
 2.20.1
 
