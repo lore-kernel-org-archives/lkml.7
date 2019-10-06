@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB39C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ADDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30AB2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7A02067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384917;
-	bh=KlSB4HBw84tIqwEJl/ZN5F7suGhn/NvkDm8CJqPjPb0=;
+	s=default; t=1570384925;
+	bh=+z1/bSBIpzw/6DQYOinfkUhl+ECxEW75rghM58TcE+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKkZFN3us9yQ/+NWijpuEntavaGXhpwOTnD/qnR85ebSnTt1fYEPert6ou4eV3AVF
-	 KHfBcz3UVcCOLKERkz1pst7XzNewztb1/baifZJ5G9FyI8Z6pyY3SYmgw81GeCLMkz
-	 g/l0jO0iGAEL9uzx9Q4UP1rll+Lj7zeIMMdlszgM=
+	b=PxEMg9GV4oYHiGU7A3dNPtgGLFfBLqvV39+MNcGRcvCAcULwKWrphK96Qu/YxKD1t
+	 g3l+TJlR+NUhdoRoXgHX1+1HG2nzqFCDJ/hjQfSF51yc7TjGXbfQ/LEUro7Cni7k4I
+	 jMFToMKjlmU09+mzhs+h4hnoe7Y9xZmFMxEMFYaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfJFSB4 (ORCPT
+        id S1728228AbfJFR0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51454 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbfJFR0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:21 -0400
+        id S1728207AbfJFR0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90B082077B;
-        Sun,  6 Oct 2019 17:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E29482077B;
+        Sun,  6 Oct 2019 17:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382781;
-        bh=KlSB4HBw84tIqwEJl/ZN5F7suGhn/NvkDm8CJqPjPb0=;
+        s=default; t=1570382770;
+        bh=+z1/bSBIpzw/6DQYOinfkUhl+ECxEW75rghM58TcE+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oazCHXbnPqEadcW1M9plmFRnYV4MBcMCnZuyCm0qUIgCTyu2BpUR4fQOzsi4u+w7R
-         SI5X/nP+SMd1TZdv4zwRrkiqictB7bXeuoYIKFtxDm01jyTh3ceQuAMFaau0+iOGjM
-         3jidb5rKdjMjpf3xc8vVy3Sa8RdRlWLBhnjVsO2Q=
+        b=cL23YV52RnYf/Pwg2jVFafUxpmtdqmwoMFfsgRAjt9JF+Zx2yLWe/6OOTk5RGlYla
+         ClRC8WvZwWXBA9h8EU8d5RCfs1KE5XVNsQjSf9ZaW2kXpfK8wsnE3JBhqdPWU7o24P
+         E1kzcpz9v44d1XSBCMEUR5+iy5CJ+OYapsl4xkGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/68] drm/bridge: tc358767: Increase AUX transfer length limit
-Date:   Sun,  6 Oct 2019 19:20:40 +0200
-Message-Id: <20191006171110.124883581@linuxfoundation.org>
+        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 32/68] PCI: tegra: Fix OF node reference leak
+Date:   Sun,  6 Oct 2019 19:21:08 +0200
+Message-Id: <20191006171122.472129602@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -67,50 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
+[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
 
-According to the datasheet tc358767 can transfer up to 16 bytes via
-its AUX channel, so the artificial limit of 8 appears to be too
-low. However only up to 15-bytes seem to be actually supported and
-trying to use 16-byte transfers results in transfers failing
-sporadically (with bogus status in case of I2C transfers), so limit it
-to 15.
+Each iteration of for_each_child_of_node() executes of_node_put() on the
+previous node, but in some return paths in the middle of the loop
+of_node_put() is missing thus causing a reference leak.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
+Hence stash these mid-loop return values in a variable 'err' and add a
+new label err_node_put which executes of_node_put() on the previous node
+and returns 'err' on failure.
+
+Change mid-loop return statements to point to jump to this label to
+fix the reference leak.
+
+Issue found with Coccinelle.
+
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+[lorenzo.pieralisi@arm.com: rewrote commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358767.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/host/pci-tegra.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 9705ca197b90d..cefa2c1685ba4 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -300,7 +300,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 			       struct drm_dp_aux_msg *msg)
- {
- 	struct tc_data *tc = aux_to_tc(aux);
--	size_t size = min_t(size_t, 8, msg->size);
-+	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
- 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
- 	u8 *buf = msg->buffer;
- 	u32 tmp = 0;
+diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+index 1987fec1f126f..8efd086c57c96 100644
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -1910,14 +1910,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		index = PCI_SLOT(err);
+ 
+ 		if (index < 1 || index > soc->num_ports) {
+ 			dev_err(dev, "invalid port number: %d\n", index);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		index--;
+@@ -1926,12 +1927,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse # of lanes: %d\n",
+ 				err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		if (value > 16) {
+ 			dev_err(dev, "invalid # of lanes: %u\n", value);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto err_node_put;
+ 		}
+ 
+ 		lanes |= value << (index << 3);
+@@ -1945,13 +1947,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		lane += value;
+ 
+ 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
+-		if (!rp)
+-			return -ENOMEM;
++		if (!rp) {
++			err = -ENOMEM;
++			goto err_node_put;
++		}
+ 
+ 		err = of_address_to_resource(port, 0, &rp->regs);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse address: %d\n", err);
+-			return err;
++			goto err_node_put;
+ 		}
+ 
+ 		INIT_LIST_HEAD(&rp->list);
+@@ -1978,6 +1982,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		return err;
+ 
+ 	return 0;
++
++err_node_put:
++	of_node_put(port);
++	return err;
+ }
+ 
+ /*
 -- 
 2.20.1
 
