@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0512C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161D8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6BB20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF7D20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382589;
-	bh=yXB39dAJ0OPDeSOHA2m2wMUfQ/NcOLpxgJl/vscunP4=;
+	s=default; t=1570382592;
+	bh=BLh+1kfbIon/9bGRpihBQiIwiWHKbLj73j6V0wbtLjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0jEIBXAYmbC6EymR7MsjpjssKCEFheciK7d7MDr+dmkJeld99j93QNZWNBtb8zWOd
-	 v6sGiVHJTQZTeZ+rAzZs2T2ahlqeYpKVOVHf5KAx/5gFsvt2F3wFlbQVX54G7saCN9
-	 904q8QwwV4ZZvg85rkN+TtxfpDFAqpWYOej8Hb/o=
+	b=sExvQHStqAHfhTfpBB81Ej1Aw6qTcmPxQuIOGYF9SIexTdNmiNP0gN1IFsavAVsZ9
+	 lJ5lxDUFV/rREhno9zJEbLiz840s18tpsHwsLzPzF1cehv2+fYpfr+h0xI9KQAMcWj
+	 nZ3J1AFfTUGAvWflmCneNTsPR86T5kjadwphifmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfJFRXJ (ORCPT
+        id S1727533AbfJFRXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47492 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbfJFRXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:23:07 -0400
+        id S1726508AbfJFRXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:23:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C6E2077B;
-        Sun,  6 Oct 2019 17:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 856BE2133F;
+        Sun,  6 Oct 2019 17:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382587;
-        bh=yXB39dAJ0OPDeSOHA2m2wMUfQ/NcOLpxgJl/vscunP4=;
+        s=default; t=1570382590;
+        bh=BLh+1kfbIon/9bGRpihBQiIwiWHKbLj73j6V0wbtLjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUtG3X5AgSITwFxU1XEHWdrvjmQwemTgLQFkz/lUewfl4PCzs3vdyu8n6Hude72O/
-         MiYjdyHwaGO1VSwbOJ/LweUfQBu0Hd38VfZHcPYH8E0MiB+1cYnCpfBHxB0S/2kcOn
-         MJqzxI0S5b4/NitzkPBufe6Mm/525Z2NmyW3v69E=
+        b=2hlFsXkqmLxXS4lJV2B7Szn9DHF4IO+o/I1rLEWLh1nB4ig9JoNAi0Y0LU/gX0fwu
+         FkFnAy34+vLeQ9JZFRG0ECetYT35FSPsr5iRewia6BGX8nJqjRRShzI2gN9BxZ1KR+
+         YFWg7vc7ELSx5VcoA25LoC6T0HXz7ENSXC1ZqdLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/47] powerpc/64s/exception: machine check use correct cfar for late handler
-Date:   Sun,  6 Oct 2019 19:21:01 +0200
-Message-Id: <20191006172017.639416159@linuxfoundation.org>
+Subject: [PATCH 4.9 15/47] powerpc/pseries: correctly track irq state in default idle
+Date:   Sun,  6 Oct 2019 19:21:02 +0200
+Message-Id: <20191006172017.690629102@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -60,42 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
+[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
 
-Bare metal machine checks run an "early" handler in real mode before
-running the main handler which reports the event.
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-The main handler runs exactly as a normal interrupt handler, after the
-"windup" which sets registers back as they were at interrupt entry.
-CFAR does not get restored by the windup code, so that will be wrong
-when the handler is run.
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
 
-Restore the CFAR to the saved value before running the late handler.
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
+
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 92474227262b4..0c8b966e80702 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -467,6 +467,10 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
- 	RFI_TO_USER_OR_KERNEL
- 9:
- 	/* Deliver the machine check to host kernel in V mode. */
-+BEGIN_FTR_SECTION
-+	ld	r10,ORIG_GPR3(r1)
-+	mtspr	SPRN_CFAR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	MACHINE_CHECK_HANDLER_WINDUP
- 	b	machine_check_pSeries
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index adb09ab87f7c0..30782859d8980 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -298,6 +298,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by ceding processor to hypervisor
+ 	 */
+ 
++	if (!prep_irq_for_idle())
++		return;
++
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
  
 -- 
 2.20.1
