@@ -2,55 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22689FA3728
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CAFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F108A20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB5620673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384296;
-	bh=QLd0IQcqVc9AYi8QX0dtKcvb4DiXolFy52qG/i1vhuw=;
+	s=default; t=1570384308;
+	bh=SsmMWj3jspdVYymTd9rWSZYZZF4Otthg7BZ/+Oq09qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cl9mY+ErZKYAS1kNXjl1QGHkG8EDiBSzd65ezYiS1SUWAwQHbmw2iyphyxKFLDbLs
-	 TsnJSZs5gkz5FIYX1yXfc/9swtcTVE+hzHdsGiBMOJZG5pEi3XqBd3DM79wteTWh11
-	 KnMiWFq5pznh2VnfrMJtR1LRoHUOkUqN5ajkAmrw=
+	b=a8iAymLH9tj0QkpZPNQwCXYB8kCts4Ovq2F9PsE7RUbEg/C/Gu6/t7PseLNA9Eh4u
+	 Y6jzW9FqwQVXVQfBGprwN3dIBAyEUWgcXpaHozDpNEZvV5RE7gtyBybkjmbHT4fArP
+	 N8zCsBLUcPYOgbZCRlQn9aQ0hSrvRSkbTSUSsXyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfJFRjO (ORCPT
+        id S1730553AbfJFRvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730730AbfJFRjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:09 -0400
+        id S1727631AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 749502133F;
-        Sun,  6 Oct 2019 17:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B5021850;
+        Sun,  6 Oct 2019 17:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383549;
-        bh=QLd0IQcqVc9AYi8QX0dtKcvb4DiXolFy52qG/i1vhuw=;
+        s=default; t=1570383933;
+        bh=SsmMWj3jspdVYymTd9rWSZYZZF4Otthg7BZ/+Oq09qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OYfxyGiKNhYMV+Qx8wInTlE1B5PXc+eT1pLE+LMuWvAFfNplf7vALGDT4K+EuHk8N
-         ze0NB8OO2LMQw2whsy3UeeP1IBstBHsiEPWlmh8bIYARsZOgb03ULaEj0snyckGqt9
-         inn+pihSY63ked4sg9sDK85qldVSrnxW9U2argqM=
+        b=hDd3+RZcSjwoRrWEqlWMxtLVjN0meuXReyL4v2BaO6T/W/ay0w8mPzgX30NZv/Z9c
+         2fIG2cOH9oKTDW974hbIk/Ewwv48ZP2hciX+IYql81gWZBBnkAIRoZuO3kUlTMLX9+
+         iU0X0EBh0X9YJ17dhKbhNetSkN5Q7j3FXkGMrNIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 129/137] soundwire: fix regmap dependencies and align with other serial links
-Date:   Sun,  6 Oct 2019 19:21:53 +0200
-Message-Id: <20191006171220.082495291@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 149/166] net: dsa: sja1105: Initialize the meta_lock
+Date:   Sun,  6 Oct 2019 19:21:55 +0200
+Message-Id: <20191006171225.464320750@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
-References: <20191006171209.403038733@linuxfoundation.org>
+In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
+References: <20191006171212.850660298@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,92 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit 8676b3ca4673517650fd509d7fa586aff87b3c28 ]
+[ Upstream commit d6530e5ad45089c018c3cc5b5957a34721249f6f ]
 
-The existing code has a mixed select/depend usage which makes no sense.
+Otherwise, with CONFIG_DEBUG_SPINLOCK=y, this stack trace gets printed
+when enabling RX timestamping and receiving a PTP frame:
 
-config SOUNDWIRE_BUS
-       tristate
-       select REGMAP_SOUNDWIRE
+[  318.537078] INFO: trying to register non-static key.
+[  318.542040] the code is fine but needs lockdep annotation.
+[  318.547500] turning off the locking correctness validator.
+[  318.552972] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-13257-g0825b0669811-dirty #1962
+[  318.561283] Hardware name: Freescale LS1021A
+[  318.565566] [<c03144bc>] (unwind_backtrace) from [<c030e164>] (show_stack+0x10/0x14)
+[  318.573289] [<c030e164>] (show_stack) from [<c11b9f50>] (dump_stack+0xd4/0x100)
+[  318.580579] [<c11b9f50>] (dump_stack) from [<c03b9b40>] (register_lock_class+0x728/0x734)
+[  318.588731] [<c03b9b40>] (register_lock_class) from [<c03b60c4>] (__lock_acquire+0x78/0x25cc)
+[  318.597227] [<c03b60c4>] (__lock_acquire) from [<c03b8ef8>] (lock_acquire+0xd8/0x234)
+[  318.605033] [<c03b8ef8>] (lock_acquire) from [<c11db934>] (_raw_spin_lock+0x44/0x54)
+[  318.612755] [<c11db934>] (_raw_spin_lock) from [<c1164370>] (sja1105_rcv+0x1f8/0x4e8)
+[  318.620561] [<c1164370>] (sja1105_rcv) from [<c115d7cc>] (dsa_switch_rcv+0x80/0x204)
+[  318.628283] [<c115d7cc>] (dsa_switch_rcv) from [<c0f58c80>] (__netif_receive_skb_one_core+0x50/0x6c)
+[  318.637386] [<c0f58c80>] (__netif_receive_skb_one_core) from [<c0f58f04>] (netif_receive_skb_internal+0xac/0x264)
+[  318.647611] [<c0f58f04>] (netif_receive_skb_internal) from [<c0f59e98>] (napi_gro_receive+0x1d8/0x338)
+[  318.656887] [<c0f59e98>] (napi_gro_receive) from [<c0c298a4>] (gfar_clean_rx_ring+0x328/0x724)
+[  318.665472] [<c0c298a4>] (gfar_clean_rx_ring) from [<c0c29e60>] (gfar_poll_rx_sq+0x34/0x94)
+[  318.673795] [<c0c29e60>] (gfar_poll_rx_sq) from [<c0f5b40c>] (net_rx_action+0x128/0x4f8)
+[  318.681860] [<c0f5b40c>] (net_rx_action) from [<c03022f0>] (__do_softirq+0x148/0x5ac)
+[  318.689666] [<c03022f0>] (__do_softirq) from [<c0355af4>] (irq_exit+0x160/0x170)
+[  318.697040] [<c0355af4>] (irq_exit) from [<c03c6818>] (__handle_domain_irq+0x60/0xb4)
+[  318.704847] [<c03c6818>] (__handle_domain_irq) from [<c07e9440>] (gic_handle_irq+0x58/0x9c)
+[  318.713172] [<c07e9440>] (gic_handle_irq) from [<c0301a70>] (__irq_svc+0x70/0x98)
+[  318.720622] Exception stack(0xc2001f18 to 0xc2001f60)
+[  318.725656] 1f00:                                                       00000001 00000006
+[  318.733805] 1f20: 00000000 c20165c0 ffffe000 c2010cac c2010cf4 00000001 00000000 c2010c88
+[  318.741955] 1f40: c1f7a5a8 00000000 00000000 c2001f68 c03ba140 c030a288 200e0013 ffffffff
+[  318.750110] [<c0301a70>] (__irq_svc) from [<c030a288>] (arch_cpu_idle+0x24/0x3c)
+[  318.757486] [<c030a288>] (arch_cpu_idle) from [<c038a480>] (do_idle+0x1b8/0x2a4)
+[  318.764859] [<c038a480>] (do_idle) from [<c038a94c>] (cpu_startup_entry+0x18/0x1c)
+[  318.772407] [<c038a94c>] (cpu_startup_entry) from [<c1e00f10>] (start_kernel+0x4cc/0x4fc)
 
-config REGMAP_SOUNDWIRE
-        tristate
-        depends on SOUNDWIRE_BUS
-
-Let's remove one layer of Kconfig definitions and align with the
-solutions used by all other serial links.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190718230215.18675-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 844d7edc6a34 ("net: dsa: sja1105: Add a global sja1105_tagger_data structure")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/regmap/Kconfig | 2 +-
- drivers/soundwire/Kconfig   | 7 +------
- drivers/soundwire/Makefile  | 2 +-
- 3 files changed, 3 insertions(+), 8 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-index 6ad5ef48b61ee..8cd2ac650b505 100644
---- a/drivers/base/regmap/Kconfig
-+++ b/drivers/base/regmap/Kconfig
-@@ -44,7 +44,7 @@ config REGMAP_IRQ
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -2165,6 +2165,7 @@ static int sja1105_probe(struct spi_devi
+ 	tagger_data = &priv->tagger_data;
+ 	skb_queue_head_init(&tagger_data->skb_rxtstamp_queue);
+ 	INIT_WORK(&tagger_data->rxtstamp_work, sja1105_rxtstamp_work);
++	spin_lock_init(&tagger_data->meta_lock);
  
- config REGMAP_SOUNDWIRE
- 	tristate
--	depends on SOUNDWIRE_BUS
-+	depends on SOUNDWIRE
- 
- config REGMAP_SCCB
- 	tristate
-diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-index 3a01cfd70fdcd..f518273cfbe3c 100644
---- a/drivers/soundwire/Kconfig
-+++ b/drivers/soundwire/Kconfig
-@@ -4,7 +4,7 @@
- #
- 
- menuconfig SOUNDWIRE
--	bool "SoundWire support"
-+	tristate "SoundWire support"
- 	help
- 	  SoundWire is a 2-Pin interface with data and clock line ratified
- 	  by the MIPI Alliance. SoundWire is used for transporting data
-@@ -17,17 +17,12 @@ if SOUNDWIRE
- 
- comment "SoundWire Devices"
- 
--config SOUNDWIRE_BUS
--	tristate
--	select REGMAP_SOUNDWIRE
--
- config SOUNDWIRE_CADENCE
- 	tristate
- 
- config SOUNDWIRE_INTEL
- 	tristate "Intel SoundWire Master driver"
- 	select SOUNDWIRE_CADENCE
--	select SOUNDWIRE_BUS
- 	depends on X86 && ACPI && SND_SOC
- 	help
- 	  SoundWire Intel Master driver.
-diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
-index fd99a831b92a0..45b7e50016539 100644
---- a/drivers/soundwire/Makefile
-+++ b/drivers/soundwire/Makefile
-@@ -5,7 +5,7 @@
- 
- #Bus Objs
- soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
--obj-$(CONFIG_SOUNDWIRE_BUS) += soundwire-bus.o
-+obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
- 
- #Cadence Objs
- soundwire-cadence-objs := cadence_master.o
--- 
-2.20.1
-
+ 	/* Connections between dsa_port and sja1105_port */
+ 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
 
 
