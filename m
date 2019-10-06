@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09339C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B350ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20B52077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E802077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382499;
-	bh=H1UlWTytnQ7kqdRX4mbQdL7bveS9FBSgwFgIlp3T5Ic=;
+	s=default; t=1570382502;
+	bh=WSKx2NsU87TftP0l64bQqCPa7Bs/Y4Z5ODCqohZ2XO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=daJqnoGjWR6P0d4Wuurft34C8TmbPsNjd3Fggo4z70xMBsJAcwK1VBEwJlFrManpu
-	 l552BZaXPF4FXieXS2ZWEk3vRyvL6T20yZaNO59nhUJDhNFfJ2KlTX+ETLOdz/Frr6
-	 L6jHi+eAJhoXNIZsA3KV84Ped4+bvbS0Ym6EzBL8=
+	b=jzm6n1sCCAAGHcqynmzoYNF/7mT/tmRU84EKgzqgUrC5Cyvo2OlnGcJ3891UTO7/V
+	 QFJpvtqwMfMcnQTVXruFamnOrhrmF7bv2Rv6Z31Qixj1tzkNmyv0YVJfBywo+PMfy5
+	 Yy8FuvHq+oyk177j+TMARK4Em2JApFHYoqQkBSHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfJFRVj (ORCPT
+        id S1727225AbfJFRUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727255AbfJFRUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:34 -0400
+        id S1727185AbfJFRUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:20:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5822077B;
-        Sun,  6 Oct 2019 17:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4025E2077B;
+        Sun,  6 Oct 2019 17:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382433;
-        bh=H1UlWTytnQ7kqdRX4mbQdL7bveS9FBSgwFgIlp3T5Ic=;
+        s=default; t=1570382422;
+        bh=WSKx2NsU87TftP0l64bQqCPa7Bs/Y4Z5ODCqohZ2XO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IalJrVrCPkk+jH3Y08+r+SVb7XDMINuj14zh7zQpcZXk+wS85GVNPRWLjMWOyBcAF
-         w/dRGGRZ6yX2xjCJH1fjKxd/u4eZTwoIvCWFwFaLvpWoxyQqJT5REdI6nfgp9Tb/Zn
-         CncJMbGHQlyTpp0QxNhl3t0U2TnmV/M8sxABpBhQ=
+        b=JlwK7FR/NeU2nwmUBiDHEa7NVQzl5lcNy9XhDqQEhcqIwXF8A+TaQr/OYB1d1oRgh
+         g0PLvD/p3VBirYu1VHSgxcmGk66a6zZ/ZZvuhuip3kDUMhEZeQ7oQlOPh1TkeQP7MZ
+         e2LCbbh0GztymaEDzscjXc8oTWZROPp6ut48VD0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 29/36] nfc: fix memory leak in llcp_sock_bind()
-Date:   Sun,  6 Oct 2019 19:19:11 +0200
-Message-Id: <20191006171058.216908056@linuxfoundation.org>
+Subject: [PATCH 4.4 25/36] hso: fix NULL-deref on tty open
+Date:   Sun,  6 Oct 2019 19:19:07 +0200
+Message-Id: <20191006171055.989740557@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -60,62 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d ]
+[ Upstream commit 8353da9fa69722b54cba82b2ec740afd3d438748 ]
 
-sysbot reported a memory leak after a bind() has failed.
+Fix NULL-pointer dereference on tty open due to a failure to handle a
+missing interrupt-in endpoint when probing modem ports:
 
-While we are at it, abort the operation if kmemdup() has failed.
+	BUG: kernel NULL pointer dereference, address: 0000000000000006
+	...
+	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
+	...
+	Call Trace:
+	hso_start_serial_device+0xdc/0x140 [hso]
+	hso_serial_open+0x118/0x1b0 [hso]
+	tty_open+0xf1/0x490
 
-BUG: memory leak
-unreferenced object 0xffff888105d83ec0 (size 32):
-  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
-  hex dump (first 32 bytes):
-    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
-    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
-  backtrace:
-    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
-    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
-    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
-    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
-    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
-    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
-    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
-    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
-    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
-    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
-    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
-    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
-    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/llcp_sock.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/hso.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -118,9 +118,14 @@ static int llcp_sock_bind(struct socket
- 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
- 					  llcp_sock->service_name_len,
- 					  GFP_KERNEL);
--
-+	if (!llcp_sock->service_name) {
-+		ret = -ENOMEM;
-+		goto put_dev;
-+	}
- 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
- 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
-+		kfree(llcp_sock->service_name);
-+		llcp_sock->service_name = NULL;
- 		ret = -EADDRINUSE;
- 		goto put_dev;
- 	}
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2650,14 +2650,18 @@ static struct hso_device *hso_create_bul
+ 		 */
+ 		if (serial->tiocmget) {
+ 			tiocmget = serial->tiocmget;
++			tiocmget->endp = hso_get_ep(interface,
++						    USB_ENDPOINT_XFER_INT,
++						    USB_DIR_IN);
++			if (!tiocmget->endp) {
++				dev_err(&interface->dev, "Failed to find INT IN ep\n");
++				goto exit;
++			}
++
+ 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
+ 			if (tiocmget->urb) {
+ 				mutex_init(&tiocmget->mutex);
+ 				init_waitqueue_head(&tiocmget->waitq);
+-				tiocmget->endp = hso_get_ep(
+-					interface,
+-					USB_ENDPOINT_XFER_INT,
+-					USB_DIR_IN);
+ 			} else
+ 				hso_free_tiomget(serial);
+ 		}
 
 
