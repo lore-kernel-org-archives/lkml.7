@@ -2,128 +2,101 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D4CECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ED3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC6E121927
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4AF2084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570376105;
-	bh=fRYDmasrgYjzBcOmaU5XZPlEceBGjt+XDDUbZlCH1G4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E95SCYaNLlS/o1TFkSuRUm0OdxpwztPqv0pCO0KX+dCBwzxRkqUZVChpGAYjoFIB+
-	 VaFjybVERGbGmwKwbZWwhEtay9vjWF81K+ieT/D9r/XlG/zt46rrXxz3dSUU25DA82
-	 C3cf2Z6JhweaZMKJ+iW99Ql270kVu3cMvKBzt+lE=
+	s=default; t=1570376863;
+	bh=DryS73MwEqYaEHfjk9sJrp4eJu/HbUNbnmzbPpUq0gc=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=dWCf+mwCd+/UvA+CAaaEDTDA3YFdVjbOikzocd+qbBeJZCcGWMKi8AFykIXcy0qSp
+	 Ltxyq81RnMM0ljH6eWzLzS16V1tKzUSIAc3EHf8D4pk5veGAAu5XZHuUns8oxjnUum
+	 QFPimBuBqA4wXU12G5ECiIcDRwO1feRqzG7/g/aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfJFPfF convert rfc822-to-8bit (ORCPT
+        id S1726574AbfJFPrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:35:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37052 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJFPfE (ORCPT
+        Sun, 6 Oct 2019 11:47:43 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55716 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFPrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:35:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i16so9641897oie.4;
-        Sun, 06 Oct 2019 08:35:03 -0700 (PDT)
+        Sun, 6 Oct 2019 11:47:42 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a6so10044625wma.5;
+        Sun, 06 Oct 2019 08:47:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vJ/fN1Td6yKGxz4rSrSmUvRGVTLM8nHHs5htnjPWdus=;
-        b=U8vUSZ8AHnwmo0wbddLUYzZzGp3f1sIWCM591LQM5tvFAY7kfGDCapugDUWJ3xddXb
-         b02itqtrqAf0ddxRE3z9pVlW2zpmvHRTlhOuuKzQG0lKvxwSE/AlVah4HfVX29CAk7+X
-         JvQJ4ukD7mVdrYhkAtQQCHs3c0Nxf5KaNE8fxtJjL9mwK9gGMLduUxcWH1OL0rKV8B6c
-         VMWp4ZtDYU+1rpTSim6ksxlwfbUkHc61X4Uc+d88BNEHoa4Vy7WRtNtvZfa4U+KW3exL
-         ejCXKNqhgIhpVwlvN5HEg1pxwxDJ/zG/iKp9zItmTaxuMtFpspcfkD0gc7KX3vW3w8ID
-         ueQg==
-X-Gm-Message-State: APjAAAUSGr+einD1Pnfkta4OIYD2x9HzKT1C55HeTWlnqS0Ka23LGcVV
-        LRrttxqovGh7o/BTGFJEdsrdKiaJrDctw+yEUXo=
-X-Google-Smtp-Source: APXvYqwYT9OUUNLx0nEf+PiDEhafjGnfYuD/XrtvHL6roRxoSb0ZP2ty4iqUH8Km5t2frUwDctDFJ2muIxViqyBBbWo=
-X-Received: by 2002:aca:4890:: with SMTP id v138mr15295460oia.57.1570376103413;
- Sun, 06 Oct 2019 08:35:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SBpRb6qd+48zQK5uPLn0YvEluIoUY9o3FhFhGA6TXtY=;
+        b=Z37+ICp7Y2QDT49t+AdNnVTJVt76pPZFd6B69eHRoUoNZlsdtFkBCYnSdEyhWhNbuK
+         XyETKrUDNSnLU0N40QS4exLwpNzCn3/7e6RprNKgM+Qgr2l5BRucGBLAeRfUBtKOQMJ/
+         5E9krxQL8OOHlalnke9FA7tibZzAe6GFB/E4Tjd1T8SsglrBwPlPGPzr8Yl+7Mdbg35j
+         IFXYmMzgkgcDjGXuUelcoGSjezWAQjoj/QavICNDeyyyRPhrYYOc89Nr353qflFxSsn4
+         1BvgZwAEXST7N03PUH5ali/fZNJcdatPFLpTHv6qfPMQra3BvYtNieDoXbXlpO+z1NTI
+         sjXw==
+X-Gm-Message-State: APjAAAUxUmMz14TPUm0Zi7j50psy10b7VPGg5JHEvkXkDaeqENUPDqXP
+        tPZ/Wxzu3jmyhFXsDcYOxAA=
+X-Google-Smtp-Source: APXvYqwiD5w33vuIYv9624AWG0k3vsCYtE8uO59mkpTJi1G/TZQDv7OS1UJvxH3zuwZ0w6XxIwuUIQ==
+X-Received: by 2002:a1c:9988:: with SMTP id b130mr18139392wme.164.1570376858781;
+        Sun, 06 Oct 2019 08:47:38 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id o22sm31539882wra.96.2019.10.06.08.47.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 06 Oct 2019 08:47:38 -0700 (PDT)
+Date:   Sun, 6 Oct 2019 17:47:34 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Rename power domain nodes to
+ "power-domain" in Exynos4
+Message-ID: <20191006154734.GA29365@kozik-lap>
+References: <20191002160632.11140-1-krzk@kernel.org>
+ <20191002160632.11140-3-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20191003140828.14801-1-ville.syrjala@linux.intel.com>
- <2393023.mJgu6cDs6C@kreacher> <20191004123026.GU1208@intel.com>
-In-Reply-To: <20191004123026.GU1208@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 6 Oct 2019 17:34:52 +0200
-Message-ID: <CAJZ5v0hsiyKfVcDFbnJKqDkCKWhbSfNrmm7yVhudONuS0SWALw@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: Fix RCU reboot regression on x86 PIC machines
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191002160632.11140-3-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:30 PM Ville Syrjälä
-<ville.syrjala@linux.intel.com> wrote:
->
-> On Thu, Oct 03, 2019 at 05:05:28PM +0200, Rafael J. Wysocki wrote:
-> > On Thursday, October 3, 2019 4:08:28 PM CEST Ville Syrjala wrote:
-> > > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > >
-> > > Since 4.20-rc1 my PIC machines no longer reboot/shutdown.
-> > > I bisected this down to commit 45975c7d21a1 ("rcu: Define RCU-sched
-> > > API in terms of RCU for Tree RCU PREEMPT builds").
-> > >
-> > > I traced the hang into
-> > > -> cpufreq_suspend()
-> > >  -> cpufreq_stop_governor()
-> > >   -> cpufreq_dbs_governor_stop()
-> > >    -> gov_clear_update_util()
-> > >     -> synchronize_sched()
-> > >      -> synchronize_rcu()
-> > >
-> > > Only PREEMPT=y is affected for obvious reasons. The problem
-> > > is limited to PIC machines since they mask off interrupts
-> > > in i8259A_shutdown() (syscore_ops.shutdown() registered
-> > > from device_initcall()).
-> >
-> > Let me treat this as a fresh bug report. :-)
-> >
-> > > I reported this long ago but no better fix has surfaced,
-> >
-> > So I don't recall seeing the original report or if I did, I had not understood
-> > the problem then.
-> >
-> > > hence sending out my initial workaround which I've been
-> > > carrying around ever since. I just move cpufreq_core_init()
-> > > to late_initcall() so the syscore_ops get registered in the
-> > > oppsite order and thus the .shutdown() hooks get executed
-> > > in the opposite order as well. Not 100% convinced this is
-> > > safe (especially moving the cpufreq_global_kobject creation
-> > > to late_initcall()) but I've not had any problems with it
-> > > at least.
-> >
-> > The problem is a bug in cpufreq that shouldn't point its syscore shutdown
-> > callback pointer to cpufreq_suspend(), because the syscore stage is generally
-> > too lat to call that function and I'm not sure why this has not been causing
-> > any other issues to trigger (or maybe it did, but they were not reported).
-> >
-> > Does the patch below work for you?
->
-> It does. Thanks.
->
-> Feel free to slap on
-> Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
->
-> if you want to go with that.
+On Wed, Oct 02, 2019 at 06:06:32PM +0200, Krzysztof Kozlowski wrote:
+> The device node name should reflect generic class of a device so rename
+> power domain nodes to "power-domain".  No functional change.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi    | 14 +++++++-------
+>  arch/arm/boot/dts/exynos4210.dtsi |  2 +-
+>  arch/arm/boot/dts/exynos4412.dtsi |  2 +-
+>  3 files changed, 9 insertions(+), 9 deletions(-)
 
-I will, thank you!
+Applied.
+
+Best regards,
+Krzysztof
