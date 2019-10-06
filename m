@@ -2,145 +2,315 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A89BC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0004AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0F02084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pZNF06AS"
+	by mail.kernel.org (Postfix) with ESMTP id CD0C721479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570355366;
+	bh=Fc2l1puCwcW0sr5zvCwL0Vv3wdf9pdlCPsvAOKTZu1Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s4KYsfv0vrAsFusTZUQkAZRkS5VXfRfmvqzRdJSPhRIxYvwgIuK23LzT7ZMJ3ZVvW
+	 TaXEHD9bKlta3jRhEaCLrAurZgBKa7YqW/lW9jt7RswSVzfHvHNi1zbuLUOFpxJSYw
+	 lrTfey9G4IhRvT30oq3KrgqF/7JEGaOkTJHE9YBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfJFJeG (ORCPT
+        id S1726317AbfJFJt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:34:06 -0400
-Received: from mout.web.de ([212.227.17.12]:34567 "EHLO mout.web.de"
+        Sun, 6 Oct 2019 05:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfJFJeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:34:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570354407;
-        bh=NBS72s4G9mNZ3WzMI1DxdaMo0OErlqpG5qmV3BuMlZU=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=pZNF06AS/3DMU/K3SM8WQdRnpSQINzwQw1P/I20tfHdcpKf9vScrf4tFZn/y8Y8iD
-         pP6nSUvqvEAOOuvw9DuAFbSLXvTbXtr/LCKUVlQwEHadC5T0fMk+EqQstg85j9JmjU
-         npEA71wR1jQ7PCzpQ4rK2DUIdb/aOj2yI94IVOfU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.114.140]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MIvbh-1iEa4s2gYr-002VfF; Sun, 06
- Oct 2019 11:33:27 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <20191004190938.15353-1-navid.emamdoost@gmail.com>
-Subject: Re: drm/imx: Checking a kmemdup() call in imx_pd_bind()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        dri-devel@lists.freedesktop.org, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
-Message-ID: <540321eb-7699-1d51-59d5-dde5ffcb8fc4@web.de>
-Date:   Sun, 6 Oct 2019 11:33:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726185AbfJFJtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:49:25 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45DE1214D9;
+        Sun,  6 Oct 2019 09:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570355364;
+        bh=Fc2l1puCwcW0sr5zvCwL0Vv3wdf9pdlCPsvAOKTZu1Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=j/axwVkX2PZ43YQ0GwRo8AJYnHK7JKRvtN5bMzJsDzKmvoOLFp5q4zP0NezrTLOiN
+         PRojCqpOs7pVxYFlErCaAXhmYVraaOH4zKykhXQQlxI43yFwjSngX0H+7e9CqzMMYL
+         bYWWap6bYMrTTeOu9MiW4V5ECZ9/lHRNUSbVo/OU=
+Date:   Sun, 6 Oct 2019 10:49:18 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 1/4] iio: pressure: bmp280: use bulk regulator ops
+Message-ID: <20191006104919.05caab4f@archlinux>
+In-Reply-To: <CAMRc=McpiPT2n2adpUiNGF+iF-gO_B3r7rAGFEA_1YzY0c+6Ww@mail.gmail.com>
+References: <20191002085759.13337-2-brgl@bgdev.pl>
+        <201910022132.qRNFfzjP%lkp@intel.com>
+        <CAMRc=McpiPT2n2adpUiNGF+iF-gO_B3r7rAGFEA_1YzY0c+6Ww@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191004190938.15353-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9mEhHApvRLSLfrVaidVTASDIrRouu2LbdOnMIG6rWYMu+pdZgaW
- 5LqTf5uN+peDd18uYxVPSaX1UbVhdoHy+aNcFMD7UZrSxUAUxm9V4k5RSP3Z7pL+utgAZi2
- kuBf7x5SZy/EWuRyYAmjXAb+7hMyfuBPd4/FdT+aOmA3LmjLCkmMftGwGedLMgAXEbQQaYk
- fFbvqe2eSc2BO0/zn0CEw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+9qyh83oa28=:N9o4qbfKfvNblikgOLzyCp
- 0Se1VG1t4md6rQ6Nl625v5sh814b5FaDF23ulz77km7/bFAUf0NIbOt/MMjXNLoCnS9WtPM7E
- dR9/+ei+o8SQlLkjPESQDY4mEY4SaqnD/eMZNTQz26Vtytsw2lFAyZb448W2O3zAEB5b5GuYx
- rPl6fMWiNLKs2alIqajdE9ZlnyDVC6xFSOcDjw0JzE3clgyKHOxfycDMoVtnAiN5aRMB/aWti
- ASCzWO660viQUg/0hAOGl0Iq3IzkKtZ9LPX+oRVXFG5nJWzFkr4ek7P/SobEQPGpB3kYUcYDm
- Pa3wYIWejcdaUO+yC0lq539DYUsXZ8z5Zw8GM5FSMA8564B7cRG4zsOvUQ72YcR6icQN+DNpF
- axHeD0H7U1dm5CixzDve8rH2I2NB3vFoZ4maN5kRUG1rt2LIclxGlDL5ckJOGcWC6BSf5U5yd
- SorcFi+PSf3rUey2bwMVgvoxc6Ot2QuosO8R3btSQ5OnUUSRxIPK2Z/OLV0j1aXjdPejTHUyn
- iWJIQ1LTsUoGmhLGOJdGWMvmW/Q7OYf47Gwj8smplyR17eTVxTf9iGXSdWqO55ATIFiN8Ww4d
- hMtuNtvSRusAHDXp63XVLVyFcLusYotQRob5YYbBVZZTikpLP2v4VfeqaCsdYJlh/zf3bqZko
- wct5X0DLbe+FYNu+nq8zb13YV42hp9ff0D+3v5HZskLk/WgVR17pcalY7Ow5WLfDbUAPXapPm
- /DQsXDnmh4Iz1swa67N025RZshvAM5fB3rVezNib6P9DfHr8+Gnxm9maBw9CRYhdp68+zcs6v
- tzAckWV6Cdioh2+X6fw1qYIaJWocL6l0xFeaQQhuAwxmZCO21WKEqD+HIpKPghAZ19r2If0Az
- DLdVa1imc45TWCyOwqMHNdKSyQxh8UF4ggNucPYiMjY43bHmRJTQDVxOnPj640PlsTPvrZhFW
- 3+lMpMK8+UYla4obNNeZrSM+bLDjon9Zq0zdg/bK8uFfp3oQD7Mu3vclxehQkCbiVEydG80J8
- 7Z+mbTxA4d02G3+jrxjiW2wb0/iE4yIf/bcUtPr+Vj5JxtMtlVG3Cb6XH5JaHgpU0LPZm0vYN
- n75vjfvjZAvCzpkUTyoHaASaB2R32EKCR1PTXnVZ3a3kN/ZLTbWL52Jx6ZG21+75o9oGtELFj
- 0hS+IINjRiVqgjJXfbBl7FPNht4PSwXSreo39fwqJk5Hx0kWbp019EyRhBiXz/0sjrJkOggc9
- rm4Vk56pbilr2X+W9OLw/qmqOmmGso2XTsEIwhBjFYQ8J+C3pRagmoTmE6zI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have taken another look also at the implementation of the function =E2=
-=80=9Cimx_pd_bind=E2=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/gpu/drm/imx/parallel-display.c?id=3D43b815c6a8e7dbccb5b8bd9c4b099c24=
-bc22d135#n197
-https://elixir.bootlin.com/linux/v5.4-rc1/source/drivers/gpu/drm/imx/paral=
-lel-display.c#L197
+On Wed, 2 Oct 2019 17:57:30 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Now I find an unchecked call of the function =E2=80=9Ckmemdup=E2=80=9D sus=
-picious.
-Will this detail trigger further software development considerations?
+> =C5=9Br., 2 pa=C5=BA 2019 o 15:06 kbuild test robot <lkp@intel.com> napis=
+a=C5=82(a):
+> >
+> > Hi Bartosz,
+> >
+> > I love your patch! Yet something to improve:
+> >
+> > [auto build test ERROR on iio/togreg]
+> > [cannot apply to v5.4-rc1 next-20191002]
+> > [if your patch is applied to the wrong git tree, please drop us a note =
+to help
+> > improve the system. BTW, we also suggest to use '--base' option to spec=
+ify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/3=
+7406982]
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Bartosz-Golaszewski/ii=
+o-pressure-bmp280-code-shrink/20191002-194508
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git t=
+ogreg
+> > config: sh-allmodconfig (attached as .config)
+> > compiler: sh4-linux-gcc (GCC) 7.4.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/s=
+bin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=3D7.4.0 make.cross ARCH=3Dsh
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >    drivers/iio/pressure/bmp280-core.c: In function 'bmp280_common_probe=
+': =20
+> > >> drivers/iio/pressure/bmp280-core.c:1041:2: error: implicit declarati=
+on of function 'regulator_bulk_set_supply_names'; did you mean 'regulator_b=
+ulk_register_supply_alias'? [-Werror=3Dimplicit-function-declaration] =20
+> >      regulator_bulk_set_supply_names(data->supplies,
+> >      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >      regulator_bulk_register_supply_alias
+> >    cc1: some warnings being treated as errors
+> > =20
+>=20
+> This function has been introduced in commit d0087e72710c ("regulator:
+> provide regulator_bulk_set_supply_names()") and released in v5.4-rc1
+> but it's not present in this tree. In other words: a false positive.
+Kind of handy to known though ;)  My tree doesn't contain it yet
+either.  That should be fixed later this week after a pull request
+and rebase.  I'll not be applying this series until after that.
 
-Regards,
-Markus
+Thanks,
+
+Jonathan
+
+>=20
+> Bart
+>=20
+> > vim +1041 drivers/iio/pressure/bmp280-core.c
+> >
+> >    986
+> >    987  int bmp280_common_probe(struct device *dev,
+> >    988                          struct regmap *regmap,
+> >    989                          unsigned int chip,
+> >    990                          const char *name,
+> >    991                          int irq)
+> >    992  {
+> >    993          int ret;
+> >    994          struct iio_dev *indio_dev;
+> >    995          struct bmp280_data *data;
+> >    996          unsigned int chip_id;
+> >    997          struct gpio_desc *gpiod;
+> >    998
+> >    999          indio_dev =3D devm_iio_device_alloc(dev, sizeof(*data));
+> >   1000          if (!indio_dev)
+> >   1001                  return -ENOMEM;
+> >   1002
+> >   1003          data =3D iio_priv(indio_dev);
+> >   1004          mutex_init(&data->lock);
+> >   1005          data->dev =3D dev;
+> >   1006
+> >   1007          indio_dev->dev.parent =3D dev;
+> >   1008          indio_dev->name =3D name;
+> >   1009          indio_dev->channels =3D bmp280_channels;
+> >   1010          indio_dev->info =3D &bmp280_info;
+> >   1011          indio_dev->modes =3D INDIO_DIRECT_MODE;
+> >   1012
+> >   1013          switch (chip) {
+> >   1014          case BMP180_CHIP_ID:
+> >   1015                  indio_dev->num_channels =3D 2;
+> >   1016                  data->chip_info =3D &bmp180_chip_info;
+> >   1017                  data->oversampling_press =3D ilog2(8);
+> >   1018                  data->oversampling_temp =3D ilog2(1);
+> >   1019                  data->start_up_time =3D 10000;
+> >   1020                  break;
+> >   1021          case BMP280_CHIP_ID:
+> >   1022                  indio_dev->num_channels =3D 2;
+> >   1023                  data->chip_info =3D &bmp280_chip_info;
+> >   1024                  data->oversampling_press =3D ilog2(16);
+> >   1025                  data->oversampling_temp =3D ilog2(2);
+> >   1026                  data->start_up_time =3D 2000;
+> >   1027                  break;
+> >   1028          case BME280_CHIP_ID:
+> >   1029                  indio_dev->num_channels =3D 3;
+> >   1030                  data->chip_info =3D &bme280_chip_info;
+> >   1031                  data->oversampling_press =3D ilog2(16);
+> >   1032                  data->oversampling_humid =3D ilog2(16);
+> >   1033                  data->oversampling_temp =3D ilog2(2);
+> >   1034                  data->start_up_time =3D 2000;
+> >   1035                  break;
+> >   1036          default:
+> >   1037                  return -EINVAL;
+> >   1038          }
+> >   1039
+> >   1040          /* Bring up regulators */ =20
+> > > 1041          regulator_bulk_set_supply_names(data->supplies, =20
+> >   1042                                          bmp280_supply_names,
+> >   1043                                          BMP280_NUM_SUPPLIES);
+> >   1044
+> >   1045          ret =3D devm_regulator_bulk_get(dev,
+> >   1046                                        BMP280_NUM_SUPPLIES, data=
+->supplies);
+> >   1047          if (ret) {
+> >   1048                  dev_err(dev, "failed to get regulators\n");
+> >   1049                  return ret;
+> >   1050          }
+> >   1051
+> >   1052          ret =3D regulator_bulk_enable(BMP280_NUM_SUPPLIES, data=
+->supplies);
+> >   1053          if (ret) {
+> >   1054                  dev_err(dev, "failed to enable regulators\n");
+> >   1055                  return ret;
+> >   1056          }
+> >   1057
+> >   1058          /* Wait to make sure we started up properly */
+> >   1059          usleep_range(data->start_up_time, data->start_up_time +=
+ 100);
+> >   1060
+> >   1061          /* Bring chip out of reset if there is an assigned GPIO=
+ line */
+> >   1062          gpiod =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> >   1063          /* Deassert the signal */
+> >   1064          if (!IS_ERR(gpiod)) {
+> >   1065                  dev_info(dev, "release reset\n");
+> >   1066                  gpiod_set_value(gpiod, 0);
+> >   1067          }
+> >   1068
+> >   1069          data->regmap =3D regmap;
+> >   1070          ret =3D regmap_read(regmap, BMP280_REG_ID, &chip_id);
+> >   1071          if (ret < 0)
+> >   1072                  goto out_disable_regulators;
+> >   1073          if (chip_id !=3D chip) {
+> >   1074                  dev_err(dev, "bad chip id: expected %x got %x\n=
+",
+> >   1075                          chip, chip_id);
+> >   1076                  ret =3D -EINVAL;
+> >   1077                  goto out_disable_regulators;
+> >   1078          }
+> >   1079
+> >   1080          ret =3D data->chip_info->chip_config(data);
+> >   1081          if (ret < 0)
+> >   1082                  goto out_disable_regulators;
+> >   1083
+> >   1084          dev_set_drvdata(dev, indio_dev);
+> >   1085
+> >   1086          /*
+> >   1087           * Some chips have calibration parameters "programmed i=
+nto the devices'
+> >   1088           * non-volatile memory during production". Let's read t=
+hem out at probe
+> >   1089           * time once. They will not change.
+> >   1090           */
+> >   1091          if (chip_id  =3D=3D BMP180_CHIP_ID) {
+> >   1092                  ret =3D bmp180_read_calib(data, &data->calib.bm=
+p180);
+> >   1093                  if (ret < 0) {
+> >   1094                          dev_err(data->dev,
+> >   1095                                  "failed to read calibration coe=
+fficients\n");
+> >   1096                          goto out_disable_regulators;
+> >   1097                  }
+> >   1098          } else if (chip_id =3D=3D BMP280_CHIP_ID || chip_id =3D=
+=3D BME280_CHIP_ID) {
+> >   1099                  ret =3D bmp280_read_calib(data, &data->calib.bm=
+p280, chip_id);
+> >   1100                  if (ret < 0) {
+> >   1101                          dev_err(data->dev,
+> >   1102                                  "failed to read calibration coe=
+fficients\n");
+> >   1103                          goto out_disable_regulators;
+> >   1104                  }
+> >   1105          }
+> >   1106
+> >   1107          /*
+> >   1108           * Attempt to grab an optional EOC IRQ - only the BMP08=
+5 has this
+> >   1109           * however as it happens, the BMP085 shares the chip ID=
+ of BMP180
+> >   1110           * so we look for an IRQ if we have that.
+> >   1111           */
+> >   1112          if (irq > 0 || (chip_id  =3D=3D BMP180_CHIP_ID)) {
+> >   1113                  ret =3D bmp085_fetch_eoc_irq(dev, name, irq, da=
+ta);
+> >   1114                  if (ret)
+> >   1115                          goto out_disable_regulators;
+> >   1116          }
+> >   1117
+> >   1118          /* Enable runtime PM */
+> >   1119          pm_runtime_get_noresume(dev);
+> >   1120          pm_runtime_set_active(dev);
+> >   1121          pm_runtime_enable(dev);
+> >   1122          /*
+> >   1123           * Set autosuspend to two orders of magnitude larger th=
+an the
+> >   1124           * start-up time.
+> >   1125           */
+> >   1126          pm_runtime_set_autosuspend_delay(dev, data->start_up_ti=
+me / 10);
+> >   1127          pm_runtime_use_autosuspend(dev);
+> >   1128          pm_runtime_put(dev);
+> >   1129
+> >   1130          ret =3D iio_device_register(indio_dev);
+> >   1131          if (ret)
+> >   1132                  goto out_runtime_pm_disable;
+> >   1133
+> >   1134
+> >   1135          return 0;
+> >   1136
+> >   1137  out_runtime_pm_disable:
+> >   1138          pm_runtime_get_sync(data->dev);
+> >   1139          pm_runtime_put_noidle(data->dev);
+> >   1140          pm_runtime_disable(data->dev);
+> >   1141  out_disable_regulators:
+> >   1142          regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->suppl=
+ies);
+> >   1143          return ret;
+> >   1144  }
+> >   1145  EXPORT_SYMBOL(bmp280_common_probe);
+> >   1146
+> >
+> > ---
+> > 0-DAY kernel test infrastructure                Open Source Technology =
+Center
+> > https://lists.01.org/pipermail/kbuild-all                   Intel Corpo=
+ration =20
+
