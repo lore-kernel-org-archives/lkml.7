@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF418C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA741C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B545D20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9849A2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383623;
-	bh=jP5aR8QFUuqvh6IsxqjL6IewN0qsy7Z1B9ECwlveLB8=;
+	s=default; t=1570383626;
+	bh=xXqTTNREpLdYn6bT7Dacf3FS8rp75G+TLfM3oBVMFtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XPN3EwHNub+uvlc1k4ANFoum1oiIEGwkF4Xw3o4C3hZu45xPW1V7OGRuKSlVckFCt
-	 nIqQzbAZeRP0CGX1m+T8b5RF/TXlF6jjTj7dA17FMGBNvA1N5LDITHH4xuNhGuG5Ze
-	 vvV7u7ym4AhoKDM9XsGg1TyDPOnQND7VR+IaW+uY=
+	b=YFqhPGblgx/r64s04LTERyfbRbHzRPZ8NTQR03V1UP2zdnLM0kc4k5PIU9JEegEg9
+	 aH4m//NYx5QVbPLY1ikTCdAA3J0x9ldyaXSoOi2Suy1+AFvqr1sXLSb75lygTWdTr2
+	 AGyEMi9NEdNYrQZzGqYzKNhhqPlqeuaIcJyzXE8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfJFRkW (ORCPT
+        id S1731019AbfJFRk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729997AbfJFRkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:20 -0400
+        id S1731004AbfJFRkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EDCF2053B;
-        Sun,  6 Oct 2019 17:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99ACC2053B;
+        Sun,  6 Oct 2019 17:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383617;
-        bh=jP5aR8QFUuqvh6IsxqjL6IewN0qsy7Z1B9ECwlveLB8=;
+        s=default; t=1570383623;
+        bh=xXqTTNREpLdYn6bT7Dacf3FS8rp75G+TLfM3oBVMFtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltyf0fPx3QsE5e/m991m43YA2xN+15PhZ2vo6MU1WPVx33cCtPAHeQWTcMWiCj12B
-         sRS/H7sXUYgAopUz3G2ExxYJQEH5BijqdyilzsBsmHYxWPTX+CDVcgIoE9LgaJOewR
-         y0elRgf8Li/sMbd3WNe6Vfcg+fD/8yKpymBNLiho=
+        b=MNO3if3TGEIOyqg00A7mdYGe0zUBhQdgAbp7NWc+taYvkCIzl0rgJAtEFEou8K90C
+         tFsEEniqNgeZKBZen7+9IKVfsZ2vC254r5lNsQdk5Sv1Zla/U1awYMhKRhGZjECfvJ
+         mGsqMNZpwjTpoGXzZR+jkJlfjptAcgVg33VFVIro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 031/166] drm/amd/display: Register VUPDATE_NO_LOCK interrupts for DCN2
-Date:   Sun,  6 Oct 2019 19:19:57 +0200
-Message-Id: <20191006171215.621657686@linuxfoundation.org>
+Subject: [PATCH 5.3 033/166] clk: actions: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:19:59 +0200
+Message-Id: <20191006171215.748168661@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -63,88 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit e40837afb9b011757e17e9f71d97853ca574bcff ]
+[ Upstream commit cf9ec1fc6d7cceb73e7f1efd079d2eae173fdf57 ]
 
-[Why]
-These are needed to send back DRM vblank events in the case where VRR
-is on. Without the interrupt enabled we're deferring the events into the
-vblank queue and userspace is left waiting forever to get back the
-events they need.
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-Found using igt@kms_vrr - the test fails immediately due to vblank
-timeout.
-
-[How]
-Register them the same way we're handling it for DCN1.
-
-This fixes igt@kms_vrr for DCN2.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: David Francis <David.Francis@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-2-sboyd@kernel.org
+[sboyd@kernel.org: Move name to after checking for error or NULL hw]
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../display/dc/irq/dcn20/irq_service_dcn20.c  | 28 ++++++++++++-------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ drivers/clk/actions/owl-common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/irq/dcn20/irq_service_dcn20.c b/drivers/gpu/drm/amd/display/dc/irq/dcn20/irq_service_dcn20.c
-index 3cc0f2a1f77cc..5db29bf582d31 100644
---- a/drivers/gpu/drm/amd/display/dc/irq/dcn20/irq_service_dcn20.c
-+++ b/drivers/gpu/drm/amd/display/dc/irq/dcn20/irq_service_dcn20.c
-@@ -167,6 +167,11 @@ static const struct irq_source_info_funcs vblank_irq_info_funcs = {
- 	.ack = NULL
- };
+diff --git a/drivers/clk/actions/owl-common.c b/drivers/clk/actions/owl-common.c
+index 32dd29e0a37e1..4de97cc7cb54d 100644
+--- a/drivers/clk/actions/owl-common.c
++++ b/drivers/clk/actions/owl-common.c
+@@ -68,16 +68,17 @@ int owl_clk_probe(struct device *dev, struct clk_hw_onecell_data *hw_clks)
+ 	struct clk_hw *hw;
  
-+static const struct irq_source_info_funcs vupdate_no_lock_irq_info_funcs = {
-+	.set = NULL,
-+	.ack = NULL
-+};
-+
- #undef BASE_INNER
- #define BASE_INNER(seg) DCN_BASE__INST0_SEG ## seg
+ 	for (i = 0; i < hw_clks->num; i++) {
++		const char *name;
  
-@@ -221,12 +226,15 @@ static const struct irq_source_info_funcs vblank_irq_info_funcs = {
- 		.funcs = &pflip_irq_info_funcs\
+ 		hw = hw_clks->hws[i];
+-
+ 		if (IS_ERR_OR_NULL(hw))
+ 			continue;
+ 
++		name = hw->init->name;
+ 		ret = devm_clk_hw_register(dev, hw);
+ 		if (ret) {
+ 			dev_err(dev, "Couldn't register clock %d - %s\n",
+-				i, hw->init->name);
++				i, name);
+ 			return ret;
+ 		}
  	}
- 
--#define vupdate_int_entry(reg_num)\
-+/* vupdate_no_lock_int_entry maps to DC_IRQ_SOURCE_VUPDATEx, to match semantic
-+ * of DCE's DC_IRQ_SOURCE_VUPDATEx.
-+ */
-+#define vupdate_no_lock_int_entry(reg_num)\
- 	[DC_IRQ_SOURCE_VUPDATE1 + reg_num] = {\
- 		IRQ_REG_ENTRY(OTG, reg_num,\
--			OTG_GLOBAL_SYNC_STATUS, VUPDATE_INT_EN,\
--			OTG_GLOBAL_SYNC_STATUS, VUPDATE_EVENT_CLEAR),\
--		.funcs = &vblank_irq_info_funcs\
-+			OTG_GLOBAL_SYNC_STATUS, VUPDATE_NO_LOCK_INT_EN,\
-+			OTG_GLOBAL_SYNC_STATUS, VUPDATE_NO_LOCK_EVENT_CLEAR),\
-+		.funcs = &vupdate_no_lock_irq_info_funcs\
- 	}
- 
- #define vblank_int_entry(reg_num)\
-@@ -333,12 +341,12 @@ irq_source_info_dcn20[DAL_IRQ_SOURCES_NUMBER] = {
- 	dc_underflow_int_entry(6),
- 	[DC_IRQ_SOURCE_DMCU_SCP] = dummy_irq_entry(),
- 	[DC_IRQ_SOURCE_VBIOS_SW] = dummy_irq_entry(),
--	vupdate_int_entry(0),
--	vupdate_int_entry(1),
--	vupdate_int_entry(2),
--	vupdate_int_entry(3),
--	vupdate_int_entry(4),
--	vupdate_int_entry(5),
-+	vupdate_no_lock_int_entry(0),
-+	vupdate_no_lock_int_entry(1),
-+	vupdate_no_lock_int_entry(2),
-+	vupdate_no_lock_int_entry(3),
-+	vupdate_no_lock_int_entry(4),
-+	vupdate_no_lock_int_entry(5),
- 	vblank_int_entry(0),
- 	vblank_int_entry(1),
- 	vblank_int_entry(2),
 -- 
 2.20.1
 
