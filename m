@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEFFC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09253C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7739A2133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B5F20700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383574;
-	bh=5VSvU6HBfPNZEb5WDAIzTm+/cX7N3Y3hY73y1TIdwtg=;
+	s=default; t=1570383580;
+	bh=LwusMpGPNsCVEui+CxCkO+wYv9bCaUMlqnWW/yVJQbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhQ9gX/5MlKPNrDqwzVJLgFkuNiksgWAJFODvDKV5f1RusscsYNjAf8cvKlCHqf4e
-	 0Dd5AaL8KKERFu63IiNDWXJyL32qd2bb3Dy3YlTrFrcEplLSg5J/GrwxJqAcVkAQaU
-	 PfNhOD3gbu33v2fvacDFJBa0zkQ7DQZ4StWL+Wqc=
+	b=fhqctwnQ9RwsAo+QYgtYwOJ+VqA/XFjliiitxoTQkTUgTbk/x7ASfiH69Pq+NFvz9
+	 9ySKEMw7P8qGSm7jH7HDajSBcIilPp2GvhTaJa/vMMGphvnPi4hV21hjlsP5HpTlvA
+	 v2dtTiRoSJtOefWniM8WFlnsrWeXYNDxmt2+QBu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfJFRjd (ORCPT
+        id S1730823AbfJFRjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38954 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730795AbfJFRj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:28 -0400
+        id S1730001AbfJFRjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D9F820700;
-        Sun,  6 Oct 2019 17:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38ADC2080F;
+        Sun,  6 Oct 2019 17:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383567;
-        bh=5VSvU6HBfPNZEb5WDAIzTm+/cX7N3Y3hY73y1TIdwtg=;
+        s=default; t=1570383570;
+        bh=LwusMpGPNsCVEui+CxCkO+wYv9bCaUMlqnWW/yVJQbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CovRT9CdoFfzah4jj6oqKMCmkDKyVAxJAHJCzFRXPsA+ISRY1f1YNsmvH3RmSbu50
-         hMjJUVW93X7eDmmNQ/hkxnuQBAWaaDVthZ3UUHFV5bUCGCr2gFgWIaRDenOn2Rrt9j
-         L+S4d2SPKzbV1WgW9a44kj4zjZB2yQrOC/zr7XXc=
+        b=N/y4LraV+rWJpAeV6w1EBjmso4H+hpuZ65TwqYC2FeNJ+rymM9N0GQD0vq5jzuMLr
+         KzJYtIY1ciYqON2QE94cFA/9yEORo9OYL3ziZk23llJagIcZCeHKIocvQbegjibxaT
+         jMMdKyqr/X/R5/gZxUKqhWXUdhJrE2KgaW+4iPhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Zain Wang <wzz@rock-chips.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 015/166] drm/panel: check failure cases in the probe func
-Date:   Sun,  6 Oct 2019 19:19:41 +0200
-Message-Id: <20191006171214.306773906@linuxfoundation.org>
+Subject: [PATCH 5.3 016/166] drm/rockchip: Check for fast link training before enabling psr
+Date:   Sun,  6 Oct 2019 19:19:42 +0200
+Message-Id: <20191006171214.466966359@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,66 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit afd6d4f5a52c16e1483328ac074abb1cde92c29f ]
+[ Upstream commit ad309284a52be47c8b3126c9376358bf381861bc ]
 
-The following function calls may fail and return NULL, so the null check
-is added.
-of_graph_get_next_endpoint
-of_graph_get_remote_port_parent
-of_graph_get_remote_port
+Once we start shutting off the link during PSR, we're going to want fast
+training to work. If the display doesn't support fast training, don't
+enable psr.
 
-Update: Thanks to Sam Ravnborg, for suggession on the use of goto to avoid
-leaking endpoint.
+Changes in v2:
+- None
+Changes in v3:
+- None
+Changes in v4:
+- None
+Changes in v5:
+- None
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190724195534.9303-1-navid.emamdoost@gmail.com
+Link to v1: https://patchwork.freedesktop.org/patch/msgid/20190228210939.83386-3-sean@poorly.run
+Link to v2: https://patchwork.freedesktop.org/patch/msgid/20190326204509.96515-2-sean@poorly.run
+Link to v3: https://patchwork.freedesktop.org/patch/msgid/20190502194956.218441-9-sean@poorly.run
+Link to v4: https://patchwork.freedesktop.org/patch/msgid/20190508160920.144739-8-sean@poorly.run
+
+Cc: Zain Wang <wzz@rock-chips.com>
+Cc: Tomasz Figa <tfiga@chromium.org>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190611160844.257498-8-sean@poorly.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/panel/panel-raspberrypi-touchscreen.c   | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 28c0620dfe0f9..b5b14aa059ea7 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -399,7 +399,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 
- 	/* Look up the DSI host.  It needs to probe before we do. */
- 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (!endpoint)
-+		return -ENODEV;
-+
- 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
-+	if (!dsi_host_node)
-+		goto error;
-+
- 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
- 	of_node_put(dsi_host_node);
- 	if (!host) {
-@@ -408,6 +414,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 	}
- 
- 	info.node = of_graph_get_remote_port(endpoint);
-+	if (!info.node)
-+		goto error;
-+
- 	of_node_put(endpoint);
- 
- 	ts->dsi = mipi_dsi_device_register_full(host, &info);
-@@ -428,6 +437,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index 3f7f4880be091..37bd541166a5e 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1035,16 +1035,17 @@ static int analogix_dp_commit(struct analogix_dp_device *dp)
+ 	if (ret)
  		return ret;
  
- 	return 0;
++	/* Check whether panel supports fast training */
++	ret = analogix_dp_fast_link_train_detection(dp);
++	if (ret)
++		dp->psr_enable = false;
 +
-+error:
-+	of_node_put(endpoint);
-+	return -ENODEV;
- }
+ 	if (dp->psr_enable) {
+ 		ret = analogix_dp_enable_sink_psr(dp);
+ 		if (ret)
+ 			return ret;
+ 	}
  
- static int rpi_touchscreen_remove(struct i2c_client *i2c)
+-	/* Check whether panel supports fast training */
+-	ret =  analogix_dp_fast_link_train_detection(dp);
+-	if (ret)
+-		dp->psr_enable = false;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
