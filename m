@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D642C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D61DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747152173B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387A520862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384882;
-	bh=A5WALeZeWvec8xhZuwAQY2l0SGVZ/jHm8pZR/5Q0p8o=;
+	s=default; t=1570384888;
+	bh=AcwuN2HBRyI1eYM+h+mINPecMOfKwcXviV7htaH0aSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naEWX8YiTFJInKDYfXu/gYRiHWrEEJEgHX+N39LxWk2r2ogWRA/tYXq0Ot6sWESKc
-	 +bzkSZZor7ZpyC/tJh2WgRkkIzf0Y0Wj3n39+NY9A2g5W4bjTMi5LAloUIOwSleQRz
-	 wEA96mRsVoirGJD3I8cjzoEC7oO/yOAeB0UrQgss=
+	b=ylZwXvEoaa5xy5Uq8K0jCASBQFHAObFEtYA2MLKDaFzlJ31AzfJF9KqBW6Z97F4b9
+	 YHvJ13ArXNFRV9uS1QV9WhQRLathZlhcUmS81IB9zDR/YcceQtgv44VdnI445pJnt2
+	 Kv9T64SmqWIzcSmrhSbZOW6y+Wf1/0KJ3GvbspQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfJFSBV (ORCPT
+        id S1727696AbfJFR1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:01:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbfJFR1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:19 -0400
+        id S1727307AbfJFR1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC742077B;
-        Sun,  6 Oct 2019 17:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D520217D6;
+        Sun,  6 Oct 2019 17:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382837;
-        bh=A5WALeZeWvec8xhZuwAQY2l0SGVZ/jHm8pZR/5Q0p8o=;
+        s=default; t=1570382821;
+        bh=AcwuN2HBRyI1eYM+h+mINPecMOfKwcXviV7htaH0aSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzFeWg0+t89NuRcmxyDvJN4ALn4Mkif/RCMVaEgU8ayiph5vJmHVhT83LcTE0valp
-         utRDlcw2vd0TC3AxDD4N1V15ivB6NolEpUCpGdjVoSPGIhBySZqUdlpMzUMNGTQmL2
-         xqU6GbighFTxrKvkA/X2jooRyJ12LumrrHb2OcfQ=
+        b=wRF9HJDYhdRlSYAGfuuMav+YQaP5wVZuyR/0ML3YlOp3s62flpmdTrKFtQ9r/z85c
+         Gxzf+b9VLTre1DMZ/od+Ffq441YnpNPFWXkiw03cxwkoexAGf6Oy30PwCNN3IvF5J3
+         YT6QbjRuRAMb1A4hjaVeUieXhHiFOeTFWBEc3q7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 58/68] sch_dsmark: fix potential NULL deref in dsmark_init()
-Date:   Sun,  6 Oct 2019 19:21:34 +0200
-Message-Id: <20191006171134.818232841@linuxfoundation.org>
+Subject: [PATCH 4.14 53/68] net: ipv4: avoid mixed n_redirects and rate_tokens usage
+Date:   Sun,  6 Oct 2019 19:21:29 +0200
+Message-Id: <20191006171132.572610019@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,73 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 474f0813a3002cb299bb73a5a93aa1f537a80ca8 ]
+[ Upstream commit b406472b5ad79ede8d10077f0c8f05505ace8b6d ]
 
-Make sure TCA_DSMARK_INDICES was provided by the user.
+Since commit c09551c6ff7f ("net: ipv4: use a dedicated counter
+for icmp_v4 redirect packets") we use 'n_redirects' to account
+for redirect packets, but we still use 'rate_tokens' to compute
+the redirect packets exponential backoff.
 
-syzbot reported :
+If the device sent to the relevant peer any ICMP error packet
+after sending a redirect, it will also update 'rate_token' according
+to the leaking bucket schema; typically 'rate_token' will raise
+above BITS_PER_LONG and the redirect packets backoff algorithm
+will produce undefined behavior.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8799 Comm: syz-executor235 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nla_get_u16 include/net/netlink.h:1501 [inline]
-RIP: 0010:dsmark_init net/sched/sch_dsmark.c:364 [inline]
-RIP: 0010:dsmark_init+0x193/0x640 net/sched/sch_dsmark.c:339
-Code: 85 db 58 0f 88 7d 03 00 00 e8 e9 1a ac fb 48 8b 9d 70 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ca
-RSP: 0018:ffff88809426f3b8 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff85c6eb09
-RDX: 0000000000000000 RSI: ffffffff85c6eb17 RDI: 0000000000000004
-RBP: ffff88809426f4b0 R08: ffff88808c4085c0 R09: ffffed1015d26159
-R10: ffffed1015d26158 R11: ffff8880ae930ac7 R12: ffff8880a7e96940
-R13: dffffc0000000000 R14: ffff88809426f8c0 R15: 0000000000000000
-FS:  0000000001292880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000008ca1b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- qdisc_create+0x4ee/0x1210 net/sched/sch_api.c:1237
- tc_modify_qdisc+0x524/0x1c50 net/sched/sch_api.c:1653
- rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5223
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x803/0x920 net/socket.c:2311
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
- __do_sys_sendmsg net/socket.c:2365 [inline]
- __se_sys_sendmsg net/socket.c:2363 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
- do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440369
+Fix the issue using 'n_redirects' to compute the exponential backoff
+in ip_rt_send_redirect().
 
-Fixes: 758cc43c6d73 ("[PKT_SCHED]: Fix dsmark to apply changes consistent")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Note that we still clear rate_tokens after a redirect silence period,
+to avoid changing an established behaviour.
+
+The root cause predates git history; before the mentioned commit in
+the critical scenario, the kernel stopped sending redirects, after
+the mentioned commit the behavior more randomic.
+
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: c09551c6ff7f ("net: ipv4: use a dedicated counter for icmp_v4 redirect packets")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_dsmark.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/route.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/sched/sch_dsmark.c
-+++ b/net/sched/sch_dsmark.c
-@@ -353,6 +353,8 @@ static int dsmark_init(struct Qdisc *sch
- 		goto errout;
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -925,16 +925,15 @@ void ip_rt_send_redirect(struct sk_buff
+ 	if (peer->rate_tokens == 0 ||
+ 	    time_after(jiffies,
+ 		       (peer->rate_last +
+-			(ip_rt_redirect_load << peer->rate_tokens)))) {
++			(ip_rt_redirect_load << peer->n_redirects)))) {
+ 		__be32 gw = rt_nexthop(rt, ip_hdr(skb)->daddr);
  
- 	err = -EINVAL;
-+	if (!tb[TCA_DSMARK_INDICES])
-+		goto errout;
- 	indices = nla_get_u16(tb[TCA_DSMARK_INDICES]);
- 
- 	if (hweight32(indices) != 1)
+ 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
+ 		peer->rate_last = jiffies;
+-		++peer->rate_tokens;
+ 		++peer->n_redirects;
+ #ifdef CONFIG_IP_ROUTE_VERBOSE
+ 		if (log_martians &&
+-		    peer->rate_tokens == ip_rt_redirect_number)
++		    peer->n_redirects == ip_rt_redirect_number)
+ 			net_warn_ratelimited("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
+ 					     &ip_hdr(skb)->saddr, inet_iif(skb),
+ 					     &ip_hdr(skb)->daddr, &gw);
 
 
