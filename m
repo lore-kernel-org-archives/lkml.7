@@ -2,86 +2,113 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8685DC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382D9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A9E2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 118AA2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfJFK55 (ORCPT
+        id S1726578AbfJFK6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:57:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbfJFK55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:57:57 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 926D158369EC033520F0;
-        Sun,  6 Oct 2019 18:57:54 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:57:45 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <Bhawanpreet.Lakha@amd.com>, <Anthony.Koo@amd.com>,
-        <aric.cyr@amd.com>, <Harmanprit.Tatla@amd.com>,
-        <bayan.zabihiyan@amd.com>, <ahmad.othman@amd.com>,
-        <Reza.Amini@amd.com>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/amd/display: remove set but not used variable 'core_freesync'
-Date:   Sun, 6 Oct 2019 18:57:35 +0800
-Message-ID: <20191006105735.60708-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sun, 6 Oct 2019 06:58:54 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43470 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfJFK6y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:58:54 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id CF2FC80471; Sun,  6 Oct 2019 12:58:35 +0200 (CEST)
+Date:   Sun, 6 Oct 2019 12:58:50 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Mat King <mathewk@google.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        Ross Zwisler <zwisler@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: New sysfs interface for privacy screens
+Message-ID: <20191006105850.GA24605@amd>
+References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Content-Disposition: inline
+In-Reply-To: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
 
-rivers/gpu/drm/amd/amdgpu/../display/modules/freesync/freesync.c:
- In function mod_freesync_get_settings:
-drivers/gpu/drm/amd/amdgpu/../display/modules/freesync/freesync.c:984:24:
- warning: variable core_freesync set but not used [-Wunused-but-set-variable]
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is not used since commit 98e6436d3af5 ("drm/amd/display: Refactor FreeSync module")
+On Tue 2019-10-01 10:09:46, Mat King wrote:
+> Resending in plain text mode
+>=20
+> I have been looking into adding Linux support for electronic privacy
+> screens which is a feature on some new laptops which is built into the
+> display and allows users to turn it on instead of needing to use a
+> physical privacy filter. In discussions with my colleagues the idea of
+> using either /sys/class/backlight or /sys/class/leds but this new
+> feature does not seem to quite fit into either of those classes.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 4 ----
- 1 file changed, 4 deletions(-)
+Thank you for not trying to push it as a LED ;-).
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index 9ce56a8..237dda7 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -981,13 +981,9 @@ void mod_freesync_get_settings(struct mod_freesync *mod_freesync,
- 		unsigned int *inserted_frames,
- 		unsigned int *inserted_duration_in_us)
- {
--	struct core_freesync *core_freesync = NULL;
--
- 	if (mod_freesync == NULL)
- 		return;
- 
--	core_freesync = MOD_FREESYNC_TO_CORE(mod_freesync);
--
- 	if (vrr->supported) {
- 		*v_total_min = vrr->adjust.v_total_min;
- 		*v_total_max = vrr->adjust.v_total_max;
--- 
-2.7.4
+> I am proposing adding a class called "privacy_screen" to interface
+> with these devices. The initial API would be simple just a single
+> property called "privacy_state" which when set to 1 would mean that
+> privacy is enabled and 0 when privacy is disabled.
+>=20
+> Current known use cases will use ACPI _DSM in order to interface with
+> the privacy screens, but this class would allow device driver authors
+> to use other interfaces as well.
+>=20
+> Example:
+>=20
+> # get privacy screen state
+> cat /sys/class/privacy_screen/cros_privacy/privacy_state # 1: privacy
+> enabled 0: privacy disabled
+>=20
+> # set privacy enabled
+> echo 1 > /sys/class/privacy_screen/cros_privacy/privacy_state
+>=20
+>  Does this approach seem to be reasonable?
 
+Not really. How does the userland know which displays this will
+affect?
 
+This sounds like something that should go through drm drivers,
+probably to be selected by xrandr, rather than separate file somewhere
+in sysfs.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2ZyOoACgkQMOfwapXb+vIIUACeJ2pN1CHDcsdh0BG2KltFUGBJ
+sOEAn1IE5e0NufSQ0G4RhwqmtYb04UbY
+=Loez
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
