@@ -2,54 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8782C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39F7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEFA20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846502053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383442;
-	bh=Wm5o5GS0w1SM6itP8Ry0jGS2hvCfJY2Z44Hswv46aDc=;
+	s=default; t=1570383445;
+	bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mh3p6e1K18v1n8n5QlJfNIPsEcEkzrVWeLjlGuPhud/MDLRPwsTr3BMzyYBbso8r6
-	 P18858G4G4QA6t2I7WH1Bv32wTbPFgFbH5v5r8edxFoAwJr6XnPsK2tvb4N4Nk+L7u
-	 VINiHWctXdmjgyMvBFGnp7ZojwZADxkrEmqvqvNU=
+	b=WwA4UAaALCW7ZChcR85NHmtC9sOncvCH3QsvDrOoqGiAkz1xwNr/9kEkkDKszDhuE
+	 /HpX1m3BBv7G0LtTBUV8t5nHSKUC3mqiSr7gk6muhjkE1lYXZ68OhuTo/KAkGfN6aM
+	 2vUnpRm6qCDmOva1Z1P4FMB5MdlOEdh+7ezU68e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfJFRhV (ORCPT
+        id S1730440AbfJFRhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36272 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729505AbfJFRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:18 -0400
+        id S1730428AbfJFRhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEB022080F;
-        Sun,  6 Oct 2019 17:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 755232053B;
+        Sun,  6 Oct 2019 17:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383438;
-        bh=Wm5o5GS0w1SM6itP8Ry0jGS2hvCfJY2Z44Hswv46aDc=;
+        s=default; t=1570383441;
+        bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AalMWeFTcYe5hP1yJrdYxGgDiqnWGfwoIYyCAsgNYt6bjNGKJTgeJf39ebxYc/sZv
-         szWRYo49/tEHpri5SOUOeYuGnQ9fLwb0gJOOyoQaPgSa5Swk9fEvcg24BNBX9T7zNw
-         8Kpm96qDcsQr3G5ws7lR6jHtLnfhBJHjkEHevnZk=
+        b=jJy8GZpqAYPa8xbuZ8lK9Y5W0rYeuDL1CeyUZ+PJueJ2w3Db9z8VjPsjHmpdUtfdj
+         ijWhch62O2DH1JMO9vl4Q+tqklRPyQ5UsYH6G6RArHiDfayKkjA36YY7kblJ9Mxlt+
+         MaZ8762ORyPQ/6zvIgF9ZVk4tEPYtHVMQJuEW7oY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 104/137] ARM: 8875/1: Kconfig: default to AEABI w/ Clang
-Date:   Sun,  6 Oct 2019 19:21:28 +0200
-Message-Id: <20191006171217.601678408@linuxfoundation.org>
+Subject: [PATCH 5.2 105/137] rtc: snvs: fix possible race condition
+Date:   Sun,  6 Oct 2019 19:21:29 +0200
+Message-Id: <20191006171217.690483807@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,48 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit a05b9608456e0d4464c6f7ca8572324ace57a3f4 ]
+[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
 
-Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
-arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
-is not selected (such as when OABI_COMPAT is selected).
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in IRQ handler.
 
-While this means that OABI userspaces wont be able to upgraded to
-kernels built with Clang, it means that boards that don't enable AEABI
-like s3c2410_defconfig will stop failing to link in KernelCI when built
-with Clang.
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/482
-Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
-
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-snvs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 8869742a85df1..3539be8700558 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1545,8 +1545,9 @@ config ARM_PATCH_IDIV
- 	  code to do integer division.
+diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
+index 7ee673a25fd0a..4f9a107a04277 100644
+--- a/drivers/rtc/rtc-snvs.c
++++ b/drivers/rtc/rtc-snvs.c
+@@ -279,6 +279,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
  
- config AEABI
--	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && !CPU_V7M && !CPU_V6 && !CPU_V6K
--	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K
-+	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
-+		!CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG
-+	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG
- 	help
- 	  This option allows for the kernel to be compiled using the latest
- 	  ARM ABI (aka EABI).  This is only useful if you are using a user
++	data->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(data->rtc))
++		return PTR_ERR(data->rtc);
++
+ 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
+ 
+ 	if (IS_ERR(data->regmap)) {
+@@ -343,10 +347,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 		goto error_rtc_device_register;
+ 	}
+ 
+-	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					&snvs_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(data->rtc)) {
+-		ret = PTR_ERR(data->rtc);
++	data->rtc->ops = &snvs_rtc_ops;
++	ret = rtc_register_device(data->rtc);
++	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+ 		goto error_rtc_device_register;
+ 	}
 -- 
 2.20.1
 
