@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4339C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AFBC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F492133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E78217D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383208;
-	bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
+	s=default; t=1570383213;
+	bh=UGUU/8QyejhUdLsO3Qp6xSfeNn8zrabgD53ZEOe+6Z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVKnQpD2upu29Ylq5VNb5Vk04Pq+OEuP7K+IBLJLa4kftqyKSKctqlbZzJzIvf/uS
-	 GpVk5PjhBPkM8XAEJnfsjT+usRd8n4TR59475F7vBOrw6AIazJ5xSrMyXcNPeWG/Yp
-	 La/G+FaaxOyE/gTfCpxhGq/Uqa8ANwwSmryKtlqU=
+	b=WQ78amV2lejRrL59gniQDVHhqiDf3Don2fyTAS4XUDVW9xwFqWD8eSmuRohxVBagC
+	 iz57WnZvN0y8yqAYCIvDcfD1vJSvttVNHUE4024Ukmmc5jDFQG3kM+VpVrlhyTrCu5
+	 WSh44aHarxjK5xVOw+0/SV6hrfC3SZzh2cUzndf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbfJFRd1 (ORCPT
+        id S1729775AbfJFRdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60010 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:33:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729179AbfJFRdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:33:23 -0400
+        id S1729048AbfJFRd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:33:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98C82080F;
-        Sun,  6 Oct 2019 17:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C7D2087E;
+        Sun,  6 Oct 2019 17:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383203;
-        bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
+        s=default; t=1570383208;
+        bh=UGUU/8QyejhUdLsO3Qp6xSfeNn8zrabgD53ZEOe+6Z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z49iXmmS3BC3N22WWCbSyN7H55SB3YjY8gf2kAUD1QQiOZQweSBaZjSPtMohZD+lo
-         yw1KcsP2zDSYJH7KM/LZI+OvHgctkD2EDtrwDaUWBcsO9LYJLu5/9rqRv8z9YF80aD
-         qWvPNsbsAf2I6l8OfZmyTh7C4gA/OHoJgZOLdPjk=
+        b=zq/EeK9OSeTLQycDP9B4GlHKOcTmWTSSdqmSTIc4QjEbZIjWrrjFuYMhzCny7POQf
+         jIZm9FNcV5IjXz8Rv1H46z1vPVXcT5FFMHkUtCepE/oUqS05bYqY7x1lK3KxAeeLLM
+         TsLferWlH3FXR8rQSwUFTma/EcSxiO8seNHfcf3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 018/137] net: dsa: rtl8366: Check VLAN ID and not ports
-Date:   Sun,  6 Oct 2019 19:20:02 +0200
-Message-Id: <20191006171210.902717793@linuxfoundation.org>
+Subject: [PATCH 5.2 002/137] erspan: remove the incorrect mtu limit for erspan
+Date:   Sun,  6 Oct 2019 19:19:46 +0200
+Message-Id: <20191006171209.761851478@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -59,58 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit e8521e53cca584ddf8ec4584d3c550a6c65f88c4 ]
+[ Upstream commit 0e141f757b2c78c983df893e9993313e2dc21e38 ]
 
-There has been some confusion between the port number and
-the VLAN ID in this driver. What we need to check for
-validity is the VLAN ID, nothing else.
+erspan driver calls ether_setup(), after commit 61e84623ace3
+("net: centralize net_device min/max MTU checking"), the range
+of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
 
-The current confusion came from assigning a few default
-VLANs for default routing and we need to rewrite that
-properly.
+It causes the dev mtu of the erspan device to not be greater
+than 1500, this limit value is not correct for ipgre tap device.
 
-Instead of checking if the port number is a valid VLAN
-ID, check the actual VLAN IDs passed in to the callback
-one by one as expected.
+Tested:
+Before patch:
+# ip link set erspan0 mtu 1600
+Error: mtu greater than device maximum.
+After patch:
+# ip link set erspan0 mtu 1600
+# ip -d link show erspan0
+21: erspan0@NONE: <BROADCAST,MULTICAST> mtu 1600 qdisc noop state DOWN
+mode DEFAULT group default qlen 1000
+    link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 0
 
-Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/rtl8366.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ net/ipv4/ip_gre.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/dsa/rtl8366.c
-+++ b/drivers/net/dsa/rtl8366.c
-@@ -339,10 +339,12 @@ int rtl8366_vlan_prepare(struct dsa_swit
- 			 const struct switchdev_obj_port_vlan *vlan)
- {
- 	struct realtek_smi *smi = ds->priv;
-+	u16 vid;
- 	int ret;
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -1446,6 +1446,7 @@ static void erspan_setup(struct net_devi
+ 	struct ip_tunnel *t = netdev_priv(dev);
  
--	if (!smi->ops->is_vlan_valid(smi, port))
--		return -EINVAL;
-+	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
-+		if (!smi->ops->is_vlan_valid(smi, vid))
-+			return -EINVAL;
- 
- 	dev_info(smi->dev, "prepare VLANs %04x..%04x\n",
- 		 vlan->vid_begin, vlan->vid_end);
-@@ -370,8 +372,9 @@ void rtl8366_vlan_add(struct dsa_switch
- 	u16 vid;
- 	int ret;
- 
--	if (!smi->ops->is_vlan_valid(smi, port))
--		return;
-+	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
-+		if (!smi->ops->is_vlan_valid(smi, vid))
-+			return;
- 
- 	dev_info(smi->dev, "add VLAN on port %d, %s, %s\n",
- 		 port,
+ 	ether_setup(dev);
++	dev->max_mtu = 0;
+ 	dev->netdev_ops = &erspan_netdev_ops;
+ 	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
+ 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
 
 
