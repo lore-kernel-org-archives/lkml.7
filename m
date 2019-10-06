@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B1EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826FDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF80920700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CA520700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383358;
-	bh=szCeKCu1HOCfG8Xa5dhnSRI7Vdwm04GAxX3XtKErotk=;
+	s=default; t=1570383368;
+	bh=ufQvx7ZNex7e9L1n3iz0qxl2DPV4jX3rgvJ6+P7qKWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wjClCMNHQrsr8BzT683aq53DECrsd1PoGMdqE+O+Pv6z1oF7+YMm6xZf5TEiWotmO
-	 cKyCFS84eiyKHl2q8xGq8yUJkppKqqkCEF1+c38h3omFJktFMRZnNhx2PTtct9TN+b
-	 T5MKs0q+1B0ADSJ+Z0gJRSOfmpdn1lo2FCTLG7BI=
+	b=P6bZkaJGZ+qRlD3VFQh6z6jIy8WZbvJ8+zSq4e8/H8J8XUB16BSFZ7EzORlcNqR8y
+	 66yXMJJzj6vCxZu2fN7nNOetfqb+PFkIz+sKg0itlOIgtOifUtShEgb8nA9Ib9lVSu
+	 WngNW1sxrmzMEc9TqV3bJyC2u5lQy0spunfpbVR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbfJFRf6 (ORCPT
+        id S1730055AbfJFRgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbfJFRfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:47 -0400
+        id S1730231AbfJFRgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF66720700;
-        Sun,  6 Oct 2019 17:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6066E20700;
+        Sun,  6 Oct 2019 17:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383346;
-        bh=szCeKCu1HOCfG8Xa5dhnSRI7Vdwm04GAxX3XtKErotk=;
+        s=default; t=1570383359;
+        bh=ufQvx7ZNex7e9L1n3iz0qxl2DPV4jX3rgvJ6+P7qKWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noxuRWHocBIeRk65ezZ3g7w4tHRp8TpxatpWK4MrdAj1VgW2Ds8189fRrnB/48SGU
-         BN3GaM/SKkr82BmMjzDu3i2W57KoGa5t4LI5g5WgEkV1iPt8Bz1fx5GuAn/t5yQGIL
-         MIaaxzKhoC1uL2u9xEjkRlwl9tnXfud1x9T3BLFU=
+        b=qJAoh8P4MWFfwNeYFXUtTt5o+WhTBUgVm5PqJ1e0jx5x/WjmszafyZK01Ji7BLPju
+         WlEt9r3a1uWlQ3PK9I+LA1U9r2/pgdQYIPalnRXHpkwgvSDb7Ia+J3F0hlSW8xcI+h
+         2nOemzjQhWioGA0xA6E0/9RVjx9EArWe9Ido3HTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Gustavo Romero <gromero@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 069/137] selftests/powerpc: Retry on host facility unavailable
-Date:   Sun,  6 Oct 2019 19:20:53 +0200
-Message-Id: <20191006171214.928589488@linuxfoundation.org>
+Subject: [PATCH 5.2 074/137] clk: qcom: gcc-sdm845: Use floor ops for sdcc clks
+Date:   Sun,  6 Oct 2019 19:20:58 +0200
+Message-Id: <20191006171215.232413868@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,38 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.vnet.ibm.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 6652bf6408895b09d31fd4128a1589a1a0672823 ]
+[ Upstream commit 5e4b7e82d497580bc430576c4c9bce157dd72512 ]
 
-TM test tm-unavailable must take into account aborts due to host aborting
-a transactin because of a facility unavailable exception, just like it
-already does for aborts on reschedules (TM_CAUSE_KVM_RESCHED).
+Some MMC cards fail to enumerate properly when inserted into an MMC slot
+on sdm845 devices. This is because the clk ops for qcom clks round the
+frequency up to the nearest rate instead of down to the nearest rate.
+For example, the MMC driver requests a frequency of 52MHz from
+clk_set_rate() but the qcom implementation for these clks rounds 52MHz
+up to the next supported frequency of 100MHz. The MMC driver could be
+modified to request clk rate ranges but for now we can fix this in the
+clk driver by changing the rounding policy for this clk to be round down
+instead of round up.
 
-Reported-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1566341651-19747-1-git-send-email-gromero@linux.vnet.ibm.com
+Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Cc: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lkml.kernel.org/r/20190830195142.103564-1-swboyd@chromium.org
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/tm/tm.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/qcom/gcc-sdm845.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/tm/tm.h b/tools/testing/selftests/powerpc/tm/tm.h
-index 97f9f491c541a..c402464b038fc 100644
---- a/tools/testing/selftests/powerpc/tm/tm.h
-+++ b/tools/testing/selftests/powerpc/tm/tm.h
-@@ -55,7 +55,8 @@ static inline bool failure_is_unavailable(void)
- static inline bool failure_is_reschedule(void)
- {
- 	if ((failure_code() & TM_CAUSE_RESCHED) == TM_CAUSE_RESCHED ||
--	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED)
-+	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED ||
-+	    (failure_code() & TM_CAUSE_KVM_FAC_UNAV) == TM_CAUSE_KVM_FAC_UNAV)
- 		return true;
+diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+index 7131dcf9b0603..95be125c3bddf 100644
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -685,7 +685,7 @@ static struct clk_rcg2 gcc_sdcc2_apps_clk_src = {
+ 		.name = "gcc_sdcc2_apps_clk_src",
+ 		.parent_names = gcc_parent_names_10,
+ 		.num_parents = 5,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
  
- 	return false;
+@@ -709,7 +709,7 @@ static struct clk_rcg2 gcc_sdcc4_apps_clk_src = {
+ 		.name = "gcc_sdcc4_apps_clk_src",
+ 		.parent_names = gcc_parent_names_0,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
+ 
 -- 
 2.20.1
 
