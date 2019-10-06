@@ -2,52 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09424C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F28520673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E9220700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384705;
-	bh=eGhmsYZKuBW2PvWz3EQXgbbJszC6F+ic1oPctoDG0lk=;
+	s=default; t=1570384711;
+	bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVZ3PlRjc9NX7ZvGg9eptpPmdwPOVolAl/9zwh/1fzQR1k+bVTGAeJU68YwZ+nMNV
-	 dGngM+WAmOe/9eN+PcKYXOa9l7Av5/9d3jNmoYO/VT+/EUT3j5QS1Df4T9bFpKqL7N
-	 S7auKfn77u3hPJ+qK84ZMn1htT8Fe0nJCVvZ5v8g=
+	b=fKoHBAUyzVNrSwL/7dM/NKLCjzEVJ5NiIB0E9vvYWUJGyibhlrPy1iAFTPbSPiAgI
+	 A1Tulv9yiQhAxv2G/FwjlTGcm+96nbAwjPYMQ/ruMRT1M/oaMrOhV7km8EB1AGfFhR
+	 jvWspvpJ4lgH4pI9JIodNrTaWX/OD3y3MGj3SDSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfJFR6Y (ORCPT
+        id S1728010AbfJFR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbfJFRcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:15 -0400
+        id S1729091AbfJFRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:32:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0B5F2133F;
-        Sun,  6 Oct 2019 17:32:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E0E4214D9;
+        Sun,  6 Oct 2019 17:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383135;
-        bh=eGhmsYZKuBW2PvWz3EQXgbbJszC6F+ic1oPctoDG0lk=;
+        s=default; t=1570383124;
+        bh=lzf4NezQwvnIwgsemkILbMCirg6UhvXpkxXQMME+7bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FdKQbzENdUBzhXn1tkxQfHxz+suYHRoaPmYyCVM8cgTmlQOY3LyPgER1o21+Gf6To
-         hqocmdmBZwKycgpZWRDIERxlYI3ndKM5IOnUXMzDAWWTvjlxDGwPRKnyPmRktltJG+
-         iHD52sh0y+MRHx0vAfAurGIi4q2KFHRN1JsrUNeA=
+        b=zx1MgU7WZsUGNr04bSLfnIDa4IIJ3Bft/25mLaoW7Dn4dwLlJckA0HPlMYpLjXU3g
+         s8p0R5qyMxV/cj/CjajZoo5zppGw82cfRjjkWeQKfdCFUtne/sMVCYdDr162Vm91Q5
+         PNGQiR06VuabL6Ph/tGCxxfXt8dFYuxu7W7UpKSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/106] soundwire: Kconfig: fix help format
-Date:   Sun,  6 Oct 2019 19:21:46 +0200
-Message-Id: <20191006171202.852850922@linuxfoundation.org>
+        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
+        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 096/106] net/rds: Fix error handling in rds_ib_add_one()
+Date:   Sun,  6 Oct 2019 19:21:42 +0200
+Message-Id: <20191006171201.744213878@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,35 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Dotan Barak <dotanb@dev.mellanox.co.il>
 
-[ Upstream commit 9d7cd9d500826a14fc68fb6994db375432866c6a ]
+[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
 
-Move to the regular help format, --help-- is no longer recommended.
+rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
+after allocation some resources such as protection domain.
+If allocation of such resources fail, then these uninitialized
+variables are accessed in rds_ib_dev_free() in failure path. This
+can potentially crash the system. The code has been updated to
+initialize these variables very early in the function.
 
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
+Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rds/ib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-index 19c8efb9a5ee7..84876a74874fb 100644
---- a/drivers/soundwire/Kconfig
-+++ b/drivers/soundwire/Kconfig
-@@ -4,7 +4,7 @@
+--- a/net/rds/ib.c
++++ b/net/rds/ib.c
+@@ -143,6 +143,9 @@ static void rds_ib_add_one(struct ib_dev
+ 	refcount_set(&rds_ibdev->refcount, 1);
+ 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
  
- menuconfig SOUNDWIRE
- 	bool "SoundWire support"
--	---help---
-+	help
- 	  SoundWire is a 2-Pin interface with data and clock line ratified
- 	  by the MIPI Alliance. SoundWire is used for transporting data
- 	  typically related to audio functions. SoundWire interface is
--- 
-2.20.1
-
++	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
++	INIT_LIST_HEAD(&rds_ibdev->conn_list);
++
+ 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
+ 	rds_ibdev->max_sge = min(device->attrs.max_send_sge, RDS_IB_MAX_SGE);
+ 
+@@ -203,9 +206,6 @@ static void rds_ib_add_one(struct ib_dev
+ 		device->name,
+ 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
+ 
+-	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
+-	INIT_LIST_HEAD(&rds_ibdev->conn_list);
+-
+ 	down_write(&rds_ib_devices_lock);
+ 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
+ 	up_write(&rds_ib_devices_lock);
 
 
