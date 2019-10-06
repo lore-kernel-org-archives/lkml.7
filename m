@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AEEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71459C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DB62166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B782133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382857;
-	bh=4wqBNUuvysB2SkWx5KMjTRsw89Nhb/8OQY+pCz/jZmA=;
+	s=default; t=1570382860;
+	bh=Gyx+YxoClyUsWanHAtgiXk3n+uf7ILNWM4v7yipxFlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MA4ArKXaG23+mw2b52nE3bf8AvfmX7BR9etxDPoSh5MgmVRZ1SJhxQGruUA+Osz8s
-	 M3ReVcTcpSgk7vo+9V0/NwhCfvw3HxmXwAtZ321kvjYEe9ReTMBtGqA9O2iTtVLEMH
-	 6d/EffX8qrjzrDeuxNQujxzVPfMIG7uLLmC53MMM=
+	b=uEkJK3hrZd0H/BqKFBfq88SmKPt+EXkjvlaYIFzbEJQx5qQjgCNWtRJjSFSdWuQ5T
+	 IK9OrMswzG99QUXKs7FW/8YZj3ZgKolGE6LuO1B96GDFZa87cfsQdprnJkuU8l/W/b
+	 nCQj+BKPeeNEi717GUXMSh0LJZyH9XCFW30uTRJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfJFR1g (ORCPT
+        id S1728552AbfJFR1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfJFR1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:35 -0400
+        id S1727066AbfJFR1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2EA52087E;
-        Sun,  6 Oct 2019 17:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733FD2080F;
+        Sun,  6 Oct 2019 17:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382854;
-        bh=4wqBNUuvysB2SkWx5KMjTRsw89Nhb/8OQY+pCz/jZmA=;
+        s=default; t=1570382857;
+        bh=Gyx+YxoClyUsWanHAtgiXk3n+uf7ILNWM4v7yipxFlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wB2QUbSPXPG4sp658oWa3gLs7dtWwetP2C4Hv58R+9nN8tNn3MY7hAIob+eg/15it
-         cZoRL9L4higvsDBQMwSxmhFg7nwjgMiGkeKB5nDcsONwHeyJBEvN4gvgCf83zKklnn
-         Do0RRyK828sNRVNkGxpqE3LEEf8WaAoLj7KWTWws=
+        b=N65t+Zlwtc5Q3EBZL6TbvbTjfv7IA2/CKh+w0Xe3RmxHLtducD3GAX/CecrkMxghv
+         sKYEaTq1eb6P/A+WFBuKOTcqYSN/fFK4P09l6UXYkFPCrj8yTzMNRTREcm+wLZ2iAG
+         3XDL6JFVeCHZVKUMsiiXPaIodKn3/zEZePNtxa3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
-        David Ahern <dsahern@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 64/68] ipv6: Handle missing host route in __ipv6_ifa_notify
-Date:   Sun,  6 Oct 2019 19:21:40 +0200
-Message-Id: <20191006171138.315444337@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 4.14 65/68] Smack: Dont ignore other bprm->unsafe flags if LSM_UNSAFE_PTRACE is set
+Date:   Sun,  6 Oct 2019 19:21:41 +0200
+Message-Id: <20191006171138.670100846@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -62,85 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 2d819d250a1393a3e725715425ab70a0e0772a71 ]
+commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
 
-Rajendra reported a kernel panic when a link was taken down:
+There is a logic bug in the current smack_bprm_set_creds():
+If LSM_UNSAFE_PTRACE is set, but the ptrace state is deemed to be
+acceptable (e.g. because the ptracer detached in the meantime), the other
+->unsafe flags aren't checked. As far as I can tell, this means that
+something like the following could work (but I haven't tested it):
 
-    [ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
-    [ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
+ - task A: create task B with fork()
+ - task B: set NO_NEW_PRIVS
+ - task B: install a seccomp filter that makes open() return 0 under some
+   conditions
+ - task B: replace fd 0 with a malicious library
+ - task A: attach to task B with PTRACE_ATTACH
+ - task B: execve() a file with an SMACK64EXEC extended attribute
+ - task A: while task B is still in the middle of execve(), exit (which
+   destroys the ptrace relationship)
 
-    <snip>
+Make sure that if any flags other than LSM_UNSAFE_PTRACE are set in
+bprm->unsafe, we reject the execve().
 
-    [ 6870.570501] Call Trace:
-    [ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
-    [ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
-    [ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
-    [ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
-    [ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
-    [ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
-    [ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
-    [ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
-    [ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
-    [ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
-    [ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
-    [ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
-    [ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
-
-addrconf_dad_work is kicked to be scheduled when a device is brought
-up. There is a race between addrcond_dad_work getting scheduled and
-taking the rtnl lock and a process taking the link down (under rtnl).
-The latter removes the host route from the inet6_addr as part of
-addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
-to use the host route in __ipv6_ifa_notify. If the down event removes
-the host route due to the race to the rtnl, then the BUG listed above
-occurs.
-
-Since the DAD sequence can not be aborted, add a check for the missing
-host route in __ipv6_ifa_notify. The only way this should happen is due
-to the previously mentioned race. The host route is created when the
-address is added to an interface; it is only removed on a down event
-where the address is kept. Add a warning if the host route is missing
-AND the device is up; this is a situation that should never happen.
-
-Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
-Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Fixes: 5663884caab1 ("Smack: unify all ptrace accesses in the smack")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/addrconf.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -5547,13 +5547,20 @@ static void __ipv6_ifa_notify(int event,
- 	switch (event) {
- 	case RTM_NEWADDR:
- 		/*
--		 * If the address was optimistic
--		 * we inserted the route at the start of
--		 * our DAD process, so we don't need
--		 * to do it again
-+		 * If the address was optimistic we inserted the route at the
-+		 * start of our DAD process, so we don't need to do it again.
-+		 * If the device was taken down in the middle of the DAD
-+		 * cycle there is a race where we could get here without a
-+		 * host route, so nothing to insert. That will be fixed when
-+		 * the device is brought up.
- 		 */
--		if (!rcu_access_pointer(ifp->rt->rt6i_node))
-+		if (ifp->rt && !rcu_access_pointer(ifp->rt->rt6i_node)) {
- 			ip6_ins_rt(ifp->rt);
-+		} else if (!ifp->rt && (ifp->idev->dev->flags & IFF_UP)) {
-+			pr_warn("BUG: Address %pI6c on device %s is missing its host route.\n",
-+				&ifp->addr, ifp->idev->dev->name);
-+		}
-+
- 		if (ifp->idev->cnf.forwarding)
- 			addrconf_join_anycast(ifp);
- 		if (!ipv6_addr_any(&ifp->peer_addr))
+---
+ security/smack/smack_lsm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -944,7 +944,8 @@ static int smack_bprm_set_creds(struct l
+ 
+ 		if (rc != 0)
+ 			return rc;
+-	} else if (bprm->unsafe)
++	}
++	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
+ 		return -EPERM;
+ 
+ 	bsp->smk_task = isp->smk_task;
 
 
