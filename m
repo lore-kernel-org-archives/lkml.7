@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E031EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44992C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA28722486
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF8A22486
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384200;
-	bh=ghPfPE3Dv9KM5BihfJgp2aHVM6ja4supiXXbg586G2g=;
+	s=default; t=1570384203;
+	bh=rvdn6CM18sRU3iihANkuQJrrZFTaDeCo9vZzLOAkUgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsTWo2Ckcqxg7I9zj3Z/c81d5Aoi1Dq5PxF5eeNTzBQxURHiF94/+rpJwHdVorINi
-	 F6u9bAfYC5xQatx0CSM7i/obJU0D6xb56Ao6xzORs08cxROE/FRcEIpqYsJQW1jLpQ
-	 5SkOk6ZIg8JZhJkdni7s0RhN2QNhOzq8pkO5qqK0=
+	b=xXUg+hyaSrzzY54+7cX8juk+fGcobIMN26JLBLlY1foW9rQsLmZ39gZdr4fG4pV4y
+	 g7Fw/EWyOtP5S8h2jaaEXK6MfHhGVxBN10FuUQ2EAZSsTIjEOt0Mz1aIfuKadi/6+r
+	 OdrmemPvnyoML+FNRPLXzJZc5PeNsr0+Jo+mVM2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731198AbfJFRlY (ORCPT
+        id S1731187AbfJFRlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730540AbfJFRlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:41:20 -0400
+        id S1731158AbfJFRlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:41:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0085C2053B;
-        Sun,  6 Oct 2019 17:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D73D2053B;
+        Sun,  6 Oct 2019 17:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383679;
-        bh=ghPfPE3Dv9KM5BihfJgp2aHVM6ja4supiXXbg586G2g=;
+        s=default; t=1570383676;
+        bh=rvdn6CM18sRU3iihANkuQJrrZFTaDeCo9vZzLOAkUgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbkwNFJKwUhyfg/syVNfTZgJX7zEc49Ci62Aj7RfadKBjwIhPyIlVkHcE3ABGpuFG
-         avhH3Oowg/uYtfzI896hDWu7aZUhP8fVOtq9bCrdlHt97SbGN21xErAkh9yTtk0ZAR
-         hE7hvKnLWwp4W6UIDtn2K1zxfV/KEpiLLD44+0Q0=
+        b=ZIgbLhHXy6U6qhgK/6gpz7pH86r/lY+l+8+DRpUN6NRQkDKGbQZOk4qgsLoFC0LD+
+         kYFlupCQryKF8Nwmnm+mASr5TYgnnbYqaI/4xQGh1LJ0jBrCdhdrdT2PlStFFz7uCX
+         W9pOKoEofqH1Z7vKfRGBvFB7JEYw4t+3O6SlbM4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Charlene Liu <charlene.liu@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 038/166] clk: sunxi: Dont call clk_hw_get_name() on a hw that isnt registered
-Date:   Sun,  6 Oct 2019 19:20:04 +0200
-Message-Id: <20191006171216.122051307@linuxfoundation.org>
+Subject: [PATCH 5.3 055/166] drm/amd/display: support spdif
+Date:   Sun,  6 Oct 2019 19:20:21 +0200
+Message-Id: <20191006171217.713757795@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,46 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Charlene Liu <charlene.liu@amd.com>
 
-[ Upstream commit a7b85ad25a97cf897b4819a121655c483d86156f ]
+[ Upstream commit b5a41620bb88efb9fb31a4fa5e652e3d5bead7d4 ]
 
-The implementation of clk_hw_get_name() relies on the clk_core
-associated with the clk_hw pointer existing. If of_clk_hw_register()
-fails, there isn't a clk_core created yet, so calling clk_hw_get_name()
-here fails. Extract the name first so we can print it later.
+[Description]
+port spdif fix to staging:
+ spdif hardwired to afmt inst 1.
+ spdif func pointer
+ spdif resource allocation (reserve last audio endpoint for spdif only)
 
-Fixes: 1d80c14248d6 ("clk: sunxi-ng: Add common infrastructure")
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Charlene Liu <charlene.liu@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu_common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../gpu/drm/amd/display/dc/core/dc_resource.c   | 17 ++++++++---------
+ drivers/gpu/drm/amd/display/dc/dce/dce_audio.c  |  4 ++--
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu_common.c
-index 7fe3ac980e5f9..2e20e650b6c01 100644
---- a/drivers/clk/sunxi-ng/ccu_common.c
-+++ b/drivers/clk/sunxi-ng/ccu_common.c
-@@ -97,14 +97,15 @@ int sunxi_ccu_probe(struct device_node *node, void __iomem *reg,
- 
- 	for (i = 0; i < desc->hw_clks->num ; i++) {
- 		struct clk_hw *hw = desc->hw_clks->hws[i];
-+		const char *name;
- 
- 		if (!hw)
- 			continue;
- 
-+		name = hw->init->name;
- 		ret = of_clk_hw_register(node, hw);
- 		if (ret) {
--			pr_err("Couldn't register clock %d - %s\n",
--			       i, clk_hw_get_name(hw));
-+			pr_err("Couldn't register clock %d - %s\n", i, name);
- 			goto err_clk_unreg;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index 2ceaab4fb5deb..68db60e4caf32 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -265,12 +265,10 @@ bool resource_construct(
+ 				DC_ERR("DC: failed to create audio!\n");
+ 				return false;
+ 			}
+-
+ 			if (!aud->funcs->endpoint_valid(aud)) {
+ 				aud->funcs->destroy(&aud);
+ 				break;
+ 			}
+-
+ 			pool->audios[i] = aud;
+ 			pool->audio_count++;
+ 		}
+@@ -1659,24 +1657,25 @@ static struct audio *find_first_free_audio(
+ 		const struct resource_pool *pool,
+ 		enum engine_id id)
+ {
+-	int i;
+-	for (i = 0; i < pool->audio_count; i++) {
++	int i, available_audio_count;
++
++	available_audio_count = pool->audio_count;
++
++	for (i = 0; i < available_audio_count; i++) {
+ 		if ((res_ctx->is_audio_acquired[i] == false) && (res_ctx->is_stream_enc_acquired[i] == true)) {
+ 			/*we have enough audio endpoint, find the matching inst*/
+ 			if (id != i)
+ 				continue;
+-
+ 			return pool->audios[i];
  		}
  	}
+ 
+-    /* use engine id to find free audio */
+-	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
++	/* use engine id to find free audio */
++	if ((id < available_audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
+ 		return pool->audios[id];
+ 	}
+-
+ 	/*not found the matching one, first come first serve*/
+-	for (i = 0; i < pool->audio_count; i++) {
++	for (i = 0; i < available_audio_count; i++) {
+ 		if (res_ctx->is_audio_acquired[i] == false) {
+ 			return pool->audios[i];
+ 		}
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+index 4a10a5d22c90b..5de9623bdf66b 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+@@ -613,6 +613,8 @@ void dce_aud_az_configure(
+ 
+ 	AZ_REG_WRITE(AZALIA_F0_CODEC_PIN_CONTROL_SINK_INFO1,
+ 		value);
++	DC_LOG_HW_AUDIO("\n\tAUDIO:az_configure: index: %u data, 0x%x, displayName %s: \n",
++		audio->inst, value, audio_info->display_name);
+ 
+ 	/*
+ 	*write the port ID:
+@@ -922,7 +924,6 @@ static const struct audio_funcs funcs = {
+ 	.az_configure = dce_aud_az_configure,
+ 	.destroy = dce_aud_destroy,
+ };
+-
+ void dce_aud_destroy(struct audio **audio)
+ {
+ 	struct dce_audio *aud = DCE_AUD(*audio);
+@@ -953,7 +954,6 @@ struct audio *dce_audio_create(
+ 	audio->regs = reg;
+ 	audio->shifts = shifts;
+ 	audio->masks = masks;
+-
+ 	return &audio->base;
+ }
+ 
 -- 
 2.20.1
 
