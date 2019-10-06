@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E198C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58186C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F410C20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2257D2173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383732;
-	bh=VuxlzBzhQeFjKHVvyyE52Ljx9pPrF9R8j1sj9Gw04SM=;
+	s=default; t=1570383736;
+	bh=NpxL+WCCtdslumQX2yqO+h1199gm+NJi3hIXzXiutNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oY/dbh8OCEwPy2l1N3nniV4T371THURMpxQgQi/utgtBHRBXaQMY0dCtpfvzINL/z
-	 rBwjfAPwCY+XdRKfnKgtMuteyWBAOcCaqg6Ao5avcZ2QD+PYOc12hB0/mjVgeGs2ex
-	 SCQHWbUr7wCNKFSw5Qa7SCqozuTIoddgX/YY1B/I=
+	b=WHgY6SbQGtSvRCSf3mokVaPoVqnvpQLueFXuDZR3+R7EeXIj+PucGTepKROAQz8ba
+	 gRO8wRIELXsfzS4Who6zfup3MjbDVjkdssngge+Zpm9g3DWmOxL1icOLQlfprH60DE
+	 oOERAs8GkyFa1xa96R4SkwYlrY/BdJaed1JBLjEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbfJFRmL (ORCPT
+        id S1731287AbfJFRmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730274AbfJFRmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:09 -0400
+        id S1730351AbfJFRmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:42:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BEE20700;
-        Sun,  6 Oct 2019 17:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A28F20700;
+        Sun,  6 Oct 2019 17:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383727;
-        bh=VuxlzBzhQeFjKHVvyyE52Ljx9pPrF9R8j1sj9Gw04SM=;
+        s=default; t=1570383732;
+        bh=NpxL+WCCtdslumQX2yqO+h1199gm+NJi3hIXzXiutNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VyDD9o5QiLf/YfDhs5drtjwLQr0ZuoKzXj4kg/I75Uhb+SwXPr2OZhYGLmrM2rIWa
-         cTMaicPuArGmAa7gMWt3Ts88sUks96nvLvRWSR9lQ66ZotammbF1WIzyGb5Yi9VyqR
-         6RMayYckASPi7ZFPdvR7BU410YAXKrh1dtWtAEfE=
+        b=m8exilOfkITt/tTO4SX+3VaSXlM9ma/LRoGnor/wB5Ca/qSAqTZuE8YCH0MtWBtiP
+         LbHr0NEujkWmRxtuE2hK3VFueri7StFZMO+GFKvph+J5qT3y8B2Sq07Ydgz6CncgJV
+         xYTynWlGeXXZlsMq6+n+0SP2ZIxFFSF+ooC4I3Ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 072/166] clk: imx: pll14xx: avoid glitch when set rate
-Date:   Sun,  6 Oct 2019 19:20:38 +0200
-Message-Id: <20191006171219.467190308@linuxfoundation.org>
+Subject: [PATCH 5.3 074/166] clk: Make clk_bulk_get_all() return a valid "id"
+Date:   Sun,  6 Oct 2019 19:20:40 +0200
+Message-Id: <20191006171219.660307134@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,88 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit dee1bc9c23cd41fe32549c0adbe6cb57cab02282 ]
+[ Upstream commit 7f81c2426587b34bf73e643c1a6d080dfa14cf8a ]
 
-According to PLL1443XA and PLL1416X spec,
-"When BYPASS is 0 and RESETB is changed from 0 to 1, FOUT starts to
-output unstable clock until lock time passes. PLL1416X/PLL1443XA may
-generate a glitch at FOUT."
+The adreno driver expects the "id" field of the returned clk_bulk_data
+to be filled in with strings from the clock-names property.
 
-So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.
-In the end of set rate, BYPASS will be cleared.
+But due to the use of kmalloc_array() in of_clk_bulk_get_all() it
+receives a list of bogus pointers instead.
 
-When prepare clock, also need to take care to avoid glitch. So
-we also follow Spec to set BYPASS before RESETB changed from 0 to 1.
-And add a check if the RESETB is already 0, directly return 0;
+Zero-initialize the "id" field and attempt to populate with strings from
+the clock-names property to resolve both these issues.
 
-Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lkml.kernel.org/r/1568043491-20680-2-git-send-email-peng.fan@nxp.com
+Fixes: 616e45df7c4a ("clk: add new APIs to operate on all available clocks")
+Fixes: 8e3e791d20d2 ("drm/msm: Use generic bulk clock function")
+Cc: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lkml.kernel.org/r/20190913024029.2640-1-bjorn.andersson@linaro.org
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-pll14xx.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/clk/clk-bulk.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index b7213023b238f..656f48b002dd3 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -191,6 +191,10 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw, unsigned long drate,
- 	tmp &= ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
+diff --git a/drivers/clk/clk-bulk.c b/drivers/clk/clk-bulk.c
+index 524bf9a530985..e9e16425c739c 100644
+--- a/drivers/clk/clk-bulk.c
++++ b/drivers/clk/clk-bulk.c
+@@ -18,10 +18,13 @@ static int __must_check of_clk_bulk_get(struct device_node *np, int num_clks,
+ 	int ret;
+ 	int i;
  
-+	/* Enable BYPASS */
-+	tmp |= BYPASS_MASK;
-+	writel(tmp, pll->base);
-+
- 	div_val = (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -250,6 +254,10 @@ static int clk_pll1443x_set_rate(struct clk_hw *hw, unsigned long drate,
- 	tmp &= ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
+-	for (i = 0; i < num_clks; i++)
++	for (i = 0; i < num_clks; i++) {
++		clks[i].id = NULL;
+ 		clks[i].clk = NULL;
++	}
  
-+	/* Enable BYPASS */
-+	tmp |= BYPASS_MASK;
-+	writel_relaxed(tmp, pll->base);
-+
- 	div_val = (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -283,16 +291,28 @@ static int clk_pll14xx_prepare(struct clk_hw *hw)
- {
- 	struct clk_pll14xx *pll = to_clk_pll14xx(hw);
- 	u32 val;
-+	int ret;
- 
- 	/*
- 	 * RESETB = 1 from 0, PLL starts its normal
- 	 * operation after lock time
- 	 */
- 	val = readl_relaxed(pll->base + GNRL_CTL);
-+	if (val & RST_MASK)
-+		return 0;
-+	val |= BYPASS_MASK;
-+	writel_relaxed(val, pll->base + GNRL_CTL);
- 	val |= RST_MASK;
- 	writel_relaxed(val, pll->base + GNRL_CTL);
- 
--	return clk_pll14xx_wait_lock(pll);
-+	ret = clk_pll14xx_wait_lock(pll);
-+	if (ret)
-+		return ret;
-+
-+	val &= ~BYPASS_MASK;
-+	writel_relaxed(val, pll->base + GNRL_CTL);
-+
-+	return 0;
- }
- 
- static int clk_pll14xx_is_prepared(struct clk_hw *hw)
+ 	for (i = 0; i < num_clks; i++) {
++		of_property_read_string_index(np, "clock-names", i, &clks[i].id);
+ 		clks[i].clk = of_clk_get(np, i);
+ 		if (IS_ERR(clks[i].clk)) {
+ 			ret = PTR_ERR(clks[i].clk);
 -- 
 2.20.1
 
