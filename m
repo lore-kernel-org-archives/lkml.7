@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E90BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48689C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126B520862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BE12080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383724;
-	bh=oZ/CdR4pk54TSdx6nW2duEampafCF/90uNe4q3GZa9I=;
+	s=default; t=1570383728;
+	bh=BlKSi1Xq4EuPHJSs1tQuJ38g3c84qR75o+FZ4x/DhnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmY7sJdzamd/tgPHghf3YQbNyaAkX60vheGTQbRnbZyloo0SvMt+LyP5Rc0GXZzgn
-	 zsW5MAw+yUTq9vQOcS+9E9wYycaSCcjsGbBszF3BQbzA2BNElB9vurUjtzMaz1ysLM
-	 LQXnXftHZLRnMper41+tUo9xdn6lX28QHDXPMu1o=
+	b=RGJAhVl93NFyyRhN/S87jMKAwG8mdqy0ddqzU41jUcnM9LUOzTqIvn1zNTgKFxPy3
+	 rOClQt3lYV+6EVAHlxabAifzqtklxDz4p9SCGAlX46aevOt8sN3aQ0XAZrtrQVfvYQ
+	 96OkfwZQiyU0c89I8NwUqY+l3Qqj+u+LzLt106JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfJFRmC (ORCPT
+        id S1730549AbfJFRmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41704 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:42:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730882AbfJFRmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:00 -0400
+        id S1730933AbfJFRmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:42:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FFC20700;
-        Sun,  6 Oct 2019 17:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65EB820700;
+        Sun,  6 Oct 2019 17:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383719;
-        bh=oZ/CdR4pk54TSdx6nW2duEampafCF/90uNe4q3GZa9I=;
+        s=default; t=1570383724;
+        bh=BlKSi1Xq4EuPHJSs1tQuJ38g3c84qR75o+FZ4x/DhnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4cVwoFEe7dqN2L4qq1ne4ePPgRb99YYoW0xOOg/MIbu8ltHB/GYfdyGnbkMPQ9F7
-         IY5ikJY8thQ+ZqsoYigAL7zPnADtMYUZHkdVDQhN9kyvI/6D44OpUaxyHgLhVvlsox
-         Mujk4oyX9jXKI8r1072LRHUreW5xaJOUYlVZNJ1k=
+        b=k+yFWN41WA+cw0r12jikcCfhSjzclbWleydv5wovs92LAoH7//Im/4KUCKq25CbwV
+         XV2UmfpOU4fTWljSPay4gXI8o3chGgqCkCL7wuOZH2dmLInnLUhncR3K0cYwUBEY5g
+         E/1qJ6hHSHDdEYIqVctAjiiJJDzYuq1/F52ZW2xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 069/166] ARM: dts: dir685: Drop spi-cpol from the display
-Date:   Sun,  6 Oct 2019 19:20:35 +0200
-Message-Id: <20191006171219.185398266@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 071/166] clk: at91: select parent if main oscillator or bypass is enabled
+Date:   Sun,  6 Oct 2019 19:20:37 +0200
+Message-Id: <20191006171219.379471558@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,47 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 2a7326caab479ca257c4b9bd67db42d1d49079bf ]
+[ Upstream commit 69a6bcde7fd3fe6f3268ce26f31d9d9378384c98 ]
 
-The D-Link DIR-685 had its clock polarity set as active
-low using the special SPI "spi-cpol" property.
+Selecting the right parent for the main clock is done using only
+main oscillator enabled bit.
+In case we have this oscillator bypassed by an external signal (no driving
+on the XOUT line), we still use external clock, but with BYPASS bit set.
+So, in this case we must select the same parent as before.
+Create a macro that will select the right parent considering both bits from
+the MOR register.
+Use this macro when looking for the right parent.
 
-This is not correct: the datasheet clearly states:
-"Fix SCL to GND level when not in use" which is
-indicative that this line is active high.
-
-After a recent fix making the GPIO-based SPI driver
-force the clock line de-asserted at the beginning of
-each SPI transaction this reared its ugly head: now
-de-asserted was taken to mean the line should be
-driven high, but it should be driven low.
-
-Fix this up in the DTS file and the display works again.
-
-Link: https://lore.kernel.org/r/20190915135444.11066-1-linus.walleij@linaro.org
-Cc: Mark Brown <broonie@kernel.org>
-Fixes: 2922d1cc1696 ("spi: gpio: Add SPI_MASTER_GPIO_SS flag")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Link: https://lkml.kernel.org/r/1568042692-11784-2-git-send-email-eugen.hristev@microchip.com
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/gemini-dlink-dir-685.dts | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clk/at91/clk-main.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/gemini-dlink-dir-685.dts b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-index bfaa2de63a100..e2030ba16512f 100644
---- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-+++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-@@ -72,7 +72,6 @@
- 			reg = <0>;
- 			/* 50 ns min period = 20 MHz */
- 			spi-max-frequency = <20000000>;
--			spi-cpol; /* Clock active low */
- 			vcc-supply = <&vdisp>;
- 			iovcc-supply = <&vdisp>;
- 			vci-supply = <&vdisp>;
+diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+index f607ee702c838..311cea0c3ae2b 100644
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -21,6 +21,10 @@
+ 
+ #define MOR_KEY_MASK		(0xff << 16)
+ 
++#define clk_main_parent_select(s)	(((s) & \
++					(AT91_PMC_MOSCEN | \
++					AT91_PMC_OSCBYPASS)) ? 1 : 0)
++
+ struct clk_main_osc {
+ 	struct clk_hw hw;
+ 	struct regmap *regmap;
+@@ -113,7 +117,7 @@ static int clk_main_osc_is_prepared(struct clk_hw *hw)
+ 
+ 	regmap_read(regmap, AT91_PMC_SR, &status);
+ 
+-	return (status & AT91_PMC_MOSCS) && (tmp & AT91_PMC_MOSCEN);
++	return (status & AT91_PMC_MOSCS) && clk_main_parent_select(tmp);
+ }
+ 
+ static const struct clk_ops main_osc_ops = {
+@@ -450,7 +454,7 @@ static u8 clk_sam9x5_main_get_parent(struct clk_hw *hw)
+ 
+ 	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
+ 
+-	return status & AT91_PMC_MOSCEN ? 1 : 0;
++	return clk_main_parent_select(status);
+ }
+ 
+ static const struct clk_ops sam9x5_main_ops = {
+@@ -492,7 +496,7 @@ at91_clk_register_sam9x5_main(struct regmap *regmap,
+ 	clkmain->hw.init = &init;
+ 	clkmain->regmap = regmap;
+ 	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
+-	clkmain->parent = status & AT91_PMC_MOSCEN ? 1 : 0;
++	clkmain->parent = clk_main_parent_select(status);
+ 
+ 	hw = &clkmain->hw;
+ 	ret = clk_hw_register(NULL, &clkmain->hw);
 -- 
 2.20.1
 
