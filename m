@@ -6,34 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD16C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8685DC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781FD2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A9E2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfJFK4E (ORCPT
+        id S1726574AbfJFK55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:56:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46978 "EHLO huawei.com"
+        Sun, 6 Oct 2019 06:57:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3260 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbfJFK4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:56:04 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8B54B5739D6D5E177BA0;
-        Sun,  6 Oct 2019 18:56:02 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:55:55 +0800
+        id S1726224AbfJFK55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:57:57 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 926D158369EC033520F0;
+        Sun,  6 Oct 2019 18:57:54 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:57:45 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <timur@kernel.org>, <nicoleotsuka@gmail.com>,
-        <Xiubo.Lee@gmail.com>, <festevam@gmail.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linuxppc-dev@lists.ozlabs.org>,
+To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Bhawanpreet.Lakha@amd.com>, <Anthony.Koo@amd.com>,
+        <aric.cyr@amd.com>, <Harmanprit.Tatla@amd.com>,
+        <bayan.zabihiyan@amd.com>, <ahmad.othman@amd.com>,
+        <Reza.Amini@amd.com>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
         <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: fsl_mqs: remove set but not used variable 'bclk'
-Date:   Sun, 6 Oct 2019 18:55:22 +0800
-Message-ID: <20191006105522.58560-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/amd/display: remove set but not used variable 'core_freesync'
+Date:   Sun, 6 Oct 2019 18:57:35 +0800
+Message-ID: <20191006105735.60708-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -46,33 +50,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-sound/soc/fsl/fsl_mqs.c: In function fsl_mqs_hw_params:
-sound/soc/fsl/fsl_mqs.c:54:6: warning: variable bclk set but not used [-Wunused-but-set-variable]
+rivers/gpu/drm/amd/amdgpu/../display/modules/freesync/freesync.c:
+ In function mod_freesync_get_settings:
+drivers/gpu/drm/amd/amdgpu/../display/modules/freesync/freesync.c:984:24:
+ warning: variable core_freesync set but not used [-Wunused-but-set-variable]
 
-It is never used, so can be removed.
+It is not used since commit 98e6436d3af5 ("drm/amd/display: Refactor FreeSync module")
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/fsl/fsl_mqs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
-index c1619a5..7b9cab3 100644
---- a/sound/soc/fsl/fsl_mqs.c
-+++ b/sound/soc/fsl/fsl_mqs.c
-@@ -51,10 +51,9 @@ static int fsl_mqs_hw_params(struct snd_pcm_substream *substream,
- 	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
- 	unsigned long mclk_rate;
- 	int div, res;
--	int bclk, lrclk;
-+	int lrclk;
+diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+index 9ce56a8..237dda7 100644
+--- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
++++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+@@ -981,13 +981,9 @@ void mod_freesync_get_settings(struct mod_freesync *mod_freesync,
+ 		unsigned int *inserted_frames,
+ 		unsigned int *inserted_duration_in_us)
+ {
+-	struct core_freesync *core_freesync = NULL;
+-
+ 	if (mod_freesync == NULL)
+ 		return;
  
- 	mclk_rate = clk_get_rate(mqs_priv->mclk);
--	bclk = snd_soc_params_to_bclk(params);
- 	lrclk = params_rate(params);
- 
- 	/*
+-	core_freesync = MOD_FREESYNC_TO_CORE(mod_freesync);
+-
+ 	if (vrr->supported) {
+ 		*v_total_min = vrr->adjust.v_total_min;
+ 		*v_total_max = vrr->adjust.v_total_max;
 -- 
 2.7.4
 
