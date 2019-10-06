@@ -2,98 +2,108 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF5BECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD13C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27ADB2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CD52080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570385022;
-	bh=6QPtUIVWERq86ViWEnx4jphwcdTZYGRW02K4DAWvmN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cOnnHPtC0rHcKXuejeEZue4LBLQRtV2P1/hDJlgMPjPshe/J2JryQ/eOvRfzcbe8v
-	 SohEwQntcFMxQN9EZfYZuRAmF97avYrHI8guJN/LV1Ryu3bIAZt10lgoYMXjrnpz5g
-	 iq3rQb0ThrZSu4hcmRRVQ98Bmnw1CrrUiMx+EO3Y=
+	s=default; t=1570385222;
+	bh=m4BBRy0bCRgpg2FTvrM5XMjhnhRRdyKZ/3eSot2H4sQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E7R4w0mufpqboEWaIjJcOG5U1YCS8ISRu8zlCZRMFpe6rRlwu8MIO/CXDwAuQ2Wca
+	 sXG3zp3oIOsGgPxQY+IEoKyZu0uNgUGYBex/PB/or49w0c86HbArq/DjHZCVnmP2dW
+	 ykF93MmF/e1BBLFdfAF6WoWelTo0amCouuOoHF34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfJFRYC (ORCPT
+        id S1726856AbfJFSHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfJFRX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:23:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2422080F;
-        Sun,  6 Oct 2019 17:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382637;
-        bh=6QPtUIVWERq86ViWEnx4jphwcdTZYGRW02K4DAWvmN0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHZJdYN+kllWSlXS1EYYXc2V6kz8y9kdWQKhin/EIQ3kPT64Z3lIT+HdkrqOztJxM
-         hdjLXhHlOd+GASvOgEXw9XmnwR+CRkiqYdfKs+JXtJsiLR7NEDzrmkGbxN2QThxMx6
-         e9YwY88dRgzBE5KzO/yBpCfvwHAocbEsCAWw+y8s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a2a3c4909716e271487e@syzkaller.appspotmail.com,
-        Martijn Coenen <maco@android.com>,
-        Mattias Nissler <mnissler@chromium.org>
-Subject: [PATCH 4.9 31/47] ANDROID: binder: synchronize_rcu() when using POLLFREE.
-Date:   Sun,  6 Oct 2019 19:21:18 +0200
-Message-Id: <20191006172018.533551246@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
-References: <20191006172016.873463083@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 6 Oct 2019 14:07:01 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39537 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfJFSHB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 14:07:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y3so11291133ljj.6
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:06:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LYZhJ8z29L9VXaq40W7IaPRpHSPw3yWamQCRA+/ko3U=;
+        b=bGADQTdQUdcHqbYbNLqk9QwKozcUBscZ2f20slYeCKfCvmhN38YzMKFvX2ufUc7FXY
+         ODiodrltVBR1zqdLTv38xj3MP/5BMFzRTbjwiz51A8ILCCXUKeHQexCepEAVI85inw7X
+         VnAVOK7Rvj9ezJaN6A43dtjOY05DLDXYKJxuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LYZhJ8z29L9VXaq40W7IaPRpHSPw3yWamQCRA+/ko3U=;
+        b=Ct/fkEnzpyVmEp/IOX399QyRjhHEa2RI+QjevTMPeqGb1wu+oH93mrfe7dhpD1afx1
+         hfvHyXqdefMZthGcbGFurlUhRpbK7EmqKaQE0tZ7SmNpB0DJtyj1s80fqZd7IzyxzHr6
+         c2nsFe6RzllJGuU6GFPHorLOIoF9iKisqcnxnbJ8I6Tfg8tC8MSku51i5B9Yp25GH2Kq
+         14qZe7aJQ+Z53aklnu0PwrHwB9cCBo5ix/w+LwrVYdnrt0BAJfKAUZWNzKqp4sjcYlkV
+         ezK06Q+hUf8mlegbJTpVwaWojG+XWyTXvgTus2oMM5+5sZLmREdL73JHTgOw3XnijW6i
+         Oh7w==
+X-Gm-Message-State: APjAAAWc6QWxFsWSuWYgguJ5AoPuznrmf92V3okFIbzqtJS9LOr7xL8E
+        o+3K3wNZ4MCrjMzN8oJw++lRB6h/2YY=
+X-Google-Smtp-Source: APXvYqxl7Yi78ER+qSOIF1u82NyFH6Xm7K17/2FM+VrkSru27m4vAxPvzYR0OnpdWhvGLdOQWYj9Eg==
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr16057961ljh.106.1570385216821;
+        Sun, 06 Oct 2019 11:06:56 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id q24sm2422376lfa.94.2019.10.06.11.06.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Oct 2019 11:06:55 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 7so11281963ljw.7
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:06:54 -0700 (PDT)
+X-Received: by 2002:a2e:9556:: with SMTP id t22mr15616404ljh.97.1570385214720;
+ Sun, 06 Oct 2019 11:06:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <20191006114129.GD24605@amd> <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
+ <20191006173501.GA31243@amd>
+In-Reply-To: <20191006173501.GA31243@amd>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 6 Oct 2019 11:06:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
+Message-ID: <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
+Subject: Re: x86/random: Speculation to the rescue
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martijn Coenen <maco@android.com>
+On Sun, Oct 6, 2019 at 10:35 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> It will not: boot is now halted because systemd wants some
+> entropy. Everything is idle and very little interrupts are
+> happening. We have spinning rust, but it is idle, and thus not
+> generating any interrupts.
 
-commit 5eeb2ca02a2f6084fc57ae5c244a38baab07033a upstream.
+Yes, but we have that problem now solved.
 
-To prevent races with ep_remove_waitqueue() removing the
-waitqueue at the same time.
+Except on embedded platforms that have garbage CPU's without even a
+cycle counter.
 
-Reported-by: syzbot+a2a3c4909716e271487e@syzkaller.appspotmail.com
-Signed-off-by: Martijn Coenen <maco@android.com>
-Cc: stable <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Mattias Nissler <mnissler@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/android/binder.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+But those won't have spinning rust anyway.
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -2641,6 +2641,15 @@ static int binder_free_thread(struct bin
- 		wake_up_poll(&thread->wait, POLLHUP | POLLFREE);
- 	}
- 
-+	/*
-+	 * This is needed to avoid races between wake_up_poll() above and
-+	 * and ep_remove_waitqueue() called for other reasons (eg the epoll file
-+	 * descriptor being closed); ep_remove_waitqueue() holds an RCU read
-+	 * lock, so we can be sure it's done after calling synchronize_rcu().
-+	 */
-+	if (thread->looper & BINDER_LOOPER_STATE_POLL)
-+		synchronize_rcu();
-+
- 	if (send_reply)
- 		binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
- 	binder_release_work(&thread->todo);
+Yes, bad SSD's and MMC disks (that they do have) will generate timing
+noise too, but in the absense of a cycle counter, that noise won't be
+much use.
 
-
+                 Linus
