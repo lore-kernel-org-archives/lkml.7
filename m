@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BADC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07809C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF5920835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF5621479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384542;
-	bh=jiqWDvjr3y286qK70hFFRbHs5tN2gQs8Lk1YAW0uoAc=;
+	s=default; t=1570384544;
+	bh=7n+wym7xP2UaLFtaocy+zLj89/hGGwRuD0CgKErsl84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXtxELOW4RMMaVrYoNSiFH5PTtpQlMFi+YkmWIjHeJbmFVif3AGWgTzOIVQXhQC7p
-	 JyDFXon7q/mjFgqbx18glm156pMKt0NTQkYIQtqUSfPqw+y8JcXfV3FD/iEljox2YI
-	 ZKb6Rla70KTlIMVM3aTNGGQacSNzv/Wi7NSpzCyE=
+	b=G9H5BavfDXrkRQJExm+tpE5dEtiRG8TGJiIFrJGpEbw2Ubl9QtD/Cm5PjF3I2/4vb
+	 TI6pB5YEACeFIYu7OaOZI3LChJF7bcjgDc5lPB0shMeeBHr98g6zDn4zXdhscETp50
+	 HbNqrs+Luezf1GQO5tEVIlOLsiTfmo5brz/IErFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbfJFRgD (ORCPT
+        id S1728493AbfJFRzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34724 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbfJFRf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:58 -0400
+        id S1730242AbfJFRgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0462064A;
-        Sun,  6 Oct 2019 17:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F06A2064A;
+        Sun,  6 Oct 2019 17:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383357;
-        bh=jiqWDvjr3y286qK70hFFRbHs5tN2gQs8Lk1YAW0uoAc=;
+        s=default; t=1570383362;
+        bh=7n+wym7xP2UaLFtaocy+zLj89/hGGwRuD0CgKErsl84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wLJz+ctO6s9FgmAZIP0Zfd/BIkEVbf4HekMFACUj/NKwjXwflE0OTMf1DJz5tPtMP
-         2CW5tAvcvv442nRQr7exlJquMcIrTj8xqe0t5IjEXx057DmZw8Fydz3Od2Tj97u4li
-         21q5Dd3x3Trf/fEg9VRo1+udb0kSI3uHKYU5HF5I=
+        b=Y8HYbMN+ykRvOwk2hYvRXevlPIIqHbnwKC6ct7D8UP+ftYD3XbgTgBG9ldEy3w0AL
+         vWVEB7ViR7ybzmD2nyac6hflEhomfV/zMpi9heQR0hKt2tLAPE70kwOWKdlze6Hbla
+         tQWd5Iz4yxakg9fjxgGWlzUJUmfB5Z1X4bLvAcDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 073/137] powerpc/eeh: Clean up EEH PEs after recovery finishes
-Date:   Sun,  6 Oct 2019 19:20:57 +0200
-Message-Id: <20191006171215.175180587@linuxfoundation.org>
+Subject: [PATCH 5.2 075/137] powerpc/pseries: correctly track irq state in default idle
+Date:   Sun,  6 Oct 2019 19:20:59 +0200
+Message-Id: <20191006171215.286934954@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,177 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 799abe283e5103d48e079149579b4f167c95ea0e ]
+[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
 
-When the last device in an eeh_pe is removed the eeh_pe structure itself
-(and any empty parents) are freed since they are no longer needed. This
-results in a crash when a hotplug driver is involved since the following
-may occur:
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-1. Device is suprise removed.
-2. Driver performs an MMIO, which fails and queues and eeh_event.
-3. Hotplug driver receives a hotplug interrupt and removes any
-   pci_devs that were under the slot.
-4. pci_dev is torn down and the eeh_pe is freed.
-5. The EEH event handler thread processes the eeh_event and crashes
-   since the eeh_pe pointer in the eeh_event structure is no
-   longer valid.
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
 
-Crashing is generally considered poor form. Instead of doing that use
-the fact PEs are marked as EEH_PE_INVALID to keep them around until the
-end of the recovery cycle, at which point we can safely prune any empty
-PEs.
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
 
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
+
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190903101605.2890-2-oohall@gmail.com
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_driver.c | 36 ++++++++++++++++++++++++++++++--
- arch/powerpc/kernel/eeh_event.c  |  8 +++++++
- arch/powerpc/kernel/eeh_pe.c     | 23 +++++++++++++++++++-
- 3 files changed, 64 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 1fbe541856f5e..fe0c32fb9f96f 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -744,6 +744,33 @@ static int eeh_reset_device(struct eeh_pe *pe, struct pci_bus *bus,
-  */
- #define MAX_WAIT_FOR_RECOVERY 300
- 
-+
-+/* Walks the PE tree after processing an event to remove any stale PEs.
-+ *
-+ * NB: This needs to be recursive to ensure the leaf PEs get removed
-+ * before their parents do. Although this is possible to do recursively
-+ * we don't since this is easier to read and we need to garantee
-+ * the leaf nodes will be handled first.
-+ */
-+static void eeh_pe_cleanup(struct eeh_pe *pe)
-+{
-+	struct eeh_pe *child_pe, *tmp;
-+
-+	list_for_each_entry_safe(child_pe, tmp, &pe->child_list, child)
-+		eeh_pe_cleanup(child_pe);
-+
-+	if (pe->state & EEH_PE_KEEP)
-+		return;
-+
-+	if (!(pe->state & EEH_PE_INVALID))
-+		return;
-+
-+	if (list_empty(&pe->edevs) && list_empty(&pe->child_list)) {
-+		list_del(&pe->child);
-+		kfree(pe);
-+	}
-+}
-+
- /**
-  * eeh_handle_normal_event - Handle EEH events on a specific PE
-  * @pe: EEH PE - which should not be used after we return, as it may
-@@ -782,8 +809,6 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 		return;
- 	}
- 
--	eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
--
- 	eeh_pe_update_time_stamp(pe);
- 	pe->freeze_count++;
- 	if (pe->freeze_count > eeh_max_freezes) {
-@@ -973,6 +998,12 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 			return;
- 		}
- 	}
-+
-+	/*
-+	 * Clean up any PEs without devices. While marked as EEH_PE_RECOVERYING
-+	 * we don't want to modify the PE tree structure so we do it here.
-+	 */
-+	eeh_pe_cleanup(pe);
- 	eeh_pe_state_clear(pe, EEH_PE_RECOVERING, true);
- }
- 
-@@ -1045,6 +1076,7 @@ void eeh_handle_special_event(void)
- 		 */
- 		if (rc == EEH_NEXT_ERR_FROZEN_PE ||
- 		    rc == EEH_NEXT_ERR_FENCED_PHB) {
-+			eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
- 			eeh_handle_normal_event(pe);
- 		} else {
- 			pci_lock_rescan_remove();
-diff --git a/arch/powerpc/kernel/eeh_event.c b/arch/powerpc/kernel/eeh_event.c
-index 64cfbe41174b2..e36653e5f76b3 100644
---- a/arch/powerpc/kernel/eeh_event.c
-+++ b/arch/powerpc/kernel/eeh_event.c
-@@ -121,6 +121,14 @@ int __eeh_send_failure_event(struct eeh_pe *pe)
- 	}
- 	event->pe = pe;
- 
-+	/*
-+	 * Mark the PE as recovering before inserting it in the queue.
-+	 * This prevents the PE from being free()ed by a hotplug driver
-+	 * while the PE is sitting in the event queue.
-+	 */
-+	if (pe)
-+		eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
-+
- 	/* We may or may not be called in an interrupt context */
- 	spin_lock_irqsave(&eeh_eventlist_lock, flags);
- 	list_add(&event->list, &eeh_eventlist);
-diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
-index 854cef7b18f4d..f0813d50e0b1c 100644
---- a/arch/powerpc/kernel/eeh_pe.c
-+++ b/arch/powerpc/kernel/eeh_pe.c
-@@ -491,6 +491,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
- int eeh_rmv_from_parent_pe(struct eeh_dev *edev)
- {
- 	struct eeh_pe *pe, *parent, *child;
-+	bool keep, recover;
- 	int cnt;
- 	struct pci_dn *pdn = eeh_dev_to_pdn(edev);
- 
-@@ -516,10 +517,21 @@ int eeh_rmv_from_parent_pe(struct eeh_dev *edev)
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 8fa012a65a712..cc682759feae8 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -344,6 +344,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by ceding processor to hypervisor
  	 */
- 	while (1) {
- 		parent = pe->parent;
-+
-+		/* PHB PEs should never be removed */
- 		if (pe->type & EEH_PE_PHB)
- 			break;
  
--		if (!(pe->state & EEH_PE_KEEP)) {
-+		/*
-+		 * XXX: KEEP is set while resetting a PE. I don't think it's
-+		 * ever set without RECOVERING also being set. I could
-+		 * be wrong though so catch that with a WARN.
-+		 */
-+		keep = !!(pe->state & EEH_PE_KEEP);
-+		recover = !!(pe->state & EEH_PE_RECOVERING);
-+		WARN_ON(keep && !recover);
++	if (!prep_irq_for_idle())
++		return;
 +
-+		if (!keep && !recover) {
- 			if (list_empty(&pe->edevs) &&
- 			    list_empty(&pe->child_list)) {
- 				list_del(&pe->child);
-@@ -528,6 +540,15 @@ int eeh_rmv_from_parent_pe(struct eeh_dev *edev)
- 				break;
- 			}
- 		} else {
-+			/*
-+			 * Mark the PE as invalid. At the end of the recovery
-+			 * process any invalid PEs will be garbage collected.
-+			 *
-+			 * We need to delay the free()ing of them since we can
-+			 * remove edev's while traversing the PE tree which
-+			 * might trigger the removal of a PE and we can't
-+			 * deal with that (yet).
-+			 */
- 			if (list_empty(&pe->edevs)) {
- 				cnt = 0;
- 				list_for_each_entry(child, &pe->child_list, child) {
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
+ 
 -- 
 2.20.1
 
