@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5C8C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242F0C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA84217D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10FA214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382970;
-	bh=0ZSwGD0yIhbn+Y46gEL7KTJq9btBY1FBXRX+yBn0Ofo=;
+	s=default; t=1570382975;
+	bh=TivASpM3/86zANGlVZN2Uu3v/DewE3+KHlZDVvnmyWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2L7uM5PDM2rRDaOIJSI9xiEdHRowwKFMr6Rc67SWpyZPrwHKsnrOEwll8ZT21Ox4A
-	 wVtP10O2US2oI08MKqv3vw8YRbLcfcv+AQVh1wuxGBj85yyC/Hn4s0G0MbCFQeoHN2
-	 NuueDFXZs3SQjCCYAzvnsQLKwT8jKLY3+mCgn/Hg=
+	b=YtStTXeRM1TtFkuB/ynBGx4XnTsG4nOwUD0txCl3BM3kXGjmj8JL4Ui3xrRZP62vK
+	 WPAJ05G3XaGYodfZLq5QskepDifSDtv4pshAptmOW+BAAYFSMDnWIXnEcSwG0KPtgd
+	 LZHF8D/yly7XIskZczPc6U2tZDmBCwCX92pMx3mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfJFR33 (ORCPT
+        id S1729001AbfJFR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55126 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbfJFR3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:25 -0400
+        id S1728987AbfJFR32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962992080F;
-        Sun,  6 Oct 2019 17:29:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43CDA2087E;
+        Sun,  6 Oct 2019 17:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382965;
-        bh=0ZSwGD0yIhbn+Y46gEL7KTJq9btBY1FBXRX+yBn0Ofo=;
+        s=default; t=1570382967;
+        bh=TivASpM3/86zANGlVZN2Uu3v/DewE3+KHlZDVvnmyWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFfFtjKL/rTMuqPYkvRp2illjqQMTnD1f8Y98MPgnzf4pQBxZEbxrvYXYcRtdQAsI
-         YQNHQipzjGdXKQ8wd5REGpw5LgWpQWJfCtaPtfmAD/Tsiv8gRLvBLBBFglsws7UCgy
-         GiwBVy3Kakg8xIcpvHulQnuZnsleF5/PDBRLZBM4=
+        b=kvNqqKYsvHMhjHU7DyxnU4RrBAYe7PJpTEuu+QkDDwCgfnZzkP48IevRvF9fhW/zo
+         UEoiDNEU/sBKU8bDUu4xbZrEp9xMAQ9zgE5nVSMBVVOWDysJEwlGK5IncI0Faj7QoM
+         krH3adA/UzRJzufF4C2bfh5kXUW44VsfzoKpkg4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/106] powerpc/64s/exception: machine check use correct cfar for late handler
-Date:   Sun,  6 Oct 2019 19:20:41 +0200
-Message-Id: <20191006171140.612370043@linuxfoundation.org>
+Subject: [PATCH 4.19 004/106] drm/panel: simple: fix AUO g185han01 horizontal blanking
+Date:   Sun,  6 Oct 2019 19:20:10 +0200
+Message-Id: <20191006171126.937604511@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,43 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
+[ Upstream commit f8c6bfc612b56f02e1b8fae699dff12738aaf889 ]
 
-Bare metal machine checks run an "early" handler in real mode before
-running the main handler which reports the event.
+The horizontal blanking periods are too short, as the values are
+specified for a single LVDS channel. Since this panel is dual LVDS
+they need to be doubled. With this change the panel reaches its
+nominal vrefresh rate of 60Fps, instead of the 64Fps with the
+current wrong blanking.
 
-The main handler runs exactly as a normal interrupt handler, after the
-"windup" which sets registers back as they were at interrupt entry.
-CFAR does not get restored by the windup code, so that will be wrong
-when the handler is run.
+Philipp Zabel added:
+The datasheet specifies 960 active clocks + 40/128/160 clocks blanking
+on each of the two LVDS channels (min/typical/max), so doubled this is
+now correct.
 
-Restore the CFAR to the saved value before running the late handler.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1562764060.23869.12.camel@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 06cc77813dbb7..90af86f143a91 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -520,6 +520,10 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
- 	RFI_TO_USER_OR_KERNEL
- 9:
- 	/* Deliver the machine check to host kernel in V mode. */
-+BEGIN_FTR_SECTION
-+	ld	r10,ORIG_GPR3(r1)
-+	mtspr	SPRN_CFAR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	MACHINE_CHECK_HANDLER_WINDUP
- 	b	machine_check_pSeries
- 
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5fd94e2060297..654fea2b43124 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -689,9 +689,9 @@ static const struct panel_desc auo_g133han01 = {
+ static const struct display_timing auo_g185han01_timings = {
+ 	.pixelclock = { 120000000, 144000000, 175000000 },
+ 	.hactive = { 1920, 1920, 1920 },
+-	.hfront_porch = { 18, 60, 74 },
+-	.hback_porch = { 12, 44, 54 },
+-	.hsync_len = { 10, 24, 32 },
++	.hfront_porch = { 36, 120, 148 },
++	.hback_porch = { 24, 88, 108 },
++	.hsync_len = { 20, 48, 64 },
+ 	.vactive = { 1080, 1080, 1080 },
+ 	.vfront_porch = { 6, 10, 40 },
+ 	.vback_porch = { 2, 5, 20 },
 -- 
 2.20.1
 
