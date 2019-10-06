@@ -2,623 +2,211 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20659C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE78C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD04720835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8604D20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qhNFt8SH"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MYntRpAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfJFQDi (ORCPT
+        id S1726792AbfJFQDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 12:03:38 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34066 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfJFQDb (ORCPT
+        Sun, 6 Oct 2019 12:03:41 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:35931 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfJFQDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 12:03:31 -0400
-Received: by mail-yb1-f195.google.com with SMTP id m1so3851679ybm.1;
-        Sun, 06 Oct 2019 09:03:30 -0700 (PDT)
+        Sun, 6 Oct 2019 12:03:39 -0400
+Received: by mail-ua1-f67.google.com with SMTP id r25so3343584uam.3;
+        Sun, 06 Oct 2019 09:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y6pwP6ofOu0AllmStkErTxBXrc+gza8N2Qt/++md7dw=;
-        b=qhNFt8SHK1jcpnMbIwO295cJJ9mqfvLXMkWmHGnVQUbkIrzU2Fz6XwBgQru10blB5z
-         K77/O+uD8VBrPtNRtIEjE5ohe7tr778EQs+tUoBziPbaQ4+Ka2C2hH9KRdASpqbtTSzf
-         AEG2WAnkgPX+pvnjUDK/jZfXT196HUQ8/G4w6/mA2RCF7uYsknomoA8DIVihgDLvQd4o
-         tG41l6ija4IctKEzErKtc9DAyWYFNHEUsirD+dZEbZojd3hBjXfIJLoqWnpPEkDcHhLv
-         lYdnxCt0JAGkv5SlZw3BWZtYdTOB0CoANfakywx9YsMrAmIsk0/1njXxmgth8aju1OLh
-         x1dQ==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uq1yTMjJxVrrmQg6Vw7e0l/Q44DjBU8KLu0PbdRO8wI=;
+        b=MYntRpAxJBc9qfwO5jFNB2Rz3OUPm7O02jTeEk/WhoRH2ofkfVXizEKn4SWH/fn+4y
+         QBFL8iik/lLkae9rOMc9ucEat3XWFfGM89WHJ50Hgs93MkB6xSP6EzTN5Zy0jl/kZhpi
+         Yaoj58676bwka2qsBlHJHkHJkspiUQgZUs33todwhPxwWe+fy3Dyt5VuCJz1kAR4HsEy
+         mQtdslK8LtRglyh0VCZz5PMSMLq+HWEY6Jk/p5WfS+pArkIrkPHzfcfASHcihtYu3Flb
+         /UaxMrXBP8sE+kDibB3ylikNPOEW9bL2IKAv16vohJ9Qwna/McXhd+KSZeDeQnVHCLWu
+         NFIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y6pwP6ofOu0AllmStkErTxBXrc+gza8N2Qt/++md7dw=;
-        b=cbFp1Tkhn3HdEYihjYaJxeBdyBaDKLsxEWbEAGd8yfmkxCWBUKpaQt4qlQ/MS9TcwU
-         Og3uQUWEv6cpJroWCTUPclgxm1Ndy8MCjwjAcd9aZmI7ceFW+OhIIo8LG1icLaBTxpDZ
-         AHy43ijWdkciC2hioxZS+MVBXhOI62d7eJY+7HbQWcxPZBASvOKTwn6X5u1Gm92I8ePp
-         gKGbzH2fkeskj49C/mdiaoSoJt+C532M0D3yCcD/7eeQWqh5ZvZa7SgP8WfFiIOoV3fe
-         5Oks3WkqGfaedynb28RimaVyy8HOrVjc5f5SJUXwBAVGrpUzr9ma478Bgxok183f2gPs
-         Calg==
-X-Gm-Message-State: APjAAAXri6LYqIbzTiGQRZ0Jf4OxSJxHgaFF/4QsPbSr4UKlW5xrlly0
-        Ixnov85zw42xnKVKQ9KjpWE=
-X-Google-Smtp-Source: APXvYqwjv9db2C/SI+RYLECwBslf3dk7suinFIGSgC4vafKyrWNuGQounyN3TNeocUNWoijzLOLrXQ==
-X-Received: by 2002:a25:3c6:: with SMTP id 189mr8078531ybd.450.1570377809955;
-        Sun, 06 Oct 2019 09:03:29 -0700 (PDT)
-Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id y129sm3341816ywy.41.2019.10.06.09.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 09:03:29 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     jic23@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
-        david@lechnology.com,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v4 1/2] counter: Simplify the count_read and count_write callbacks
-Date:   Sun,  6 Oct 2019 12:03:10 -0400
-Message-Id: <7c129bd95675412e21c7a54e366e21723cac94ea.1570377521.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1570377521.git.vilhelm.gray@gmail.com>
-References: <cover.1570377521.git.vilhelm.gray@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uq1yTMjJxVrrmQg6Vw7e0l/Q44DjBU8KLu0PbdRO8wI=;
+        b=PXPev3LIrLmx45SH1WILBRIIQjMPP1iiiSO4pFfV238vQH9CL2MR5fQKrkoh/TjQk3
+         FiQ071bAbILbmAaIobmSoPtYqNp8n2Pngna7a/mh4UNKi9bkawJu50bw9n9BUoKdGCgg
+         /7EhvtGiB962r8ldTseYRpkEFUqaiSdm4UVZMVex4Uh/fMjpH2fY3VwgV1A6e3dLar/4
+         kYodhphvNgbuxS9PGrPGQWfRlHkAv0G/JoDvHkfAtUXVmIHdma3yK74GlA+R+sh5MNrd
+         VCRJBrVXGDbMK2jSiES9FPFHEjrEhpGEYxfGHR51zHOfE1zKLmg1L9MAGG+L13zssNzm
+         ZU8g==
+X-Gm-Message-State: APjAAAUjutuWjv8vgVre9GvxiVXOQWWVPnEqc+RDLBtjqA6DteqCfdCl
+        9mngu19SC6xuzyPEHE95T6JE/sPghaCcR04wyJM=
+X-Google-Smtp-Source: APXvYqxYxmm18GiZo9LTURV0DeVetqvs2lC+HHaIrXaZmVBQdwcNQc1Zyo2qUwm0TfqQgza30ipGxvnE2PN8mWs1RMk=
+X-Received: by 2002:ab0:e10:: with SMTP id g16mr135473uak.42.1570377817752;
+ Sun, 06 Oct 2019 09:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191006023254.23841-1-aford173@gmail.com> <CAGm1_ksBaEN0OWR+dTwT9SgoybtnchcCKasjXf5ybP2fZfRF7A@mail.gmail.com>
+ <CAHCN7xLgTiXxLrW4njTT8Zaiib6+F4xo07wk0-sQp8h+j=E3yw@mail.gmail.com>
+ <CAGm1_kuPbOLYUfGBHp5TEf9wtF5fQOMcEfLTVCp6uSHJo-YKZQ@mail.gmail.com> <CAHCN7xKihTMqK537Kph-xkzdeovsOQQ1VR7t2fxfTgWjZJxFgQ@mail.gmail.com>
+In-Reply-To: <CAHCN7xKihTMqK537Kph-xkzdeovsOQQ1VR7t2fxfTgWjZJxFgQ@mail.gmail.com>
+From:   Yegor Yefremov <yegorslists@googlemail.com>
+Date:   Sun, 6 Oct 2019 18:03:27 +0200
+Message-ID: <CAGm1_kum6070b_TWrajva8e9rBL1-1QX+k=pTqvZjoS2vKYF9A@mail.gmail.com>
+Subject: Re: [PATCH] serial: 8250_omap: Fix gpio check for auto RTS and CTS
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-serial@vger.kernel.org, Adam Ford <adam.ford@logicpd.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Vignesh R <vigneshr@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>,
+        Stefan Roese <sr@denx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The count_read and count_write callbacks are simplified to pass val as
-unsigned long rather than as an opaque data structure. The opaque
-counter_count_read_value and counter_count_write_value structures,
-counter_count_value_type enum, and relevant counter_count_read_value_set
-and counter_count_write_value_get functions, are removed as they are no
-longer used.
+On Sun, Oct 6, 2019 at 5:49 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Sun, Oct 6, 2019 at 7:34 AM Yegor Yefremov
+> <yegorslists@googlemail.com> wrote:
+> >
+> > On Sun, Oct 6, 2019 at 1:38 PM Adam Ford <aford173@gmail.com> wrote:
+> > >
+> > > On Sun, Oct 6, 2019 at 6:21 AM Yegor Yefremov
+> > > <yegorslists@googlemail.com> wrote:
+> > > >
+> > > > Hi Adam,
+> > > >
+> > > > On Sun, Oct 6, 2019 at 4:33 AM Adam Ford <aford173@gmail.com> wrote:
+> > > > >
+> > > > > There are two checks to see if the manual gpio is configured, but
+> > > > > these the check is seeing if the structure is NULL instead it
+> > > > > should check to see if there are CTS and/or RTS pins defined.
+> > > > >
+> > > > > This patch uses checks for those individual pins instead of
+> > > > > checking for the structure itself.
+> > > diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+> > index e682390..d5fdb71 100644
+> > --- a/drivers/tty/serial/8250/8250_core.c
+> > +++ b/drivers/tty/serial/8250/8250_core.c
+> > @@ -1031,6 +1031,8 @@ int serial8250_register_8250_port(struct
+> > uart_8250_port *up)
+> >                         } else {
+> >                                 uart->gpios = gpios;
+> >                         }
+> > +               } else {
+> > +                       uart->gpios = NULL;
+> >                 }
+> >
+> >                 serial8250_set_defaults(uart);
+> > > >
+> > > > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > > >
+> > > > > diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+> > > > > index c68e2b3a1634..836e736ae188 100644
+> > > > > --- a/drivers/tty/serial/8250/8250_omap.c
+> > > > > +++ b/drivers/tty/serial/8250/8250_omap.c
+> > > > > @@ -141,7 +141,7 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+> > > > >
+> > > > >         serial8250_do_set_mctrl(port, mctrl);
+> > > > >
+> > > > > -       if (!up->gpios) {
+> > > > > +       if (!mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS)) {
+> > > > >                 /*
+> > > > >                  * Turn off autoRTS if RTS is lowered and restore autoRTS
+> > > > >                  * setting if RTS is raised
+> > > > > @@ -456,7 +456,8 @@ static void omap_8250_set_termios(struct uart_port *port,
+> > > > >         up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
+> > > > >
+> > > > >         if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
+> > > > > -           !up->gpios) {
+> > > > > +           !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS) &&
+> > > > > +           !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_CTS)) {
+> > > > >                 /* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
+> > > > >                 up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
+> > > > >                 priv->efr |= UART_EFR_CTS;
+> > > >
+> > > > Looks good to me but !up->gpios must remain as otherwise, we will get
+> > > > NULL pointer dereference. What do you think?
+>
+> What we if add a check to make sure we deference it?  I was thinking
+> something like:
+>
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c
+> b/drivers/tty/serial/serial_mctrl_gpio.c
+> index d9074303c88e..fb4781292d40 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -66,6 +66,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+>  struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+>                                       enum mctrl_gpio_idx gidx)
+>  {
+> +       if (gpios == NULL)
+> +               return NULL;
+> +
+>         return gpios->gpio[gidx];
+>  }
+>  EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
+>
+> This should make my previous patch tolerate situations where gpios is
+> NULL.  It also explictly looks for conditions where the gpios are
+> manually configured for RTS and/or CTS.
 
-Cc: David Lechner <david@lechnology.com>
-Cc: Patrick Havelange <patrick.havelange@essensium.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/counter/104-quad-8.c        |  33 +++------
- drivers/counter/counter.c           | 101 +++++-----------------------
- drivers/counter/ftm-quaddec.c       |  14 ++--
- drivers/counter/stm32-lptimer-cnt.c |   5 +-
- drivers/counter/stm32-timer-cnt.c   |  17 ++---
- drivers/counter/ti-eqep.c           |  19 ++----
- include/linux/counter.h             |  74 +++-----------------
- 7 files changed, 51 insertions(+), 212 deletions(-)
+I like this idea. This would solve my concern.
 
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 00b113f4b958..17e67a84777d 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -562,11 +562,10 @@ static const struct iio_chan_spec quad8_channels[] = {
- };
- 
- static int quad8_signal_read(struct counter_device *counter,
--	struct counter_signal *signal, struct counter_signal_read_value *val)
-+	struct counter_signal *signal, enum counter_signal_value *val)
- {
- 	const struct quad8_iio *const priv = counter->priv;
- 	unsigned int state;
--	enum counter_signal_level level;
- 
- 	/* Only Index signal levels can be read */
- 	if (signal->id < 16)
-@@ -575,22 +574,19 @@ static int quad8_signal_read(struct counter_device *counter,
- 	state = inb(priv->base + QUAD8_REG_INDEX_INPUT_LEVELS)
- 		& BIT(signal->id - 16);
- 
--	level = (state) ? COUNTER_SIGNAL_LEVEL_HIGH : COUNTER_SIGNAL_LEVEL_LOW;
--
--	counter_signal_read_value_set(val, COUNTER_SIGNAL_LEVEL, &level);
-+	*val = (state) ? COUNTER_SIGNAL_HIGH : COUNTER_SIGNAL_LOW;
- 
- 	return 0;
- }
- 
- static int quad8_count_read(struct counter_device *counter,
--	struct counter_count *count, struct counter_count_read_value *val)
-+	struct counter_count *count, unsigned long *val)
- {
- 	const struct quad8_iio *const priv = counter->priv;
- 	const int base_offset = priv->base + 2 * count->id;
- 	unsigned int flags;
- 	unsigned int borrow;
- 	unsigned int carry;
--	unsigned long position;
- 	int i;
- 
- 	flags = inb(base_offset + 1);
-@@ -598,36 +594,27 @@ static int quad8_count_read(struct counter_device *counter,
- 	carry = !!(flags & QUAD8_FLAG_CT);
- 
- 	/* Borrow XOR Carry effectively doubles count range */
--	position = (unsigned long)(borrow ^ carry) << 24;
-+	*val = (unsigned long)(borrow ^ carry) << 24;
- 
- 	/* Reset Byte Pointer; transfer Counter to Output Latch */
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_CNTR_OUT,
- 	     base_offset + 1);
- 
- 	for (i = 0; i < 3; i++)
--		position |= (unsigned long)inb(base_offset) << (8 * i);
--
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &position);
-+		*val |= (unsigned long)inb(base_offset) << (8 * i);
- 
- 	return 0;
- }
- 
- static int quad8_count_write(struct counter_device *counter,
--	struct counter_count *count, struct counter_count_write_value *val)
-+	struct counter_count *count, unsigned long val)
- {
- 	const struct quad8_iio *const priv = counter->priv;
- 	const int base_offset = priv->base + 2 * count->id;
--	int err;
--	unsigned long position;
- 	int i;
- 
--	err = counter_count_write_value_get(&position, COUNTER_COUNT_POSITION,
--					    val);
--	if (err)
--		return err;
--
- 	/* Only 24-bit values are supported */
--	if (position > 0xFFFFFF)
-+	if (val > 0xFFFFFF)
- 		return -EINVAL;
- 
- 	/* Reset Byte Pointer */
-@@ -635,7 +622,7 @@ static int quad8_count_write(struct counter_device *counter,
- 
- 	/* Counter can only be set via Preset Register */
- 	for (i = 0; i < 3; i++)
--		outb(position >> (8 * i), base_offset);
-+		outb(val >> (8 * i), base_offset);
- 
- 	/* Transfer Preset Register to Counter */
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_PRESET_CNTR, base_offset + 1);
-@@ -644,9 +631,9 @@ static int quad8_count_write(struct counter_device *counter,
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
- 
- 	/* Set Preset Register back to original value */
--	position = priv->preset[count->id];
-+	val = priv->preset[count->id];
- 	for (i = 0; i < 3; i++)
--		outb(position >> (8 * i), base_offset);
-+		outb(val >> (8 * i), base_offset);
- 
- 	/* Reset Borrow, Carry, Compare, and Sign flags */
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_FLAGS, base_offset + 1);
-diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
-index 106bc7180cd8..6a683d086008 100644
---- a/drivers/counter/counter.c
-+++ b/drivers/counter/counter.c
-@@ -220,86 +220,6 @@ ssize_t counter_device_enum_available_read(struct counter_device *counter,
- }
- EXPORT_SYMBOL_GPL(counter_device_enum_available_read);
- 
--static const char *const counter_signal_level_str[] = {
--	[COUNTER_SIGNAL_LEVEL_LOW] = "low",
--	[COUNTER_SIGNAL_LEVEL_HIGH] = "high"
--};
--
--/**
-- * counter_signal_read_value_set - set counter_signal_read_value data
-- * @val:	counter_signal_read_value structure to set
-- * @type:	property Signal data represents
-- * @data:	Signal data
-- *
-- * This function sets an opaque counter_signal_read_value structure with the
-- * provided Signal data.
-- */
--void counter_signal_read_value_set(struct counter_signal_read_value *const val,
--				   const enum counter_signal_value_type type,
--				   void *const data)
--{
--	if (type == COUNTER_SIGNAL_LEVEL)
--		val->len = sprintf(val->buf, "%s\n",
--				   counter_signal_level_str[*(enum counter_signal_level *)data]);
--	else
--		val->len = 0;
--}
--EXPORT_SYMBOL_GPL(counter_signal_read_value_set);
--
--/**
-- * counter_count_read_value_set - set counter_count_read_value data
-- * @val:	counter_count_read_value structure to set
-- * @type:	property Count data represents
-- * @data:	Count data
-- *
-- * This function sets an opaque counter_count_read_value structure with the
-- * provided Count data.
-- */
--void counter_count_read_value_set(struct counter_count_read_value *const val,
--				  const enum counter_count_value_type type,
--				  void *const data)
--{
--	switch (type) {
--	case COUNTER_COUNT_POSITION:
--		val->len = sprintf(val->buf, "%lu\n", *(unsigned long *)data);
--		break;
--	default:
--		val->len = 0;
--	}
--}
--EXPORT_SYMBOL_GPL(counter_count_read_value_set);
--
--/**
-- * counter_count_write_value_get - get counter_count_write_value data
-- * @data:	Count data
-- * @type:	property Count data represents
-- * @val:	counter_count_write_value structure containing data
-- *
-- * This function extracts Count data from the provided opaque
-- * counter_count_write_value structure and stores it at the address provided by
-- * @data.
-- *
-- * RETURNS:
-- * 0 on success, negative error number on failure.
-- */
--int counter_count_write_value_get(void *const data,
--				  const enum counter_count_value_type type,
--				  const struct counter_count_write_value *const val)
--{
--	int err;
--
--	switch (type) {
--	case COUNTER_COUNT_POSITION:
--		err = kstrtoul(val->buf, 0, data);
--		if (err)
--			return err;
--		break;
--	}
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(counter_count_write_value_get);
--
- struct counter_attr_parm {
- 	struct counter_device_attr_group *group;
- 	const char *prefix;
-@@ -369,6 +289,11 @@ struct counter_signal_unit {
- 	struct counter_signal *signal;
- };
- 
-+static const char *const counter_signal_value_str[] = {
-+	[COUNTER_SIGNAL_LOW] = "low",
-+	[COUNTER_SIGNAL_HIGH] = "high"
-+};
-+
- static ssize_t counter_signal_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -377,13 +302,13 @@ static ssize_t counter_signal_show(struct device *dev,
- 	const struct counter_signal_unit *const component = devattr->component;
- 	struct counter_signal *const signal = component->signal;
- 	int err;
--	struct counter_signal_read_value val = { .buf = buf };
-+	enum counter_signal_value val;
- 
- 	err = counter->ops->signal_read(counter, signal, &val);
- 	if (err)
- 		return err;
- 
--	return val.len;
-+	return sprintf(buf, "%s\n", counter_signal_value_str[val]);
- }
- 
- struct counter_name_unit {
-@@ -788,13 +713,13 @@ static ssize_t counter_count_show(struct device *dev,
- 	const struct counter_count_unit *const component = devattr->component;
- 	struct counter_count *const count = component->count;
- 	int err;
--	struct counter_count_read_value val = { .buf = buf };
-+	unsigned long val;
- 
- 	err = counter->ops->count_read(counter, count, &val);
- 	if (err)
- 		return err;
- 
--	return val.len;
-+	return sprintf(buf, "%lu\n", val);
- }
- 
- static ssize_t counter_count_store(struct device *dev,
-@@ -806,9 +731,13 @@ static ssize_t counter_count_store(struct device *dev,
- 	const struct counter_count_unit *const component = devattr->component;
- 	struct counter_count *const count = component->count;
- 	int err;
--	struct counter_count_write_value val = { .buf = buf };
-+	unsigned long val;
-+
-+	err = kstrtoul(buf, 0, &val);
-+	if (err)
-+		return err;
- 
--	err = counter->ops->count_write(counter, count, &val);
-+	err = counter->ops->count_write(counter, count, val);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-index 4046aa9f9234..c2b3fdfd8b77 100644
---- a/drivers/counter/ftm-quaddec.c
-+++ b/drivers/counter/ftm-quaddec.c
-@@ -178,31 +178,25 @@ static const enum counter_count_function ftm_quaddec_count_functions[] = {
- 
- static int ftm_quaddec_count_read(struct counter_device *counter,
- 				  struct counter_count *count,
--				  struct counter_count_read_value *val)
-+				  unsigned long *val)
- {
- 	struct ftm_quaddec *const ftm = counter->priv;
- 	uint32_t cntval;
- 
- 	ftm_read(ftm, FTM_CNT, &cntval);
- 
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cntval);
-+	*val = cntval;
- 
- 	return 0;
- }
- 
- static int ftm_quaddec_count_write(struct counter_device *counter,
- 				   struct counter_count *count,
--				   struct counter_count_write_value *val)
-+				   const unsigned long val)
- {
- 	struct ftm_quaddec *const ftm = counter->priv;
--	u32 cnt;
--	int err;
- 
--	err = counter_count_write_value_get(&cnt, COUNTER_COUNT_POSITION, val);
--	if (err)
--		return err;
--
--	if (cnt != 0) {
-+	if (val != 0) {
- 		dev_warn(&ftm->pdev->dev, "Can only accept '0' as new counter value\n");
- 		return -EINVAL;
- 	}
-diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
-index 28b63645c411..8e276eb655f5 100644
---- a/drivers/counter/stm32-lptimer-cnt.c
-+++ b/drivers/counter/stm32-lptimer-cnt.c
-@@ -377,8 +377,7 @@ static enum counter_synapse_action stm32_lptim_cnt_synapse_actions[] = {
- };
- 
- static int stm32_lptim_cnt_read(struct counter_device *counter,
--				struct counter_count *count,
--				struct counter_count_read_value *val)
-+				struct counter_count *count, unsigned long *val)
- {
- 	struct stm32_lptim_cnt *const priv = counter->priv;
- 	u32 cnt;
-@@ -388,7 +387,7 @@ static int stm32_lptim_cnt_read(struct counter_device *counter,
- 	if (ret)
- 		return ret;
- 
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cnt);
-+	*val = cnt;
- 
- 	return 0;
- }
-diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-index b61135b63ee8..3eafccec3beb 100644
---- a/drivers/counter/stm32-timer-cnt.c
-+++ b/drivers/counter/stm32-timer-cnt.c
-@@ -48,34 +48,27 @@ static enum counter_count_function stm32_count_functions[] = {
- };
- 
- static int stm32_count_read(struct counter_device *counter,
--			    struct counter_count *count,
--			    struct counter_count_read_value *val)
-+			    struct counter_count *count, unsigned long *val)
- {
- 	struct stm32_timer_cnt *const priv = counter->priv;
- 	u32 cnt;
- 
- 	regmap_read(priv->regmap, TIM_CNT, &cnt);
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cnt);
-+	*val = cnt;
- 
- 	return 0;
- }
- 
- static int stm32_count_write(struct counter_device *counter,
- 			     struct counter_count *count,
--			     struct counter_count_write_value *val)
-+			     const unsigned long val)
- {
- 	struct stm32_timer_cnt *const priv = counter->priv;
--	u32 cnt;
--	int err;
--
--	err = counter_count_write_value_get(&cnt, COUNTER_COUNT_POSITION, val);
--	if (err)
--		return err;
- 
--	if (cnt > priv->ceiling)
-+	if (val > priv->ceiling)
- 		return -EINVAL;
- 
--	return regmap_write(priv->regmap, TIM_CNT, cnt);
-+	return regmap_write(priv->regmap, TIM_CNT, val);
- }
- 
- static int stm32_count_function_get(struct counter_device *counter,
-diff --git a/drivers/counter/ti-eqep.c b/drivers/counter/ti-eqep.c
-index 4b3ef2449c06..1ff07faef27f 100644
---- a/drivers/counter/ti-eqep.c
-+++ b/drivers/counter/ti-eqep.c
-@@ -93,35 +93,28 @@ struct ti_eqep_cnt {
- };
- 
- static int ti_eqep_count_read(struct counter_device *counter,
--			      struct counter_count *count,
--			      struct counter_count_read_value *val)
-+			      struct counter_count *count, unsigned long *val)
- {
- 	struct ti_eqep_cnt *priv = counter->priv;
- 	u32 cnt;
- 
- 	regmap_read(priv->regmap32, QPOSCNT, &cnt);
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cnt);
-+	*val = cnt;
- 
- 	return 0;
- }
- 
- static int ti_eqep_count_write(struct counter_device *counter,
--			       struct counter_count *count,
--			       struct counter_count_write_value *val)
-+			       struct counter_count *count, unsigned long val)
- {
- 	struct ti_eqep_cnt *priv = counter->priv;
--	u32 cnt, max;
--	int err;
--
--	err = counter_count_write_value_get(&cnt, COUNTER_COUNT_POSITION, val);
--	if (err)
--		return err;
-+	u32 max;
- 
- 	regmap_read(priv->regmap32, QPOSMAX, &max);
--	if (cnt > max)
-+	if (val > max)
- 		return -EINVAL;
- 
--	return regmap_write(priv->regmap32, QPOSCNT, cnt);
-+	return regmap_write(priv->regmap32, QPOSCNT, val);
- }
- 
- static int ti_eqep_function_get(struct counter_device *counter,
-diff --git a/include/linux/counter.h b/include/linux/counter.h
-index a061cdcdef7c..32fb4d8cc3fd 100644
---- a/include/linux/counter.h
-+++ b/include/linux/counter.h
-@@ -290,53 +290,22 @@ struct counter_device_state {
- 	const struct attribute_group **groups;
- };
- 
--/**
-- * struct counter_signal_read_value - Opaque Signal read value
-- * @buf:	string representation of Signal read value
-- * @len:	length of string in @buf
-- */
--struct counter_signal_read_value {
--	char *buf;
--	size_t len;
--};
--
--/**
-- * struct counter_count_read_value - Opaque Count read value
-- * @buf:	string representation of Count read value
-- * @len:	length of string in @buf
-- */
--struct counter_count_read_value {
--	char *buf;
--	size_t len;
--};
--
--/**
-- * struct counter_count_write_value - Opaque Count write value
-- * @buf:	string representation of Count write value
-- */
--struct counter_count_write_value {
--	const char *buf;
-+enum counter_signal_value {
-+	COUNTER_SIGNAL_LOW = 0,
-+	COUNTER_SIGNAL_HIGH
- };
- 
- /**
-  * struct counter_ops - Callbacks from driver
-  * @signal_read:	optional read callback for Signal attribute. The read
-  *			value of the respective Signal should be passed back via
-- *			the val parameter. val points to an opaque type which
-- *			should be set only by calling the
-- *			counter_signal_read_value_set function from within the
-- *			signal_read callback.
-+ *			the val parameter.
-  * @count_read:		optional read callback for Count attribute. The read
-  *			value of the respective Count should be passed back via
-- *			the val parameter. val points to an opaque type which
-- *			should be set only by calling the
-- *			counter_count_read_value_set function from within the
-- *			count_read callback.
-+ *			the val parameter.
-  * @count_write:	optional write callback for Count attribute. The write
-  *			value for the respective Count is passed in via the val
-- *			parameter. val points to an opaque type which should be
-- *			accessed only by calling the
-- *			counter_count_write_value_get function.
-+ *			parameter.
-  * @function_get:	function to get the current count function mode. Returns
-  *			0 on success and negative error code on error. The index
-  *			of the respective Count's returned function mode should
-@@ -355,13 +324,11 @@ struct counter_count_write_value {
- struct counter_ops {
- 	int (*signal_read)(struct counter_device *counter,
- 			   struct counter_signal *signal,
--			   struct counter_signal_read_value *val);
-+			   enum counter_signal_value *val);
- 	int (*count_read)(struct counter_device *counter,
--			  struct counter_count *count,
--			  struct counter_count_read_value *val);
-+			  struct counter_count *count, unsigned long *val);
- 	int (*count_write)(struct counter_device *counter,
--			   struct counter_count *count,
--			   struct counter_count_write_value *val);
-+			   struct counter_count *count, unsigned long val);
- 	int (*function_get)(struct counter_device *counter,
- 			    struct counter_count *count, size_t *function);
- 	int (*function_set)(struct counter_device *counter,
-@@ -477,29 +444,6 @@ struct counter_device {
- 	void *priv;
- };
- 
--enum counter_signal_level {
--	COUNTER_SIGNAL_LEVEL_LOW = 0,
--	COUNTER_SIGNAL_LEVEL_HIGH
--};
--
--enum counter_signal_value_type {
--	COUNTER_SIGNAL_LEVEL = 0
--};
--
--enum counter_count_value_type {
--	COUNTER_COUNT_POSITION = 0,
--};
--
--void counter_signal_read_value_set(struct counter_signal_read_value *const val,
--				   const enum counter_signal_value_type type,
--				   void *const data);
--void counter_count_read_value_set(struct counter_count_read_value *const val,
--				  const enum counter_count_value_type type,
--				  void *const data);
--int counter_count_write_value_get(void *const data,
--				  const enum counter_count_value_type type,
--				  const struct counter_count_write_value *const val);
--
- int counter_register(struct counter_device *const counter);
- void counter_unregister(struct counter_device *const counter);
- int devm_counter_register(struct device *dev,
--- 
-2.23.0
+Yegor
 
+> > >
+> > > I was not seeing up->gpios ever NULL so the contents inside the check
+> > > never was executed.  When I removed the check, the performance came
+> > > back.  I looked at examples on how other devices checked for RTS and
+> > > CTS, and I noticed that the Atmel serial driver did something like the
+> > > above.
+> > >
+> > > >
+> > > > Also adding some more people who can be interested in testing this approach.
+> > >
+> > > I am open for ideas.  If something is better, but something is either
+> > > incorrectly setting up->gpios to non-NULL or the check for non-NULL is
+> > > wrong.
+> >
+> > I wonder whether we forgot to add this assignment for the ACPI systems:
+> >
+>
+> I unwound my patch and applied your patch instead, but it is back to
+> having corrupt frames again.
+>
+> > diff --git a/drivers/tty/serial/8250/8250_core.c
+> > b/drivers/tty/serial/8250/8250_core.c
+> > index e682390..d5fdb71 100644
+> > --- a/drivers/tty/serial/8250/8250_core.c
+> > +++ b/drivers/tty/serial/8250/8250_core.c
+> > @@ -1031,6 +1031,8 @@ int serial8250_register_8250_port(struct
+> > uart_8250_port *up)
+> >                         } else {
+> >                                 uart->gpios = gpios;
+> >                         }
+> > +               } else {
+> > +                       uart->gpios = NULL;
+> >                 }
+> >
+> I did not check the value of uart->gpios after this patch, but since
+> the flow control code isn't executing, I am guessing it's still not
+> NULL.
+> >                 serial8250_set_defaults(uart);
+>
+> adam
