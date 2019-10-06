@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62584ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C29C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3374220835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A988122499
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384246;
-	bh=k8Gkfh4WylF2EMw5TxX8IpC/R8y9n/0WnDmd5d6JUh0=;
+	s=default; t=1570384253;
+	bh=rVZbbjAhkHux7zJ+PirVH6htCfn1dxxVKBY20QsjSAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ThsvGXZ2szj0bMcufIob1jGZrPv+u283oOggDcG7zZJaYKNTU8SmjrSFSTmaSnzLG
-	 NZmEjpe91V7t6AFEziq+NIe57dmaRSXf8KkyJYWsNb8nU9s6v5pCTL1ahV3X6M892w
-	 Hx1JVsiXhg8JFJOucX3aY/FDRau/mcC3LyAdHG9E=
+	b=HhdsiC6GLda/u4zVlEPLt8f+R+A2KNm+0Va5n+zEpZ3j1LKPfQRb1VYDfFE8zqRON
+	 XTrcpAmxxL5rmiWBoelizoq8xs5lX87Y0W1XSN4hxar/y0wru+kCq+u7XiDL+3ACxB
+	 e6YHn//8MnjGhDm5ALieV+NmKOcox11jHAF2sd/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfJFRkY (ORCPT
+        id S1729981AbfJFRkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39894 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbfJFRkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:21 -0400
+        id S1729336AbfJFRkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F27F720700;
-        Sun,  6 Oct 2019 17:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A08B20700;
+        Sun,  6 Oct 2019 17:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383620;
-        bh=k8Gkfh4WylF2EMw5TxX8IpC/R8y9n/0WnDmd5d6JUh0=;
+        s=default; t=1570383610;
+        bh=rVZbbjAhkHux7zJ+PirVH6htCfn1dxxVKBY20QsjSAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7t1JIES73B8xSiH5IcmnTY/EM4UhTiZ65gSpFFP7KZeurSoHiAlfgjKZdRjozY63
-         oK/DXXfxoIKAkXjQHOWdtvBx3rbE/yoMiLLuYqNzNHzKKMxTrYEvsxPMRBOUI3bzv6
-         arqqV3k/caRCo+zXm/awl63uaZ81ehMd8n2hFAlI=
+        b=fCjEz0QMcAXsCKjlu70A3ADMVrph03A0mZfC3dNtkjKEyvjrA82XYN94blXsCqYU8
+         lhTP5XLkQ1Yhfrdj6894LiYkNuW2nk65tmyQZvqxy9Q5ZgY+KPdKYm8A15e10ek/jZ
+         waDPUjHyCeDXvSv0nQdSi5wdSegTSdhy9jYnuSlo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alistair Popple <alistair@popple.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 032/166] powerpc/powernv/ioda2: Allocate TCE table levels on demand for default DMA window
-Date:   Sun,  6 Oct 2019 19:19:58 +0200
-Message-Id: <20191006171215.684053241@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 003/166] drm/bridge: tc358767: Increase AUX transfer length limit
+Date:   Sun,  6 Oct 2019 19:19:29 +0200
+Message-Id: <20191006171213.063117533@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,259 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit c37c792dec0929dbb6360a609fb00fa20bb16fc2 ]
+[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
 
-We allocate only the first level of multilevel TCE tables for KVM
-already (alloc_userspace_copy==true), and the rest is allocated on demand.
-This is not enabled though for bare metal.
+According to the datasheet tc358767 can transfer up to 16 bytes via
+its AUX channel, so the artificial limit of 8 appears to be too
+low. However only up to 15-bytes seem to be actually supported and
+trying to use 16-byte transfers results in transfers failing
+sporadically (with bogus status in case of I2C transfers), so limit it
+to 15.
 
-This removes the KVM limitation (implicit, via the alloc_userspace_copy
-parameter) and always allocates just the first level. The on-demand
-allocation of missing levels is already implemented.
-
-As from now on DMA map might happen with disabled interrupts, this
-allocates TCEs with GFP_ATOMIC; otherwise lockdep reports errors 1].
-In practice just a single page is allocated there so chances for failure
-are quite low.
-
-To save time when creating a new clean table, this skips non-allocated
-indirect TCE entries in pnv_tce_free just like we already do in
-the VFIO IOMMU TCE driver.
-
-This changes the default level number from 1 to 2 to reduce the amount
-of memory required for the default 32bit DMA window at the boot time.
-The default window size is up to 2GB which requires 4MB of TCEs which is
-unlikely to be used entirely or at all as most devices these days are
-64bit capable so by switching to 2 levels by default we save 4032KB of
-RAM per a device.
-
-While at this, add __GFP_NOWARN to alloc_pages_node() as the userspace
-can trigger this path via VFIO, see the failure and try creating a table
-again with different parameters which might succeed.
-
-[1]:
-===
-BUG: sleeping function called from invalid context at mm/page_alloc.c:4596
-in_atomic(): 1, irqs_disabled(): 1, pid: 1038, name: scsi_eh_1
-2 locks held by scsi_eh_1/1038:
- #0: 000000005efd659a (&host->eh_mutex){+.+.}, at: ata_eh_acquire+0x34/0x80
- #1: 0000000006cf56a6 (&(&host->lock)->rlock){....}, at: ata_exec_internal_sg+0xb0/0x5c0
-irq event stamp: 500
-hardirqs last  enabled at (499): [<c000000000cb8a74>] _raw_spin_unlock_irqrestore+0x94/0xd0
-hardirqs last disabled at (500): [<c000000000cb85c4>] _raw_spin_lock_irqsave+0x44/0x120
-softirqs last  enabled at (0): [<c000000000101120>] copy_process.isra.4.part.5+0x640/0x1a80
-softirqs last disabled at (0): [<0000000000000000>] 0x0
-CPU: 73 PID: 1038 Comm: scsi_eh_1 Not tainted 5.2.0-rc6-le_nv2_aikATfstn1-p1 #634
-Call Trace:
-[c000003d064cef50] [c000000000c8e6c4] dump_stack+0xe8/0x164 (unreliable)
-[c000003d064cefa0] [c00000000014ed78] ___might_sleep+0x2f8/0x310
-[c000003d064cf020] [c0000000003ca084] __alloc_pages_nodemask+0x2a4/0x1560
-[c000003d064cf220] [c0000000000c2530] pnv_alloc_tce_level.isra.0+0x90/0x130
-[c000003d064cf290] [c0000000000c2888] pnv_tce+0x128/0x3b0
-[c000003d064cf360] [c0000000000c2c00] pnv_tce_build+0xb0/0xf0
-[c000003d064cf3c0] [c0000000000bbd9c] pnv_ioda2_tce_build+0x3c/0xb0
-[c000003d064cf400] [c00000000004cfe0] ppc_iommu_map_sg+0x210/0x550
-[c000003d064cf510] [c00000000004b7a4] dma_iommu_map_sg+0x74/0xb0
-[c000003d064cf530] [c000000000863944] ata_qc_issue+0x134/0x470
-[c000003d064cf5b0] [c000000000863ec4] ata_exec_internal_sg+0x244/0x5c0
-[c000003d064cf700] [c0000000008642d0] ata_exec_internal+0x90/0xe0
-[c000003d064cf780] [c0000000008650ac] ata_dev_read_id+0x2ec/0x640
-[c000003d064cf8d0] [c000000000878e28] ata_eh_recover+0x948/0x16d0
-[c000003d064cfa10] [c00000000087d760] sata_pmp_error_handler+0x480/0xbf0
-[c000003d064cfbc0] [c000000000884624] ahci_error_handler+0x74/0xe0
-[c000003d064cfbf0] [c000000000879fa8] ata_scsi_port_error_handler+0x2d8/0x7c0
-[c000003d064cfca0] [c00000000087a544] ata_scsi_error+0xb4/0x100
-[c000003d064cfd00] [c000000000802450] scsi_error_handler+0x120/0x510
-[c000003d064cfdb0] [c000000000140c48] kthread+0x1b8/0x1c0
-[c000003d064cfe20] [c00000000000bd8c] ret_from_kernel_thread+0x5c/0x70
-ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-irq event stamp: 2305
-
-========================================================
-hardirqs last  enabled at (2305): [<c00000000000e4c8>] fast_exc_return_irq+0x28/0x34
-hardirqs last disabled at (2303): [<c000000000cb9fd0>] __do_softirq+0x4a0/0x654
-WARNING: possible irq lock inversion dependency detected
-5.2.0-rc6-le_nv2_aikATfstn1-p1 #634 Tainted: G        W
-softirqs last  enabled at (2304): [<c000000000cba054>] __do_softirq+0x524/0x654
-softirqs last disabled at (2297): [<c00000000010f278>] irq_exit+0x128/0x180
---------------------------------------------------------
-swapper/0/0 just changed the state of lock:
-0000000006cf56a6 (&(&host->lock)->rlock){-...}, at: ahci_single_level_irq_intr+0xac/0x120
-but this lock took another, HARDIRQ-unsafe lock in the past:
- (fs_reclaim){+.+.}
-
-and interrupts could create inverse lock ordering between them.
-
-other info that might help us debug this:
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(fs_reclaim);
-                               local_irq_disable();
-                               lock(&(&host->lock)->rlock);
-                               lock(fs_reclaim);
-  <Interrupt>
-    lock(&(&host->lock)->rlock);
-
- *** DEADLOCK ***
-
-no locks held by swapper/0/0.
-
-the shortest dependencies between 2nd lock and 1st lock:
- -> (fs_reclaim){+.+.} ops: 167579 {
-    HARDIRQ-ON-W at:
-                      lock_acquire+0xf8/0x2a0
-                      fs_reclaim_acquire.part.23+0x44/0x60
-                      kmem_cache_alloc_node_trace+0x80/0x590
-                      alloc_desc+0x64/0x270
-                      __irq_alloc_descs+0x2e4/0x3a0
-                      irq_domain_alloc_descs+0xb0/0x150
-                      irq_create_mapping+0x168/0x2c0
-                      xics_smp_probe+0x2c/0x98
-                      pnv_smp_probe+0x40/0x9c
-                      smp_prepare_cpus+0x524/0x6c4
-                      kernel_init_freeable+0x1b4/0x650
-                      kernel_init+0x2c/0x148
-                      ret_from_kernel_thread+0x5c/0x70
-    SOFTIRQ-ON-W at:
-                      lock_acquire+0xf8/0x2a0
-                      fs_reclaim_acquire.part.23+0x44/0x60
-                      kmem_cache_alloc_node_trace+0x80/0x590
-                      alloc_desc+0x64/0x270
-                      __irq_alloc_descs+0x2e4/0x3a0
-                      irq_domain_alloc_descs+0xb0/0x150
-                      irq_create_mapping+0x168/0x2c0
-                      xics_smp_probe+0x2c/0x98
-                      pnv_smp_probe+0x40/0x9c
-                      smp_prepare_cpus+0x524/0x6c4
-                      kernel_init_freeable+0x1b4/0x650
-                      kernel_init+0x2c/0x148
-                      ret_from_kernel_thread+0x5c/0x70
-    INITIAL USE at:
-                     lock_acquire+0xf8/0x2a0
-                     fs_reclaim_acquire.part.23+0x44/0x60
-                     kmem_cache_alloc_node_trace+0x80/0x590
-                     alloc_desc+0x64/0x270
-                     __irq_alloc_descs+0x2e4/0x3a0
-                     irq_domain_alloc_descs+0xb0/0x150
-                     irq_create_mapping+0x168/0x2c0
-                     xics_smp_probe+0x2c/0x98
-                     pnv_smp_probe+0x40/0x9c
-                     smp_prepare_cpus+0x524/0x6c4
-                     kernel_init_freeable+0x1b4/0x650
-                     kernel_init+0x2c/0x148
-                     ret_from_kernel_thread+0x5c/0x70
-  }
-===
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Alistair Popple <alistair@popple.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190718051139.74787-4-aik@ozlabs.ru
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda-tce.c | 20 +++++++++----------
- arch/powerpc/platforms/powernv/pci.h          |  2 +-
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda-tce.c b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-index e28f03e1eb5eb..c75ec37bf0cda 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-@@ -36,7 +36,8 @@ static __be64 *pnv_alloc_tce_level(int nid, unsigned int shift)
- 	struct page *tce_mem = NULL;
- 	__be64 *addr;
- 
--	tce_mem = alloc_pages_node(nid, GFP_KERNEL, shift - PAGE_SHIFT);
-+	tce_mem = alloc_pages_node(nid, GFP_ATOMIC | __GFP_NOWARN,
-+			shift - PAGE_SHIFT);
- 	if (!tce_mem) {
- 		pr_err("Failed to allocate a TCE memory, level shift=%d\n",
- 				shift);
-@@ -161,6 +162,9 @@ void pnv_tce_free(struct iommu_table *tbl, long index, long npages)
- 
- 		if (ptce)
- 			*ptce = cpu_to_be64(0);
-+		else
-+			/* Skip the rest of the level */
-+			i |= tbl->it_level_size - 1;
- 	}
- }
- 
-@@ -260,7 +264,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	unsigned int table_shift = max_t(unsigned int, entries_shift + 3,
- 			PAGE_SHIFT);
- 	const unsigned long tce_table_size = 1UL << table_shift;
--	unsigned int tmplevels = levels;
- 
- 	if (!levels || (levels > POWERNV_IOMMU_MAX_LEVELS))
- 		return -EINVAL;
-@@ -268,9 +271,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	if (!is_power_of_2(window_size))
- 		return -EINVAL;
- 
--	if (alloc_userspace_copy && (window_size > (1ULL << 32)))
--		tmplevels = 1;
--
- 	/* Adjust direct table size from window_size and levels */
- 	entries_shift = (entries_shift + levels - 1) / levels;
- 	level_shift = entries_shift + 3;
-@@ -281,7 +281,7 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 
- 	/* Allocate TCE table */
- 	addr = pnv_pci_ioda2_table_do_alloc_pages(nid, level_shift,
--			tmplevels, tce_table_size, &offset, &total_allocated);
-+			1, tce_table_size, &offset, &total_allocated);
- 
- 	/* addr==NULL means that the first level allocation failed */
- 	if (!addr)
-@@ -292,18 +292,18 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	 * we did not allocate as much as we wanted,
- 	 * release partially allocated table.
- 	 */
--	if (tmplevels == levels && offset < tce_table_size)
-+	if (levels == 1 && offset < tce_table_size)
- 		goto free_tces_exit;
- 
- 	/* Allocate userspace view of the TCE table */
- 	if (alloc_userspace_copy) {
- 		offset = 0;
- 		uas = pnv_pci_ioda2_table_do_alloc_pages(nid, level_shift,
--				tmplevels, tce_table_size, &offset,
-+				1, tce_table_size, &offset,
- 				&total_allocated_uas);
- 		if (!uas)
- 			goto free_tces_exit;
--		if (tmplevels == levels && (offset < tce_table_size ||
-+		if (levels == 1 && (offset < tce_table_size ||
- 				total_allocated_uas != total_allocated))
- 			goto free_uas_exit;
- 	}
-@@ -318,7 +318,7 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 
- 	pr_debug("Created TCE table: ws=%08llx ts=%lx @%08llx base=%lx uas=%p levels=%d/%d\n",
- 			window_size, tce_table_size, bus_offset, tbl->it_base,
--			tbl->it_userspace, tmplevels, levels);
-+			tbl->it_userspace, 1, levels);
- 
- 	return 0;
- 
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 469c244632477..f914f0b14e4e3 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -219,7 +219,7 @@ extern struct iommu_table_group *pnv_npu_compound_attach(
- 		struct pnv_ioda_pe *pe);
- 
- /* pci-ioda-tce.c */
--#define POWERNV_IOMMU_DEFAULT_LEVELS	1
-+#define POWERNV_IOMMU_DEFAULT_LEVELS	2
- #define POWERNV_IOMMU_MAX_LEVELS	5
- 
- extern int pnv_tce_build(struct iommu_table *tbl, long index, long npages,
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index 13ade28a36a8a..b3a7d5f1250c8 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -313,7 +313,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
+ {
+ 	struct tc_data *tc = aux_to_tc(aux);
+-	size_t size = min_t(size_t, 8, msg->size);
++	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+ 	u8 *buf = msg->buffer;
+ 	u32 tmp = 0;
 -- 
 2.20.1
 
