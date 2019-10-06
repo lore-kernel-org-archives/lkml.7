@@ -6,104 +6,87 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD13C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8AFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CD52080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E04A2053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570385222;
-	bh=m4BBRy0bCRgpg2FTvrM5XMjhnhRRdyKZ/3eSot2H4sQ=;
+	s=default; t=1570385293;
+	bh=L9aR50NYBt843MOvRMMcEbVhq2w4fcktV0ZPetbBjvk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E7R4w0mufpqboEWaIjJcOG5U1YCS8ISRu8zlCZRMFpe6rRlwu8MIO/CXDwAuQ2Wca
-	 sXG3zp3oIOsGgPxQY+IEoKyZu0uNgUGYBex/PB/or49w0c86HbArq/DjHZCVnmP2dW
-	 ykF93MmF/e1BBLFdfAF6WoWelTo0amCouuOoHF34=
+	b=kqDqak68MO2x+ZcbGbC4v3BHJ79m3pNsKQqUH7QQoza3JyyomMlaJkS1vtmTRLyYJ
+	 +ljo3AWYozKbwhgxkpWBOAupVFjg4uhIYAeK4Oqy80Hu22hKgcvZTADE5VfNMjvMeq
+	 KWjwDE8oHIZCDyXZy98kOyJdLmJS7qfqKGXepKOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfJFSHB (ORCPT
+        id S1727107AbfJFSIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:07:01 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39537 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfJFSHB (ORCPT
+        Sun, 6 Oct 2019 14:08:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42236 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfJFSIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 14:07:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y3so11291133ljj.6
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:06:58 -0700 (PDT)
+        Sun, 6 Oct 2019 14:08:12 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so11261424lje.9
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LYZhJ8z29L9VXaq40W7IaPRpHSPw3yWamQCRA+/ko3U=;
-        b=bGADQTdQUdcHqbYbNLqk9QwKozcUBscZ2f20slYeCKfCvmhN38YzMKFvX2ufUc7FXY
-         ODiodrltVBR1zqdLTv38xj3MP/5BMFzRTbjwiz51A8ILCCXUKeHQexCepEAVI85inw7X
-         VnAVOK7Rvj9ezJaN6A43dtjOY05DLDXYKJxuQ=
+        bh=flbQh8QSyXP6BbnfTs+H8n25p/Mq0h+HNPEYy/tByz8=;
+        b=P1Zwwo362VmJDYKc/k9YtY16SaVT5xekypy3icdc2I+0UiGXEYThp5IOObvGRn9wGc
+         ye+kUfJYyByYGQlPZMM0S83TLuAaGcTsiI08JyqcfopJ0rPS7Z/MbAKvLuB31G2UWvem
+         u1UrgeeITr+sexh6CkhTQxLOB0qKukBOVhnUk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LYZhJ8z29L9VXaq40W7IaPRpHSPw3yWamQCRA+/ko3U=;
-        b=Ct/fkEnzpyVmEp/IOX399QyRjhHEa2RI+QjevTMPeqGb1wu+oH93mrfe7dhpD1afx1
-         hfvHyXqdefMZthGcbGFurlUhRpbK7EmqKaQE0tZ7SmNpB0DJtyj1s80fqZd7IzyxzHr6
-         c2nsFe6RzllJGuU6GFPHorLOIoF9iKisqcnxnbJ8I6Tfg8tC8MSku51i5B9Yp25GH2Kq
-         14qZe7aJQ+Z53aklnu0PwrHwB9cCBo5ix/w+LwrVYdnrt0BAJfKAUZWNzKqp4sjcYlkV
-         ezK06Q+hUf8mlegbJTpVwaWojG+XWyTXvgTus2oMM5+5sZLmREdL73JHTgOw3XnijW6i
-         Oh7w==
-X-Gm-Message-State: APjAAAWc6QWxFsWSuWYgguJ5AoPuznrmf92V3okFIbzqtJS9LOr7xL8E
-        o+3K3wNZ4MCrjMzN8oJw++lRB6h/2YY=
-X-Google-Smtp-Source: APXvYqxl7Yi78ER+qSOIF1u82NyFH6Xm7K17/2FM+VrkSru27m4vAxPvzYR0OnpdWhvGLdOQWYj9Eg==
-X-Received: by 2002:a2e:84d0:: with SMTP id q16mr16057961ljh.106.1570385216821;
-        Sun, 06 Oct 2019 11:06:56 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id q24sm2422376lfa.94.2019.10.06.11.06.54
+        bh=flbQh8QSyXP6BbnfTs+H8n25p/Mq0h+HNPEYy/tByz8=;
+        b=O1lXcWHIn0r1gBcIPAF6IyYxkuuQIH6+Lz4WO1EF8ZOdAvBzXun1ZcbnAwjrfleZ+a
+         GESEySVxQlgPEdyLk594v1RDMHdsuqV+xURA0KS/GnimqKxfKD7LVgtwcCcr3U4r6yRf
+         TmiatA0CAx7myZjn028K590GvZLeIlMhX7CurZNQ273t/w7WDx/4vo/aby1lqFNsZVx6
+         R9kf75SJwbBQPwenUgdSE+6l2EpPyRN2OqHIH6zMIBYadJ7vpp7P5aB3gSZaGKJVipkS
+         2c8QC6rn4nLNsJf6VlK7RZmDENeC8bXaAGdGVVecf4QScUjhDePHbbcrbQ6r/FRCYkxo
+         SPIQ==
+X-Gm-Message-State: APjAAAWtGCVrcjlB07TNc3bIXgp9UYy05cmGCXvWAXkKh+aDP29OSRTM
+        fKRCtK11Y2LMO2IQVHoMJGo7EVJVQ8c=
+X-Google-Smtp-Source: APXvYqxjb9I+YE5LmFhb/ocMd0x17wTprfC8cmOAPWBlopQwdgHCVdPOWl4zSFjpMtlHNd+psk94iQ==
+X-Received: by 2002:a2e:b045:: with SMTP id d5mr15922281ljl.105.1570385289806;
+        Sun, 06 Oct 2019 11:08:09 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id t6sm2599585ljd.102.2019.10.06.11.08.08
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2019 11:06:55 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id 7so11281963ljw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:06:54 -0700 (PDT)
-X-Received: by 2002:a2e:9556:: with SMTP id t22mr15616404ljh.97.1570385214720;
- Sun, 06 Oct 2019 11:06:54 -0700 (PDT)
+        Sun, 06 Oct 2019 11:08:08 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id r2so7664953lfn.8
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 11:08:08 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr14586548lfp.134.1570385288311;
+ Sun, 06 Oct 2019 11:08:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <20191006114129.GD24605@amd> <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
- <20191006173501.GA31243@amd>
-In-Reply-To: <20191006173501.GA31243@amd>
+References: <20191005233227.GB25745@shell.armlinux.org.uk> <CAHk-=wiy9MWteoaoV15FJ7QJeRhBtCVgo6ECiLb4khuc5PxHUg@mail.gmail.com>
+ <20191006130924.GC25745@shell.armlinux.org.uk>
+In-Reply-To: <20191006130924.GC25745@shell.armlinux.org.uk>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 6 Oct 2019 11:06:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
-Message-ID: <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
-Subject: Re: x86/random: Speculation to the rescue
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
+Date:   Sun, 6 Oct 2019 11:07:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh6jhO1X3VZuZ28aA4m0k6wGhkHRRrJSQpQ69N901D7Mw@mail.gmail.com>
+Message-ID: <CAHk-=wh6jhO1X3VZuZ28aA4m0k6wGhkHRRrJSQpQ69N901D7Mw@mail.gmail.com>
+Subject: Re: MAP_FIXED_NOREPLACE appears to break older i386 binaries
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>, Michal Hocko <mhocko@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 10:35 AM Pavel Machek <pavel@ucw.cz> wrote:
+On Sun, Oct 6, 2019 at 6:09 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 >
-> It will not: boot is now halted because systemd wants some
-> entropy. Everything is idle and very little interrupts are
-> happening. We have spinning rust, but it is idle, and thus not
-> generating any interrupts.
+> However, I think it _is_ worth highlighting that we seem to have broken
+> binary compatibility with older i386 userspace with newer kernels.
 
-Yes, but we have that problem now solved.
+Yes, we should get this fixed. But I continue to ask you to point to
+the actual binaries for testing..
 
-Except on embedded platforms that have garbage CPU's without even a
-cycle counter.
-
-But those won't have spinning rust anyway.
-
-Yes, bad SSD's and MMC disks (that they do have) will generate timing
-noise too, but in the absense of a cycle counter, that noise won't be
-much use.
-
-                 Linus
+                Linus
