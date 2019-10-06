@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD0FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3546DC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D202087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3AA21872
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383261;
-	bh=zCKmjyZlrLC7ANRYhp/52vjRW/jBssQmM8dBavnIWww=;
+	s=default; t=1570383265;
+	bh=Jbi6amqW/v8CYVXQA06UFDffvZQJOUPYCkTYaT+G2XU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhYuD2g7jEtrQb0RQAmdLDOfrR9swfx05U9M0tSKq1yIdm+ACHOjQLjENjfueosY+
-	 8WUG9krfmezk406e++yjsnnTQaV8YOyn3okyDdBTfT8SJ9wGCk/H17vCQsF3l61Hdy
-	 LpSIyWo8yauooFQPpvdPUSvxXDRic0ue3aE8U5VM=
+	b=VxG9YnKqTqxZohtoshH8wBzD3hB+iScShO9GGxjSIhikDLpyFssphHnIw3bcc90q6
+	 rih4hPxQCovjepO1zKySFsnfOBMsbL1YZbJgGORHSeVlGLjXSk4Itd4CBQkJuZbcih
+	 YO+vVOiq5tTHimLFOipVG9jZItufwWOTNHBus4QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfJFReU (ORCPT
+        id S1729942AbfJFReY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729921AbfJFReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:17 -0400
+        id S1729927AbfJFReU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:34:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E3E92087E;
-        Sun,  6 Oct 2019 17:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 460352080F;
+        Sun,  6 Oct 2019 17:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383257;
-        bh=zCKmjyZlrLC7ANRYhp/52vjRW/jBssQmM8dBavnIWww=;
+        s=default; t=1570383259;
+        bh=Jbi6amqW/v8CYVXQA06UFDffvZQJOUPYCkTYaT+G2XU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Upts+nec0x2OyuE3R71OXcehSZgHJZ7Z4s66LNZgExmYxwEeR6b7SYKkBKJwnrPND
-         dW+fPSsROM120XHL6aOtSl8N9j317vJfGMsUeEy9GKKlBVf3I8wZAcGmVoRABh5KBV
-         joxrctzgnscyPM5GEwi/GCZv2YEXnQe8zfZz2pf4=
+        b=K+Y3iu45/D5nBL5xrYSl7lvrRt25v/GM5byiz2KIEKTcAsakKpZCvIXQRXpoPjrsl
+         NtJFE0TN4iCNVVYmEC9y/30Jr4vqhZPnn9v8AMOl3m6Oi2hFi9nldr3AYwoW4EDUL6
+         qgoCFN80h0vuzPx89/z8FsRsMxjB0EV2sjthQPxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        David Ahern <dsahern@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 004/137] ipv6: drop incoming packets having a v4mapped source address
-Date:   Sun,  6 Oct 2019 19:19:48 +0200
-Message-Id: <20191006171209.972856683@linuxfoundation.org>
+Subject: [PATCH 5.2 005/137] ipv6: Handle missing host route in __ipv6_ifa_notify
+Date:   Sun,  6 Oct 2019 19:19:49 +0200
+Message-Id: <20191006171210.032118824@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,67 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3 ]
+[ Upstream commit 2d819d250a1393a3e725715425ab70a0e0772a71 ]
 
-This began with a syzbot report. syzkaller was injecting
-IPv6 TCP SYN packets having a v4mapped source address.
+Rajendra reported a kernel panic when a link was taken down:
 
-After an unsuccessful 4-tuple lookup, TCP creates a request
-socket (SYN_RECV) and calls reqsk_queue_hash_req()
+    [ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
+    [ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
 
-reqsk_queue_hash_req() calls sk_ehashfn(sk)
+    <snip>
 
-At this point we have AF_INET6 sockets, and the heuristic
-used by sk_ehashfn() to either hash the IPv4 or IPv6 addresses
-is to use ipv6_addr_v4mapped(&sk->sk_v6_daddr)
+    [ 6870.570501] Call Trace:
+    [ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
+    [ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
+    [ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
+    [ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
+    [ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+    [ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
+    [ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
+    [ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
+    [ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
+    [ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+    [ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
+    [ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
+    [ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
 
-For the particular spoofed packet, we end up hashing V4 addresses
-which were not initialized by the TCP IPv6 stack, so KMSAN fired
-a warning.
+addrconf_dad_work is kicked to be scheduled when a device is brought
+up. There is a race between addrcond_dad_work getting scheduled and
+taking the rtnl lock and a process taking the link down (under rtnl).
+The latter removes the host route from the inet6_addr as part of
+addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
+to use the host route in __ipv6_ifa_notify. If the down event removes
+the host route due to the race to the rtnl, then the BUG listed above
+occurs.
 
-I first fixed sk_ehashfn() to test both source and destination addresses,
-but then faced various problems, including user-space programs
-like packetdrill that had similar assumptions.
+Since the DAD sequence can not be aborted, add a check for the missing
+host route in __ipv6_ifa_notify. The only way this should happen is due
+to the previously mentioned race. The host route is created when the
+address is added to an interface; it is only removed on a down event
+where the address is kept. Add a warning if the host route is missing
+AND the device is up; this is a situation that should never happen.
 
-Instead of trying to fix the whole ecosystem, it is better
-to admit that we have a dual stack behavior, and that we
-can not build linux kernels without V4 stack anyway.
-
-The dual stack API automatically forces the traffic to be IPv4
-if v4mapped addresses are used at bind() or connect(), so it makes
-no sense to allow IPv6 traffic to use the same v4mapped class.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
+Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6_input.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ net/ipv6/addrconf.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/net/ipv6/ip6_input.c
-+++ b/net/ipv6/ip6_input.c
-@@ -221,6 +221,16 @@ static struct sk_buff *ip6_rcv_core(stru
- 	if (ipv6_addr_is_multicast(&hdr->saddr))
- 		goto err;
- 
-+	/* While RFC4291 is not explicit about v4mapped addresses
-+	 * in IPv6 headers, it seems clear linux dual-stack
-+	 * model can not deal properly with these.
-+	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
-+	 *
-+	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
-+	 */
-+	if (ipv6_addr_v4mapped(&hdr->saddr))
-+		goto err;
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -5962,13 +5962,20 @@ static void __ipv6_ifa_notify(int event,
+ 	switch (event) {
+ 	case RTM_NEWADDR:
+ 		/*
+-		 * If the address was optimistic
+-		 * we inserted the route at the start of
+-		 * our DAD process, so we don't need
+-		 * to do it again
++		 * If the address was optimistic we inserted the route at the
++		 * start of our DAD process, so we don't need to do it again.
++		 * If the device was taken down in the middle of the DAD
++		 * cycle there is a race where we could get here without a
++		 * host route, so nothing to insert. That will be fixed when
++		 * the device is brought up.
+ 		 */
+-		if (!rcu_access_pointer(ifp->rt->fib6_node))
++		if (ifp->rt && !rcu_access_pointer(ifp->rt->fib6_node)) {
+ 			ip6_ins_rt(net, ifp->rt);
++		} else if (!ifp->rt && (ifp->idev->dev->flags & IFF_UP)) {
++			pr_warn("BUG: Address %pI6c on device %s is missing its host route.\n",
++				&ifp->addr, ifp->idev->dev->name);
++		}
 +
- 	skb->transport_header = skb->network_header + sizeof(*hdr);
- 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
- 
+ 		if (ifp->idev->cnf.forwarding)
+ 			addrconf_join_anycast(ifp);
+ 		if (!ipv6_addr_any(&ifp->peer_addr))
 
 
