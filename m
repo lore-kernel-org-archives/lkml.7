@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F8DC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF06C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4268121479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67522166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382962;
-	bh=6vFK/QNNqrF4iFB8pKoHfYXMILTJC1iEO49zGfm7bnU=;
+	s=default; t=1570382965;
+	bh=K4T6lRYMyRRepGM0P+BdfI9+GRjzZhv/1SdRP6HK8Lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TB7V4qIgBBhe9B6Knif/JqRA1BoVsMw2f4xU5GmwFbOzL0nrTVUzmNsp6j4/AeGXG
-	 AIgIz2EhCk9E68/A5WpdlTxTW+B7vwhbxj4yHvYVke9dkv/Qt2rOZ/kpGhqx206sR9
-	 zCjtO+baqK0A5hA/1lC4aQhKJ/HxHXUL6EWMS8tA=
+	b=HuZssFUzQBlw4EcGzrXrGBAAKbqDrC/OKUJZlOblSv/zFwbOi4q44GynVSiHc+NE7
+	 D/37g5+SjUKnJhyj8dHjTBguyta6jvq/cDUBzO7qlZX4Xd1sRT3RdkdRM52KLqi9KK
+	 BU8K6FwIYmItyb3GL7kZKWFyZikMgHNcvBkD3VFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfJFR3V (ORCPT
+        id S1728984AbfJFR3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfJFR3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:17 -0400
+        id S1728969AbfJFR3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FEE02087E;
-        Sun,  6 Oct 2019 17:29:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2770C217D6;
+        Sun,  6 Oct 2019 17:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382956;
-        bh=6vFK/QNNqrF4iFB8pKoHfYXMILTJC1iEO49zGfm7bnU=;
+        s=default; t=1570382959;
+        bh=K4T6lRYMyRRepGM0P+BdfI9+GRjzZhv/1SdRP6HK8Lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdDkKxAdsGd92llhsvYWY4tu4qYC60+W+yRUOGQKcbsb3SPMjc4YBD5kpOHiCyh30
-         1duyUXQZ0egJ51VL5jG4B/FSlGfNCbYu5R88Ar0hVlhwEYtyso+iuRcUdIiZmNVGDh
-         CHi1QoZg9AX6Y7nRMH35DEOOqgzeaXFeqIWd7zyY=
+        b=f96qSILktnJZ02/ghg3o1dJQgLdZ7wxfQlsVBsYMYxzxOU+/kdo+I3pt/4zZHqJio
+         DL9UmIXR1+8QKEkmPugmy0XdAENLNBg0S5IyooUR11lT4Mo0dIG1MGvVAI6QHdSocw
+         9rkOwOSr7YPq5662NJyhzzhv+gimdN2UgSc/zElI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Charlene Liu <charlene.liu@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/106] clk: renesas: cpg-mssr: Set GENPD_FLAG_ALWAYS_ON for clock domain
-Date:   Sun,  6 Oct 2019 19:20:38 +0200
-Message-Id: <20191006171139.866912267@linuxfoundation.org>
+Subject: [PATCH 4.19 033/106] drm/amd/display: support spdif
+Date:   Sun,  6 Oct 2019 19:20:39 +0200
+Message-Id: <20191006171140.114447492@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -62,42 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Charlene Liu <charlene.liu@amd.com>
 
-[ Upstream commit f787216f33ce5b5a2567766398f44ab62157114c ]
+[ Upstream commit b5a41620bb88efb9fb31a4fa5e652e3d5bead7d4 ]
 
-The CPG/MSSR Clock Domain driver does not implement the
-generic_pm_domain.power_{on,off}() callbacks, as the domain itself
-cannot be powered down.  Hence the domain should be marked as always-on
-by setting the GENPD_FLAG_ALWAYS_ON flag, to prevent the core PM Domain
-code from considering it for power-off, and doing unnessary processing.
+[Description]
+port spdif fix to staging:
+ spdif hardwired to afmt inst 1.
+ spdif func pointer
+ spdif resource allocation (reserve last audio endpoint for spdif only)
 
-Note that this only affects RZ/A2 SoCs.  On R-Car Gen2 and Gen3 SoCs,
-the R-Car SYSC driver handles Clock Domain creation, and offloads only
-device attachment/detachment to the CPG/MSSR driver.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Charlene Liu <charlene.liu@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../gpu/drm/amd/display/dc/core/dc_resource.c   | 17 ++++++++---------
+ drivers/gpu/drm/amd/display/dc/dce/dce_audio.c  |  4 ++--
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 24485bee9b49e..d7a2ad6173694 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -514,7 +514,8 @@ static int __init cpg_mssr_add_clk_domain(struct device *dev,
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index f0d68aa7c8fcc..d440b28ee43fb 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -229,12 +229,10 @@ bool resource_construct(
+ 				DC_ERR("DC: failed to create audio!\n");
+ 				return false;
+ 			}
+-
+ 			if (!aud->funcs->endpoint_valid(aud)) {
+ 				aud->funcs->destroy(&aud);
+ 				break;
+ 			}
+-
+ 			pool->audios[i] = aud;
+ 			pool->audio_count++;
+ 		}
+@@ -1703,24 +1701,25 @@ static struct audio *find_first_free_audio(
+ 		const struct resource_pool *pool,
+ 		enum engine_id id)
+ {
+-	int i;
+-	for (i = 0; i < pool->audio_count; i++) {
++	int i, available_audio_count;
++
++	available_audio_count = pool->audio_count;
++
++	for (i = 0; i < available_audio_count; i++) {
+ 		if ((res_ctx->is_audio_acquired[i] == false) && (res_ctx->is_stream_enc_acquired[i] == true)) {
+ 			/*we have enough audio endpoint, find the matching inst*/
+ 			if (id != i)
+ 				continue;
+-
+ 			return pool->audios[i];
+ 		}
+ 	}
  
- 	genpd = &pd->genpd;
- 	genpd->name = np->name;
--	genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
-+	genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ALWAYS_ON |
-+		       GENPD_FLAG_ACTIVE_WAKEUP;
- 	genpd->attach_dev = cpg_mssr_attach_dev;
- 	genpd->detach_dev = cpg_mssr_detach_dev;
- 	pm_genpd_init(genpd, &pm_domain_always_on_gov, false);
+-    /* use engine id to find free audio */
+-	if ((id < pool->audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
++	/* use engine id to find free audio */
++	if ((id < available_audio_count) && (res_ctx->is_audio_acquired[id] == false)) {
+ 		return pool->audios[id];
+ 	}
+-
+ 	/*not found the matching one, first come first serve*/
+-	for (i = 0; i < pool->audio_count; i++) {
++	for (i = 0; i < available_audio_count; i++) {
+ 		if (res_ctx->is_audio_acquired[i] == false) {
+ 			return pool->audios[i];
+ 		}
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+index 7f6d724686f1a..abb559ce64085 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
+@@ -611,6 +611,8 @@ void dce_aud_az_configure(
+ 
+ 	AZ_REG_WRITE(AZALIA_F0_CODEC_PIN_CONTROL_SINK_INFO1,
+ 		value);
++	DC_LOG_HW_AUDIO("\n\tAUDIO:az_configure: index: %u data, 0x%x, displayName %s: \n",
++		audio->inst, value, audio_info->display_name);
+ 
+ 	/*
+ 	*write the port ID:
+@@ -922,7 +924,6 @@ static const struct audio_funcs funcs = {
+ 	.az_configure = dce_aud_az_configure,
+ 	.destroy = dce_aud_destroy,
+ };
+-
+ void dce_aud_destroy(struct audio **audio)
+ {
+ 	struct dce_audio *aud = DCE_AUD(*audio);
+@@ -953,7 +954,6 @@ struct audio *dce_audio_create(
+ 	audio->regs = reg;
+ 	audio->shifts = shifts;
+ 	audio->masks = masks;
+-
+ 	return &audio->base;
+ }
+ 
 -- 
 2.20.1
 
