@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20786C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2666C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB57A20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935C820673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384261;
-	bh=KKjC7cI+5h5CVGidPc9+DB5Om89zRlr5+ongFW5KqAk=;
+	s=default; t=1570384262;
+	bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/Fx6Ir15KL3Ehovh2OiAeBxJXnTqX2EuCPKna5xIA763NRdzdh632JBkuqBInmQx
-	 c6Wd5IdnNqF3F0Z5O2RwHKeYDMykzSpaoQ0ItKqf79bulQMIMZR8MdRF6qDLJRbEKi
-	 vj9tu9cLwvvAt61nuSfIoXMG3GRUQVlEFeA1XUwM=
+	b=VQ5zTGRwfLWpCaF46qCNWttTXTgDhefS73P4dccngzakjZfKffLE4OU9e0OrYmFRk
+	 yPK8CYclyywOhkiYfOXUA6n05g+Qx8qGnnpUMpCmX05N3MImdaA2wUQk5b50tAn5D1
+	 5L5ziPHoCf2xOD9ob5FFnCvBs7HHyq7clyhvrjX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfJFRvA (ORCPT
+        id S1729345AbfJFRvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48964 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbfJFRuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:50:55 -0400
+        id S1727321AbfJFRuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95173217F9;
-        Sun,  6 Oct 2019 17:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ECA02087E;
+        Sun,  6 Oct 2019 17:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383925;
-        bh=KKjC7cI+5h5CVGidPc9+DB5Om89zRlr5+ongFW5KqAk=;
+        s=default; t=1570383919;
+        bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZDAQruDMEJLobMPzSSdeMLpAz/tFrrMnOZKb2O9EYmvky4tYeqOBrZwrP8O7iGTW
-         JiNeKst5RWCCBdhfxGKiHS3XC29eofxQp/n9v8XyPWb+HukagBerrSQm2nTF0yUB92
-         skWOAkjtPp4GfpBFo3XtbTxnCXO+/wRYn1nuCIpo=
+        b=jgXzoPUKmb3HK6NcHyUiM9e4xQKZriUFIrflYM+TJrXHZB3MUuHiotCFqCOLrmiFL
+         sTIxfYWm/WxWSSWgqtQnXs2suSK8RDbycbYSkHx+8uhOA0ObPaNpYOc+502kBRsuV4
+         GXM6eFMLE/DaafD1+0bqrwzkf+cQXlNIZwjPy0UU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Hunt <johunt@akamai.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 147/166] udp: only do GSO if # of segs > 1
-Date:   Sun,  6 Oct 2019 19:21:53 +0200
-Message-Id: <20191006171225.311971320@linuxfoundation.org>
+Subject: [PATCH 5.3 145/166] net: dsa: rtl8366: Check VLAN ID and not ports
+Date:   Sun,  6 Oct 2019 19:21:51 +0200
+Message-Id: <20191006171225.179123080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -61,140 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Hunt <johunt@akamai.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 4094871db1d65810acab3d57f6089aa39ef7f648 ]
+[ Upstream commit e8521e53cca584ddf8ec4584d3c550a6c65f88c4 ]
 
-Prior to this change an application sending <= 1MSS worth of data and
-enabling UDP GSO would fail if the system had SW GSO enabled, but the
-same send would succeed if HW GSO offload is enabled. In addition to this
-inconsistency the error in the SW GSO case does not get back to the
-application if sending out of a real device so the user is unaware of this
-failure.
+There has been some confusion between the port number and
+the VLAN ID in this driver. What we need to check for
+validity is the VLAN ID, nothing else.
 
-With this change we only perform GSO if the # of segments is > 1 even
-if the application has enabled segmentation. I've also updated the
-relevant udpgso selftests.
+The current confusion came from assigning a few default
+VLANs for default routing and we need to rewrite that
+properly.
 
-Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
-Signed-off-by: Josh Hunt <johunt@akamai.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Instead of checking if the port number is a valid VLAN
+ID, check the actual VLAN IDs passed in to the callback
+one by one as expected.
+
+Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/udp.c                       |   11 +++++++----
- net/ipv6/udp.c                       |   11 +++++++----
- tools/testing/selftests/net/udpgso.c |   16 ++++------------
- 3 files changed, 18 insertions(+), 20 deletions(-)
+ drivers/net/dsa/rtl8366.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -821,6 +821,7 @@ static int udp_send_skb(struct sk_buff *
- 	int is_udplite = IS_UDPLITE(sk);
- 	int offset = skb_transport_offset(skb);
- 	int len = skb->len - offset;
-+	int datalen = len - sizeof(*uh);
- 	__wsum csum = 0;
+--- a/drivers/net/dsa/rtl8366.c
++++ b/drivers/net/dsa/rtl8366.c
+@@ -339,10 +339,12 @@ int rtl8366_vlan_prepare(struct dsa_swit
+ 			 const struct switchdev_obj_port_vlan *vlan)
+ {
+ 	struct realtek_smi *smi = ds->priv;
++	u16 vid;
+ 	int ret;
  
- 	/*
-@@ -854,10 +855,12 @@ static int udp_send_skb(struct sk_buff *
- 			return -EIO;
- 		}
+-	if (!smi->ops->is_vlan_valid(smi, port))
+-		return -EINVAL;
++	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
++		if (!smi->ops->is_vlan_valid(smi, vid))
++			return -EINVAL;
  
--		skb_shinfo(skb)->gso_size = cork->gso_size;
--		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
--		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
--							 cork->gso_size);
-+		if (datalen > cork->gso_size) {
-+			skb_shinfo(skb)->gso_size = cork->gso_size;
-+			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-+			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
-+								 cork->gso_size);
-+		}
- 		goto csum_partial;
- 	}
+ 	dev_info(smi->dev, "prepare VLANs %04x..%04x\n",
+ 		 vlan->vid_begin, vlan->vid_end);
+@@ -370,8 +372,9 @@ void rtl8366_vlan_add(struct dsa_switch
+ 	u16 vid;
+ 	int ret;
  
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -1109,6 +1109,7 @@ static int udp_v6_send_skb(struct sk_buf
- 	__wsum csum = 0;
- 	int offset = skb_transport_offset(skb);
- 	int len = skb->len - offset;
-+	int datalen = len - sizeof(*uh);
+-	if (!smi->ops->is_vlan_valid(smi, port))
+-		return;
++	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
++		if (!smi->ops->is_vlan_valid(smi, vid))
++			return;
  
- 	/*
- 	 * Create a UDP header
-@@ -1141,10 +1142,12 @@ static int udp_v6_send_skb(struct sk_buf
- 			return -EIO;
- 		}
- 
--		skb_shinfo(skb)->gso_size = cork->gso_size;
--		skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
--		skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(len - sizeof(*uh),
--							 cork->gso_size);
-+		if (datalen > cork->gso_size) {
-+			skb_shinfo(skb)->gso_size = cork->gso_size;
-+			skb_shinfo(skb)->gso_type = SKB_GSO_UDP_L4;
-+			skb_shinfo(skb)->gso_segs = DIV_ROUND_UP(datalen,
-+								 cork->gso_size);
-+		}
- 		goto csum_partial;
- 	}
- 
---- a/tools/testing/selftests/net/udpgso.c
-+++ b/tools/testing/selftests/net/udpgso.c
-@@ -89,12 +89,9 @@ struct testcase testcases_v4[] = {
- 		.tfail = true,
- 	},
- 	{
--		/* send a single MSS: will fail with GSO, because the segment
--		 * logic in udp4_ufo_fragment demands a gso skb to be > MTU
--		 */
-+		/* send a single MSS: will fall back to no GSO */
- 		.tlen = CONST_MSS_V4,
- 		.gso_len = CONST_MSS_V4,
--		.tfail = true,
- 		.r_num_mss = 1,
- 	},
- 	{
-@@ -139,10 +136,9 @@ struct testcase testcases_v4[] = {
- 		.tfail = true,
- 	},
- 	{
--		/* send a single 1B MSS: will fail, see single MSS above */
-+		/* send a single 1B MSS: will fall back to no GSO */
- 		.tlen = 1,
- 		.gso_len = 1,
--		.tfail = true,
- 		.r_num_mss = 1,
- 	},
- 	{
-@@ -196,12 +192,9 @@ struct testcase testcases_v6[] = {
- 		.tfail = true,
- 	},
- 	{
--		/* send a single MSS: will fail with GSO, because the segment
--		 * logic in udp4_ufo_fragment demands a gso skb to be > MTU
--		 */
-+		/* send a single MSS: will fall back to no GSO */
- 		.tlen = CONST_MSS_V6,
- 		.gso_len = CONST_MSS_V6,
--		.tfail = true,
- 		.r_num_mss = 1,
- 	},
- 	{
-@@ -246,10 +239,9 @@ struct testcase testcases_v6[] = {
- 		.tfail = true,
- 	},
- 	{
--		/* send a single 1B MSS: will fail, see single MSS above */
-+		/* send a single 1B MSS: will fall back to no GSO */
- 		.tlen = 1,
- 		.gso_len = 1,
--		.tfail = true,
- 		.r_num_mss = 1,
- 	},
- 	{
+ 	dev_info(smi->dev, "add VLAN on port %d, %s, %s\n",
+ 		 port,
 
 
