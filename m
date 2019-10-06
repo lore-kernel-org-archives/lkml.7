@@ -7,60 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC98ECE58E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1652CECE596
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFC4214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDAB620867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382415;
-	bh=WJKHsHBGnPsbTeLW4pe0ZnE9hwyn18ncCskMJuf8L3g=;
+	s=default; t=1570382416;
+	bh=xqcbefcJOqTr5yezU+WtL17X1hRbLdYNn8J2gsa7Mc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rydFk7E5TlwaBKsYy1sC6+siDJ8n1BMQYakryAz/SMhW621so3hVaVq0itlmA9acW
-	 gG4Tu7L8vU9yZ1NxEbPoa2Q8VPHdfGy92ZtQGChsqFLxblOwglfQMZRluyKjYC7fuy
-	 5WUBrd/VhSwmvD9w1ZXOwlsO+yprywqeQ5P43DTk=
+	b=uPyi5Aq+jPVyZcFkM7RVhfl5ZyoHID1/BOnJ/0tg1ilDUsKwfvZCmVnBKwEEWb5dq
+	 UHeMB2ZuaktgaunkAiEatuPkm8yMsI+n6fGusojgIKX50TMlkrON3oQk+BGt0ZmIwF
+	 CTFdrJnxEHcJuIfHdmwUIrjvlaoongO7AHrSgbWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfJFRUK (ORCPT
+        id S1726934AbfJFRTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45086 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfJFRUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:20:08 -0400
+        id S1726828AbfJFRTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:19:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDB0820862;
-        Sun,  6 Oct 2019 17:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE7B20835;
+        Sun,  6 Oct 2019 17:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382403;
-        bh=WJKHsHBGnPsbTeLW4pe0ZnE9hwyn18ncCskMJuf8L3g=;
+        s=default; t=1570382384;
+        bh=xqcbefcJOqTr5yezU+WtL17X1hRbLdYNn8J2gsa7Mc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1alKuid5hRrvIOzodQ7SYhX3SbTMRzUuDC8+XaN9yv0P0hCBc0FFVRCN7VCaHyjag
-         9RWkMvU6bF1BHrDZrKgarkXMGeiSxVgPF8haveikC2lwKesaofsOYoiE6wVWuZ3wGq
-         fG2F9jV/mHspTV0mL9VmApBnFPLQutIbOZSc6lGA=
+        b=18mCn1xRAnbpUqmu58T6ti/EnorGx44njQmZPBMWaYP/DmIygtcLfmobpHUnYsP/R
+         KDZbqjVZfCg7Na2/LyM4IpwrNj4VywjV/Fvysl7jP+52lEA78hSgnbV1RxqtP4tUDV
+         zPH2wihcBnj9NI7awnf6HwjbIvsslhhVsNgkH9TM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/36] kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
-Date:   Sun,  6 Oct 2019 19:19:04 +0200
-Message-Id: <20191006171053.978216514@linuxfoundation.org>
+Subject: [PATCH 4.4 16/36] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
+Date:   Sun,  6 Oct 2019 19:18:58 +0200
+Message-Id: <20191006171051.090284415@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
 References: <20191006171038.266461022@linuxfoundation.org>
@@ -73,55 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit b751c52bb587ae66f773b15204ef7a147467f4c7 ]
+[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
 
-The current default value (400) is too low on many systems (e.g.  some
-ARM64 platform takes up 1000+ entries).
+Translation faults arising from cache maintenance instructions are
+rather unhelpfully reported with an FSR value where the WnR field is set
+to 1, indicating that the faulting access was a write. Since cache
+maintenance instructions on 32-bit ARM do not require any particular
+permissions, this can cause our private 'cacheflush' system call to fail
+spuriously if a translation fault is generated due to page aging when
+targetting a read-only VMA.
 
-syzbot uses 16000 as default value, and has proved to be enough on beefy
-configurations, so let's pick that value.
+In this situation, we will return -EFAULT to userspace, although this is
+unfortunately suppressed by the popular '__builtin___clear_cache()'
+intrinsic provided by GCC, which returns void.
 
-This consumes more RAM on boot (each entry is 160 bytes, so in total
-~2.5MB of RAM), but the memory would later be freed (early_log is
-__initdata).
+Although it's tempting to write this off as a userspace issue, we can
+actually do a little bit better on CPUs that support LPAE, even if the
+short-descriptor format is in use. On these CPUs, cache maintenance
+faults additionally set the CM field in the FSR, which we can use to
+suppress the write permission checks in the page fault handler and
+succeed in performing cache maintenance to read-only areas even in the
+presence of a translation fault.
 
-Link: http://lkml.kernel.org/r/20190730154027.101525-1-drinkcat@chromium.org
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Orion Hodson <oth@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mm/fault.c | 4 ++--
+ arch/arm/mm/fault.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index fd1205a3dbdbc..7b9d7328f189e 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -521,7 +521,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
- 	int "Maximum kmemleak early log entries"
- 	depends on DEBUG_KMEMLEAK
- 	range 200 40000
--	default 400
-+	default 16000
- 	help
- 	  Kmemleak must track all the memory allocations to avoid
- 	  reporting false positives. Since memory may be allocated or
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index 0d20cd5940171..702a5542b11a8 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -211,7 +211,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
+ {
+ 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
+ 
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		mask = VM_WRITE;
+ 	if (fsr & FSR_LNX_PF)
+ 		mask = VM_EXEC;
+@@ -281,7 +281,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		flags |= FAULT_FLAG_WRITE;
+ 
+ 	/*
+diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
+index 78830657cab3a..b014e57248044 100644
+--- a/arch/arm/mm/fault.h
++++ b/arch/arm/mm/fault.h
+@@ -5,6 +5,7 @@
+  * Fault status register encodings.  We steal bit 31 for our own purposes.
+  */
+ #define FSR_LNX_PF		(1 << 31)
++#define FSR_CM			(1 << 13)
+ #define FSR_WRITE		(1 << 11)
+ #define FSR_FS4			(1 << 10)
+ #define FSR_FS3_0		(15)
 -- 
 2.20.1
 
