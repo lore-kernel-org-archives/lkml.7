@@ -2,55 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BAC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10471C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18262053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4A62053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384163;
-	bh=jY3qVanxeRquDLEImQZu/x/re51v+SLrET3Sx0RMqiY=;
+	s=default; t=1570384169;
+	bh=OykuoBvG7eWAabm6JjGpW/J91pGbkUxRh6yTEZjST08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wScx1kXoAXEe5vO/0ECPq5DFdfooKnFz+G/DPrV9WMcbxwIO0woN243oIXkSKDxkc
-	 qbgAQNIt6V0XAGoFDh0MD4akiFDqTlv7P1XjKmAiXUUV37vnfhLrfpdW3PqO5rD5oG
-	 +BWPD5VtI0x6w5+NQ+B57Vb2XG0CX+PT7eEU5Yf8=
+	b=m7FDe0y9mqbKazaUTqCn/rTHcyZ61hiMZqggI2qanIC0x440+8bcv4NzgQaLDTlrr
+	 1v9x1QEY3FB9H7K0BSDV31LB9FfI8WO+VL3k/CYaovHIVmplvxAr1fZqJ0yeNYsByJ
+	 UqK7gHEmbZYfDqCRgTSIBE3BRAFXpOpXl2XTVbWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbfJFRtX (ORCPT
+        id S1730932AbfJFRmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731310AbfJFRmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:42:16 -0400
+        id S1730902AbfJFRmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:42:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA4F20700;
-        Sun,  6 Oct 2019 17:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B81482080F;
+        Sun,  6 Oct 2019 17:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383735;
-        bh=jY3qVanxeRquDLEImQZu/x/re51v+SLrET3Sx0RMqiY=;
+        s=default; t=1570383722;
+        bh=OykuoBvG7eWAabm6JjGpW/J91pGbkUxRh6yTEZjST08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j7Q+RTVoDcXQ/5681YbGaAWsjYgklmtmQ9XYxkvJQa755xnVmU3UdRckAFIVaEoe6
-         Wr1Z2Lgdw9H21+W0EOlS9UuKTv2FeqecZdkReEShqI7uWH7JfYx1dOhEtS+ddZK+mY
-         /+IN9bAgmIgyzN0levKONw3qKDFOzcY8ANlFHZxs=
+        b=D29NobGm5re8ei1L7ORz2E9fyMRHiKCOyeEvPk7tNYgNowDiXXAr5cgbiwKIzYrVr
+         +wylP/ZB7eftBKVFHE4A8YrFEaxZxvmHzb4Wi8RFlREPpoMzxWTo5XZ3H/PQxD5k88
+         QUr057NRhd/D1Lmv60OjQamMDwhquR3TtjfS3a1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 075/166] powerpc: dump kernel log before carrying out fadump or kdump
-Date:   Sun,  6 Oct 2019 19:20:41 +0200
-Message-Id: <20191006171219.755665726@linuxfoundation.org>
+Subject: [PATCH 5.3 070/166] arm64: fix unreachable code issue with cmpxchg
+Date:   Sun,  6 Oct 2019 19:20:36 +0200
+Message-Id: <20191006171219.278323490@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -63,41 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@linux.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit e7ca44ed3ba77fc26cf32650bb71584896662474 ]
+[ Upstream commit 920fdab7b3ce98c14c840261e364f490f3679a62 ]
 
-Since commit 4388c9b3a6ee ("powerpc: Do not send system reset request
-through the oops path"), pstore dmesg file is not updated when dump is
-triggered from HMC. This commit modified system reset (sreset) handler
-to invoke fadump or kdump (if configured), without pushing dmesg to
-pstore. This leaves pstore to have old dmesg data which won't be much
-of a help if kdump fails to capture the dump. This patch fixes that by
-calling kmsg_dump() before heading to fadump ot kdump.
+On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
+when CONFIG_OPTIMIZE_INLINING is set.
+Clang then fails a compile-time assertion, because it cannot tell at
+compile time what the size of the argument is:
 
-Fixes: 4388c9b3a6ee ("powerpc: Do not send system reset request through the oops path")
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190904075949.15607-1-ganeshgr@linux.ibm.com
+mm/memcontrol.o: In function `__cmpxchg_mb':
+memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
+memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
+
+Mark all of the cmpxchg() style functions as __always_inline to
+ensure that the compiler can see the result.
+
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/648
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Tested-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/traps.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/cmpxchg.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 11caa0291254e..82f43535e6867 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -472,6 +472,7 @@ void system_reset_exception(struct pt_regs *regs)
- 	if (debugger(regs))
- 		goto out;
+diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+index 7a299a20f6dcc..7a8b8bc69e8d1 100644
+--- a/arch/arm64/include/asm/cmpxchg.h
++++ b/arch/arm64/include/asm/cmpxchg.h
+@@ -63,7 +63,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
+ #undef __XCHG_CASE
  
-+	kmsg_dump(KMSG_DUMP_OOPS);
- 	/*
- 	 * A system reset is a request to dump, so we always send
- 	 * it through the crashdump code (if fadump or kdump are
+ #define __XCHG_GEN(sfx)							\
+-static inline unsigned long __xchg##sfx(unsigned long x,		\
++static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
+ 					volatile void *ptr,		\
+ 					int size)			\
+ {									\
+@@ -105,7 +105,7 @@ __XCHG_GEN(_mb)
+ #define arch_xchg(...)		__xchg_wrapper( _mb, __VA_ARGS__)
+ 
+ #define __CMPXCHG_GEN(sfx)						\
+-static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
++static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
+ 					   unsigned long old,		\
+ 					   unsigned long new,		\
+ 					   int size)			\
+@@ -212,7 +212,7 @@ __CMPWAIT_CASE( ,  , 64);
+ #undef __CMPWAIT_CASE
+ 
+ #define __CMPWAIT_GEN(sfx)						\
+-static inline void __cmpwait##sfx(volatile void *ptr,			\
++static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
+ 				  unsigned long val,			\
+ 				  int size)				\
+ {									\
 -- 
 2.20.1
 
