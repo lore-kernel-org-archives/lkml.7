@@ -2,118 +2,131 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4291FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF55C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A652084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:08:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/HtZGNK"
+	by mail.kernel.org (Postfix) with ESMTP id 1395220862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570374530;
+	bh=OKtcuD4x+cDr3mMNVt22HFnpqd0jT8dTaGb9StBb3P8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C7VOQiwlRKRipgbmgmK6YVau54pTV0WiCpOtBeWCGtnz0HYQukjTq/sx+l5Z2lxrt
+	 NOYpR0bPFNablnViGjQUVLgTzypZpLfdjUao5vepgUi3if3TfJJI9ytD07rolLNnmp
+	 3ZNh+Hco8o3G7pJWyQ9rAA6UaQ+FKJgj9IUD5NxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfJFPIS (ORCPT
+        id S1726620AbfJFPIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:08:18 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:36934 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJFPIR (ORCPT
+        Sun, 6 Oct 2019 11:08:49 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39935 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFPIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:08:17 -0400
-Received: by mail-yb1-f193.google.com with SMTP id z125so3816135ybc.4;
-        Sun, 06 Oct 2019 08:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L/3bXAMhH+NMl02E2HmiTYgs/jrbZvh1+VGy/pv/Uu4=;
-        b=A/HtZGNKASObaRehA9OcjjBRSeAtpi4F6ziIrMchH412rKhTL5W4tpIP67/nHuQHV+
-         wuDfh7O5e93k8mliYn1n4egN/Dqze6p1uj6F6wGiugSR2mCc/N6UYqPfc0UN1HK3n5pr
-         Ij6F98HGEIPfaR4eDaaQLEJt0lZYNcetImUDufl2JSc8k1NkaRM6HIA0ZyNutWrn6AZj
-         O8DNe6nAFiiACTiOSnE2y/Psjg6vgfJV/5MU1dJc4gaYU98WEJw+1ZDnLozgubzHiHNe
-         NjCamTQImaXeYe4WvTuAKMUG5+d2ny0JiQyq3/E/YlWMeVcb3eUis7Gk94CfCd8Epusv
-         zgNA==
+        Sun, 6 Oct 2019 11:08:49 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w144so9601655oia.6;
+        Sun, 06 Oct 2019 08:08:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L/3bXAMhH+NMl02E2HmiTYgs/jrbZvh1+VGy/pv/Uu4=;
-        b=MQsFWTDo0l/TBCW/f/WBpHIkuFcvoSst24jLNNB38vrxcEIWHHfBFmeu0c5+Kuz86u
-         eEUY41SWhSyfz9uyMB0zi8kAbqegsqdgYqxAWesz77+Sk4Gn9t9/GlrrnOuOheYm9TDk
-         m53qKMBc14Ks7mjqwDEq8b3sr9EQMNRA5wlf2ZuuIcQ6cuK8ctU5QhrYP8YVCOCr7xGi
-         Bl/EmwKZyJenD2Ski63KxgsLpXLeEUGv4R+G106Ir5JWhHZ4lCpnJPGbVO99gIAdBTvK
-         nX8m1tfa6TvktUiMR62p/wkB64PhY37GPC00Kvl+1+TGZJ+Nwn2GG2wMpoNBg9VIeXLS
-         EXHw==
-X-Gm-Message-State: APjAAAXpOPXHN/vdztTZRfHw/92KOS0xLniTS/iaHFng79fmRd/jqloU
-        peDb3MCzsSyT6nGo5y1WGfQ=
-X-Google-Smtp-Source: APXvYqwQ0LkvaQGAxA3mkt1Upbaiqmx2lXJuZg+G8EGDyVs9fWRTeF3gnxgsMn1rpvSMUgwATxHLSg==
-X-Received: by 2002:a25:f50c:: with SMTP id a12mr8635437ybe.354.1570374494329;
-        Sun, 06 Oct 2019 08:08:14 -0700 (PDT)
-Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id m20sm3069324ywd.97.2019.10.06.08.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 08:08:13 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 11:07:59 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: 104-idi-48e: make array register_offset static,
- makes object smaller
-Message-ID: <20191006150759.GA68457@icarus>
-References: <20191006144256.23733-1-colin.king@canonical.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nqvbMIqcq67/i2yVAL0YTUW6apJz4THEkuKthWl5fgE=;
+        b=HyuJR8DjoVRp3FQ/QPDhQ8MWC1olcnGcpYbztk9CrqxZsP36w3DsfPimCpoYbhYxzw
+         gEFmfDsx6EVn2Q3r6FO9wXlWi47XGbuaeKC9B1ZNLTC+4tAaRzaSxUtWAIviov9R6Zhc
+         lnub7hyvPqV5LF0xZH1T5VpS77nuLRAtRVNIWvTyd/4+JndLsdceolILatucNytVd25r
+         XY/FaW+Nv9117xLbyyvN78vw67Adjz+Dp91ntFwoGtAy2jpEvOqyvyA28piRnnd7slkl
+         YP9fuA8H+pho/BdnjlHM5b3no2jMFCtFVdc/H54Lzv9SdA5zhkCWfIv9OvHDc1uEZACa
+         ivRA==
+X-Gm-Message-State: APjAAAVc5B10z/TQwCLK6B1U+/4TDn5tKhGxu1lexambBi+YRuURW1H3
+        Hv0tDKOqSlE+FEPJ5ayEI452liOP72f96Neu8Mw=
+X-Google-Smtp-Source: APXvYqwq60LmDn6AGtgdwDclNIdBSotjYjNaDAYj0L2DIdw3d2KLe0BdN5/cm86sCM6ESSLo3pGS2cGtZt9GawUo8cM=
+X-Received: by 2002:aca:50ca:: with SMTP id e193mr15226415oib.110.1570374526444;
+ Sun, 06 Oct 2019 08:08:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191006144256.23733-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191004100025.70798-1-mika.westerberg@linux.intel.com> <0002b2f3-d17c-0d49-52f4-b2ce31832e6c@kernel.dk>
+In-Reply-To: <0002b2f3-d17c-0d49-52f4-b2ce31832e6c@kernel.dk>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 6 Oct 2019 17:08:31 +0200
+Message-ID: <CAJZ5v0i=rc6DiZfch6J8ZOyj8ksK-2Dyb+qH_o=NQxtSntfnOw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bdi: Do not use freezable workqueue
+To:     Jens Axboe <axboe@kernel.dk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Jan Kara <jack@suse.cz>,
+        Tejun Heo <tj@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 03:42:56PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the array register_offset on the stack but instead make it
-> static. Makes the object code smaller by 63 bytes.  Also add the int type
-> specifier to clean up a checkpatch warning.
-> 
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->    9212	   5712	   1408	  16332	   3fcc	drivers/gpio/gpio-104-idi-48.o
-> 
-> After:
->    text	   data	    bss	    dec	    hex	filename
->    9085	   5776	   1408	  16269	   3f8d	drivers/gpio/gpio-104-idi-48.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpio/gpio-104-idi-48.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-104-idi-48.c b/drivers/gpio/gpio-104-idi-48.c
-> index ff53887bdaa8..c95c93ec0bd7 100644
-> --- a/drivers/gpio/gpio-104-idi-48.c
-> +++ b/drivers/gpio/gpio-104-idi-48.c
-> @@ -65,7 +65,7 @@ static int idi_48_gpio_get(struct gpio_chip *chip, unsigned offset)
->  {
->  	struct idi_48_gpio *const idi48gpio = gpiochip_get_data(chip);
->  	unsigned i;
-> -	const unsigned register_offset[6] = { 0, 1, 2, 4, 5, 6 };
-> +	static const unsigned int register_offset[6] = { 0, 1, 2, 4, 5, 6 };
->  	unsigned base_offset;
->  	unsigned mask;
->  
-> -- 
-> 2.20.1
+On Fri, Oct 4, 2019 at 3:22 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 10/4/19 4:00 AM, Mika Westerberg wrote:
+> > A removable block device, such as NVMe or SSD connected over Thunderbolt
+> > can be hot-removed any time including when the system is suspended. When
+> > device is hot-removed during suspend and the system gets resumed, kernel
+> > first resumes devices and then thaws the userspace including freezable
+> > workqueues. What happens in that case is that the NVMe driver notices
+> > that the device is unplugged and removes it from the system. This ends
+> > up calling bdi_unregister() for the gendisk which then schedules
+> > wb_workfn() to be run one more time.
+> >
+> > However, since the bdi_wq is still frozen flush_delayed_work() call in
+> > wb_shutdown() blocks forever halting system resume process. User sees
+> > this as hang as nothing is happening anymore.
+> >
+> > Triggering sysrq-w reveals this:
+> >
+> >    Workqueue: nvme-wq nvme_remove_dead_ctrl_work [nvme]
+> >    Call Trace:
+> >     ? __schedule+0x2c5/0x630
+> >     ? wait_for_completion+0xa4/0x120
+> >     schedule+0x3e/0xc0
+> >     schedule_timeout+0x1c9/0x320
+> >     ? resched_curr+0x1f/0xd0
+> >     ? wait_for_completion+0xa4/0x120
+> >     wait_for_completion+0xc3/0x120
+> >     ? wake_up_q+0x60/0x60
+> >     __flush_work+0x131/0x1e0
+> >     ? flush_workqueue_prep_pwqs+0x130/0x130
+> >     bdi_unregister+0xb9/0x130
+> >     del_gendisk+0x2d2/0x2e0
+> >     nvme_ns_remove+0xed/0x110 [nvme_core]
+> >     nvme_remove_namespaces+0x96/0xd0 [nvme_core]
+> >     nvme_remove+0x5b/0x160 [nvme]
+> >     pci_device_remove+0x36/0x90
+> >     device_release_driver_internal+0xdf/0x1c0
+> >     nvme_remove_dead_ctrl_work+0x14/0x30 [nvme]
+> >     process_one_work+0x1c2/0x3f0
+> >     worker_thread+0x48/0x3e0
+> >     kthread+0x100/0x140
+> >     ? current_work+0x30/0x30
+> >     ? kthread_park+0x80/0x80
+> >     ret_from_fork+0x35/0x40
+> >
+> > This is not limited to NVMes so exactly same issue can be reproduced by
+> > hot-removing SSD (over Thunderbolt) while the system is suspended.
+> >
+> > Prevent this from happening by removing WQ_FREEZABLE from bdi_wq.
+>
+> This series looks good for me, I don't think there's a reason for
+> the workers to be marked freezable.
 
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+I was a bit concerned that the original idea might be to prevent
+writes to the persistent storage from occurring after creating an
+image during hibernation, but if that's not the case, the series is
+fine from the general power management standpoint, so
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+for both patches.
