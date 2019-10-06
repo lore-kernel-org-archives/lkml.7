@@ -2,54 +2,52 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77946ECE58E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C52ECE595
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486AC2080F
+	by mail.kernel.org (Postfix) with ESMTP id A52E82080F
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384293;
-	bh=bNCnRboeCVn87mOl7ww26nNSv6sQjpBOKLRnr2WZNgI=;
+	bh=KMI7eC5xuJg87PJdl1pUzpnIv2cuQPx4iF38ZF5IDYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wdR+YIj7tb1/Wk9/RLv6nwr3O7rKicuFWolIS9wNBUzVhCSJVHQB/Kmrk7h6wV9Ev
-	 gxZOel2r/gDf2a7Nr9rGxPSzZuZJiMnjAQgoc47mlt8sjz3UGPN/NfoTisYWSkWo1j
-	 z/nM34qkuV3/4bVZBI9bgX3Q5VSN2PGjvKntxs08=
+	b=xVeUlPa7wzuJcDoNA7+eO+cbvb/gIL0/Gfjl+lM9+csOXNlxoJav0yXAsKCLOw0jt
+	 DUpbuueN5sCPSz5BFVskKIWowqVuNjjl+Tt6eslxKtrzKxGs20TQq3ndFe5Kqe/+TZ
+	 0JLmuNh7K25NS8gyriXgEDpTx/aDYI8lEy+f+O4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfJFRkC (ORCPT
+        id S1730845AbfJFRjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730956AbfJFRj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:58 -0400
+        id S1730843AbfJFRjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:39:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3298820700;
-        Sun,  6 Oct 2019 17:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62E82087E;
+        Sun,  6 Oct 2019 17:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383597;
-        bh=bNCnRboeCVn87mOl7ww26nNSv6sQjpBOKLRnr2WZNgI=;
+        s=default; t=1570383584;
+        bh=KMI7eC5xuJg87PJdl1pUzpnIv2cuQPx4iF38ZF5IDYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brvip0M5BkFXEnZLFwM6Z+h1WLLAY2K+RY2A7nt65HQN3M9MFmZjTjVJ8RKm8FOLQ
-         l/TANzw3O81Ysh+QrCpq54B1qrg6UplCaV0ljuu/7dfAdVfZwxN2rgOwtRrcyrlvRF
-         xzU57Us/5Q9lruHnVNuq2we42jPT7QQwigfHTy14=
+        b=QDKeQxRW9a8b4J28v08sjC+OdcCKAp/awuuRIdXgc60cZeisYAa8mW2BKhvaL287h
+         piUYD70KOf4sxl6ATaGDcTSP5UBcAhvt32s3qitYdW6L/oHUVV6Y13KDoLfFIn7Aox
+         Cr58xEMnELE7rKjewQXgxJLx1zTiDMp6zc/pO2oQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Scott Wood <oss@buserror.net>, Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 025/166] clk: qoriq: Fix -Wunused-const-variable
-Date:   Sun,  6 Oct 2019 19:19:51 +0200
-Message-Id: <20191006171215.243938906@linuxfoundation.org>
+Subject: [PATCH 5.3 020/166] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
+Date:   Sun,  6 Oct 2019 19:19:46 +0200
+Message-Id: <20191006171214.930647434@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,47 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit a95fb581b144b5e73da382eaedb2e32027610597 ]
+[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
 
-drivers/clk/clk-qoriq.c:138:38: warning: unused variable
-'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
-clockgen_muxinfo p5020_cmux_grp1
+In radeon_connector_set_property(), there is an if statement on line 743
+to check whether connector->encoder is NULL:
+    if (connector->encoder)
 
-drivers/clk/clk-qoriq.c:146:38: warning: unused variable
-'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
-clockgen_muxinfo p5020_cmux_grp2
+When connector->encoder is NULL, it is used on line 755:
+    if (connector->encoder->crtc)
 
-In the definition of the p5020 chip, the p2041 chip's info was used
-instead.  The p5020 and p2041 chips have different info. This is most
-likely a typo.
+Thus, a possible null-pointer dereference may occur.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/525
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Link: https://lkml.kernel.org/r/20190627220642.78575-1-nhuck@google.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Scott Wood <oss@buserror.net>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+To fix this bug, connector->encoder is checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 2 +-
+ drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 07f3b252f3e0c..bed140f7375f0 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -686,7 +686,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
- 		.guts_compat = "fsl,qoriq-device-config-1.0",
- 		.init_periph = p5020_init_periph,
- 		.cmux_groups = {
--			&p2041_cmux_grp1, &p2041_cmux_grp2
-+			&p5020_cmux_grp1, &p5020_cmux_grp2
- 		},
- 		.cmux_to_group = {
- 			0, 1, -1
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index c60d1a44d22a2..b684cd719612b 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -752,7 +752,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
+ 
+ 		radeon_encoder->output_csc = val;
+ 
+-		if (connector->encoder->crtc) {
++		if (connector->encoder && connector->encoder->crtc) {
+ 			struct drm_crtc *crtc  = connector->encoder->crtc;
+ 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
+ 
 -- 
 2.20.1
 
