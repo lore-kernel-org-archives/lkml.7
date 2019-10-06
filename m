@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF91C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789C9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60462087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFFF2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382843;
-	bh=19hy6bRgT1aVhWGV9J4lMvjQubmNFi99x5CKAAp2d+4=;
+	s=default; t=1570382848;
+	bh=JqTXN7JhzPAO5L728ViFHvgnVscpM0ZnmG8eFHglBO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEckF+UxxTzmdY8I5UNk0P/6lKK+sPC9bfwH1BHiWhATXGoM6w5YdAFNuTGfh17dC
-	 oc+POOE+znLEXLlH4eddhRUty55FaDBYbYS65lMe/2QqIL30qMgXczJmFCcV/NTgwK
-	 FITS+9ohRUqtVBOglyDXSAC90r0KGB8s2K6j2Ilw=
+	b=tpaV66ko68m8t4LwTayxjl6fS8vdwVUZJCoVFnBDvgrlzg0t7YmvTVEsk9cV1XPWy
+	 fNxOr0aENU4OJMQr8cnO/VAGwkT4d7kI6U2tgSioSSaQZNRzGDxHHPTcmLgBxGXLvw
+	 Z+dfXmT7bdVatqgskmqWGNjqFoyimIm5B+ecd1sU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfJFR1X (ORCPT
+        id S1728488AbfJFR10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbfJFR1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:21 -0400
+        id S1728157AbfJFR1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF8A2087E;
-        Sun,  6 Oct 2019 17:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0EA92077B;
+        Sun,  6 Oct 2019 17:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382840;
-        bh=19hy6bRgT1aVhWGV9J4lMvjQubmNFi99x5CKAAp2d+4=;
+        s=default; t=1570382843;
+        bh=JqTXN7JhzPAO5L728ViFHvgnVscpM0ZnmG8eFHglBO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWdDix5hMXUUcL/lIDjempi143jxCzGH7Wh7YZJslU3YDbAQXwXZ7mdKRT9TJ997B
-         RX/8fFGFqW1lYgLJgR1eNnevgbqr6ppFec1RqCUW476234RKToLcQ/EJJeUBttTFLB
-         n17oInJ6noOGn54+7aa6GnQu0CtD19B+KQgwFEzo=
+        b=s24YFp0bMz3Gy4peALkKkRyJya8arU1Zza7H69lVdiqScLL6If2xaQavXnyrBJNO9
+         iV8mDhD8eK6Qr3Xp0lnEL+7D/fko8HyFDsS4tMadunKGxjo8QLDiVOI4uBbUa2m5md
+         BOQi/KR8+Pns3pdlyThBDpQqFSWr0gC4BklNpD9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
+        stable@vger.kernel.org, Dotan Barak <dotanb@dev.mellanox.co.il>,
+        Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 59/68] vsock: Fix a lockdep warning in __vsock_release()
-Date:   Sun,  6 Oct 2019 19:21:35 +0200
-Message-Id: <20191006171136.030090399@linuxfoundation.org>
+Subject: [PATCH 4.14 60/68] net/rds: Fix error handling in rds_ib_add_one()
+Date:   Sun,  6 Oct 2019 19:21:36 +0200
+Message-Id: <20191006171136.815586896@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,146 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Dotan Barak <dotanb@dev.mellanox.co.il>
 
-[ Upstream commit 0d9138ffac24cf8b75366ede3a68c951e6dcc575 ]
+[ Upstream commit d64bf89a75b65f83f06be9fb8f978e60d53752db ]
 
-Lockdep is unhappy if two locks from the same class are held.
+rds_ibdev:ipaddr_list and rds_ibdev:conn_list are initialized
+after allocation some resources such as protection domain.
+If allocation of such resources fail, then these uninitialized
+variables are accessed in rds_ib_dev_free() in failure path. This
+can potentially crash the system. The code has been updated to
+initialize these variables very early in the function.
 
-Fix the below warning for hyperv and virtio sockets (vmci socket code
-doesn't have the issue) by using lock_sock_nested() when __vsock_release()
-is called recursively:
-
-============================================
-WARNING: possible recursive locking detected
-5.3.0+ #1 Not tainted
---------------------------------------------
-server/1795 is trying to acquire lock:
-ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
-
-but task is already holding lock:
-ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(sk_lock-AF_VSOCK);
-  lock(sk_lock-AF_VSOCK);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-2 locks held by server/1795:
- #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
- #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
-
-stack backtrace:
-CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
-Call Trace:
- dump_stack+0x67/0x90
- __lock_acquire.cold.67+0xd2/0x20b
- lock_acquire+0xb5/0x1c0
- lock_sock_nested+0x6d/0x90
- hvs_release+0x10/0x120 [hv_sock]
- __vsock_release+0x24/0xf0 [vsock]
- __vsock_release+0xa0/0xf0 [vsock]
- vsock_release+0x12/0x30 [vsock]
- __sock_release+0x37/0xa0
- sock_close+0x14/0x20
- __fput+0xc1/0x250
- task_work_run+0x98/0xc0
- do_exit+0x344/0xc60
- do_group_exit+0x47/0xb0
- get_signal+0x15c/0xc50
- do_signal+0x30/0x720
- exit_to_usermode_loop+0x50/0xa0
- do_syscall_64+0x24e/0x270
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f4184e85f31
-
-Tested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
+Signed-off-by: Sudhakar Dindukurti <sudhakar.dindukurti@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/af_vsock.c                |   16 ++++++++++++----
- net/vmw_vsock/hyperv_transport.c        |    2 +-
- net/vmw_vsock/virtio_transport_common.c |    2 +-
- 3 files changed, 14 insertions(+), 6 deletions(-)
+ net/rds/ib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -648,7 +648,7 @@ struct sock *__vsock_create(struct net *
- }
- EXPORT_SYMBOL_GPL(__vsock_create);
+--- a/net/rds/ib.c
++++ b/net/rds/ib.c
+@@ -140,6 +140,9 @@ static void rds_ib_add_one(struct ib_dev
+ 	refcount_set(&rds_ibdev->refcount, 1);
+ 	INIT_WORK(&rds_ibdev->free_work, rds_ib_dev_free);
  
--static void __vsock_release(struct sock *sk)
-+static void __vsock_release(struct sock *sk, int level)
- {
- 	if (sk) {
- 		struct sk_buff *skb;
-@@ -658,9 +658,17 @@ static void __vsock_release(struct sock
- 		vsk = vsock_sk(sk);
- 		pending = NULL;	/* Compiler warning. */
++	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
++	INIT_LIST_HEAD(&rds_ibdev->conn_list);
++
+ 	rds_ibdev->max_wrs = device->attrs.max_qp_wr;
+ 	rds_ibdev->max_sge = min(device->attrs.max_sge, RDS_IB_MAX_SGE);
  
-+		/* The release call is supposed to use lock_sock_nested()
-+		 * rather than lock_sock(), if a sock lock should be acquired.
-+		 */
- 		transport->release(vsk);
+@@ -199,9 +202,6 @@ static void rds_ib_add_one(struct ib_dev
+ 		device->name,
+ 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
  
--		lock_sock(sk);
-+		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
-+		 * version to avoid the warning "possible recursive locking
-+		 * detected". When "level" is 0, lock_sock_nested(sk, level)
-+		 * is the same as lock_sock(sk).
-+		 */
-+		lock_sock_nested(sk, level);
- 		sock_orphan(sk);
- 		sk->sk_shutdown = SHUTDOWN_MASK;
- 
-@@ -669,7 +677,7 @@ static void __vsock_release(struct sock
- 
- 		/* Clean up any sockets that never were accepted. */
- 		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
--			__vsock_release(pending);
-+			__vsock_release(pending, SINGLE_DEPTH_NESTING);
- 			sock_put(pending);
- 		}
- 
-@@ -718,7 +726,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space
- 
- static int vsock_release(struct socket *sock)
- {
--	__vsock_release(sock->sk);
-+	__vsock_release(sock->sk, 0);
- 	sock->sk = NULL;
- 	sock->state = SS_FREE;
- 
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -539,7 +539,7 @@ static void hvs_release(struct vsock_soc
- 	struct sock *sk = sk_vsock(vsk);
- 	bool remove_sock;
- 
--	lock_sock(sk);
-+	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 	remove_sock = hvs_close_lock_held(vsk);
- 	release_sock(sk);
- 	if (remove_sock)
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -791,7 +791,7 @@ void virtio_transport_release(struct vso
- 	struct sock *sk = &vsk->sk;
- 	bool remove_sock = true;
- 
--	lock_sock(sk);
-+	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 	if (sk->sk_type == SOCK_STREAM)
- 		remove_sock = virtio_transport_close(vsk);
- 
+-	INIT_LIST_HEAD(&rds_ibdev->ipaddr_list);
+-	INIT_LIST_HEAD(&rds_ibdev->conn_list);
+-
+ 	down_write(&rds_ib_devices_lock);
+ 	list_add_tail_rcu(&rds_ibdev->list, &rds_ib_devices);
+ 	up_write(&rds_ib_devices_lock);
 
 
