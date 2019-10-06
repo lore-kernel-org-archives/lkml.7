@@ -2,94 +2,103 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9763BECE58D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7848AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2A121479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570355837;
-	bh=1mAeXC6xQdByjNElffMksG7pUEXmQ6BBlE4Xqu1qO78=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N7CWCiGRVO23uSzglnGXLns0NhMY0wlK/OPyCKGHEbcnpLtMQOmjt23A56A2hFno6
-	 lQyPuODyGnI64EkPs8gcp/6VbEbgDMMFtYNs69aVkqJC8lljch7y7+mvmdBBOy9sOW
-	 0R7Ox9k7dCO/7WrxFOItD+HVExTHclF2y+wc+8cU=
+	by mail.kernel.org (Postfix) with ESMTP id 5731920867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 09:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfJFJ5Q (ORCPT
+        id S1726461AbfJFJ5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 05:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfJFJ5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 05:57:16 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3034120867;
-        Sun,  6 Oct 2019 09:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570355835;
-        bh=1mAeXC6xQdByjNElffMksG7pUEXmQ6BBlE4Xqu1qO78=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HU0qlJDotgC18EXMonSdnt2A+LuvrLk2ZFoZL5vRTKQ8UObIP59PwqEG5np9uHBuv
-         uJ1E8LIhNtq8z8JUW6Zhwvea8p9Ym53jrrnGDy30AErUioddxyMZITv+dmjls8zhIC
-         WkG6FtBnD37NfeQ2kgkGN1M5LZZYcfrZSP6VQu+I=
-Date:   Sun, 6 Oct 2019 10:57:11 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 3/4] iio: pressure: bmp280: remove stray newline
-Message-ID: <20191006105711.3b118d70@archlinux>
-In-Reply-To: <20191002085759.13337-4-brgl@bgdev.pl>
-References: <20191002085759.13337-1-brgl@bgdev.pl>
-        <20191002085759.13337-4-brgl@bgdev.pl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 6 Oct 2019 05:57:30 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:42912 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfJFJ5a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 05:57:30 -0400
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23990413AbfJFJ51AhgUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 11:57:27 +0200
+Date:   Sun, 6 Oct 2019 11:57:20 +0200
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        rf@opensource.wolfsonmicro.com, piotrs@opensource.cirrus.com,
+        enric.balletbo@collabora.com, paul@crapouillou.net,
+        srinivas.kandagatla@linaro.org, andradanciu1997@gmail.com,
+        mirq-linux@rere.qmqm.pl, kuninori.morimoto.gx@renesas.com,
+        m.felsch@pengutronix.de, shifu0704@thundersoft.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH -next] ASoc: tas2770: Fix build error
+ without GPIOLIB
+Message-ID: <20191006095720.GA13261@lenoch>
+References: <20191006072241.56808-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191006072241.56808-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  2 Oct 2019 10:57:58 +0200
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Dear YueHaibing,
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Sun, Oct 06, 2019 at 03:22:41PM +0800, YueHaibing wrote:
+> If GPIOLIB is not set, building fails:
 > 
-> Remove a stray newline from the probe callback.
+> sound/soc/codecs/tas2770.c: In function tas2770_reset:
+> sound/soc/codecs/tas2770.c:38:3: error: implicit declaration of function gpiod_set_value_cansleep; did you mean gpio_set_value_cansleep? [-Werror=implicit-function-declaration]
+>    gpiod_set_value_cansleep(tas2770->reset_gpio, 0);
+>    ^~~~~~~~~~~~~~~~~~~~~~~~
+>    gpio_set_value_cansleep
+> sound/soc/codecs/tas2770.c: In function tas2770_i2c_probe:
+> sound/soc/codecs/tas2770.c:749:24: error: implicit declaration of function devm_gpiod_get_optional; did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
+>   tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
+>                         ^~~~~~~~~~~~~~~~~~~~~~~
+>                         devm_regulator_get_optional
+> sound/soc/codecs/tas2770.c:751:13: error: GPIOD_OUT_HIGH undeclared (first use in this function); did you mean GPIOF_INIT_HIGH?
+>              GPIOD_OUT_HIGH);
+>              ^~~~~~~~~~~~~~
+>              GPIOF_INIT_HIGH
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-no particular reason (well for the other patches in that tree ;)
-
-Thanks,
-
-Jonathan
-
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 1a476abc723e ("tas2770: add tas2770 smart PA kernel driver")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/iio/pressure/bmp280-core.c | 1 -
->  1 file changed, 1 deletion(-)
+>  sound/soc/codecs/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-> index f22400e1e98f..fdbd3bc27921 100644
-> --- a/drivers/iio/pressure/bmp280-core.c
-> +++ b/drivers/iio/pressure/bmp280-core.c
-> @@ -1131,7 +1131,6 @@ int bmp280_common_probe(struct device *dev,
->  	if (ret)
->  		goto out_runtime_pm_disable;
->  
-> -
->  	return 0;
->  
->  out_runtime_pm_disable:
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index bcac957..d639f17 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -1108,6 +1108,7 @@ config SND_SOC_TAS2552
+>  config SND_SOC_TAS2770
+>  	tristate "Texas Instruments TAS2770 speaker amplifier"
+>  	depends on I2C
+> +	select GPIOLIB
 
+GPIOLIB API is working perfectly fine even if GPIOLIB is not selected
+and gpiod_* functions will merely return -ENOSYS in this case.
+Please see <linux/gpio/consumer.h> and fix your patch accordingly.
+
+>  config SND_SOC_TAS5086
+>  	tristate "Texas Instruments TAS5086 speaker amplifier"
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
