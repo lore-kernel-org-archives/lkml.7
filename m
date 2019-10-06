@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E89C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977C0ECE58F
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4ED920700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6683720673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384500;
-	bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
+	s=default; t=1570384501;
+	bh=QYuncw7U6eCu+v+lSMJpPfdq8LmiWt9sdzhJZ8oWmNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWdzHYph7LUzEJZxs9Z0gxH8forfOvPP1zUo/5p6n/PoL3g6VEXEdmnfwuKO2nWmB
-	 RmKfykCnWRWi7JBPIQMP2u569bhUjpLcjjAW29r69yQeN080enM2i+2AmGQ+bRUxQh
-	 qMyZ6ypAxrjTR95CVMR+/j+jnfgEYEJjJ7EqyYBU=
+	b=fGhcuY4/qc3Baa08mud3VP7n7Fd08KjCMnyaq6VL3r4aFj2FbClwnuRy8NR0UCwq+
+	 ouVB2Wu/nl7M1SoY7Km/fiXQ0hTlbi2p8HmQpOHs19RS2U3leojEpfJiQlIzvIXQBM
+	 k1HWYCvDbLh+brv/WaB98stpzRRml/XntBN3bZYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbfJFRyh (ORCPT
+        id S1728336AbfJFRyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51356 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:54:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:54:29 -0400
+        id S1728644AbfJFRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:54:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB1622477;
-        Sun,  6 Oct 2019 17:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6FC22469;
+        Sun,  6 Oct 2019 17:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383989;
-        bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
+        s=default; t=1570383971;
+        bh=QYuncw7U6eCu+v+lSMJpPfdq8LmiWt9sdzhJZ8oWmNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HWqxf9rMOFN8p1Rv30NKI4wlQ/JiM9igJsiblx8AWLR3dfLEvYoXqfYMQ4wNjwbQ
-         Lhg8OoXM5In0DI+gbiV4R+XYdo8KeLZufILCt9WT7CuA/ETIam1i8+EWS1Xnpg8Iz4
-         JtEFnctWQxoYAUnLFK1dfulbRdYoUKq6zzMcCKJ0=
+        b=KYoTfUH5FBdrKW6tmkzt5awG6PavgbrPFyZVt0Zu/hcgx50Ty3qDuEL9Q+YPSsvFv
+         A1EI7vzGyyNJiwDetfKZBU9z2Hmheb96bo3Ze0/fM0/Zbb2H0EO9wbRr8sAfoSNrLk
+         jdk9SAIqY6Crqr6EFxqVQXlFBHu2/b5kUphapKLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 134/166] net: qlogic: Fix memory leak in ql_alloc_large_buffers
-Date:   Sun,  6 Oct 2019 19:21:40 +0200
-Message-Id: <20191006171224.456500506@linuxfoundation.org>
+Subject: [PATCH 5.3 162/166] NFC: fix attrs checks in netlink interface
+Date:   Sun,  6 Oct 2019 19:22:08 +0200
+Message-Id: <20191006171226.494412163@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,30 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit 1acb8f2a7a9f10543868ddd737e37424d5c36cf4 ]
+commit 18917d51472fe3b126a3a8f756c6b18085eb8130 upstream.
 
-In ql_alloc_large_buffers, a new skb is allocated via netdev_alloc_skb.
-This skb should be released if pci_dma_mapping_error fails.
+nfc_genl_deactivate_target() relies on the NFC_ATTR_TARGET_INDEX
+attribute being present, but doesn't check whether it is actually
+provided by the user. Same goes for nfc_genl_fw_download() and
+NFC_ATTR_FIRMWARE_NAME.
 
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() in ql_release_to_lrg_buf_free_list(), ql_populate_free_queue(), ql_alloc_large_buffers(), and ql3xxx_send()")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+This patch adds appropriate checks.
+
+Found with syzkaller.
+
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/qlogic/qla3xxx.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2787,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
- 				netdev_err(qdev->ndev,
- 					   "PCI mapping failed with error: %d\n",
- 					   err);
-+				dev_kfree_skb_irq(skb);
- 				ql_free_large_buffers(qdev);
- 				return -ENOMEM;
- 			}
+---
+ net/nfc/netlink.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -970,7 +970,8 @@ static int nfc_genl_dep_link_down(struct
+ 	int rc;
+ 	u32 idx;
+ 
+-	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
++	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
++	    !info->attrs[NFC_ATTR_TARGET_INDEX])
+ 		return -EINVAL;
+ 
+ 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
+@@ -1018,7 +1019,8 @@ static int nfc_genl_llc_get_params(struc
+ 	struct sk_buff *msg = NULL;
+ 	u32 idx;
+ 
+-	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
++	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
++	    !info->attrs[NFC_ATTR_FIRMWARE_NAME])
+ 		return -EINVAL;
+ 
+ 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
 
 
