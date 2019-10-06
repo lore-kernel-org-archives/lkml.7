@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA3BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25263C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5732080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDCA20862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383405;
-	bh=NjzupDenoqLLyLpB0bUoEgIBSgtmb3n0NUd2iv3HQdM=;
+	s=default; t=1570383411;
+	bh=2r8AeKYGjMupGol4CtMYkDcX41Wu5e//UTgfixnBy/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MxD7BIcEEV7RLCnHK87NRE4aytRWNJ/IIHykKNomtVkp/X2PcAThcLCSgij/VZZYR
-	 dnWDOvAgA7LxwmEauqL+mDG43Lx5+sWJ2suDbJ8qqecKr5E9S9YHMP8UenVt9dpDCW
-	 IUnWL8EepclL7H16KerRzykEk08YY8vxpBhvrVEw=
+	b=vWgKK3QAL84K7kgjJPajFIm1rfih9G27BsUoHgYNn7W24iej19s81QZjcrbGzsyhD
+	 r5wiwN4cU0HP6/NkNQUa+Q4C/0nxVjKATEqny1XZZwSfRol0F0GtXTFsu8P2EUDMRG
+	 +VdhQUu2JaPuokCGsRx30T3PvidfmEICyXOqlXgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbfJFRgo (ORCPT
+        id S1730357AbfJFRgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730315AbfJFRgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:41 -0400
+        id S1730339AbfJFRgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4112053B;
-        Sun,  6 Oct 2019 17:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB3112053B;
+        Sun,  6 Oct 2019 17:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383400;
-        bh=NjzupDenoqLLyLpB0bUoEgIBSgtmb3n0NUd2iv3HQdM=;
+        s=default; t=1570383408;
+        bh=2r8AeKYGjMupGol4CtMYkDcX41Wu5e//UTgfixnBy/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2tMNiPChmOiXbtxxketd8PlkmNkIEZbB/1+30VZqkdIfQk9u/izESIs1EMdSQovO2
-         8SbT3yYkVNUgpq78gwiwzykUE2EpFrksYwVaQqiDeNCCMZO7skWO2ZNaVk/FNVP40o
-         MW6p0DGXpOFWaVpoOeOL/kTEOyCyqh03dSr1txt0=
+        b=hUd+lxD4JzYJGyzFsZand6W/6W+zpMcjrxy1uYcS3yVcJELKDMl3/Fh6lXwf5a2+8
+         WvJQOGCF0BbyT8Izi4KNz73owNwOnBJN0rFBaYLYKQhifoiEJL2QnAhScAuww4PHhK
+         gtr1zrrG0XRUz6N/O5s0ob2v0ndh4yr00AIW4QYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Shirish S <shirish.s@amd.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 036/137] drm/amdgpu: Fix hard hang for S/G display BOs.
-Date:   Sun,  6 Oct 2019 19:20:20 +0200
-Message-Id: <20191006171212.121400912@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 094/137] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun,  6 Oct 2019 19:21:18 +0200
+Message-Id: <20191006171216.696748415@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,73 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit e4c4073b0139d055d43a9568690fc560aab4fa5c ]
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-HW requires for caching to be unset for scanout BO
-mappings when the BO placement is in GTT memory.
-Usually the flag to unset is passed from user mode
-but for FB mode this was missing.
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-v2:
-Keep all BO placement logic in amdgpu_display_supported_domains
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
 
-Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Tested-by: Shirish S <shirish.s@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c  | 7 +++----
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 3 ++-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/mfd/intel-lpss-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-index e476092188392..bf0c61baa05c7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-@@ -137,14 +137,14 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
- 						  fb_tiled);
- 	domain = amdgpu_display_supported_domains(adev);
--
- 	height = ALIGN(mode_cmd->height, 8);
- 	size = mode_cmd->pitches[0] * height;
- 	aligned_size = ALIGN(size, PAGE_SIZE);
- 	ret = amdgpu_gem_object_create(adev, aligned_size, 0, domain,
- 				       AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
--				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS |
--				       AMDGPU_GEM_CREATE_VRAM_CLEARED,
-+				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS     |
-+				       AMDGPU_GEM_CREATE_VRAM_CLEARED 	     |
-+				       AMDGPU_GEM_CREATE_CPU_GTT_USWC,
- 				       ttm_bo_type_kernel, NULL, &gobj);
- 	if (ret) {
- 		pr_err("failed to allocate framebuffer (%d)\n", aligned_size);
-@@ -166,7 +166,6 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 			dev_err(adev->dev, "FB failed to set tiling flags\n");
- 	}
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index aed2c04479663..3c271b14e7c6c 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -35,6 +35,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
  
--
- 	ret = amdgpu_bo_pin(abo, domain);
- 	if (ret) {
- 		amdgpu_bo_unreserve(abo);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index d4fcf54754646..6fc77ac814d8e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -746,7 +746,8 @@ int amdgpu_mode_dumb_create(struct drm_file *file_priv,
- 	struct amdgpu_device *adev = dev->dev_private;
- 	struct drm_gem_object *gobj;
- 	uint32_t handle;
--	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
-+	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
-+		    AMDGPU_GEM_CREATE_CPU_GTT_USWC;
- 	u32 domain;
- 	int r;
- 
++	pdev->d3cold_delay = 0;
++
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
+ 	pci_try_set_mwi(pdev);
 -- 
 2.20.1
 
