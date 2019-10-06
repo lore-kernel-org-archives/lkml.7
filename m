@@ -2,83 +2,164 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67887ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD7020862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570377100;
-	bh=IKQEcQ5xYjeh1+fpHNxvg0gttpN5rYp8I8PcfsoeK8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=08C4leKAcfOEq0WlOlpxQzZV7v24jKObsyR9qil432gojUbuE8DCLjgtdXupWsufM
-	 Svp8nSydNlNq5ydtfmYTLuNq22VMNlcSixbrdujrt/isCqNYjf8dOOlNi6QqWKvsBm
-	 GpF0DPNmd3FmCrHZD9wim7Q8H5x1acYXcfWuo96k=
+	by mail.kernel.org (Postfix) with ESMTP id 3E45D20835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="El+CWmCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfJFPvk (ORCPT
+        id S1726703AbfJFQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:51:40 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52410 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbfJFPvk (ORCPT
+        Sun, 6 Oct 2019 12:03:30 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:34066 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfJFQDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:51:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r19so10079236wmh.2;
-        Sun, 06 Oct 2019 08:51:37 -0700 (PDT)
+        Sun, 6 Oct 2019 12:03:30 -0400
+Received: by mail-yb1-f196.google.com with SMTP id m1so3851667ybm.1;
+        Sun, 06 Oct 2019 09:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dVq3A/TrWA22YphYYB+8No5n6QtHAxN2b6l0mk2+kwE=;
+        b=El+CWmCQb7R1fo1oaYIeiyEHx3GBZV4IoBkFhd03r6gfzUl03znZ2gdd9tCnotz27U
+         qf720XYBzApe7w5zHR9EQ6v6qxaoiJ5P9Fv4DLS63DpPZMaPPr63LQSba6an/X8SQW1F
+         wesEJwGo4JmAzqcHtXkfzFjqWqLwiPIGkfiWAQEEVWIXy0KiwgPiID4CLh8oNGf2QE4L
+         oMnBwWRUXXmq8b/G9vNjukYF3TjiQYfjtZ50CTj7AM+lZKrKH7DPJ32tDdThMa2rkBE4
+         QZ5fEmkYrXC/KK+7mWFL8+mM9dUFjPx2IhQ2uAZKSely5VF+4GYckmZy2jflNlF8iB42
+         qfTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0nXnEB9b2XWFTb5GFglwkFLq+9bBGBkHzp8HDXQJJYk=;
-        b=H17J9Z+nYHEm9yXpdUB+KwmcnS8bD/5iasiJS1bq6WI17f66nITXNhd28BZSwO4KYU
-         txjKa7JHkevea/va7qkevnsNurKJJZnn/9CPcXdSPT/zkuWxT0Lo6H8b4ELUdVZhVBvt
-         XV2OEIAU8f2pSUs/ij4uM47GY+7i4ocVq9XqOAi+J/xPFms+QpNBag1Po89eEhgyMXqI
-         ZiCc+EMtAKSUhDhKCN9erBF+IHNNKLheAkLHVp0UVZhVq+hdg53U+AVxI7KdiVhOgjYg
-         oSbXgLBN8vi1FVCexcOanDZMinsoH6nFVWOjNQ/RKkknLp21cL1L033hE7VKdP6P/Jxs
-         VSSw==
-X-Gm-Message-State: APjAAAUw1ULy2D/Iysuw1PEXvPvCEs+vsdMykI02iOedZkjFag4sXzNM
-        67mnW9RPqaUIHz6tufQWI0A=
-X-Google-Smtp-Source: APXvYqwMPG0oNHL5qqKUMGxfKA4MAEB/fhmshV+PJLM+ItEC8trmEp5NVxLkaqXJHGbyUjOCdc3wAw==
-X-Received: by 2002:a7b:cc0c:: with SMTP id f12mr17619692wmh.105.1570377096921;
-        Sun, 06 Oct 2019 08:51:36 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id q10sm35989747wrd.39.2019.10.06.08.51.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Oct 2019 08:51:36 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 17:51:34 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     kgene@kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
-Subject: Re: [PATCH] soc: samsung: chipid: Make exynos_chipid_early_init()
- static
-Message-ID: <20191006155134.GD29365@kozik-lap>
-References: <CGME20190904085001eucas1p2b3a120d6206983d47f0084b872042342@eucas1p2.samsung.com>
- <20190904084951.28971-1-s.nawrocki@samsung.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dVq3A/TrWA22YphYYB+8No5n6QtHAxN2b6l0mk2+kwE=;
+        b=fCdyYNU1WeaJfruU+9pX7r9fC+Tn7/U4bGaCIH7MyUKp0WHzUV3OkeIJZC9zqKLRQu
+         1NqUKwfuGaqn6AjKpDaSTGfa2d5cPAFpqXPsaOabS7CQtoWU5fNnQ6DPmBFFIiT4zMD1
+         6U12f+/ZRyxjjn2DthNCxvaSTpbTsoXJ8a5ycmNm7OEHozQXBFs7h7m14aIQ4occH1mV
+         kzc8SOP9RpGGJBVErtGcKhWavTKqAVMR7q6hmFRlgRN5Y3r0BLmn4ZFjLTUShENM1ViM
+         vdmca6o3i1oSJcjY2P/BoS5+PwbearHvsS1rm8BJKCkQiMjlX/+fd3jQdH65LCW7zvd0
+         ihlA==
+X-Gm-Message-State: APjAAAXnl27L9jalkDeg4BUpwa4Ofw60ruKjkDZ1qI1DHMByMKY3Av+V
+        N7Z0VXFjOc/YwTvELSLBLjE=
+X-Google-Smtp-Source: APXvYqyT7gjrdIuAXN+Bwn4RKda6PPR1sKi1ETOlqbj7vb1Sy27HtwuzkOxhz14rXqUdFFOvXtIc3Q==
+X-Received: by 2002:a25:ab21:: with SMTP id u30mr3900549ybi.143.1570377808701;
+        Sun, 06 Oct 2019 09:03:28 -0700 (PDT)
+Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
+        by smtp.gmail.com with ESMTPSA id y129sm3341816ywy.41.2019.10.06.09.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 09:03:27 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
+        david@lechnology.com,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v4 0/2] Simplify count_read/count_write/signal_read
+Date:   Sun,  6 Oct 2019 12:03:09 -0400
+Message-Id: <cover.1570377521.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190904084951.28971-1-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 10:49:51AM +0200, Sylwester Nawrocki wrote:
-> Add missing static qualifier to the chipid initcall function.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  drivers/soc/samsung/exynos-chipid.c | 2 +-
+Changes in v4:
+ - Rebase ontop of ti-eqep introduction patches and update ti-eqep
 
-Thanks, applied.
+The changes in this patchset will not affect the userspace interface.
+Rather, these changes are intended to simplify the kernelspace Counter
+callbacks for counter device driver authors.
 
-Best regards,
-Krzysztof
+The following main changes are proposed:
+
+* Retire the opaque counter_count_read_value/counter_count_write_value
+  structures and simply represent count data as an unsigned integer.
+
+* Retire the opaque counter_signal_read_value structure and represent
+  Signal data as a counter_signal_value enum.
+
+These changes should reduce some complexity and code in the use and
+implementation of the count_read, count_write, and signal_read
+callbacks.
+
+The opaque structures for Count data and Signal data were introduced
+originally in anticipation of supporting various representations of
+counter data (e.g. arbitrary-precision tallies, floating-point spherical
+coordinate positions, etc). However, with the counter device drivers
+that have appeared, it's become apparent that utilizing opaque
+structures in kernelspace is not the best approach to take.
+
+I believe it is best to let userspace applications decide how to
+interpret the count data they receive. There are a couple of reasons why
+it would be good to do so:
+
+* Users use their devices in unexpected ways.
+
+  For example, a quadrature encoder counter device is typically used to
+  keep track of the position of a motor, but a user could set the device
+  in a pulse-direction mode and instead use it to count sporadic rising
+  edges from an arbitrary signal line unrelated to positioning. Users
+  should have the freedom to decide what their data represents.
+
+* Most counter devices represent data as unsigned integers anyway.
+
+  For example, whether the device is a tally counter or position
+  counter, the count data is represented to the user as an unsigned
+  integer value. So specifying that one device is representing tallies
+  while the other specifies positions does not provide much utility from
+  an interface perspective.
+
+For these reasons, the count_read and count_write callbacks have been
+redefined to pass count data directly as unsigned long instead of passed
+via opaque structures:
+
+        count_read(struct counter_device *counter,
+                   struct counter_count *count, unsigned long *val);
+        count_write(struct counter_device *counter,
+                    struct counter_count *count, unsigned long val);
+
+Similarly, the signal_read is redefined to pass Signal data directly as
+a counter_signal_value enum instead of via an opaque structure:
+
+        signal_read(struct counter_device *counter,
+                    struct counter_signal *signal,
+                    enum counter_signal_value *val);
+
+The counter_signal_value enum is simply the counter_signal_level enum
+redefined to remove the references to the Signal data "level" data type.
+
+William Breathitt Gray (2):
+  counter: Simplify the count_read and count_write callbacks
+  docs: driver-api: generic-counter: Update Count and Signal data types
+
+ Documentation/driver-api/generic-counter.rst |  22 ++--
+ drivers/counter/104-quad-8.c                 |  33 ++----
+ drivers/counter/counter.c                    | 101 +++----------------
+ drivers/counter/ftm-quaddec.c                |  14 +--
+ drivers/counter/stm32-lptimer-cnt.c          |   5 +-
+ drivers/counter/stm32-timer-cnt.c            |  17 +---
+ drivers/counter/ti-eqep.c                    |  19 ++--
+ include/linux/counter.h                      |  74 ++------------
+ 8 files changed, 59 insertions(+), 226 deletions(-)
+
+
+base-commit: 0c3aa63a842d84990bd02622f2fa50d2bd33c652
+prerequisite-patch-id: ebe284609b3db8d4130ea2915f7f7b185c743a70
+prerequisite-patch-id: cbe857759f10d875690df125d18bc04f585ac7c9
+prerequisite-patch-id: 21f2660dc88627387ee4666d08044c63dd961dae
+-- 
+2.23.0
 
