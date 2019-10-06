@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2666C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCF9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935C820673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67ABD20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384262;
-	bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
+	s=default; t=1570384264;
+	bh=JtWgIdPbrxTIzhHvd5RJChyICdzkwyKEP1/c3Lj8kLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQ5zTGRwfLWpCaF46qCNWttTXTgDhefS73P4dccngzakjZfKffLE4OU9e0OrYmFRk
-	 yPK8CYclyywOhkiYfOXUA6n05g+Qx8qGnnpUMpCmX05N3MImdaA2wUQk5b50tAn5D1
-	 5L5ziPHoCf2xOD9ob5FFnCvBs7HHyq7clyhvrjX8=
+	b=0GnWwGKk2Pztq59WQCcyMHuVC5rulVQnulZ5ptGHrhs+/fA6a7q/Fmc8DVoHrJrsG
+	 q2sJTgBNZz/Gn5Zs2lIubbwntGCKUYLsRGsNiqgHlsmI4WAbqu9sLu2JMAv15UgtF6
+	 ofYStUL6elpQLvYua6CobL+aAiPmIs32+5Bse+yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfJFRvB (ORCPT
+        id S1730519AbfJFRvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48972 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727321AbfJFRuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727265AbfJFRuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ECA02087E;
-        Sun,  6 Oct 2019 17:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF53821872;
+        Sun,  6 Oct 2019 17:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383919;
-        bh=qbJambDLBU2iCC1IS1jCXXoXh7F8TMycRq4h3giH+D8=;
+        s=default; t=1570383941;
+        bh=JtWgIdPbrxTIzhHvd5RJChyICdzkwyKEP1/c3Lj8kLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jgXzoPUKmb3HK6NcHyUiM9e4xQKZriUFIrflYM+TJrXHZB3MUuHiotCFqCOLrmiFL
-         sTIxfYWm/WxWSSWgqtQnXs2suSK8RDbycbYSkHx+8uhOA0ObPaNpYOc+502kBRsuV4
-         GXM6eFMLE/DaafD1+0bqrwzkf+cQXlNIZwjPy0UU=
+        b=Yh/br1eSJYr50P8lEDMtX28ytovq9sjAgEScWtZx4SOY1vSpMlFb0bQ5ksGn69jO8
+         8E9Xx2OQx0QHkpwGgR2ii86qQy+CddlnlP6ZT0VX9F8UvRssAe5QoEB6Zz1lICU+Z/
+         xcFI55FsoxdhFyQmKIz441GLPGRroHw71cxCorXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 145/166] net: dsa: rtl8366: Check VLAN ID and not ports
-Date:   Sun,  6 Oct 2019 19:21:51 +0200
-Message-Id: <20191006171225.179123080@linuxfoundation.org>
+Subject: [PATCH 5.3 152/166] ptp_qoriq: Initialize the registers spinlock before calling ptp_qoriq_settime
+Date:   Sun,  6 Oct 2019 19:21:58 +0200
+Message-Id: <20191006171225.700840257@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,58 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit e8521e53cca584ddf8ec4584d3c550a6c65f88c4 ]
+[ Upstream commit db34a4714c013b644eec2de0ec81b1f0373b8b93 ]
 
-There has been some confusion between the port number and
-the VLAN ID in this driver. What we need to check for
-validity is the VLAN ID, nothing else.
+Because ptp_qoriq_settime is being called prior to spin_lock_init, the
+following stack trace can be seen at driver probe time:
 
-The current confusion came from assigning a few default
-VLANs for default routing and we need to rewrite that
-properly.
+[    2.269117] the code is fine but needs lockdep annotation.
+[    2.274569] turning off the locking correctness validator.
+[    2.280027] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc7-01478-g01eaa67a4797 #263
+[    2.288073] Hardware name: Freescale LS1021A
+[    2.292337] [<c0313cb4>] (unwind_backtrace) from [<c030e11c>] (show_stack+0x10/0x14)
+[    2.300045] [<c030e11c>] (show_stack) from [<c1219440>] (dump_stack+0xcc/0xf8)
+[    2.307235] [<c1219440>] (dump_stack) from [<c03b9b44>] (register_lock_class+0x730/0x73c)
+[    2.315372] [<c03b9b44>] (register_lock_class) from [<c03b6190>] (__lock_acquire+0x78/0x270c)
+[    2.323856] [<c03b6190>] (__lock_acquire) from [<c03b90cc>] (lock_acquire+0xe0/0x22c)
+[    2.331649] [<c03b90cc>] (lock_acquire) from [<c123c310>] (_raw_spin_lock_irqsave+0x54/0x68)
+[    2.340048] [<c123c310>] (_raw_spin_lock_irqsave) from [<c0e73fe4>] (ptp_qoriq_settime+0x38/0x80)
+[    2.348878] [<c0e73fe4>] (ptp_qoriq_settime) from [<c0e746d4>] (ptp_qoriq_init+0x1f8/0x484)
+[    2.357189] [<c0e746d4>] (ptp_qoriq_init) from [<c0e74aac>] (ptp_qoriq_probe+0xd0/0x184)
+[    2.365243] [<c0e74aac>] (ptp_qoriq_probe) from [<c0b0a07c>] (platform_drv_probe+0x48/0x9c)
+[    2.373555] [<c0b0a07c>] (platform_drv_probe) from [<c0b07a14>] (really_probe+0x1c4/0x400)
+[    2.381779] [<c0b07a14>] (really_probe) from [<c0b07e28>] (driver_probe_device+0x78/0x1b8)
+[    2.390003] [<c0b07e28>] (driver_probe_device) from [<c0b081d0>] (device_driver_attach+0x58/0x60)
+[    2.398832] [<c0b081d0>] (device_driver_attach) from [<c0b082d4>] (__driver_attach+0xfc/0x160)
+[    2.407402] [<c0b082d4>] (__driver_attach) from [<c0b05a84>] (bus_for_each_dev+0x68/0xb4)
+[    2.415539] [<c0b05a84>] (bus_for_each_dev) from [<c0b06b68>] (bus_add_driver+0x104/0x20c)
+[    2.423763] [<c0b06b68>] (bus_add_driver) from [<c0b0909c>] (driver_register+0x78/0x10c)
+[    2.431815] [<c0b0909c>] (driver_register) from [<c030313c>] (do_one_initcall+0x8c/0x3ac)
+[    2.439954] [<c030313c>] (do_one_initcall) from [<c1f013f4>] (kernel_init_freeable+0x468/0x548)
+[    2.448610] [<c1f013f4>] (kernel_init_freeable) from [<c12344d8>] (kernel_init+0x8/0x10c)
+[    2.456745] [<c12344d8>] (kernel_init) from [<c03010b4>] (ret_from_fork+0x14/0x20)
+[    2.464273] Exception stack(0xea89ffb0 to 0xea89fff8)
+[    2.469297] ffa0:                                     00000000 00000000 00000000 00000000
+[    2.477432] ffc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    2.485566] ffe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
-Instead of checking if the port number is a valid VLAN
-ID, check the actual VLAN IDs passed in to the callback
-one by one as expected.
-
-Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: ff54571a747b ("ptp_qoriq: convert to use ptp_qoriq_init/free")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/rtl8366.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/ptp/ptp_qoriq.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/dsa/rtl8366.c
-+++ b/drivers/net/dsa/rtl8366.c
-@@ -339,10 +339,12 @@ int rtl8366_vlan_prepare(struct dsa_swit
- 			 const struct switchdev_obj_port_vlan *vlan)
- {
- 	struct realtek_smi *smi = ds->priv;
-+	u16 vid;
- 	int ret;
+--- a/drivers/ptp/ptp_qoriq.c
++++ b/drivers/ptp/ptp_qoriq.c
+@@ -507,6 +507,8 @@ int ptp_qoriq_init(struct ptp_qoriq *ptp
+ 		ptp_qoriq->regs.etts_regs = base + ETTS_REGS_OFFSET;
+ 	}
  
--	if (!smi->ops->is_vlan_valid(smi, port))
--		return -EINVAL;
-+	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
-+		if (!smi->ops->is_vlan_valid(smi, vid))
-+			return -EINVAL;
++	spin_lock_init(&ptp_qoriq->lock);
++
+ 	ktime_get_real_ts64(&now);
+ 	ptp_qoriq_settime(&ptp_qoriq->caps, &now);
  
- 	dev_info(smi->dev, "prepare VLANs %04x..%04x\n",
- 		 vlan->vid_begin, vlan->vid_end);
-@@ -370,8 +372,9 @@ void rtl8366_vlan_add(struct dsa_switch
- 	u16 vid;
- 	int ret;
+@@ -514,7 +516,6 @@ int ptp_qoriq_init(struct ptp_qoriq *ptp
+ 	  (ptp_qoriq->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
+ 	  (ptp_qoriq->cksel & CKSEL_MASK) << CKSEL_SHIFT;
  
--	if (!smi->ops->is_vlan_valid(smi, port))
--		return;
-+	for (vid = vlan->vid_begin; vid < vlan->vid_end; vid++)
-+		if (!smi->ops->is_vlan_valid(smi, vid))
-+			return;
+-	spin_lock_init(&ptp_qoriq->lock);
+ 	spin_lock_irqsave(&ptp_qoriq->lock, flags);
  
- 	dev_info(smi->dev, "add VLAN on port %d, %s, %s\n",
- 		 port,
+ 	regs = &ptp_qoriq->regs;
 
 
