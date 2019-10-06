@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F50C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C431C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8414C214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA772087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfJFKdh (ORCPT
+        id S1727150AbfJFKdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:33:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57804 "EHLO huawei.com"
+        Sun, 6 Oct 2019 06:33:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57978 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727040AbfJFKdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:33:35 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CD44A5F4786B90C41FC6;
-        Sun,  6 Oct 2019 18:33:32 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:33:25 +0800
+        id S1727040AbfJFKdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:33:40 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B23469E9D902B5E687B3;
+        Sun,  6 Oct 2019 18:33:37 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:33:29 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
         <joel@jms.id.au>, <andrew@aj.id.au>, <nicolas.ferre@microchip.com>,
@@ -46,9 +46,9 @@ CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 24/34] rtc: spear: use devm_platform_ioremap_resource() to simplify code
-Date:   Sun, 6 Oct 2019 18:29:43 +0800
-Message-ID: <20191006102953.57536-25-yuehaibing@huawei.com>
+Subject: [PATCH -next 25/34] rtc: stk17ta8: use devm_platform_ioremap_resource() to simplify code
+Date:   Sun, 6 Oct 2019 18:29:44 +0800
+Message-ID: <20191006102953.57536-26-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191006102953.57536-1-yuehaibing@huawei.com>
 References: <20191006102953.57536-1-yuehaibing@huawei.com>
@@ -66,31 +66,31 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/rtc/rtc-spear.c | 4 +---
+ drivers/rtc/rtc-stk17ta8.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-spear.c b/drivers/rtc/rtc-spear.c
-index 9f23b24..833daeb 100644
---- a/drivers/rtc/rtc-spear.c
-+++ b/drivers/rtc/rtc-spear.c
-@@ -347,7 +347,6 @@ static const struct rtc_class_ops spear_rtc_ops = {
+diff --git a/drivers/rtc/rtc-stk17ta8.c b/drivers/rtc/rtc-stk17ta8.c
+index a833ebc..01a4504 100644
+--- a/drivers/rtc/rtc-stk17ta8.c
++++ b/drivers/rtc/rtc-stk17ta8.c
+@@ -256,7 +256,6 @@ static int stk17ta8_nvram_write(void *priv, unsigned int pos, void *val,
  
- static int spear_rtc_probe(struct platform_device *pdev)
+ static int stk17ta8_rtc_probe(struct platform_device *pdev)
  {
 -	struct resource *res;
- 	struct spear_rtc_config *config;
- 	int status = 0;
- 	int irq;
-@@ -369,8 +368,7 @@ static int spear_rtc_probe(struct platform_device *pdev)
- 		return status;
- 	}
+ 	unsigned int cal;
+ 	unsigned int flags;
+ 	struct rtc_plat_data *pdata;
+@@ -275,8 +274,7 @@ static int stk17ta8_rtc_probe(struct platform_device *pdev)
+ 	if (!pdata)
+ 		return -ENOMEM;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	config->ioaddr = devm_ioremap_resource(&pdev->dev, res);
-+	config->ioaddr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(config->ioaddr))
- 		return PTR_ERR(config->ioaddr);
- 
+-	ioaddr = devm_ioremap_resource(&pdev->dev, res);
++	ioaddr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ioaddr))
+ 		return PTR_ERR(ioaddr);
+ 	pdata->ioaddr = ioaddr;
 -- 
 2.7.4
 
