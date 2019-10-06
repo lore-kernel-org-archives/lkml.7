@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F36C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51598C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18CDE2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F5C21479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383652;
-	bh=bnDghddhGNrXYMm7y7i94nht+NXgCpKvXxgaNq7ZRAE=;
+	s=default; t=1570383658;
+	bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdfhvwylMZyUNx5N0d31Iz4lfPT2JGIJv6mzuhxOt57rylRU16920kgGhCGcFGHc8
-	 lFsK2SML3/R/GGvuueVcGHKD69KNEO8iqWOBKtGIXGjK5h9XmwEgQWFgyzG4PwV8S+
-	 6JE+VcCdB/WhkA6CwgwPBJ539jyt6YcAZ03TzdTk=
+	b=PvFFwhZcMWdKhTtIuwEjGW4fvZU/SVmCcHNJOPxXSO+2MacWuAaVer7eBmwFc+k/V
+	 LX1xtMgvjPWJjbB1DIQneZMzcoubkOF66EqNpnJW2poLCrQsIbAeMRtTzW4teInyrn
+	 qN7ylFzlZmVB6OccYnsibm8bOUUIPlBe6mwwqrVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbfJFRkv (ORCPT
+        id S1731108AbfJFRk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbfJFRkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:45 -0400
+        id S1731091AbfJFRkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C7A20700;
-        Sun,  6 Oct 2019 17:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46CA02133F;
+        Sun,  6 Oct 2019 17:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383644;
-        bh=bnDghddhGNrXYMm7y7i94nht+NXgCpKvXxgaNq7ZRAE=;
+        s=default; t=1570383652;
+        bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwEUPPZJaQ1QLXtnIyh5C5QbTih6HB9Mzdm5LIT7ZeK+8kc3Sl4zL73iaSk7LfcZe
-         sfNCF883Fam1SnsMIU5dHyjbrLHXbFOXV0zx4QQUc/SpRPmkLU5nl4AZbN2fj8NtVQ
-         DAjeKjGg/Rj/MrJyMBwx9ajyI7IyXyknKdF/g6bI=
+        b=spYGapJmlQqoC0pR57YiVvwfgBNCPyJrYxXfblszcYw42hNbW8pcadcMQinHJMUPq
+         Eq1p18BJk8e3HtF6nqWpB5NDniG8DpVca7IkaGexKb6mE7q5T5G1pa7VodXpkWO4lG
+         uwEF04NI4A4ZxP3X5d4EIbvM5ynDC8ee1n/ZAdxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikola Cornij <nikola.cornij@amd.com>,
-        Joshua Aberback <Joshua.Aberback@amd.com>,
-        Chris Park <Chris.Park@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 009/166] drm/amd/display: Clear FEC_READY shadow register if DPCD write fails
-Date:   Sun,  6 Oct 2019 19:19:35 +0200
-Message-Id: <20191006171213.432636170@linuxfoundation.org>
+Subject: [PATCH 5.3 046/166] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date:   Sun,  6 Oct 2019 19:20:12 +0200
+Message-Id: <20191006171216.864783027@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,39 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikola Cornij <nikola.cornij@amd.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit d68a74541735e030dea56f72746cd26d19986f41 ]
+[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
 
-[why]
-As a fail-safe, in case 'set FEC_READY' DPCD write fails, a HW shadow
-register should be cleared and the internal FEC stat should be set to
-'not ready'. This is to make sure HW settings will be consistent with
-FEC_READY state on the RX.
+pmx_writel uses writel which inserts write barrier before the
+register write.
 
-Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Joshua Aberback <Joshua.Aberback@amd.com>
-Acked-by: Chris Park <Chris.Park@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This patch has fix to replace writel with writel_relaxed followed
+by a readback and memory barrier to ensure write operation is
+completed for successful pinctrl change.
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 2c7aaed907b91..0bf85a7a2cd31 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -3033,6 +3033,8 @@ void dp_set_fec_ready(struct dc_link *link, bool ready)
- 				link_enc->funcs->fec_set_ready(link_enc, true);
- 				link->fec_state = dc_link_fec_ready;
- 			} else {
-+				link->link_enc->funcs->fec_set_ready(link->link_enc, false);
-+				link->fec_state = dc_link_fec_not_ready;
- 				dm_error("dpcd write failed to set fec_ready");
- 			}
- 		} else if (link->fec_state == dc_link_fec_ready && !ready) {
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 186ef98e7b2b8..f1b523beec5b3 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -32,7 +32,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+ 
+ static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
+ {
+-	writel(val, pmx->regs[bank] + reg);
++	writel_relaxed(val, pmx->regs[bank] + reg);
++	/* make sure pinmux register write completed */
++	pmx_readl(pmx, bank, reg);
+ }
+ 
+ static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
 -- 
 2.20.1
 
