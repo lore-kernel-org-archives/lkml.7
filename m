@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE4CC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F08C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67B8217D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E7A20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384821;
-	bh=kAO61HjFeH1doRYmWN6z62Ejk2alckKKZ1JNaT4YbW0=;
+	s=default; t=1570384824;
+	bh=2Q/4MtwUVizCp4FO/MXsq8GYoPfKnljP6aUWr61tcrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=St6ugIKAErwNwhIpT1oF8eMAXb6SsHz+zJ6Pw4eOhzbamxpxvMcdsaZxXgTmSaY8l
-	 2Q/bHymBcgQ2y1RTwrcCP16G24cDzI25nAa2xFtKSL/+oNTtR5eBDcP/gieG6aqhjQ
-	 epWb45HFmwgyN7AxWtRsDXY4q/Vbtj+Eoaw2aai8=
+	b=Meq7Vz4P7lIQ9qKuTwc9SJG7ku/zUFkqH9TEOEqpZzL+8ZKKcLGJE99LkkvraHe6M
+	 7OTOzPAyXfSxrlwDvVq5KhkkJEKi8mhCiDjvv187+ySnlf0ujMuoPaBKCyJvfYWDmE
+	 Ry3Zi3v3+LKFmmZTrKBFxG3NevtPd2PWT42FbQNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfJFR3P (ORCPT
+        id S1728900AbfJFSAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:00:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbfJFR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:12 -0400
+        id S1728942AbfJFR3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8E6F217F9;
-        Sun,  6 Oct 2019 17:29:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20EAE2080F;
+        Sun,  6 Oct 2019 17:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382951;
-        bh=kAO61HjFeH1doRYmWN6z62Ejk2alckKKZ1JNaT4YbW0=;
+        s=default; t=1570382948;
+        bh=2Q/4MtwUVizCp4FO/MXsq8GYoPfKnljP6aUWr61tcrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ai5A4p/GTX0h6nS2W/jv+h/FCgXFVHox7msLRFg/16ApTnMTlD76Vr/f8UBpbgQGM
-         NUlhlOFMaDuRZsoo17w5/FFPD6M41BV8+EJRu5Rm9jafcfYFCWijj4EnOT1nIABQea
-         w+s6kfTz/aowtHGeEJ4UDI003EhcSELXn4USsseI=
+        b=KbM1lBHq31a6rKXkMe0AVz7MuGC2ug3HA8llEYfJB4MWaG55A81B0X7maEucpd6It
+         qiKgvYwU7c3SoSaee15kaAHUzIEL4lXHxWy+adIIUi/Y9DZAI2rXn32dI92DG/VZfP
+         jO3cmf6rRuUYd+I5Da0YEzldvbhvvZc2IUp7+Ht0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/106] pinctrl: amd: disable spurious-firing GPIO IRQs
-Date:   Sun,  6 Oct 2019 19:20:36 +0200
-Message-Id: <20191006171139.515584588@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 003/106] drm/bridge: tc358767: Increase AUX transfer length limit
+Date:   Sun,  6 Oct 2019 19:20:09 +0200
+Message-Id: <20191006171126.240257065@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,72 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit d21b8adbd475dba19ac2086d3306327b4a297418 ]
+[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
 
-When cold-booting Asus X434DA, GPIO 7 is found to be already configured
-as an interrupt, and the GPIO level is found to be in a state that
-causes the interrupt to fire.
+According to the datasheet tc358767 can transfer up to 16 bytes via
+its AUX channel, so the artificial limit of 8 appears to be too
+low. However only up to 15-bytes seem to be actually supported and
+trying to use 16-byte transfers results in transfers failing
+sporadically (with bogus status in case of I2C transfers), so limit it
+to 15.
 
-As soon as pinctrl-amd probes, this interrupt fires and invokes
-amd_gpio_irq_handler(). The IRQ is acked, but no GPIO-IRQ handler was
-invoked, so the GPIO level being unchanged just causes another interrupt
-to fire again immediately after.
-
-This results in an interrupt storm causing this platform to hang
-during boot, right after pinctrl-amd is probed.
-
-Detect this situation and disable the GPIO interrupt when this happens.
-This enables the affected platform to boot as normal. GPIO 7 actually is
-the I2C touchpad interrupt line, and later on, i2c-multitouch loads and
-re-enables this interrupt when it is ready to handle it.
-
-Instead of this approach, I considered disabling all GPIO interrupts at
-probe time, however that seems a little risky, and I also confirmed that
-Windows does not seem to have this behaviour: the same 41 GPIO IRQs are
-enabled under both Linux and Windows, which is a far larger collection
-than the GPIOs referenced by the DSDT on this platform.
-
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/r/20190814090540.7152-1-drake@endlessm.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 1425c2874d402..cd7a5d95b499a 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -569,15 +569,25 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
- 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
- 				continue;
- 			irq = irq_find_mapping(gc->irq.domain, irqnr + i);
--			generic_handle_irq(irq);
-+			if (irq != 0)
-+				generic_handle_irq(irq);
- 
- 			/* Clear interrupt.
- 			 * We must read the pin register again, in case the
- 			 * value was changed while executing
- 			 * generic_handle_irq() above.
-+			 * If we didn't find a mapping for the interrupt,
-+			 * disable it in order to avoid a system hang caused
-+			 * by an interrupt storm.
- 			 */
- 			raw_spin_lock_irqsave(&gpio_dev->lock, flags);
- 			regval = readl(regs + i);
-+			if (irq == 0) {
-+				regval &= ~BIT(INTERRUPT_ENABLE_OFF);
-+				dev_dbg(&gpio_dev->pdev->dev,
-+					"Disabling spurious GPIO IRQ %d\n",
-+					irqnr + i);
-+			}
- 			writel(regval, regs + i);
- 			raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
- 			ret = IRQ_HANDLED;
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index aaca5248da070..d728b6cf61096 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -302,7 +302,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
+ {
+ 	struct tc_data *tc = aux_to_tc(aux);
+-	size_t size = min_t(size_t, 8, msg->size);
++	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+ 	u8 *buf = msg->buffer;
+ 	u32 tmp = 0;
 -- 
 2.20.1
 
