@@ -2,55 +2,56 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0113C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81286C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957D120862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599F32053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383694;
-	bh=XBtLILC1EqGpUwxx8Twbl8rVA44ne2zeh7juqbZ4Re4=;
+	s=default; t=1570383697;
+	bh=r7clx+IRTUbZI71jftjGrG09BfRH4JbqPfE9eaE08qM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8wBxTj+HefCw8FP1Q7WQs97Mr9+N7dPTMgiCdp9UKiPwKE4WdVWX8Txe2rST7hRG
-	 RxGm5Cc7aKBpliPYKiTTymfhQ2oSn0eT8vYayRE0LwTWjWk9Gr/7GYTxrSgGEMiQo2
-	 3xW7v7X2lClrGIpF1T1nDQOKO3sARtrsuKAxX6Rg=
+	b=F8TFLkSejxiT7RWUcQ4LMDLGOk8+ezsVFwJ6IALpFTQQbFScKJsOiOpS86f+yqeyh
+	 qTmDpo2BRUMUXBZC5JdZJ8xgpQ3iFhNjErf2swas7vregXMcAd9xfDWWTBUmpUDBT2
+	 GfND0+SiWYatyplPBRT8hRKsIyQDr77pPHSqRUp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbfJFRld (ORCPT
+        id S1731236AbfJFRlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41084 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:41:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731207AbfJFRl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:41:28 -0400
+        id S1731207AbfJFRle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:41:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E2D2053B;
-        Sun,  6 Oct 2019 17:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65CED20700;
+        Sun,  6 Oct 2019 17:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383687;
-        bh=XBtLILC1EqGpUwxx8Twbl8rVA44ne2zeh7juqbZ4Re4=;
+        s=default; t=1570383692;
+        bh=r7clx+IRTUbZI71jftjGrG09BfRH4JbqPfE9eaE08qM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3uJhtWFJM+X6O3FMpbCdI5j0LKVajNqOhKgEJv/e3grJRj3V6bQx6TTZU2u/pN3K
-         sCrAHf4+8L7lQVhIs6scqw2wpdz8u5RmrdTpBkevj2T9OCDNQDPZmTEeS8vT0FjWDo
-         WlublA+8J1w+9TDlesCeKvafzpciIKtCw1maI+Gg=
+        b=HtGNrUN3bRs7z19ERirPPUDWkkkAUqhknl5AYwCX0lVhCi2AwSJQXB85XY4jRRJN/
+         B/qsUNfxUXzLQ4T8CH+M+4IMobEJd984z4xkT7mI7kauYjDok23Ke2dqwJjEIwJZ/d
+         G/Ihyg5RHODoiEDb3ell/Kv2USagwR3z6wK9liE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yogesh Mohan Marimuthu <yogesh.mohanmarimuthu@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 058/166] drm/amd/display: fix trigger not generated for freesync
-Date:   Sun,  6 Oct 2019 19:20:24 +0200
-Message-Id: <20191006171218.023647315@linuxfoundation.org>
+Subject: [PATCH 5.3 060/166] kbuild: Do not enable -Wimplicit-fallthrough for clang for now
+Date:   Sun,  6 Oct 2019 19:20:26 +0200
+Message-Id: <20191006171218.230265051@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -63,40 +64,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yogesh Mohan Marimuthu <yogesh.mohanmarimuthu@amd.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1e7f100ce8c0640634b794604880d9204480c9f1 ]
+[ Upstream commit e2079e93f562c7f7a030eb7642017ee5eabaaa10 ]
 
-[Why]
-In newer hardware MANUAL_FLOW_CONTROL is not a trigger bit. Due to this
-front porch is fixed and in these hardware freesync does not work.
+This functionally reverts commit bfd77145f35c ("Makefile: Convert
+-Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang").
 
-[How]
-Change the programming to generate a pulse so that the event will be
-triggered, front porch will be cut short and freesync will work.
+clang enabled support for -Wimplicit-fallthrough in C in r369414 [1],
+which causes a lot of warnings when building the kernel for two reasons:
 
-Signed-off-by: Yogesh Mohan Marimuthu <yogesh.mohanmarimuthu@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+1. Clang does not support the /* fall through */ comments. There seems
+   to be a general consensus in the LLVM community that this is not
+   something they want to support. Joe Perches wrote a script to convert
+   all of the comments to a "fallthrough" keyword that will be added to
+   compiler_attributes.h [2] [3], which catches the vast majority of the
+   comments. There doesn't appear to be any consensus in the kernel
+   community when to do this conversion.
+
+2. Clang and GCC disagree about falling through to final case statements
+   with no content or cases that simply break:
+
+   https://godbolt.org/z/c8csDu
+
+   This difference contributes at least 50 warnings in an allyesconfig
+   build for x86, not considering other architectures. This difference
+   will need to be discussed to see which compiler is right [4] [5].
+
+[1]: https://github.com/llvm/llvm-project/commit/1e0affb6e564b7361b0aadb38805f26deff4ecfc
+[2]: https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
+[3]: https://lore.kernel.org/lkml/1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com/
+[4]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
+[5]: https://github.com/ClangBuiltLinux/linux/issues/636
+
+Given these two problems need discussion and coordination, do not enable
+-Wimplicit-fallthrough with clang right now. Add a comment to explain
+what is going on as well. This commit should be reverted once these two
+issues are fully flushed out and resolved.
+
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Makefile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
-index a546c2bc9129c..e365f2dd7f9a9 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_optc.c
-@@ -824,6 +824,9 @@ void optc1_program_manual_trigger(struct timing_generator *optc)
- 
- 	REG_SET(OTG_MANUAL_FLOW_CONTROL, 0,
- 			MANUAL_FLOW_CONTROL, 1);
+diff --git a/Makefile b/Makefile
+index fa11c1d89acf1..331a63f998818 100644
+--- a/Makefile
++++ b/Makefile
+@@ -751,6 +751,11 @@ else
+ # These warnings generated too much noise in a regular build.
+ # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
+ KBUILD_CFLAGS += -Wno-unused-but-set-variable
 +
-+	REG_SET(OTG_MANUAL_FLOW_CONTROL, 0,
-+			MANUAL_FLOW_CONTROL, 0);
- }
++# Warn about unmarked fall-throughs in switch statement.
++# Disabled for clang while comment to attribute conversion happens and
++# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
++KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+ endif
  
+ KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
+@@ -845,9 +850,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+ # warn about C99 declaration after statement
+ KBUILD_CFLAGS += -Wdeclaration-after-statement
+ 
+-# Warn about unmarked fall-throughs in switch statement.
+-KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
+-
+ # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+ KBUILD_CFLAGS += -Wvla
  
 -- 
 2.20.1
