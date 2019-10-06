@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51598C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D28C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F5C21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B81D2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383658;
-	bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
+	s=default; t=1570383660;
+	bh=jujcImgHDYGHQ7uDDwkXOSgG2q4SgjbpIX6MY4h8sRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PvFFwhZcMWdKhTtIuwEjGW4fvZU/SVmCcHNJOPxXSO+2MacWuAaVer7eBmwFc+k/V
-	 LX1xtMgvjPWJjbB1DIQneZMzcoubkOF66EqNpnJW2poLCrQsIbAeMRtTzW4teInyrn
-	 qN7ylFzlZmVB6OccYnsibm8bOUUIPlBe6mwwqrVg=
+	b=LiVJUixhCw7M6S2qtbZA+Uet19w688toeMsR9QfJPYeThspcJriUD3ghIpmNXLa6G
+	 L2H3gp0xq49zyw+IeNLJpKn5RP3wBB1QoTJ3WN7Vrq/vPL5WWlWHhX4kLpMP3olkL/
+	 sTwB2H1UEFfiiW02HUN21FkG77hM4i2FlhjIIYFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbfJFRk4 (ORCPT
+        id S1731114AbfJFRk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40498 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbfJFRkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:40:53 -0400
+        id S1731104AbfJFRk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46CA02133F;
-        Sun,  6 Oct 2019 17:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F36720862;
+        Sun,  6 Oct 2019 17:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383652;
-        bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
+        s=default; t=1570383655;
+        bh=jujcImgHDYGHQ7uDDwkXOSgG2q4SgjbpIX6MY4h8sRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=spYGapJmlQqoC0pR57YiVvwfgBNCPyJrYxXfblszcYw42hNbW8pcadcMQinHJMUPq
-         Eq1p18BJk8e3HtF6nqWpB5NDniG8DpVca7IkaGexKb6mE7q5T5G1pa7VodXpkWO4lG
-         uwEF04NI4A4ZxP3X5d4EIbvM5ynDC8ee1n/ZAdxs=
+        b=05F3owToAOijjxr87I/c+1BI8mKCliDPjJCSpDt1kB4SzdHn6avLVCcJbJK53OXTP
+         1uA8iC2csxdQ5D11MLLNQp0+n7/zw0N+DtwrccFCQVCMakGAXSBPeul2N/ARb/nCOu
+         O4MaB/p6SVolZfArHI8RyEsq8HMn31QJzMvXD0Lo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 046/166] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Sun,  6 Oct 2019 19:20:12 +0200
-Message-Id: <20191006171216.864783027@linuxfoundation.org>
+Subject: [PATCH 5.3 047/166] powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag
+Date:   Sun,  6 Oct 2019 19:20:13 +0200
+Message-Id: <20191006171216.961971960@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,42 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
+[ Upstream commit aa06e3d60e245284d1e55497eb3108828092818d ]
 
-pmx_writel uses writel which inserts write barrier before the
-register write.
+The EEH_DEV_NO_HANDLER flag is used by the EEH system to prevent the
+use of driver callbacks in drivers that have been bound part way
+through the recovery process. This is necessary to prevent later stage
+handlers from being called when the earlier stage handlers haven't,
+which can be confusing for drivers.
 
-This patch has fix to replace writel with writel_relaxed followed
-by a readback and memory barrier to ensure write operation is
-completed for successful pinctrl change.
+However, the flag is set for all devices that are added after boot
+time and only cleared at the end of the EEH recovery process. This
+results in hot plugged devices erroneously having the flag set during
+the first recovery after they are added (causing their driver's
+handlers to be incorrectly ignored).
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+To remedy this, clear the flag at the beginning of recovery
+processing. The flag is still cleared at the end of recovery
+processing, although it is no longer really necessary.
+
+Also clear the flag during eeh_handle_special_event(), for the same
+reasons.
+
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/b8ca5629d27de74c957d4f4b250177d1b6fc4bbd.1565930772.git.sbobroff@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/eeh_driver.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 186ef98e7b2b8..f1b523beec5b3 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -32,7 +32,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 89623962c7275..1fbe541856f5e 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -793,6 +793,10 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+ 		result = PCI_ERS_RESULT_DISCONNECT;
+ 	}
  
- static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
++	eeh_for_each_pe(pe, tmp_pe)
++		eeh_pe_for_each_dev(tmp_pe, edev, tmp)
++			edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 	/* Walk the various device drivers attached to this slot through
+ 	 * a reset sequence, giving each an opportunity to do what it needs
+ 	 * to accomplish the reset.  Each child gets a report of the
+@@ -981,7 +985,8 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+  */
+ void eeh_handle_special_event(void)
  {
--	writel(val, pmx->regs[bank] + reg);
-+	writel_relaxed(val, pmx->regs[bank] + reg);
-+	/* make sure pinmux register write completed */
-+	pmx_readl(pmx, bank, reg);
- }
+-	struct eeh_pe *pe, *phb_pe;
++	struct eeh_pe *pe, *phb_pe, *tmp_pe;
++	struct eeh_dev *edev, *tmp_edev;
+ 	struct pci_bus *bus;
+ 	struct pci_controller *hose;
+ 	unsigned long flags;
+@@ -1050,6 +1055,10 @@ void eeh_handle_special_event(void)
+ 				    (phb_pe->state & EEH_PE_RECOVERING))
+ 					continue;
  
- static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++				eeh_for_each_pe(pe, tmp_pe)
++					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
++						edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 				/* Notify all devices to be down */
+ 				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
+ 				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
 -- 
 2.20.1
 
