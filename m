@@ -2,111 +2,121 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D4EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00270C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A36A2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71752084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 11:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FPCqjj6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfJFLE7 (ORCPT
+        id S1726670AbfJFLJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 07:04:59 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43634 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfJFLE6 (ORCPT
+        Sun, 6 Oct 2019 07:09:09 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:46792 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726291AbfJFLJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 07:04:58 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 9D38780476; Sun,  6 Oct 2019 13:04:41 +0200 (CEST)
-Date:   Sun, 6 Oct 2019 13:04:56 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Daniel Thompson <daniel.thompson@linaro.org>, alex@alexanderweb.de,
-        andriy.shevchenko@linux.intel.com
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mat King <mathewk@google.com>, rafael@kernel.org,
-        gregkh@linuxfoundation.org, Ross Zwisler <zwisler@google.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: New sysfs interface for privacy screens
-Message-ID: <20191006110455.GC24605@amd>
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <20191002094650.3fc06a85@lwn.net>
- <87muei9r7i.fsf@intel.com>
- <20191003102254.dmwl6qimdca3dbrv@holly.lan>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
-Content-Disposition: inline
-In-Reply-To: <20191003102254.dmwl6qimdca3dbrv@holly.lan>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 6 Oct 2019 07:09:08 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 04C28C04C4;
+        Sun,  6 Oct 2019 11:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1570360147; bh=yJGh0PmYaQMDXz233hMJBanbA6dyu3TtFD0qfFGaroo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=FPCqjj6+4G9rvmQzSnovrxABBMdndyKfp7QJpAyP3yJzX/6i7HYMUWu9g9yHRrAuk
+         dKRhAtDKmOz66saLdYFoYUlpLDa/APIRgNIp7kX9WhPh34YDANCFS4g/89+8z3vSI4
+         jmDKAvTrb36w+fonwr1ssYwx/KpF6oA3ejFOSOTmNS8O2xGZyvSJCHdLY5YC0GwMrL
+         gUXtt7XV00yFfgYmZMWF2K5m/i6UdiHnS6uzddg6/YBvoHSD9FqusV34PQeJbCyM7l
+         Jh+jV4fAaLzELM2/tNjkO8kRv/hUP+g6dCT1MvKbQmFWRQXoFj9X0MH2ALiv2/xyN0
+         dPC6Hb6Z4VKBQ==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 812F6A005D;
+        Sun,  6 Oct 2019 11:09:04 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 1/3] net: stmmac: selftests: Check if filtering is available before running
+Date:   Sun,  6 Oct 2019 13:08:55 +0200
+Message-Id: <959930fe0423010540ae9e615449df5cb26da674.1570359800.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1570359800.git.Jose.Abreu@synopsys.com>
+References: <cover.1570359800.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1570359800.git.Jose.Abreu@synopsys.com>
+References: <cover.1570359800.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We need to check if the number of available Hash Filters is enough to
+run the test, otherwise we will get false failures.
 
---zCKi3GIZzVBPywwA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Hi!
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> > >> I have been looking into adding Linux support for electronic privacy
-> > >> screens which is a feature on some new laptops which is built into t=
-he
-> > >> display and allows users to turn it on instead of needing to use a
-> > >> physical privacy filter. In discussions with my colleagues the idea =
-of
-> > >> using either /sys/class/backlight or /sys/class/leds but this new
-> > >> feature does not seem to quite fit into either of those classes.
-> > >
-> > > FWIW, it seems that you're not alone in this; 5.4 got some support for
-> > > such screens if I understand things correctly:
-> > >
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-commit/?id=3D110ea1d833ad
-> >=20
-> > Oh, I didn't realize it got merged already, I thought this was
-> > related...
-> >=20
-> > So we've already replicated the backlight sysfs interface problem for
-> > privacy screens. :(
->=20
-> I guess... although the Thinkpad code hasn't added any standard
-> interfaces (no other laptop should be placing controls for a privacy
-> screen in /proc/acpi/ibm/... ). Maybe its not too late.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index cc76a42c7466..ed3926d4471d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -496,6 +496,9 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
+ 	if (ret)
+ 		return ret;
+ 
++	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
++		return -EOPNOTSUPP;
++
+ 	ret = dev_mc_add(priv->dev, gd_addr);
+ 	if (ret)
+ 		return ret;
+@@ -573,6 +576,8 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
+ 
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
++	if (!priv->hw->multicast_filter_bins)
++		return -EOPNOTSUPP;
+ 
+ 	/* Remove all MC addresses */
+ 	__dev_mc_unsync(priv->dev, NULL);
+@@ -611,6 +616,8 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+ 
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
++	if (!priv->hw->multicast_filter_bins)
++		return -EOPNOTSUPP;
+ 
+ 	/* Remove all UC addresses */
+ 	__dev_uc_unsync(priv->dev, NULL);
+-- 
+2.7.4
 
-There's new interface for controlling privacyguard... but perhaps we
-need better solution than what went in 5.4. Perhaps it should be
-reconsidered?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---zCKi3GIZzVBPywwA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2ZylcACgkQMOfwapXb+vIvLwCgv8pM8435FkksDHNB1TjTxnow
-Zm8AoKrwhCDI1rdvOj6Y2H8UU21KaV9E
-=xgty
------END PGP SIGNATURE-----
-
---zCKi3GIZzVBPywwA--
