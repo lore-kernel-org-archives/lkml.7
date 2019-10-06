@@ -2,169 +2,129 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76076ECE58D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38BEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7B12084B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570352019;
-	bh=d214+8ALIhj4CcfRSSF8xhk2RquhOl+UqhMEsOp53UM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N94408+On/vWzy8hC9iBW2EdBaN0K6ai99d5c66xh4e7iycq7EOV+fIPwY/2KugI6
-	 qdvEYODV6VlZAAjv51QCvfNQI5fDE5H2tGfiIKtP8FERVOPYw8eD0JkHqIhX9cCAVD
-	 haJws/c/JrXQLRDrVRek1ZJ722FcmG81sC+Ay8Yk=
+	by mail.kernel.org (Postfix) with ESMTP id 7858D2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 08:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfJFIxi (ORCPT
+        id S1726363AbfJFI5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 04:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 04:57:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46420 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfJFIxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 04:53:38 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726185AbfJFI5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 04:57:05 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D20862084B;
-        Sun,  6 Oct 2019 08:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570352017;
-        bh=d214+8ALIhj4CcfRSSF8xhk2RquhOl+UqhMEsOp53UM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pEkcp7cbi6YkwrJ9czi6hsWVM1ZczLPvxPpmHa35r58j5f0qnK1ajVCMxxZ605Mfj
-         7WsRwlsY3hKzqSF3QbQKUbqC4zWxgZ4dctIL3tHbpTi8PJUy64RceTIR+RkFT3W6mM
-         CqRsP1UqF4MCu/6REq8FOFPn3HY0YCU0Ft3yNXc0=
-Date:   Sun, 6 Oct 2019 09:53:33 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/10] iio: imu: adis: rename txrx_lock -> state_lock
-Message-ID: <20191006095333.7532cc5e@archlinux>
-In-Reply-To: <20190926111812.15957-2-alexandru.ardelean@analog.com>
-References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
-        <20190926111812.15957-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id D1E313082A6C;
+        Sun,  6 Oct 2019 08:57:04 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-58.ams2.redhat.com [10.36.116.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 090595B681;
+        Sun,  6 Oct 2019 08:57:01 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        x86@kernel.org, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v6 01/10] mm/memunmap: Don't access uninitialized memmap in memunmap_pages()
+Date:   Sun,  6 Oct 2019 10:56:37 +0200
+Message-Id: <20191006085646.5768-2-david@redhat.com>
+In-Reply-To: <20191006085646.5768-1-david@redhat.com>
+References: <20191006085646.5768-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sun, 06 Oct 2019 08:57:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 14:18:03 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-> The lock can be extended a bit to protect other elements that are not
-> particular to just TX/RX. Another idea would have been to just add a new
-> `state_lock`, but that would mean 2 locks which would be redundant, and
-> probably cause more potential for dead-locks.
-> 
-> What will be done in the next patches, will be to add some unlocked
-> versions for read/write_reg functions.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+With an altmap, the memmap falling into the reserved altmap space are
+not initialized and, therefore, contain a garbage NID and a garbage
+zone. Make sure to read the NID/zone from a memmap that was initialzed.
 
-Would be good to document the scope of the lock as a comment when it
-is defined.  What exactly is 'state' in this case?
+This fixes a kernel crash that is observed when destroying a namespace:
 
-Thanks,
+[   81.356173] kernel BUG at include/linux/mm.h:1107!
+cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+    pc: c0000000004b9728: memunmap_pages+0x238/0x340
+    lr: c0000000004b9724: memunmap_pages+0x234/0x340
+...
+    pid   = 3669, comm = ndctl
+kernel BUG at include/linux/mm.h:1107!
+[c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+[c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+[c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+[c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+[c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+[c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+[c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+[c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+[c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+[c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+[c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
 
-Jonathan
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+[ minimze code changes, rephrase description ]
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/memremap.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-> ---
->  drivers/iio/imu/adis.c        | 10 +++++-----
->  drivers/iio/imu/adis_buffer.c |  4 ++--
->  include/linux/iio/imu/adis.h  |  2 +-
->  3 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index 1631c255deab..3c2d896e3a96 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -70,7 +70,7 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  		},
->  	};
->  
-> -	mutex_lock(&adis->txrx_lock);
-> +	mutex_lock(&adis->state_lock);
->  
->  	spi_message_init(&msg);
->  
-> @@ -114,7 +114,7 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  	}
->  
->  out_unlock:
-> -	mutex_unlock(&adis->txrx_lock);
-> +	mutex_unlock(&adis->state_lock);
->  
->  	return ret;
->  }
-> @@ -166,7 +166,7 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  		},
->  	};
->  
-> -	mutex_lock(&adis->txrx_lock);
-> +	mutex_lock(&adis->state_lock);
->  	spi_message_init(&msg);
->  
->  	if (adis->current_page != page) {
-> @@ -211,7 +211,7 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  	}
->  
->  out_unlock:
-> -	mutex_unlock(&adis->txrx_lock);
-> +	mutex_unlock(&adis->state_lock);
->  
->  	return ret;
->  }
-> @@ -437,7 +437,7 @@ EXPORT_SYMBOL_GPL(adis_single_conversion);
->  int adis_init(struct adis *adis, struct iio_dev *indio_dev,
->  	struct spi_device *spi, const struct adis_data *data)
->  {
-> -	mutex_init(&adis->txrx_lock);
-> +	mutex_init(&adis->state_lock);
->  	adis->spi = spi;
->  	adis->data = data;
->  	iio_device_set_drvdata(indio_dev, adis);
-> diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
-> index 9ac8356d9a95..bf581a2c321d 100644
-> --- a/drivers/iio/imu/adis_buffer.c
-> +++ b/drivers/iio/imu/adis_buffer.c
-> @@ -123,7 +123,7 @@ static irqreturn_t adis_trigger_handler(int irq, void *p)
->  		return -ENOMEM;
->  
->  	if (adis->data->has_paging) {
-> -		mutex_lock(&adis->txrx_lock);
-> +		mutex_lock(&adis->state_lock);
->  		if (adis->current_page != 0) {
->  			adis->tx[0] = ADIS_WRITE_REG(ADIS_REG_PAGE_ID);
->  			adis->tx[1] = 0;
-> @@ -138,7 +138,7 @@ static irqreturn_t adis_trigger_handler(int irq, void *p)
->  
->  	if (adis->data->has_paging) {
->  		adis->current_page = 0;
-> -		mutex_unlock(&adis->txrx_lock);
-> +		mutex_unlock(&adis->state_lock);
->  	}
->  
->  	iio_push_to_buffers_with_timestamp(indio_dev, adis->buffer,
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 4c53815bb729..3ed5eceaac2d 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -61,7 +61,7 @@ struct adis {
->  	const struct adis_data	*data;
->  	struct adis_burst	*burst;
->  
-> -	struct mutex		txrx_lock;
-> +	struct mutex		state_lock;
->  	struct spi_message	msg;
->  	struct spi_transfer	*xfer;
->  	unsigned int		current_page;
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 557e53c6fb46..8c2fb44c3b4d 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -123,6 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+ void memunmap_pages(struct dev_pagemap *pgmap)
+ {
+ 	struct resource *res = &pgmap->res;
++	struct page *first_page;
+ 	unsigned long pfn;
+ 	int nid;
+ 
+@@ -131,14 +132,16 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+ 		put_page(pfn_to_page(pfn));
+ 	dev_pagemap_cleanup(pgmap);
+ 
++	/* make sure to access a memmap that was actually initialized */
++	first_page = pfn_to_page(pfn_first(pgmap));
++
+ 	/* pages are dead and unused, undo the arch mapping */
+-	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
++	nid = page_to_nid(first_page);
+ 
+ 	mem_hotplug_begin();
+ 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+-		pfn = PHYS_PFN(res->start);
+-		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+-				 PHYS_PFN(resource_size(res)), NULL);
++		__remove_pages(page_zone(first_page), PHYS_PFN(res->start),
++			       PHYS_PFN(resource_size(res)), NULL);
+ 	} else {
+ 		arch_remove_memory(nid, res->start, resource_size(res),
+ 				pgmap_altmap(pgmap));
+-- 
+2.21.0
 
