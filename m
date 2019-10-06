@@ -2,60 +2,61 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67887ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30920C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E45D20835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0350820835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="El+CWmCQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyQ5xERC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfJFQDa (ORCPT
+        id S1726733AbfJFQDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 12:03:30 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:34066 "EHLO
+        Sun, 6 Oct 2019 12:03:35 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:40549 "EHLO
         mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfJFQDa (ORCPT
+        with ESMTP id S1725847AbfJFQDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 12:03:30 -0400
-Received: by mail-yb1-f196.google.com with SMTP id m1so3851667ybm.1;
-        Sun, 06 Oct 2019 09:03:29 -0700 (PDT)
+        Sun, 6 Oct 2019 12:03:32 -0400
+Received: by mail-yb1-f196.google.com with SMTP id s7so235242ybq.7;
+        Sun, 06 Oct 2019 09:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dVq3A/TrWA22YphYYB+8No5n6QtHAxN2b6l0mk2+kwE=;
-        b=El+CWmCQb7R1fo1oaYIeiyEHx3GBZV4IoBkFhd03r6gfzUl03znZ2gdd9tCnotz27U
-         qf720XYBzApe7w5zHR9EQ6v6qxaoiJ5P9Fv4DLS63DpPZMaPPr63LQSba6an/X8SQW1F
-         wesEJwGo4JmAzqcHtXkfzFjqWqLwiPIGkfiWAQEEVWIXy0KiwgPiID4CLh8oNGf2QE4L
-         oMnBwWRUXXmq8b/G9vNjukYF3TjiQYfjtZ50CTj7AM+lZKrKH7DPJ32tDdThMa2rkBE4
-         QZ5fEmkYrXC/KK+7mWFL8+mM9dUFjPx2IhQ2uAZKSely5VF+4GYckmZy2jflNlF8iB42
-         qfTw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X0YlaBg0eWRFmg01LcYcEakBboU2udItKz/WvLmsstE=;
+        b=fyQ5xERCIVVSDumVC4ubV58r5dQvmSwwgM1gDnffp4c+23b97gjExIR2w5eKv7/8Jq
+         ziZYQoR+ekNbyGmg5MyCdRKQCpjPl96Gg05vwaXu+bKwftDmAqbbBSH5E6QwSe5Ye+LQ
+         xBUefkUGCXsIWAzl+r81TYehHx4jhYKp4zVdIT8iewLeyrco31I++sQZr0GkvC3qWrAI
+         ySzHJ9fVZA81+D7Pk/jT9oRRn9rbqPtPhS1BPMSDfCtq7jRYvKthUyl4YoB3plYqlI9i
+         4S/8SyDDMH2Wqfnrbl6M9RacL1dX7HAom4on1ZHwAGQZJQp1mHNTFfq/qMP0zFcmFZqo
+         4HYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dVq3A/TrWA22YphYYB+8No5n6QtHAxN2b6l0mk2+kwE=;
-        b=fCdyYNU1WeaJfruU+9pX7r9fC+Tn7/U4bGaCIH7MyUKp0WHzUV3OkeIJZC9zqKLRQu
-         1NqUKwfuGaqn6AjKpDaSTGfa2d5cPAFpqXPsaOabS7CQtoWU5fNnQ6DPmBFFIiT4zMD1
-         6U12f+/ZRyxjjn2DthNCxvaSTpbTsoXJ8a5ycmNm7OEHozQXBFs7h7m14aIQ4occH1mV
-         kzc8SOP9RpGGJBVErtGcKhWavTKqAVMR7q6hmFRlgRN5Y3r0BLmn4ZFjLTUShENM1ViM
-         vdmca6o3i1oSJcjY2P/BoS5+PwbearHvsS1rm8BJKCkQiMjlX/+fd3jQdH65LCW7zvd0
-         ihlA==
-X-Gm-Message-State: APjAAAXnl27L9jalkDeg4BUpwa4Ofw60ruKjkDZ1qI1DHMByMKY3Av+V
-        N7Z0VXFjOc/YwTvELSLBLjE=
-X-Google-Smtp-Source: APXvYqyT7gjrdIuAXN+Bwn4RKda6PPR1sKi1ETOlqbj7vb1Sy27HtwuzkOxhz14rXqUdFFOvXtIc3Q==
-X-Received: by 2002:a25:ab21:: with SMTP id u30mr3900549ybi.143.1570377808701;
-        Sun, 06 Oct 2019 09:03:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X0YlaBg0eWRFmg01LcYcEakBboU2udItKz/WvLmsstE=;
+        b=h2AqfsgfBUduBbMXjwZUowQ3JGqBftwq/eNBjkrrKGQFB1wha9OA6GF53dfWCSO3d+
+         ocKs1IWIb9k28/DsCZVtenLL6H7b0ichuXKmz8OQDOF2kVSh297Nt1JYnx5E+qk/YZ6I
+         OiY/1KN1e4/F1FeY6hQFa4VNL1deB40At1Jd6Vb1Ss/Qj8Jkhqo6TMPHTNn7eSy4kjOe
+         aMom5t2bOnC9PPprZ1vJEuKdebiHW1Y+QVOk8jnqYpoDfJhbU7f6J7JVLEqZ3n05UNv2
+         62ECRyrsGLOHAxdES//c+lMpFrrNDHt8AfZBkZTPm+alXbHxoEHxevyiLoNBMd8snNS+
+         8eCA==
+X-Gm-Message-State: APjAAAXnnZzAIHViLdxPfq/dLuxyd7IRUwoezMkZn4ZimylR+rbJbMLz
+        66jebKUPWUZJ3KYthUai5AY=
+X-Google-Smtp-Source: APXvYqxNW/YNL3A3scV1Qc1+vAzbrjym3yfhoINYZ8xNzXVB83HFsdfnpe2UcuggrPJqmHwKu7egzA==
+X-Received: by 2002:a25:ce08:: with SMTP id x8mr8866430ybe.177.1570377811262;
+        Sun, 06 Oct 2019 09:03:31 -0700 (PDT)
 Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id y129sm3341816ywy.41.2019.10.06.09.03.27
+        by smtp.gmail.com with ESMTPSA id y129sm3341816ywy.41.2019.10.06.09.03.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 09:03:27 -0700 (PDT)
+        Sun, 06 Oct 2019 09:03:30 -0700 (PDT)
 From:   William Breathitt Gray <vilhelm.gray@gmail.com>
 To:     jic23@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
@@ -65,10 +66,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
         david@lechnology.com,
         William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v4 0/2] Simplify count_read/count_write/signal_read
-Date:   Sun,  6 Oct 2019 12:03:09 -0400
-Message-Id: <cover.1570377521.git.vilhelm.gray@gmail.com>
+Subject: [PATCH v4 2/2] docs: driver-api: generic-counter: Update Count and Signal data types
+Date:   Sun,  6 Oct 2019 12:03:11 -0400
+Message-Id: <75a9ca9837f4d66cb4912cfa535176e27f7c219a.1570377521.git.vilhelm.gray@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1570377521.git.vilhelm.gray@gmail.com>
+References: <cover.1570377521.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,90 +79,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v4:
- - Rebase ontop of ti-eqep introduction patches and update ti-eqep
+Count data is now always represented as an unsigned integer, while
+Signal data is either SIGNAL_LOW or SIGNAL_HIGH.
 
-The changes in this patchset will not affect the userspace interface.
-Rather, these changes are intended to simplify the kernelspace Counter
-callbacks for counter device driver authors.
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+ Documentation/driver-api/generic-counter.rst | 22 +++++++-------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-The following main changes are proposed:
-
-* Retire the opaque counter_count_read_value/counter_count_write_value
-  structures and simply represent count data as an unsigned integer.
-
-* Retire the opaque counter_signal_read_value structure and represent
-  Signal data as a counter_signal_value enum.
-
-These changes should reduce some complexity and code in the use and
-implementation of the count_read, count_write, and signal_read
-callbacks.
-
-The opaque structures for Count data and Signal data were introduced
-originally in anticipation of supporting various representations of
-counter data (e.g. arbitrary-precision tallies, floating-point spherical
-coordinate positions, etc). However, with the counter device drivers
-that have appeared, it's become apparent that utilizing opaque
-structures in kernelspace is not the best approach to take.
-
-I believe it is best to let userspace applications decide how to
-interpret the count data they receive. There are a couple of reasons why
-it would be good to do so:
-
-* Users use their devices in unexpected ways.
-
-  For example, a quadrature encoder counter device is typically used to
-  keep track of the position of a motor, but a user could set the device
-  in a pulse-direction mode and instead use it to count sporadic rising
-  edges from an arbitrary signal line unrelated to positioning. Users
-  should have the freedom to decide what their data represents.
-
-* Most counter devices represent data as unsigned integers anyway.
-
-  For example, whether the device is a tally counter or position
-  counter, the count data is represented to the user as an unsigned
-  integer value. So specifying that one device is representing tallies
-  while the other specifies positions does not provide much utility from
-  an interface perspective.
-
-For these reasons, the count_read and count_write callbacks have been
-redefined to pass count data directly as unsigned long instead of passed
-via opaque structures:
-
-        count_read(struct counter_device *counter,
-                   struct counter_count *count, unsigned long *val);
-        count_write(struct counter_device *counter,
-                    struct counter_count *count, unsigned long val);
-
-Similarly, the signal_read is redefined to pass Signal data directly as
-a counter_signal_value enum instead of via an opaque structure:
-
-        signal_read(struct counter_device *counter,
-                    struct counter_signal *signal,
-                    enum counter_signal_value *val);
-
-The counter_signal_value enum is simply the counter_signal_level enum
-redefined to remove the references to the Signal data "level" data type.
-
-William Breathitt Gray (2):
-  counter: Simplify the count_read and count_write callbacks
-  docs: driver-api: generic-counter: Update Count and Signal data types
-
- Documentation/driver-api/generic-counter.rst |  22 ++--
- drivers/counter/104-quad-8.c                 |  33 ++----
- drivers/counter/counter.c                    | 101 +++----------------
- drivers/counter/ftm-quaddec.c                |  14 +--
- drivers/counter/stm32-lptimer-cnt.c          |   5 +-
- drivers/counter/stm32-timer-cnt.c            |  17 +---
- drivers/counter/ti-eqep.c                    |  19 ++--
- include/linux/counter.h                      |  74 ++------------
- 8 files changed, 59 insertions(+), 226 deletions(-)
-
-
-base-commit: 0c3aa63a842d84990bd02622f2fa50d2bd33c652
-prerequisite-patch-id: ebe284609b3db8d4130ea2915f7f7b185c743a70
-prerequisite-patch-id: cbe857759f10d875690df125d18bc04f585ac7c9
-prerequisite-patch-id: 21f2660dc88627387ee4666d08044c63dd961dae
+diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+index 8382f01a53e3..161652fc1025 100644
+--- a/Documentation/driver-api/generic-counter.rst
++++ b/Documentation/driver-api/generic-counter.rst
+@@ -39,10 +39,7 @@ There are three core components to a counter:
+ COUNT
+ -----
+ A Count represents the count data for a set of Signals. The Generic
+-Counter interface provides the following available count data types:
+-
+-* COUNT_POSITION:
+-  Unsigned integer value representing position.
++Counter interface represents the count data as an unsigned integer.
+ 
+ A Count has a count function mode which represents the update behavior
+ for the count data. The Generic Counter interface provides the following
+@@ -93,19 +90,16 @@ SIGNAL
+ A Signal represents a counter input data; this is the input data that is
+ evaluated by the counter to determine the count data; e.g. a quadrature
+ signal output line of a rotary encoder. Not all counter devices provide
+-user access to the Signal data.
+-
+-The Generic Counter interface provides the following available signal
+-data types for when the Signal data is available for user access:
++user access to the Signal data, so exposure is optional for drivers.
+ 
+-* SIGNAL_LEVEL:
+-  Signal line state level. The following states are possible:
++When the Signal data is available for user access, the Generic Counter
++interface provides the following available signal values:
+ 
+-  - SIGNAL_LEVEL_LOW:
+-    Signal line is in a low state.
++* SIGNAL_LOW:
++  Signal line is in a low state.
+ 
+-  - SIGNAL_LEVEL_HIGH:
+-    Signal line is in a high state.
++* SIGNAL_HIGH:
++  Signal line is in a high state.
+ 
+ A Signal may be associated with one or more Counts.
+ 
 -- 
 2.23.0
 
