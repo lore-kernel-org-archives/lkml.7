@@ -2,52 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2755C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6B4C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940B62067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8F721850
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570385006;
-	bh=xqs8NxGYwGvv/Ca98x9fvejosSl1iFChPNRiYgb4ENk=;
+	s=default; t=1570385010;
+	bh=TkRXmpHdZvwNp4jqEj1dbBI2v217kXfJTlu2W7Axhqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lwpMFc+MlTGfrbTlram+kSGBmp6LfWTspX9mjOUnhrdLY+FU4m2wFFM9/dY1MQlh5
-	 vvbpxd2ZrMbdccEGGBfqIUtvpJHDvXu04Tc767wUd5EaxI0NDb9JozpB2YXRh1lJrd
-	 VB6j3msGctp34WXR3mYKNNUlQIntIVjGcm+2Buyo=
+	b=sqCKJ7T1F5uHhwlixFk+6OVzJicoF02X7qG/jbK8/uRJLJUuZoM3Q1Z+GGlbGE9Vw
+	 wN3j9NmQGVY/edQRh1uealyqIKz6UANEcWOjqrjfLxPL2Z6oDuzH9cMpVpu6OFu6zG
+	 08G0+JxAB3unAJdlslwYzRhxNeFO/sHBcUIvJ4os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfJFSD0 (ORCPT
+        id S1727892AbfJFRYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49448 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfJFRYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:31 -0400
+        id S1727873AbfJFRYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C40217F9;
-        Sun,  6 Oct 2019 17:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F36A2217F9;
+        Sun,  6 Oct 2019 17:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382670;
-        bh=xqs8NxGYwGvv/Ca98x9fvejosSl1iFChPNRiYgb4ENk=;
+        s=default; t=1570382659;
+        bh=TkRXmpHdZvwNp4jqEj1dbBI2v217kXfJTlu2W7Axhqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6GOPE56Zu3/BboEk14VjLLL4lUXUmrKK121M2EkEKjrzHzp1pQJqkNnyTwMt5vOn
-         sXWhHL/P0iWfGqU3a1nZyYoqhcF7+uz5nKiz72p71eH5evmv0NtdNX7F9ufY142fzp
-         0qWFsgh5Mm5mM5lkOJJCTLfvaQ4zj7IcQ3GAtxak=
+        b=W7MN9z9cNIiXqwYMPvY3kPNKhwDc7l+F8U5phMeSYFTXLX7F1Xw/Lu12Bt2FMvfDc
+         gS1YjIPu2wZ1wgNf9C2aUg5DMT/SrlO2kgKxOHdF+QhkBcDQ8pGTxcJYZ5rcgpbslr
+         DTR/qLB77YipVixghTofypEIpLwHlhUtrqeQ1NIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 37/47] net: Unpublish sk from sk_reuseport_cb before call_rcu
-Date:   Sun,  6 Oct 2019 19:21:24 +0200
-Message-Id: <20191006172018.846290433@linuxfoundation.org>
+        stable@vger.kernel.org, Guo Zeng <Guo.Zeng@csr.com>,
+        Barry Song <Baohua.Song@csr.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 07/47] clk: sirf: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:20:54 +0200
+Message-Id: <20191006172017.276004519@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -60,59 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit 8c7138b33e5c690c308b2a7085f6313fdcb3f616 ]
+[ Upstream commit af55dadfbce35b4f4c6247244ce3e44b2e242b84 ]
 
-The "reuse->sock[]" array is shared by multiple sockets.  The going away
-sk must unpublish itself from "reuse->sock[]" before making call_rcu()
-call.  However, this unpublish-action is currently done after a grace
-period and it may cause use-after-free.
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-The fix is to move reuseport_detach_sock() to sk_destruct().
-Due to the above reason, any socket with sk_reuseport_cb has
-to go through the rcu grace period before freeing it.
-
-It is a rather old bug (~3 yrs).  The Fixes tag is not necessary
-the right commit but it is the one that introduced the SOCK_RCU_FREE
-logic and this fix is depending on it.
-
-Fixes: a4298e4522d6 ("net: add SOCK_RCU_FREE socket flag")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Guo Zeng <Guo.Zeng@csr.com>
+Cc: Barry Song <Baohua.Song@csr.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-6-sboyd@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/clk/sirf/clk-common.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1426,8 +1426,6 @@ static void __sk_destruct(struct rcu_hea
- 		sk_filter_uncharge(sk, filter);
- 		RCU_INIT_POINTER(sk->sk_filter, NULL);
- 	}
--	if (rcu_access_pointer(sk->sk_reuseport_cb))
--		reuseport_detach_sock(sk);
- 
- 	sock_disable_timestamp(sk, SK_FLAGS_TIMESTAMP);
- 
-@@ -1450,7 +1448,14 @@ static void __sk_destruct(struct rcu_hea
- 
- void sk_destruct(struct sock *sk)
+diff --git a/drivers/clk/sirf/clk-common.c b/drivers/clk/sirf/clk-common.c
+index 77e1e2491689b..edb7197cc4b4d 100644
+--- a/drivers/clk/sirf/clk-common.c
++++ b/drivers/clk/sirf/clk-common.c
+@@ -298,9 +298,10 @@ static u8 dmn_clk_get_parent(struct clk_hw *hw)
  {
--	if (sock_flag(sk, SOCK_RCU_FREE))
-+	bool use_call_rcu = sock_flag(sk, SOCK_RCU_FREE);
-+
-+	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
-+		reuseport_detach_sock(sk);
-+		use_call_rcu = true;
-+	}
-+
-+	if (use_call_rcu)
- 		call_rcu(&sk->sk_rcu, __sk_destruct);
- 	else
- 		__sk_destruct(&sk->sk_rcu);
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	u32 cfg = clkc_readl(clk->regofs);
++	const char *name = clk_hw_get_name(hw);
+ 
+ 	/* parent of io domain can only be pll3 */
+-	if (strcmp(hw->init->name, "io") == 0)
++	if (strcmp(name, "io") == 0)
+ 		return 4;
+ 
+ 	WARN_ON((cfg & (BIT(3) - 1)) > 4);
+@@ -312,9 +313,10 @@ static int dmn_clk_set_parent(struct clk_hw *hw, u8 parent)
+ {
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	u32 cfg = clkc_readl(clk->regofs);
++	const char *name = clk_hw_get_name(hw);
+ 
+ 	/* parent of io domain can only be pll3 */
+-	if (strcmp(hw->init->name, "io") == 0)
++	if (strcmp(name, "io") == 0)
+ 		return -EINVAL;
+ 
+ 	cfg &= ~(BIT(3) - 1);
+@@ -354,7 +356,8 @@ static long dmn_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	unsigned long fin;
+ 	unsigned ratio, wait, hold;
+-	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
++	const char *name = clk_hw_get_name(hw);
++	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
+ 
+ 	fin = *parent_rate;
+ 	ratio = fin / rate;
+@@ -376,7 +379,8 @@ static int dmn_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct clk_dmn *clk = to_dmnclk(hw);
+ 	unsigned long fin;
+ 	unsigned ratio, wait, hold, reg;
+-	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
++	const char *name = clk_hw_get_name(hw);
++	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
+ 
+ 	fin = parent_rate;
+ 	ratio = fin / rate;
+-- 
+2.20.1
+
 
 
