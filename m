@@ -2,209 +2,106 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC56C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481C6ECE58F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4317621871
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:20:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7OWzX/m"
+	by mail.kernel.org (Postfix) with ESMTP id 27A6120862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfJFWUu (ORCPT
+        id S1726564AbfJFWch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 18:20:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36169 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfJFWUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 18:20:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so7406293pfr.3;
-        Sun, 06 Oct 2019 15:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=jcRRPxaW1qQLSX9slpTLl4HUR4af87iVZFvEhxXf1Vo=;
-        b=W7OWzX/mR4CG1Xf/SkUUhb2WPp2GbWrd667rXAwND0HSvtafV/o6/vWD2XiMnE6h1e
-         anCsWo30ASov5nLol/awtncrwcgdOrJgcZlKryEpHXpndSCXTC2/nmuxTStmuwPObLBq
-         3RI1kSLiM5udSLIwzwxSn1Wq+7eziUMNPAHUgmHMGNPYRGNPenxfMOI3Q71gAEug2n4b
-         Jn/YattDcFHUBKSsYIc6pRT6w9XdVy1XGVjqDW0wsPzcshKs18uyTHK0fyavVbCCB7ps
-         gxTSzfO7QkK+NmEho+IAIIJwk3LRINifD/PXosXmn7WzgwEvsJRZJK68LOxlObqtQnF5
-         COHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=jcRRPxaW1qQLSX9slpTLl4HUR4af87iVZFvEhxXf1Vo=;
-        b=BeEM2o36Sw6PjP+ELbPiqY+ls3LI2laZEjqZPVajXgLD4Cy+gwPVekb1PHVH4fcH88
-         lUKtU0FuJekFGIcyodd9rtjKvrYcybo+sEyYyljlCdAJISvJ7THfDD1zFuHYfeVFL7bS
-         R9NMLytIZFRcbP0t4OQeuj+0Qwpz28kTKIEkLRZgXaNj9gQQ948rAD4qwgWpzhEEHRnd
-         ZwjmlSdds7/I2urIRSJBqcswiWhhdAs49u7ETxIe2OAFRabP1lSsO3CD+CNXugaP1gue
-         tett3Uv1O70TpYaJTZFtCOkeLLgdBwCtAK2112ruEKCvIitb1wa8mitqHL85phz8P9Dh
-         YmZQ==
-X-Gm-Message-State: APjAAAXnGHMsEZ74Z8CZnvQJVxvN1xLEc6/k+itUiLLf04dRq1ks/v3I
-        7BrG7OpTI3fBeHv+ifExuCI=
-X-Google-Smtp-Source: APXvYqyDkQZsa8wKaO5oRGIWg8PFdgwvz7fgKuf3wGn33bwDEmwwdSeXoYnZshN0IqxGuW1dFDbV1Q==
-X-Received: by 2002:a17:90a:7105:: with SMTP id h5mr30134328pjk.107.1570400449271;
-        Sun, 06 Oct 2019 15:20:49 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m12sm16150172pff.66.2019.10.06.15.20.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Oct 2019 15:20:48 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 15:20:46 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191006222046.GA18027@roeck-us.net>
+        Sun, 6 Oct 2019 18:32:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:52024 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbfJFWcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 18:32:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Oct 2019 15:32:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
+   d="scan'208";a="204889687"
+Received: from dnlarsen-mobl4.amr.corp.intel.com (HELO localhost) ([10.252.3.159])
+  by orsmga002.jf.intel.com with ESMTP; 06 Oct 2019 15:32:30 -0700
+Date:   Mon, 7 Oct 2019 01:32:28 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v7 4/6] tpm: tpm_tis_spi: Support cr50 devices
+Message-ID: <20191006223228.GA8860@linux.intel.com>
+References: <20190920183240.181420-1-swboyd@chromium.org>
+ <20190920183240.181420-5-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190920183240.181420-5-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 21, 2016 at 09:59:07PM -0700, Linus Torvalds wrote:
-> We really should avoid the "__{get,put}_user()" functions entirely,
-> because they can easily be mis-used and the original intent of being
-> used for simple direct user accesses no longer holds in a post-SMAP/PAN
-> world.
+On Fri, Sep 20, 2019 at 11:32:38AM -0700, Stephen Boyd wrote:
+> From: Andrey Pronin <apronin@chromium.org>
 > 
-> Manually optimizing away the user access range check makes no sense any
-> more, when the range check is generally much cheaper than the "enable
-> user accesses" code that the __{get,put}_user() functions still need.
+> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> firmware. The firmware running on the currently supported H1 Secure
+> Microcontroller requires a special driver to handle its specifics:
 > 
-> So instead of __put_user(), use the unsafe_put_user() interface with
-> user_access_{begin,end}() that really does generate better code these
-> days, and which is generally a nicer interface.  Under some loads, the
-> multiple user writes that filldir() does are actually quite noticeable.
+>  - need to ensure a certain delay between SPI transactions, or else
+>    the chip may miss some part of the next transaction
+>  - if there is no SPI activity for some time, it may go to sleep,
+>    and needs to be waken up before sending further commands
+>  - access to vendor-specific registers
 > 
-> This also makes the dirent name copy use unsafe_put_user() with a couple
-> of macros.  We do not want to make function calls with SMAP/PAN
-> disabled, and the code this generates is quite good when the
-> architecture uses "asm goto" for unsafe_put_user() like x86 does.
+> Cr50 firmware has a requirement to wait for the TPM to wakeup before
+> sending commands over the SPI bus. Otherwise, the firmware could be in
+> deep sleep and not respond. The method to wait for the device to wakeup
+> is slightly different than the usual flow control mechanism described in
+> the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
+> start a SPI transfer so we can keep track of the last time the TPM
+> driver accessed the SPI bus to support the flow control mechanism.
 > 
-> Note that this doesn't bother with the legacy cases.  Nobody should use
-> them anyway, so performance doesn't really matter there.
+> Split the cr50 logic off into a different file to keep it out of the
+> normal code flow of the existing SPI driver while making it all part of
+> the same module when the code is optionally compiled into the same
+> module. Export a new function, tpm_tis_spi_init(), and the associated
+> read/write/transfer APIs so that we can do this. Make the cr50 code wrap
+> the tpm_tis_spi_phy struct with its own struct to override the behavior
+> of tpm_tis_spi_transfer() by supplying a custom flow control hook. This
+> shares the most code between the core driver and the cr50 support
+> without combining everything into the core driver or exporting module
+> symbols.
 > 
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Duncan Laurie <dlaurie@chromium.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
 
-Linus,
+First, I apologize for such a long latency (two weeks).
 
-this patch causes all my sparc64 emulations to stall during boot. It causes
-all alpha emulations to crash with [1a] and [1b] when booting from a virtual
-disk, and one of the xtensa emulations to crash with [2].
+I think this looks legit now.
 
-Reverting this patch fixes the problem.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Guenter
-
----
-[1a]
-
-Unable to handle kernel paging request at virtual address 0000000000000004
-rcS(47): Oops -1
-pc = [<0000000000000004>]  ra = [<fffffc00004512e4>]  ps = 0000    Not tainted
-pc is at 0x4
-ra is at filldir64+0x64/0x320
-v0 = 0000000000000000  t0 = 0000000000000000  t1 = 0000000120117e8b
-t2 = 646e617275303253  t3 = 646e617275300000  t4 = 0000000000007fe8
-t5 = 0000000120117e78  t6 = 0000000000000000  t7 = fffffc0007ec8000
-s0 = fffffc0007dbca56  s1 = 000000000000000a  s2 = 0000000000000020
-s3 = fffffc0007ecbec8  s4 = 0000000000000008  s5 = 0000000000000021
-s6 = 1cd2631fe897bf5a
-a0 = fffffc0007dbca56  a1 = 2f2f2f2f2f2f2f2f  a2 = 000000000000000a
-a3 = 1cd2631fe897bf5a  a4 = 0000000000000021  a5 = 0000000000000008
-t8 = 0000000000000020  t9 = 0000000000000000  t10= fffffc0007dbca60
-t11= 0000000000000001  pv = fffffc0000b9a810  at = 0000000000000001
-gp = fffffc0000f03930  sp = (____ptrval____)
-Disabling lock debugging due to kernel taint
-Trace:
-[<fffffc00004e7a08>] call_filldir+0xe8/0x1b0
-[<fffffc00004e8684>] ext4_readdir+0x924/0xa70
-[<fffffc0000ba3088>] _raw_spin_unlock+0x18/0x30
-[<fffffc00003f751c>] __handle_mm_fault+0x9fc/0xc30
-[<fffffc0000450c68>] iterate_dir+0x198/0x240
-[<fffffc0000450b2c>] iterate_dir+0x5c/0x240
-[<fffffc00004518b8>] ksys_getdents64+0xa8/0x160
-[<fffffc0000451990>] sys_getdents64+0x20/0x40
-[<fffffc0000451280>] filldir64+0x0/0x320
-[<fffffc0000311634>] entSys+0xa4/0xc0
-
----
-[1b]
-
-Unable to handle kernel paging request at virtual address 0000000000000004
-reboot(50): Oops -1
-pc = [<0000000000000004>]  ra = [<fffffc00004512e4>]  ps = 0000    Tainted: G      D
-pc is at 0x4
-ra is at filldir64+0x64/0x320
-v0 = 0000000000000000  t0 = 0000000067736d6b  t1 = 000000012011445b
-t2 = 0000000000000000  t3 = 0000000000000000  t4 = 0000000000007ef8
-t5 = 0000000120114448  t6 = 0000000000000000  t7 = fffffc0007eec000
-s0 = fffffc000792b5c3  s1 = 0000000000000004  s2 = 0000000000000018
-s3 = fffffc0007eefec8  s4 = 0000000000000008  s5 = 00000000f00000a3
-s6 = 000000000000000b
-a0 = fffffc000792b5c3  a1 = 2f2f2f2f2f2f2f2f  a2 = 0000000000000004
-a3 = 000000000000000b  a4 = 00000000f00000a3  a5 = 0000000000000008
-t8 = 0000000000000018  t9 = 0000000000000000  t10= 0000000022e1d02a
-t11= 000000011f8fd3b8  pv = fffffc0000b9a810  at = 0000000022e1ccf8
-gp = fffffc0000f03930  sp = (____ptrval____)
-Trace:
-[<fffffc00004ccba0>] proc_readdir_de+0x170/0x300
-[<fffffc0000451280>] filldir64+0x0/0x320
-[<fffffc00004c565c>] proc_root_readdir+0x3c/0x80
-[<fffffc0000450c68>] iterate_dir+0x198/0x240
-[<fffffc00004518b8>] ksys_getdents64+0xa8/0x160
-[<fffffc0000451990>] sys_getdents64+0x20/0x40
-[<fffffc0000451280>] filldir64+0x0/0x320
-[<fffffc0000311634>] entSys+0xa4/0xc0
-
----
-[2]
-
-Unable to handle kernel paging request at virtual address 0000000000000004
-reboot(50): Oops -1
-pc = [<0000000000000004>]  ra = [<fffffc00004512e4>]  ps = 0000    Tainted: G      D
-pc is at 0x4
-ra is at filldir64+0x64/0x320
-v0 = 0000000000000000  t0 = 0000000067736d6b  t1 = 000000012011445b
-t2 = 0000000000000000  t3 = 0000000000000000  t4 = 0000000000007ef8
-t5 = 0000000120114448  t6 = 0000000000000000  t7 = fffffc0007eec000
-s0 = fffffc000792b5c3  s1 = 0000000000000004  s2 = 0000000000000018
-s3 = fffffc0007eefec8  s4 = 0000000000000008  s5 = 00000000f00000a3
-s6 = 000000000000000b
-a0 = fffffc000792b5c3  a1 = 2f2f2f2f2f2f2f2f  a2 = 0000000000000004
-a3 = 000000000000000b  a4 = 00000000f00000a3  a5 = 0000000000000008
-t8 = 0000000000000018  t9 = 0000000000000000  t10= 0000000022e1d02a
-t11= 000000011fd6f3b8  pv = fffffc0000b9a810  at = 0000000022e1ccf8
-gp = fffffc0000f03930  sp = (____ptrval____)
-Trace:
-[<fffffc00004ccba0>] proc_readdir_de+0x170/0x300
-[<fffffc0000451280>] filldir64+0x0/0x320
-[<fffffc00004c565c>] proc_root_readdir+0x3c/0x80
-[<fffffc0000450c68>] iterate_dir+0x198/0x240
-[<fffffc00004518b8>] ksys_getdents64+0xa8/0x160
-[<fffffc0000451990>] sys_getdents64+0x20/0x40
-[<fffffc0000451280>] filldir64+0x0/0x320
-[<fffffc0000311634>] entSys+0xa4/0xc0
-
-Code:
- 00000000
- 00063301
- 000007a3
- 00001111
- 00003f64
-
-Segmentation fault
-
+/Jarkko
