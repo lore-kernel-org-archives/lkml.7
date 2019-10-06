@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E35ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B696C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B329D20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1628F2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384795;
-	bh=xd9FKbZCNcSShJBGOLUkhgzrMnFgc/j0qXHYi6FfljA=;
+	s=default; t=1570384798;
+	bh=SOE6ACuDJrpTLEalUwUdaGYcVNC0GWFqk/MsVyT7T58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcUI6xeWMg2/SX8oddqAaXMOvL2WLYFun/T6D+XGRckAhPcQhazxVuMmmu8zic3D+
-	 sZexDwoR46FoD0XDGMA/YxjskQn2w3Ifo97TzYvqM6YffFSsKH4y5jPTnBquiimth6
-	 EZmgthBm7XD0zmoxlgf/qwDGT/7O0OglJ68DpLkE=
+	b=MvNzXNRtLVMOsiozTJwMZ/JGudAwYjt1++BifKGjD8eL8s7+1ralZYq07i+AJLGFq
+	 HYlI0oqXUH3/h813p1vL3CtHjmFizgKS/4vHGx3B4iQ61ZkC6nxuQxZ396//KussPc
+	 segLuNmP/qh2I2KUSh2kdGXBixNnibW32GgghgiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbfJFR36 (ORCPT
+        id S1729165AbfJFR35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:29:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfJFR3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:50 -0400
+        id S1729016AbfJFR3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBAC92080F;
-        Sun,  6 Oct 2019 17:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B7D2080F;
+        Sun,  6 Oct 2019 17:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382989;
-        bh=xd9FKbZCNcSShJBGOLUkhgzrMnFgc/j0qXHYi6FfljA=;
+        s=default; t=1570382986;
+        bh=SOE6ACuDJrpTLEalUwUdaGYcVNC0GWFqk/MsVyT7T58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9TSdNp+VdDSA7qne2l80GgW+4cpfOAkAf9IHZcFdVFOLLqhwifKopILflvSlF1dE
-         WyVy3I9hoFcbfTyAy5kNmpsFmcSUGeKxCnr4kPhdxHFdRFBR/OLoUqLMwUK6ZfFJtN
-         h8R3WralV4LBL31KPgPeEiOe9yhQ4/ITbrEUhbPY=
+        b=qhwdXWBgAaS2rsAxACeWqPlyWtuQTFADu/o4Z2DO99oXbBY9a0MhPlSRnnM5rThgq
+         3E7r3pOfPQuCu9zQz2jVTDfilZv0IASmmvSKjpSkfGyO5bW+/csfEBzsEakaefKkOU
+         b09p9SJHftnLR8vv06rzTzLHc1bHlUS4633vRTC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/106] dma-buf/sw_sync: Synchronize signal vs syncpt free
-Date:   Sun,  6 Oct 2019 19:20:52 +0200
-Message-Id: <20191006171143.424340388@linuxfoundation.org>
+Subject: [PATCH 4.19 037/106] clk: qcom: gcc-sdm845: Use floor ops for sdcc clks
+Date:   Sun,  6 Oct 2019 19:20:43 +0200
+Message-Id: <20191006171141.256483190@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -63,75 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit d3c6dd1fb30d3853c2012549affe75c930f4a2f9 ]
+[ Upstream commit 5e4b7e82d497580bc430576c4c9bce157dd72512 ]
 
-During release of the syncpt, we remove it from the list of syncpt and
-the tree, but only if it is not already been removed. However, during
-signaling, we first remove the syncpt from the list. So, if we
-concurrently free and signal the syncpt, the free may decide that it is
-not part of the tree and immediately free itself -- meanwhile the
-signaler goes on to use the now freed datastructure.
+Some MMC cards fail to enumerate properly when inserted into an MMC slot
+on sdm845 devices. This is because the clk ops for qcom clks round the
+frequency up to the nearest rate instead of down to the nearest rate.
+For example, the MMC driver requests a frequency of 52MHz from
+clk_set_rate() but the qcom implementation for these clks rounds 52MHz
+up to the next supported frequency of 100MHz. The MMC driver could be
+modified to request clk rate ranges but for now we can fix this in the
+clk driver by changing the rounding policy for this clk to be round down
+instead of round up.
 
-In particular, we get struck by commit 0e2f733addbf ("dma-buf: make
-dma_fence structure a bit smaller v2") as the cb_list is immediately
-clobbered by the kfree_rcu.
-
-v2: Avoid calling into timeline_fence_release() from under the spinlock
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111381
-Fixes: d3862e44daa7 ("dma-buf/sw-sync: Fix locking around sync_timeline lists")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Gustavo Padovan <gustavo@padovan.org>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: <stable@vger.kernel.org> # v4.14+
-Acked-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190812154247.20508-1-chris@chris-wilson.co.uk
+Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Cc: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lkml.kernel.org/r/20190830195142.103564-1-swboyd@chromium.org
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma-buf/sw_sync.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/clk/qcom/gcc-sdm845.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
-index 53c1d6d36a642..81ba4eb348909 100644
---- a/drivers/dma-buf/sw_sync.c
-+++ b/drivers/dma-buf/sw_sync.c
-@@ -141,17 +141,14 @@ static void timeline_fence_release(struct dma_fence *fence)
- {
- 	struct sync_pt *pt = dma_fence_to_sync_pt(fence);
- 	struct sync_timeline *parent = dma_fence_parent(fence);
-+	unsigned long flags;
+diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+index 3bf11a6200942..ada3e4aeb38f9 100644
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -647,7 +647,7 @@ static struct clk_rcg2 gcc_sdcc2_apps_clk_src = {
+ 		.name = "gcc_sdcc2_apps_clk_src",
+ 		.parent_names = gcc_parent_names_10,
+ 		.num_parents = 5,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
  
-+	spin_lock_irqsave(fence->lock, flags);
- 	if (!list_empty(&pt->link)) {
--		unsigned long flags;
--
--		spin_lock_irqsave(fence->lock, flags);
--		if (!list_empty(&pt->link)) {
--			list_del(&pt->link);
--			rb_erase(&pt->node, &parent->pt_tree);
--		}
--		spin_unlock_irqrestore(fence->lock, flags);
-+		list_del(&pt->link);
-+		rb_erase(&pt->node, &parent->pt_tree);
- 	}
-+	spin_unlock_irqrestore(fence->lock, flags);
+@@ -671,7 +671,7 @@ static struct clk_rcg2 gcc_sdcc4_apps_clk_src = {
+ 		.name = "gcc_sdcc4_apps_clk_src",
+ 		.parent_names = gcc_parent_names_0,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
  
- 	sync_timeline_put(parent);
- 	dma_fence_free(fence);
-@@ -274,7 +271,8 @@ static struct sync_pt *sync_pt_create(struct sync_timeline *obj,
- 				p = &parent->rb_left;
- 			} else {
- 				if (dma_fence_get_rcu(&other->base)) {
--					dma_fence_put(&pt->base);
-+					sync_timeline_put(obj);
-+					kfree(pt);
- 					pt = other;
- 					goto unlock;
- 				}
 -- 
 2.20.1
 
