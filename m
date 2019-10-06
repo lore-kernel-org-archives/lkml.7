@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F08C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DE7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E7A20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2D120700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384824;
-	bh=2Q/4MtwUVizCp4FO/MXsq8GYoPfKnljP6aUWr61tcrg=;
+	s=default; t=1570384829;
+	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Meq7Vz4P7lIQ9qKuTwc9SJG7ku/zUFkqH9TEOEqpZzL+8ZKKcLGJE99LkkvraHe6M
-	 7OTOzPAyXfSxrlwDvVq5KhkkJEKi8mhCiDjvv187+ySnlf0ujMuoPaBKCyJvfYWDmE
-	 Ry3Zi3v3+LKFmmZTrKBFxG3NevtPd2PWT42FbQNU=
+	b=ZaZDA7iKFxAEkgfJQapQ/OCpsaXQ89KkPBnGHAHy+kvxAPohy7pOa71685HJUIDAw
+	 XcAONQfIG7y+CjT/T2JqRi0NoZM33yczTdKJoX2fBkebXGoQnVw5cOh7xsTd8yTkAz
+	 vencmkzTf8/LAqMHLNZvW41Kxp/4+DD+t8xeSo3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfJFSAX (ORCPT
+        id S1729251AbfJFSA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbfJFR3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:09 -0400
+        id S1728927AbfJFR3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EAE2080F;
-        Sun,  6 Oct 2019 17:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 850362080F;
+        Sun,  6 Oct 2019 17:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382948;
-        bh=2Q/4MtwUVizCp4FO/MXsq8GYoPfKnljP6aUWr61tcrg=;
+        s=default; t=1570382946;
+        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KbM1lBHq31a6rKXkMe0AVz7MuGC2ug3HA8llEYfJB4MWaG55A81B0X7maEucpd6It
-         qiKgvYwU7c3SoSaee15kaAHUzIEL4lXHxWy+adIIUi/Y9DZAI2rXn32dI92DG/VZfP
-         jO3cmf6rRuUYd+I5Da0YEzldvbhvvZc2IUp7+Ht0=
+        b=VjM9RUMvED/iaajAv48wE9aLIWUKDzV26puuXRlzTL5mSrcYL7P9fJv43urtbqZVb
+         hh+rHSnwFKstIjjDWUS84/VNX2GM34YFaypMhhXdA1+83121l16njd24SUKLwjHSk7
+         7HxyrLCek4jp2AaU+Lz0fXa/WLJ2WFwd+quDHOfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/106] drm/bridge: tc358767: Increase AUX transfer length limit
-Date:   Sun,  6 Oct 2019 19:20:09 +0200
-Message-Id: <20191006171126.240257065@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Mark Menzynski <mmenzyns@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 029/106] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
+Date:   Sun,  6 Oct 2019 19:20:35 +0200
+Message-Id: <20191006171138.932176677@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -67,50 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Mark Menzynski <mmenzyns@redhat.com>
 
-[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
+[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
 
-According to the datasheet tc358767 can transfer up to 16 bytes via
-its AUX channel, so the artificial limit of 8 appears to be too
-low. However only up to 15-bytes seem to be actually supported and
-trying to use 16-byte transfers results in transfers failing
-sporadically (with bogus status in case of I2C transfers), so limit it
-to 15.
+Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
+When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
+
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358767.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index aaca5248da070..d728b6cf61096 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -302,7 +302,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 			       struct drm_dp_aux_msg *msg)
- {
- 	struct tc_data *tc = aux_to_tc(aux);
--	size_t size = min_t(size_t, 8, msg->size);
-+	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
- 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
- 	u8 *buf = msg->buffer;
- 	u32 tmp = 0;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+index 7143ea4611aa3..33a9fb5ac5585 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
+ 		info->min     = min(info->base,
+ 				    info->base + info->step * info->vidmask);
+ 		info->max     = nvbios_rd32(bios, volt + 0x0e);
++		if (!info->max)
++			info->max = max(info->base, info->base + info->step * info->vidmask);
+ 		break;
+ 	case 0x50:
+ 		info->min     = nvbios_rd32(bios, volt + 0x0a);
 -- 
 2.20.1
 
