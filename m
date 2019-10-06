@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3C0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B766C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A372053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E2A20700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383600;
-	bh=bL9gZIONi5x1sP8K0K9+7JkjNGb4N9JAG6j5LpCsJzM=;
+	s=default; t=1570383604;
+	bh=UAfTYj9dSSWlNwqhJHR1m9xmDES6sax0XfOL7/szap8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=va+ORcSM7nwrU36kxY8fodQGtd8qxtB1rTDNe5TnEqvrAMFor4g3h/X5AU8TNdN4N
-	 M3rj+U63Q3wLcIIfO6HfPSNES0RnqTHQcNw8GxrxP0XDPgmoncG8qiY85EsK/SAFLM
-	 xjX/ntrRxiJBnPY0i6uCgqjFDeUggVGcqTNFdRYE=
+	b=R+oSLETCeusAk64n46WohpKAwxlDl71dyjQpNrHlVTXROVoh0FSE3t7dW4qW5Enu9
+	 oCUM1hawOUj+efBkdcsuFzU1diXWNmAaxUv8M98NcGQotejdu7wyUmgwIwcz5taM83
+	 jP4UHmqJv0/2LTktQnWApt5AoMfy5LiViqSlXtw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730961AbfJFRj6 (ORCPT
+        id S1728938AbfJFRkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39400 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbfJFRjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:39:55 -0400
+        id S1730967AbfJFRkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:40:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7744B2087E;
-        Sun,  6 Oct 2019 17:39:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC9B92087E;
+        Sun,  6 Oct 2019 17:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383595;
-        bh=bL9gZIONi5x1sP8K0K9+7JkjNGb4N9JAG6j5LpCsJzM=;
+        s=default; t=1570383600;
+        bh=UAfTYj9dSSWlNwqhJHR1m9xmDES6sax0XfOL7/szap8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mhBq4YzeybhO1IFHca3bv24k02PJ3kKxJgipvmJjpJwgpPaw8Wkdcdnv/wSsscn4e
-         WJEJ7rZSWJVDxx9E+Hng8XjcHfYxyHTxJxZSGB2c7bfP9MRHZ3FtFhxcqimb5VZ8En
-         yE9tZx5nuCXZKxuGtH7xF/QMy3jI5SGO8afZnllQ=
+        b=cG+Re7QleUuPwYWPTGjOlV+Mt4LswALube3/NKTmJ0KekTWKj89k3Ya/OU5UbUGiZ
+         S2xgvZZcLyE0e/A7NVaTHiZjeQIw5eULn8Ko1ZWYTxOePmAC3STuocqvxI1MqBDGQh
+         upfH4rBNQuN+gmsMDIZZhzzueB4ODoCiVMc1uTyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 024/166] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Sun,  6 Oct 2019 19:19:50 +0200
-Message-Id: <20191006171215.188421890@linuxfoundation.org>
+Subject: [PATCH 5.3 026/166] clk: ingenic/jz4740: Fix "pll half" divider not read/written properly
+Date:   Sun,  6 Oct 2019 19:19:52 +0200
+Message-Id: <20191006171215.318003328@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,86 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+[ Upstream commit 568b9de48d80bcf1a92e2c4fa67651abbb8ebfe2 ]
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+The code was setting the bit 21 of the CPCCR register to use a divider
+of 2 for the "pll half" clock, and clearing the bit to use a divider
+of 1.
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+This is the opposite of how this register field works: a cleared bit
+means that the /2 divider is used, and a set bit means that the divider
+is 1.
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
+Restore the correct behaviour using the newly introduced .div_table
+field.
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://lkml.kernel.org/r/20190701113606.4130-1-paul@crapouillou.net
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/clk/ingenic/jz4740-cgu.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index da5b6723329a9..28693dbcb0c38 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -221,6 +221,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 4c0a20949c2c2..9b27d75d9485c 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -53,6 +53,10 @@ static const u8 jz4740_cgu_cpccr_div_table[] = {
+ 	1, 2, 3, 4, 6, 8, 12, 16, 24, 32,
+ };
  
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
++static const u8 jz4740_cgu_pll_half_div_table[] = {
++	2, 1,
++};
 +
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1007,11 +1010,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1019,8 +1031,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
- 	}
- 	return 0;
- }
-@@ -1198,6 +1211,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
+ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
  
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
- }
+ 	/* External clocks */
+@@ -86,7 +90,10 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
+ 	[JZ4740_CLK_PLL_HALF] = {
+ 		"pll half", CGU_CLK_DIV,
+ 		.parents = { JZ4740_CLK_PLL, -1, -1, -1 },
+-		.div = { CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1 },
++		.div = {
++			CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1,
++			jz4740_cgu_pll_half_div_table,
++		},
+ 	},
  
- static void shutdown_smi(void *send_info);
+ 	[JZ4740_CLK_CCLK] = {
 -- 
 2.20.1
 
