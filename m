@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B5EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F67BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6AF2133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8E12080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383395;
-	bh=bvp7U6owBiuRrjazjNW9vjE9/ElqnQAHUf39IoJDf2M=;
+	s=default; t=1570383399;
+	bh=onWG5fEy79m+P5MeMD3OfBF+FFwESVPrTUiJrrE519s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bB+Nx56n9F9nknjVfVEEPgFYIRbtSMX+cpWbn74l3BVFEcSB73rSMZPprOZQEGwtg
-	 XLVqhHy2c0tY3SVSdzHfkpoP4YDbFIY8lJW1PLIpI/k9QW+UEJTCvBr2jkA7LXarY9
-	 dPy7SCNcD1p5AMe4ThdGfVprWqMiavCyET1J3xGo=
+	b=kTu5P8GnvTCcEWBNtNSu9jaif+JDsDALIsc5PaE1Q8NSjBKDfRrJitlSyaHqEOsT5
+	 sQd86v7iJVAtPER7lXs0eUhlAqyRJcfUaWrwzXWUsn1Tf+5f0pWuaaMqZBIxSGv4Y6
+	 PMIDvIVxaDM5yGZlHxskWgA9A5CwrJkAoNRdI7P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfJFRge (ORCPT
+        id S1730314AbfJFRgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbfJFRga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:30 -0400
+        id S1728368AbfJFRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD0CB20862;
-        Sun,  6 Oct 2019 17:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 609882080F;
+        Sun,  6 Oct 2019 17:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383389;
-        bh=bvp7U6owBiuRrjazjNW9vjE9/ElqnQAHUf39IoJDf2M=;
+        s=default; t=1570383394;
+        bh=onWG5fEy79m+P5MeMD3OfBF+FFwESVPrTUiJrrE519s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=itIZO8SnKSIilxUkxnj9iluaKU6pcAvqgSvETz019x2h6OGAx7JaX3JCTwPZAcHJr
-         gRKNoW5yepEBE5cp6qiSmPv3i9LTRGcA25xalNl9oynurRzrHV6HcKnyB6ihRuR2NU
-         p8W/Z7zzQj174P38vKefKN5lgy9WhA2MN4XdFnIs=
+        b=kkLmhiO+hFKsJKphAvCAtt9KFt5NDBGYwJLGzkMYVa1CpbZN1E9FVIG4/kRLHJcM2
+         8h1sC4hLIv4eStYcwKg5Zg18SIR8sj7DSiApxaZ32IsSba8N/Z/uequccqbcLxBnTY
+         Kx2J365w8nHFb0RLr7ifAPGfzOvOjtpRi6U7UZ48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 042/137] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Sun,  6 Oct 2019 19:20:26 +0200
-Message-Id: <20191006171212.486377295@linuxfoundation.org>
+Subject: [PATCH 5.2 044/137] clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
+Date:   Sun,  6 Oct 2019 19:20:28 +0200
+Message-Id: <20191006171212.610700587@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -59,86 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+[ Upstream commit 720099603d1f62e37b789366d7e89824b009ca28 ]
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+The MMC2 clock slices are currently not defined in V3s CCU driver, which
+makes MMC2 not working.
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+Fix this issue.
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
-
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index f124a2d2bb9f5..92a89c8290aa4 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -221,6 +221,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
- 
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
-+
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1007,11 +1010,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1019,8 +1031,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
- 	}
- 	return 0;
- }
-@@ -1198,6 +1211,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
- 
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
- }
- 
- static void shutdown_smi(void *send_info);
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index cbbf06d42c2c2..408a6750ddda2 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -493,6 +493,9 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
+ 		[CLK_MMC1]		= &mmc1_clk.common.hw,
+ 		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
+ 		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
++		[CLK_MMC2]		= &mmc2_clk.common.hw,
++		[CLK_MMC2_SAMPLE]	= &mmc2_sample_clk.common.hw,
++		[CLK_MMC2_OUTPUT]	= &mmc2_output_clk.common.hw,
+ 		[CLK_CE]		= &ce_clk.common.hw,
+ 		[CLK_SPI0]		= &spi0_clk.common.hw,
+ 		[CLK_USB_PHY0]		= &usb_phy0_clk.common.hw,
 -- 
 2.20.1
 
