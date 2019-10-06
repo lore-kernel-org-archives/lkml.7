@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05BAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21CFC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7272080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876422173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383135;
-	bh=DAmgiiSZWCuRyI8VV23ospy6jJdpUUxcp04e1vpILr8=;
+	s=default; t=1570383138;
+	bh=C9rdRd4FKnAjdBTCt+SycYLieZOPOIsh4TIELYR1dvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b1Aaa499hG0K2WCkLiayuaiUhGIS+sHprOOLmXO9CJiN1DzRq8VfuwUgOVQOuR7jH
-	 mQFvzIOPrPM7jCB4cNFPPsEICedkCUOCarAZGGJDZzOL9k1Z3xyba6ilrRTLspcgGb
-	 bPHOukJjfmQA4ChyT8K2r6wWiPo2a72InHeMnEiM=
+	b=GmFGRW72FggLbKyLH3j7cG6cZEy7kjHa5OzzCNZWzlpIoeEEOQYCYTJjEyOqwS42D
+	 cEKSJy4bEPqjpcwbgt+IYfPlXcoSiDpHBc/o9GJ/wYF8Q9Jywez62Y/4yPvrlt1/t4
+	 BBXth41F9OML4NX9p1rxgFZ5npujVyW82miOBu54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfJFRcP (ORCPT
+        id S1729542AbfJFRcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbfJFRcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:32:10 -0400
+        id S1729498AbfJFRcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:32:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8407E2133F;
-        Sun,  6 Oct 2019 17:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33EBB2080F;
+        Sun,  6 Oct 2019 17:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383130;
-        bh=DAmgiiSZWCuRyI8VV23ospy6jJdpUUxcp04e1vpILr8=;
+        s=default; t=1570383132;
+        bh=C9rdRd4FKnAjdBTCt+SycYLieZOPOIsh4TIELYR1dvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dLGseiajWLaQg1WIC5MOv9yU8ejH1zAN1/mbPWXWXyhvPxSHZ7Ejm0PMzUr03j5dT
-         3t0q19XhyL5FKQ56qWU6Ty82TMJkaBcBJ14UWeBfVIxX2C9nI8IJ8qiwO8ZY2BcJrM
-         YldkxKPN3a2N/Var7Nt0b6pZG0J80ebpYzakL5VA=
+        b=vKbqaNNpaOhX+Br3/gwjYOpMRHAdwhe5Na/qTJWAbsTRtERQ3ysHpiwO/vFrX+BGB
+         7F5jprodRumlw/mnDoumf/vOw4tG+9MpC6mbmKEYL7nlUBOUq4eZJArCte60lhXhjV
+         SrOKC5gLFcTpprDk4jayWi35NXTy1evduYW6yEmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hoang Le <hoang.h.le@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 098/106] tipc: fix unlimited bundling of small messages
-Date:   Sun,  6 Oct 2019 19:21:44 +0200
-Message-Id: <20191006171202.606183179@linuxfoundation.org>
+Subject: [PATCH 4.19 099/106] sch_cbq: validate TCA_CBQ_WRROPT to avoid crash
+Date:   Sun,  6 Oct 2019 19:21:45 +0200
+Message-Id: <20191006171202.701244385@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,171 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuong Lien <tuong.t.lien@dektech.com.au>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e95584a889e1902fdf1ded9712e2c3c3083baf96 ]
+[ Upstream commit e9789c7cc182484fc031fd88097eb14cb26c4596 ]
 
-We have identified a problem with the "oversubscription" policy in the
-link transmission code.
+syzbot reported a crash in cbq_normalize_quanta() caused
+by an out of range cl->priority.
 
-When small messages are transmitted, and the sending link has reached
-the transmit window limit, those messages will be bundled and put into
-the link backlog queue. However, bundles of data messages are counted
-at the 'CRITICAL' level, so that the counter for that level, instead of
-the counter for the real, bundled message's level is the one being
-increased.
-Subsequent, to-be-bundled data messages at non-CRITICAL levels continue
-to be tested against the unchanged counter for their own level, while
-contributing to an unrestrained increase at the CRITICAL backlog level.
+iproute2 enforces this check, but malicious users do not.
 
-This leaves a gap in congestion control algorithm for small messages
-that can result in starvation for other users or a "real" CRITICAL
-user. Even that eventually can lead to buffer exhaustion & link reset.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+Modules linked in:
+CPU: 1 PID: 26447 Comm: syz-executor.1 Not tainted 5.3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:cbq_normalize_quanta.part.0+0x1fd/0x430 net/sched/sch_cbq.c:902
+RSP: 0018:ffff8801a5c333b0 EFLAGS: 00010206
+RAX: 0000000020000003 RBX: 00000000fffffff8 RCX: ffffc9000712f000
+RDX: 00000000000043bf RSI: ffffffff83be8962 RDI: 0000000100000018
+RBP: ffff8801a5c33420 R08: 000000000000003a R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000002ef
+R13: ffff88018da95188 R14: dffffc0000000000 R15: 0000000000000015
+FS:  00007f37d26b1700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004c7cec CR3: 00000001bcd0a006 CR4: 00000000001626f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ [<ffffffff83be9d57>] cbq_normalize_quanta include/net/pkt_sched.h:27 [inline]
+ [<ffffffff83be9d57>] cbq_addprio net/sched/sch_cbq.c:1097 [inline]
+ [<ffffffff83be9d57>] cbq_set_wrr+0x2d7/0x450 net/sched/sch_cbq.c:1115
+ [<ffffffff83bee8a7>] cbq_change_class+0x987/0x225b net/sched/sch_cbq.c:1537
+ [<ffffffff83b96985>] tc_ctl_tclass+0x555/0xcd0 net/sched/sch_api.c:2329
+ [<ffffffff83a84655>] rtnetlink_rcv_msg+0x485/0xc10 net/core/rtnetlink.c:5248
+ [<ffffffff83cadf0a>] netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2510
+ [<ffffffff83a7db6d>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5266
+ [<ffffffff83cac2c6>] netlink_unicast_kernel net/netlink/af_netlink.c:1324 [inline]
+ [<ffffffff83cac2c6>] netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1350
+ [<ffffffff83cacd4a>] netlink_sendmsg+0x89a/0xd50 net/netlink/af_netlink.c:1939
+ [<ffffffff8399d46e>] sock_sendmsg_nosec net/socket.c:673 [inline]
+ [<ffffffff8399d46e>] sock_sendmsg+0x12e/0x170 net/socket.c:684
+ [<ffffffff8399f1fd>] ___sys_sendmsg+0x81d/0x960 net/socket.c:2359
+ [<ffffffff839a2d05>] __sys_sendmsg+0x105/0x1d0 net/socket.c:2397
+ [<ffffffff839a2df9>] SYSC_sendmsg net/socket.c:2406 [inline]
+ [<ffffffff839a2df9>] SyS_sendmsg+0x29/0x30 net/socket.c:2404
+ [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
+ [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
 
-We fix this by keeping a 'target_bskb' buffer pointer at each levels,
-then when bundling, we only bundle messages at the same importance
-level only. This way, we know exactly how many slots a certain level
-have occupied in the queue, so can manage level congestion accurately.
-
-By bundling messages at the same level, we even have more benefits. Let
-consider this:
-- One socket sends 64-byte messages at the 'CRITICAL' level;
-- Another sends 4096-byte messages at the 'LOW' level;
-
-When a 64-byte message comes and is bundled the first time, we put the
-overhead of message bundle to it (+ 40-byte header, data copy, etc.)
-for later use, but the next message can be a 4096-byte one that cannot
-be bundled to the previous one. This means the last bundle carries only
-one payload message which is totally inefficient, as for the receiver
-also! Later on, another 64-byte message comes, now we make a new bundle
-and the same story repeats...
-
-With the new bundling algorithm, this will not happen, the 64-byte
-messages will be bundled together even when the 4096-byte message(s)
-comes in between. However, if the 4096-byte messages are sent at the
-same level i.e. 'CRITICAL', the bundling algorithm will again cause the
-same overhead.
-
-Also, the same will happen even with only one socket sending small
-messages at a rate close to the link transmit's one, so that, when one
-message is bundled, it's transmitted shortly. Then, another message
-comes, a new bundle is created and so on...
-
-We will solve this issue radically by another patch.
-
-Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
-Reported-by: Hoang Le <hoang.h.le@dektech.com.au>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/link.c |   29 ++++++++++++++++++-----------
- net/tipc/msg.c  |    5 +----
- 2 files changed, 19 insertions(+), 15 deletions(-)
+ net/sched/sch_cbq.c |   40 ++++++++++++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 12 deletions(-)
 
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -161,6 +161,7 @@ struct tipc_link {
- 	struct {
- 		u16 len;
- 		u16 limit;
-+		struct sk_buff *target_bskb;
- 	} backlog[5];
- 	u16 snd_nxt;
- 	u16 last_retransm;
-@@ -846,6 +847,7 @@ static void link_prepare_wakeup(struct t
- void tipc_link_reset(struct tipc_link *l)
- {
- 	struct sk_buff_head list;
-+	u32 imp;
+--- a/net/sched/sch_cbq.c
++++ b/net/sched/sch_cbq.c
+@@ -1132,6 +1132,32 @@ static const struct nla_policy cbq_polic
+ 	[TCA_CBQ_POLICE]	= { .len = sizeof(struct tc_cbq_police) },
+ };
  
- 	__skb_queue_head_init(&list);
- 
-@@ -864,11 +866,10 @@ void tipc_link_reset(struct tipc_link *l
- 	__skb_queue_purge(&l->transmq);
- 	__skb_queue_purge(&l->deferdq);
- 	__skb_queue_purge(&l->backlogq);
--	l->backlog[TIPC_LOW_IMPORTANCE].len = 0;
--	l->backlog[TIPC_MEDIUM_IMPORTANCE].len = 0;
--	l->backlog[TIPC_HIGH_IMPORTANCE].len = 0;
--	l->backlog[TIPC_CRITICAL_IMPORTANCE].len = 0;
--	l->backlog[TIPC_SYSTEM_IMPORTANCE].len = 0;
-+	for (imp = 0; imp <= TIPC_SYSTEM_IMPORTANCE; imp++) {
-+		l->backlog[imp].len = 0;
-+		l->backlog[imp].target_bskb = NULL;
++static int cbq_opt_parse(struct nlattr *tb[TCA_CBQ_MAX + 1],
++			 struct nlattr *opt,
++			 struct netlink_ext_ack *extack)
++{
++	int err;
++
++	if (!opt) {
++		NL_SET_ERR_MSG(extack, "CBQ options are required for this operation");
++		return -EINVAL;
 +	}
- 	kfree_skb(l->reasm_buf);
- 	kfree_skb(l->failover_reasm_skb);
- 	l->reasm_buf = NULL;
-@@ -909,7 +910,7 @@ int tipc_link_xmit(struct tipc_link *l,
- 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
- 	struct sk_buff_head *transmq = &l->transmq;
- 	struct sk_buff_head *backlogq = &l->backlogq;
--	struct sk_buff *skb, *_skb, *bskb;
-+	struct sk_buff *skb, *_skb, **tskb;
- 	int pkt_cnt = skb_queue_len(list);
- 	int rc = 0;
++
++	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy, extack);
++	if (err < 0)
++		return err;
++
++	if (tb[TCA_CBQ_WRROPT]) {
++		const struct tc_cbq_wrropt *wrr = nla_data(tb[TCA_CBQ_WRROPT]);
++
++		if (wrr->priority > TC_CBQ_MAXPRIO) {
++			NL_SET_ERR_MSG(extack, "priority is bigger than TC_CBQ_MAXPRIO");
++			err = -EINVAL;
++		}
++	}
++	return err;
++}
++
+ static int cbq_init(struct Qdisc *sch, struct nlattr *opt,
+ 		    struct netlink_ext_ack *extack)
+ {
+@@ -1144,12 +1170,7 @@ static int cbq_init(struct Qdisc *sch, s
+ 	hrtimer_init(&q->delay_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+ 	q->delay_timer.function = cbq_undelay;
  
-@@ -955,19 +956,21 @@ int tipc_link_xmit(struct tipc_link *l,
- 			seqno++;
- 			continue;
- 		}
--		if (tipc_msg_bundle(skb_peek_tail(backlogq), hdr, mtu)) {
-+		tskb = &l->backlog[imp].target_bskb;
-+		if (tipc_msg_bundle(*tskb, hdr, mtu)) {
- 			kfree_skb(__skb_dequeue(list));
- 			l->stats.sent_bundled++;
- 			continue;
- 		}
--		if (tipc_msg_make_bundle(&bskb, hdr, mtu, l->addr)) {
-+		if (tipc_msg_make_bundle(tskb, hdr, mtu, l->addr)) {
- 			kfree_skb(__skb_dequeue(list));
--			__skb_queue_tail(backlogq, bskb);
--			l->backlog[msg_importance(buf_msg(bskb))].len++;
-+			__skb_queue_tail(backlogq, *tskb);
-+			l->backlog[imp].len++;
- 			l->stats.sent_bundled++;
- 			l->stats.sent_bundles++;
- 			continue;
- 		}
-+		l->backlog[imp].target_bskb = NULL;
- 		l->backlog[imp].len += skb_queue_len(list);
- 		skb_queue_splice_tail_init(list, backlogq);
- 	}
-@@ -983,6 +986,7 @@ static void tipc_link_advance_backlog(st
- 	u16 seqno = l->snd_nxt;
- 	u16 ack = l->rcv_nxt - 1;
- 	u16 bc_ack = l->bc_rcvlink->rcv_nxt - 1;
-+	u32 imp;
+-	if (!opt) {
+-		NL_SET_ERR_MSG(extack, "CBQ options are required for this operation");
+-		return -EINVAL;
+-	}
+-
+-	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy, extack);
++	err = cbq_opt_parse(tb, opt, extack);
+ 	if (err < 0)
+ 		return err;
  
- 	while (skb_queue_len(&l->transmq) < l->window) {
- 		skb = skb_peek(&l->backlogq);
-@@ -993,7 +997,10 @@ static void tipc_link_advance_backlog(st
- 			break;
- 		__skb_dequeue(&l->backlogq);
- 		hdr = buf_msg(skb);
--		l->backlog[msg_importance(hdr)].len--;
-+		imp = msg_importance(hdr);
-+		l->backlog[imp].len--;
-+		if (unlikely(skb == l->backlog[imp].target_bskb))
-+			l->backlog[imp].target_bskb = NULL;
- 		__skb_queue_tail(&l->transmq, skb);
- 		__skb_queue_tail(xmitq, _skb);
- 		TIPC_SKB_CB(skb)->ackers = l->ackers;
---- a/net/tipc/msg.c
-+++ b/net/tipc/msg.c
-@@ -484,10 +484,7 @@ bool tipc_msg_make_bundle(struct sk_buff
- 	bmsg = buf_msg(_skb);
- 	tipc_msg_init(msg_prevnode(msg), bmsg, MSG_BUNDLER, 0,
- 		      INT_H_SIZE, dnode);
--	if (msg_isdata(msg))
--		msg_set_importance(bmsg, TIPC_CRITICAL_IMPORTANCE);
--	else
--		msg_set_importance(bmsg, TIPC_SYSTEM_IMPORTANCE);
-+	msg_set_importance(bmsg, msg_importance(msg));
- 	msg_set_seqno(bmsg, msg_seqno(msg));
- 	msg_set_ack(bmsg, msg_ack(msg));
- 	msg_set_bcast_ack(bmsg, msg_bcast_ack(msg));
+@@ -1466,12 +1487,7 @@ cbq_change_class(struct Qdisc *sch, u32
+ 	struct cbq_class *parent;
+ 	struct qdisc_rate_table *rtab = NULL;
+ 
+-	if (!opt) {
+-		NL_SET_ERR_MSG(extack, "Mandatory qdisc options missing");
+-		return -EINVAL;
+-	}
+-
+-	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy, extack);
++	err = cbq_opt_parse(tb, opt, extack);
+ 	if (err < 0)
+ 		return err;
+ 
 
 
