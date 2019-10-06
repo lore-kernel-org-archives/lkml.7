@@ -2,170 +2,111 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14395C47404
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4B6C47404
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD74218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B32F222CA
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NMSncqY+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkENuWgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfJFCbK (ORCPT
+        id S1726217AbfJFCdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 22:31:10 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:41204 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfJFCbJ (ORCPT
+        Sat, 5 Oct 2019 22:33:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33475 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfJFCdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 22:31:09 -0400
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x962Upd6006790
-        for <linux-kernel@vger.kernel.org>; Sun, 6 Oct 2019 11:30:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x962Upd6006790
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570329052;
-        bh=kuS/GKnKklmRpPbyJCs/1Gxnnvpl6N+X6d6FVhIH0Qo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NMSncqY+lYiIafmLeCg29z6tSGWnOQyxBeDOQUCICpmoSO2H+mY3MieP07YEtYz2r
-         kcEGoO/zSgshDc1GL257RVEDRF5ow4oVzFwOG/yhfzoBRry73o56uU+n19yfUr92+T
-         UVrA32h4EPz0f/vHjEBw4vy9GaH0PwfgIj6kTrmAmgvvulXC39kJ9dfzDNb74kY37I
-         u/Jxyeq/J+JWmEEt1bLlvPGN+mtIKCxy1MdNkOuGaCybGUHOMw8a+cbEH1WfjI2vpn
-         Gw2q3rYjz4RKVphCJIpF/XMTQgsS/5U96Vrax4ytpr+ZNZy0JJGStzvs9H7Yk33VuF
-         yJ3pZQfH7RELg==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id w3so2281700vkm.3
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 19:30:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAUY4tDX6WLAgZnKKNom5jemLlKO8wwad+6aSfTnPlBGrV5STc+o
-        ZUNQ1WC1INyFlnLeGJ/iPbd5urzff4Ru5UCMyAI=
-X-Google-Smtp-Source: APXvYqx3bSTblZRYno1+Rvd64tc+kjphZrmb8vrW7f9tgdcP/7FB0Zj9I5meeZ8rp53YdnxijfZF1+0ji0xeXyPrkLw=
-X-Received: by 2002:a1f:d483:: with SMTP id l125mr11392682vkg.12.1570329050468;
- Sat, 05 Oct 2019 19:30:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190811184938.1796-1-rikard.falkeborn@gmail.com> <20190811184938.1796-4-rikard.falkeborn@gmail.com>
-In-Reply-To: <20190811184938.1796-4-rikard.falkeborn@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 6 Oct 2019 11:30:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS_ya0LRvheguU678G5YSPQrOk9wTbq+-kVoFdbxR++kA@mail.gmail.com>
-Message-ID: <CAK7LNAS_ya0LRvheguU678G5YSPQrOk9wTbq+-kVoFdbxR++kA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] linux/bits.h: Add compile time sanity check of
- GENMASK inputs
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 5 Oct 2019 22:33:19 -0400
+Received: by mail-io1-f68.google.com with SMTP id z19so21684523ior.0;
+        Sat, 05 Oct 2019 19:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HIOpkaYk/LdhNeJZnSkbF455Ac5gPraX0S6ROVZRNtg=;
+        b=lkENuWgVYOr+0FINXrsfRgS2ooQ1Fd8KQrhsNtuK47tukg2c/0pxvINxQIbPjo6tl0
+         5RK/oL4PSowKSSKk8x39r5ZD3qoYh31/fdD9J/UGVDD1iHi7Akl4fWF/X/FQXmW/+e5P
+         0HWOsuf409TdeqUFexZGZ6K58iKtS6W1Q2LNZlLBkHjx6GY1tHi9rw4cRbqWSLAPu4f7
+         rR/4yZFjs0mP97d1qMlaIUdGDLMa64w+m3KAOfYEfxwdlJPvkZa6ZqQy41UKB+kgCLlP
+         U5b6cMPeFaCuj+/mkiAg3rJl/rd1sSnqik/Zlm0IADC9e9kEDXzjBkwF2/jf0zPs+ilX
+         IvLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HIOpkaYk/LdhNeJZnSkbF455Ac5gPraX0S6ROVZRNtg=;
+        b=sdwBFmT3Sj5c/gjoWEHHXVTmd3QAvo4tYuqrqpPUejQ1Z5AwE9B9TUxgs+tnYOj2t3
+         LKtsBeSKYf7CRBmObUxu4uT8N6YJtc2tj4bdmfuBS0fkYFHQiAJ34F5TFCBs+ueODnkP
+         2NThWNDyq9mQCClThh33RTpqfHnkrpnu8W4O2FEGpDP2yPbdbYgraXN/ZAzH4PYbspNI
+         LXTTejsIm8V/7p8YeyTpLCX9azfPzrjwQhy9Hn7SIXDOqliAkOSM4dyrb+2XlZ/5Ty6T
+         fQ8gaHcYAmFoHQyptT0HVCbc1FNEhMZZVWqwxwlAvY7bmu1HxyQJ+2sPS0bkhia+DdMp
+         vdtQ==
+X-Gm-Message-State: APjAAAUTf8gqmeOBQldNnRfWQQV96l4ngwlxIV1cI08urYQZz8xwxBPx
+        3gfTfdrlPU77tUYeDU8GrlZOYcQG
+X-Google-Smtp-Source: APXvYqx+Hi3qVmUmyjC+UjEP/BasijEGykJofjqeqhWQyD1nCRW+dKbmCucPTXnSCIslCe/Liy2uUQ==
+X-Received: by 2002:a92:169d:: with SMTP id 29mr23172307ilw.146.1570329197511;
+        Sat, 05 Oct 2019 19:33:17 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id v17sm6109149ill.76.2019.10.05.19.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2019 19:33:16 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-serial@vger.kernel.org
+Cc:     adam.ford@logicpd.com, linux-omap@vger.kernel.org,
+        Adam Ford <aford173@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Vignesh R <vigneshr@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] serial: 8250_omap: Fix gpio check for auto RTS and CTS
+Date:   Sat,  5 Oct 2019 21:32:52 -0500
+Message-Id: <20191006023254.23841-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 3:50 AM Rikard Falkeborn
-<rikard.falkeborn@gmail.com> wrote:
->
-> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-> as the first argument and the low bit as the second argument. Mixing
-> them will return a mask with zero bits set.
->
-> Recent commits show getting this wrong is not uncommon, see e.g.
-> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-> macro").
->
-> To prevent such mistakes from appearing again, add compile time sanity
-> checking to the arguments of GENMASK() and GENMASK_ULL(). If both
-> arguments are known at compile time, and the low bit is higher than the
-> high bit, break the build to detect the mistake immediately.
->
-> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-> used instead of BUILD_BUG_ON().
->
-> __builtin_constant_p does not evaluate is argument, it only checks if it
-> is a constant or not at compile time, and __builtin_choose_expr does not
-> evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
-> does only evaluate x++ once.
->
-> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-> available in assembly") made the macros in linux/bits.h available in
-> assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-> checks if the file is included in an asm file.
->
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+There are two checks to see if the manual gpio is configured, but
+these the check is seeing if the structure is NULL instead it
+should check to see if there are CTS and/or RTS pins defined.
 
+This patch uses checks for those individual pins instead of
+checking for the structure itself.
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-
-> ---
-> Changes in v3:
->   - Changed back to shorter macro argument names
->   - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
->     since all results in GENMASK_INPUT_CHECK() are now ints. Update
->     commit message to reflect that.
->
-> Changes in v2:
->   - Add comment about why inputs are not checked when used in asm file
->   - Use UL(0) instead of 0
->   - Extract mask creation in a separate macro to improve readability
->   - Use high and low instead of h and l (part of this was extracted to a
->     separate patch)
->   - Updated commit message
->
-> Joe Perches sent a series to fix the existing misuses of GENMASK() that
-> needs to be merged before this to avoid build failures. Currently, 5 of
-> the patches are not in Linus tree, and 2 are not in linux-next. There is
-> also a patch pending by Nathan Chancellor that also needs to be merged
-> before this patch is merged to avoid build failures.
->
->  include/linux/bits.h | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/bits.h b/include/linux/bits.h
-> index 669d69441a62..4ba0fb609239 100644
-> --- a/include/linux/bits.h
-> +++ b/include/linux/bits.h
-> @@ -18,12 +18,29 @@
->   * position @h. For example
->   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
->   */
-> -#define GENMASK(h, l) \
-> +#ifndef __ASSEMBLY__
-> +#include <linux/build_bug.h>
-> +#define GENMASK_INPUT_CHECK(h, l) \
-> +       (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> +               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> +#else
-> +/*
-> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> + * disable the input check if that is the case.
-> + */
-> +#define GENMASK_INPUT_CHECK(h, l) 0
-> +#endif
-> +
-> +#define __GENMASK(h, l) \
->         (((~UL(0)) - (UL(1) << (l)) + 1) & \
->          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> +#define GENMASK(h, l) \
-> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->
-> -#define GENMASK_ULL(h, l) \
-> +#define __GENMASK_ULL(h, l) \
->         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
->          (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-> +#define GENMASK_ULL(h, l) \
-> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
->
->  #endif /* __LINUX_BITS_H */
-> --
-> 2.22.0
->
-
-
+diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+index c68e2b3a1634..836e736ae188 100644
+--- a/drivers/tty/serial/8250/8250_omap.c
++++ b/drivers/tty/serial/8250/8250_omap.c
+@@ -141,7 +141,7 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ 
+ 	serial8250_do_set_mctrl(port, mctrl);
+ 
+-	if (!up->gpios) {
++	if (!mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS)) {
+ 		/*
+ 		 * Turn off autoRTS if RTS is lowered and restore autoRTS
+ 		 * setting if RTS is raised
+@@ -456,7 +456,8 @@ static void omap_8250_set_termios(struct uart_port *port,
+ 	up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
+ 
+ 	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
+-	    !up->gpios) {
++	    !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS) &&
++	    !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_CTS)) {
+ 		/* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
+ 		up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
+ 		priv->efr |= UART_EFR_CTS;
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
