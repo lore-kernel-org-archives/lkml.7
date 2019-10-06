@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EF5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC97214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EE821841
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382899;
-	bh=hYVt0RUpuwd8TcWj9uwviXzVdy6fGVwf5peNzZMmb6c=;
+	s=default; t=1570382903;
+	bh=9EMZoMlOTp277FGr1ArlagX6CsLtls8Fgtekm+PH48w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y5f1G8ZA62j5rPUhOOpjnPlm3umSNNldXIG5JOelQV9YJjS2HpP4+fnDtrf+wQt5T
-	 6ZB0rg3hLpxrGnwsUKVEczKGX/cWC3UN7rGF1UqArBpRpPjBPVYRr3V3unk8owHGvd
-	 L+5wRfRgtYFXExejYVumDfEFoYJJn0kxwrLRtLPk=
+	b=Shdhtlmgz9aHTXj64I2jKEi1UbR8kFnFfC9uEXDCvyGwQEqMw+NbxLjYkURbj+RMu
+	 4yGWu1Es44sOYlfaRjOo3i2smapOHTXAtPY4D9koSzFOI8nnowFpo8QADYqhyQNh9E
+	 OMzJVeebqDrvR1jelpQY1Zvx42wrsavmp+ADRCWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfJFR2T (ORCPT
+        id S1728743AbfJFR2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727617AbfJFR2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:16 -0400
+        id S1727460AbfJFR2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677812080F;
-        Sun,  6 Oct 2019 17:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBCFA2080F;
+        Sun,  6 Oct 2019 17:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382894;
-        bh=hYVt0RUpuwd8TcWj9uwviXzVdy6fGVwf5peNzZMmb6c=;
+        s=default; t=1570382900;
+        bh=9EMZoMlOTp277FGr1ArlagX6CsLtls8Fgtekm+PH48w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evUKo+qZXUyiLbpcHPjb5VjKacpeqPd1upF/aZtiIEASeUcxxA7hH6wEMg69fUchO
-         GQTRThaYcS0QY5YgrwgF8L+3MeOaK5N1qaWsuFBV11Dy/vFvHBxZIA1T2QyKV0ZqQm
-         uDVZNIQs4dIPuFe6uBnJLCj8YPVIOMl+gVobkeqo=
+        b=vIi6M3/bmgGCJXMqEZELktvWrMG4u1wp+/33qIOXlejhbRLS23JY4nFObvIC9IA8H
+         BZi/uB99MoDMMoxH0vAhDpi12HVDf5SnVZM30VQLgz7fxNGYzj5cF619dEcpBL9twT
+         BJ9lbiTcV8oNrIsEFnWU7m1eUPsCFQWWvdnJOc68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Joel Savitz <jsavitz@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Huckleberry <nhuck@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Scott Wood <oss@buserror.net>, Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/106] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Date:   Sun,  6 Oct 2019 19:20:17 +0200
-Message-Id: <20191006171129.951697403@linuxfoundation.org>
+Subject: [PATCH 4.19 013/106] clk: qoriq: Fix -Wunused-const-variable
+Date:   Sun,  6 Oct 2019 19:20:19 +0200
+Message-Id: <20191006171130.650525085@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -63,85 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit 0df3e42167caaf9f8c7b64de3da40a459979afe8 ]
+[ Upstream commit a95fb581b144b5e73da382eaedb2e32027610597 ]
 
-When building with -Wsometimes-uninitialized, clang warns:
+drivers/clk/clk-qoriq.c:138:38: warning: unused variable
+'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
+clockgen_muxinfo p5020_cmux_grp1
 
-drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-used uninitialized whenever 'for' loop exits because its condition is
-false [-Wsometimes-uninitialized]
-        for (j = 0; j < entries; j++) {
-                    ^~~~~~~~~~~
-drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
-here
-        if (fndit)
-            ^~~~~
-drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
-it is always true
-        for (j = 0; j < entries; j++) {
-                    ^~~~~~~~~~~
-drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
-'fndit' to silence this warning
-        int j, fndit;
-                    ^
-                     = 0
+drivers/clk/clk-qoriq.c:146:38: warning: unused variable
+'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
+clockgen_muxinfo p5020_cmux_grp2
 
-fndit is only used to gate a sprintf call, which can be moved into the
-loop to simplify the code and eliminate the local variable, which will
-fix this warning.
+In the definition of the p5020 chip, the p2041 chip's info was used
+instead.  The p5020 and p2041 chips have different info. This is most
+likely a typo.
 
-Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Joel Savitz <jsavitz@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://github.com/ClangBuiltLinux/linux/issues/504
-Link: https://lore.kernel.org/r/20190603221157.58502-1-natechancellor@gmail.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/525
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Link: https://lkml.kernel.org/r/20190627220642.78575-1-nhuck@google.com
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Scott Wood <oss@buserror.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ drivers/clk/clk-qoriq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index 857c358b727b8..cc860c5f7d26f 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 	struct of_drc_info drc;
- 	const __be32 *value;
- 	char cell_drc_name[MAX_DRC_NAME_LEN];
--	int j, fndit;
-+	int j;
- 
- 	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
- 	if (info == NULL)
-@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 
- 		/* Should now know end of current entry */
- 
--		if (my_index > drc.last_drc_index)
--			continue;
--
--		fndit = 1;
--		break;
-+		/* Found it */
-+		if (my_index <= drc.last_drc_index) {
-+			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
-+				my_index);
-+			break;
-+		}
- 	}
--	/* Found it */
--
--	if (fndit)
--		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
--			my_index);
- 
- 	if (((drc_name == NULL) ||
- 	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index 3a1812f65e5d8..8abc5c8cb8b8c 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -610,7 +610,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
+ 		.guts_compat = "fsl,qoriq-device-config-1.0",
+ 		.init_periph = p5020_init_periph,
+ 		.cmux_groups = {
+-			&p2041_cmux_grp1, &p2041_cmux_grp2
++			&p5020_cmux_grp1, &p5020_cmux_grp2
+ 		},
+ 		.cmux_to_group = {
+ 			0, 1, -1
 -- 
 2.20.1
 
