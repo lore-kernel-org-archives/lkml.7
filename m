@@ -2,191 +2,117 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6243C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F5DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B826F20835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="RDWHphDd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nOXsY4aF"
+	by mail.kernel.org (Postfix) with ESMTP id ED60620835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfJFOn2 (ORCPT
+        id S1726532AbfJFOp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 10:43:28 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:43885 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfJFOn1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 10:43:27 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 5F9A42B7;
-        Sun,  6 Oct 2019 10:43:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sun, 06 Oct 2019 10:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=k/vLThNCgaYuNTAWlGdIAwooUFW
-        4oooG8+RtbEaxCQw=; b=RDWHphDdTCQ7NthgqDQ18MHip0dtAbJ4qA4lJDCAVp0
-        t9QimCOsy3HDlIk3u3ch6gLDy0XNWAZ6dQ+zK2LFmPFMbkje29W185mkw+JawzoY
-        kmCa4Qjf0/wg7el9Qj6pohd5rYu0KI96+D+IZKHi4tm2dl3xClsimq3/6P+LMZRx
-        1EH5s2yjj4MubcEjzwCw6d6ItxPKyDrM2cgL6Bhc2XAGvG/wBIrKBpV+F+1j7iUe
-        dUVAh2mYBAWgb4sUs8zDGeKnb3nKvFQzfBabkozStpHR3jHCCKhGJPx23PzZqc62
-        ka7ai6r1PVs1zasuqrMWgwxrQr9jDpnyxTjLo8MTxaQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=k/vLTh
-        NCgaYuNTAWlGdIAwooUFW4oooG8+RtbEaxCQw=; b=nOXsY4aFF2B367w8NqtAyO
-        OlC2mT3bxbezPHyZI0REsc5SrW0gY7Iu9QFHG8lD10Na6yXMNwr6K+O/EauzE3j8
-        DxnT8mgGPXt6dKF2fOVHThlBC1brMzv5q3oNycx5/NI2HX5Q+4l5x2jdB2Dw5Tda
-        Qct4zD6sZHrBXxORrFlkyh0NcxldBlaTHWivuvla3cBny2stSCc3Zv83GNeBoh8y
-        2Bqsq4UfgAjrqzjY+zX9S8FYrqoU+JWQNv0cVO1XOqPjJKKuqQjybKLVU0FoupqJ
-        OMnrPAv8VBQN96EpUfXvH3da8PdHZGcR+kCyDCKq9QJZPBDITO8jtnzWOwdXnf6A
-        ==
-X-ME-Sender: <xms:jf2ZXdJp7TtOkL-bfPQClj2LVlID-13OcR-gj3tPH_SuVHQiWxqWaQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrheehgdekvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesthdtre
-    dttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:jf2ZXZU_akMnsDMLeb63bfaKHH5GU90PxPe2VwAtLLtKY5o71TLYRw>
-    <xmx:jf2ZXfNZWCmacri3_-sRljxetLfkcYvKBpRPV3AP01BZFlMod29HGg>
-    <xmx:jf2ZXddTStfdAEQ9bg4VxlWSZLvIBemIsTEoGOa9K6ol2ClGTv4Htg>
-    <xmx:jv2ZXVQp_3ztQNwuvEPnq9g5pkW3h1TUpdTBLgdExfoi17fNleGN8w>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3C172D6005D;
-        Sun,  6 Oct 2019 10:43:25 -0400 (EDT)
-Date:   Sun, 6 Oct 2019 16:43:23 +0200
-From:   Greg KH <greg@kroah.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pierre-louis.bossart@linux.intel.com,
-        stable-commits@vger.kernel.org
-Subject: Re: Patch "soundwire: fix regmap dependencies and align with other
- serial links" has been added to the 5.2-stable tree
-Message-ID: <20191006144323.GA4050853@kroah.com>
-References: <20191006134448.9CBEE2084B@mail.kernel.org>
+        Sun, 6 Oct 2019 10:45:27 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:44891 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfJFOp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 10:45:26 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 26B0482916;
+        Sun,  6 Oct 2019 14:45:19 +0000 (UTC)
+Message-ID: <58dc94b6371ab2f5b11b13ab707d73ab3fc4cc64.camel@aosc.io>
+Subject: Re: [linux-sunxi] [PATCH 3/3] Revert "drm/sun4i: dsi: Rework a bit
+ the hblk calculation"
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Date:   Sun, 06 Oct 2019 22:44:25 +0800
+In-Reply-To: <CAMty3ZDW4XHyW+6XL_RSVHqTSk79-r749pa0n5e6VbUzowAsiw@mail.gmail.com>
+References: <20191001080253.6135-1-icenowy@aosc.io>
+         <20191001080253.6135-4-icenowy@aosc.io>
+         <CAMty3ZDW4XHyW+6XL_RSVHqTSk79-r749pa0n5e6VbUzowAsiw@mail.gmail.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006134448.9CBEE2084B@mail.kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 09:44:47AM -0400, Sasha Levin wrote:
-> This is a note to let you know that I've just added the patch titled
+在 2019-10-03四的 09:53 +0530，Jagan Teki写道：
+> Hi Wens,
 > 
->     soundwire: fix regmap dependencies and align with other serial links
+> On Tue, Oct 1, 2019 at 1:34 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+> > This reverts commit 62e7511a4f4dcf07f753893d3424decd9466c98b.
+> > 
+> > This commit, although claimed as a refactor, in fact changed the
+> > formula.
+> > 
+> > By expanding the original formula, we can find that the const 10 is
+> > not
+> > substracted, instead it's added to the value (because 10 is
+> > negative
+> > when calculating hsa, and hsa itself is negative when calculating
+> > hblk).
+> > This breaks the similar pattern to other formulas, so restoring the
+> > original formula is more proper.
+> > 
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++-------
+> >  1 file changed, 2 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > index 2d3e822a7739..cb5fd19c0d0d 100644
+> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > @@ -577,14 +577,9 @@ static void sun6i_dsi_setup_timings(struct
+> > sun6i_dsi *dsi,
+> >                           (mode->hsync_start - mode->hdisplay) *
+> > Bpp - HFP_PACKET_OVERHEAD);
+> > 
+> >                 /*
+> > -                * The blanking is set using a sync event (4 bytes)
+> > -                * and a blanking packet (4 bytes + payload + 2
+> > -                * bytes). Its minimal size is therefore 10 bytes.
+> > +                * hblk seems to be the line + porches length.
+> >                  */
+> > -#define HBLK_PACKET_OVERHEAD   10
+> > -               hblk = max((unsigned int)HBLK_PACKET_OVERHEAD,
+> > -                          (mode->htotal - (mode->hsync_end - mode-
+> > >hsync_start)) * Bpp -
+> > -                          HBLK_PACKET_OVERHEAD);
+> > +               hblk = mode->htotal * Bpp - hsa;
 > 
-> to the 5.2-stable tree which can be found at:
->     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> 
-> The filename of the patch is:
->      soundwire-fix-regmap-dependencies-and-align-with-oth.patch
-> and it can be found in the queue-5.2 subdirectory.
-> 
-> If you, or anyone else, feels it should not be added to the stable tree,
-> please let <stable@vger.kernel.org> know about it.
-> 
-> 
-> 
-> commit 3287dff699a585506096287541cc4414600899c7
-> Author: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Date:   Thu Jul 18 18:02:15 2019 -0500
-> 
->     soundwire: fix regmap dependencies and align with other serial links
->     
->     [ Upstream commit 8676b3ca4673517650fd509d7fa586aff87b3c28 ]
->     
->     The existing code has a mixed select/depend usage which makes no sense.
->     
->     config SOUNDWIRE_BUS
->            tristate
->            select REGMAP_SOUNDWIRE
->     
->     config REGMAP_SOUNDWIRE
->             tristate
->             depends on SOUNDWIRE_BUS
->     
->     Let's remove one layer of Kconfig definitions and align with the
->     solutions used by all other serial links.
->     
->     Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->     Link: https://lore.kernel.org/r/20190718230215.18675-1-pierre-louis.bossart@linux.intel.com
->     Signed-off-by: Vinod Koul <vkoul@kernel.org>
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-> index 6ad5ef48b61ee..8cd2ac650b505 100644
-> --- a/drivers/base/regmap/Kconfig
-> +++ b/drivers/base/regmap/Kconfig
-> @@ -44,7 +44,7 @@ config REGMAP_IRQ
->  
->  config REGMAP_SOUNDWIRE
->  	tristate
-> -	depends on SOUNDWIRE_BUS
-> +	depends on SOUNDWIRE
->  
->  config REGMAP_SCCB
->  	tristate
-> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-> index 3a01cfd70fdcd..f518273cfbe3c 100644
-> --- a/drivers/soundwire/Kconfig
-> +++ b/drivers/soundwire/Kconfig
-> @@ -4,7 +4,7 @@
->  #
->  
->  menuconfig SOUNDWIRE
-> -	bool "SoundWire support"
-> +	tristate "SoundWire support"
->  	help
->  	  SoundWire is a 2-Pin interface with data and clock line ratified
->  	  by the MIPI Alliance. SoundWire is used for transporting data
-> @@ -17,17 +17,12 @@ if SOUNDWIRE
->  
->  comment "SoundWire Devices"
->  
-> -config SOUNDWIRE_BUS
-> -	tristate
-> -	select REGMAP_SOUNDWIRE
-> -
->  config SOUNDWIRE_CADENCE
->  	tristate
->  
->  config SOUNDWIRE_INTEL
->  	tristate "Intel SoundWire Master driver"
->  	select SOUNDWIRE_CADENCE
-> -	select SOUNDWIRE_BUS
->  	depends on X86 && ACPI && SND_SOC
->  	help
->  	  SoundWire Intel Master driver.
-> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
-> index fd99a831b92a0..45b7e50016539 100644
-> --- a/drivers/soundwire/Makefile
-> +++ b/drivers/soundwire/Makefile
-> @@ -5,7 +5,7 @@
->  
->  #Bus Objs
->  soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
-> -obj-$(CONFIG_SOUNDWIRE_BUS) += soundwire-bus.o
-> +obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
->  
->  #Cadence Objs
->  soundwire-cadence-objs := cadence_master.o
+> The original formula is correct according to BSP [1] and work with my
+> panels which I have tested before. May be the horizontal timings on
+> panels you have leads to negative value.
 
-Do any of these Kconfig changes actually fix any real issue?  It looks
-like they are all just "cleanups" to me.  What problem are they solving?
+Do you tested the same timing with BSP kernel?
 
-thanks,
+It's quite difficult to get a negative value here, because the value is
+quite big (includes mode->hdisplay * Bpp).
 
-greg k-h
+Strangely, only change the formula here back makes the timing
+translated from FEX file works (tested on PineTab and PinePhone
+production ver). The translation rule is from [1].
+
+So I still insist on the patch because it's needed by experiment.
+
+[1] http://linux-sunxi.org/LCD
+
+> 
+> [1] 
+> https://github.com/ayufan-pine64/linux-pine64/blob/my-hacks-1.2-with-drm/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L919
+
