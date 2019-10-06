@@ -2,53 +2,57 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E28C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C3C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7A12067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F5B2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384894;
-	bh=vTl9zJpljgQsfufSouxqoZf5478I80hsMeKWww/XdhA=;
+	s=default; t=1570384903;
+	bh=+7ukwZYjRuqp0HaB2giqWF8t5YMps7LpkoRS2U8DhoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/a7ofo0uiKTP58uQt2UFWJrjHTO2rLm0vRl0+2zFlF4m+P+82LLyrZRl9OKYj3+K
-	 d9rNDD0p2wrJy70wHSta/c/dmm8yHtTHjpMsPw2uFYWF95AsBf3cbWj6NdRszLKfW4
-	 7/YewotA4gQjLfVQZ3gaJnapucBRqm9E25vf8aBs=
+	b=x3nxH38gO3z5in786j4sR4Q6fstLR0dJPxU2YEfPf4yMQTIUsKsw522uDFem0LbbL
+	 l6VkmriK7ZHiGvCDldSyUsXl+jv16u1AYJmEAV4EGFDwmmuvsl0pHJrCv0nIb141vx
+	 8O3gy01hoOkVeMb5PIPhrZH8DoooD/VNBdR0vm7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfJFR0z (ORCPT
+        id S1728301AbfJFSBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:01:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfJFR0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:51 -0400
+        id S1728332AbfJFR0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EB362070B;
-        Sun,  6 Oct 2019 17:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4722070B;
+        Sun,  6 Oct 2019 17:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382810;
-        bh=vTl9zJpljgQsfufSouxqoZf5478I80hsMeKWww/XdhA=;
+        s=default; t=1570382802;
+        bh=+7ukwZYjRuqp0HaB2giqWF8t5YMps7LpkoRS2U8DhoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6rs/3JbU5Cy6V1Yw0SftxxmIiBaSnXfxN9RlYQTQ1bmglJxiQViFS5kDOhL8dmFM
-         OAIc7FxbAthFkM+F42pFiim9qHlUJ3NU2lpKtTdkq07MWBRNK69mgkaFj4AKWAxVmZ
-         HVYLfeL7GVf6DYK3KJ3jEEJbtzr7K7cze2Mn80uE=
+        b=LQ+OvHzKIlEE24Q67ypjMvrtpgw51FlO1Sv7laxX3qtkwyGTvWvq+5DGB1xYwLa5q
+         mNkWIofojJRdWQh2SA09wojxYY8pQHXEuYOXPW3kFgb0pDlsoLIP9mo1aiXLtfrgJN
+         dp2K5luKuarBRJsGW0z3cn4bLR3LV3QQh+o/3c4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shahjada Abul Husain <shahjada@chelsio.com>,
-        Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 49/68] cxgb4:Fix out-of-bounds MSI-X info array access
-Date:   Sun,  6 Oct 2019 19:21:25 +0200
-Message-Id: <20191006171131.302140886@linuxfoundation.org>
+        stable@vger.kernel.org, Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 46/68] ocfs2: wait for recovering done after direct unlock request
+Date:   Sun,  6 Oct 2019 19:21:22 +0200
+Message-Id: <20191006171129.936624789@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -61,51 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Kulkarni <vishal@chelsio.com>
+From: Changwei Ge <gechangwei@live.cn>
 
-[ Upstream commit 6b517374f4ea5a3c6e307e1219ec5f35d42e6d00 ]
+[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
 
-When fetching free MSI-X vectors for ULDs, check for the error code
-before accessing MSI-X info array. Otherwise, an out-of-bounds access is
-attempted, which results in kernel panic.
+There is a scenario causing ocfs2 umount hang when multiple hosts are
+rebooting at the same time.
 
-Fixes: 94cdb8bb993a ("cxgb4: Add support for dynamic allocation of resources for ULD")
-Signed-off-by: Shahjada Abul Husain <shahjada@chelsio.com>
-Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+NODE1                           NODE2               NODE3
+send unlock requset to NODE2
+                                dies
+                                                    become recovery master
+                                                    recover NODE2
+find NODE2 dead
+mark resource RECOVERING
+directly remove lock from grant list
+calculate usage but RECOVERING marked
+**miss the window of purging
+clear RECOVERING
+
+To reproduce this issue, crash a host and then umount ocfs2
+from another node.
+
+To solve this, just let unlock progress wait for recovery done.
+
+Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
+Signed-off-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
-@@ -137,13 +137,12 @@ static int uldrx_handler(struct sge_rspq
- static int alloc_uld_rxqs(struct adapter *adap,
- 			  struct sge_uld_rxq_info *rxq_info, bool lro)
- {
--	struct sge *s = &adap->sge;
- 	unsigned int nq = rxq_info->nrxq + rxq_info->nciq;
-+	int i, err, msi_idx, que_idx = 0, bmap_idx = 0;
- 	struct sge_ofld_rxq *q = rxq_info->uldrxq;
- 	unsigned short *ids = rxq_info->rspq_id;
--	unsigned int bmap_idx = 0;
-+	struct sge *s = &adap->sge;
- 	unsigned int per_chan;
--	int i, err, msi_idx, que_idx = 0;
+diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
+index 63d701cd1e2e7..c8e9b7031d9ad 100644
+--- a/fs/ocfs2/dlm/dlmunlock.c
++++ b/fs/ocfs2/dlm/dlmunlock.c
+@@ -105,7 +105,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	enum dlm_status status;
+ 	int actions = 0;
+ 	int in_use;
+-        u8 owner;
++	u8 owner;
++	int recovery_wait = 0;
  
- 	per_chan = rxq_info->nrxq / adap->params.nports;
- 
-@@ -161,6 +160,10 @@ static int alloc_uld_rxqs(struct adapter
- 
- 		if (msi_idx >= 0) {
- 			bmap_idx = get_msix_idx_from_bmap(adap);
-+			if (bmap_idx < 0) {
-+				err = -ENOSPC;
-+				goto freeout;
-+			}
- 			msi_idx = adap->msix_info_ulds[bmap_idx].idx;
+ 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
+ 	     flags & LKM_VALBLK);
+@@ -208,9 +209,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
  		}
- 		err = t4_sge_alloc_rxq(adap, &q->rspq, false,
+ 		if (flags & LKM_CANCEL)
+ 			lock->cancel_pending = 0;
+-		else
+-			lock->unlock_pending = 0;
+-
++		else {
++			if (!lock->unlock_pending)
++				recovery_wait = 1;
++			else
++				lock->unlock_pending = 0;
++		}
+ 	}
+ 
+ 	/* get an extra ref on lock.  if we are just switching
+@@ -244,6 +248,17 @@ leave:
+ 	spin_unlock(&res->spinlock);
+ 	wake_up(&res->wq);
+ 
++	if (recovery_wait) {
++		spin_lock(&res->spinlock);
++		/* Unlock request will directly succeed after owner dies,
++		 * and the lock is already removed from grant list. We have to
++		 * wait for RECOVERING done or we miss the chance to purge it
++		 * since the removement is much faster than RECOVERING proc.
++		 */
++		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
++		spin_unlock(&res->spinlock);
++	}
++
+ 	/* let the caller's final dlm_lock_put handle the actual kfree */
+ 	if (actions & DLM_UNLOCK_FREE_LOCK) {
+ 		/* this should always be coupled with list removal */
+-- 
+2.20.1
+
 
 
