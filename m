@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9354DECE58E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD3C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D6F214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1B92077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384888;
-	bh=+so2JCo0KXSJCFl1b7ZFsBD+QNPfJQ+ECE6yVD6cj3o=;
+	s=default; t=1570384891;
+	bh=OTW28PhRPioW4YJq8GClGBnYIu9bhhmZHGS0w6YRHpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ic33YaGuuF4V6xYgDz005iZxtfSMKAsv7K28Vz2+Wd/q3VK6Q4TxTRC7sv+ymxsxR
-	 v/Ml80IJcCuMqCtt2r8YGR8sPtwjoXviKtO79dLGpWbKryTPuMKGEAYVmBM+gnMWvv
-	 E+qU+VKXmCImwXq/NJ6IK5z52yaD5pVJHbmwlDJs=
+	b=Vqu70slRPtEiOzrQPVNBDi7BnDAe2uZXm4me5vvQXfURUl/Eomyr0rVHjrNRX2DS8
+	 e5VB+k7PHd/S++GJprvI6lUqyCdOLJ4thedIpts8Co0lnOeRun3UH6T+2kixibXUKy
+	 auHltMzIaU/nuCX/5wQ7g7nfN+PskGUdKnkIwVck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfJFR1E (ORCPT
+        id S1728408AbfJFR1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbfJFR04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:56 -0400
+        id S1727126AbfJFR07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E13A42133F;
-        Sun,  6 Oct 2019 17:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A74A121479;
+        Sun,  6 Oct 2019 17:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382816;
-        bh=+so2JCo0KXSJCFl1b7ZFsBD+QNPfJQ+ECE6yVD6cj3o=;
+        s=default; t=1570382819;
+        bh=OTW28PhRPioW4YJq8GClGBnYIu9bhhmZHGS0w6YRHpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5oGU6AmrUuyTcP5+941DPiMopWEL/O6xrGj7iqRuWkrX5Zl62DuCqBfWV8CqCLGP
-         OrUTdJAc6y9nuX8GEBGHTRdCEDCblCgcSrgVrRq6+dZhGCuRLvt+9KNz/ydtzwZkWM
-         t/xuJ5dLyKV4Jjxp3Lg9yucbD++ZB0nPj/qZR8XY=
+        b=Nkgex+eJnHCOZAuqnZ1gtNCY2iNvb7iO4a4Jbk/3hvQhRFIEtzHG56b7l+84IfsIr
+         Swbqx2BuGoXTTzPYrwAsVoqHDL3aMofeo1pgtxVFc/tjaV7+EJNTZcs4jmjEJN5M5o
+         jNNTqeNk/1is3/jniVQdhTyHogsozRVrXM1TYRIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 51/68] hso: fix NULL-deref on tty open
-Date:   Sun,  6 Oct 2019 19:21:27 +0200
-Message-Id: <20191006171132.048746509@linuxfoundation.org>
+Subject: [PATCH 4.14 52/68] ipv6: drop incoming packets having a v4mapped source address
+Date:   Sun,  6 Oct 2019 19:21:28 +0200
+Message-Id: <20191006171132.203016558@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -59,54 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 8353da9fa69722b54cba82b2ec740afd3d438748 ]
+[ Upstream commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3 ]
 
-Fix NULL-pointer dereference on tty open due to a failure to handle a
-missing interrupt-in endpoint when probing modem ports:
+This began with a syzbot report. syzkaller was injecting
+IPv6 TCP SYN packets having a v4mapped source address.
 
-	BUG: kernel NULL pointer dereference, address: 0000000000000006
-	...
-	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
-	...
-	Call Trace:
-	hso_start_serial_device+0xdc/0x140 [hso]
-	hso_serial_open+0x118/0x1b0 [hso]
-	tty_open+0xf1/0x490
+After an unsuccessful 4-tuple lookup, TCP creates a request
+socket (SYN_RECV) and calls reqsk_queue_hash_req()
 
-Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+reqsk_queue_hash_req() calls sk_ehashfn(sk)
+
+At this point we have AF_INET6 sockets, and the heuristic
+used by sk_ehashfn() to either hash the IPv4 or IPv6 addresses
+is to use ipv6_addr_v4mapped(&sk->sk_v6_daddr)
+
+For the particular spoofed packet, we end up hashing V4 addresses
+which were not initialized by the TCP IPv6 stack, so KMSAN fired
+a warning.
+
+I first fixed sk_ehashfn() to test both source and destination addresses,
+but then faced various problems, including user-space programs
+like packetdrill that had similar assumptions.
+
+Instead of trying to fix the whole ecosystem, it is better
+to admit that we have a dual stack behavior, and that we
+can not build linux kernels without V4 stack anyway.
+
+The dual stack API automatically forces the traffic to be IPv4
+if v4mapped addresses are used at bind() or connect(), so it makes
+no sense to allow IPv6 traffic to use the same v4mapped class.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/hso.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/ipv6/ip6_input.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -2633,14 +2633,18 @@ static struct hso_device *hso_create_bul
- 		 */
- 		if (serial->tiocmget) {
- 			tiocmget = serial->tiocmget;
-+			tiocmget->endp = hso_get_ep(interface,
-+						    USB_ENDPOINT_XFER_INT,
-+						    USB_DIR_IN);
-+			if (!tiocmget->endp) {
-+				dev_err(&interface->dev, "Failed to find INT IN ep\n");
-+				goto exit;
-+			}
+--- a/net/ipv6/ip6_input.c
++++ b/net/ipv6/ip6_input.c
+@@ -173,6 +173,16 @@ int ipv6_rcv(struct sk_buff *skb, struct
+ 	if (ipv6_addr_is_multicast(&hdr->saddr))
+ 		goto err;
+ 
++	/* While RFC4291 is not explicit about v4mapped addresses
++	 * in IPv6 headers, it seems clear linux dual-stack
++	 * model can not deal properly with these.
++	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
++	 *
++	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
++	 */
++	if (ipv6_addr_v4mapped(&hdr->saddr))
++		goto err;
 +
- 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
- 			if (tiocmget->urb) {
- 				mutex_init(&tiocmget->mutex);
- 				init_waitqueue_head(&tiocmget->waitq);
--				tiocmget->endp = hso_get_ep(
--					interface,
--					USB_ENDPOINT_XFER_INT,
--					USB_DIR_IN);
- 			} else
- 				hso_free_tiomget(serial);
- 		}
+ 	skb->transport_header = skb->network_header + sizeof(*hdr);
+ 	IP6CB(skb)->nhoff = offsetof(struct ipv6hdr, nexthdr);
+ 
 
 
