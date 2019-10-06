@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC3AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E58C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F9620862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B0720700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383388;
-	bh=2w4J4EU+vkn9b/OZxn8whPVPfDR0AZ6c1hgoTTdibcM=;
+	s=default; t=1570383392;
+	bh=Xhdwc27crQh8QWKhbFFcu+WZDtv79dO+TPMXSEimq/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZioB0MgP97TU1JflEA/AzdkGwuZwjzduMAEftqyefSedQIYJP0TcAhb2MY/8+NKy
-	 /Mjh+ume1HCnUP26napoloBTPNRwRgWnYAHs2S2GPl+yBPCEIZNwjP+uo0HTMgqJma
-	 PlvyiRdHCgSp1C+CDxlrSLa59dL5GrAOa6eRZJO4=
+	b=EF/ENGP6aA3rdEH3q7PBr2ONDUeJcPMh2JAWUQY68N3XxoCOlmbE0feLMdLorooal
+	 N4hGhshehxiJyekBHguw9lH6tDSzBzkuoSA+i7gCXGhxQydFrVqxVjNZG+RaBxJ6Ri
+	 Yi0wr2I90wD7SEbtlKoyVyyfX1eiFSaHT0O80X8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfJFRg1 (ORCPT
+        id S1729648AbfJFRgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35194 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730276AbfJFRgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:24 -0400
+        id S1729639AbfJFRg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 831E520700;
-        Sun,  6 Oct 2019 17:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4055920700;
+        Sun,  6 Oct 2019 17:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383384;
-        bh=2w4J4EU+vkn9b/OZxn8whPVPfDR0AZ6c1hgoTTdibcM=;
+        s=default; t=1570383386;
+        bh=Xhdwc27crQh8QWKhbFFcu+WZDtv79dO+TPMXSEimq/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PIK2fuFqxAcXcoM2h0PGzfBMDUruIgWl/xdnYP2RqjIPTWSXYWBjdEFdvhZjzT3V0
-         /MWtVGVtvznS9oe2D76/I6FNA8ojLlDcm78atZhmnYgP1o/lrgZjOzKjaISt7XmNh9
-         3v31d4qZGdv9umUtR+LW//qTfoByyfmr7prCcyfM=
+        b=SPsyPDyToZ4BpL8/IIxhQwxsF5rI0qfSZTygmCjdJh1ecmyT0Tny0dsaJ3VxS/jd+
+         RZKohjyZiPjvOOHNM566HyEByvpKFZnCJLL9PKgiCIqiOkDFUoHJ4fmH9jq0qJ3M3N
+         PcLsjT8PLKWZVd1EbvP79emtOO6+SF+FaQmRDpc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 082/137] clk: Make clk_bulk_get_all() return a valid "id"
-Date:   Sun,  6 Oct 2019 19:21:06 +0200
-Message-Id: <20191006171215.695568055@linuxfoundation.org>
+Subject: [PATCH 5.2 041/137] pinctrl: stmfx: update pinconf settings
+Date:   Sun,  6 Oct 2019 19:20:25 +0200
+Message-Id: <20191006171212.422419325@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,51 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-[ Upstream commit 7f81c2426587b34bf73e643c1a6d080dfa14cf8a ]
+[ Upstream commit a502b343ebd0eab38f3cb33fbb84011847cf5aac ]
 
-The adreno driver expects the "id" field of the returned clk_bulk_data
-to be filled in with strings from the clock-names property.
+According to the following tab (coming from STMFX datasheet), updates
+have to done in stmfx_pinconf_set function:
 
-But due to the use of kmalloc_array() in of_clk_bulk_get_all() it
-receives a list of bogus pointers instead.
+-"type" has to be set when "bias" is configured as "pull-up or pull-down"
+-PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
+ output. There is so no need to check direction.
 
-Zero-initialize the "id" field and attempt to populate with strings from
-the clock-names property to resolve both these issues.
+DIR | TYPE | PUPD | MFX GPIO configuration
+----|------|------|---------------------------------------------------
+1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
+----|------|------|---------------------------------------------------
+1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
+----|------|------|---------------------------------------------------
+1   | 0    | 0/1  | OUTPUT push pull no pull
+----|------|------|---------------------------------------------------
+0   | 1    | 1    | INPUT with internal pull-up resistor
+----|------|------|---------------------------------------------------
+0   | 1    | 0    | INPUT with internal pull-down resistor
+----|------|------|---------------------------------------------------
+0   | 0    | 1    | INPUT floating
+----|------|------|---------------------------------------------------
+0   | 0    | 0    | analog (GPIO not used, default setting)
 
-Fixes: 616e45df7c4a ("clk: add new APIs to operate on all available clocks")
-Fixes: 8e3e791d20d2 ("drm/msm: Use generic bulk clock function")
-Cc: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lkml.kernel.org/r/20190913024029.2640-1-bjorn.andersson@linaro.org
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/1564053416-32192-1-git-send-email-amelie.delaunay@st.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-bulk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/clk-bulk.c b/drivers/clk/clk-bulk.c
-index 06499568cf076..db5096fa9a170 100644
---- a/drivers/clk/clk-bulk.c
-+++ b/drivers/clk/clk-bulk.c
-@@ -18,10 +18,13 @@ static int __must_check of_clk_bulk_get(struct device_node *np, int num_clks,
- 	int ret;
- 	int i;
- 
--	for (i = 0; i < num_clks; i++)
-+	for (i = 0; i < num_clks; i++) {
-+		clks[i].id = NULL;
- 		clks[i].clk = NULL;
-+	}
- 
- 	for (i = 0; i < num_clks; i++) {
-+		of_property_read_string_index(np, "clock-names", i, &clks[i].id);
- 		clks[i].clk = of_clk_get(np, i);
- 		if (IS_ERR(clks[i].clk)) {
- 			ret = PTR_ERR(clks[i].clk);
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index eba872ce4a7cb..c82ad4b629e3e 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+ 		case PIN_CONFIG_BIAS_DISABLE:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			if (ret)
++				return ret;
++			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
++			if (ret)
++				return ret;
+ 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+-			break;
+-		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-		case PIN_CONFIG_DRIVE_PUSH_PULL:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
 2.20.1
 
