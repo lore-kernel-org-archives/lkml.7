@@ -2,171 +2,313 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B14CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE88EC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A8320835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D33220835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UgnJVUbI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF1cA8K0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfJFPWg (ORCPT
+        id S1726638AbfJFPXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:22:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40280 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726245AbfJFPWf (ORCPT
+        Sun, 6 Oct 2019 11:23:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36261 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJFPXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:22:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570375354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/kOnrpYd9eSud0Ixupa7J9ljvVudCP2XNDO8TzpsHNE=;
-        b=UgnJVUbIQYyPkZEIEPdBviR4ZMZVdZk8P+iJf4ehQqs0dK0TAIfXEzZyz0kCeIB9u8hd01
-        rXr+9yXrz/Tc+TTZrDJecvc3D7wTa+piLpqvacdJM8lHOJCAWe6hmzbLTNpQdN98ZoxFtU
-        EI0eWR0qJqM36hz5gV5H79UTH5Kq4LY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-nATV75-0NCKb0LAOiqlDzw-1; Sun, 06 Oct 2019 11:22:32 -0400
-Received: by mail-ed1-f69.google.com with SMTP id n14so7367527edt.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 08:22:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        Sun, 6 Oct 2019 11:23:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m18so9979568wmc.1;
+        Sun, 06 Oct 2019 08:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=eu8O/YhqU7zJEjRc7W99Fi77CUDu2zTF0Sf1rRqLcS8=;
-        b=HGeE+iH9X+CYNCWk8af9uftnVUBCDFBqR0CV3ChTaC0gvpcfVPVCLwG6zwvrx3smcf
-         N7GlcYg7qXBNIk5df29gxYxA52kumELrmTj43hRtPI+XyXYZLWvh9g5yyZUzte38vrD5
-         HcNvumj+qzHTbQZH06a0pkI6B4MNe1cHgP7to7zDQRrTvSbEeyZOlRDK6o8n7uo0QG8A
-         YTosDA0kjEgGSOw3PYd8zSKZtMrXcdhx3W3oV0VCIzX6nfASDtrNqocIN4jEAjvPJW1G
-         UmApQyxAtaE9TYC3faVgA1kTylO8f+qPkC3U/OTOSPO7UylfSnLrgdUFWEJKO1UENQEe
-         L/vg==
-X-Gm-Message-State: APjAAAU9wB3zmbxdJWpAQPQbqfrhLyGYcFz9QbYBRlbJ5640pYmzVP+A
-        3cUHSk914b2oP9qqmWOYNQXZPsMB3ugLdkOrcSlhXYWkHeolej5wn7aPOV8KdfvBrtf2pfsJhpq
-        Mf3T5RcCQdhEun+/mgk5MmemC
-X-Received: by 2002:a50:fb16:: with SMTP id d22mr25119890edq.30.1570375351535;
-        Sun, 06 Oct 2019 08:22:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxtY8LnU1MoovTCbhwbtJH9YruP7SXFbEh5OkwIhzOI6haHNozTxOEiKJdPxcrBFmzfbNEyQg==
-X-Received: by 2002:a50:fb16:: with SMTP id d22mr25119877edq.30.1570375351305;
-        Sun, 06 Oct 2019 08:22:31 -0700 (PDT)
-Received: from localhost.localdomain ([109.38.129.160])
-        by smtp.gmail.com with ESMTPSA id dv15sm1447787ejb.49.2019.10.06.08.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2019 08:22:30 -0700 (PDT)
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191002231617.3670-1-john.stultz@linaro.org>
- <20191002231617.3670-3-john.stultz@linaro.org>
- <20191003112618.GA2420393@kroah.com>
- <CALAqxLWm_u3KsXHn4a6PdBCOKM1vs5k0xS3G5jY+M-=HBqUJag@mail.gmail.com>
- <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
- <CALAqxLX3uSJKvRwzcQznaF4WK52BcM5Bh+PNXHmfDe1aTSUL8Q@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fa44a7ab-14bc-24ec-a19b-7bf15e100ce1@redhat.com>
-Date:   Sun, 6 Oct 2019 17:22:28 +0200
+        bh=Km1xU490DCpbCgsMiwKphUBLMaARWD0NbJTnOPfspdQ=;
+        b=ZF1cA8K0ckWTGfgwJjGaA4T1m4g1wMvRX6VkHsSlPqMZ97eTDTNeKRGgtbx6VieHDC
+         kIUdRnBbj/RX+fRmMOHs2O/U7YxgfN92os4OH4xl67Iyax6JZ4ERJOQgk3xiSYZ4yRpM
+         jFdW2Z4POH1cDthjRInq0Hb5XUt/IL7HD+pTLww/XxSQ5APd+6Byxs02DirkDKq412oe
+         fIn7bx4vhtCKCAvbaMz0Fz+TFFDM0YBrsyNpc0baudr9aHJYC4nmAAM8s05Wy3Xe01xl
+         phsTunzzPa9CUplrVHsLoNMyEDPz+27imEamhZ96HdGD75WOVuJI41ainU/4BUG81Mlx
+         hIfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Km1xU490DCpbCgsMiwKphUBLMaARWD0NbJTnOPfspdQ=;
+        b=Vj1qQEDSeuziboGG3bx591Xny70hVhEgi/h2a3Acru9Hg/1qZ90rPAiUOfCwwgwGOe
+         IyZpAZ3DdwOOTqkw91IE0xlZZY8Lxnz2VgNgPyyYZY5j1TadbNr9wrWF4xKVrBfudSdT
+         klCmJl6IcornFNx+DuHxShcUo7SjCcx0iK1MmJWejskXShn9x6251oGzySL3GZSibEYN
+         P5OZ6WzUjFCkMEBkpPNuy5VKk+49DAhN6Kh1pJRrbcXNzIG2f3XBRtDITAtR72mzYp+R
+         QDKOQDLeu134pTEeyyw5/DvT0chmD4pk5WzZGNDf6rjA20UMThEs/LigDPbnQC1fcmNg
+         FlGg==
+X-Gm-Message-State: APjAAAU7bi92mHFO5Cdtm28xNDqllWHzsOtB7MaS+8KAFI1lolxzTGa2
+        QR0LmyDfafph4iL7DrgbrIl6Hd5l
+X-Google-Smtp-Source: APXvYqz/SqbSttX1oazt49iHjHqKMdatoCWWx8/U67ZMQF6DQU8tTLuQtYCcnA0lMG9TWwFs5+VV6g==
+X-Received: by 2002:a7b:c7d7:: with SMTP id z23mr13630015wmk.137.1570375418956;
+        Sun, 06 Oct 2019 08:23:38 -0700 (PDT)
+Received: from [192.168.1.19] (bgw69.neoplus.adsl.tpnet.pl. [83.28.86.69])
+        by smtp.gmail.com with ESMTPSA id h17sm22089114wme.6.2019.10.06.08.23.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 06 Oct 2019 08:23:38 -0700 (PDT)
+Subject: Re: [PATCH v10 04/16] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191001145620.11123-1-dmurphy@ti.com>
+ <20191001145620.11123-5-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8c00d678-48e0-bb2b-a18f-39247eff7fe2@gmail.com>
+Date:   Sun, 6 Oct 2019 17:23:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLX3uSJKvRwzcQznaF4WK52BcM5Bh+PNXHmfDe1aTSUL8Q@mail.gmail.com>
+In-Reply-To: <20191001145620.11123-5-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MC-Unique: nATV75-0NCKb0LAOiqlDzw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Dan,
 
-On 10/3/19 11:33 PM, John Stultz wrote:
-> On Thu, Oct 3, 2019 at 1:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 03-10-2019 22:45, John Stultz wrote:
->>> The HiKey960 has only one USB controller, but in order to support both
->>> USB-C gadget/OTG and USB-A (host only) ports. When the USB-C
->>> connection is attached, it powers down and disconnects the hub. When
->>> the USB-C connection is detached, it powers the hub on and connects
->>> the controller to the hub.
->>
->> When you say one controller, do you mean 1 host and 1 gadget controller,
->> or is this one of these lovely devices where a gadget controller gets
->> abused as / confused with a proper host controller?
->=20
-> I'm not totally sure myself, but I believe it's the latter, as the
-> host ports have to be disabled in order for the gadet/otg port to
-> function.
->=20
-> There was a similar situation w/ the original HiKey board (dwc2
-> controller) as well, though the switching was done fully in hardware
-> and we only needed some minor tweaks to the driver to keep the state
-> transitions straight.
->=20
->> And since you are doing a usb-role-switch driver, I guess that the
->> role-switch is integrated inside the SoC, so you only get one pair
->> of USB datalines to the outside ?
->=20
-> I believe so, but again, I don't have a ton of knowledge about the SoC
-> details, Chen Yu would probably be the right person to answer, but I
-> don't know if he's doing upstreaming anymore.
->=20
->> This does seem rather special, it might help if you can provide a diagra=
-m
->> with both the relevant bits inside the SoC as well as what lives outside
->> the Soc. even if it is in ASCII art...
->=20
-> There is a schematic pdf here:
-> https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey=
-960/hardware-docs/HiKey960_Schematics.pdf
->=20
-> The larger block diagram on page 3 might be helpful, but you can find
-> more details on the usb hub bits on page 17 and 18.
+Thank you for the update.
 
-Ok, so I took a quick look at the schematic and it is really funky.
+On 10/1/19 4:56 PM, Dan Murphy wrote:
+> Introduce a multicolor class that groups colored LEDs
+> within a LED node.
+> 
+> The multi color class groups monochrome LEDs and allows controlling two
+> aspects of the final combined color: hue and lightness. The former is
+> controlled via <color>_intensity files and the latter is controlled
+> via brightness file.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../ABI/testing/sysfs-class-led-multicolor    |  35 +++
+>  Documentation/leds/index.rst                  |   1 +
+>  Documentation/leds/leds-class-multicolor.rst  |  96 +++++++
+>  drivers/leds/Kconfig                          |  10 +
+>  drivers/leds/Makefile                         |   1 +
+>  drivers/leds/led-class-multicolor.c           | 268 ++++++++++++++++++
+>  include/linux/led-class-multicolor.h          |  88 ++++++
+>  7 files changed, 499 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>  create mode 100644 Documentation/leds/leds-class-multicolor.rst
+>  create mode 100644 drivers/leds/led-class-multicolor.c
+>  create mode 100644 include/linux/led-class-multicolor.h
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> new file mode 100644
+> index 000000000000..65cb43de26e6
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> @@ -0,0 +1,35 @@
+> +What:		/sys/class/leds/<led>/brightness
+> +Date:		Sept 2019
+> +KernelVersion:	5.5
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		Writing to this file will update all LEDs within the group to a
+> +		calculated percentage of what each color LED intensity is set
+> +		to. The percentage is calculated via the equation below:
+> +
+> +		led_brightness = brightness * <color>_intensity/<color>_max_intensity
+> +
+> +		For additional details please refer to
+> +		Documentation/leds/leds-class-multicolor.rst.
+> +
+> +		The value of the color is from 0 to
+> +		/sys/class/leds/<led>/max_brightness.
+> +
+> +What:		/sys/class/leds/<led>/colors/<color>_intensity
+> +Date:		Sept 2019
+> +KernelVersion:	5.5
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		The <color>_intensity file is created based on the color
+> +		defined by the registrar of the class.
+> +		There is one file per color presented.
+> +
+> +		The value of the color is from 0 to
+> +		/sys/class/leds/<led>/colors/<color>_max_intensity.
+> +
+> +What:		/sys/class/leds/<led>/colors/<color>_max_intensity
+> +Date:		Sept 2019
+> +KernelVersion:	5.5
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read only
+> +		Maximum intensity level for the LED color.
+> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
+> index 060f4e485897..bc70c6aa7138 100644
+> --- a/Documentation/leds/index.rst
+> +++ b/Documentation/leds/index.rst
+> @@ -9,6 +9,7 @@ LEDs
+>  
+>     leds-class
+>     leds-class-flash
+> +   leds-class-multicolor
+>     ledtrig-oneshot
+>     ledtrig-transient
+>     ledtrig-usbport
+> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+> new file mode 100644
+> index 000000000000..87a1588d7619
+> --- /dev/null
+> +++ b/Documentation/leds/leds-class-multicolor.rst
+> @@ -0,0 +1,96 @@
+> +====================================
+> +Multi Color LED handling under Linux
+> +====================================
+> +
+> +Description
+> +===========
+> +The multi color class groups monochrome LEDs and allows controlling two
+> +aspects of the final combined color: hue and lightness. The former is
+> +controlled via <color>_intensity files and the latter is controlled
+> +via brightness file.
+> +
+> +For more details on hue and lightness notions please refer to
+> +https://en.wikipedia.org/wiki/CIECAM02.
+> +
+> +Note that intensity files only cache the written value and the actual
+> +change of hardware state occurs upon writing brightness file. This
+> +allows for changing many factors of the perceived color in a virtually
+> +unnoticeable way for the human observer.
+> +
+> +Multicolor Class Control
+> +========================
+> +The multicolor class presents the LED groups under a directory called "colors".
+> +This directory is a child under the LED parent node created by the led_class
+> +framework.  The led_class framework is documented in led-class.rst within this
+> +documentation directory.
+> +
+> +Each colored LED will have two files created under the colors directory
+> +<color>_intensity and <color>_max_intensity. These files will contain
+> +one of LED_COLOR_ID_* definitions from the header
+> +include/dt-bindings/leds/common.h.
+> +
+> +Directory Layout Example
+> +========================
+> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
+> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
+> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
+> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
+> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
+> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
 
-The USB3 superspeed data pairs are only going to the USB-3 hub and
-only the USB-2 lines are muxed between the TypeC and the HUB, so
-in theory superspeed devices could keep working while the TypeC is
-in device mode, since their data lines will still be connected,
-but I guess the controller in the SoC is switched to device mode
-then so this does not work. Likewise Vbus is an all or
-nothing thing, either both the TypeC connector + the 2 Type-A
-reeptacles get Vusb or none of them get Vusb. Also it is seems to use
-the TypeC connector in host-mode together with the A receptacles.
-I must say this is a weird design...
+Now when you have fixed file permissions in LED mc core the
+'ls -l' should report them correctly, so this needs to be
+updated.
 
-Anyways back the code to add a usb role switch notifier. I do
-not think that this is a good idea, this is making "core" changes
-to deal with a special case. If you are going to use a notfier for
-this then IMHO the notifier should be part of the hikey960 usb role
-swtich driver and not be in the usb-role-switch class code, since
-this is very much a device specific hack.
+[...]
+> +int devm_led_classdev_multicolor_register(struct device *parent,
+> +					  struct led_classdev_mc *mcled_cdev)
+> +{
+> +	struct led_classdev_mc **dr;
+> +	int ret;
+> +
+> +	dr = devres_alloc(devm_led_classdev_multicolor_release,
+> +			  sizeof(*dr), GFP_KERNEL);
+> +	if (!dr)
+> +		return -ENOMEM;
+> +
+> +	ret = led_classdev_multicolor_register(parent, mcled_cdev);
+> +	if (ret) {
+> +		devres_free(dr);
+> +		return ret;
+> +	}
+> +
+> +	*dr = mcled_cdev;
+> +	devres_add(parent, dr);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_register);
+> +
+> +static int devm_led_classdev_multicolor_match(struct device *dev,
+> +					      void *res, void *data)
+> +{
+> +	struct mcled_cdev **p = res;
 
-Regards,
+s/mcled_cdev/led_classdev_mc/
 
-Hans
-
+> +
+> +	if (WARN_ON(!p || !*p))
+> +		return 0;
+> +
+> +	return *p == data;
+> +}
+> +
+[...]
+-- 
+Best regards,
+Jacek Anaszewski
