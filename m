@@ -2,60 +2,61 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8B5ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE0CC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1763D20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748C420867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pp0Vss3x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKeWAJ7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfJFPLf (ORCPT
+        id S1726697AbfJFPLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:11:35 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:39968 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfJFPLe (ORCPT
+        Sun, 6 Oct 2019 11:11:39 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38276 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfJFPLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:11:34 -0400
-Received: by mail-yb1-f196.google.com with SMTP id s7so207940ybq.7;
-        Sun, 06 Oct 2019 08:11:34 -0700 (PDT)
+        Sun, 6 Oct 2019 11:11:37 -0400
+Received: by mail-yb1-f194.google.com with SMTP id k10so614677ybs.5;
+        Sun, 06 Oct 2019 08:11:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jbtblgd/jJPBkocI+MwRuPHJhAT10ALT9hQEoN0MCo4=;
-        b=pp0Vss3xZ2x2i3OiesE0HzbYZb1Ba6rMU6p/AmC99WBLaB24DpFCIZ/Pbh5rmUlmgU
-         789dzs9gnGZ4m5nej4eyLhbiAc6b2qi3q0EsI1KIJfRPC3EiOYEhQWv9Me+JICnlFZVI
-         L+cGI086edZssoONImyLsgv1cvGs53NZ83CNYkBuL303hI+X3cCQJ0cwz1uDPpI5MHQp
-         4++e9laTjLX+5C5ofKZej0BCnJWYBwwRdchZs1gHnW1UkFQCHbfSvfeBcENs8l2dNWhi
-         fOQq3sngZWTyUuex7wGfhand7B8AwkmwHZWso8ASQoYIfQQC/gaFSEJJ9SDRAVx+sV3I
-         Dn4Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BimiSAhIyu/wlnbGZzM5zv98VeK3KGxYKaa4VCWD3vc=;
+        b=AKeWAJ7aA2PXvljZVsU+pEzFXbslhbblSurq4szOpIExNDWN0oOkOtHRo9yp/WiB5Y
+         ff4g4nubB+suu8qFOUOmznUS4umGnlwm/sor1h+Uipqp36Q3OJSiXi2mCLqAnNKu78q0
+         qKWbBuk3OVYKWkPwl0kLIiZ91GxnifeqUZDBk/u8R1Ky8V1YjngFOUkoRFa3fhiZGf91
+         LhFCg13/R6Uwiga5dv2ozmD2mwtk16Qu2y+5GJbJYoKA0n4T/Ea+Mvip/ceaQSmHiw2d
+         AT3BNgRPWn1XMWgQ/h4AZBtUBvDeok74osQKLHk2tR8Vnsc5kjDxvjc/SC23L4SOaTXB
+         JKxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jbtblgd/jJPBkocI+MwRuPHJhAT10ALT9hQEoN0MCo4=;
-        b=tcnLSQzwXVWwadZ+iw+mRcMMisolUHTEzbT5BgYdLPVw1+nBwkz8mPMLHd8p5kFYoi
-         bsX2He4hwLTnKPbG70p0Ks1zroRLJ2raBf+xP4FnTobjPIGCsFazgFtrpzYLtDw+eVu/
-         FhYo1qTua0nKNvUEju4xaYNuGiScep9F3qq8zyyic/Rs1QR1oT+jTz66hlI+8XXy/pzs
-         i8zxyg016oCMs0rcQ0DR1qTpEe2Gle7eA2GzMhJvlWh/t5Th2TGgYEQhbCx9DMx4pZoX
-         WWrGiJl7EbEd/qw/WqbCGicRoQR7rlB+fqJnJQmTkgaJomnQvl85xaRvHvQdeVvzxBQU
-         DB8g==
-X-Gm-Message-State: APjAAAXgx/8cSHPKB+FAmsCE4QFReu6TUSJrM57hjPEvcVztq44K0xtl
-        t+NZRhgL74cSWFtemeGsMSY=
-X-Google-Smtp-Source: APXvYqzuLr7tNwFfzVIotQtIQRiBkdOuxRVp0bEL09oY03vVYasfb32PD0Z2/XiXhEWU81GBtjcSng==
-X-Received: by 2002:a25:34d2:: with SMTP id b201mr7985252yba.232.1570374693292;
-        Sun, 06 Oct 2019 08:11:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BimiSAhIyu/wlnbGZzM5zv98VeK3KGxYKaa4VCWD3vc=;
+        b=mJW+G18uoRJppHKbWeVmxueavXhc3TacVqckhEBt6CgYeyB8yUKrp1ONq7X65i6M8k
+         0c/Xq255Y33DbEHYTvdXpdP8zCy1imHkgw9rkTE+YDG7pMwFvH+XRc8l5vQIrvH2aBxl
+         BVZSIlX6DDk0AwUBbvT41XbYG5FxZHggE7JLjIxFMmC7jV/MtFSHU0ksWxAVkdC3LyQT
+         fal/Iwhn2NJGN7eE1BsGoZERYftWaUywjtoN2A2hLVpUztGTs/TgNFeBICTYNjx38zMp
+         QJF/VUkviVWyAooiPcTf507eBXgIbh+TCHIKv9aIsWuKhlIimnoeJMkkiN8NzScNQHTn
+         A0TA==
+X-Gm-Message-State: APjAAAVOjD5WAvPh+Dn3IR5fipsAZbGPmL99SGOlItjotfUh7/al1RRF
+        qekkB9VoMetzl+Z5IUWJlyA=
+X-Google-Smtp-Source: APXvYqyikexpni3X8Md6iVbAyTaBv894xbXgE9Vg/89s2NUfaHSQgnO977TuYCryD6LxmKVQ2LKGlg==
+X-Received: by 2002:a25:2507:: with SMTP id l7mr8836043ybl.20.1570374696030;
+        Sun, 06 Oct 2019 08:11:36 -0700 (PDT)
 Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id e82sm2662434ywc.43.2019.10.06.08.11.32
+        by smtp.gmail.com with ESMTPSA id e82sm2662434ywc.43.2019.10.06.08.11.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 08:11:32 -0700 (PDT)
+        Sun, 06 Oct 2019 08:11:35 -0700 (PDT)
 From:   William Breathitt Gray <vilhelm.gray@gmail.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
@@ -65,11 +66,14 @@ Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
         geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
         sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v16 00/14] Introduce the for_each_set_clump8 macro
-Date:   Sun,  6 Oct 2019 11:10:57 -0400
-Message-Id: <cover.1570374078.git.vilhelm.gray@gmail.com>
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v16 02/14] lib/test_bitmap.c: Add for_each_set_clump8 test cases
+Date:   Sun,  6 Oct 2019 11:10:59 -0400
+Message-Id: <68a64acf894cda2ccdacabbb808d23486613a095.1570374078.git.vilhelm.gray@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1570374078.git.vilhelm.gray@gmail.com>
+References: <cover.1570374078.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,97 +81,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v16:
-  - Fix typo in max3191x patch ('offset' to 'bit' in bitmap_set_value8)
+The introduction of the for_each_set_clump8 macro warrants test cases to
+verify the implementation. This patch adds test case checks for whether
+an out-of-bounds clump index is returned, a zero clump is returned, or
+the returned clump value differs from the expected clump value.
 
-While adding GPIO get_multiple/set_multiple callback support for various
-drivers, I noticed a pattern of looping manifesting that would be useful
-standardized as a macro.
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+ lib/test_bitmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-This patchset introduces the for_each_set_clump8 macro and utilizes it
-in several GPIO drivers. The for_each_set_clump macro8 facilitates a
-for-loop syntax that iterates over a memory region entire groups of set
-bits at a time.
-
-For example, suppose you would like to iterate over a 32-bit integer 8
-bits at a time, skipping over 8-bit groups with no set bit, where
-XXXXXXXX represents the current 8-bit group:
-
-    Example:        10111110 00000000 11111111 00110011
-    First loop:     10111110 00000000 11111111 XXXXXXXX
-    Second loop:    10111110 00000000 XXXXXXXX 00110011
-    Third loop:     XXXXXXXX 00000000 11111111 00110011
-
-Each iteration of the loop returns the next 8-bit group that has at
-least one set bit.
-
-The for_each_set_clump8 macro has four parameters:
-
-    * start: set to the bit offset of the current clump
-    * clump: set to the current clump value
-    * bits: bitmap to search within
-    * size: bitmap size in number of bits
-
-In this version of the patchset, the for_each_set_clump macro has been
-reimplemented and simplified based on the suggestions provided by Rasmus
-Villemoes and Andy Shevchenko in the version 4 submission.
-
-In particular, the function of the for_each_set_clump macro has been
-restricted to handle only 8-bit clumps; the drivers that use the
-for_each_set_clump macro only handle 8-bit ports so a generic
-for_each_set_clump implementation is not necessary. Thus, a solution for
-large clumps (i.e. those larger than the width of a bitmap word) can be
-postponed until a driver appears that actually requires such a generic
-for_each_set_clump implementation.
-
-For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
-smaller than the width of a bitmap word) can be implemented by simply
-replacing the hardcoded '8' and '0xFF' instances with respective
-variables. I have not yet had a need for such an implementation, and
-since it falls short of a true generic for_each_set_clump function, I
-have decided to forgo such an implementation for now.
-
-In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
-introduced to get and set 8-bit values respectively. Their use is based
-on the behavior suggested in the patchset version 4 review.
-
-William Breathitt Gray (14):
-  bitops: Introduce the for_each_set_clump8 macro
-  lib/test_bitmap.c: Add for_each_set_clump8 test cases
-  gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
-  gpio: 104-idi-48: Utilize for_each_set_clump8 macro
-  gpio: gpio-mm: Utilize for_each_set_clump8 macro
-  gpio: ws16c48: Utilize for_each_set_clump8 macro
-  gpio: pci-idio-16: Utilize for_each_set_clump8 macro
-  gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
-  gpio: uniphier: Utilize for_each_set_clump8 macro
-  gpio: 74x164: Utilize the for_each_set_clump8 macro
-  thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
-  gpio: pisosr: Utilize the for_each_set_clump8 macro
-  gpio: max3191x: Utilize the for_each_set_clump8 macro
-  gpio: pca953x: Utilize the for_each_set_clump8 macro
-
- drivers/gpio/gpio-104-dio-48e.c            |  73 ++++----------
- drivers/gpio/gpio-104-idi-48.c             |  36 ++-----
- drivers/gpio/gpio-74x164.c                 |  19 ++--
- drivers/gpio/gpio-gpio-mm.c                |  73 ++++----------
- drivers/gpio/gpio-max3191x.c               |  19 ++--
- drivers/gpio/gpio-pca953x.c                |  17 ++--
- drivers/gpio/gpio-pci-idio-16.c            |  75 +++++---------
- drivers/gpio/gpio-pcie-idio-24.c           | 109 ++++++++-------------
- drivers/gpio/gpio-pisosr.c                 |  12 +--
- drivers/gpio/gpio-uniphier.c               |  16 ++-
- drivers/gpio/gpio-ws16c48.c                |  73 ++++----------
- drivers/thermal/intel/intel_soc_dts_iosf.c |  29 +++---
- drivers/thermal/intel/intel_soc_dts_iosf.h |   2 -
- include/asm-generic/bitops/find.h          |  50 ++++++++++
- include/linux/bitops.h                     |   5 +
- lib/find_bit.c                             |  14 +++
- lib/test_bitmap.c                          |  65 ++++++++++++
- 17 files changed, 325 insertions(+), 362 deletions(-)
-
-
-base-commit: 8c550e94b8835170593169a45b5ba30d3fc72a70
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index 51a98f7ee79e..dc167c13eb39 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -92,6 +92,36 @@ __check_eq_u32_array(const char *srcfile, unsigned int line,
+ 	return true;
+ }
+ 
++static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
++				    const unsigned int offset,
++				    const unsigned int size,
++				    const unsigned char *const clump_exp,
++				    const unsigned long *const clump)
++{
++	unsigned long exp;
++
++	if (offset >= size) {
++		pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
++			srcfile, line, size, offset);
++		return false;
++	}
++
++	exp = clump_exp[offset / 8];
++	if (!exp) {
++		pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
++			srcfile, line, offset);
++		return false;
++	}
++
++	if (*clump != exp) {
++		pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
++			srcfile, line, exp, *clump);
++		return false;
++	}
++
++	return true;
++}
++
+ #define __expect_eq(suffix, ...)					\
+ 	({								\
+ 		int result = 0;						\
+@@ -108,6 +138,7 @@ __check_eq_u32_array(const char *srcfile, unsigned int line,
+ #define expect_eq_bitmap(...)		__expect_eq(bitmap, ##__VA_ARGS__)
+ #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
+ #define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
++#define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
+ 
+ static void __init test_zero_clear(void)
+ {
+@@ -404,6 +435,39 @@ static void noinline __init test_mem_optimisations(void)
+ 	}
+ }
+ 
++static const unsigned char clump_exp[] __initconst = {
++	0x01,	/* 1 bit set */
++	0x02,	/* non-edge 1 bit set */
++	0x00,	/* zero bits set */
++	0x38,	/* 3 bits set across 4-bit boundary */
++	0x38,	/* Repeated clump */
++	0x0F,	/* 4 bits set */
++	0xFF,	/* all bits set */
++	0x05,	/* non-adjacent 2 bits set */
++};
++
++static void __init test_for_each_set_clump8(void)
++{
++#define CLUMP_EXP_NUMBITS 64
++	DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
++	unsigned int start;
++	unsigned long clump;
++
++	/* set bitmap to test case */
++	bitmap_zero(bits, CLUMP_EXP_NUMBITS);
++	bitmap_set(bits, 0, 1);		/* 0x01 */
++	bitmap_set(bits, 9, 1);		/* 0x02 */
++	bitmap_set(bits, 27, 3);	/* 0x28 */
++	bitmap_set(bits, 35, 3);	/* 0x28 */
++	bitmap_set(bits, 40, 4);	/* 0x0F */
++	bitmap_set(bits, 48, 8);	/* 0xFF */
++	bitmap_set(bits, 56, 1);	/* 0x05 - part 1 */
++	bitmap_set(bits, 58, 1);	/* 0x05 - part 2 */
++
++	for_each_set_clump8(start, clump, bits, CLUMP_EXP_NUMBITS)
++		expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
++}
++
+ static void __init selftest(void)
+ {
+ 	test_zero_clear();
+@@ -413,6 +477,7 @@ static void __init selftest(void)
+ 	test_bitmap_parselist();
+ 	test_bitmap_parselist_user();
+ 	test_mem_optimisations();
++	test_for_each_set_clump8();
+ }
+ 
+ KSTM_MODULE_LOADERS(test_bitmap);
 -- 
 2.23.0
 
