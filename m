@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802DBC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E92CC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546272133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D100F2133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383037;
-	bh=SZIa8j9CJhCBRyj+SHTyx1EHRbuknY5E3dcb6CrkBkc=;
+	s=default; t=1570383039;
+	bh=r0VppsRO05cODlZfjJkNWNlLDib6ImkdtE/4yky8mDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLvAlzMGfedsr/kkwLL1ZCQCEZNatC7d3VE/DzxKTent6J8yGaCpWm4OckP1reAbw
-	 /M1t9zvF93JcnUxDhR/uisyYGRIyK20jEJeVqV1kiKDNyCmgrxQqaed5ST/lCFemg1
-	 DrTZsv+qXu2hW9UpJzDX/2rI2jK+zXE6hJgtfpSk=
+	b=XHaV5wTwniRTNGoz8K+V9nH/ZyDVKUfOafzgfofY9oBYad8el/zVvS+Ebf+TVOnro
+	 tmL1KreY6P6Bhwp1tW9n+2O/yY+5iELtYUb5uo7CQ15pA6HjsQ79rNfOPTKt2N+AEL
+	 C6hNKRYeW+Q7p8xZwftN3k12FpmADutQOshTM7+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfJFRag (ORCPT
+        id S1729271AbfJFRaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56366 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfJFRa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:28 -0400
+        id S1728018AbfJFRag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1832133F;
-        Sun,  6 Oct 2019 17:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6DBF2087E;
+        Sun,  6 Oct 2019 17:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383027;
-        bh=SZIa8j9CJhCBRyj+SHTyx1EHRbuknY5E3dcb6CrkBkc=;
+        s=default; t=1570383035;
+        bh=r0VppsRO05cODlZfjJkNWNlLDib6ImkdtE/4yky8mDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZE2Y1avhzMjDcdd74ZDkxcPz7TznF1uPzYE170RpDsJOHbJFwXbb/xFLX18Zz0KB
-         22rs1RJpbUM3ODsF5Kzpupm7sOBKRlrMV5mpHcYaSlLwjNAhgcdYk7C4jvdiWZWJkf
-         btedxBVuxC1RknBzDl0MEtFSCGhNJnv5u1kfeLls=
+        b=MTr95dv+viOkb2V5q6li7K9Qlome5l1VBC7zWcB1ZPvk7EpOzOlmkNYfE6kC/GmZ3
+         PKFh9TqhsUNW5aXCcf/j34CPZivxoex0+aT8u3RoniJ6cN3KjKBau5Pkk4hKSzsAXt
+         GiR+gZYXNxlRLtpufR2jDr9V26CZLhP4eBNkcC8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biwen Li <biwen.li@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/106] rtc: pcf85363/pcf85263: fix regmap error in set_time
-Date:   Sun,  6 Oct 2019 19:21:05 +0200
-Message-Id: <20191006171149.162400490@linuxfoundation.org>
+Subject: [PATCH 4.19 062/106] PCI: histb: Propagate errors for optional regulators
+Date:   Sun,  6 Oct 2019 19:21:08 +0200
+Message-Id: <20191006171150.122985520@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,59 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 7ef66122bdb3b839e9f51b76d7e600b6e21ef648 ]
+[ Upstream commit 8f9e1641ba445437095411d9fda2324121110d5d ]
 
-Issue:
-    - # hwclock -w
-      hwclock: RTC_SET_TIME: Invalid argument
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-Why:
-    - Relative commit: 8b9f9d4dc511 ("regmap: verify if register is
-      writeable before writing operations"), this patch
-      will always check for unwritable registers, it will compare reg
-      with max_register in regmap_writeable.
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-    - The pcf85363/pcf85263 has the capability of address wrapping
-      which means if you access an address outside the allowed range
-      (0x00-0x2f) hardware actually wraps the access to a lower address.
-      The rtc-pcf85363 driver will use this feature to configure the time
-      and execute 2 actions in the same i2c write operation (stopping the
-      clock and configure the time). However the driver has also
-      configured the `regmap maxregister` protection mechanism that will
-      block accessing addresses outside valid range (0x00-0x2f).
-
-How:
-    - Split of writing regs to two parts, first part writes control
-      registers about stop_enable and resets, second part writes
-      RTC time and date registers.
-
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
-Link: https://lore.kernel.org/r/20190829021418.4607-1-biwen.li@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf85363.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-histb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
-index c04a1edcd5716..c3702684b3426 100644
---- a/drivers/rtc/rtc-pcf85363.c
-+++ b/drivers/rtc/rtc-pcf85363.c
-@@ -169,7 +169,12 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	buf[DT_YEARS] = bin2bcd(tm->tm_year % 100);
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index 7b32e619b959c..a3489839a8fc3 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -340,8 +340,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
  
- 	ret = regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
--				tmp, sizeof(tmp));
-+				tmp, 2);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_bulk_write(pcf85363->regmap, DT_100THS,
-+				buf, sizeof(tmp) - 2);
- 	if (ret)
- 		return ret;
+ 	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
+ 	if (IS_ERR(hipcie->vpcie)) {
+-		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(hipcie->vpcie) != -ENODEV)
++			return PTR_ERR(hipcie->vpcie);
+ 		hipcie->vpcie = NULL;
+ 	}
  
 -- 
 2.20.1
