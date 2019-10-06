@@ -2,116 +2,145 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,GAPPY_SUBJECT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFED5ECE58F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD16C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9811D20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:49:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRCGlzEt"
+	by mail.kernel.org (Postfix) with ESMTP id 3E74D20835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 16:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfJFQth (ORCPT
+        id S1726699AbfJFQ4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 12:49:37 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44067 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfJFQth (ORCPT
+        Sun, 6 Oct 2019 12:56:49 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48794 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726443AbfJFQ4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 12:49:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id w12so23545798iol.11;
-        Sun, 06 Oct 2019 09:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gitR6prE2tnQKW2d8vwg8C75oWlKUdv67rXVU7q0QOQ=;
-        b=DRCGlzEtnAKAXsK/2hn1rAPa+00ur0pwb7bfnsPV4inoX1EZo9f+x/DVaJh3kTSbvi
-         EwRDB6fUbQk1/rsy5egGmgH7bYlcXmGHzRajWercwPT1mZvXWa4HpuUmfY4pFtU0/3IC
-         Somjz9/4ecpl/+/yIkZ7GAORqGj8k8bdBaTZWXsRp4KXVc2ycIcMdGM2IbFKi+Pxg31W
-         kFatCmY+0Dy9QUmOdHaVpCrY2A2KPq+lIYzAbToHi0nxs6dptrLB9wgohM3H3Zr/nZm/
-         PVEq146Ba46kpeaoXCqP1UbN7ZSRrQsxVJailmMq0xQbY9qTMOUGx0WvMQvJoH86IJJl
-         s7ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gitR6prE2tnQKW2d8vwg8C75oWlKUdv67rXVU7q0QOQ=;
-        b=pMdL3V28vLn9ZtqkpSocDzFkeHmnRkYHTo7s4Dp0k5RbeiFlfgOgA64/gsssRKKfVe
-         uLrd6hEZgZx1O2YtJUgowLJmW8ysPmY3YqGJ+UNVdHW11Y2SaPiTAKXeN8CZn8oVIVOI
-         mBfKerZCaR6ysnXFx7SVz/j0ph6IrNELmSUZvo7zmj1w5Q/OIQss7cw8GuWuUsp8UfZt
-         nUFb8P2z4JgX71E+ZJSG19eii4hppneJgBvQqsIDjBXSAiDFSE5v7a6cUMiQZp7sEd7J
-         ISlpJZtWbNJiK1U8X+hQZuBDE4+BeiwkceskIfcyU8w7T3iLEjteEcKYYwR7TXSrBD34
-         hjWA==
-X-Gm-Message-State: APjAAAUa/JM2JkZNE/nimvipfWYLG+SWlJwHE9eGooIxW4IdmnbEIHfs
-        Quqh6ha6AMo7H1aIkYmkccKyz1R1DMAAxPbJ/Kg=
-X-Google-Smtp-Source: APXvYqzGZYdzHVT/2p6rnwPtcBhy8+JdFhrM+z5AfNJSgF/qYn5iG9mbEGZsWcc2vspca5ATINmbfjn4WGtO7qG9mW4=
-X-Received: by 2002:a05:6602:10d:: with SMTP id s13mr12183510iot.244.1570380576506;
- Sun, 06 Oct 2019 09:49:36 -0700 (PDT)
+        Sun, 6 Oct 2019 12:56:49 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x96GsaNE023214
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 6 Oct 2019 12:54:38 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id A922942088C; Sun,  6 Oct 2019 12:54:36 -0400 (EDT)
+Date:   Sun, 6 Oct 2019 12:54:36 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     shuah <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20191006165436.GA29585@mit.edu>
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+ <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+ <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+ <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+ <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
 MIME-Version: 1.0
-References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
- <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com> <CAG48ez35oJhey5WNzMQR14ko6RPJUJp+nCuAHVUJqX7EPPPokA@mail.gmail.com>
- <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com>
-In-Reply-To: <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com>
-From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
-Date:   Sun, 6 Oct 2019 17:49:24 +0100
-Message-ID: <CAJHCu1JobL7aj51=4gvaoXPfWH8aNdYXgcBDq90wV4_jN2iUfw@mail.gmail.com>
-Subject: Re: [PATCH v5 04/12] S.A.R.A.: generic DFA for string matching
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Brad Spengler <spender@grsecurity.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        PaX Team <pageexec@freemail.hu>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        James Morris <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Salvatore Mesoraca <s.mesoraca16@gmail.com> wrote:
->
-> Jann Horn <jannh@google.com> wrote:
-> >
-> > On Sat, Jul 6, 2019 at 12:55 PM Salvatore Mesoraca
-> > <s.mesoraca16@gmail.com> wrote:
-> > > Creation of a generic Discrete Finite Automata implementation
-> > > for string matching. The transition tables have to be produced
-> > > in user-space.
-> > > This allows us to possibly support advanced string matching
-> > > patterns like regular expressions, but they need to be supported
-> > > by user-space tools.
-> >
-> > AppArmor already has a DFA implementation that takes a DFA machine
-> > from userspace and runs it against file paths; see e.g.
-> > aa_dfa_match(). Did you look into whether you could move their DFA to
-> > some place like lib/ and reuse it instead of adding yet another
-> > generic rule interface to the kernel?
->
-> Yes, using AppArmor DFA cloud be a possibility.
-> Though, I didn't know how AppArmor's maintainers feel about this.
-> I thought that was easier to just implement my own.
-> Anyway I understand that re-using that code would be the optimal solution.
-> I'm adding in CC AppArmor's maintainers, let's see what they think about this.
+On Fri, Oct 04, 2019 at 06:18:04PM -0700, Brendan Higgins wrote:
+> > Let's talk about current state. Right now kunit is in linux-next and
+> > we want to add a few more tests. We will have to coordinate the effort.
+> > Once kunit get into mainline, then the need for this coordination goes
+> > down.
+> 
+> Sure, I was just thinking that getting other people to write the tests
+> would be better. Since not only is it then useful to someone else, it
+> provides the best possible exercise of KUnit.
 
-I don't want this to prevent SARA from being up-streamed.
-Do you think that having another DFA here could be acceptable anyway?
-Would it be better if I just drop the DFA an go back to simple string
-matching to speed up things?
+Well, one thing we *can* do is if (a) if we can create a kselftest
+branch which we know is stable and won't change, and (b) we can get
+assurances that Linus *will* accept that branch during the next merge
+window, those subsystems which want to use kself test can simply pull
+it into their tree.
 
-Thank you,
+We've done this before in the file system world, when there has been
+some common set of changes needed to improve, say, Direct I/O, where
+the changes are put into a standalone branch, say, in the xfs tree,
+and those file systems which need it as a building block can pull it
+into their tree, and then add the changes needed to use those changes
+into their file system git tree.  These changes are generally not
+terribly controversial, and we've not had to worry about people want
+to bikeshed the changes.
 
-Salvatore
+There is a risk with doing this of course, which is that if the branch
+*is* controversial, or gets bike-shedded for some reason, then Linus
+gets upset and any branches which depended on said branch will get
+rejected at the next merge window.  Which is the requirement for (a)
+and (b) above.  Presumably, the fact that people were unwilling to let
+Kunit land during this merge window might will *because* we think more
+changes might be pending?
+
+The other thing I suppose I can do is to let the ext4 kunit tests land
+in ext4 tree, but with the necessary #ifdef's around things like
+"#include <kunit/test.h>" so that the build won't blow up w/o kunit
+changes being in the tree that I'm building.  It means I won't be able
+to run the tests without creating a test integration branch and
+merging in kunit by hand, which will super-annoying, of course.  And
+if some of the bike-shedding is in Kunit's interfaces, then that
+becomes problematic as well, since any tests that are in ext4.git tree
+might change if people want to rename Kunit's publically exported
+functions (for example).
+
+> Hey Ted, do you know if that ext4 timestamp test can go in through
+> linux-kselftest? It seemed fairly self-contained. Or is that what you
+> were saying wouldn't work for you?
+
+Well, I was hoping that we might start creating more tests beyond just
+the ext4 timestamp tests....
+
+						- Ted
