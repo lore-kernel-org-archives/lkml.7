@@ -2,165 +2,196 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6D1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6D3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621CD21479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2378320862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 22:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Duz0PvB2"
+	dkim=pass (1024-bit key) header.d=paranoici.org header.i=@paranoici.org header.b="RjfnXkwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfJFWjo (ORCPT
+        id S1726771AbfJFWlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 18:39:44 -0400
-Received: from mout.gmx.net ([212.227.17.20]:59337 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfJFWjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 18:39:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570401534;
-        bh=HQioVg0fLiB703pC94Q5CJrHeDjz8YSULyFi62pu9m0=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Duz0PvB2qX4L8giiwuDvx5SsbWVQkb8MNecGicQqT5uyuTsSprcb4szvkk+FyF308
-         T8DlnhoKCH/OKa212mngd7IOBBUBNriW+dQD/sJLRXWBvhuZc1HMtk5iSxIdv46jut
-         AsHL66iTBj3HOm50gcjLz6rKv8wQRSbpJ9aIRN2E=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTAFb-1ig9bd1brD-00Uabf; Mon, 07
- Oct 2019 00:38:54 +0200
-Date:   Mon, 7 Oct 2019 00:38:48 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
-        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] ARM: dts: add Netronix E60K02 board common file
-Message-ID: <20191006223848.GE19803@latitude>
-References: <20190930194332.12246-1-andreas@kemnade.info>
- <20190930194332.12246-3-andreas@kemnade.info>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
-Content-Disposition: inline
-In-Reply-To: <20190930194332.12246-3-andreas@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:J4irto3tAosr7xHmcWxuJ3ndP76ZbpNdsbSVgPvdRBbyvC87GJw
- aihi+iczLukRIoJQMVNUx900ERyIMFo4pEOlHqGD9/GlFKFWHdmSMQMKFuEFr7ab1pSvKaB
- PCTNYdwLfqAYjoUal33EWnA8HpQaRIF9NQk/HqOjZ9Bg8I6iw5rRkIGWpJ0NN0XKfsgS5bT
- jH6ius3PpesaQmI65q7yQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pNfCcJIi9Yg=:jVzGatRezPDUqXoRMuTiCK
- WikGS7YNtIWvBa/qyr/BVMfmnZjb9pRnm60iEVgst2Q0b5BzmrnXuyUb1FvlAF/uWqZYmg1+q
- CFSzTGbf2pYkYlT1qlrqNx7DD9mouXUZ8pzket/2gn2UDWtBNqBvOi7kVvhxFeJRhjGCZzahu
- M5qs7+I2OBeCuhhzkNNVLlJ5TNzhgmGjylo6WKoNC1UaRUTOOxm/+o6lkw5GoaYP6/irlMnqe
- bQK4OzU56aIAiSsIhkQPYSbJEjIupxPhldWu0LS8OKw2TfrXfzJsh6tL2+Tp/gKEfgk+KBvdr
- AsvXWv2AvUioCIfVMqjIzTUJpVoOf47CbJzwomtd6uieXgJIzPM2QXNaSb9vAh/UYpPvX+iHU
- ZBVIE6t1LFOpY/10M8Rl5ImuKyacdAAiXXbArWFyTxkRxndcoXo80p2tCai3HhXcPnIozoTSC
- UzRfgdcAPlVB9B+V4OQFRcXk4/2VVNifgvfYAaq+8u7+C71lxEUnODJ65Bu1p1ZXMdf5/beA3
- iY+MYzm9yM4xBlVpPdpz4Vp3q0ZPfk2ju73GIoKyewH0lH2W60sfAokDffg/UkSabsSnOq64j
- Kg8NLayxxqQAYNMOcyye0jaXw+GoeDkU7lxxxm7TDkKToZviztmG2gDbiL5iLreSroXfH0cZZ
- 4vZrHoJZJ8Sj61SpRYdDZJ4MknKH28XRQW5ISijP5O9ZeiOspgabrgEqkML1E9ARcZXo159JY
- G5TlSvYgb33saya+tVqZ9UoRiwsAaIy9q+sZMpGNPLXfgkKYbApfDsGSCO6tz8n72KyXdr+ed
- ozjFUkYXZL6Bk6v03PFNVpYsxf4d5ZBiujCtJJ2MGqibQB3u5s624pxfQQNA1fiA5NKHBUswC
- 0JwbFANOUgZhYZdg1w4hKdKtjN1A6KSEiFXKotRwJddHOiiiR/rm4wHqy9Xv8CoRyv7IQWOzw
- LD62IibRULWlTF2hOIjgHabvUAeaCbMAd3d08Fq0q/5fKkP0idx9oEflKmK6QMybjh7k0tF4E
- NNS4FpuHZBTPeZu6amVeiEOxnR5Ww3gsFKkllSVxRMRLTD2MaBHoBH7JIvT/QMKw+1JZAQ73O
- Z7nj7OK8dRans0lONpWYYru7/zGHG58Ws8NFy81e0OAzIOnpI8/izMHzjilLtlB5erIv/W07e
- rvSp08//+XL4Qq8XtRAtSipEneG03z4fF3cMc0DoT+x0Jrq/rwUb45LPXRoWTJXaaWeW0+CgV
- g54ivdND9+lGWgCLeBLfsp/MlwQFrI5mn+yICXlXuWqfDdUlpr3jkeJH/EnI=
+        Sun, 6 Oct 2019 18:41:23 -0400
+Received: from latitanza.investici.org ([82.94.249.234]:52121 "EHLO
+        latitanza.investici.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfJFWlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 18:41:23 -0400
+X-Greylist: delayed 547 seconds by postgrey-1.27 at vger.kernel.org; Sun, 06 Oct 2019 18:41:21 EDT
+Received: from mx3.investici.org (localhost [127.0.0.1])
+        by latitanza.investici.org (Postfix) with ESMTP id 08CB4120249
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Oct 2019 22:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paranoici.org;
+        s=stigmate; t=1570401133;
+        bh=XWRTVuOQgQhRGvwSz9ecvELf4dYZZb9UNRmCJdzibcA=;
+        h=Date:From:To:Subject:From;
+        b=RjfnXkwLPwOdZiwUAFDugd0QUJxyFaiV62yk5tXariEZBwGEyPiArYNf7Uvq+uDkY
+         1gw7Go2XSfz2znqGXq03sZUoUzArHLUi2p4YSq5T09j8RHEpp5rtl79laXLOwrPHtZ
+         HjysPDL0OeSgNd42A3OCqKb79GAxcPQvw7jCPIZE=
+Received: from [82.94.249.234] (mx3.investici.org [82.94.249.234]) (Authenticated sender: invernomuto@paranoici.org) by localhost (Postfix) with ESMTPSA id E1305120156
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Oct 2019 22:32:12 +0000 (UTC)
+Received: from frx by crunch with local (Exim 4.92.2)
+        (envelope-from <invernomuto@paranoici.org>)
+        id 1iHF4W-0001nf-0e
+        for linux-kernel@vger.kernel.org; Mon, 07 Oct 2019 00:32:12 +0200
+Date:   Mon, 7 Oct 2019 00:32:05 +0200
+From:   Francesco Poli <invernomuto@paranoici.org>
+To:     linux-kernel@vger.kernel.org
+Subject: Question about sched_prio_to_weight values
+Message-Id: <20191007003205.8888ac99da2dd732b6198387@paranoici.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA512";
+ boundary="Signature=_Mon__7_Oct_2019_00_32_05_+0200_zDIrpdzOEkZ987T4"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---BZaMRJmqxGScZ8Mx
-Content-Type: text/plain; charset=utf-8
+--Signature=_Mon__7_Oct_2019_00_32_05_+0200_zDIrpdzOEkZ987T4
+Content-Type: text/plain; charset=US-ASCII
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for CCing me on this patchset. Nice to see more e-book reader
-related work!
+Hello,
+I am trying to understand something about the internals of the
+completely fair scheduler (CFS) used in the Linux kernel.
 
-A few comments and questions below.
-
-On Mon, Sep 30, 2019 at 09:43:31PM +0200, Andreas Kemnade wrote:
-> The Netronix board E60K02 can be found some several Ebook-Readers,
-> at least the Kobo Clara HD and the Tolino Shine 3. The board
-> is equipped with different SoCs requiring different pinmuxes.
-
-Do I understand it correctly that i.MX6SL and i.MX6SLL are pin-
-compatible so we can use the same pin numbers and GPIO handles in the
-DT?
-
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_led>;
-> +
-> +		GLED {
-
-What does "GLED" mean? It's not obvious to me.
-What user-visible purpose does this LED have, or where is it on the
-board?
-
-> +			gpios =3D <&gpio5 7 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger =3D "timer";
-> +		};
-> +	};
-> +
-> +	memory {
-> +		reg =3D <0x80000000 0x80000000>;
-
-2 GiB of memory?
-
-> +			/* Core3_3V3 */
-
-What are these labels (Core3_3V3, Core4_1V2, etc.)?
-
-> +			dcdc2_reg: DCDC2 {
-> +				regulator-name =3D "DCDC2";
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-max-microvolt =3D <3300000>;
-> +					regulator-suspend-min-microvolt =3D <3300000>;
-> +				};
-> +			};
+I have a question about the mapping between nice levels and weights,
+I hope someone can shed some light on those numbers.
+Please note that I am not subscribed to the LKML: could you please Cc
+me on replies? Thanks for your understanding.
 
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+As far as I can see, the mapping is hard-coded in the
+sched_prio_to_weight array, which is defined in kernel/sched/core.c
+The [latest code] defines the following values:
 
---BZaMRJmqxGScZ8Mx
-Content-Type: application/pgp-signature; name="signature.asc"
+  const int sched_prio_to_weight[40] =3D {
+   /* -20 */     88761,     71755,     56483,     46273,     36291,
+   /* -15 */     29154,     23254,     18705,     14949,     11916,
+   /* -10 */      9548,      7620,      6100,      4904,      3906,
+   /*  -5 */      3121,      2501,      1991,      1586,      1277,
+   /*   0 */      1024,       820,       655,       526,       423,
+   /*   5 */       335,       272,       215,       172,       137,
+   /*  10 */       110,        87,        70,        56,        45,
+   /*  15 */        36,        29,        23,        18,        15,
+  };
+
+but I found the same values in much more ancient versions
+(the values probably date back to the first patch that introduced
+the CFS in the kernel).
+
+[latest code]: <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
+nux.git/tree/kernel/sched/core.c?h=3Dv5.4-rc1>
+
+Now, the comments in the code suggest that each value is obtained by
+dividing the previous one by 1.25: I found [some] [documentation] that
+seems to confirm that the "weight is roughly equivalent to
+1024/(1.25)^(nice)"
+
+[some]: <https://blog.shichao.io/2015/07/22/relationships_among_nice_priori=
+ty_and_weight_in_linux_kernel.html>
+[documentation]: <www.iaiai.org/journals/index.php/IEE/article/download/9/1=
+9>
+
+I tried to see whether I could re-obtain those numbers by rounding (to
+integers) the values computed with that formula, but the result does not
+look quite right.
+By using calc(1), I get:
+
+  ; for (nice =3D -20; nice < 20; ++nice) {=20
+  ;;     w =3D 1024/(1.25)^(nice);
+  ;;     printf('%3d %7d (%.2f)\n', nice, round(w), w);
+  ;; }
+  -20   88818 (~88817.84)
+  -19   71054 (~71054.27)
+  -18   56843 (~56843.42)
+  -17   45475 (~45474.74)
+  -16   36380 (~36379.79)
+  -15   29104 (~29103.83)
+  -14   23283 (~23283.06)
+  -13   18626 (~18626.45)
+  -12   14901 (~14901.16)
+  -11   11921 (~11920.93)
+  -10    9537 (~9536.74)
+   -9    7629 (~7629.39)
+   -8    6104 (~6103.52)
+   -7    4883 (~4882.81)
+   -6    3906 (3906.25)
+   -5    3125 (3125)
+   -4    2500 (2500)
+   -3    2000 (2000)
+   -2    1600 (1600)
+   -1    1280 (1280)
+    0    1024 (1024)
+    1     819 (819.2)
+    2     655 (655.36)
+    3     524 (~524.29)
+    4     419 (~419.43)
+    5     336 (~335.54)
+    6     268 (~268.44)
+    7     215 (~214.75)
+    8     172 (~171.80)
+    9     137 (~137.44)
+   10     110 (~109.95)
+   11      88 (~87.96)
+   12      70 (~70.37)
+   13      56 (~56.29)
+   14      45 (~45.04)
+   15      36 (~36.03)
+   16      29 (~28.82)
+   17      23 (~23.06)
+   18      18 (~18.45)
+   19      15 (~14.76)
+
+where some numbers correspond, while others differ from those found
+in kernel/sched/core.c ...
+
+I tried to tweak the 1.25 factor: 1.2499599 makes me get
+weight =3D=3D 88761 for nice =3D=3D -20, but other numbers still differ.
+A non-linear curve fitting with grace(1) leads to a factor of 1.25018,
+which still produces values that fail to completely match those found
+in kernel/sched/core.c ...
+
+I searched the web and the mailing list archives, but I failed to find
+an answer to this question. Could someone please explain me how those
+numbers were picked?
+
+Thanks for your time!
+
+
+--=20
+ http://www.inventati.org/frx/
+ There's not a second to spare! To the laboratory!
+..................................................... Francesco Poli .
+ GnuPG key fpr =3D=3D CA01 1147 9CD2 EFDF FB82  3925 3E1C 27E1 1F69 BFFE
+
+--Signature=_Mon__7_Oct_2019_00_32_05_+0200_zDIrpdzOEkZ987T4
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl2abPEACgkQCDBEmo7z
-X9uKtxAAzzgCu+n9jH9hNCttJ3lG5alFog0lO+dd69DN/EG3wH4NCQNnkfL0eTUQ
-ePZWqAlCuXMrFgJUrL0RDEw926fYD558I9RBtJGI1yPlKq4Qhs0ENpkNI9bOSZyG
-s4UI1iLsalte+sGFZwPcTfWv5mgD5FSoLPIQleDaaHvCoRh9+PP7Nn3svxyToGcY
-OE7WtpBAwA+gawwKGWZJUxXLMGQKwyg3f8TcFkugLh5VefyiNgTpRcWnilUbZ3mI
-uU1hZc4cC/dcoCs0blZZwO24MAIDN/686fwViySRjzKE411dp1XZDz9LqQdr9OLW
-NKMyFCSsjhn5TFMPoo6rux88KLBujHPRiu7e+EXSVgYZH4nRsxUqPTxnGzimotrx
-1IoN+Dkg+hx5hxVntHrKktH5kvwuN7mKcgGqHNtkQgyhS4dWa+83R0C0E+uEi/ZM
-mH+ht5CK/J6BbCXyUans1T+tIs1xL5xYHsw/ZKZtiYIwGrVVMiIbLf/OW+9llrc4
-wt0KQkqUudaQj8i6PCihRudCi371QWQbcGholaDqkn4HFEGYRC8pzsCHr7sU6Gdf
-J/5fw3n4lQv5H2RBLgzQBqNWB9CkRdJOTTR3Zj95Gaz1HizSWwyk22aoVKdD/f9R
-jQ8CI9hIEMXx1iGEmBAltMHzwtfAzlwp9esITOahR7Sd3ZK0Hyc=
-=YsCq
+iQIzBAEBCgAdFiEEygERR5zS79/7gjklPhwn4R9pv/4FAl2aa2UACgkQPhwn4R9p
+v/4qIA//e29ELud66GOxrxzMlgufK42tTQaIH+WupbfErX6iU9urE/TzeDnw+nwz
+yLVR91+l7T8PEAHwdZ+kVU9+GzK6IZLL8VNsAI6TakO2V3Mg+qYssgWM/UAi1zZl
+PJXoGhLI1x+p2iNRrZnnqYOoLZn9uWSYprLw1aabn0nchrr+H3KsBlkX0+mW/sac
+2SuJu1OX0Ncg6teR/PZ9sgJAGoDrIvZsQOQ4iH8gokmVR1NImP1XR92cuuib2TmU
+vqLyqc1H+JGZN2oILPHbSfEaYCu826jx9tZAjMY2pXYje4ml1Y5CQBPuASjso/E8
+dI+dRBMREO+7fiiFK3hgmk8QkNPWWeg5AjyJDsro0GeEoe3a7iVXHWi2OAZwYKzb
+tVQtDQjsWGZ7uT3RHiE4CLIT6jp6IAjyKJcSdnO2mpFOyzOindeIv4EnZwtFWusu
+0lYvSkgL3cQxfX15MeL7vfx26dvZqvCKN/ttUEbpeuC9lyrn8Aq6e8ZjpMwJtSrs
+ernSC6/xucibaPtOQSAFejYfTs92RPFiGtZWVAph4vIqlR/WD22jCQ+icz9dvuc3
+fqnwFLJBdxOL9+ZhLWbnns0wbMt97V+HMLZ7aQe1QNoq0oOmYHZJDyy6v/e5WM0t
+1ObidXJUoIGQPOKYxyI4KzYRsAdYIBiZRl+cGKvFY4s5q+qnrTE=
+=OjWA
 -----END PGP SIGNATURE-----
 
---BZaMRJmqxGScZ8Mx--
+--Signature=_Mon__7_Oct_2019_00_32_05_+0200_zDIrpdzOEkZ987T4--
