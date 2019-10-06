@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAB8C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA70C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9022087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF43F2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382827;
-	bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
+	s=default; t=1570382830;
+	bh=UFY23L5eLiCo+2aJP3vZWsf8JbVPN0hHJcoBfya3n9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cAEKQ8kdj2Lf9x5OnHVWc+IZp+ZQnjaDvjncrNqkrCRdM9hga9IH7DYjGqUs3d6SB
-	 WzzWf+MGYcAYD7YFKn6I0TGtrzQlPRi7MQyrOR4KB9QAuJ8Aw0gWJzr8XldbMjzRNM
-	 RXZDwFFag+sbWo99/lduY2/1VOkp+jIbGeGmzZpA=
+	b=HDhzMxp2P5yEP8FDToD6RzeRdrmk790v6neWK+Vt9N9L5OjMJY12h6wsZDr3MeYUb
+	 /0I+er/lNPMfcILd+UMl2Wg4Q++Bbtp5U9VuPG0qhA+SUO0qyt/60EquWuhG0QoiNJ
+	 J+6BhTfey/YH0z5rVUnqBRkyb/0K0GSNE6OiTRI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfJFR1G (ORCPT
+        id S1728448AbfJFR1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbfJFR1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:27:04 -0400
+        id S1727505AbfJFR1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:27:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F255F2077B;
-        Sun,  6 Oct 2019 17:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE22D2077B;
+        Sun,  6 Oct 2019 17:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382824;
-        bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
+        s=default; t=1570382827;
+        bh=UFY23L5eLiCo+2aJP3vZWsf8JbVPN0hHJcoBfya3n9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2m1qYlcCPmWTH73naGHBdCdDTPAtEahqm277imaQL2K1v7XN3c0W7XDrjWaesrHLZ
-         ZqDEtQOwGhWG9ALigCVUBtbuERjSWTXZ7OPDik9brN8PcB73T9LaWW1d86qMXtGMPO
-         e862ZDaxkOisfYbrCwIQSMKGxXhL9Bb71fnCqDCA=
+        b=dl9XgafFch6X0W+2NIcIMujWPhvQVCcnAYP5uQQFZCWB1pbEujgTdSn2s5yRYTbzi
+         kMWctCJxz2kMmtE+1hTlnkxLXR9fkJi/TPwI87SleEKFVkNqAzsQSzqy9CzM2fzGuJ
+         ba2EE4a7+z3xww+PhJgu+pKGgNI51FCbHp3ifc+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 54/68] net: qlogic: Fix memory leak in ql_alloc_large_buffers
-Date:   Sun,  6 Oct 2019 19:21:30 +0200
-Message-Id: <20191006171132.917617857@linuxfoundation.org>
+Subject: [PATCH 4.14 55/68] net: Unpublish sk from sk_reuseport_cb before call_rcu
+Date:   Sun,  6 Oct 2019 19:21:31 +0200
+Message-Id: <20191006171133.399020893@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -60,30 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Martin KaFai Lau <kafai@fb.com>
 
-[ Upstream commit 1acb8f2a7a9f10543868ddd737e37424d5c36cf4 ]
+[ Upstream commit 8c7138b33e5c690c308b2a7085f6313fdcb3f616 ]
 
-In ql_alloc_large_buffers, a new skb is allocated via netdev_alloc_skb.
-This skb should be released if pci_dma_mapping_error fails.
+The "reuse->sock[]" array is shared by multiple sockets.  The going away
+sk must unpublish itself from "reuse->sock[]" before making call_rcu()
+call.  However, this unpublish-action is currently done after a grace
+period and it may cause use-after-free.
 
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() in ql_release_to_lrg_buf_free_list(), ql_populate_free_queue(), ql_alloc_large_buffers(), and ql3xxx_send()")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+The fix is to move reuseport_detach_sock() to sk_destruct().
+Due to the above reason, any socket with sk_reuseport_cb has
+to go through the rcu grace period before freeing it.
+
+It is a rather old bug (~3 yrs).  The Fixes tag is not necessary
+the right commit but it is the one that introduced the SOCK_RCU_FREE
+logic and this fix is depending on it.
+
+Fixes: a4298e4522d6 ("net: add SOCK_RCU_FREE socket flag")
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qla3xxx.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/sock.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2787,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
- 				netdev_err(qdev->ndev,
- 					   "PCI mapping failed with error: %d\n",
- 					   err);
-+				dev_kfree_skb_irq(skb);
- 				ql_free_large_buffers(qdev);
- 				return -ENOMEM;
- 			}
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1561,8 +1561,6 @@ static void __sk_destruct(struct rcu_hea
+ 		sk_filter_uncharge(sk, filter);
+ 		RCU_INIT_POINTER(sk->sk_filter, NULL);
+ 	}
+-	if (rcu_access_pointer(sk->sk_reuseport_cb))
+-		reuseport_detach_sock(sk);
+ 
+ 	sock_disable_timestamp(sk, SK_FLAGS_TIMESTAMP);
+ 
+@@ -1585,7 +1583,14 @@ static void __sk_destruct(struct rcu_hea
+ 
+ void sk_destruct(struct sock *sk)
+ {
+-	if (sock_flag(sk, SOCK_RCU_FREE))
++	bool use_call_rcu = sock_flag(sk, SOCK_RCU_FREE);
++
++	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
++		reuseport_detach_sock(sk);
++		use_call_rcu = true;
++	}
++
++	if (use_call_rcu)
+ 		call_rcu(&sk->sk_rcu, __sk_destruct);
+ 	else
+ 		__sk_destruct(&sk->sk_rcu);
 
 
