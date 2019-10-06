@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5C1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E7ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747F520673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B78720700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384443;
-	bh=qa0mUQv2VHTLNbiFSyncuiRPcluh1c6Y3izKC1A5WRY=;
+	s=default; t=1570384448;
+	bh=GKjZy4P+9TGkqvMqU59odRlZDEdrfCj2aPgQx1WN0X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iTvJBcoa/+rKfHqJ/7plrO9EN35OMa7+U7WsnUxuegs/JwhI9oDrtX2YbXQTwov5W
-	 BoRgJdGJYz525AhD3GB6m78hx1qF6HSxr2YLno63zSLoVQnTnNHdXbV3Ffxz8AT1kn
-	 cCy9a4Ib+VsRm/jdfc1EltD2efMsbDJ3X3a7ZwBo=
+	b=qm0qv8oBoKo144lNCuoOxUjJyyZcFJY5i8VkEOfX1nueiY332NH6RLJgpi548+J8k
+	 B+p61REDSkKKCFohwAq6jF/jeC40XHUfF+T2VlKDX/BrDspZSE4HNEUe4gQpZf2DYP
+	 MPVF552KeqhJzsyCcV7LMJOBUP1liJh1eTZUV9lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfJFRyC (ORCPT
+        id S1730344AbfJFRgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35892 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbfJFRg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:36:59 -0400
+        id S1728560AbfJFRgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B392080F;
-        Sun,  6 Oct 2019 17:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B012053B;
+        Sun,  6 Oct 2019 17:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383419;
-        bh=qa0mUQv2VHTLNbiFSyncuiRPcluh1c6Y3izKC1A5WRY=;
+        s=default; t=1570383405;
+        bh=GKjZy4P+9TGkqvMqU59odRlZDEdrfCj2aPgQx1WN0X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YFzfaQt9sPA+htKi2JqIREy5jAWDcSXimrPi4/NVfrOBZQi1fdBqS5H3S4JxLZMPE
-         64kS5mMp+/dGWmrOnIX6d81QSP+sR8nyCHeVLSEVLHeDrOzMkJkPFFCVX3uqfQIRsG
-         raytlzBFFWMA0UF90OwBoG6pkmjwI8WtsbQvBhHI=
+        b=mhtS46BYm6pOmeD/hKmnMPHOHWm4wfRt31tpVJcDUS4mbuenjH3WeF8FPrJA/iSz+
+         IBi2AafozE/O1DexROwZbaZggTTIp/WkPAu7RTiv/JgVWfJPYEm76JodvTSKe2/BWW
+         Sx9PrmOHwAsFAmRbZJvOTF7GDNrVjrRd2u1mOCYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH 5.2 098/137] PCI: pci-hyperv: Fix build errors on non-SYSFS config
-Date:   Sun,  6 Oct 2019 19:21:22 +0200
-Message-Id: <20191006171217.062322810@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 093/137] i2c-cht-wc: Fix lockdep warning
+Date:   Sun,  6 Oct 2019 19:21:17 +0200
+Message-Id: <20191006171216.615633135@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -68,56 +60,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit f58ba5e3f6863ea4486952698898848a6db726c2 ]
+[ Upstream commit 232219b9a464c2479c98aa589acb1bd3383ae9d6 ]
 
-Fix build errors when building almost-allmodconfig but with SYSFS
-not set (not enabled). Fixes these build errors:
+When the kernel is build with lockdep support and the i2c-cht-wc driver is
+used, the following warning is shown:
 
-ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
-ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+[   66.674334] ======================================================
+[   66.674337] WARNING: possible circular locking dependency detected
+[   66.674340] 5.3.0-rc4+ #83 Not tainted
+[   66.674342] ------------------------------------------------------
+[   66.674345] systemd-udevd/1232 is trying to acquire lock:
+[   66.674349] 00000000a74dab07 (intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock){+.+.}, at: regmap_write+0x31/0x70
+[   66.674360]
+               but task is already holding lock:
+[   66.674362] 00000000d44a85b7 (i2c_register_adapter){+.+.}, at: i2c_smbus_xfer+0x49/0xf0
+[   66.674370]
+               which lock already depends on the new lock.
 
-drivers/pci/slot.o is only built when SYSFS is enabled, so
-pci-hyperv.o has an implicit dependency on SYSFS.
-Make that explicit.
+[   66.674371]
+               the existing dependency chain (in reverse order) is:
+[   66.674374]
+               -> #1 (i2c_register_adapter){+.+.}:
+[   66.674381]        rt_mutex_lock_nested+0x46/0x60
+[   66.674384]        i2c_smbus_xfer+0x49/0xf0
+[   66.674387]        i2c_smbus_read_byte_data+0x45/0x70
+[   66.674391]        cht_wc_byte_reg_read+0x35/0x50
+[   66.674394]        _regmap_read+0x63/0x1a0
+[   66.674396]        _regmap_update_bits+0xa8/0xe0
+[   66.674399]        regmap_update_bits_base+0x63/0xa0
+[   66.674403]        regmap_irq_update_bits.isra.0+0x3b/0x50
+[   66.674406]        regmap_add_irq_chip+0x592/0x7a0
+[   66.674409]        devm_regmap_add_irq_chip+0x89/0xed
+[   66.674412]        cht_wc_probe+0x102/0x158
+[   66.674415]        i2c_device_probe+0x95/0x250
+[   66.674419]        really_probe+0xf3/0x380
+[   66.674422]        driver_probe_device+0x59/0xd0
+[   66.674425]        device_driver_attach+0x53/0x60
+[   66.674428]        __driver_attach+0x92/0x150
+[   66.674431]        bus_for_each_dev+0x7d/0xc0
+[   66.674434]        bus_add_driver+0x14d/0x1f0
+[   66.674437]        driver_register+0x6d/0xb0
+[   66.674440]        i2c_register_driver+0x45/0x80
+[   66.674445]        do_one_initcall+0x60/0x2f4
+[   66.674450]        kernel_init_freeable+0x20d/0x2b4
+[   66.674453]        kernel_init+0xa/0x10c
+[   66.674457]        ret_from_fork+0x3a/0x50
+[   66.674459]
+               -> #0 (intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock){+.+.}:
+[   66.674465]        __lock_acquire+0xe07/0x1930
+[   66.674468]        lock_acquire+0x9d/0x1a0
+[   66.674472]        __mutex_lock+0xa8/0x9a0
+[   66.674474]        regmap_write+0x31/0x70
+[   66.674480]        cht_wc_i2c_adap_smbus_xfer+0x72/0x240 [i2c_cht_wc]
+[   66.674483]        __i2c_smbus_xfer+0x1a3/0x640
+[   66.674486]        i2c_smbus_xfer+0x67/0xf0
+[   66.674489]        i2c_smbus_read_byte_data+0x45/0x70
+[   66.674494]        bq24190_probe+0x26b/0x410 [bq24190_charger]
+[   66.674497]        i2c_device_probe+0x189/0x250
+[   66.674500]        really_probe+0xf3/0x380
+[   66.674503]        driver_probe_device+0x59/0xd0
+[   66.674506]        device_driver_attach+0x53/0x60
+[   66.674509]        __driver_attach+0x92/0x150
+[   66.674512]        bus_for_each_dev+0x7d/0xc0
+[   66.674515]        bus_add_driver+0x14d/0x1f0
+[   66.674518]        driver_register+0x6d/0xb0
+[   66.674521]        i2c_register_driver+0x45/0x80
+[   66.674524]        do_one_initcall+0x60/0x2f4
+[   66.674528]        do_init_module+0x5c/0x230
+[   66.674531]        load_module+0x2707/0x2a20
+[   66.674534]        __do_sys_init_module+0x188/0x1b0
+[   66.674537]        do_syscall_64+0x5c/0xb0
+[   66.674541]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   66.674543]
+               other info that might help us debug this:
 
-Also, depending on X86 && X86_64 is not needed, so just change that
-to depend on X86_64.
+[   66.674545]  Possible unsafe locking scenario:
 
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Jake Oshins <jakeo@microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Stephen Hemminger <stephen@networkplumber.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-hyperv@vger.kernel.org
-Cc: Dexuan Cui <decui@microsoft.com>
+[   66.674547]        CPU0                    CPU1
+[   66.674548]        ----                    ----
+[   66.674550]   lock(i2c_register_adapter);
+[   66.674553]                                lock(intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock);
+[   66.674556]                                lock(i2c_register_adapter);
+[   66.674559]   lock(intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock);
+[   66.674561]
+                *** DEADLOCK ***
+
+The problem is that the CHT Whiskey Cove PMIC's builtin i2c-adapter is
+itself a part of an i2c-client (the PMIC). This means that transfers done
+through it take adapter->bus_lock twice, once for the parent i2c-adapter
+and once for its own bus_lock. Lockdep does not like this nested locking.
+
+To make lockdep happy in the case of busses with muxes, the i2c-core's
+i2c_adapter_lock_bus function calls:
+
+ rt_mutex_lock_nested(&adapter->bus_lock, i2c_adapter_depth(adapter));
+
+But i2c_adapter_depth only works when the direct parent of the adapter is
+another adapter, as it is only meant for muxes. In this case there is an
+i2c-client and MFD instantiated platform_device in the parent->child chain
+between the 2 devices.
+
+This commit overrides the default i2c_lock_operations, passing a hardcoded
+depth of 1 to rt_mutex_lock_nested, making lockdep happy.
+
+Note that if there were to be a mux attached to the i2c-wc-cht adapter,
+this would break things again since the i2c-mux code expects the
+root-adapter to have a locking depth of 0. But the i2c-wc-cht adapter
+always has only 1 client directly attached in the form of the charger IC
+paired with the CHT Whiskey Cove PMIC.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-cht-wc.c | 46 +++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 2ab92409210af..297bf928d6522 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -181,7 +181,7 @@ config PCI_LABEL
+diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+index 66af44bfa67d5..f6546de66fbc8 100644
+--- a/drivers/i2c/busses/i2c-cht-wc.c
++++ b/drivers/i2c/busses/i2c-cht-wc.c
+@@ -178,6 +178,51 @@ static const struct i2c_algorithm cht_wc_i2c_adap_algo = {
+ 	.smbus_xfer = cht_wc_i2c_adap_smbus_xfer,
+ };
  
- config PCI_HYPERV
-         tristate "Hyper-V PCI Frontend"
--        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-+        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
-         help
-           The PCI device frontend driver allows the kernel to import arbitrary
-           PCI devices from a PCI backend to support PCI driver domains.
++/*
++ * We are an i2c-adapter which itself is part of an i2c-client. This means that
++ * transfers done through us take adapter->bus_lock twice, once for our parent
++ * i2c-adapter and once to take our own bus_lock. Lockdep does not like this
++ * nested locking, to make lockdep happy in the case of busses with muxes, the
++ * i2c-core's i2c_adapter_lock_bus function calls:
++ * rt_mutex_lock_nested(&adapter->bus_lock, i2c_adapter_depth(adapter));
++ *
++ * But i2c_adapter_depth only works when the direct parent of the adapter is
++ * another adapter, as it is only meant for muxes. In our case there is an
++ * i2c-client and MFD instantiated platform_device in the parent->child chain
++ * between the 2 devices.
++ *
++ * So we override the default i2c_lock_operations and pass a hardcoded
++ * depth of 1 to rt_mutex_lock_nested, to make lockdep happy.
++ *
++ * Note that if there were to be a mux attached to our adapter, this would
++ * break things again since the i2c-mux code expects the root-adapter to have
++ * a locking depth of 0. But we always have only 1 client directly attached
++ * in the form of the Charger IC paired with the CHT Whiskey Cove PMIC.
++ */
++static void cht_wc_i2c_adap_lock_bus(struct i2c_adapter *adapter,
++				 unsigned int flags)
++{
++	rt_mutex_lock_nested(&adapter->bus_lock, 1);
++}
++
++static int cht_wc_i2c_adap_trylock_bus(struct i2c_adapter *adapter,
++				   unsigned int flags)
++{
++	return rt_mutex_trylock(&adapter->bus_lock);
++}
++
++static void cht_wc_i2c_adap_unlock_bus(struct i2c_adapter *adapter,
++				   unsigned int flags)
++{
++	rt_mutex_unlock(&adapter->bus_lock);
++}
++
++static const struct i2c_lock_operations cht_wc_i2c_adap_lock_ops = {
++	.lock_bus =    cht_wc_i2c_adap_lock_bus,
++	.trylock_bus = cht_wc_i2c_adap_trylock_bus,
++	.unlock_bus =  cht_wc_i2c_adap_unlock_bus,
++};
++
+ /**** irqchip for the client connected to the extchgr i2c adapter ****/
+ static void cht_wc_i2c_irq_lock(struct irq_data *data)
+ {
+@@ -286,6 +331,7 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+ 	adap->adapter.owner = THIS_MODULE;
+ 	adap->adapter.class = I2C_CLASS_HWMON;
+ 	adap->adapter.algo = &cht_wc_i2c_adap_algo;
++	adap->adapter.lock_ops = &cht_wc_i2c_adap_lock_ops;
+ 	strlcpy(adap->adapter.name, "PMIC I2C Adapter",
+ 		sizeof(adap->adapter.name));
+ 	adap->adapter.dev.parent = &pdev->dev;
 -- 
 2.20.1
 
