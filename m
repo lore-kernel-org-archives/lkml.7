@@ -2,53 +2,55 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5C7C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B737C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DBB20862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23355214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383474;
-	bh=aZliCapHq0JTn6jAEA0jo5fj/W6N/vFQStGVfGggpZg=;
+	s=default; t=1570383478;
+	bh=oRgLhrKc4k3mo0FARYlSzSkP3Mf1sLVjO6FzgjI3NpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUjhPNVE19YGRtVgZ06cwtQlcR4X0OQm+Ap8d+QuTcax3MiVcny04r90X8pQ9D21Q
-	 TSYLBjFCSfhjPoreIjnbyT8Fhan4RDNcBzfhDJ/ilmoCSmIqXr/Ifw5HshhrixTUqK
-	 6H1IGQ1Tkv1TiXciq6FFsXwP2xQV+ZsUBQ3+Od1Q=
+	b=Cjsyu8teIUKmrx6fXXDKn0WKQPXDXh4jGY+yBwJkV1bjUPzGYM4QPocktczRmiPMK
+	 s+JodCsEQWfLAy2Lht/550TQ1e0J84EClOD4EhS3C/oFAdaXok5cnmkk36OT10+PM/
+	 FNzZD0HD/eBnzrdPcGUanqmrjJ0DPf1bY7WOe7Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbfJFRhy (ORCPT
+        id S1730536AbfJFRh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36914 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbfJFRhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:51 -0400
+        id S1729588AbfJFRhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0B72053B;
-        Sun,  6 Oct 2019 17:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA7A020700;
+        Sun,  6 Oct 2019 17:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383470;
-        bh=aZliCapHq0JTn6jAEA0jo5fj/W6N/vFQStGVfGggpZg=;
+        s=default; t=1570383473;
+        bh=oRgLhrKc4k3mo0FARYlSzSkP3Mf1sLVjO6FzgjI3NpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fj27/mijGtf3SPkzhnC7wKDIkZK1D240Mm3TFi+Di97s7Dqo0hMI+X6zkq2A/HrhH
-         UHjeJJuo+Qf7onP2bAOYCoOoI6BwzR+TX8ExCmzeAi77Z3vqkv35dJLGS1WfKBbLLq
-         nU5arr9kksfKZytrWbfR6dVEtHFKiuUftniJncfk=
+        b=mLdk52nBYASOlEfIvMML0ZhD9MqtpFWIgxvXvo0aoAEFd1lMMYZd2tUrD6Vmg8DmD
+         3t/v4/ZFHGdIHD/uvr5zU78hYGiZdV5pkDfYizMLnyKRrCz2Of+NkYUsCfhXVg1jgV
+         Arqr0thOBfbAlxF+YyiJL+sG8vyvGcSQOIyRSCco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 115/137] PCI: Use static const struct, not const static struct
-Date:   Sun,  6 Oct 2019 19:21:39 +0200
-Message-Id: <20191006171218.741239098@linuxfoundation.org>
+Subject: [PATCH 5.2 116/137] ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
+Date:   Sun,  6 Oct 2019 19:21:40 +0200
+Message-Id: <20191006171218.851692845@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,55 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 8050f3f6645ae0f7e4c1304593f6f7eb2ee7d85c ]
+[ Upstream commit b0fe66cf095016e0b238374c10ae366e1f087d11 ]
 
-Move the static keyword to the front of declarations of pci_regs_behavior[]
-and pcie_cap_regs_behavior[], which resolves compiler warnings when
-building with "W=1":
+Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
+with clang:
 
-  drivers/pci/pci-bridge-emul.c:41:1: warning: ‘static’ is not at beginning of
-  declaration [-Wold-style-declaration]
-   const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-   ^
-  drivers/pci/pci-bridge-emul.c:176:1: warning: ‘static’ is not at beginning of
-  declaration [-Wold-style-declaration]
-   const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-   ^
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
+softirq.c:(.text+0x504): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
+softirq.c:(.text+0x58c): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
+softirq.c:(.text+0x6c8): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
+softirq.c:(.text+0x75c): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
+softirq.c:(.text+0x840): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
 
-Link: https://lore.kernel.org/r/20190826151436.4672-1-kw@linux.com
-Link: https://lore.kernel.org/r/20190828131733.5817-1-kw@linux.com
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+clang can emit a working mcount symbol, __gnu_mcount_nc, when
+'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
+broken and caused the kernel not to boot with '-pg' because the
+calling convention was not correct. Always build with '-meabi gnu'
+when using clang but ensure that '-pg' (which is added with
+CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
+cannot be added with it unless this is fixed (which means using
+clang 10.0.0 and newer).
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/35
+Link: https://bugs.llvm.org/show_bug.cgi?id=33845
+Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-bridge-emul.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig  | 2 +-
+ arch/arm/Makefile | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 83fb077d0b41f..702966e4fcaa4 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
- 	u32 rsvd;
- };
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 3539be8700558..6029d324911cf 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -75,7 +75,7 @@ config ARM
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
+-	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
++	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
+ 	select HAVE_IDE if PCI || ISA || PCMCIA
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index f863c6935d0e5..c0b2783583016 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -112,6 +112,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
+ CFLAGS_ABI	+=-funwind-tables
+ endif
  
--const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-+static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- 	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
- 	[PCI_COMMAND / 4] = {
- 		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-@@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
- 	},
- };
++ifeq ($(CONFIG_CC_IS_CLANG),y)
++CFLAGS_ABI	+= -meabi gnu
++endif
++
+ # Accept old syntax despite ".syntax unified"
+ AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
  
--const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-+static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 	[PCI_CAP_LIST_ID / 4] = {
- 		/*
- 		 * Capability ID, Next Capability Pointer and
 -- 
 2.20.1
 
