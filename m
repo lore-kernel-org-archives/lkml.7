@@ -2,54 +2,49 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F56C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CCCC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC4920700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5951420700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384526;
-	bh=7pzP4N3IP6jfi4j71+ehXaA+mibn5YhMNZhqmUZG5D4=;
+	s=default; t=1570384533;
+	bh=lcB1mFJcKFF8tbCYE5shlRbzQ7T708HoKSgtww14kP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KiVhhtza5d6L7JDXai3aZUjH0vBNcG9nt/9e/FcMhP7X7KBil4kWJfz4An4MwayBf
-	 UjaXGXoL1dZophZ8BiAWU6a1bpH7GS0AY7JQxxfMutGwAYqEtAL+Q7r0Vu/6KaVh/M
-	 6b8sqtYnwCLiHzYB6TzVgf3jeIo8WvyeluXQQIfc=
+	b=x2wm+nbbJ00S6cQQs+mPaZEVCHoJtT09l62hZGCzorXVYZQIRWmFlSoig9+yVohOI
+	 kwd++cC6zfOmyj/LKvmNB1uT2/fCmWgri/F6/ubG9qKfKtb9u4q2YdVMRwJzdsDtpR
+	 UMLPDa15ciCyAW7KNYSIc86MrjtVUVwm5M0xYsrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfJFRzZ (ORCPT
+        id S1729998AbfJFRzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728632AbfJFRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:54:30 -0400
+        id S1728611AbfJFRy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE5522473;
-        Sun,  6 Oct 2019 17:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE0F522466;
+        Sun,  6 Oct 2019 17:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383984;
-        bh=7pzP4N3IP6jfi4j71+ehXaA+mibn5YhMNZhqmUZG5D4=;
+        s=default; t=1570383968;
+        bh=lcB1mFJcKFF8tbCYE5shlRbzQ7T708HoKSgtww14kP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T9c80g299hblyEGWe1+psPfYExLZTxbxq8f0E6/54oLGeyEY6dArDfYw9LUvRzHrN
-         maVcBjERQHDDyVDmt/M4Sppj/1/B5cTboy9qLguMspRbDPKkJne1//ouWkCJY4gjz4
-         EgvI+bu2X+eD7oybbxBZ4i/cvSN/oT891JOHsuGw=
+        b=KgHLO9rUSmNjHgHcMYwDbplbKrycCoKgj1WxVYXgPdtriWCrgK4d2N85u0Iw6pEfb
+         lXA3QanfuyXoYzDuY9OH3VscHtpdFfahr5H7xuAzcD0Kv4heGYMOk/Xm4+vNW65SCt
+         2aaZsePRbk+d4z3JowGkj63VgATSuJUq591XymXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
-        David Ahern <dsahern@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 132/166] ipv6: Handle missing host route in __ipv6_ifa_notify
-Date:   Sun,  6 Oct 2019 19:21:38 +0200
-Message-Id: <20191006171224.321221708@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 5.3 161/166] dm zoned: fix invalid memory access
+Date:   Sun,  6 Oct 2019 19:22:07 +0200
+Message-Id: <20191006171226.412783993@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -62,85 +57,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 2d819d250a1393a3e725715425ab70a0e0772a71 ]
+commit 0c8e9c2d668278652af028c3cc068c65f66342f4 upstream.
 
-Rajendra reported a kernel panic when a link was taken down:
+Commit 75d66ffb48efb30f2dd42f041ba8b39c5b2bd115 ("dm zoned: properly
+handle backing device failure") triggers a coverity warning:
 
-    [ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
-    [ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
-
-    <snip>
-
-    [ 6870.570501] Call Trace:
-    [ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
-    [ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
-    [ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
-    [ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
-    [ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
-    [ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
-    [ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
-    [ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
-    [ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
-    [ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
-    [ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
-    [ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
-    [ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
-
-addrconf_dad_work is kicked to be scheduled when a device is brought
-up. There is a race between addrcond_dad_work getting scheduled and
-taking the rtnl lock and a process taking the link down (under rtnl).
-The latter removes the host route from the inet6_addr as part of
-addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
-to use the host route in __ipv6_ifa_notify. If the down event removes
-the host route due to the race to the rtnl, then the BUG listed above
-occurs.
-
-Since the DAD sequence can not be aborted, add a check for the missing
-host route in __ipv6_ifa_notify. The only way this should happen is due
-to the previously mentioned race. The host route is created when the
-address is added to an interface; it is only removed on a down event
-where the address is kept. Add a warning if the host route is missing
-AND the device is up; this is a situation that should never happen.
-
-Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
-Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/md/dm-zoned-target.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -5964,13 +5964,20 @@ static void __ipv6_ifa_notify(int event,
- 	switch (event) {
- 	case RTM_NEWADDR:
- 		/*
--		 * If the address was optimistic
--		 * we inserted the route at the start of
--		 * our DAD process, so we don't need
--		 * to do it again
-+		 * If the address was optimistic we inserted the route at the
-+		 * start of our DAD process, so we don't need to do it again.
-+		 * If the device was taken down in the middle of the DAD
-+		 * cycle there is a race where we could get here without a
-+		 * host route, so nothing to insert. That will be fixed when
-+		 * the device is brought up.
- 		 */
--		if (!rcu_access_pointer(ifp->rt->fib6_node))
-+		if (ifp->rt && !rcu_access_pointer(ifp->rt->fib6_node)) {
- 			ip6_ins_rt(net, ifp->rt);
-+		} else if (!ifp->rt && (ifp->idev->dev->flags & IFF_UP)) {
-+			pr_warn("BUG: Address %pI6c on device %s is missing its host route.\n",
-+				&ifp->addr, ifp->idev->dev->name);
-+		}
-+
- 		if (ifp->idev->cnf.forwarding)
- 			addrconf_join_anycast(ifp);
- 		if (!ipv6_addr_any(&ifp->peer_addr))
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -134,8 +134,6 @@ static int dmz_submit_bio(struct dmz_tar
+ 
+ 	refcount_inc(&bioctx->ref);
+ 	generic_make_request(clone);
+-	if (clone->bi_status == BLK_STS_IOERR)
+-		return -EIO;
+ 
+ 	if (bio_op(bio) == REQ_OP_WRITE && dmz_is_seq(zone))
+ 		zone->wp_block += nr_blocks;
 
 
