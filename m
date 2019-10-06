@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BEDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52D9C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA8221479
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA1B2087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383032;
-	bh=l7NP07G1Ea8ObzNjqXfvhMjFFJVuFFmr/gpg2A2d3/U=;
+	s=default; t=1570383034;
+	bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXftiHQxgFvY43ZJ152sp4I9rXmnKeR4zUkqwMJqo9oVUZMzqcmNzD6Vc7Ml7fKOT
-	 Atr7F0N0VoSasP3+TnDtaJUlW9vLUyNItlMI/Qw1Ei/3m6AZISPzTNUj7mlf5tjxr9
-	 dflxlrNaGta9TwYr3og/UtZ4quCDKDPm9DoQgjAs=
+	b=pbkQWGUBDGXWam1yjl5S5YxrFgTEskwAy3eSv3ToqWuTUBY4vrx1ISzmeNQYHIbUK
+	 ugfZX5S0VzIg3nyCgmWLpemwNf5C2QBKAPiPxTft8TVCULB+LmfyeGLuyBrzErC8F8
+	 ty7nZp5MLo4j1OOZ+7uvFOUaIFHqlgowaaRbHey8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfJFRaa (ORCPT
+        id S1728436AbfJFRae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbfJFRaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:25 -0400
+        id S1727981AbfJFRab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2787B2087E;
-        Sun,  6 Oct 2019 17:30:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BB32087E;
+        Sun,  6 Oct 2019 17:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383024;
-        bh=l7NP07G1Ea8ObzNjqXfvhMjFFJVuFFmr/gpg2A2d3/U=;
+        s=default; t=1570383030;
+        bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0NRMstMWEtcz8MeQO7fBSQb98B8iUPXL7fyNVG6UyOglLlLVOnUDWNzfyDt3/EiO
-         GwmI+wZGH8x47mdhPenyCnEK4lUf7xAtPRFsu/hpv1SGrVh6O9DHo1rXQDWSKQmEkp
-         SY/28PEKHZN/e26y1lAXfuBbkJPqp5ZsEJzMo/10=
+        b=oQ4Vt6xZkK/+gPLhJ0GqSt5BXK/R4s4H1y9S2ZVarnZVzWGndcPhlI7FHHYcgzyzL
+         qex7o631UgA6FNTopkYPEsYuoe7x9Sq2ckiZAqfgw1/60b0S85MjIn+GdhtacPUprY
+         NptodcaNucVzWKqbllxbixMwFbzxpVoU5bxwx/zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/106] rtc: snvs: fix possible race condition
-Date:   Sun,  6 Oct 2019 19:21:04 +0200
-Message-Id: <20191006171147.945904228@linuxfoundation.org>
+Subject: [PATCH 4.19 060/106] HID: apple: Fix stuck function keys when using FN
+Date:   Sun,  6 Oct 2019 19:21:06 +0200
+Message-Id: <20191006171149.254376705@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,55 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Joao Moreno <mail@joaomoreno.com>
 
-[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
+[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
 
-The RTC IRQ is requested before the struct rtc_device is allocated,
-this may lead to a NULL pointer dereference in IRQ handler.
+This fixes an issue in which key down events for function keys would be
+repeatedly emitted even after the user has raised the physical key. For
+example, the driver fails to emit the F5 key up event when going through
+the following steps:
+- fnmode=1: hold FN, hold F5, release FN, release F5
+- fnmode=2: hold F5, hold FN, release F5, release FN
 
-To fix this issue, allocating the rtc_device struct before requesting
-the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
-to register the RTC device.
+The repeated F5 key down events can be easily verified using xev.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-snvs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-index b2483a749ac45..3cf011e120530 100644
---- a/drivers/rtc/rtc-snvs.c
-+++ b/drivers/rtc/rtc-snvs.c
-@@ -273,6 +273,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 1cb41992aaa1f..d0a81a03ddbdd 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -57,7 +57,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
+-	DECLARE_BITMAP(pressed_fn, KEY_CNT);
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
  
-+	data->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(data->rtc))
-+		return PTR_ERR(data->rtc);
+@@ -184,6 +183,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ {
+ 	struct apple_sc *asc = hid_get_drvdata(hid);
+ 	const struct apple_key_translation *trans, *table;
++	bool do_translate;
++	u16 code = 0;
+ 
+ 	if (usage->code == KEY_FN) {
+ 		asc->fn_on = !!value;
+@@ -192,8 +193,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	}
+ 
+ 	if (fnmode) {
+-		int do_translate;
+-
+ 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+ 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+ 			table = macbookair_fn_keys;
+@@ -205,25 +204,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 		trans = apple_find_translation (table, usage->code);
+ 
+ 		if (trans) {
+-			if (test_bit(usage->code, asc->pressed_fn))
+-				do_translate = 1;
+-			else if (trans->flags & APPLE_FLAG_FKEY)
+-				do_translate = (fnmode == 2 && asc->fn_on) ||
+-					(fnmode == 1 && !asc->fn_on);
+-			else
+-				do_translate = asc->fn_on;
+-
+-			if (do_translate) {
+-				if (value)
+-					set_bit(usage->code, asc->pressed_fn);
+-				else
+-					clear_bit(usage->code, asc->pressed_fn);
+-
+-				input_event(input, usage->type, trans->to,
+-						value);
+-
+-				return 1;
++			if (test_bit(trans->from, input->key))
++				code = trans->from;
++			else if (test_bit(trans->to, input->key))
++				code = trans->to;
 +
- 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
++			if (!code) {
++				if (trans->flags & APPLE_FLAG_FKEY) {
++					switch (fnmode) {
++					case 1:
++						do_translate = !asc->fn_on;
++						break;
++					case 2:
++						do_translate = asc->fn_on;
++						break;
++					default:
++						/* should never happen */
++						do_translate = false;
++					}
++				} else {
++					do_translate = asc->fn_on;
++				}
++
++				code = do_translate ? trans->to : trans->from;
+ 			}
++
++			input_event(input, usage->type, code, value);
++			return 1;
+ 		}
  
- 	if (IS_ERR(data->regmap)) {
-@@ -335,10 +339,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 		goto error_rtc_device_register;
- 	}
- 
--	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
--					&snvs_rtc_ops, THIS_MODULE);
--	if (IS_ERR(data->rtc)) {
--		ret = PTR_ERR(data->rtc);
-+	data->rtc->ops = &snvs_rtc_ops;
-+	ret = rtc_register_device(data->rtc);
-+	if (ret) {
- 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
- 		goto error_rtc_device_register;
- 	}
+ 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
