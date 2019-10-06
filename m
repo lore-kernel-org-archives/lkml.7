@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B35ECE58E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E89C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150F620673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226662080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384362;
-	bh=QYuncw7U6eCu+v+lSMJpPfdq8LmiWt9sdzhJZ8oWmNQ=;
+	s=default; t=1570384369;
+	bh=BH/a5c+bXXYLg/uA0RRJfRa6LSxsadgUgOffxgQNYPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d1gpkN7paj8uxIOgStX2bRlLdBLeTwiSov5N5vASK/I8j0HaCvcmsMD/WEh+TX9cr
-	 /l21tROXwgDHa9U9H9kfq6/fKmJRtSYkFDZzKTvZpEEeIuyT/R+5syKiJaCOL8N5n9
-	 Jdq1eFjfd1R49Jt+dxM8uWBPvR5tejGGTtO4ETm8=
+	b=dGUfV2XgKNgKchcSImS3sHmlLnaTg11chBEsGcmNA8PO2JNJMK2weDNps1drYUf46
+	 mRuZaXJ5y0SgB079VdngwVkmFl73xvntQp1WJ2EfgWEwWdtaAn4Tbaz5nO54tAbh4e
+	 z0yDrWTZLwQcWVlwQV+N5RNOjpWkehuqi931ubHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfJFRi7 (ORCPT
+        id S1727345AbfJFRwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38350 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbfJFRiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:55 -0400
+        id S1730676AbfJFRix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:38:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7B2C2053B;
-        Sun,  6 Oct 2019 17:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 196992080F;
+        Sun,  6 Oct 2019 17:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383535;
-        bh=QYuncw7U6eCu+v+lSMJpPfdq8LmiWt9sdzhJZ8oWmNQ=;
+        s=default; t=1570383532;
+        bh=BH/a5c+bXXYLg/uA0RRJfRa6LSxsadgUgOffxgQNYPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jYL0fCWSR4lmYw0FynYFKi31rD4FeunxtEIcgaCHZbc88WB2d/LpMIwvlqGsYKYdN
-         ezCerJr2lmfxtXsPaViGAee7K1e1xcQ2YOxk+HCnVHUsNami2sPMYUpU/y/pImTHc1
-         mSN/DHbLrsjMDIC43dx+vZnmP5SF0KGhmyGHnJzM=
+        b=F+GJzq0P2nIivwnTAWSrGS3cYJfCumgAxh9gQFllouy+kFD51IiLhSGz8SVs8WOlf
+         oJOlkvxQ201suO0D/rmk6gpcg6dwLykrJDTyhTAp2arTRL2IxGzQvu9WBsLZxR6IIY
+         YyoJjKJxJsP+hXX4bgTIJIWRXvDwKEdzmxPBhsnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 133/137] NFC: fix attrs checks in netlink interface
-Date:   Sun,  6 Oct 2019 19:21:57 +0200
-Message-Id: <20191006171220.461067562@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.2 132/137] dm raid: fix updating of max_discard_sectors limit
+Date:   Sun,  6 Oct 2019 19:21:56 +0200
+Message-Id: <20191006171220.369479205@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -60,49 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit 18917d51472fe3b126a3a8f756c6b18085eb8130 upstream.
+commit c8156fc77d0796ba2618936dbb3084e769e916c1 upstream.
 
-nfc_genl_deactivate_target() relies on the NFC_ATTR_TARGET_INDEX
-attribute being present, but doesn't check whether it is actually
-provided by the user. Same goes for nfc_genl_fw_download() and
-NFC_ATTR_FIRMWARE_NAME.
+Unit of 'chunk_size' is byte, instead of sector, so fix it by setting
+the queue_limits' max_discard_sectors to rs->md.chunk_sectors.  Also,
+rename chunk_size to chunk_size_bytes.
 
-This patch adds appropriate checks.
+Without this fix, too big max_discard_sectors is applied on the request
+queue of dm-raid, finally raid code has to split the bio again.
 
-Found with syzkaller.
+This re-split done by raid causes the following nested clone_endio:
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+1) one big bio 'A' is submitted to dm queue, and served as the original
+bio
+
+2) one new bio 'B' is cloned from the original bio 'A', and .map()
+is run on this bio of 'B', and B's original bio points to 'A'
+
+3) raid code sees that 'B' is too big, and split 'B' and re-submit
+the remainded part of 'B' to dm-raid queue via generic_make_request().
+
+4) now dm will handle 'B' as new original bio, then allocate a new
+clone bio of 'C' and run .map() on 'C'. Meantime C's original bio
+points to 'B'.
+
+5) suppose now 'C' is completed by raid directly, then the following
+clone_endio() is called recursively:
+
+	clone_endio(C)
+		->clone_endio(B)		#B is original bio of 'C'
+			->bio_endio(A)
+
+'A' can be big enough to make hundreds of nested clone_endio(), then
+stack can be corrupted easily.
+
+Fixes: 61697a6abd24a ("dm: eliminate 'split_discard_bios' flag from DM target interface")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/nfc/netlink.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/dm-raid.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -970,7 +970,8 @@ static int nfc_genl_dep_link_down(struct
- 	int rc;
- 	u32 idx;
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3738,18 +3738,18 @@ static int raid_iterate_devices(struct d
+ static void raid_io_hints(struct dm_target *ti, struct queue_limits *limits)
+ {
+ 	struct raid_set *rs = ti->private;
+-	unsigned int chunk_size = to_bytes(rs->md.chunk_sectors);
++	unsigned int chunk_size_bytes = to_bytes(rs->md.chunk_sectors);
  
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_TARGET_INDEX])
- 		return -EINVAL;
+-	blk_limits_io_min(limits, chunk_size);
+-	blk_limits_io_opt(limits, chunk_size * mddev_data_stripes(rs));
++	blk_limits_io_min(limits, chunk_size_bytes);
++	blk_limits_io_opt(limits, chunk_size_bytes * mddev_data_stripes(rs));
  
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
-@@ -1018,7 +1019,8 @@ static int nfc_genl_llc_get_params(struc
- 	struct sk_buff *msg = NULL;
- 	u32 idx;
+ 	/*
+ 	 * RAID1 and RAID10 personalities require bio splitting,
+ 	 * RAID0/4/5/6 don't and process large discard bios properly.
+ 	 */
+ 	if (rs_is_raid1(rs) || rs_is_raid10(rs)) {
+-		limits->discard_granularity = chunk_size;
+-		limits->max_discard_sectors = chunk_size;
++		limits->discard_granularity = chunk_size_bytes;
++		limits->max_discard_sectors = rs->md.chunk_sectors;
+ 	}
+ }
  
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_FIRMWARE_NAME])
- 		return -EINVAL;
- 
- 	idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
 
 
