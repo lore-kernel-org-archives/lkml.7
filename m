@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7DDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0627AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7A620673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C794C20673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384319;
-	bh=2wb1uq+QHh0LuGSRjL9ECKM78xBue/wLBVnlI1ciBn0=;
+	s=default; t=1570384324;
+	bh=IAvCUtQoEkkm/ms8EqboKBC0qzh6TVyhRsg0uyoDaFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hRxzCndtVXSlHd9n7fh0VpfCqew4EEbXH8J7m3zgngJDWVCqSOkFBN8WulStZqTSE
-	 wc3mQjgwxij6Cvmn/qQMIwsr/6rj87/LDtsCvlUJEMTfEEM8fLdIp22igNeKWq1AEJ
-	 KqYZd0QW36veO45c7+wilsMiiQN33kQDu1O29djw=
+	b=D8rVahPaTEFM6l7Qq1rzWp/zTSlynAwQ+0eaA6j4V2KshTPtxYrSYIxJLO6yHL/D2
+	 JtDF0xEVERPevpmF2CTLUs3oE34i/MOZnIA8zfVsyRPnUDdRrEx8anLInd//D3sOu9
+	 PE0nLQ60su7cHmGgcrSv3uUhsgZrghOYYA2NlMgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbfJFRv5 (ORCPT
+        id S1727575AbfJFRwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:52:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728034AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B8E521835;
-        Sun,  6 Oct 2019 17:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CDA222D0;
+        Sun,  6 Oct 2019 17:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383927;
-        bh=2wb1uq+QHh0LuGSRjL9ECKM78xBue/wLBVnlI1ciBn0=;
+        s=default; t=1570383952;
+        bh=IAvCUtQoEkkm/ms8EqboKBC0qzh6TVyhRsg0uyoDaFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0SESXCO031fTDNSBiebgGzDXmCnXug+/tZCjQyDD57R6Bp5+KgKbP5Wh8njUzX7g
-         41lUArrKNEVJtuE4PAAVpl09q/ozAX+4s935NDuHVXQNefDKBZBDmQe/Yk1xPa5QGl
-         76OFvAXFstbbaa17RLztIvrq1pprKXl/Na7EdUGI=
+        b=MXuwVu7rDla4UV9TQ5eNKxcnidvG+3DimOQ0qdBFzsQMKLX78wWNNRqUsGmDvBwym
+         jiUbjLvsZs/cET0VC6x901gKCGjb65s+0/jF/ioZtFfS/Ug9yFZYQ/NhTS3+lvqFq6
+         elzzTpkPbMHX7Q44Mkk6ID1iPOp48WKXyCay05/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 130/166] hso: fix NULL-deref on tty open
-Date:   Sun,  6 Oct 2019 19:21:36 +0200
-Message-Id: <20191006171224.182792306@linuxfoundation.org>
+Subject: [PATCH 5.3 156/166] net: sched: cbs: Avoid division by zero when calculating the port rate
+Date:   Sun,  6 Oct 2019 19:22:02 +0200
+Message-Id: <20191006171226.022911349@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,54 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit 8353da9fa69722b54cba82b2ec740afd3d438748 ]
+[ Upstream commit 83c8c3cf45163f0c823db37be6ab04dfcf8ac751 ]
 
-Fix NULL-pointer dereference on tty open due to a failure to handle a
-missing interrupt-in endpoint when probing modem ports:
+As explained in the "net: sched: taprio: Avoid division by zero on
+invalid link speed" commit, it is legal for the ethtool API to return
+zero as a link speed. So guard against it to ensure we don't perform a
+division by zero in kernel.
 
-	BUG: kernel NULL pointer dereference, address: 0000000000000006
-	...
-	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
-	...
-	Call Trace:
-	hso_start_serial_device+0xdc/0x140 [hso]
-	hso_serial_open+0x118/0x1b0 [hso]
-	tty_open+0xf1/0x490
-
-Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/hso.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/sched/sch_cbs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -2620,14 +2620,18 @@ static struct hso_device *hso_create_bul
- 		 */
- 		if (serial->tiocmget) {
- 			tiocmget = serial->tiocmget;
-+			tiocmget->endp = hso_get_ep(interface,
-+						    USB_ENDPOINT_XFER_INT,
-+						    USB_DIR_IN);
-+			if (!tiocmget->endp) {
-+				dev_err(&interface->dev, "Failed to find INT IN ep\n");
-+				goto exit;
-+			}
-+
- 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
- 			if (tiocmget->urb) {
- 				mutex_init(&tiocmget->mutex);
- 				init_waitqueue_head(&tiocmget->waitq);
--				tiocmget->endp = hso_get_ep(
--					interface,
--					USB_ENDPOINT_XFER_INT,
--					USB_DIR_IN);
- 			} else
- 				hso_free_tiomget(serial);
- 		}
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -306,7 +306,7 @@ static void cbs_set_port_rate(struct net
+ 	if (err < 0)
+ 		goto skip;
+ 
+-	if (ecmd.base.speed != SPEED_UNKNOWN)
++	if (ecmd.base.speed && ecmd.base.speed != SPEED_UNKNOWN)
+ 		speed = ecmd.base.speed;
+ 
+ skip:
 
 
