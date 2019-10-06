@@ -2,53 +2,51 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A33C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445BFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE90B20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1442920673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384624;
-	bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
+	s=default; t=1570384631;
+	bh=2wb1uq+QHh0LuGSRjL9ECKM78xBue/wLBVnlI1ciBn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wdwpBR1BxYxoyyb67TILK1KYGLT+EY51eiNSrvZXwHI5OmFqnrbWuFT4Iwnr9xIPb
-	 zgSgTaa1n3Tgm19fZVCD1GCY/zVGchVGXxGN/LEPzZgxcawX1rvqZnr/uMqzPrxfE8
-	 HJWM4BkYLCvznwSn1ANzhvXhFoXG4A0GGRrfDJLE=
+	b=fBC1gHrnKmnZrjZSiesrn/fDcfQr0CENIw9peotMdfwvjSy2eTLP4h9DhQxTBBcVi
+	 7NbT7FAh4vAFoCQyz+d4sT7HHPylEk3RKQ50dp+Bt7EHMdXh7yUcCNM8PkKuCyqmiy
+	 AzeS2x+zosmjkB3Um10UFx6HAo17PByxZ8ml3PiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfJFR5C (ORCPT
+        id S1729869AbfJFReB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60948 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfJFReM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:12 -0400
+        id S1729275AbfJFRd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:33:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C4A2087E;
-        Sun,  6 Oct 2019 17:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 955A22133F;
+        Sun,  6 Oct 2019 17:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383251;
-        bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
+        s=default; t=1570383238;
+        bh=2wb1uq+QHh0LuGSRjL9ECKM78xBue/wLBVnlI1ciBn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1WgbQx9erCnUZX18H/9JicJdVrjGttJ0zkfNuR66Rtdg9N6dBSfBRVcF6s18gKUUh
-         2kgw411wqYAZ4fl9gh39H6z3nU6/VYsJLDKDf890mHu4zuK/SvTYQIhzBsWkcUwNm4
-         m78aQAEEgt/lyhH18SXTD/zZdKLcvfeRIvRZiGyE=
+        b=zv3WlkbQ6c5827sogXj7FDk3DJV5s4QEhr6b9gOITUbc/lOwttBmG2T80mhhmOtKb
+         PKZwm35CmUMgYIKuz6GZhF3dpoqystPmAUO32/tYrb0ka8LLienjYHvyUrz7+SKwcz
+         TyccsHb4i+LOtCSvbUPXKtuKIUVYEju8wWVgp26o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 034/137] drm/panel: check failure cases in the probe func
-Date:   Sun,  6 Oct 2019 19:20:18 +0200
-Message-Id: <20191006171211.971876273@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 003/137] hso: fix NULL-deref on tty open
+Date:   Sun,  6 Oct 2019 19:19:47 +0200
+Message-Id: <20191006171209.915264872@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,68 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit afd6d4f5a52c16e1483328ac074abb1cde92c29f ]
+[ Upstream commit 8353da9fa69722b54cba82b2ec740afd3d438748 ]
 
-The following function calls may fail and return NULL, so the null check
-is added.
-of_graph_get_next_endpoint
-of_graph_get_remote_port_parent
-of_graph_get_remote_port
+Fix NULL-pointer dereference on tty open due to a failure to handle a
+missing interrupt-in endpoint when probing modem ports:
 
-Update: Thanks to Sam Ravnborg, for suggession on the use of goto to avoid
-leaking endpoint.
+	BUG: kernel NULL pointer dereference, address: 0000000000000006
+	...
+	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
+	...
+	Call Trace:
+	hso_start_serial_device+0xdc/0x140 [hso]
+	hso_serial_open+0x118/0x1b0 [hso]
+	tty_open+0xf1/0x490
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190724195534.9303-1-navid.emamdoost@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../gpu/drm/panel/panel-raspberrypi-touchscreen.c   | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/usb/hso.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 2c9c9722734f5..9a2cb8aeab3a4 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -400,7 +400,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 
- 	/* Look up the DSI host.  It needs to probe before we do. */
- 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (!endpoint)
-+		return -ENODEV;
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2620,14 +2620,18 @@ static struct hso_device *hso_create_bul
+ 		 */
+ 		if (serial->tiocmget) {
+ 			tiocmget = serial->tiocmget;
++			tiocmget->endp = hso_get_ep(interface,
++						    USB_ENDPOINT_XFER_INT,
++						    USB_DIR_IN);
++			if (!tiocmget->endp) {
++				dev_err(&interface->dev, "Failed to find INT IN ep\n");
++				goto exit;
++			}
 +
- 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
-+	if (!dsi_host_node)
-+		goto error;
-+
- 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
- 	of_node_put(dsi_host_node);
- 	if (!host) {
-@@ -409,6 +415,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 	}
- 
- 	info.node = of_graph_get_remote_port(endpoint);
-+	if (!info.node)
-+		goto error;
-+
- 	of_node_put(endpoint);
- 
- 	ts->dsi = mipi_dsi_device_register_full(host, &info);
-@@ -429,6 +438,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 		return ret;
- 
- 	return 0;
-+
-+error:
-+	of_node_put(endpoint);
-+	return -ENODEV;
- }
- 
- static int rpi_touchscreen_remove(struct i2c_client *i2c)
--- 
-2.20.1
-
+ 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
+ 			if (tiocmget->urb) {
+ 				mutex_init(&tiocmget->mutex);
+ 				init_waitqueue_head(&tiocmget->waitq);
+-				tiocmget->endp = hso_get_ep(
+-					interface,
+-					USB_ENDPOINT_XFER_INT,
+-					USB_DIR_IN);
+ 			} else
+ 				hso_free_tiomget(serial);
+ 		}
 
 
