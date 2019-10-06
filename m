@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06919C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C40BC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00AA2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE79B20867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382669;
-	bh=uzav9WMqexhDvnaLqfBJoM5xcO0X3E4XEDP/pB3N+Ds=;
+	s=default; t=1570382677;
+	bh=fHqOQJ6Mhd47oaOIPunjdLpumaaCH0jkysn3GhZIxdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PT1rF9XZ2q2Bf3uLdylW5YQf/ZcynAJ0Bpji3S2hi5CYWh6YMHfWQuvgAgwYJ0bWe
-	 vyjK6jgPKG14ehS8dV5nc5WPSuJKBlSxe8rBf0/eqj+RbkIVRhdL3VeolvijF+cJiX
-	 NwruFSPUpONvNNyBWptf3h7JXxY24DysYRpzgK7o=
+	b=WV9z6AwCf9LrBZVTjltr52EhzhWZKEEG+twTrNv9cwDI+ayd0iDFT4E/aXPI/jR6w
+	 VF+8YGHtV00/33dkKhl+dDh5N34EEPQ7Yb+uQDXhlfL6CcNLSITTb3JwVoKsYGHjE8
+	 qrs0enjVu51+ph7uX9giVdq1LdPC0daY7IB29gxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfJFRY2 (ORCPT
+        id S1727936AbfJFRYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727831AbfJFRYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:23 -0400
+        id S1727899AbfJFRYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B02F92077B;
-        Sun,  6 Oct 2019 17:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9913F20867;
+        Sun,  6 Oct 2019 17:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382662;
-        bh=uzav9WMqexhDvnaLqfBJoM5xcO0X3E4XEDP/pB3N+Ds=;
+        s=default; t=1570382673;
+        bh=fHqOQJ6Mhd47oaOIPunjdLpumaaCH0jkysn3GhZIxdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozU91RhPBYH6ISSguH4SsfWs6+aUlemLxzW7ASXAJRKxdF7Bung+Supc34qlHiTMZ
-         aK0xSU/VDvq1zaILtJW9Wa8Rqew5R71RojWXU/GUBhiMpf2z4/7L2oYhH505UaqVKh
-         nT6Ab0dkLZlRLS9sakdI87Kou0fzdMWos0Iszg/Q=
+        b=mhhleIcnxbpSRU6rX4/knKeteegmrhe4euL09lNW35/Dg7RfBya2rl9dUhNirUdqy
+         0nJvj3J76Wnzz/B4Y1GtKDLatOnhrCtHVCqIlOWRyJduJ3gBYkScjdv3zECeFQo8uc
+         Tn/6iLb8MYPImBg8KIGpc3o5bh3bNrALYyMpwQaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/47] powerpc/rtas: use device model APIs and serialization during LPM
-Date:   Sun,  6 Oct 2019 19:20:55 +0200
-Message-Id: <20191006172017.327218967@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 4.9 46/47] smack: use GFP_NOFS while holding inode_smack::smk_lock
+Date:   Sun,  6 Oct 2019 19:21:33 +0200
+Message-Id: <20191006172019.312676905@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -61,96 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
+commit e5bfad3d7acc5702f32aafeb388362994f4d7bd0 upstream.
 
-The LPAR migration implementation and userspace-initiated cpu hotplug
-can interleave their executions like so:
+inode_smack::smk_lock is taken during smack_d_instantiate(), which is
+called during a filesystem transaction when creating a file on ext4.
+Therefore to avoid a deadlock, all code that takes this lock must use
+GFP_NOFS, to prevent memory reclaim from waiting for the filesystem
+transaction to complete.
 
-1. Set cpu 7 offline via sysfs.
+Reported-by: syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-2. Begin a partition migration, whose implementation requires the OS
-   to ensure all present cpus are online; cpu 7 is onlined:
-
-     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
-
-   This sets cpu 7 online in all respects except for the cpu's
-   corresponding struct device; dev->offline remains true.
-
-3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
-   already online and returns success. The driver core (device_online)
-   sets dev->offline = false.
-
-4. The migration completes and restores cpu 7 to offline state:
-
-     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
-
-This leaves cpu7 in a state where the driver core considers the cpu
-device online, but in all other respects it is offline and
-unused. Attempts to online the cpu via sysfs appear to succeed but the
-driver core actually does not pass the request to the lower-level
-cpuhp support code. This makes the cpu unusable until the cpu device
-is manually set offline and then online again via sysfs.
-
-Instead of directly calling cpu_up/cpu_down, the migration code should
-use the higher-level device core APIs to maintain consistent state and
-serialize operations.
-
-Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ security/smack/smack_access.c |    4 ++--
+ security/smack/smack_lsm.c    |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 6a3e5de544ce2..a309a7a29cc60 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -874,15 +874,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
- 		return 0;
+--- a/security/smack/smack_access.c
++++ b/security/smack/smack_access.c
+@@ -474,7 +474,7 @@ char *smk_parse_smack(const char *string
+ 	if (i == 0 || i >= SMK_LONGLABEL)
+ 		return ERR_PTR(-EINVAL);
  
- 	for_each_cpu(cpu, cpus) {
-+		struct device *dev = get_cpu_device(cpu);
-+
- 		switch (state) {
- 		case DOWN:
--			cpuret = cpu_down(cpu);
-+			cpuret = device_offline(dev);
- 			break;
- 		case UP:
--			cpuret = cpu_up(cpu);
-+			cpuret = device_online(dev);
- 			break;
- 		}
--		if (cpuret) {
-+		if (cpuret < 0) {
- 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
- 					__func__,
- 					((state == UP) ? "up" : "down"),
-@@ -971,6 +973,8 @@ int rtas_ibm_suspend_me(u64 handle)
- 	data.token = rtas_token("ibm,suspend-me");
- 	data.complete = &done;
+-	smack = kzalloc(i + 1, GFP_KERNEL);
++	smack = kzalloc(i + 1, GFP_NOFS);
+ 	if (smack == NULL)
+ 		return ERR_PTR(-ENOMEM);
  
-+	lock_device_hotplug();
-+
- 	/* All present CPUs must be online */
- 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
- 	cpuret = rtas_online_cpus_mask(offline_mask);
-@@ -1002,6 +1006,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 				__func__);
+@@ -545,7 +545,7 @@ struct smack_known *smk_import_entry(con
+ 	if (skp != NULL)
+ 		goto freeout;
  
- out:
-+	unlock_device_hotplug();
- 	free_cpumask_var(offline_mask);
- 	return atomic_read(&data.error);
- }
--- 
-2.20.1
-
+-	skp = kzalloc(sizeof(*skp), GFP_KERNEL);
++	skp = kzalloc(sizeof(*skp), GFP_NOFS);
+ 	if (skp == NULL) {
+ 		skp = ERR_PTR(-ENOMEM);
+ 		goto freeout;
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -268,7 +268,7 @@ static struct smack_known *smk_fetch(con
+ 	if (!(ip->i_opflags & IOP_XATTR))
+ 		return ERR_PTR(-EOPNOTSUPP);
+ 
+-	buffer = kzalloc(SMK_LONGLABEL, GFP_KERNEL);
++	buffer = kzalloc(SMK_LONGLABEL, GFP_NOFS);
+ 	if (buffer == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
 
 
