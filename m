@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE927C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61551ECE58E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9492D20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320FA20700
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384835;
-	bh=iOj8CJhHNalPdK22Tr/ETE/feQREA8Pz9UcoTQaOLwc=;
+	s=default; t=1570384838;
+	bh=imc0Q0pspsvYgj/52o+N72nnGePu1STZj1a8QPV/zXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PBkXko8zkR5El4FMXGrPVpucRobos5v2ab7sbp3WD3u6gn3drCRv9uUVdo9CFCHgv
-	 2fdaVOgbrG58ceF7dDrVEDDrWu1uWZ061S0KNgMBpI37V3sEQZiorBP1F4WMc0Ip9H
-	 8qQKAiCxe2XZmdwP4PWg2wSMEiTBHkMla3rC5p+Y=
+	b=GvbzhslCJWydHap/8sIdzg8tr6Taf0Lgby7gmqnfRxYZIRgoiW1NCE1mjpntUBZXI
+	 cs5nM7m3alrP13rFHmP3nVgr8AMqDEbqk0GxQdMa8MIl7ev2tDNeCKu4GfRgfIS6W8
+	 Zfko7B1VyYAgZn1OSEYZM4AjFCJMM3bT1f+6YYVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfJFR24 (ORCPT
+        id S1727175AbfJFR2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728858AbfJFR2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:51 -0400
+        id S1728829AbfJFR2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 934A42087E;
-        Sun,  6 Oct 2019 17:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CF1F2087E;
+        Sun,  6 Oct 2019 17:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382930;
-        bh=iOj8CJhHNalPdK22Tr/ETE/feQREA8Pz9UcoTQaOLwc=;
+        s=default; t=1570382922;
+        bh=imc0Q0pspsvYgj/52o+N72nnGePu1STZj1a8QPV/zXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JveZ4PF069dsJx9Cs0xbSDuweWaxS3k+0/eTd9qNPvNQ83ASGr9DN98ar7EkGo27L
-         M+qQ5I8ng6rBPGHNohVbbvQ50Hqskg9SzXuhMrgDM1RU+gRT96wNa2jn23KIpomNLr
-         V5IFajWJRXlXgiaDjIR6dpxrLoGaD0rBXekNCvgA=
+        b=gB8/XH7Tov3QOPnEBDlfiX43WIx0XwGyPijUv9pscUylb2eAyNDOcIBIaYJyvtMVs
+         +TYMgF/tQNio4NHeT/GwM7SZv3GCQLSUSkFQcTZaWoKgHDrPOvMYp6wQCaByaa9eJp
+         Podi9fEopORmqHG/U0j3e6qxdA2OjU9mdhwYZYy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/106] powerpc/rtas: use device model APIs and serialization during LPM
-Date:   Sun,  6 Oct 2019 19:20:29 +0200
-Message-Id: <20191006171136.822220280@linuxfoundation.org>
+Subject: [PATCH 4.19 020/106] clk: sprd: Dont reference clk_init_data after registration
+Date:   Sun,  6 Oct 2019 19:20:26 +0200
+Message-Id: <20191006171134.651188987@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -61,94 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
+[ Upstream commit f6c90df8e7e33c3dc33d4d7471bc42c232b0510e ]
 
-The LPAR migration implementation and userspace-initiated cpu hotplug
-can interleave their executions like so:
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-1. Set cpu 7 offline via sysfs.
-
-2. Begin a partition migration, whose implementation requires the OS
-   to ensure all present cpus are online; cpu 7 is onlined:
-
-     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
-
-   This sets cpu 7 online in all respects except for the cpu's
-   corresponding struct device; dev->offline remains true.
-
-3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
-   already online and returns success. The driver core (device_online)
-   sets dev->offline = false.
-
-4. The migration completes and restores cpu 7 to offline state:
-
-     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
-
-This leaves cpu7 in a state where the driver core considers the cpu
-device online, but in all other respects it is offline and
-unused. Attempts to online the cpu via sysfs appear to succeed but the
-driver core actually does not pass the request to the lower-level
-cpuhp support code. This makes the cpu unusable until the cpu device
-is manually set offline and then online again via sysfs.
-
-Instead of directly calling cpu_up/cpu_down, the migration code should
-use the higher-level device core APIs to maintain consistent state and
-serialize operations.
-
-Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
+Cc: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-8-sboyd@kernel.org
+Acked-by: Baolin Wang <baolin.wang@linaro.org>
+Acked-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/clk/sprd/common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 8afd146bc9c70..9e41a9de43235 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -875,15 +875,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
- 		return 0;
+diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
+index e038b04472061..8bdab1c3013b8 100644
+--- a/drivers/clk/sprd/common.c
++++ b/drivers/clk/sprd/common.c
+@@ -71,16 +71,17 @@ int sprd_clk_probe(struct device *dev, struct clk_hw_onecell_data *clkhw)
+ 	struct clk_hw *hw;
  
- 	for_each_cpu(cpu, cpus) {
-+		struct device *dev = get_cpu_device(cpu);
-+
- 		switch (state) {
- 		case DOWN:
--			cpuret = cpu_down(cpu);
-+			cpuret = device_offline(dev);
- 			break;
- 		case UP:
--			cpuret = cpu_up(cpu);
-+			cpuret = device_online(dev);
- 			break;
+ 	for (i = 0; i < clkhw->num; i++) {
++		const char *name;
+ 
+ 		hw = clkhw->hws[i];
+-
+ 		if (!hw)
+ 			continue;
+ 
++		name = hw->init->name;
+ 		ret = devm_clk_hw_register(dev, hw);
+ 		if (ret) {
+ 			dev_err(dev, "Couldn't register clock %d - %s\n",
+-				i, hw->init->name);
++				i, name);
+ 			return ret;
  		}
--		if (cpuret) {
-+		if (cpuret < 0) {
- 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
- 					__func__,
- 					((state == UP) ? "up" : "down"),
-@@ -972,6 +974,8 @@ int rtas_ibm_suspend_me(u64 handle)
- 	data.token = rtas_token("ibm,suspend-me");
- 	data.complete = &done;
- 
-+	lock_device_hotplug();
-+
- 	/* All present CPUs must be online */
- 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
- 	cpuret = rtas_online_cpus_mask(offline_mask);
-@@ -1003,6 +1007,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 				__func__);
- 
- out:
-+	unlock_device_hotplug();
- 	free_cpumask_var(offline_mask);
- 	return atomic_read(&data.error);
- }
+ 	}
 -- 
 2.20.1
 
