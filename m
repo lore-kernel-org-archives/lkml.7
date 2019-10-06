@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1486CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DC62133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11892133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382694;
-	bh=EZXCOgWMcyDlbQcr4EQRifzZAxCGdL9unuxEcc414Jo=;
+	s=default; t=1570382697;
+	bh=l2KjOeZAkK2ZIPyy1esPxcn8fBP4TO0yCPNyCJSq1oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jiDarYz0ICx3k44VB7adN8BXOKqG5XEr4eeVBSvobcDncggzuVkJ6vOzJcThjPfW1
-	 9Z0VOSoBHcYLBcXxl1Yw19sP7ZGEZEUVe/gsJp+uahkBeQlhM9hQZxv5BbKcnvzeOI
-	 4VZDqS3Gf8IJW2Gq2pzvCN1xAW3FawVO1yVZN7oY=
+	b=eRxlsmYSsPfqqvFvA7N0KMu01QxWTHYvtO0ZE1OzjENasIeGZj4y0r/FLmon/MGrY
+	 485r15i/Y/PZDb6GerbRijaTbtCxoKXFZj/o+wTUGSXzuxERcjDqXtc4k5EzSe4JZQ
+	 NJZURM7tgs3SyzoYJUdZpOX2lk3H6b3YrBGKQLN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfJFRYx (ORCPT
+        id S1728014AbfJFRYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfJFRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:44 -0400
+        id S1727995AbfJFRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5559120867;
-        Sun,  6 Oct 2019 17:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FA920867;
+        Sun,  6 Oct 2019 17:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382683;
-        bh=EZXCOgWMcyDlbQcr4EQRifzZAxCGdL9unuxEcc414Jo=;
+        s=default; t=1570382691;
+        bh=l2KjOeZAkK2ZIPyy1esPxcn8fBP4TO0yCPNyCJSq1oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FrE9yWNc5NzsOYrM6MT6ld2xl0kwK4NOAaWmPviTzqmNH+g8tN8g3Fd3Yk+LO9/Z7
-         Li2ZjMCxMzM4B9EE1YNyvPL6XGnDXO2ZzxfZlHeH2obtnALRaBkf6mbqipShn2zLbO
-         yB5HDQ/g1BZV0gRI7FdbYJBDqYtwzeWSyIfuHTmo=
+        b=J/WgaTrKP2fyHqL2NDkZIOHNBs6JUxgkCFoPKPYFUAhvdaVuysfIC1pxlLziJUOT9
+         A9f9xMF9Fmd9JR2lp41qaORPCZ4w1T/DuR/3qCK4y5WPxwl4kGa1UnKnYeYJvQL/8c
+         Glb/f9nYHj48Im+mVtkcKfSdVP+KTduve3xFpbss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 40/47] sch_dsmark: fix potential NULL deref in dsmark_init()
-Date:   Sun,  6 Oct 2019 19:21:27 +0200
-Message-Id: <20191006172019.001134445@linuxfoundation.org>
+Subject: [PATCH 4.9 43/47] sch_cbq: validate TCA_CBQ_WRROPT to avoid crash
+Date:   Sun,  6 Oct 2019 19:21:30 +0200
+Message-Id: <20191006172019.156803228@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -62,71 +62,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 474f0813a3002cb299bb73a5a93aa1f537a80ca8 ]
+[ Upstream commit e9789c7cc182484fc031fd88097eb14cb26c4596 ]
 
-Make sure TCA_DSMARK_INDICES was provided by the user.
+syzbot reported a crash in cbq_normalize_quanta() caused
+by an out of range cl->priority.
 
-syzbot reported :
+iproute2 enforces this check, but malicious users do not.
 
 kasan: CONFIG_KASAN_INLINE enabled
 kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8799 Comm: syz-executor235 Not tainted 5.3.0+ #0
+general protection fault: 0000 [#1] SMP KASAN PTI
+Modules linked in:
+CPU: 1 PID: 26447 Comm: syz-executor.1 Not tainted 5.3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nla_get_u16 include/net/netlink.h:1501 [inline]
-RIP: 0010:dsmark_init net/sched/sch_dsmark.c:364 [inline]
-RIP: 0010:dsmark_init+0x193/0x640 net/sched/sch_dsmark.c:339
-Code: 85 db 58 0f 88 7d 03 00 00 e8 e9 1a ac fb 48 8b 9d 70 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ca
-RSP: 0018:ffff88809426f3b8 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff85c6eb09
-RDX: 0000000000000000 RSI: ffffffff85c6eb17 RDI: 0000000000000004
-RBP: ffff88809426f4b0 R08: ffff88808c4085c0 R09: ffffed1015d26159
-R10: ffffed1015d26158 R11: ffff8880ae930ac7 R12: ffff8880a7e96940
-R13: dffffc0000000000 R14: ffff88809426f8c0 R15: 0000000000000000
-FS:  0000000001292880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+RIP: 0010:cbq_normalize_quanta.part.0+0x1fd/0x430 net/sched/sch_cbq.c:902
+RSP: 0018:ffff8801a5c333b0 EFLAGS: 00010206
+RAX: 0000000020000003 RBX: 00000000fffffff8 RCX: ffffc9000712f000
+RDX: 00000000000043bf RSI: ffffffff83be8962 RDI: 0000000100000018
+RBP: ffff8801a5c33420 R08: 000000000000003a R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000002ef
+R13: ffff88018da95188 R14: dffffc0000000000 R15: 0000000000000015
+FS:  00007f37d26b1700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000008ca1b000 CR4: 00000000001406e0
+CR2: 00000000004c7cec CR3: 00000001bcd0a006 CR4: 00000000001626f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- qdisc_create+0x4ee/0x1210 net/sched/sch_api.c:1237
- tc_modify_qdisc+0x524/0x1c50 net/sched/sch_api.c:1653
- rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5223
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x803/0x920 net/socket.c:2311
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
- __do_sys_sendmsg net/socket.c:2365 [inline]
- __se_sys_sendmsg net/socket.c:2363 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
- do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440369
+ [<ffffffff83be9d57>] cbq_normalize_quanta include/net/pkt_sched.h:27 [inline]
+ [<ffffffff83be9d57>] cbq_addprio net/sched/sch_cbq.c:1097 [inline]
+ [<ffffffff83be9d57>] cbq_set_wrr+0x2d7/0x450 net/sched/sch_cbq.c:1115
+ [<ffffffff83bee8a7>] cbq_change_class+0x987/0x225b net/sched/sch_cbq.c:1537
+ [<ffffffff83b96985>] tc_ctl_tclass+0x555/0xcd0 net/sched/sch_api.c:2329
+ [<ffffffff83a84655>] rtnetlink_rcv_msg+0x485/0xc10 net/core/rtnetlink.c:5248
+ [<ffffffff83cadf0a>] netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2510
+ [<ffffffff83a7db6d>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5266
+ [<ffffffff83cac2c6>] netlink_unicast_kernel net/netlink/af_netlink.c:1324 [inline]
+ [<ffffffff83cac2c6>] netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1350
+ [<ffffffff83cacd4a>] netlink_sendmsg+0x89a/0xd50 net/netlink/af_netlink.c:1939
+ [<ffffffff8399d46e>] sock_sendmsg_nosec net/socket.c:673 [inline]
+ [<ffffffff8399d46e>] sock_sendmsg+0x12e/0x170 net/socket.c:684
+ [<ffffffff8399f1fd>] ___sys_sendmsg+0x81d/0x960 net/socket.c:2359
+ [<ffffffff839a2d05>] __sys_sendmsg+0x105/0x1d0 net/socket.c:2397
+ [<ffffffff839a2df9>] SYSC_sendmsg net/socket.c:2406 [inline]
+ [<ffffffff839a2df9>] SyS_sendmsg+0x29/0x30 net/socket.c:2404
+ [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
+ [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
 
-Fixes: 758cc43c6d73 ("[PKT_SCHED]: Fix dsmark to apply changes consistent")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_dsmark.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sched/sch_cbq.c |   27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
---- a/net/sched/sch_dsmark.c
-+++ b/net/sched/sch_dsmark.c
-@@ -346,6 +346,8 @@ static int dsmark_init(struct Qdisc *sch
- 		goto errout;
+--- a/net/sched/sch_cbq.c
++++ b/net/sched/sch_cbq.c
+@@ -1129,6 +1129,26 @@ static const struct nla_policy cbq_polic
+ 	[TCA_CBQ_POLICE]	= { .len = sizeof(struct tc_cbq_police) },
+ };
  
- 	err = -EINVAL;
-+	if (!tb[TCA_DSMARK_INDICES])
-+		goto errout;
- 	indices = nla_get_u16(tb[TCA_DSMARK_INDICES]);
++static int cbq_opt_parse(struct nlattr *tb[TCA_CBQ_MAX + 1], struct nlattr *opt)
++{
++	int err;
++
++	if (!opt)
++		return -EINVAL;
++
++	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy);
++	if (err < 0)
++		return err;
++
++	if (tb[TCA_CBQ_WRROPT]) {
++		const struct tc_cbq_wrropt *wrr = nla_data(tb[TCA_CBQ_WRROPT]);
++
++		if (wrr->priority > TC_CBQ_MAXPRIO)
++			err = -EINVAL;
++	}
++	return err;
++}
++
+ static int cbq_init(struct Qdisc *sch, struct nlattr *opt)
+ {
+ 	struct cbq_sched_data *q = qdisc_priv(sch);
+@@ -1136,7 +1156,7 @@ static int cbq_init(struct Qdisc *sch, s
+ 	struct tc_ratespec *r;
+ 	int err;
  
- 	if (hweight32(indices) != 1)
+-	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy);
++	err = cbq_opt_parse(tb, opt);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1468,10 +1488,7 @@ cbq_change_class(struct Qdisc *sch, u32
+ 	struct cbq_class *parent;
+ 	struct qdisc_rate_table *rtab = NULL;
+ 
+-	if (opt == NULL)
+-		return -EINVAL;
+-
+-	err = nla_parse_nested(tb, TCA_CBQ_MAX, opt, cbq_policy);
++	err = cbq_opt_parse(tb, opt);
+ 	if (err < 0)
+ 		return err;
+ 
 
 
