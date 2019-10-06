@@ -2,111 +2,170 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D9EC47404
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14395C47404
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CDD222C5
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD74218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 02:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXbR5lRl"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NMSncqY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfJFC3x (ORCPT
+        id S1726211AbfJFCbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Oct 2019 22:29:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46167 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfJFC3w (ORCPT
+        Sat, 5 Oct 2019 22:31:10 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:41204 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfJFCbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Oct 2019 22:29:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so11203836wrv.13
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 19:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YGXf9idAJ+CJ9q4yeCvmnDfU8PF8I7CxRLbmXUnGvaE=;
-        b=bXbR5lRlZwWTXVwvK015DgZNC+gXgMsDlm5stxRvBjFYfgSjZrLk1/gDpV5MWxUr4V
-         foOM8irTZsUCyvzu7zQaH5tnxXU7lbho45WPbYYlJOZ12WnBymVvmCfVWU4gRJ6wsnoz
-         toLpbD5R53JK/imQA6T4vwVRqF5FhgLSnwSBLii8itUaBoYiVJtIh8ytJNbNi87k16f/
-         lrZsfLFqg0Y3OEV7sisBz3AIg9+hKLKYfX6AZ+UhzM5F2ohQKK4jii7OStNX6WNSi1HR
-         gyOAVTAEspNzDwu+TqI1JElFNIo6ZXsqlB6svs2rbqEa0Bj7ZPpDVXWAXKFjJTpcNNfC
-         GIOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YGXf9idAJ+CJ9q4yeCvmnDfU8PF8I7CxRLbmXUnGvaE=;
-        b=EN8Te1fTOAy0YtZD9NphBEtAOJoEvXfhfhkRS8+RsgCLPkJQ2rzoc2ii0y28KbgsVq
-         lqwlAvhJVMRbBSMUxqdgU7RuuoiI5kt8lTMcZzQqukuRKHpzy38vCpIJjAb60mr7aw2p
-         g+4M5aFjZamOF65OZgUK+4GB8mom3R331fq+RVlEY1rVA1zoq7IA2E0H4hnbluFC14hF
-         k4Tkd/nCZuqSpONT/y9yK0HnklexkfXOd6eHmcDIHkGQJ163Nk9dR7PNwnyqfzXkq1Mn
-         yed7e1ZiqmVbGdr6Woh68yr/oyXQ2xcuGKGz4Wwd0MnpOWsAOtZ1l9lnyQf6Tsv3np84
-         HeHw==
-X-Gm-Message-State: APjAAAWcGd4KizRmULE/da1CKkBW3JW6KmoztCZiZThml/7tsTfRwMNB
-        7iJM8dsl5yPAMcKwBq/D4jU=
-X-Google-Smtp-Source: APXvYqwYQEIzRU2OOoOL/M1kz1QfCVsYvxsYYZynX93oCN+/Z9SdM15Qdv6y6grRKFvRgKDzQpeJXg==
-X-Received: by 2002:a5d:4d4f:: with SMTP id a15mr17546051wru.267.1570328990269;
-        Sat, 05 Oct 2019 19:29:50 -0700 (PDT)
-Received: from mail.google.com ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id w3sm828162wru.5.2019.10.05.19.29.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2019 19:29:49 -0700 (PDT)
-Date:   Sun, 6 Oct 2019 10:29:43 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/mm: determine whether the fault address is canonical
-Message-ID: <20191006022941.pvwldrjyhl4z5inu@mail.google.com>
-References: <20191004134501.30651-1-changbin.du@gmail.com>
- <CALCETrWEhNCWDz7OVpbYJceJ5eShsWWhuyuAQQSzAdKncUo7zA@mail.gmail.com>
- <2d078dbc-73ca-0868-71f8-16e413ebdbf4@intel.com>
+        Sat, 5 Oct 2019 22:31:09 -0400
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x962Upd6006790
+        for <linux-kernel@vger.kernel.org>; Sun, 6 Oct 2019 11:30:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x962Upd6006790
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570329052;
+        bh=kuS/GKnKklmRpPbyJCs/1Gxnnvpl6N+X6d6FVhIH0Qo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NMSncqY+lYiIafmLeCg29z6tSGWnOQyxBeDOQUCICpmoSO2H+mY3MieP07YEtYz2r
+         kcEGoO/zSgshDc1GL257RVEDRF5ow4oVzFwOG/yhfzoBRry73o56uU+n19yfUr92+T
+         UVrA32h4EPz0f/vHjEBw4vy9GaH0PwfgIj6kTrmAmgvvulXC39kJ9dfzDNb74kY37I
+         u/Jxyeq/J+JWmEEt1bLlvPGN+mtIKCxy1MdNkOuGaCybGUHOMw8a+cbEH1WfjI2vpn
+         Gw2q3rYjz4RKVphCJIpF/XMTQgsS/5U96Vrax4ytpr+ZNZy0JJGStzvs9H7Yk33VuF
+         yJ3pZQfH7RELg==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id w3so2281700vkm.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Oct 2019 19:30:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAUY4tDX6WLAgZnKKNom5jemLlKO8wwad+6aSfTnPlBGrV5STc+o
+        ZUNQ1WC1INyFlnLeGJ/iPbd5urzff4Ru5UCMyAI=
+X-Google-Smtp-Source: APXvYqx3bSTblZRYno1+Rvd64tc+kjphZrmb8vrW7f9tgdcP/7FB0Zj9I5meeZ8rp53YdnxijfZF1+0ji0xeXyPrkLw=
+X-Received: by 2002:a1f:d483:: with SMTP id l125mr11392682vkg.12.1570329050468;
+ Sat, 05 Oct 2019 19:30:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d078dbc-73ca-0868-71f8-16e413ebdbf4@intel.com>
-User-Agent: NeoMutt/20180716
+References: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+ <20190811184938.1796-1-rikard.falkeborn@gmail.com> <20190811184938.1796-4-rikard.falkeborn@gmail.com>
+In-Reply-To: <20190811184938.1796-4-rikard.falkeborn@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 6 Oct 2019 11:30:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS_ya0LRvheguU678G5YSPQrOk9wTbq+-kVoFdbxR++kA@mail.gmail.com>
+Message-ID: <CAK7LNAS_ya0LRvheguU678G5YSPQrOk9wTbq+-kVoFdbxR++kA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] linux/bits.h: Add compile time sanity check of
+ GENMASK inputs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 08:14:25AM -0700, Dave Hansen wrote:
-> On 10/4/19 7:59 AM, Andy Lutomirski wrote:
-> >> @@ -123,7 +125,8 @@ __visible bool ex_handler_uaccess(const struct exception_table_entry *fixup,
-> >>                                   unsigned long error_code,
-> >>                                   unsigned long fault_addr)
-> >>  {
-> >> -       WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in user access. Non-canonical address?");
-> >> +       WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault at %s address in user access.",
-> >> +                 is_canonical_addr(fault_addr) ? "canonical" : "non-canonical");
-> > Unless the hardware behaves rather differently from the way I think it
-> > does, fault_addr is garbage for anything other than #PF and sometimes
-> > for #DF.  (And maybe the virtualization faults?)  I don't believe that
-> > #GP fills in CR2.
-> 
-> For #GP, we do:
-> 
-> do_general_protection(struct pt_regs *regs, long error_code)
-> {
-> ...
->         if (!user_mode(regs)) {
->                 if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
->                         return;
-> 
-> Where the 0 is 'fault_addr'.  I'm not sure any other way that
-> ex_handler_uaccess() can get called with trapnr == X86_TRAP_GP.  0 is
-> canonical last I checked, which would make this patch a bit academic. :)
-My fault. I thought the 'fault_addr' is filled with a valid value. So we really
-don't know the answer without decoding the instruction which causes this #GP. :)
+On Mon, Aug 12, 2019 at 3:50 AM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
+>
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
+>
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
+>
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
+>
+> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
+> used instead of BUILD_BUG_ON().
+>
+> __builtin_constant_p does not evaluate is argument, it only checks if it
+> is a constant or not at compile time, and __builtin_choose_expr does not
+> evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
+> does only evaluate x++ once.
+>
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+> checks if the file is included in an asm file.
+>
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+
+
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+> ---
+> Changes in v3:
+>   - Changed back to shorter macro argument names
+>   - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
+>     since all results in GENMASK_INPUT_CHECK() are now ints. Update
+>     commit message to reflect that.
+>
+> Changes in v2:
+>   - Add comment about why inputs are not checked when used in asm file
+>   - Use UL(0) instead of 0
+>   - Extract mask creation in a separate macro to improve readability
+>   - Use high and low instead of h and l (part of this was extracted to a
+>     separate patch)
+>   - Updated commit message
+>
+> Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> needs to be merged before this to avoid build failures. Currently, 5 of
+> the patches are not in Linus tree, and 2 are not in linux-next. There is
+> also a patch pending by Nathan Chancellor that also needs to be merged
+> before this patch is merged to avoid build failures.
+>
+>  include/linux/bits.h | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+> index 669d69441a62..4ba0fb609239 100644
+> --- a/include/linux/bits.h
+> +++ b/include/linux/bits.h
+> @@ -18,12 +18,29 @@
+>   * position @h. For example
+>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>   */
+> -#define GENMASK(h, l) \
+> +#ifndef __ASSEMBLY__
+> +#include <linux/build_bug.h>
+> +#define GENMASK_INPUT_CHECK(h, l) \
+> +       (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> +               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> +#else
+> +/*
+> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> + * disable the input check if that is the case.
+> + */
+> +#define GENMASK_INPUT_CHECK(h, l) 0
+> +#endif
+> +
+> +#define __GENMASK(h, l) \
+>         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+>          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> +#define GENMASK(h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>
+> -#define GENMASK_ULL(h, l) \
+> +#define __GENMASK_ULL(h, l) \
+>         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+>          (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> +#define GENMASK_ULL(h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>
+>  #endif /* __LINUX_BITS_H */
+> --
+> 2.22.0
+>
+
 
 -- 
-Cheers,
-Changbin Du
+Best Regards
+Masahiro Yamada
