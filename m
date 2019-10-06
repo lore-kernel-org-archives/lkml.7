@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC5BC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D907C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736F120867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E927020867
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382777;
-	bh=GofdUfSQXIx0DjaZGvqWXBDxkWOXKOib6pKnwDPKu3s=;
+	s=default; t=1570382781;
+	bh=QAeX3pYl1wm9N0GeIoBGX1XUJSECbBcflCV8F8zifwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SbhqZRkw7Cjub/PELJcqRkgl7gtAMFRlVmsvjKEq0tbw34XmTenTDrQtlVX1tSn/H
-	 n9JWQwepyViyCPhYbli+4fRe0+OyOGZKV7XiiwMbXo+vWIqEheDQ/yvQOsHYkKJF9Z
-	 HauJOa47nwo9iIoOr740zM4DNkBerE/ld+iMwDQE=
+	b=JQRKDNaJ2QoH53dRL+oPeskoZ3DkuugaRRJ3x0oMZb00Lmdwk0eONHqUrg/5fSDQa
+	 dQWFKAMJE8X2UhD1wqE+j3gBqfd02tMBgAJR1WpqZAlTNjhgtRaCC6TPLQLQDcKMqg
+	 pWEmx4VJyiuRqw5QAd1amJdM/UZ+BhEvoGyfpVjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfJFR0Q (ORCPT
+        id S1728257AbfJFR0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbfJFR0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:13 -0400
+        id S1728236AbfJFR0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9786320867;
-        Sun,  6 Oct 2019 17:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC982077B;
+        Sun,  6 Oct 2019 17:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382773;
-        bh=GofdUfSQXIx0DjaZGvqWXBDxkWOXKOib6pKnwDPKu3s=;
+        s=default; t=1570382775;
+        bh=QAeX3pYl1wm9N0GeIoBGX1XUJSECbBcflCV8F8zifwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juXSnZSRA/psNmyiX5qdA6qXIousfPQLZbSxwZInnr/4wd6lFIb4FsQf84q7JqxXc
-         rMQ9x1Tl8DC0JsvP1QdruIOVcE2Iy+Iuu4VcWe7YLybOTl1zb56tCQA3a7UNVV/A5O
-         ZBKAW4TjzPI1AMveVUQvTA8r5AfqkdWJMA2vdCps=
+        b=agS+mN0T5crT/ZIt5E+k4wSEbeZjzgoe8rB89ntkcCQBMsx/+B2ASbQePuQmA7W+C
+         n/cTONITq2G/vCbWfSrMEvzlvBsHJzHJX+Y99RANJvn9dBChvrCv11VM+SvuEIlb/I
+         wLdKiEbqOanQ44woW8mv46iJvHpHPhETlgKynblw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/68] livepatch: Nullify obj->mod in klp_module_coming()s error path
-Date:   Sun,  6 Oct 2019 19:21:09 +0200
-Message-Id: <20191006171124.321287020@linuxfoundation.org>
+Subject: [PATCH 4.14 34/68] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
+Date:   Sun,  6 Oct 2019 19:21:10 +0200
+Message-Id: <20191006171124.524201751@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -61,39 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 4ff96fb52c6964ad42e0a878be8f86a2e8052ddd ]
+[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
 
-klp_module_coming() is called for every module appearing in the system.
-It sets obj->mod to a patched module for klp_object obj. Unfortunately
-it leaves it set even if an error happens later in the function and the
-patched module is not allowed to be loaded.
+Translation faults arising from cache maintenance instructions are
+rather unhelpfully reported with an FSR value where the WnR field is set
+to 1, indicating that the faulting access was a write. Since cache
+maintenance instructions on 32-bit ARM do not require any particular
+permissions, this can cause our private 'cacheflush' system call to fail
+spuriously if a translation fault is generated due to page aging when
+targetting a read-only VMA.
 
-klp_is_object_loaded() uses obj->mod variable and could currently give a
-wrong return value. The bug is probably harmless as of now.
+In this situation, we will return -EFAULT to userspace, although this is
+unfortunately suppressed by the popular '__builtin___clear_cache()'
+intrinsic provided by GCC, which returns void.
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Although it's tempting to write this off as a userspace issue, we can
+actually do a little bit better on CPUs that support LPAE, even if the
+short-descriptor format is in use. On these CPUs, cache maintenance
+faults additionally set the CM field in the FSR, which we can use to
+suppress the write permission checks in the page fault handler and
+succeed in performing cache maintenance to read-only areas even in the
+presence of a translation fault.
+
+Reported-by: Orion Hodson <oth@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/livepatch/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mm/fault.c | 4 ++--
+ arch/arm/mm/fault.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 88754e9790f9b..f8dc77b18962c 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -941,6 +941,7 @@ err:
- 	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
- 		patch->mod->name, obj->mod->name, obj->mod->name);
- 	mod->klp_alive = false;
-+	obj->mod = NULL;
- 	klp_cleanup_module_patches_limited(mod, patch);
- 	mutex_unlock(&klp_mutex);
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index 49b1b80486358..9bb446cc135d1 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -215,7 +215,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
+ {
+ 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
  
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		mask = VM_WRITE;
+ 	if (fsr & FSR_LNX_PF)
+ 		mask = VM_EXEC;
+@@ -285,7 +285,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		flags |= FAULT_FLAG_WRITE;
+ 
+ 	/*
+diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
+index c063708fa5032..9ecc2097a87a0 100644
+--- a/arch/arm/mm/fault.h
++++ b/arch/arm/mm/fault.h
+@@ -6,6 +6,7 @@
+  * Fault status register encodings.  We steal bit 31 for our own purposes.
+  */
+ #define FSR_LNX_PF		(1 << 31)
++#define FSR_CM			(1 << 13)
+ #define FSR_WRITE		(1 << 11)
+ #define FSR_FS4			(1 << 10)
+ #define FSR_FS3_0		(15)
 -- 
 2.20.1
 
