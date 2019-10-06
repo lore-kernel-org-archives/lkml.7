@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E99ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748E3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE43214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A242214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383064;
-	bh=d5x6H7X8RM/sSGV+fpNeGD/8PnIzqMfJl2docqT8a5o=;
+	s=default; t=1570383069;
+	bh=+7ukwZYjRuqp0HaB2giqWF8t5YMps7LpkoRS2U8DhoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h3vfnH9FwuvK4FH17ISEwoCN2AMmF4i8h8GGf3B7LblOqL4FjwHva6ftRPQCUdI1Y
-	 y9cohn/kBHgiX6fva249RpQwby4vHjESqrHc16Y6ij6aH38ZCsP4/TJT7MHSD6J4E7
-	 o8dITbktM73wWum6YWf5g1AFf7tKQyEZl1uKp+js=
+	b=oAAzKJws1Pi3LfY8ixpyU44CslY2p45i+04k47ZZaBY1cYRmjT5iUkzrI0HROeatc
+	 sv75uo33nrhpFKjPxomRr6EMQIfzep5u8NRnHV6MCSovejV3kYDBC2NrKA4m849b4o
+	 Phfbm+I2ry9crysF0S1j/UjqNyf9w1v/b77vIjgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfJFRbD (ORCPT
+        id S1727816AbfJFRbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbfJFRbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:31:00 -0400
+        id S1726949AbfJFRbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:31:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 283A52080F;
-        Sun,  6 Oct 2019 17:30:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FFE72133F;
+        Sun,  6 Oct 2019 17:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383059;
-        bh=d5x6H7X8RM/sSGV+fpNeGD/8PnIzqMfJl2docqT8a5o=;
+        s=default; t=1570383065;
+        bh=+7ukwZYjRuqp0HaB2giqWF8t5YMps7LpkoRS2U8DhoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07G0A0PfQ+o+2jE8AT11dzYsNR6EMf/WcffFkfFfvIpF5duO2pRSXTn2vjIRg9OOo
-         WaM4g89itjkanJCl9RazgPlitWS2fX6Ky4Rv79TwEnPtQxsXkP9dAkXGfTPIeArgbl
-         +h4EB36JvTrp2e2MIL8bIhpG1YzMboHWR5XzhcJg=
+        b=To5ys4tHXG7LK/9wekfvLZq65o5Goj+Oa4Pz/HxCd7SOZj2B10eetQGZPShc1mhng
+         U2X4ZTNTOqVa12Wu2JLckHqaGBy1lGJJpKjCM8tHzN/xo4UQ95+Y2SzCEo6Xn2n/xp
+         btHcIDKMkdy+RPTLhP/3jsDviHE2/93UAEe0RkoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/106] crypto: hisilicon - Fix double free in sec_free_hw_sgl()
-Date:   Sun,  6 Oct 2019 19:21:16 +0200
-Message-Id: <20191006171152.609263690@linuxfoundation.org>
+Subject: [PATCH 4.19 072/106] ocfs2: wait for recovering done after direct unlock request
+Date:   Sun,  6 Oct 2019 19:21:18 +0200
+Message-Id: <20191006171153.744922590@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,61 +65,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Changwei Ge <gechangwei@live.cn>
 
-[ Upstream commit 24fbf7bad888767bed952f540ac963bc57e47e15 ]
+[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
 
-There are two problems in sec_free_hw_sgl():
+There is a scenario causing ocfs2 umount hang when multiple hosts are
+rebooting at the same time.
 
-First, when sgl_current->next is valid, @hw_sgl will be freed in the
-first loop, but it free again after the loop.
+NODE1                           NODE2               NODE3
+send unlock requset to NODE2
+                                dies
+                                                    become recovery master
+                                                    recover NODE2
+find NODE2 dead
+mark resource RECOVERING
+directly remove lock from grant list
+calculate usage but RECOVERING marked
+**miss the window of purging
+clear RECOVERING
 
-Second, sgl_current and sgl_current->next_sgl is not match when
-dma_pool_free() is invoked, the third parameter should be the dma
-address of sgl_current, but sgl_current->next_sgl is the dma address
-of next chain, so use sgl_current->next_sgl is wrong.
+To reproduce this issue, crash a host and then umount ocfs2
+from another node.
 
-Fix this by deleting the last dma_pool_free() in sec_free_hw_sgl(),
-modifying the condition for while loop, and matching the address for
-dma_pool_free().
+To solve this, just let unlock progress wait for recovery done.
 
-Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
+Signed-off-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/hisilicon/sec/sec_algs.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/hisilicon/sec/sec_algs.c b/drivers/crypto/hisilicon/sec/sec_algs.c
-index cdc4f9a171d98..db2983c51f1e6 100644
---- a/drivers/crypto/hisilicon/sec/sec_algs.c
-+++ b/drivers/crypto/hisilicon/sec/sec_algs.c
-@@ -215,17 +215,18 @@ static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
- 			    dma_addr_t psec_sgl, struct sec_dev_info *info)
- {
- 	struct sec_hw_sgl *sgl_current, *sgl_next;
-+	dma_addr_t sgl_next_dma;
+diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
+index 63d701cd1e2e7..c8e9b7031d9ad 100644
+--- a/fs/ocfs2/dlm/dlmunlock.c
++++ b/fs/ocfs2/dlm/dlmunlock.c
+@@ -105,7 +105,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	enum dlm_status status;
+ 	int actions = 0;
+ 	int in_use;
+-        u8 owner;
++	u8 owner;
++	int recovery_wait = 0;
  
--	if (!hw_sgl)
--		return;
- 	sgl_current = hw_sgl;
--	while (sgl_current->next) {
-+	while (sgl_current) {
- 		sgl_next = sgl_current->next;
--		dma_pool_free(info->hw_sgl_pool, sgl_current,
--			      sgl_current->next_sgl);
-+		sgl_next_dma = sgl_current->next_sgl;
-+
-+		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
-+
- 		sgl_current = sgl_next;
-+		psec_sgl = sgl_next_dma;
+ 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
+ 	     flags & LKM_VALBLK);
+@@ -208,9 +209,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 		}
+ 		if (flags & LKM_CANCEL)
+ 			lock->cancel_pending = 0;
+-		else
+-			lock->unlock_pending = 0;
+-
++		else {
++			if (!lock->unlock_pending)
++				recovery_wait = 1;
++			else
++				lock->unlock_pending = 0;
++		}
  	}
--	dma_pool_free(info->hw_sgl_pool, hw_sgl, psec_sgl);
- }
  
- static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
+ 	/* get an extra ref on lock.  if we are just switching
+@@ -244,6 +248,17 @@ leave:
+ 	spin_unlock(&res->spinlock);
+ 	wake_up(&res->wq);
+ 
++	if (recovery_wait) {
++		spin_lock(&res->spinlock);
++		/* Unlock request will directly succeed after owner dies,
++		 * and the lock is already removed from grant list. We have to
++		 * wait for RECOVERING done or we miss the chance to purge it
++		 * since the removement is much faster than RECOVERING proc.
++		 */
++		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
++		spin_unlock(&res->spinlock);
++	}
++
+ 	/* let the caller's final dlm_lock_put handle the actual kfree */
+ 	if (actions & DLM_UNLOCK_FREE_LOCK) {
+ 		/* this should always be coupled with list removal */
 -- 
 2.20.1
 
