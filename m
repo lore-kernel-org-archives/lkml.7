@@ -2,84 +2,109 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF045ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42E7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46872080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9678220862
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 23:41:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="QebelLM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfJFXkV (ORCPT
+        id S1726812AbfJFXlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 19:40:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7649 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfJFXkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 19:40:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Oct 2019 16:40:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
-   d="scan'208";a="192946807"
-Received: from mwebb1-mobl.ger.corp.intel.com (HELO localhost) ([10.251.93.103])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Oct 2019 16:40:12 -0700
-Date:   Mon, 7 Oct 2019 02:40:11 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v22 16/24] x86/vdso: Add support for exception fixup in
- vDSO functions
-Message-ID: <20191006234011.GA16366@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-17-jarkko.sakkinen@linux.intel.com>
- <20191002231804.GA14315@linux.intel.com>
- <20191004001459.GD14325@linux.intel.com>
- <20191004185221.GI6945@linux.intel.com>
- <20191006233817.GC15594@linux.intel.com>
+        Sun, 6 Oct 2019 19:41:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34858 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfJFXlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 19:41:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v8so13078007wrt.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 16:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=2AVVZuP6kRpkgBFdGu0/PBs/Zxs8/JTnpS/uTskY5hQ=;
+        b=QebelLM9RylRDZILcVIWQAh0EB9YgifEJHF77MAFIOUdlj9DYWJwPFdb9roKho7EvM
+         pjEhGDM4LyWtto6tAUnGOaybDU5mg29yhZSt0vN9TDEKN1kD1AmFxN4SLaxRFACZEbgM
+         FF2YC07tNWOAJPYuPLzbCzIDCib5ra7vv0Rkm2YKedKhdFGw8sSqO1kbwBwau+kHGgrO
+         Et7ZwTUH+OAJ3nGNTJ72HprgLTBmDCcNkIpCpn6ie4K69efkonO+BReBqmVLQSWJFqjF
+         KjatAarFbtCrXx7lJM9Wao9KzhBuPfFbJ/LlboVVCJRVW7thku10JNU7/nAYAwYd1b4T
+         cylQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=2AVVZuP6kRpkgBFdGu0/PBs/Zxs8/JTnpS/uTskY5hQ=;
+        b=iwg2kTfMz50kJ9e2A9eloc8Ty7SITl7QYxT6CPjLeNt8OwLOniZ3n4fMtEboun6dgh
+         vEQWzQzFdEK6HXZoMrFFoxfFF/RCuTaybPme9oTi65bktEi2OUk4ID61d6r+ZjvTtzBm
+         vn/8VV/o2+b2a9xb2rr7tiH2LWyVNWjUHZIzJwV9gaQ+706yXiWrhy/94PJqAocJfOod
+         PbaEFXPrvGE0WfL6RBcUsn6gIiWBlWXU2iwK4TXFwqrWHJm4YQD4+NjmCCWUHAFt+PCz
+         18vN3Oy516R6tV1S53g721QeKHw23wV5TSfohpljDIyo+HLpB3gySclqSJ/nNdAQlzw/
+         uoBA==
+X-Gm-Message-State: APjAAAVY5pFhFK1jsWetfiA4x4PV6UVYmN1fuH3LWV1fCkNSQfZxQ0nx
+        8d2/MZ4tkA7rPrpjxU92dtOI/Q==
+X-Google-Smtp-Source: APXvYqy+X4wqx7pdNVuZNr7q908rq+zyXvBqoT+8W33XSHhrytfbFPFh1G/Obr4oJ1A1mFCEd3BLtw==
+X-Received: by 2002:a05:6000:128e:: with SMTP id f14mr19273644wrx.73.1570405277325;
+        Sun, 06 Oct 2019 16:41:17 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id z9sm14341532wrp.26.2019.10.06.16.41.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 06 Oct 2019 16:41:16 -0700 (PDT)
+Message-ID: <5d9a7b9c.1c69fb81.14b6f.089f@mx.google.com>
+Date:   Sun, 06 Oct 2019 16:41:16 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006233817.GC15594@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.2.19-138-gc7a8121be8ef
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-5.2.y
+In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
+References: <20191006171209.403038733@linuxfoundation.org>
+Subject: Re: [PATCH 5.2 000/137] 5.2.20-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 02:38:17AM +0300, Jarkko Sakkinen wrote:
-> On Fri, Oct 04, 2019 at 09:52:21PM +0300, Jarkko Sakkinen wrote:
-> > On Thu, Oct 03, 2019 at 05:15:00PM -0700, Sean Christopherson wrote:
-> > > I'll tackle this tomorrow.  I've been working on the feature control MSR
-> > > series and will get that sent out tomorrow as well.  I should also be able
-> > > to get you the multi-page EADD patch.
-> > 
-> > Great I'll compose the patch set during the weekend and take Monday off
-> > so you have the full work day to get everything (probably send the patch
-> > set on Sunday).
-> 
-> I don't see why the multipage version could not be ioctl of its own and
-> ioctl's can then use the same internals. Having a single page version
-> does not cause any kind of bottleneck really.
-> 
-> Thus, sending now v23 based on these conclusions.
+stable-rc/linux-5.2.y boot: 62 boots: 0 failed, 61 passed with 1 untried/un=
+known (v5.2.19-138-gc7a8121be8ef)
 
-Sure, you can argue it is redudant but I see it as a nice convenience
-for simple stuff that does not really hurt at all.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.2.y/kernel/v5.2.19-138-gc7a8121be8ef/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
+/kernel/v5.2.19-138-gc7a8121be8ef/
 
-/Jarkko
+Tree: stable-rc
+Branch: linux-5.2.y
+Git Describe: v5.2.19-138-gc7a8121be8ef
+Git Commit: c7a8121be8ef67066e07c79b2204dea12511b17b
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 43 unique boards, 16 SoC families, 12 builds out of 209
+
+Boot Regressions Detected:
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          meson-gxl-s805x-p241:
+              lab-baylibre: new failure (last pass: v5.2.19-133-ga4c5f9f597=
+86)
+
+---
+For more info write to <info@kernelci.org>
