@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB30C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F5EECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A66D21835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46BF21835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382783;
-	bh=QKRCG8f/z7TmRpXy/oFC4HCqvZVx9ImvcBK7A1PeQ10=;
+	s=default; t=1570382786;
+	bh=6ns37Ob8BZRTnowWqkz997jdBf9E9CsNqMDuyBEwcRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ri/5fdNd9l1kSx/FuKckmX/jiOEjg5aMDyTTb0M+1lX2vSfgAja1WPvdXik4zVRUu
-	 dJzaPTyIQNmPcz2l985ph5/vYIuGKquHTBcLthjfeCYlN5mK7Dv/SqyWFD6MHaXtme
-	 M6XYEcuo0BUyYC9WnMv1cy6c2BgM6WiDXgCxDMlY=
+	b=vj3Gos0p15lLgmLQML6GVSu4KsoYkAlrLi9g4NyJv6ebdoAwB8EK1U2hA14KqqZfE
+	 NwuPQ4CH8q6LHGNtDFKs92ZAZIlO+PaRkBaZWHwRr7sehe5+AF3hFlMXxQOELnCndp
+	 YR1rr+a7oqsQWLx/ik8QnIkmecZseaiCYXfbe1w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfJFR0W (ORCPT
+        id S1728281AbfJFR00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:26:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfJFR0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:26:19 -0400
+        id S1726514AbfJFR0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:26:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F300C2080F;
-        Sun,  6 Oct 2019 17:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A70D2080F;
+        Sun,  6 Oct 2019 17:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382778;
-        bh=QKRCG8f/z7TmRpXy/oFC4HCqvZVx9ImvcBK7A1PeQ10=;
+        s=default; t=1570382783;
+        bh=6ns37Ob8BZRTnowWqkz997jdBf9E9CsNqMDuyBEwcRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMVc0OUZXiu083lTRy9/0lvf/TW3bPXkCSFNI/KVJ+VYNuKCSnaxjj4Fdc/NM/S0I
-         CrafPORzC8l4bVsZQfEReifnzaCxs3Eb7wgamEYDjluEdzrjoR+rycxQ9kc/7SXaWg
-         RAB8fy5vTPp2bEoeZ1qzoNzol+kOsXBJBNukNyVE=
+        b=v4z/OxHEPO69EjKe4s+35K9431zLSYEP8M5DN+ULJyAwJ8yRWPNXxhY4dM+FyOuZq
+         oVwnhX5SuRZndVDztSSZenekjAw/FU3Xt+CvPQiZleN2Ob1ZsfxCCUlF88zlT7E1mM
+         bHsZROBEqttg+fpajDmI3Oy0WPCmDpK2CMDeVk7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/68] rtc: snvs: fix possible race condition
-Date:   Sun,  6 Oct 2019 19:21:11 +0200
-Message-Id: <20191006171124.973127408@linuxfoundation.org>
+Subject: [PATCH 4.14 05/68] drm/panel: simple: fix AUO g185han01 horizontal blanking
+Date:   Sun,  6 Oct 2019 19:20:41 +0200
+Message-Id: <20191006171111.113263768@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -61,55 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
+[ Upstream commit f8c6bfc612b56f02e1b8fae699dff12738aaf889 ]
 
-The RTC IRQ is requested before the struct rtc_device is allocated,
-this may lead to a NULL pointer dereference in IRQ handler.
+The horizontal blanking periods are too short, as the values are
+specified for a single LVDS channel. Since this panel is dual LVDS
+they need to be doubled. With this change the panel reaches its
+nominal vrefresh rate of 60Fps, instead of the 64Fps with the
+current wrong blanking.
 
-To fix this issue, allocating the rtc_device struct before requesting
-the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
-to register the RTC device.
+Philipp Zabel added:
+The datasheet specifies 960 active clocks + 40/128/160 clocks blanking
+on each of the two LVDS channels (min/typical/max), so doubled this is
+now correct.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1562764060.23869.12.camel@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-snvs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-index 71eee39520f0b..7aa2c5ea0de4f 100644
---- a/drivers/rtc/rtc-snvs.c
-+++ b/drivers/rtc/rtc-snvs.c
-@@ -280,6 +280,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	data->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(data->rtc))
-+		return PTR_ERR(data->rtc);
-+
- 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
- 
- 	if (IS_ERR(data->regmap)) {
-@@ -342,10 +346,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 		goto error_rtc_device_register;
- 	}
- 
--	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
--					&snvs_rtc_ops, THIS_MODULE);
--	if (IS_ERR(data->rtc)) {
--		ret = PTR_ERR(data->rtc);
-+	data->rtc->ops = &snvs_rtc_ops;
-+	ret = rtc_register_device(data->rtc);
-+	if (ret) {
- 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
- 		goto error_rtc_device_register;
- 	}
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 7a0fd4e4e78d5..c1daed3fe8428 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -614,9 +614,9 @@ static const struct panel_desc auo_g133han01 = {
+ static const struct display_timing auo_g185han01_timings = {
+ 	.pixelclock = { 120000000, 144000000, 175000000 },
+ 	.hactive = { 1920, 1920, 1920 },
+-	.hfront_porch = { 18, 60, 74 },
+-	.hback_porch = { 12, 44, 54 },
+-	.hsync_len = { 10, 24, 32 },
++	.hfront_porch = { 36, 120, 148 },
++	.hback_porch = { 24, 88, 108 },
++	.hsync_len = { 20, 48, 64 },
+ 	.vactive = { 1080, 1080, 1080 },
+ 	.vfront_porch = { 6, 10, 40 },
+ 	.vback_porch = { 2, 5, 20 },
 -- 
 2.20.1
 
