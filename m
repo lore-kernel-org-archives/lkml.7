@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BF1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E3DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CE920700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B40020673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384392;
-	bh=GDnE7TWM084jLv/9o7QScr1HLC3+SE6bcqhm2DZWlOs=;
+	s=default; t=1570384397;
+	bh=GW+r+Rf5qHmzeTuPacvUbQairqdtetqEGa1SdIDAQAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9GrMZKsMPVa5LwuSUOc8odW/c7N/BALqTPPKLToDueFUneqZnJLzIKjTYWjPaaw5
-	 DWVy3vHmZt8+Q9v9xF9A+nR5AZNacO9FCn6AHRDh4HlhNxJkBDRehEcwlbDPVFJ8pr
-	 75Nkaq0XUDmvaJDMLq/ycpy1z7V0iLoHP4XKjzp8=
+	b=IrfZhjyBMEwjl916aSf5tPdtGlvPIp4Bim6m4Aly3zYSHOKmaU+lThccnTzzcDfQA
+	 McojzJdm4D5N7kUIRS8Cr1FTyHWsoWBlxJwnCJ5SDuwcu+qVueemNYdpzA8rlaamCf
+	 pM5qq2HwAl2YMFcE6nDmbQJ92fpO7hcz3uQ+zevo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfJFRiT (ORCPT
+        id S1727680AbfJFRxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37430 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:53:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbfJFRiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:15 -0400
+        id S1730557AbfJFRiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:38:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 594452080F;
-        Sun,  6 Oct 2019 17:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911182053B;
+        Sun,  6 Oct 2019 17:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383494;
-        bh=GDnE7TWM084jLv/9o7QScr1HLC3+SE6bcqhm2DZWlOs=;
+        s=default; t=1570383492;
+        bh=GW+r+Rf5qHmzeTuPacvUbQairqdtetqEGa1SdIDAQAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QOm4AQpcLxcHBOuAGVk6/JbHi8OikgCsYvdBpmy6KoYQFvIPfupObU1NmXk1Idy2+
-         G5u/mfO00buZg1QZCvxfsGAUXCF4cL9kNwL00bBEbhFfchAFC1k2DUwLJzRqaXWRVI
-         aPWVu0fAT8Jr/n8E7AXI4A7J6j/izqKHPsAIhFJ8=
+        b=00EV2UsVxInUAlUKEUPzr6NPDLFwUQxiE1HdYb99vHiqYk17PGeTYLmfZkL4I0f8S
+         3oBqfANfV+9DafqB5VsNuF/6jE2PKdVSsg1BoroFjlLKS86fQY6WhkD/iivHXzfxxH
+         9vTfR/g+eHWHDkrlpvURicc4dGVpHz4EMyi/FMjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changwei Ge <gechangwei@live.cn>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 123/137] ocfs2: wait for recovering done after direct unlock request
-Date:   Sun,  6 Oct 2019 19:21:47 +0200
-Message-Id: <20191006171219.541645995@linuxfoundation.org>
+Subject: [PATCH 5.2 087/137] dma-buf/sw_sync: Synchronize signal vs syncpt free
+Date:   Sun,  6 Oct 2019 19:21:11 +0200
+Message-Id: <20191006171216.070601806@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -65,92 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <gechangwei@live.cn>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
+[ Upstream commit d3c6dd1fb30d3853c2012549affe75c930f4a2f9 ]
 
-There is a scenario causing ocfs2 umount hang when multiple hosts are
-rebooting at the same time.
+During release of the syncpt, we remove it from the list of syncpt and
+the tree, but only if it is not already been removed. However, during
+signaling, we first remove the syncpt from the list. So, if we
+concurrently free and signal the syncpt, the free may decide that it is
+not part of the tree and immediately free itself -- meanwhile the
+signaler goes on to use the now freed datastructure.
 
-NODE1                           NODE2               NODE3
-send unlock requset to NODE2
-                                dies
-                                                    become recovery master
-                                                    recover NODE2
-find NODE2 dead
-mark resource RECOVERING
-directly remove lock from grant list
-calculate usage but RECOVERING marked
-**miss the window of purging
-clear RECOVERING
+In particular, we get struck by commit 0e2f733addbf ("dma-buf: make
+dma_fence structure a bit smaller v2") as the cb_list is immediately
+clobbered by the kfree_rcu.
 
-To reproduce this issue, crash a host and then umount ocfs2
-from another node.
+v2: Avoid calling into timeline_fence_release() from under the spinlock
 
-To solve this, just let unlock progress wait for recovery done.
-
-Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
-Signed-off-by: Changwei Ge <gechangwei@live.cn>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111381
+Fixes: d3862e44daa7 ("dma-buf/sw-sync: Fix locking around sync_timeline lists")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Gustavo Padovan <gustavo@padovan.org>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: <stable@vger.kernel.org> # v4.14+
+Acked-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190812154247.20508-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/dma-buf/sw_sync.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
-index e78657742bd89..3883633e82eb9 100644
---- a/fs/ocfs2/dlm/dlmunlock.c
-+++ b/fs/ocfs2/dlm/dlmunlock.c
-@@ -90,7 +90,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 	enum dlm_status status;
- 	int actions = 0;
- 	int in_use;
--        u8 owner;
-+	u8 owner;
-+	int recovery_wait = 0;
+diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
+index 051f6c2873c7a..6713cfb1995c6 100644
+--- a/drivers/dma-buf/sw_sync.c
++++ b/drivers/dma-buf/sw_sync.c
+@@ -132,17 +132,14 @@ static void timeline_fence_release(struct dma_fence *fence)
+ {
+ 	struct sync_pt *pt = dma_fence_to_sync_pt(fence);
+ 	struct sync_timeline *parent = dma_fence_parent(fence);
++	unsigned long flags;
  
- 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
- 	     flags & LKM_VALBLK);
-@@ -193,9 +194,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 		}
- 		if (flags & LKM_CANCEL)
- 			lock->cancel_pending = 0;
--		else
--			lock->unlock_pending = 0;
++	spin_lock_irqsave(fence->lock, flags);
+ 	if (!list_empty(&pt->link)) {
+-		unsigned long flags;
 -
-+		else {
-+			if (!lock->unlock_pending)
-+				recovery_wait = 1;
-+			else
-+				lock->unlock_pending = 0;
-+		}
+-		spin_lock_irqsave(fence->lock, flags);
+-		if (!list_empty(&pt->link)) {
+-			list_del(&pt->link);
+-			rb_erase(&pt->node, &parent->pt_tree);
+-		}
+-		spin_unlock_irqrestore(fence->lock, flags);
++		list_del(&pt->link);
++		rb_erase(&pt->node, &parent->pt_tree);
  	}
++	spin_unlock_irqrestore(fence->lock, flags);
  
- 	/* get an extra ref on lock.  if we are just switching
-@@ -229,6 +233,17 @@ leave:
- 	spin_unlock(&res->spinlock);
- 	wake_up(&res->wq);
- 
-+	if (recovery_wait) {
-+		spin_lock(&res->spinlock);
-+		/* Unlock request will directly succeed after owner dies,
-+		 * and the lock is already removed from grant list. We have to
-+		 * wait for RECOVERING done or we miss the chance to purge it
-+		 * since the removement is much faster than RECOVERING proc.
-+		 */
-+		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
-+		spin_unlock(&res->spinlock);
-+	}
-+
- 	/* let the caller's final dlm_lock_put handle the actual kfree */
- 	if (actions & DLM_UNLOCK_FREE_LOCK) {
- 		/* this should always be coupled with list removal */
+ 	sync_timeline_put(parent);
+ 	dma_fence_free(fence);
+@@ -265,7 +262,8 @@ static struct sync_pt *sync_pt_create(struct sync_timeline *obj,
+ 				p = &parent->rb_left;
+ 			} else {
+ 				if (dma_fence_get_rcu(&other->base)) {
+-					dma_fence_put(&pt->base);
++					sync_timeline_put(obj);
++					kfree(pt);
+ 					pt = other;
+ 					goto unlock;
+ 				}
 -- 
 2.20.1
 
