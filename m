@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA07C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B933ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AB420862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CADE21841
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382611;
-	bh=FQnyGHniUWZ8WUPvO966/aKiYAgXuWbjg5v6j5e9C98=;
+	s=default; t=1570382614;
+	bh=v1uxMpEy4OhIiDtMAhQTqznuWJsOzOI/p4DPGLEgCXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zIa92CsCmeKj+ncHPt974bi+oMWkLXFhiG00PZwrhGK4fl4J59pKXPMZUe/h3BYNH
-	 r0OInwUH8diUF18oaFtdzfGkEbfCQt82Qw4QBfDdjIzWyfMGFeofzFILPhriXiWxuo
-	 VSjVSccROeurFVBGAewaqjj4GWbMZWBSIGyfve/c=
+	b=xCpt1XfxcdqnQhvnZihKwezs6QWG8dwbParHSQU7h4Pgz5YeUB6XXCjxem+DY4CWs
+	 fSyTXAoPGJJYHvs5RiqfyDXPPhYY7zFrClVgNuROV5V0HOcG0M1CTm4eAbfJ1kKCIE
+	 wKcGpLO3RI+aUkhfne7/Ceknkoovgdw6UDHijJjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfJFRXa (ORCPT
+        id S1727632AbfJFRXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48052 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbfJFRX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:23:29 -0400
+        id S1727602AbfJFRXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:23:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C2F82077B;
-        Sun,  6 Oct 2019 17:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E473D2077B;
+        Sun,  6 Oct 2019 17:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382608;
-        bh=FQnyGHniUWZ8WUPvO966/aKiYAgXuWbjg5v6j5e9C98=;
+        s=default; t=1570382611;
+        bh=v1uxMpEy4OhIiDtMAhQTqznuWJsOzOI/p4DPGLEgCXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dl5f/R2WcWKdIoBc/3VvGIDbbX4BN4o1ZqPEgriY1Wtl7tblTxwv5aCbJrYbKQP6i
-         SlAH0ZW68xiBfPT9DpA5l1wWbGfQTut/rkTg9z+cB4woFHUrUoBsrrzcO0W+zsvZKu
-         66ZR3yrn3hrZrTjM66jI0P7aCnEz23tPU/jg+p7A=
+        b=FkaxiT7YAmY7BbYey4uqau3wUjnJgj7dJCapVf38JFrmE3IRSdOEor+cDZgQXsq7j
+         ZbLmFQYTRgQWItNt6iLGKpP7n6WkPIvVYgTNAZR8d8z6BU4qtuCXoK5p6+fJMaaIqo
+         gee7aQKfrvoM5faDAk//Jn0x51y8+jJy8qfsvRkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Orion Hodson <oth@google.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/47] PCI: tegra: Fix OF node reference leak
-Date:   Sun,  6 Oct 2019 19:21:08 +0200
-Message-Id: <20191006172018.007602590@linuxfoundation.org>
+Subject: [PATCH 4.9 22/47] ARM: 8898/1: mm: Dont treat faults reported from cache maintenance as writes
+Date:   Sun,  6 Oct 2019 19:21:09 +0200
+Message-Id: <20191006172018.061722941@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -60,99 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
+[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
 
-Each iteration of for_each_child_of_node() executes of_node_put() on the
-previous node, but in some return paths in the middle of the loop
-of_node_put() is missing thus causing a reference leak.
+Translation faults arising from cache maintenance instructions are
+rather unhelpfully reported with an FSR value where the WnR field is set
+to 1, indicating that the faulting access was a write. Since cache
+maintenance instructions on 32-bit ARM do not require any particular
+permissions, this can cause our private 'cacheflush' system call to fail
+spuriously if a translation fault is generated due to page aging when
+targetting a read-only VMA.
 
-Hence stash these mid-loop return values in a variable 'err' and add a
-new label err_node_put which executes of_node_put() on the previous node
-and returns 'err' on failure.
+In this situation, we will return -EFAULT to userspace, although this is
+unfortunately suppressed by the popular '__builtin___clear_cache()'
+intrinsic provided by GCC, which returns void.
 
-Change mid-loop return statements to point to jump to this label to
-fix the reference leak.
+Although it's tempting to write this off as a userspace issue, we can
+actually do a little bit better on CPUs that support LPAE, even if the
+short-descriptor format is in use. On these CPUs, cache maintenance
+faults additionally set the CM field in the FSR, which we can use to
+suppress the write permission checks in the page fault handler and
+succeed in performing cache maintenance to read-only areas even in the
+presence of a translation fault.
 
-Issue found with Coccinelle.
-
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-[lorenzo.pieralisi@arm.com: rewrote commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reported-by: Orion Hodson <oth@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-tegra.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ arch/arm/mm/fault.c | 4 ++--
+ arch/arm/mm/fault.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-index 8dfccf7332411..8e101b19c4d6f 100644
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -1898,14 +1898,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		err = of_pci_get_devfn(port);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index 5ca207ada8524..2539c8f9fb3fa 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -214,7 +214,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
+ {
+ 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
  
- 		index = PCI_SLOT(err);
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		mask = VM_WRITE;
+ 	if (fsr & FSR_LNX_PF)
+ 		mask = VM_EXEC;
+@@ -284,7 +284,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
  
- 		if (index < 1 || index > soc->num_ports) {
- 			dev_err(dev, "invalid port number: %d\n", index);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		flags |= FAULT_FLAG_WRITE;
  
- 		index--;
-@@ -1914,12 +1915,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse # of lanes: %d\n",
- 				err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		if (value > 16) {
- 			dev_err(dev, "invalid # of lanes: %u\n", value);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		lanes |= value << (index << 3);
-@@ -1933,13 +1935,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		lane += value;
- 
- 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
--		if (!rp)
--			return -ENOMEM;
-+		if (!rp) {
-+			err = -ENOMEM;
-+			goto err_node_put;
-+		}
- 
- 		err = of_address_to_resource(port, 0, &rp->regs);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		INIT_LIST_HEAD(&rp->list);
-@@ -1966,6 +1970,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		return err;
- 
- 	return 0;
-+
-+err_node_put:
-+	of_node_put(port);
-+	return err;
- }
- 
- /*
+ 	/*
+diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
+index afc1f84e763b2..9bc272642d55a 100644
+--- a/arch/arm/mm/fault.h
++++ b/arch/arm/mm/fault.h
+@@ -5,6 +5,7 @@
+  * Fault status register encodings.  We steal bit 31 for our own purposes.
+  */
+ #define FSR_LNX_PF		(1 << 31)
++#define FSR_CM			(1 << 13)
+ #define FSR_WRITE		(1 << 11)
+ #define FSR_FS4			(1 << 10)
+ #define FSR_FS3_0		(15)
 -- 
 2.20.1
 
