@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABE7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4980ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF00A2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB85D2173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384508;
-	bh=35T8UIzRCNiDttKKFdbMJmiuJrtXjpVVa+1qrFBi4Vo=;
+	s=default; t=1570384511;
+	bh=BH/a5c+bXXYLg/uA0RRJfRa6LSxsadgUgOffxgQNYPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMtCKEIfDDsBSJTkMbr3tiMOIw7ZBNjsPRaDioERjk0VLNxYWKjWgkpQlQu7CU15J
-	 e6yR5wzCeC1l0fOQ6qni2/Jx/YMebPNHJdjb3ajMoMnEVtC+WWL+XEZSdSl+nAa1LM
-	 hULcOfpbTdEQlCiD3+/tQY3StCt3bSFU+Epq/BSA=
+	b=Ms/lOcbZcO8NGxTeWu/FLjj+fva8MugMNWnAODbm82x8iSsUvSugEVFWDMr9ZzmjS
+	 owstPjzt/4GuKIf9cMS2zojUSXqlKXFpicgjdcyfMsvVSxVJ9CwJhR+nZFybJStQzC
+	 fV2POqou3gDqMI+7SxJ4QG0MtS+Q81qiGT0999co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfJFRzI (ORCPT
+        id S1729552AbfJFRzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfJFRy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727101AbfJFRy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:54:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D33C32247A;
-        Sun,  6 Oct 2019 17:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C842077B;
+        Sun,  6 Oct 2019 17:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383995;
-        bh=35T8UIzRCNiDttKKFdbMJmiuJrtXjpVVa+1qrFBi4Vo=;
+        s=default; t=1570383965;
+        bh=BH/a5c+bXXYLg/uA0RRJfRa6LSxsadgUgOffxgQNYPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbCGLDAciGvHzQgp81pYY1BN/lcFQ0DyTvYJ9mNJcN41t2tVomlTMYWgQ7JRI0L3L
-         gJP1hdqwpdkQHzYvYJi8eurWFYNqPs0fOahuDukGs4t5jo5xHzREETMA3VPI/uAZGm
-         O2+ni9NrRoa/qdI0v7HBGMKS9x783kxAwrvymct0=
+        b=GQfLimJ5aC0pLiFBUaKmxAkvQO0ShxEPSEBJIfEqOPmWypLb/uqXvAf+Jh+zA0DCW
+         Oh6mGxwZRSSlV4mYEAWoxoWUCWYBQ2u9ZEPGkM8COwhhUyJA3nzDKPtmVUQY6SO4cz
+         7v53pdX67adRTVueXiiWvfA00Hf8QELHZdQVeLq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 136/166] net: Unpublish sk from sk_reuseport_cb before call_rcu
-Date:   Sun,  6 Oct 2019 19:21:42 +0200
-Message-Id: <20191006171224.590814877@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.3 160/166] dm raid: fix updating of max_discard_sectors limit
+Date:   Sun,  6 Oct 2019 19:22:06 +0200
+Message-Id: <20191006171226.329297991@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -60,59 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 8c7138b33e5c690c308b2a7085f6313fdcb3f616 ]
+commit c8156fc77d0796ba2618936dbb3084e769e916c1 upstream.
 
-The "reuse->sock[]" array is shared by multiple sockets.  The going away
-sk must unpublish itself from "reuse->sock[]" before making call_rcu()
-call.  However, this unpublish-action is currently done after a grace
-period and it may cause use-after-free.
+Unit of 'chunk_size' is byte, instead of sector, so fix it by setting
+the queue_limits' max_discard_sectors to rs->md.chunk_sectors.  Also,
+rename chunk_size to chunk_size_bytes.
 
-The fix is to move reuseport_detach_sock() to sk_destruct().
-Due to the above reason, any socket with sk_reuseport_cb has
-to go through the rcu grace period before freeing it.
+Without this fix, too big max_discard_sectors is applied on the request
+queue of dm-raid, finally raid code has to split the bio again.
 
-It is a rather old bug (~3 yrs).  The Fixes tag is not necessary
-the right commit but it is the one that introduced the SOCK_RCU_FREE
-logic and this fix is depending on it.
+This re-split done by raid causes the following nested clone_endio:
 
-Fixes: a4298e4522d6 ("net: add SOCK_RCU_FREE socket flag")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+1) one big bio 'A' is submitted to dm queue, and served as the original
+bio
+
+2) one new bio 'B' is cloned from the original bio 'A', and .map()
+is run on this bio of 'B', and B's original bio points to 'A'
+
+3) raid code sees that 'B' is too big, and split 'B' and re-submit
+the remainded part of 'B' to dm-raid queue via generic_make_request().
+
+4) now dm will handle 'B' as new original bio, then allocate a new
+clone bio of 'C' and run .map() on 'C'. Meantime C's original bio
+points to 'B'.
+
+5) suppose now 'C' is completed by raid directly, then the following
+clone_endio() is called recursively:
+
+	clone_endio(C)
+		->clone_endio(B)		#B is original bio of 'C'
+			->bio_endio(A)
+
+'A' can be big enough to make hundreds of nested clone_endio(), then
+stack can be corrupted easily.
+
+Fixes: 61697a6abd24a ("dm: eliminate 'split_discard_bios' flag from DM target interface")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/sock.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1700,8 +1700,6 @@ static void __sk_destruct(struct rcu_hea
- 		sk_filter_uncharge(sk, filter);
- 		RCU_INIT_POINTER(sk->sk_filter, NULL);
- 	}
--	if (rcu_access_pointer(sk->sk_reuseport_cb))
--		reuseport_detach_sock(sk);
- 
- 	sock_disable_timestamp(sk, SK_FLAGS_TIMESTAMP);
- 
-@@ -1728,7 +1726,14 @@ static void __sk_destruct(struct rcu_hea
- 
- void sk_destruct(struct sock *sk)
+---
+ drivers/md/dm-raid.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3738,18 +3738,18 @@ static int raid_iterate_devices(struct d
+ static void raid_io_hints(struct dm_target *ti, struct queue_limits *limits)
  {
--	if (sock_flag(sk, SOCK_RCU_FREE))
-+	bool use_call_rcu = sock_flag(sk, SOCK_RCU_FREE);
-+
-+	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
-+		reuseport_detach_sock(sk);
-+		use_call_rcu = true;
-+	}
-+
-+	if (use_call_rcu)
- 		call_rcu(&sk->sk_rcu, __sk_destruct);
- 	else
- 		__sk_destruct(&sk->sk_rcu);
+ 	struct raid_set *rs = ti->private;
+-	unsigned int chunk_size = to_bytes(rs->md.chunk_sectors);
++	unsigned int chunk_size_bytes = to_bytes(rs->md.chunk_sectors);
+ 
+-	blk_limits_io_min(limits, chunk_size);
+-	blk_limits_io_opt(limits, chunk_size * mddev_data_stripes(rs));
++	blk_limits_io_min(limits, chunk_size_bytes);
++	blk_limits_io_opt(limits, chunk_size_bytes * mddev_data_stripes(rs));
+ 
+ 	/*
+ 	 * RAID1 and RAID10 personalities require bio splitting,
+ 	 * RAID0/4/5/6 don't and process large discard bios properly.
+ 	 */
+ 	if (rs_is_raid1(rs) || rs_is_raid10(rs)) {
+-		limits->discard_granularity = chunk_size;
+-		limits->max_discard_sectors = chunk_size;
++		limits->discard_granularity = chunk_size_bytes;
++		limits->max_discard_sectors = rs->md.chunk_sectors;
+ 	}
+ }
+ 
 
 
