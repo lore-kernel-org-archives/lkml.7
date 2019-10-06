@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A861C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACBFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255722053B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A472053B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384084;
-	bh=Wk4nPLxqKbyr+4wrsBpGefst6njL/ETV2Bw+Kk2IN90=;
+	s=default; t=1570384096;
+	bh=hAUa0TrWfb4X363IN8Z1okqGk+klZDY+uWc9BkkRJr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MOj+lijx+Wb8CljEnKuU/lW5qYe9ZaLSUWtHoQuwVBhay6yyg0kqPoflXckRpELUx
-	 iZbczIz+lPEmSNIBOixL+vHQ1Xt6GekpBxB99jkuQI15IlbcGQJY4P2XtwHQm0ZjQp
-	 m5lqReLnhq4QHzJn4AHLoEFQcYHPZ/mBjTNL1NG0=
+	b=OXXaoWdHDE63ULKUul4pt9DIGHC16BFQbxrvd3Fwd8u6XXNpnt2W+jN5DHOPlAs3n
+	 poIU1/I3O3EgRudKmMu3GTpUwsXwrsj9BVreAjhGhQqguzN31Cr9zujuLULQFDVBoQ
+	 4Q52g83o/33I+R/lge2K1TV3yenPac0Ul3adzI3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbfJFRr7 (ORCPT
+        id S1730847AbfJFRsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:47:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731081AbfJFRoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:44:17 -0400
+        id S1731589AbfJFRnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:43:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4D920700;
-        Sun,  6 Oct 2019 17:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A9C2080F;
+        Sun,  6 Oct 2019 17:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383857;
-        bh=Wk4nPLxqKbyr+4wrsBpGefst6njL/ETV2Bw+Kk2IN90=;
+        s=default; t=1570383833;
+        bh=hAUa0TrWfb4X363IN8Z1okqGk+klZDY+uWc9BkkRJr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJ1puECRoIcd+FrFA8SGucMZ6EUKY61KCtCSawUNl5iewPSX/kWrA7f5lLRhnTEt6
-         g4MeZZ6fApymsN42IiWBFV4R+/CqKt1ty2husDThs5BqOJMH1FmDZIpkVAwoEMgvL5
-         uqWJTT8KpNcArUMnjPSgT1VkLxvMTycTXgyxUXYM=
+        b=QuHNWta3vn368odS+TncBu7rLS/FUSJka8Wk6m3rCglieoLnMYfvn0Kj12srMAJ+f
+         4VtA91SQW3dF1SuVjmIaCGDKSp3yYhejL6bjQrFn47CDJlvcQ7mEwiIF+TB3bzDLHH
+         Qg25wUocHH/lYusZ1WxrlWotov24GksbTpZVqZsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 120/166] mm: add dummy can_do_mlock() helper
-Date:   Sun,  6 Oct 2019 19:21:26 +0200
-Message-Id: <20191006171223.408924054@linuxfoundation.org>
+Subject: [PATCH 5.3 112/166] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
+Date:   Sun,  6 Oct 2019 19:21:18 +0200
+Message-Id: <20191006171222.815356851@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -66,50 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mike Rapoport <mike.rapoport@gmail.com>
 
-[ Upstream commit 710ec38b0f633ab3e2581f07a73442d809e28ab0 ]
+[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
 
-On kernels without CONFIG_MMU, we get a link error for the siw driver:
+The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
+bank 0 starts from a PMD-aligned address. However, the beginning of the
+first bank may be NOMAP memory and the start of usable memory
+will be not aligned to PMD boundary. In such case the memblock_limit will
+be set to the end of the NOMAP region, which will prevent any memblock
+allocations.
 
-drivers/infiniband/sw/siw/siw_mem.o: In function `siw_umem_get':
-siw_mem.c:(.text+0x4c8): undefined reference to `can_do_mlock'
+Mark the region between the end of the NOMAP area and the next PMD-aligned
+address as NOMAP as well, so that the usable memory will start at
+PMD-aligned address.
 
-This is probably not the only driver that needs the function and could
-otherwise build correctly without CONFIG_MMU, so add a dummy variant that
-always returns false.
-
-Link: http://lkml.kernel.org/r/20190909204201.931830-1-arnd@arndb.de
-Fixes: 2251334dcac9 ("rdma/siw: application buffer management")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Bernard Metzler <bmt@zurich.ibm.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mm/mmu.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0334ca97c584d..fe4552e1c40b4 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1405,7 +1405,11 @@ extern void pagefault_out_of_memory(void);
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index d9a0038774a6d..d5e0b908f0bad 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1177,6 +1177,22 @@ void __init adjust_lowmem_bounds(void)
+ 	 */
+ 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
  
- extern void show_free_areas(unsigned int flags, nodemask_t *nodemask);
- 
-+#ifdef CONFIG_MMU
- extern bool can_do_mlock(void);
-+#else
-+static inline bool can_do_mlock(void) { return false; }
-+#endif
- extern int user_shm_lock(size_t, struct user_struct *);
- extern void user_shm_unlock(size_t, struct user_struct *);
- 
++	/*
++	 * The first usable region must be PMD aligned. Mark its start
++	 * as MEMBLOCK_NOMAP if it isn't
++	 */
++	for_each_memblock(memory, reg) {
++		if (!memblock_is_nomap(reg)) {
++			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
++				phys_addr_t len;
++
++				len = round_up(reg->base, PMD_SIZE) - reg->base;
++				memblock_mark_nomap(reg->base, len);
++			}
++			break;
++		}
++	}
++
+ 	for_each_memblock(memory, reg) {
+ 		phys_addr_t block_start = reg->base;
+ 		phys_addr_t block_end = reg->base + reg->size;
 -- 
 2.20.1
 
