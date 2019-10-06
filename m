@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBEEC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76B7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965A020867
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9F62166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 10:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfJFKdB (ORCPT
+        id S1726876AbfJFKdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 06:33:01 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3209 "EHLO huawei.com"
+        Sun, 6 Oct 2019 06:33:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43662 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726826AbfJFKc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 06:32:57 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 65E1162F2BF2303E363C;
+        id S1726827AbfJFKc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 06:32:58 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 97380DE482CC9E32676D;
         Sun,  6 Oct 2019 18:32:55 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
- 18:32:45 +0800
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sun, 6 Oct 2019
+ 18:32:48 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
         <joel@jms.id.au>, <andrew@aj.id.au>, <nicolas.ferre@microchip.com>,
@@ -46,9 +46,9 @@ CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-tegra@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 13/34] rtc: jz4740: use devm_platform_ioremap_resource() to simplify code
-Date:   Sun, 6 Oct 2019 18:29:32 +0800
-Message-ID: <20191006102953.57536-14-yuehaibing@huawei.com>
+Subject: [PATCH -next 14/34] rtc: lpc24xx: use devm_platform_ioremap_resource() to simplify code
+Date:   Sun, 6 Oct 2019 18:29:33 +0800
+Message-ID: <20191006102953.57536-15-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191006102953.57536-1-yuehaibing@huawei.com>
 References: <20191006102953.57536-1-yuehaibing@huawei.com>
@@ -66,30 +66,29 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/rtc/rtc-jz4740.c | 4 +---
+ drivers/rtc/rtc-lpc24xx.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 3089645..18023e4 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -307,7 +307,6 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
+diff --git a/drivers/rtc/rtc-lpc24xx.c b/drivers/rtc/rtc-lpc24xx.c
+index a8bb156..00ef16b 100644
+--- a/drivers/rtc/rtc-lpc24xx.c
++++ b/drivers/rtc/rtc-lpc24xx.c
+@@ -194,15 +194,13 @@ static const struct rtc_class_ops lpc24xx_rtc_ops = {
+ static int lpc24xx_rtc_probe(struct platform_device *pdev)
  {
- 	int ret;
- 	struct jz4740_rtc *rtc;
--	struct resource *mem;
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
- 	const struct of_device_id *of_id = of_match_device(
- 			jz4740_rtc_of_match, &pdev->dev);
-@@ -326,8 +325,7 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
- 	if (rtc->irq < 0)
- 		return -ENOENT;
+ 	struct lpc24xx_rtc *rtc;
+-	struct resource *res;
+ 	int irq, ret;
  
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	rtc->base = devm_ioremap_resource(&pdev->dev, mem);
-+	rtc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rtc->base))
- 		return PTR_ERR(rtc->base);
+ 	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+ 	if (!rtc)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	rtc->rtc_base = devm_ioremap_resource(&pdev->dev, res);
++	rtc->rtc_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rtc->rtc_base))
+ 		return PTR_ERR(rtc->rtc_base);
  
 -- 
 2.7.4
