@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68987C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C522C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3818E2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309B521479
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383102;
-	bh=XjRzfQOC8cj7/J/AH0SqkxazC1NYpjmNDLJsQklIF1Q=;
+	s=default; t=1570383106;
+	bh=JpYnaaRnpqG1IJ9LpF43Ky4t2CfiGETqsYi76zPHC88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LTvh2IddpdrSpnnhPcvYeiPKN8klSiIKdPyaG5da8/8uumcLSWYPcMCEF0jaLs5Kd
-	 FwD/3wypTIqtYKMRiZdw3xx28xY5l8V+claHu2qmk7leUVkGT9V+SY4muV9hDzp7nn
-	 Tg+t+tqYeT2Ylf+/b51JO4kjoEmVnc7BVjsMHbRE=
+	b=vzxvnM/enDkEWq6750dbk19eaBk8WrRZJjAf9OwV8BpS2QwbFNUFsb5IWy3mRwVZX
+	 vctt6V8dVOu4UhT5gbLB2jsv4gDYk8SonWGd+hDCR8j5Oegy5DxP6kdCmq8GBjswa4
+	 PHax81bby+j+NcAKbMC/kmEuNkvRMIOKRj4CaI30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbfJFRbl (ORCPT
+        id S1729487AbfJFRbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:31:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57912 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbfJFRbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:31:38 -0400
+        id S1729467AbfJFRbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:31:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E77BB214D9;
-        Sun,  6 Oct 2019 17:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F0A2087E;
+        Sun,  6 Oct 2019 17:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383097;
-        bh=XjRzfQOC8cj7/J/AH0SqkxazC1NYpjmNDLJsQklIF1Q=;
+        s=default; t=1570383100;
+        bh=JpYnaaRnpqG1IJ9LpF43Ky4t2CfiGETqsYi76zPHC88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NuXSllGWiif9jaK1x/OP2CcRW1iOq8VlAoWDXzc4J/VPrL+L4jB/7ncYH9RopSpw3
-         zE79Daxe1BRmLW57utSZeHpk8kFYBJ0DH/rJKoBafuYgRlqIox06UCbv5RapE5ep2z
-         b0TQRXmrTZAeXphhQs0AEgBGZ0EUnS35yxLifiuQ=
+        b=a7O6W5dSXPbSKfiMKeR3+zfkflS/yMdEay4OqQgANHpm3mXZALn+OaWLt8svpVNqq
+         Glv7nW/04fevPgKOFfu2ylanIcrGTNa6IySFX3ShXYrWZ08A74iMSWcLV4YUDzj1KF
+         GTx1T9iZyVTgbNooJNoEXPNwRKwNvLuMIX38yIz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/106] powerpc: dump kernel log before carrying out fadump or kdump
-Date:   Sun,  6 Oct 2019 19:20:48 +0200
-Message-Id: <20191006171142.256051357@linuxfoundation.org>
+Subject: [PATCH 4.19 043/106] mbox: qcom: add APCS child device for QCS404
+Date:   Sun,  6 Oct 2019 19:20:49 +0200
+Message-Id: <20191006171142.875607212@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -63,41 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@linux.ibm.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-[ Upstream commit e7ca44ed3ba77fc26cf32650bb71584896662474 ]
+[ Upstream commit 78c86458a440ff356073c21b568cb58ddb67b82b ]
 
-Since commit 4388c9b3a6ee ("powerpc: Do not send system reset request
-through the oops path"), pstore dmesg file is not updated when dump is
-triggered from HMC. This commit modified system reset (sreset) handler
-to invoke fadump or kdump (if configured), without pushing dmesg to
-pstore. This leaves pstore to have old dmesg data which won't be much
-of a help if kdump fails to capture the dump. This patch fixes that by
-calling kmsg_dump() before heading to fadump ot kdump.
+There is clock controller functionality in the APCS hardware block of
+qcs404 devices similar to msm8916.
 
-Fixes: 4388c9b3a6ee ("powerpc: Do not send system reset request through the oops path")
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Ganesh Goudar <ganeshgr@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190904075949.15607-1-ganeshgr@linux.ibm.com
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/traps.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 02fe6d0201741..d5f351f02c153 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -399,6 +399,7 @@ void system_reset_exception(struct pt_regs *regs)
- 	if (debugger(regs))
- 		goto out;
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 333ed4a9d4b8f..5255dcb551a78 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -55,7 +55,6 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
  
-+	kmsg_dump(KMSG_DUMP_OOPS);
- 	/*
- 	 * A system reset is a request to dump, so we always send
- 	 * it through the crashdump code (if fadump or kdump are
+ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct qcom_apcs_ipc *apcs;
+ 	struct regmap *regmap;
+ 	struct resource *res;
+@@ -63,6 +62,11 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	unsigned long i;
+ 	int ret;
++	const struct of_device_id apcs_clk_match_table[] = {
++		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
++		{ .compatible = "qcom,qcs404-apcs-apps-global", },
++		{}
++	};
+ 
+ 	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
+ 	if (!apcs)
+@@ -97,7 +101,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
++	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
+ 		apcs->clk = platform_device_register_data(&pdev->dev,
+ 							  "qcom-apcs-msm8916-clk",
+ 							  -1, NULL, 0);
 -- 
 2.20.1
 
