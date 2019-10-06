@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBA8C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8896AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A9F20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DA420673
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384421;
-	bh=M7f/VWIS3/HVL4XSOEzhDN9zeadlxe+WeHhKS89VrqA=;
+	s=default; t=1570384425;
+	bh=fw70Y8GuPTIYaTwZ+t61VIeVfbkLgrEAuV3Y4OcKnl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aHyF+JVK2KSZezZjXFWlzr2SAbOy1ciu1PMKtd4JwXuJ4nhb0WbSSaHKctvx/uuOg
-	 1bl/BFxhSeVz9tJsP16GODfx3ce2Lz1ZqhEi5c4VT0lt6WYopgdFKGiVhuq7wSHi7y
-	 1ms8LJ4NF3x7wNPVgpvDGJId3oBNNPZYrFtMp/bM=
+	b=fspq6jbTE6uLQFhPg7ivrXHjhXHGPGIMt0mBGCmjFdsdjgiRf1QEy1nyxGwHs1CB5
+	 48G4BzGWgwTrsL7YMivJP3GLKdSD0s0V8kIQprXFOkdzFiFE8Dm4UK9GtBfZlgvDEn
+	 jebSvoIuGHhSvM3yZ43rFV782tLXb5yl3c8IxW7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbfJFRhg (ORCPT
+        id S1727883AbfJFRxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730446AbfJFRh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:37:27 -0400
+        id S1729878AbfJFRhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:37:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99202053B;
-        Sun,  6 Oct 2019 17:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4728B2053B;
+        Sun,  6 Oct 2019 17:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383446;
-        bh=M7f/VWIS3/HVL4XSOEzhDN9zeadlxe+WeHhKS89VrqA=;
+        s=default; t=1570383451;
+        bh=fw70Y8GuPTIYaTwZ+t61VIeVfbkLgrEAuV3Y4OcKnl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bNlq86BkNIshrxYRHV5SfjHecOL5CI8cgpIydbdlpFXce0hzSEKKRf2uPNqbfTFDh
-         XUKTZJl8fRq7T6h7ysV3oAukz9x64TRqA3lrxmQAduQJsqJryPWAvsFBgf0w5aTIYW
-         Yxg1A8jOfuHJha1y1fh21zdvHzHwQWa1ZOK7JIvw=
+        b=WH98sc5+yT/afyQGjtvWpCc1AIkVJEOjvOcGy1OKM9gPkc3QUWRpACsZAJafpNlFS
+         OT9qsCZdzVCYjQy+3Yy1fHlOBgqi81w9j5evFvJdZW1ssuCykrPmsfccm8QdZyBWGj
+         3fueP6rF0cFetzxwl+ivDn6zEhW3zqjDhZIlh6h0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Smalley <sds@tycho.nsa.gov>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 107/137] selinux: fix residual uses of current_security() for the SELinux blob
-Date:   Sun,  6 Oct 2019 19:21:31 +0200
-Message-Id: <20191006171217.886557967@linuxfoundation.org>
+Subject: [PATCH 5.2 109/137] HID: apple: Fix stuck function keys when using FN
+Date:   Sun,  6 Oct 2019 19:21:33 +0200
+Message-Id: <20191006171218.091778682@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -62,79 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+From: Joao Moreno <mail@joaomoreno.com>
 
-[ Upstream commit 169ce0c081cd85f78388bb6c1638c1ad7b81bde7 ]
+[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
 
-We need to use selinux_cred() to fetch the SELinux cred blob instead
-of directly using current->security or current_security().  There
-were a couple of lingering uses of current_security() in the SELinux code
-that were apparently missed during the earlier conversions. IIUC, this
-would only manifest as a bug if multiple security modules including
-SELinux are enabled and SELinux is not first in the lsm order. After
-this change, there appear to be no other users of current_security()
-in-tree; perhaps we should remove it altogether.
+This fixes an issue in which key down events for function keys would be
+repeatedly emitted even after the user has raised the physical key. For
+example, the driver fails to emit the F5 key up event when going through
+the following steps:
+- fnmode=1: hold FN, hold F5, release FN, release F5
+- fnmode=2: hold F5, hold FN, release F5, release FN
 
-Fixes: bbd3662a8348 ("Infrastructure management of the cred security blob")
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+The repeated F5 key down events can be easily verified using xev.
+
+Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c          |  2 +-
- security/selinux/include/objsec.h | 20 ++++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3ec7ac70c3130..c106167423a12 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3403,7 +3403,7 @@ static int selinux_inode_copy_up_xattr(const char *name)
- static int selinux_kernfs_init_security(struct kernfs_node *kn_dir,
- 					struct kernfs_node *kn)
- {
--	const struct task_security_struct *tsec = current_security();
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
- 	u32 parent_sid, newsid, clen;
- 	int rc;
- 	char *context;
-diff --git a/security/selinux/include/objsec.h b/security/selinux/include/objsec.h
-index 91c5395dd20c2..586b7abd0aa73 100644
---- a/security/selinux/include/objsec.h
-+++ b/security/selinux/include/objsec.h
-@@ -37,16 +37,6 @@ struct task_security_struct {
- 	u32 sockcreate_sid;	/* fscreate SID */
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 81df62f48c4c3..6ac8becc2372e 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
+-	DECLARE_BITMAP(pressed_fn, KEY_CNT);
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
  };
  
--/*
-- * get the subjective security ID of the current task
-- */
--static inline u32 current_sid(void)
--{
--	const struct task_security_struct *tsec = current_security();
--
--	return tsec->sid;
--}
--
- enum label_initialized {
- 	LABEL_INVALID,		/* invalid or not initialized */
- 	LABEL_INITIALIZED,	/* initialized */
-@@ -185,4 +175,14 @@ static inline struct ipc_security_struct *selinux_ipc(
- 	return ipc->security + selinux_blob_sizes.lbs_ipc;
- }
+@@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ {
+ 	struct apple_sc *asc = hid_get_drvdata(hid);
+ 	const struct apple_key_translation *trans, *table;
++	bool do_translate;
++	u16 code = 0;
  
-+/*
-+ * get the subjective security ID of the current task
-+ */
-+static inline u32 current_sid(void)
-+{
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
+ 	if (usage->code == KEY_FN) {
+ 		asc->fn_on = !!value;
+@@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	}
+ 
+ 	if (fnmode) {
+-		int do_translate;
+-
+ 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+ 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+ 			table = macbookair_fn_keys;
+@@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 		trans = apple_find_translation (table, usage->code);
+ 
+ 		if (trans) {
+-			if (test_bit(usage->code, asc->pressed_fn))
+-				do_translate = 1;
+-			else if (trans->flags & APPLE_FLAG_FKEY)
+-				do_translate = (fnmode == 2 && asc->fn_on) ||
+-					(fnmode == 1 && !asc->fn_on);
+-			else
+-				do_translate = asc->fn_on;
+-
+-			if (do_translate) {
+-				if (value)
+-					set_bit(usage->code, asc->pressed_fn);
+-				else
+-					clear_bit(usage->code, asc->pressed_fn);
+-
+-				input_event(input, usage->type, trans->to,
+-						value);
+-
+-				return 1;
++			if (test_bit(trans->from, input->key))
++				code = trans->from;
++			else if (test_bit(trans->to, input->key))
++				code = trans->to;
 +
-+	return tsec->sid;
-+}
++			if (!code) {
++				if (trans->flags & APPLE_FLAG_FKEY) {
++					switch (fnmode) {
++					case 1:
++						do_translate = !asc->fn_on;
++						break;
++					case 2:
++						do_translate = asc->fn_on;
++						break;
++					default:
++						/* should never happen */
++						do_translate = false;
++					}
++				} else {
++					do_translate = asc->fn_on;
++				}
 +
- #endif /* _SELINUX_OBJSEC_H_ */
++				code = do_translate ? trans->to : trans->from;
+ 			}
++
++			input_event(input, usage->type, code, value);
++			return 1;
+ 		}
+ 
+ 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
