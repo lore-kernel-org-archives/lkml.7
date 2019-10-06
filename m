@@ -2,55 +2,58 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FBDECE597
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11173ECE59A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C702080F
+	by mail.kernel.org (Postfix) with ESMTP id DD2612080F
 	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570384502;
-	bh=dTYb9XmPpGezQJA6U/RlhJTJ+F2VVzbzIQ64FdtB7Hw=;
+	bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czq2KBu6xpIwuK2sp2KHnZ1KUiKCsPvEtaj7yznsg2aBRtyne7FuM9INVfSovnm5K
-	 e3Y954qHsuzYPYQqs4qcCjsQhrd2ipvbV5kDZ3iVpYUED1qvHaT4Dkl1YkKR8UkDT6
-	 D/i2C0pHbwJVpUCwBkqYQx3GkLu7SlKyXnJOLcgk=
+	b=ezmKg9ADur0wvxtrpTnFCla/W6werF8dGqO3gCFMAndwnJNt1KYyQxdb3yMgI6w9F
+	 I3ymyN0MhBnX5/PYwsO0OHJfhkwsFwaIysivV/9PXt+RMDNU9S6NELZHpwDe1hMBVD
+	 74A55rfW3xmj7RVeop8YQw2nh4x5sVrS/4/zcf6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfJFRyc (ORCPT
+        id S1730074AbfJFRgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:36:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbfJFRy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:54:28 -0400
+        id S1730056AbfJFRgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:36:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8788B2247C;
-        Sun,  6 Oct 2019 17:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE0FC20700;
+        Sun,  6 Oct 2019 17:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383998;
-        bh=dTYb9XmPpGezQJA6U/RlhJTJ+F2VVzbzIQ64FdtB7Hw=;
+        s=default; t=1570383365;
+        bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PiDSBSg3AYUHNaVsZx8q9Xepic1liZ6Bn269ftTzvAAOkLKaoa9/XA3y7Y25+yFOq
-         8R5M3GNRIFHJkSAYF4tVZv35O9eq8CF2A42qXAw59Nm8gas/DukERhlB+UXou42nZX
-         sMaNhstYRcVioy2M7Q8RLyWiIccm1iC+QEzO5PiA=
+        b=qYWp2gcAkHbDF/8OH/+a0AkTieCUC8qlL4oOyXRfKtnLL0dZfHIu2jSCyxuIwfsu5
+         Nd18v9XviXlbW5PPUFYhtMrOx7hWZOH0OWGhD+xy3WQPjNIhBNrNjHbDc8oNNkBwsC
+         aIJqp2eh1MLGuBDcp2W3UzXSq5QVeQhi1yyWhMD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 137/166] nfc: fix memory leak in llcp_sock_bind()
-Date:   Sun,  6 Oct 2019 19:21:43 +0200
-Message-Id: <20191006171224.657266919@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Joel Savitz <jsavitz@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 040/137] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+Date:   Sun,  6 Oct 2019 19:20:24 +0200
+Message-Id: <20191006171212.356941548@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
-References: <20191006171212.850660298@linuxfoundation.org>
+In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
+References: <20191006171209.403038733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,62 +63,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d ]
+[ Upstream commit 0df3e42167caaf9f8c7b64de3da40a459979afe8 ]
 
-sysbot reported a memory leak after a bind() has failed.
+When building with -Wsometimes-uninitialized, clang warns:
 
-While we are at it, abort the operation if kmemdup() has failed.
+drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
+used uninitialized whenever 'for' loop exits because its condition is
+false [-Wsometimes-uninitialized]
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
+here
+        if (fndit)
+            ^~~~~
+drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
+it is always true
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
+'fndit' to silence this warning
+        int j, fndit;
+                    ^
+                     = 0
 
-BUG: memory leak
-unreferenced object 0xffff888105d83ec0 (size 32):
-  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
-  hex dump (first 32 bytes):
-    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
-    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
-  backtrace:
-    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
-    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
-    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
-    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
-    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
-    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
-    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
-    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
-    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
-    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
-    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
-    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
-    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+fndit is only used to gate a sprintf call, which can be moved into the
+loop to simplify the code and eliminate the local variable, which will
+fix this warning.
 
-Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Acked-by: Joel Savitz <jsavitz@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://github.com/ClangBuiltLinux/linux/issues/504
+Link: https://lore.kernel.org/r/20190603221157.58502-1-natechancellor@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/llcp_sock.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -107,9 +107,14 @@ static int llcp_sock_bind(struct socket
- 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
- 					  llcp_sock->service_name_len,
- 					  GFP_KERNEL);
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index bcd5d357ca238..c3899ee1db995 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 	struct of_drc_info drc;
+ 	const __be32 *value;
+ 	char cell_drc_name[MAX_DRC_NAME_LEN];
+-	int j, fndit;
++	int j;
+ 
+ 	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+ 	if (info == NULL)
+@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 
+ 		/* Should now know end of current entry */
+ 
+-		if (my_index > drc.last_drc_index)
+-			continue;
 -
-+	if (!llcp_sock->service_name) {
-+		ret = -ENOMEM;
-+		goto put_dev;
-+	}
- 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
- 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
-+		kfree(llcp_sock->service_name);
-+		llcp_sock->service_name = NULL;
- 		ret = -EADDRINUSE;
- 		goto put_dev;
+-		fndit = 1;
+-		break;
++		/* Found it */
++		if (my_index <= drc.last_drc_index) {
++			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
++				my_index);
++			break;
++		}
  	}
+-	/* Found it */
+-
+-	if (fndit)
+-		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
+-			my_index);
+ 
+ 	if (((drc_name == NULL) ||
+ 	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+-- 
+2.20.1
+
 
 
