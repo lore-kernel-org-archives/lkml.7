@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761F8C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AF4C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8BB214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3B02166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382682;
-	bh=H1UlWTytnQ7kqdRX4mbQdL7bveS9FBSgwFgIlp3T5Ic=;
+	s=default; t=1570382686;
+	bh=+BiQqXREfqedpyPZPQrqLz+Q6RzWqhu5kwykdMOrTwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gE7cNEd/z3E584YvSZqoGOmZ1SCtAX4EAD4dIBFeZneC7HwkLdwmiX9V+6P9KtkNi
-	 XL8836k7amQffHcdeO6AYYVEZcIGj//lKH8yNPY7F2JqhO116rTA5f0DdPrrNc33Nl
-	 b0o8GtB4W4KiThgiCXb96mOvwvmLEu8auMDDvAgY=
+	b=aAuxsQ4fyInC10E/HNLwqo7b4Ya6bupTc6RVNDXJOyNBDWMmP7IHZpOlq0lhk1qDd
+	 oKoWQVDpC9B3J4JZNH/8Gkg88Jyr+Ti8bt2r3/ouWkokXvBuXlC7s3t7tEtvmFviMQ
+	 8qu0ZSiGuaenIyqUkImUStD57+4lQdHEFhcdHcJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfJFRYk (ORCPT
+        id S1727975AbfJFRYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49628 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfJFRYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:24:39 -0400
+        id S1727944AbfJFRYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFBFF20867;
-        Sun,  6 Oct 2019 17:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1FDD2080F;
+        Sun,  6 Oct 2019 17:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382678;
-        bh=H1UlWTytnQ7kqdRX4mbQdL7bveS9FBSgwFgIlp3T5Ic=;
+        s=default; t=1570382681;
+        bh=+BiQqXREfqedpyPZPQrqLz+Q6RzWqhu5kwykdMOrTwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+UezLYaGMCVhHGlXayGlmpN52qIQMNmddik+bqkRu+bT2JLZVf8gHhvK1StAlctt
-         3ehzJWq3DeZdfBHRrlHKgwX1bsIAgj1VLpUDifCUvtkaDlAaKsYAFBUEcNu/CMPTLZ
-         xhX2CtA7gxK/bODhmJPukntekwUfX2TmKWlNIBfc=
+        b=iLNecweH2i+zwDEcF8e3e8pg8w/m9ZfCjqmiPrvsGorEkYBfjdry2yW6cIyYjpWu+
+         ZTIUMcAl6aYk5nmHUZhCzLKJY8fPCVmGZVGv8PRmrw/u6wryU+qTAS/cnKrO79um9h
+         xxIOtW420v/SKY46W+xLTTEA8IMi0aTRMJL8/bpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 38/47] nfc: fix memory leak in llcp_sock_bind()
-Date:   Sun,  6 Oct 2019 19:21:25 +0200
-Message-Id: <20191006172018.897792221@linuxfoundation.org>
+Subject: [PATCH 4.9 39/47] qmi_wwan: add support for Cinterion CLS8 devices
+Date:   Sun,  6 Oct 2019 19:21:26 +0200
+Message-Id: <20191006172018.949703803@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006172016.873463083@linuxfoundation.org>
 References: <20191006172016.873463083@linuxfoundation.org>
@@ -60,62 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-[ Upstream commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d ]
+[ Upstream commit cf74ac6db25d4002089e85cc623ad149ecc25614 ]
 
-sysbot reported a memory leak after a bind() has failed.
+Add support for Cinterion CLS8 devices.
+Use QMI_QUIRK_SET_DTR as required for Qualcomm MDM9x07 chipsets.
 
-While we are at it, abort the operation if kmemdup() has failed.
+T:  Bus=01 Lev=03 Prnt=05 Port=01 Cnt=02 Dev#= 25 Spd=480  MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1e2d ProdID=00b0 Rev= 3.18
+S:  Manufacturer=GEMALTO
+S:  Product=USB Modem
+C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 
-BUG: memory leak
-unreferenced object 0xffff888105d83ec0 (size 32):
-  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
-  hex dump (first 32 bytes):
-    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
-    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
-  backtrace:
-    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
-    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
-    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
-    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
-    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
-    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
-    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
-    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
-    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
-    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
-    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
-    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
-    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/llcp_sock.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -118,9 +118,14 @@ static int llcp_sock_bind(struct socket
- 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
- 					  llcp_sock->service_name_len,
- 					  GFP_KERNEL);
--
-+	if (!llcp_sock->service_name) {
-+		ret = -ENOMEM;
-+		goto put_dev;
-+	}
- 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
- 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
-+		kfree(llcp_sock->service_name);
-+		llcp_sock->service_name = NULL;
- 		ret = -EADDRINUSE;
- 		goto put_dev;
- 	}
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -940,6 +940,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1e2d, 0x0082, 4)},	/* Cinterion PHxx,PXxx (2 RmNet) */
+ 	{QMI_FIXED_INTF(0x1e2d, 0x0082, 5)},	/* Cinterion PHxx,PXxx (2 RmNet) */
+ 	{QMI_FIXED_INTF(0x1e2d, 0x0083, 4)},	/* Cinterion PHxx,PXxx (1 RmNet + USB Audio)*/
++	{QMI_QUIRK_SET_DTR(0x1e2d, 0x00b0, 4)},	/* Cinterion CLS8 */
+ 	{QMI_FIXED_INTF(0x413c, 0x81a2, 8)},	/* Dell Wireless 5806 Gobi(TM) 4G LTE Mobile Broadband Card */
+ 	{QMI_FIXED_INTF(0x413c, 0x81a3, 8)},	/* Dell Wireless 5570 HSPA+ (42Mbps) Mobile Broadband Card */
+ 	{QMI_FIXED_INTF(0x413c, 0x81a4, 8)},	/* Dell Wireless 5570e HSPA+ (42Mbps) Mobile Broadband Card */
 
 
