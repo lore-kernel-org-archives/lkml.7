@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCF5C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE4CC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE8020700
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67B8217D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384817;
-	bh=htkfBfXqO+GVK1S/HG3m6+YLChtc6ahE2SbDC3kh2MU=;
+	s=default; t=1570384821;
+	bh=kAO61HjFeH1doRYmWN6z62Ejk2alckKKZ1JNaT4YbW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdF0NOcG0FO29A50sfn0X4r/iLWJMfUxS5hs43LRHmV/8q1aZB02IWQww1+YwzPgy
-	 W7nW6s1yIO9yBMifbSEnw+6qhEx+5vBS0yU/GUXNqEVcva3+jVrgD8B64O+heyvMVg
-	 mvqBG0pqOHT2TnQn+FimVFImCv61W/XtDgVbYE4g=
+	b=St6ugIKAErwNwhIpT1oF8eMAXb6SsHz+zJ6Pw4eOhzbamxpxvMcdsaZxXgTmSaY8l
+	 2Q/bHymBcgQ2y1RTwrcCP16G24cDzI25nAa2xFtKSL/+oNTtR5eBDcP/gieG6aqhjQ
+	 epWb45HFmwgyN7AxWtRsDXY4q/Vbtj+Eoaw2aai8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfJFSAQ (ORCPT
+        id S1728960AbfJFR3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 14:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfJFR3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:29:23 -0400
+        id S1728950AbfJFR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF72E2080F;
-        Sun,  6 Oct 2019 17:29:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E6F217F9;
+        Sun,  6 Oct 2019 17:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382962;
-        bh=htkfBfXqO+GVK1S/HG3m6+YLChtc6ahE2SbDC3kh2MU=;
+        s=default; t=1570382951;
+        bh=kAO61HjFeH1doRYmWN6z62Ejk2alckKKZ1JNaT4YbW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s121UijMNXD1+PJwnVVf7gZYA09A3fJnecb8uikRWBMdN2MARs1eAjEfTwlrhfKhS
-         bnT4EG41H1i/tlLMcfCXYeAKFvBxsnBkiuyf4sQgvNBxWdpk04Fv99DaBI48YNXlB7
-         rp3idBYTvurxojxaZw6h42fv+/YBLcWlXTDjibgs=
+        b=ai5A4p/GTX0h6nS2W/jv+h/FCgXFVHox7msLRFg/16ApTnMTlD76Vr/f8UBpbgQGM
+         NUlhlOFMaDuRZsoo17w5/FFPD6M41BV8+EJRu5Rm9jafcfYFCWijj4EnOT1nIABQea
+         w+s6kfTz/aowtHGeEJ4UDI003EhcSELXn4USsseI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Ken Wang <Qingqing.Wang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/106] drm/amdgpu/si: fix ASIC tests
-Date:   Sun,  6 Oct 2019 19:20:40 +0200
-Message-Id: <20191006171140.287601264@linuxfoundation.org>
+Subject: [PATCH 4.19 030/106] pinctrl: amd: disable spurious-firing GPIO IRQs
+Date:   Sun,  6 Oct 2019 19:20:36 +0200
+Message-Id: <20191006171139.515584588@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -63,57 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Daniel Drake <drake@endlessm.com>
 
-[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
+[ Upstream commit d21b8adbd475dba19ac2086d3306327b4a297418 ]
 
-Comparing adev->family with CHIP constants is not correct.
-adev->family can only be compared with AMDGPU_FAMILY constants and
-adev->asic_type is the struct member to compare with CHIP constants.
-They are separate identification spaces.
+When cold-booting Asus X434DA, GPIO 7 is found to be already configured
+as an interrupt, and the GPIO level is found to be in a state that
+causes the interrupt to fire.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
-Cc: Ken Wang <Qingqing.Wang@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+As soon as pinctrl-amd probes, this interrupt fires and invokes
+amd_gpio_irq_handler(). The IRQ is acked, but no GPIO-IRQ handler was
+invoked, so the GPIO level being unchanged just causes another interrupt
+to fire again immediately after.
+
+This results in an interrupt storm causing this platform to hang
+during boot, right after pinctrl-amd is probed.
+
+Detect this situation and disable the GPIO interrupt when this happens.
+This enables the affected platform to boot as normal. GPIO 7 actually is
+the I2C touchpad interrupt line, and later on, i2c-multitouch loads and
+re-enables this interrupt when it is ready to handle it.
+
+Instead of this approach, I considered disabling all GPIO interrupts at
+probe time, however that seems a little risky, and I also confirmed that
+Windows does not seem to have this behaviour: the same 41 GPIO IRQs are
+enabled under both Linux and Windows, which is a far larger collection
+than the GPIOs referenced by the DSDT on this platform.
+
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20190814090540.7152-1-drake@endlessm.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-amd.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
-index c364ef94cc366..77c9f4d8668ad 100644
---- a/drivers/gpu/drm/amd/amdgpu/si.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si.c
-@@ -1813,7 +1813,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
- 			if (orig != data)
- 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 1425c2874d402..cd7a5d95b499a 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -569,15 +569,25 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
+ 				continue;
+ 			irq = irq_find_mapping(gc->irq.domain, irqnr + i);
+-			generic_handle_irq(irq);
++			if (irq != 0)
++				generic_handle_irq(irq);
  
--			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
-+			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
- 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
- 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
- 				if (orig != data)
-@@ -1862,14 +1862,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
- 
- 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
- 			data &= ~LS2_EXIT_TIME_MASK;
--			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
-+			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
- 				data |= LS2_EXIT_TIME(5);
- 			if (orig != data)
- 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
- 
- 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
- 			data &= ~LS2_EXIT_TIME_MASK;
--			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
-+			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
- 				data |= LS2_EXIT_TIME(5);
- 			if (orig != data)
- 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
+ 			/* Clear interrupt.
+ 			 * We must read the pin register again, in case the
+ 			 * value was changed while executing
+ 			 * generic_handle_irq() above.
++			 * If we didn't find a mapping for the interrupt,
++			 * disable it in order to avoid a system hang caused
++			 * by an interrupt storm.
+ 			 */
+ 			raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 			regval = readl(regs + i);
++			if (irq == 0) {
++				regval &= ~BIT(INTERRUPT_ENABLE_OFF);
++				dev_dbg(&gpio_dev->pdev->dev,
++					"Disabling spurious GPIO IRQ %d\n",
++					irqnr + i);
++			}
+ 			writel(regval, regs + i);
+ 			raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+ 			ret = IRQ_HANDLED;
 -- 
 2.20.1
 
