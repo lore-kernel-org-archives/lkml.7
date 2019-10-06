@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC72DC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A27C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B672A20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC3A2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384352;
-	bh=qM3PEEnWMa2iOxubfqWEcdDHC4Vu51bGICgjCStkxto=;
+	s=default; t=1570384355;
+	bh=ZVHW6+BSAJW1fQbbjaxtl+F6QNhxgX+j9GkD3KFFs5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVraGJzyppdfBhKPn8kyaYO4m2sBmPQXBeR7Vhso7gyyKIPZ4lOUnuYzVF4FezA0O
-	 ux4FqAe9nyRtji6vohL4SbcwOnLV7eeuYt0jdXAzsSgOJRo48VBlPMm/uEDiTNUsze
-	 JHWHqkDWcldRFIN6LQp/qLdfIiVWqpcCMgbbZCzk=
+	b=ppLETZOs0yCueq3ERjeyTptV47MlMEdaaoXmCcyxV6ZjmG0FJCexd+e9DZoZxVzr0
+	 YkPkyGiJrOUIEPYqcOKuLItUtcghYAx3PtvN8sJzYcEkqNcE2YH7IXiBWSkLvLi1uI
+	 fmB4iM8SklyGBRTYUaIBqcNhxi5NCCpAy/2cBMbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfJFRvm (ORCPT
+        id S1729443AbfJFRvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:51:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728792AbfJFRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 6 Oct 2019 13:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8477521D56;
-        Sun,  6 Oct 2019 17:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC3C20862;
+        Sun,  6 Oct 2019 17:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383944;
-        bh=qM3PEEnWMa2iOxubfqWEcdDHC4Vu51bGICgjCStkxto=;
+        s=default; t=1570383917;
+        bh=ZVHW6+BSAJW1fQbbjaxtl+F6QNhxgX+j9GkD3KFFs5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ra5bLSI8ZNzQgXK2Q2vjtn2EjNRo4gdwCos2bd8FDTzFCANsv471y9GR2rRJZnYo6
-         zOLF7Seswb3bWUVJdBA9xb5MYep3fWQhGVOCE4u+XxDkMjkA5sA0r8/vBJlkzzGXdz
-         EoRwyG+7wqG8rc+ZHkxjjAmUISAk3uNnxzg5kwWg=
+        b=w547f/6wF5enAhgrS8+lhe2YVFuvNoCm6pMbhWsW2DJoiARW00hwq8Ictxq2ZDNRb
+         4m4FUJzMzN+fffGNa6Bsiw5K6VcsDCYeCateK3PHsi+cLV2fqXHsEAZ6ejPGTpxyHm
+         DteaAtXt470TILFTVza6GMp17Xen7vo1T8gCnopw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 153/166] net: dsa: sja1105: Ensure PTP time for rxtstamp reconstruction is not in the past
-Date:   Sun,  6 Oct 2019 19:21:59 +0200
-Message-Id: <20191006171225.785468470@linuxfoundation.org>
+Subject: [PATCH 5.3 144/166] vsock: Fix a lockdep warning in __vsock_release()
+Date:   Sun,  6 Oct 2019 19:21:50 +0200
+Message-Id: <20191006171225.112208344@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
 References: <20191006171212.850660298@linuxfoundation.org>
@@ -59,86 +60,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit b6f2494d311a19b33b19708543e7ef6dea1de459 ]
+[ Upstream commit 0d9138ffac24cf8b75366ede3a68c951e6dcc575 ]
 
-Sometimes the PTP synchronization on the switch 'jumps':
+Lockdep is unhappy if two locks from the same class are held.
 
-  ptp4l[11241.155]: rms    8 max   16 freq -21732 +/-  11 delay   742 +/-   0
-  ptp4l[11243.157]: rms    7 max   17 freq -21731 +/-  10 delay   744 +/-   0
-  ptp4l[11245.160]: rms 33592410 max 134217731 freq +192422 +/- 8530253 delay   743 +/-   0
-  ptp4l[11247.163]: rms 811631 max 964131 freq +10326 +/- 557785 delay   743 +/-   0
-  ptp4l[11249.166]: rms 261936 max 533876 freq -304323 +/- 126371 delay   744 +/-   0
-  ptp4l[11251.169]: rms 48700 max 57740 freq -20218 +/- 30532 delay   744 +/-   0
-  ptp4l[11253.171]: rms 14570 max 30163 freq  -5568 +/- 7563 delay   742 +/-   0
-  ptp4l[11255.174]: rms 2914 max 3440 freq -22001 +/- 1667 delay   744 +/-   1
-  ptp4l[11257.177]: rms  811 max 1710 freq -22653 +/- 451 delay   744 +/-   1
-  ptp4l[11259.180]: rms  177 max  218 freq -21695 +/-  89 delay   741 +/-   0
-  ptp4l[11261.182]: rms   45 max   92 freq -21677 +/-  32 delay   742 +/-   0
-  ptp4l[11263.186]: rms   14 max   32 freq -21733 +/-  11 delay   742 +/-   0
-  ptp4l[11265.188]: rms    9 max   14 freq -21725 +/-  12 delay   742 +/-   0
-  ptp4l[11267.191]: rms    9 max   16 freq -21727 +/-  13 delay   742 +/-   0
-  ptp4l[11269.194]: rms    6 max   15 freq -21726 +/-   9 delay   743 +/-   0
-  ptp4l[11271.197]: rms    8 max   15 freq -21728 +/-  11 delay   743 +/-   0
-  ptp4l[11273.200]: rms    6 max   12 freq -21727 +/-   8 delay   743 +/-   0
-  ptp4l[11275.202]: rms    9 max   17 freq -21720 +/-  11 delay   742 +/-   0
-  ptp4l[11277.205]: rms    9 max   18 freq -21725 +/-  12 delay   742 +/-   0
+Fix the below warning for hyperv and virtio sockets (vmci socket code
+doesn't have the issue) by using lock_sock_nested() when __vsock_release()
+is called recursively:
 
-Background: the switch only offers partial RX timestamps (24 bits) and
-it is up to the driver to read the PTP clock to fill those timestamps up
-to 64 bits. But the PTP clock readout needs to happen quickly enough (in
-0.135 seconds, in fact), otherwise the PTP clock will wrap around 24
-bits, condition which cannot be detected.
+============================================
+WARNING: possible recursive locking detected
+5.3.0+ #1 Not tainted
+--------------------------------------------
+server/1795 is trying to acquire lock:
+ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
 
-Looking at the 'max 134217731' value on output line 3, one can see that
-in hex it is 0x8000003. Because the PTP clock resolution is 8 ns,
-that means 0x1000000 in ticks, which is exactly 2^24. So indeed this is
-a PTP clock wraparound, but the reason might be surprising.
+but task is already holding lock:
+ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
 
-What is going on is that sja1105_tstamp_reconstruct(priv, now, ts)
-expects a "now" time that is later than the "ts" was snapshotted at.
-This, of course, is obvious: we read the PTP time _after_ the partial RX
-timestamp was received. However, the workqueue is processing frames from
-a skb queue and reuses the same PTP time, read once at the beginning.
-Normally the skb queue only contains one frame and all goes well. But
-when the skb queue contains two frames, the second frame that gets
-dequeued might have been partially timestamped by the RX MAC _after_ we
-had read our PTP time initially.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-The code was originally like that due to concerns that SPI access for
-PTP time readout is a slow process, and we are time-constrained anyway
-(aka: premature optimization). But some timing analysis reveals that the
-time spent until the RX timestamp is completely reconstructed is 1 order
-of magnitude lower than the 0.135 s deadline even under worst-case
-conditions. So we can afford to read the PTP time for each frame in the
-RX timestamping queue, which of course ensures that the full PTP time is
-in the partial timestamp's future.
+       CPU0
+       ----
+  lock(sk_lock-AF_VSOCK);
+  lock(sk_lock-AF_VSOCK);
 
-Fixes: f3097be21bf1 ("net: dsa: sja1105: Add a state machine for RX timestamping")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by server/1795:
+ #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
+ #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
+
+stack backtrace:
+CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
+Call Trace:
+ dump_stack+0x67/0x90
+ __lock_acquire.cold.67+0xd2/0x20b
+ lock_acquire+0xb5/0x1c0
+ lock_sock_nested+0x6d/0x90
+ hvs_release+0x10/0x120 [hv_sock]
+ __vsock_release+0x24/0xf0 [vsock]
+ __vsock_release+0xa0/0xf0 [vsock]
+ vsock_release+0x12/0x30 [vsock]
+ __sock_release+0x37/0xa0
+ sock_close+0x14/0x20
+ __fput+0xc1/0x250
+ task_work_run+0x98/0xc0
+ do_exit+0x344/0xc60
+ do_group_exit+0x47/0xb0
+ get_signal+0x15c/0xc50
+ do_signal+0x30/0x720
+ exit_to_usermode_loop+0x50/0xa0
+ do_syscall_64+0x24e/0x270
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f4184e85f31
+
+Tested-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/vmw_vsock/af_vsock.c                |   16 ++++++++++++----
+ net/vmw_vsock/hyperv_transport.c        |    2 +-
+ net/vmw_vsock/virtio_transport_common.c |    2 +-
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1986,12 +1986,12 @@ static void sja1105_rxtstamp_work(struct
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -638,7 +638,7 @@ struct sock *__vsock_create(struct net *
+ }
+ EXPORT_SYMBOL_GPL(__vsock_create);
  
- 	mutex_lock(&priv->ptp_lock);
+-static void __vsock_release(struct sock *sk)
++static void __vsock_release(struct sock *sk, int level)
+ {
+ 	if (sk) {
+ 		struct sk_buff *skb;
+@@ -648,9 +648,17 @@ static void __vsock_release(struct sock
+ 		vsk = vsock_sk(sk);
+ 		pending = NULL;	/* Compiler warning. */
  
--	now = priv->tstamp_cc.read(&priv->tstamp_cc);
--
- 	while ((skb = skb_dequeue(&data->skb_rxtstamp_queue)) != NULL) {
- 		struct skb_shared_hwtstamps *shwt = skb_hwtstamps(skb);
- 		u64 ts;
++		/* The release call is supposed to use lock_sock_nested()
++		 * rather than lock_sock(), if a sock lock should be acquired.
++		 */
+ 		transport->release(vsk);
  
-+		now = priv->tstamp_cc.read(&priv->tstamp_cc);
-+
- 		*shwt = (struct skb_shared_hwtstamps) {0};
+-		lock_sock(sk);
++		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
++		 * version to avoid the warning "possible recursive locking
++		 * detected". When "level" is 0, lock_sock_nested(sk, level)
++		 * is the same as lock_sock(sk).
++		 */
++		lock_sock_nested(sk, level);
+ 		sock_orphan(sk);
+ 		sk->sk_shutdown = SHUTDOWN_MASK;
  
- 		ts = SJA1105_SKB_CB(skb)->meta_tstamp;
+@@ -659,7 +667,7 @@ static void __vsock_release(struct sock
+ 
+ 		/* Clean up any sockets that never were accepted. */
+ 		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
+-			__vsock_release(pending);
++			__vsock_release(pending, SINGLE_DEPTH_NESTING);
+ 			sock_put(pending);
+ 		}
+ 
+@@ -708,7 +716,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space
+ 
+ static int vsock_release(struct socket *sock)
+ {
+-	__vsock_release(sock->sk);
++	__vsock_release(sock->sk, 0);
+ 	sock->sk = NULL;
+ 	sock->state = SS_FREE;
+ 
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -559,7 +559,7 @@ static void hvs_release(struct vsock_soc
+ 	struct sock *sk = sk_vsock(vsk);
+ 	bool remove_sock;
+ 
+-	lock_sock(sk);
++	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+ 	remove_sock = hvs_close_lock_held(vsk);
+ 	release_sock(sk);
+ 	if (remove_sock)
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -790,7 +790,7 @@ void virtio_transport_release(struct vso
+ 	struct sock *sk = &vsk->sk;
+ 	bool remove_sock = true;
+ 
+-	lock_sock(sk);
++	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+ 	if (sk->sk_type == SOCK_STREAM)
+ 		remove_sock = virtio_transport_close(vsk);
+ 
 
 
