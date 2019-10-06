@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAADC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3832080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D09217F9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570382939;
-	bh=5gqlC+gB7sVHqAORGtvXGvqdowvWZMUU+1LOeJQXM+w=;
+	s=default; t=1570382948;
+	bh=0iETnc1ZmZbUuwk8H8XexJ/KlhyEDLrIuvsdckyzRDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOcgEtsclwoMid99rInNBsGmnIwtCIOxFwoUpBhUrSh+ZmOYkA/b4yd/oZZ4GjuQz
-	 Oe2UjWwtA3BwXQvQnniyPMQ2FopR+qJp1SG903yzVkqYruOLEMZhhzNc6TuL/K/KnP
-	 /w8+IW0mJeBHVhzTS3Ibc1m+AMH63qHPTk3rvjTw=
+	b=vcnpteYA7ZgOyVy2XTLqOgnptAdW262KMg6IaZyM4+VydTX6wsn59wtxEC4iopAX0
+	 g+jvtrG7qHPNdt0GLwbRPYJtjXs0aLWeaQ/5osvJIKwvtPO5z61hsJLoymIN/fCKrY
+	 vXbWxvsN/oGlz5LOkPYA2m5pqQtMD1T1cFO9L3WE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfJFR27 (ORCPT
+        id S1728936AbfJFR3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfJFR2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:28:53 -0400
+        id S1727754AbfJFR3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 495F921479;
-        Sun,  6 Oct 2019 17:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ED212080F;
+        Sun,  6 Oct 2019 17:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382932;
-        bh=5gqlC+gB7sVHqAORGtvXGvqdowvWZMUU+1LOeJQXM+w=;
+        s=default; t=1570382940;
+        bh=0iETnc1ZmZbUuwk8H8XexJ/KlhyEDLrIuvsdckyzRDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=utJplJdxLvU6/XUo052W8l8cTkWXsly9iKEFSzOTI90G1J5QzB54hO5NEWeDxPTjA
-         Fc9r1Kp4i6XDmUy0Yf4VFKU7p3hlB3nGg3pK33Sqy6GH7sauouhy53nmSdVg27z4Rb
-         TvaCureldOaacXa+F3B9di8/EdRQqqFdxNbQkAjg=
+        b=a7J4yR4AveAWObzaJMao2G6oe+5h+8oJheE2Y+9+S9T5ixCZvq1WH5T1oM0LkyznS
+         DsfhL7D3AGeQtVa3EEey/VD/zbNyxztneS5halgD69kjzYt11hEcWgjRCWwBubGW5Q
+         sp1Ena/WFU3nqK1THW5YT16Oi9UAKaWpBup7H8Lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/106] powerpc/futex: Fix warning: oldval may be used uninitialized in this function
-Date:   Sun,  6 Oct 2019 19:20:30 +0200
-Message-Id: <20191006171137.038141022@linuxfoundation.org>
+Subject: [PATCH 4.19 027/106] powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag
+Date:   Sun,  6 Oct 2019 19:20:33 +0200
+Message-Id: <20191006171138.303166186@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -60,49 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
+[ Upstream commit aa06e3d60e245284d1e55497eb3108828092818d ]
 
-We see warnings such as:
-  kernel/futex.c: In function 'do_futex':
-  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
-     return oldval == cmparg;
-                   ^
-  kernel/futex.c:1651:6: note: 'oldval' was declared here
-    int oldval, ret;
-        ^
+The EEH_DEV_NO_HANDLER flag is used by the EEH system to prevent the
+use of driver callbacks in drivers that have been bound part way
+through the recovery process. This is necessary to prevent later stage
+handlers from being called when the earlier stage handlers haven't,
+which can be confusing for drivers.
 
-This is because arch_futex_atomic_op_inuser() only sets *oval if ret
-is 0 and GCC doesn't see that it will only use it when ret is 0.
+However, the flag is set for all devices that are added after boot
+time and only cleared at the end of the EEH recovery process. This
+results in hot plugged devices erroneously having the flag set during
+the first recovery after they are added (causing their driver's
+handlers to be incorrectly ignored).
 
-Anyway, the non-zero ret path is an error path that won't suffer from
-setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
-it will have no impact.
+To remedy this, clear the flag at the beginning of recovery
+processing. The flag is still cleared at the end of recovery
+processing, although it is no longer really necessary.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: reword change log slightly]
+Also clear the flag during eeh_handle_special_event(), for the same
+reasons.
+
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/b8ca5629d27de74c957d4f4b250177d1b6fc4bbd.1565930772.git.sbobroff@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/futex.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
-index 94542776a62d6..2a7b01f97a56b 100644
---- a/arch/powerpc/include/asm/futex.h
-+++ b/arch/powerpc/include/asm/futex.h
-@@ -59,8 +59,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 67619b4b3f96c..110eba400de7c 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -811,6 +811,10 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+ 	pr_warn("EEH: This PCI device has failed %d times in the last hour and will be permanently disabled after %d failures.\n",
+ 		pe->freeze_count, eeh_max_freezes);
  
- 	pagefault_enable();
++	eeh_for_each_pe(pe, tmp_pe)
++		eeh_pe_for_each_dev(tmp_pe, edev, tmp)
++			edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 	/* Walk the various device drivers attached to this slot through
+ 	 * a reset sequence, giving each an opportunity to do what it needs
+ 	 * to accomplish the reset.  Each child gets a report of the
+@@ -1004,7 +1008,8 @@ final:
+  */
+ void eeh_handle_special_event(void)
+ {
+-	struct eeh_pe *pe, *phb_pe;
++	struct eeh_pe *pe, *phb_pe, *tmp_pe;
++	struct eeh_dev *edev, *tmp_edev;
+ 	struct pci_bus *bus;
+ 	struct pci_controller *hose;
+ 	unsigned long flags;
+@@ -1075,6 +1080,10 @@ void eeh_handle_special_event(void)
+ 				    (phb_pe->state & EEH_PE_RECOVERING))
+ 					continue;
  
--	if (!ret)
--		*oval = oldval;
-+	*oval = oldval;
- 
- 	return ret;
- }
++				eeh_for_each_pe(pe, tmp_pe)
++					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
++						edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 				/* Notify all devices to be down */
+ 				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS);
+ 				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
 -- 
 2.20.1
 
