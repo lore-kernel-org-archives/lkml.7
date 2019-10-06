@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9955C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD3ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CFF2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C542087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383046;
-	bh=fmz5hC3yBNgy6dgTbMASSrGRRvVOVbS1qhdGVdbjLH0=;
+	s=default; t=1570383053;
+	bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+4ks/I+IH7Yl9i7G9mxLipdcTtkm0Ai0W0sLCCZMQK6Q+qJr77bg64Icx44li0Jn
-	 BI5E7avZoyfDZ9L6puFwTiPiY8DQVUmkSJY7dyiB3ciuvGFSCNgk6skqGkBwEY0/xC
-	 XOMBz7tHU1HyrDOeRFpshIMepmsM9+fYPGRVMNUs=
+	b=bzJZaKsWbuqJNAJ4cLhcJD+8Hx1zJBrU6Wwfy17zHL/Q7nbBRIPBOQb/PunD213q7
+	 Ug880xLL+EfJku6gU0twFUHoCnR4KTxGCjdS/bOEOPSuOYX2sm0060fiCYKu9m47pc
+	 k2jCvF+nOgc1WoBb2FmfcMWACxfNpCz+XaKL/vYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfJFRaq (ORCPT
+        id S1729313AbfJFRaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbfJFRal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:41 -0400
+        id S1729292AbfJFRar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:30:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF6D2173B;
-        Sun,  6 Oct 2019 17:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2DE2080F;
+        Sun,  6 Oct 2019 17:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383040;
-        bh=fmz5hC3yBNgy6dgTbMASSrGRRvVOVbS1qhdGVdbjLH0=;
+        s=default; t=1570383046;
+        bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltzuFaATQuU8uMFgVy1ynuuQJAetMuhDkdyO8MZOIXgbLAz5iipNJ1AWyrGYPezRj
-         ySayWKqvzg0Z9stq3eKvBMO7u/aIR48NyLfM+4M5MzSCSyDmkIIfAsgT+SWhP65krG
-         nEYADSfL4BHJmvME32x7dzqHekSSoNpA3l4rzcVk=
+        b=Ri2TllZFWox0pDxHeQrqKQSqdNuMUiSTNd7qVLeWC83sUzOtCl672IVFyvj9d2/R/
+         fnQw4kgRsDWi49/CmsrgtwAT+U791gF9DV1Mv1ckrd1fEBCzUsvTwqfma7s47D2O2G
+         BCh5QJiutAk1cyefMLlLwq/KxvOo+e7nZJZ837Ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Otto Meier <gf435@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/106] PCI: exynos: Propagate errors for optional PHYs
-Date:   Sun,  6 Oct 2019 19:21:10 +0200
-Message-Id: <20191006171150.757811783@linuxfoundation.org>
+Subject: [PATCH 4.19 039/106] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
+Date:   Sun,  6 Oct 2019 19:20:45 +0200
+Message-Id: <20191006171141.542066648@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
 References: <20191006171124.641144086@linuxfoundation.org>
@@ -64,46 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Otto Meier <gf435@gmx.net>
 
-[ Upstream commit ddd6960087d4b45759434146d681a94bbb1c54ad ]
+[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
 
-devm_of_phy_get() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate devres structures. Propagating only -EPROBE_DEFER
-is problematic because it results in these legitimately fatal errors
-being treated as "PHY not specified in DT".
+Hi i tried to use the uart_C of the the odroid-c2.
 
-What we really want is to ignore the optional PHYs only if they have not
-been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
-that's the special case that we need to handle. So we propagate all
-errors, except -ENODEV, so that real failures will still cause the
-driver to fail probe.
+I enabled it in the dts file. During boot it crashed when the
+the sdcard slot is addressed.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
+After long search in the net i found this:
+
+https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
+
+After changing the pin definitions accordingly erverything works.
+Uart_c is functioning and sdcard ist working.
+
+Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
+Signed-off-by: Otto Meier <gf435@gmx.net>
+Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index cee5f2f590e2d..14a6ba4067fbe 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -465,7 +465,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+index 4edeb4cae72aa..c4c70dc57dbee 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+@@ -198,8 +198,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
  
- 	ep->phy = devm_of_phy_get(dev, np, NULL);
- 	if (IS_ERR(ep->phy)) {
--		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
-+		if (PTR_ERR(ep->phy) != -ENODEV)
- 			return PTR_ERR(ep->phy);
+ static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
+ static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
+-static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
+-static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
++static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
++static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
  
- 		ep->phy = NULL;
+ static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
+ static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
+@@ -445,10 +445,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
+ 	GROUP(pwm_f_x,		3,	18),
+ 
+ 	/* Bank Y */
+-	GROUP(uart_cts_c,	1,	19),
+-	GROUP(uart_rts_c,	1,	18),
+-	GROUP(uart_tx_c,	1,	17),
+-	GROUP(uart_rx_c,	1,	16),
++	GROUP(uart_cts_c,	1,	17),
++	GROUP(uart_rts_c,	1,	16),
++	GROUP(uart_tx_c,	1,	19),
++	GROUP(uart_rx_c,	1,	18),
+ 	GROUP(pwm_a_y,		1,	21),
+ 	GROUP(pwm_f_y,		1,	20),
+ 	GROUP(i2s_out_ch23_y,	1,	5),
 -- 
 2.20.1
 
