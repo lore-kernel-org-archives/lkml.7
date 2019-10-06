@@ -2,117 +2,208 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F5DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB389ECE58B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED60620835
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D7820835
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 14:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="YrZNNK5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfJFOp1 (ORCPT
+        id S1726562AbfJFOqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 10:45:27 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:44891 "EHLO hermes.aosc.io"
+        Sun, 6 Oct 2019 10:46:42 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:34238 "EHLO cmta16.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfJFOp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 10:45:26 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 26B0482916;
-        Sun,  6 Oct 2019 14:45:19 +0000 (UTC)
-Message-ID: <58dc94b6371ab2f5b11b13ab707d73ab3fc4cc64.camel@aosc.io>
-Subject: Re: [linux-sunxi] [PATCH 3/3] Revert "drm/sun4i: dsi: Rework a bit
- the hblk calculation"
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Date:   Sun, 06 Oct 2019 22:44:25 +0800
-In-Reply-To: <CAMty3ZDW4XHyW+6XL_RSVHqTSk79-r749pa0n5e6VbUzowAsiw@mail.gmail.com>
-References: <20191001080253.6135-1-icenowy@aosc.io>
-         <20191001080253.6135-4-icenowy@aosc.io>
-         <CAMty3ZDW4XHyW+6XL_RSVHqTSk79-r749pa0n5e6VbUzowAsiw@mail.gmail.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
+        id S1725985AbfJFOql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 10:46:41 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id H7nuiZSd0FXoiH7nviqxrG; Sun, 06 Oct 2019 08:46:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1570373199; bh=zhiN9/TEQQMAhrEdI04Mweoo96pgSuSYiVmgT7KYVcY=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=YrZNNK5YOVlKE/d1V817uIaBShJjgFlWJG3VJ1BWsOJ3YWAnbdJrrYm3KlNTqZbgh
+         vSoeiRKXTcirSyay2IPRQiUuqAdvyJARNiYEfpt66w3pLa9lRCcL1qrVZYdS27Y2nX
+         4WUmaX5CbIrH+ifEOV0KX6QfSy0ICtKQnNnahuC2xj94mq58FXuAV7dnCLNbfYuIfg
+         rrp+UhMeA42KfrK7GJNOloCz8xUBGFcyr8T5mfsGVKlFGu9dQ1prn22UrfufwizBEo
+         yr5ttnJPmFBP6oVTGUDZCzsY9W9WirUuvAgAu2j4ikqT4to/PXpo4YKMnRK/yr0/Oe
+         pH3JE0aSRqMHQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=HoEI5HbS c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=aatUQebYAAAA:8 a=g0t0pkq594qMvyhE6B4A:9
+ a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=VAi8dUBDBAXkbsTw:21 a=iXfTAjlW8Ecv3Iz4:21
+ a=QEXdDO2ut3YA:10 a=7715FyvI7WU-l6oqrZBK:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>
+Cc:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Frederic Weisbecker'" <frederic@kernel.org>,
+        "'Mel Gorman'" <mgorman@suse.de>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'Chen, Hu'" <hu1.chen@intel.com>,
+        "'Quentin Perret'" <quentin.perret@arm.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+References: <001601d57487$e1029ef0$a307dcd0$@net> <000f01d576df$a6b87a30$f4296e90$@net> <CAJZ5v0gu=rALS9ZLNMDT3cw_sT2m8XCKP6+AW3488x2Q9EXM3g@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gu=rALS9ZLNMDT3cw_sT2m8XCKP6+AW3488x2Q9EXM3g@mail.gmail.com>
+Subject: RE: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor for tickless systems
+Date:   Sun, 6 Oct 2019 07:46:32 -0700
+Message-ID: <000001d57c54$db31f8c0$9195ea40$@net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdV4Owr8XxahUTRXTIajgh8M33FLzQDhv/DA
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfEpcRQlwFM8G1qzSL3Ouzs7S24N0pjKPpzXNneH/LTIHjfryfJs+cn98oGSHqWb1VdbRGQGvX64aJIgLt7byk9mmkkZP1fK9Lji79W5utzXEgy1dX9Q7
+ dLNQfXL/eI5oQUhXL8zxBrhbMFmcPZYpAt/KEbGoDW2h1t+aolULVGE30ERZxnzeSM6O6znApfrRUqUNwoZH6l4nwdj3tgEawrtUg5HQbVrLB1Mq8cOk2hSK
+ u314XxvY9AtU/U+jEEvcdRjiL7mg2m6vQNkaXDeGYb+3PlMgtYcAfaFPGZOKG0SzFWXzohpQSkjtQwhiHIikbQatfbQWD0vkwVF4jlPzg2nepavhQc3xhlRy
+ e05SlKwNyLH3Zc8eqh7CqmxF7NDT/CWOdbxptTu8obhkAPorx+mpz/380l+PorTXD3DTq04Mm3eP/n/V9gBIGjg8qQMx5CZM7Vfsk/C6rIwmn8yydiFZevMV
+ +9Qm/IBV+Wh1cpiiDwisF/DiYXHoVLGi73QcnqHZla9bxggflg5pLx0Ty+aRhqGdEFESAMA7rThk3eEs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019-10-03四的 09:53 +0530，Jagan Teki写道：
-> Hi Wens,
-> 
-> On Tue, Oct 1, 2019 at 1:34 PM Icenowy Zheng <icenowy@aosc.io> wrote:
-> > This reverts commit 62e7511a4f4dcf07f753893d3424decd9466c98b.
-> > 
-> > This commit, although claimed as a refactor, in fact changed the
-> > formula.
-> > 
-> > By expanding the original formula, we can find that the const 10 is
-> > not
-> > substracted, instead it's added to the value (because 10 is
-> > negative
-> > when calculating hsa, and hsa itself is negative when calculating
-> > hblk).
-> > This breaks the similar pattern to other formulas, so restoring the
-> > original formula is more proper.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 9 ++-------
-> >  1 file changed, 2 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 2d3e822a7739..cb5fd19c0d0d 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -577,14 +577,9 @@ static void sun6i_dsi_setup_timings(struct
-> > sun6i_dsi *dsi,
-> >                           (mode->hsync_start - mode->hdisplay) *
-> > Bpp - HFP_PACKET_OVERHEAD);
-> > 
-> >                 /*
-> > -                * The blanking is set using a sync event (4 bytes)
-> > -                * and a blanking packet (4 bytes + payload + 2
-> > -                * bytes). Its minimal size is therefore 10 bytes.
-> > +                * hblk seems to be the line + porches length.
-> >                  */
-> > -#define HBLK_PACKET_OVERHEAD   10
-> > -               hblk = max((unsigned int)HBLK_PACKET_OVERHEAD,
-> > -                          (mode->htotal - (mode->hsync_end - mode-
-> > >hsync_start)) * Bpp -
-> > -                          HBLK_PACKET_OVERHEAD);
-> > +               hblk = mode->htotal * Bpp - hsa;
-> 
-> The original formula is correct according to BSP [1] and work with my
-> panels which I have tested before. May be the horizontal timings on
-> panels you have leads to negative value.
+On 2019.10.01 02:32 Rafael J. Wysocki wrote:
+> On Sun, Sep 29, 2019 at 6:05 PM Doug Smythies <dsmythies@telus.net> wrote:
+>> On 2019.09.26 09:32 Doug Smythies wrote:
+>>
+>>> If the deepest idle state is disabled, the system
+>>> can become somewhat unstable, with anywhere between no problem
+>>> at all, to the occasional temporary jump using a lot more
+>>> power for a few seconds, to a permanent jump using a lot more
+>>> power continuously. I have been unable to isolate the exact
+>>> test load conditions under which this will occur. However,
+>>> temporarily disabling and then enabling other idle states
+>>> seems to make for a somewhat repeatable test. It is important
+>>> to note that the issue occurs with only ever disabling the deepest
+>>> idle state, just not reliably.
+>>>
+>>> I want to know how you want to proceed before I do a bunch of
+>>> regression testing.
+>>
+>> I did some regression testing anyhow, more to create and debug
+>> a methodology than anything else.
+>>
+>>> On 2018.12.11 03:50 Rafael J. Wysocki wrote:
+>>>
+>>>> v7 -> v8:
+>>>>  * Apply the selection rules to the idle deepest state as well as to
+>>>>    the shallower ones (the deepest idle state was treated differently
+>>>>    before by mistake).
+>>>>  * Subtract 1/2 of the exit latency from the measured idle duration
+>>>>    in teo_update() (instead of subtracting the entire exit latency).
+>>>>    This makes the idle state selection be slightly more performance-
+>>>>   oriented.
+>>>
+>>> I have isolated the issue to a subset of the v7 to v8 changes, however
+>>> it was not the exit latency changes.
+>>>
+>>> The partial revert to V7 changes I made were (on top of 5.3):
+>>
+>> The further testing showed a problem or two with my partial teo-v7 reversion
+>> (I call it teo-v12) under slightly different testing conditions.
 
-Do you tested the same timing with BSP kernel?
+Correction:
+There was no problem with my partial reversion kernel (a.k.a. teo-v12). The problem
+was confusion over which kernel I was actually running for whatever test.
 
-It's quite difficult to get a negative value here, because the value is
-quite big (includes mode->hdisplay * Bpp).
+>>
+>> I also have a 5.3 based kernel with the current teo reverted and the entire
+>> teo-v7 put in its place. I have yet to find a idle state disabled related issue
+>> with this kernel.
+>>
+>> I'll come back to this thread at a later date with better details and test results.
+>
+> Thanks for this work!
+>
+> Please also note that there is a teo patch in 5.4-rc1 that may make a
+> difference in principle.
 
-Strangely, only change the formula here back makes the timing
-translated from FEX file works (tested on PineTab and PinePhone
-production ver). The translation rule is from [1].
+Yes, actually this saga started from somewhere between kernel 5.3 and 5.4-rc1,
+and did include those teo patches, which actually significantly increases the
+probability of the issue occurring.
 
-So I still insist on the patch because it's needed by experiment.
+When the deepest idle state is disabled, and the all states search loop exits
+normally, it might incorrectly re-evaluate a previous idle state previously
+deemed not worthy of the check. This was introduced between teo development
+versions 7 and 8. The fix is to move the code back inside the loop.
+(I'll submit a patch in a day or two).
 
-[1] http://linux-sunxi.org/LCD
+I do not think I stated it clearly before: The problem here is that some CPUs
+seem to get stuck in idle state 0, and when they do power consumption spikes,
+often by several hundred % and often indefinitely.
 
-> 
-> [1] 
-> https://github.com/ayufan-pine64/linux-pine64/blob/my-hacks-1.2-with-drm/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L919
+I made a hack job automated test:
+Kernel	tests		fail rate
+5.4-rc1	 6616		13.45%
+5.3		 2376		 4.50%
+5.3-teov7	12136		 0.00%  <<< teo.c reverted and teov7 put in its place.
+5.4-rc1-ds	11168        0.00%  <<< proposed patch (> 7 hours test time)
+
+Proposed patch (on top of kernel 5.4-rc1):
+
+doug@s15:~/temp-k-git/linux$ git diff
+diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+index b5a0e49..0502aa9 100644
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -276,8 +276,22 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+                if (idx < 0)
+                        idx = i; /* first enabled state */
+
+-               if (s->target_residency > duration_us)
++               if (s->target_residency > duration_us){
++                       /*
++                        * If the "hits" metric of the idle state matching the sleep length is
++                        * greater than its "misses" metric, that is the one to use.  Otherwise,
++                        * it is more likely that one of the shallower states will match the
++                        * idle duration observed after wakeup, so take the one with the maximum
++                        * "early hits" metric, but if that cannot be determined, just use the
++                        * state selected so far.
++                        */
++                       if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
++                           max_early_idx >= 0) {
++                               idx = max_early_idx;
++                               duration_us = drv->states[idx].target_residency;
++                       }
+                        break;
++               }
+
+                if (s->exit_latency > latency_req && constraint_idx > i)
+                        constraint_idx = i;
+@@ -293,20 +307,6 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+        }
+
+        /*
+-        * If the "hits" metric of the idle state matching the sleep length is
+-        * greater than its "misses" metric, that is the one to use.  Otherwise,
+-        * it is more likely that one of the shallower states will match the
+-        * idle duration observed after wakeup, so take the one with the maximum
+-        * "early hits" metric, but if that cannot be determined, just use the
+-        * state selected so far.
+-        */
+-       if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
+-           max_early_idx >= 0) {
+-               idx = max_early_idx;
+-               duration_us = drv->states[idx].target_residency;
+-       }
+-
+-       /*
+         * If there is a latency constraint, it may be necessary to use a
+         * shallower idle state than the one selected so far.
+         */
+
 
