@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A644ECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80B3C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6752087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FAA217F9
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383267;
-	bh=rAh7C3nWLJ9QF2K6jvkBAOzHcHw8VBn7HfXRASN2AEI=;
+	s=default; t=1570383272;
+	bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o/ktMolde6cNDCxa3nLfYpI0SmBkbtJ9mqfp2KkTbGJ2n3mckEm9MQbvpZUmWyZEt
-	 EPaT3hWPEGRTnhPXawucN6zCOeEC0yFdrPpWP5OqfTA7lOtnSJ8Lg4JGWn+7TVadf3
-	 LQ9aQecGvCiCmLkTeeHn8fXHkCckeWsNPPmzlbzw=
+	b=2h+JPcrqB2m9aQUs+o/YXstF0esEENuJL9XxUa37BTBmXftp76qVkgf+JElhqqHQe
+	 EU55PMLwChoGCYtjQZuKCD+HH6Nh7sBzmbAVsVH3BbmQ7q3XH4rrYeBeYqj6F+Sy5q
+	 Z8ZeMJDr2biWr+BQXmVqbaRUfRQjxXfTfJZ53NtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfJFRe0 (ORCPT
+        id S1727300AbfJFReb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:34:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbfJFReX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:34:23 -0400
+        id S1729949AbfJFReZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:34:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21BB32087E;
-        Sun,  6 Oct 2019 17:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D17FF2087E;
+        Sun,  6 Oct 2019 17:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383262;
-        bh=rAh7C3nWLJ9QF2K6jvkBAOzHcHw8VBn7HfXRASN2AEI=;
+        s=default; t=1570383265;
+        bh=ian+tWN6G0IstqirvWiqzGhkZLYP1MXNMkLKu3P74B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QGIQXyefyiwdD6x76MkuXvdXUk6fZeSbJFD9G6ueVxtUxELz7fdu8U5OX39B9li14
-         kxUXIf6s/mzr5bH+Z7nyUSWJvV28p7Jf3V1TFo9+ulzq1w2PTKDFr8Nzj1ive/iGXn
-         HfL2axpwh2sd6mEr9Xy6y02qwX9XCrtIWvq9Pig0=
+        b=T9qd5cwCyGZT3SX96pVwh9Rf2Tj2rL4Sx4GhoMwQZ/15iveJTNm+3gLPntsgdaQOj
+         jGFvWXZVAuUuClRmvF/Ec8Ky5wTDLDszdaDpfa+rcNwza5dCvFScogzrzkiLy3EkGt
+         I+XpSD4Hf9VqGA7HSb47bxXOTTIWc+0fQQV8w5W4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 006/137] net: ipv4: avoid mixed n_redirects and rate_tokens usage
-Date:   Sun,  6 Oct 2019 19:19:50 +0200
-Message-Id: <20191006171210.112714685@linuxfoundation.org>
+Subject: [PATCH 5.2 007/137] net: qlogic: Fix memory leak in ql_alloc_large_buffers
+Date:   Sun,  6 Oct 2019 19:19:51 +0200
+Message-Id: <20191006171210.192543155@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,62 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit b406472b5ad79ede8d10077f0c8f05505ace8b6d ]
+[ Upstream commit 1acb8f2a7a9f10543868ddd737e37424d5c36cf4 ]
 
-Since commit c09551c6ff7f ("net: ipv4: use a dedicated counter
-for icmp_v4 redirect packets") we use 'n_redirects' to account
-for redirect packets, but we still use 'rate_tokens' to compute
-the redirect packets exponential backoff.
+In ql_alloc_large_buffers, a new skb is allocated via netdev_alloc_skb.
+This skb should be released if pci_dma_mapping_error fails.
 
-If the device sent to the relevant peer any ICMP error packet
-after sending a redirect, it will also update 'rate_token' according
-to the leaking bucket schema; typically 'rate_token' will raise
-above BITS_PER_LONG and the redirect packets backoff algorithm
-will produce undefined behavior.
-
-Fix the issue using 'n_redirects' to compute the exponential backoff
-in ip_rt_send_redirect().
-
-Note that we still clear rate_tokens after a redirect silence period,
-to avoid changing an established behaviour.
-
-The root cause predates git history; before the mentioned commit in
-the critical scenario, the kernel stopped sending redirects, after
-the mentioned commit the behavior more randomic.
-
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Fixes: c09551c6ff7f ("net: ipv4: use a dedicated counter for icmp_v4 redirect packets")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() in ql_release_to_lrg_buf_free_list(), ql_populate_free_queue(), ql_alloc_large_buffers(), and ql3xxx_send()")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qlogic/qla3xxx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -915,16 +915,15 @@ void ip_rt_send_redirect(struct sk_buff
- 	if (peer->rate_tokens == 0 ||
- 	    time_after(jiffies,
- 		       (peer->rate_last +
--			(ip_rt_redirect_load << peer->rate_tokens)))) {
-+			(ip_rt_redirect_load << peer->n_redirects)))) {
- 		__be32 gw = rt_nexthop(rt, ip_hdr(skb)->daddr);
- 
- 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
- 		peer->rate_last = jiffies;
--		++peer->rate_tokens;
- 		++peer->n_redirects;
- #ifdef CONFIG_IP_ROUTE_VERBOSE
- 		if (log_martians &&
--		    peer->rate_tokens == ip_rt_redirect_number)
-+		    peer->n_redirects == ip_rt_redirect_number)
- 			net_warn_ratelimited("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
- 					     &ip_hdr(skb)->saddr, inet_iif(skb),
- 					     &ip_hdr(skb)->daddr, &gw);
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -2787,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
+ 				netdev_err(qdev->ndev,
+ 					   "PCI mapping failed with error: %d\n",
+ 					   err);
++				dev_kfree_skb_irq(skb);
+ 				ql_free_large_buffers(qdev);
+ 				return -ENOMEM;
+ 			}
 
 
