@@ -2,56 +2,54 @@ Return-Path: <SRS0=Dm7n=X7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5816BECE58B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1040EC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 286852067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2252133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 18:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570384953;
-	bh=+uE/jBQW2nAhPbZwmWhhKdEgpP4dh01GAwNZwEB0lmE=;
+	s=default; t=1570384957;
+	bh=9SHFMyTZ1b8A1lNB7zidcHr+FW0PPNHHLbMg322wdgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2eaFBmA3hxKw1OJiYQx4mdj78ee+nsj8IBpRqpz2zMMDX5r3uVVZpRDA6AGZ4piZo
-	 +r2NSuVHQvYDVoY1xqX83rDFZ6VIMNCRlYbZx/0Go4xOUDhWhNWdFkIusqC6cY0G2S
-	 y3ElgLGIxeTi+00je6iiBznMl+wSGBPf0KxSmp10=
+	b=qcH3dwBKVjjHDOkCKfCgCwXYuhUBDHeTCafkEc2TSJBb23W1m/02TJEUDYm/37nkV
+	 zmx0+ILUQfpBBPEyg2vnDMEmSY57dXCRcCgF/k3FWP5UoM6dQRUhjkdTnj1bmusFzB
+	 szNkc/6cBN3p7sGBE/vEdtHM/zlor1KQJ96O3urI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfJFRZw (ORCPT
+        id S1728580AbfJFSCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50584 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 14:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfJFRZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:25:34 -0400
+        id S1728115AbfJFRZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:25:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75F3F2077B;
-        Sun,  6 Oct 2019 17:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B1B42077B;
+        Sun,  6 Oct 2019 17:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570382733;
-        bh=+uE/jBQW2nAhPbZwmWhhKdEgpP4dh01GAwNZwEB0lmE=;
+        s=default; t=1570382748;
+        bh=9SHFMyTZ1b8A1lNB7zidcHr+FW0PPNHHLbMg322wdgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9NnQbK1h89l1ajeTHGGyD/Am+1Og1shPiCh8Fgo+DLuhEQKztxNeKHf8qt28LQHi
-         Zst0LODl9fhFcwpww+nmgp1g6ST+zCMb+gJf8ZsPNWOSZFJEu7i8TlanSnPGp/5z8S
-         cOYdDtPGa+np1V7i6NVsDiTwXkSWistnQg7uTYuc=
+        b=So7/AjcqhPabzF2L+rQc/qFyZrxwLBWwveT4tZCPqb5ZtkUzpXOKprXiZ54hvNheT
+         ukOZhIrLLE++NqZxaDJinso4aXtDoXWwhKU06kOe3vK7dzhDw+O9VPaCDwia6pnK++
+         BItyuFs7bql1qmcDP2fd/cJhegjtGw0E2k5ffNuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 02/68] tpm: use tpm_try_get_ops() in tpm-sysfs.c.
-Date:   Sun,  6 Oct 2019 19:20:38 +0200
-Message-Id: <20191006171109.219132103@linuxfoundation.org>
+Subject: [PATCH 4.14 25/68] arm64: fix unreachable code issue with cmpxchg
+Date:   Sun,  6 Oct 2019 19:21:01 +0200
+Message-Id: <20191006171119.691801996@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
 References: <20191006171108.150129403@linuxfoundation.org>
@@ -64,287 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 2677ca98ae377517930c183248221f69f771c921 upstream
+[ Upstream commit 920fdab7b3ce98c14c840261e364f490f3679a62 ]
 
-Use tpm_try_get_ops() in tpm-sysfs.c so that we can consider moving
-other decorations (locking, localities, power management for example)
-inside it. This direction can be of course taken only after other call
-sites for tpm_transmit() have been treated in the same way.
+On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
+when CONFIG_OPTIMIZE_INLINING is set.
+Clang then fails a compile-time assertion, because it cannot tell at
+compile time what the size of the argument is:
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Tested-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Tested-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+mm/memcontrol.o: In function `__cmpxchg_mb':
+memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
+memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
+
+Mark all of the cmpxchg() style functions as __always_inline to
+ensure that the compiler can see the result.
+
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/648
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Tested-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-sysfs.c | 134 ++++++++++++++++++++++-------------
- 1 file changed, 83 insertions(+), 51 deletions(-)
+ arch/arm64/include/asm/cmpxchg.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
-index 83a77a4455380..177a60e5c6ec9 100644
---- a/drivers/char/tpm/tpm-sysfs.c
-+++ b/drivers/char/tpm/tpm-sysfs.c
-@@ -39,7 +39,6 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct tpm_buf tpm_buf;
- 	struct tpm_readpubek_out *out;
--	ssize_t rc;
- 	int i;
- 	char *str = buf;
- 	struct tpm_chip *chip = to_tpm_chip(dev);
-@@ -47,19 +46,18 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
+diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+index 0f2e1ab5e1666..9b2e2e2e728ae 100644
+--- a/arch/arm64/include/asm/cmpxchg.h
++++ b/arch/arm64/include/asm/cmpxchg.h
+@@ -73,7 +73,7 @@ __XCHG_CASE( ,  ,  mb_8, dmb ish, nop,  , a, l, "memory")
+ #undef __XCHG_CASE
  
- 	memset(&anti_replay, 0, sizeof(anti_replay));
+ #define __XCHG_GEN(sfx)							\
+-static inline unsigned long __xchg##sfx(unsigned long x,		\
++static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
+ 					volatile void *ptr,		\
+ 					int size)			\
+ {									\
+@@ -115,7 +115,7 @@ __XCHG_GEN(_mb)
+ #define xchg(...)		__xchg_wrapper( _mb, __VA_ARGS__)
  
--	rc = tpm_buf_init(&tpm_buf, TPM_TAG_RQU_COMMAND, TPM_ORD_READPUBEK);
--	if (rc)
--		return rc;
-+	if (tpm_try_get_ops(chip))
-+		return 0;
-+
-+	if (tpm_buf_init(&tpm_buf, TPM_TAG_RQU_COMMAND, TPM_ORD_READPUBEK))
-+		goto out_ops;
+ #define __CMPXCHG_GEN(sfx)						\
+-static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
++static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
+ 					   unsigned long old,		\
+ 					   unsigned long new,		\
+ 					   int size)			\
+@@ -248,7 +248,7 @@ __CMPWAIT_CASE( ,  , 8);
+ #undef __CMPWAIT_CASE
  
- 	tpm_buf_append(&tpm_buf, anti_replay, sizeof(anti_replay));
- 
--	rc = tpm_transmit_cmd(chip, NULL, tpm_buf.data, PAGE_SIZE,
-+	if (tpm_transmit_cmd(chip, NULL, tpm_buf.data, PAGE_SIZE,
- 			      READ_PUBEK_RESULT_MIN_BODY_SIZE, 0,
--			      "attempting to read the PUBEK");
--	if (rc) {
--		tpm_buf_destroy(&tpm_buf);
--		return 0;
--	}
-+			      "attempting to read the PUBEK"))
-+		goto out_buf;
- 
- 	out = (struct tpm_readpubek_out *)&tpm_buf.data[10];
- 	str +=
-@@ -90,9 +88,11 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
- 			str += sprintf(str, "\n");
- 	}
- 
--	rc = str - buf;
-+out_buf:
- 	tpm_buf_destroy(&tpm_buf);
--	return rc;
-+out_ops:
-+	tpm_put_ops(chip);
-+	return str - buf;
- }
- static DEVICE_ATTR_RO(pubek);
- 
-@@ -106,12 +106,16 @@ static ssize_t pcrs_show(struct device *dev, struct device_attribute *attr,
- 	char *str = buf;
- 	struct tpm_chip *chip = to_tpm_chip(dev);
- 
--	rc = tpm_getcap(chip, TPM_CAP_PROP_PCR, &cap,
--			"attempting to determine the number of PCRS",
--			sizeof(cap.num_pcrs));
--	if (rc)
-+	if (tpm_try_get_ops(chip))
- 		return 0;
- 
-+	if (tpm_getcap(chip, TPM_CAP_PROP_PCR, &cap,
-+		       "attempting to determine the number of PCRS",
-+		       sizeof(cap.num_pcrs))) {
-+		tpm_put_ops(chip);
-+		return 0;
-+	}
-+
- 	num_pcrs = be32_to_cpu(cap.num_pcrs);
- 	for (i = 0; i < num_pcrs; i++) {
- 		rc = tpm_pcr_read_dev(chip, i, digest);
-@@ -122,6 +126,7 @@ static ssize_t pcrs_show(struct device *dev, struct device_attribute *attr,
- 			str += sprintf(str, "%02X ", digest[j]);
- 		str += sprintf(str, "\n");
- 	}
-+	tpm_put_ops(chip);
- 	return str - buf;
- }
- static DEVICE_ATTR_RO(pcrs);
-@@ -129,16 +134,21 @@ static DEVICE_ATTR_RO(pcrs);
- static ssize_t enabled_show(struct device *dev, struct device_attribute *attr,
- 		     char *buf)
- {
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	ssize_t rc = 0;
- 	cap_t cap;
--	ssize_t rc;
- 
--	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_PERM, &cap,
--			"attempting to determine the permanent enabled state",
--			sizeof(cap.perm_flags));
--	if (rc)
-+	if (tpm_try_get_ops(chip))
- 		return 0;
- 
-+	if (tpm_getcap(chip, TPM_CAP_FLAG_PERM, &cap,
-+		       "attempting to determine the permanent enabled state",
-+		       sizeof(cap.perm_flags)))
-+		goto out_ops;
-+
- 	rc = sprintf(buf, "%d\n", !cap.perm_flags.disable);
-+out_ops:
-+	tpm_put_ops(chip);
- 	return rc;
- }
- static DEVICE_ATTR_RO(enabled);
-@@ -146,16 +156,21 @@ static DEVICE_ATTR_RO(enabled);
- static ssize_t active_show(struct device *dev, struct device_attribute *attr,
- 		    char *buf)
- {
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	ssize_t rc = 0;
- 	cap_t cap;
--	ssize_t rc;
- 
--	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_PERM, &cap,
--			"attempting to determine the permanent active state",
--			sizeof(cap.perm_flags));
--	if (rc)
-+	if (tpm_try_get_ops(chip))
- 		return 0;
- 
-+	if (tpm_getcap(chip, TPM_CAP_FLAG_PERM, &cap,
-+		       "attempting to determine the permanent active state",
-+		       sizeof(cap.perm_flags)))
-+		goto out_ops;
-+
- 	rc = sprintf(buf, "%d\n", !cap.perm_flags.deactivated);
-+out_ops:
-+	tpm_put_ops(chip);
- 	return rc;
- }
- static DEVICE_ATTR_RO(active);
-@@ -163,16 +178,21 @@ static DEVICE_ATTR_RO(active);
- static ssize_t owned_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	ssize_t rc = 0;
- 	cap_t cap;
--	ssize_t rc;
- 
--	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_PROP_OWNER, &cap,
--			"attempting to determine the owner state",
--			sizeof(cap.owned));
--	if (rc)
-+	if (tpm_try_get_ops(chip))
- 		return 0;
- 
-+	if (tpm_getcap(to_tpm_chip(dev), TPM_CAP_PROP_OWNER, &cap,
-+		       "attempting to determine the owner state",
-+		       sizeof(cap.owned)))
-+		goto out_ops;
-+
- 	rc = sprintf(buf, "%d\n", cap.owned);
-+out_ops:
-+	tpm_put_ops(chip);
- 	return rc;
- }
- static DEVICE_ATTR_RO(owned);
-@@ -180,16 +200,21 @@ static DEVICE_ATTR_RO(owned);
- static ssize_t temp_deactivated_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
- {
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	ssize_t rc = 0;
- 	cap_t cap;
--	ssize_t rc;
- 
--	rc = tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_VOL, &cap,
--			"attempting to determine the temporary state",
--			sizeof(cap.stclear_flags));
--	if (rc)
-+	if (tpm_try_get_ops(chip))
- 		return 0;
- 
-+	if (tpm_getcap(to_tpm_chip(dev), TPM_CAP_FLAG_VOL, &cap,
-+		       "attempting to determine the temporary state",
-+		       sizeof(cap.stclear_flags)))
-+		goto out_ops;
-+
- 	rc = sprintf(buf, "%d\n", cap.stclear_flags.deactivated);
-+out_ops:
-+	tpm_put_ops(chip);
- 	return rc;
- }
- static DEVICE_ATTR_RO(temp_deactivated);
-@@ -198,15 +223,18 @@ static ssize_t caps_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
- 	struct tpm_chip *chip = to_tpm_chip(dev);
--	cap_t cap;
--	ssize_t rc;
-+	ssize_t rc = 0;
- 	char *str = buf;
-+	cap_t cap;
- 
--	rc = tpm_getcap(chip, TPM_CAP_PROP_MANUFACTURER, &cap,
--			"attempting to determine the manufacturer",
--			sizeof(cap.manufacturer_id));
--	if (rc)
-+	if (tpm_try_get_ops(chip))
- 		return 0;
-+
-+	if (tpm_getcap(chip, TPM_CAP_PROP_MANUFACTURER, &cap,
-+		       "attempting to determine the manufacturer",
-+		       sizeof(cap.manufacturer_id)))
-+		goto out_ops;
-+
- 	str += sprintf(str, "Manufacturer: 0x%x\n",
- 		       be32_to_cpu(cap.manufacturer_id));
- 
-@@ -223,20 +251,22 @@ static ssize_t caps_show(struct device *dev, struct device_attribute *attr,
- 			       cap.tpm_version_1_2.revMinor);
- 	} else {
- 		/* Otherwise just use TPM_STRUCT_VER */
--		rc = tpm_getcap(chip, TPM_CAP_VERSION_1_1, &cap,
--				"attempting to determine the 1.1 version",
--				sizeof(cap.tpm_version));
--		if (rc)
--			return 0;
-+		if (tpm_getcap(chip, TPM_CAP_VERSION_1_1, &cap,
-+			       "attempting to determine the 1.1 version",
-+			       sizeof(cap.tpm_version)))
-+			goto out_ops;
-+
- 		str += sprintf(str,
- 			       "TCG version: %d.%d\nFirmware version: %d.%d\n",
- 			       cap.tpm_version.Major,
- 			       cap.tpm_version.Minor,
- 			       cap.tpm_version.revMajor,
- 			       cap.tpm_version.revMinor);
--	}
--
--	return str - buf;
-+}
-+	rc = str - buf;
-+out_ops:
-+	tpm_put_ops(chip);
-+	return rc;
- }
- static DEVICE_ATTR_RO(caps);
- 
-@@ -244,10 +274,12 @@ static ssize_t cancel_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
- {
- 	struct tpm_chip *chip = to_tpm_chip(dev);
--	if (chip == NULL)
-+
-+	if (tpm_try_get_ops(chip))
- 		return 0;
- 
- 	chip->ops->cancel(chip);
-+	tpm_put_ops(chip);
- 	return count;
- }
- static DEVICE_ATTR_WO(cancel);
+ #define __CMPWAIT_GEN(sfx)						\
+-static inline void __cmpwait##sfx(volatile void *ptr,			\
++static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
+ 				  unsigned long val,			\
+ 				  int size)				\
+ {									\
 -- 
 2.20.1
 
