@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB040C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF52C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D3E2080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85CD52173B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383501;
-	bh=BU1jzN53PqmlJ8ONEqVVq43OmhXY/UNCrwZY04OTspg=;
+	s=default; t=1570383507;
+	bh=w2whw1Hr/775putsFnagWM9RGPe7vXYrduAUtGNqhKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h8JKw7UV9uEuk1yU6UseB1Ydxb1LDjHhHk05dvhS77O/PoJsjzKCozW4BI0pJ+GKE
-	 wri4Owc2qhQqcVOrF9FfIeGNPDsPZw+KIbiNVB+8G639FesqjCQGFUIPpSx0rAtb8Y
-	 y/c3s8W6Zx4VbnURet6fJNEO6v3+9ev+oiRqzhMk=
+	b=rSwhScUfMdstj3+p0QCGsHSIVUdAP9JzMO2lvpTb3Lmn0nj3uFEfPx33cSdxFHxHi
+	 Kr+XGfeNpsEpHGNcGFHsa23B7Y5IpZ5h3AivwHz0EO5KT6b1vHle4UDBLaJEHQ4nUJ
+	 GAV8HvSLk1Hg7njjKDvHF7CCCruMCLph3DntR4UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbfJFRiV (ORCPT
+        id S1730615AbfJFRi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37476 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729990AbfJFRiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:17 -0400
+        id S1730600AbfJFRiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:38:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01CF2053B;
-        Sun,  6 Oct 2019 17:38:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 277D72080F;
+        Sun,  6 Oct 2019 17:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383497;
-        bh=BU1jzN53PqmlJ8ONEqVVq43OmhXY/UNCrwZY04OTspg=;
+        s=default; t=1570383502;
+        bh=w2whw1Hr/775putsFnagWM9RGPe7vXYrduAUtGNqhKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n2tIN4L4M8k6dtm1jwsfa+HkDKcU2rBNY05US2HCqQRAmIpM9HFLcGC2sA+b2DZnE
-         50dmpTClZfq/mZM6G0eLgKjjm1TfaY6r1mBd73zlhi1GsbPTzVZHIrU6DvUH0f/ghW
-         DRpjjs/ZZcsSzQL4twg7no9GiG9vcc5m5Q/gBzug=
+        b=0ugRFQp/cd5K5EGcZztNDWs0/IkEh2S30RM/cWqAUaMSKqAljE91qkEs24zKoomLH
+         Sa8WhpO8cSgWrxLID5gsuKg0Ip5DlD29umepl/xkMIF2LOAa/ovCCnYxh0D+z58JhK
+         9IFDur/SgGDtQT7hEaX3DRp74bqZF8bHWpHqNqlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
         Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 124/137] kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
-Date:   Sun,  6 Oct 2019 19:21:48 +0200
-Message-Id: <20191006171219.630329117@linuxfoundation.org>
+Subject: [PATCH 5.2 126/137] mips: properly account for stack randomization and stack guard gap
+Date:   Sun,  6 Oct 2019 19:21:50 +0200
+Message-Id: <20191006171219.819609010@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -73,55 +74,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Alexandre Ghiti <alex@ghiti.fr>
 
-[ Upstream commit b751c52bb587ae66f773b15204ef7a147467f4c7 ]
+[ Upstream commit b1f61b5bde3a1f50392c97b4c8513d1b8efb1cf2 ]
 
-The current default value (400) is too low on many systems (e.g.  some
-ARM64 platform takes up 1000+ entries).
+This commit takes care of stack randomization and stack guard gap when
+computing mmap base address and checks if the task asked for
+randomization.  This fixes the problem uncovered and not fixed for arm
+here: https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
 
-syzbot uses 16000 as default value, and has proved to be enough on beefy
-configurations, so let's pick that value.
-
-This consumes more RAM on boot (each entry is 160 bytes, so in total
-~2.5MB of RAM), but the memory would later be freed (early_log is
-__initdata).
-
-Link: http://lkml.kernel.org/r/20190730154027.101525-1-drinkcat@chromium.org
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Link: http://lkml.kernel.org/r/20190730055113.23635-10-alex@ghiti.fr
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Paul Burton <paul.burton@mips.com>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/mm/mmap.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index cbdfae3798965..120ec6f64bbc3 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -599,7 +599,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
- 	int "Maximum kmemleak early log entries"
- 	depends on DEBUG_KMEMLEAK
- 	range 200 40000
--	default 400
-+	default 16000
- 	help
- 	  Kmemleak must track all the memory allocations to avoid
- 	  reporting false positives. Since memory may be allocated or
+diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
+index d79f2b4323187..f5c778113384b 100644
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
+ EXPORT_SYMBOL(shm_align_mask);
+ 
+ /* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
++#define MIN_GAP		(128*1024*1024UL)
++#define MAX_GAP		((TASK_SIZE)/6*5)
++#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+ 
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ {
+@@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+ {
+ 	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
++
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
+ 
+ 	if (gap < MIN_GAP)
+ 		gap = MIN_GAP;
 -- 
 2.20.1
 
