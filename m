@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 710A7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3451C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A2B2087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E09C2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 17:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570383312;
-	bh=+MlfoAtoWLCe3LiiFPezhp7+K5aRv9eFB+47gTDeinA=;
+	s=default; t=1570383316;
+	bh=ZrLi2JF1gXBIO8UjLt7eus8vyU6RSKJMJP9EwGTXIH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7e8O236Efxcnm+7+Uzp9jEHVh8SYloiZ0QeB1vyiZqObYxgg9LixlxmBqLKhyJWM
-	 E6VfSH8tQyRPHHPgYtgs0e0FsnoGZUjmj7DsolrSbmc8nIVlUWcC+P0099Vimb24mw
-	 jfKATmR6ecx1IFrjDdQDIQZaIwSw3IJq3qj/LRe0=
+	b=T5oIdS7amkrLS0O43festNM144OLyVxydi6bGbThbHP/XKyztwrCiewierUnFDc5L
+	 tQ6+i6EKmlQMx9+Vai9Ov+ASSpPVOlrrW+/lp7tSWfgyZ0dM2nWfMD3vii8teH1xkU
+	 0ResvLsao47YQr9AMGjrViPKSs4/6VUAsblf7IGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfJFRfL (ORCPT
+        id S1728451AbfJFRfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 13:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        Sun, 6 Oct 2019 13:35:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730126AbfJFRfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:35:03 -0400
+        id S1728216AbfJFRfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:35:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B0DE2080F;
-        Sun,  6 Oct 2019 17:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D144C20700;
+        Sun,  6 Oct 2019 17:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383303;
-        bh=+MlfoAtoWLCe3LiiFPezhp7+K5aRv9eFB+47gTDeinA=;
+        s=default; t=1570383311;
+        bh=ZrLi2JF1gXBIO8UjLt7eus8vyU6RSKJMJP9EwGTXIH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6FKPxUHmF++TT1VaJfLvviLhzq2lxPkn+bCoSzRbxeVCW6sF5mpO/DXfDFtAI7Cr
-         /+fFpxhc/eNewBmWLIft2onwKswMSR1y+u688QgGDuIxdsy88rnr/VEajWSCvhWuZO
-         FcC5r/1owpZHnLt6wlw64qy5vH7JCIahGxhozKuY=
+        b=rW0t0iBuHqpJNgpdaCF5SWffOaFhQrVfNq1gQvNF8AlNsZAfyTV5zWT6IZ7EklbLc
+         +bnT2MF2Htgye8kYsEuuAqWAaZT+Gs/Z56VAGnQYZlX8W9kqX3hJ0RdmE+UdhBfXCJ
+         197iCi2x9nUZD+lgnoMYxWkqFk4vDiUyHcAy/d/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 055/137] powerpc/rtas: use device model APIs and serialization during LPM
-Date:   Sun,  6 Oct 2019 19:20:39 +0200
-Message-Id: <20191006171213.287244692@linuxfoundation.org>
+Subject: [PATCH 5.2 057/137] powerpc/64s/radix: Fix memory hotplug section page table creation
+Date:   Sun,  6 Oct 2019 19:20:41 +0200
+Message-Id: <20191006171213.394418830@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
 References: <20191006171209.403038733@linuxfoundation.org>
@@ -61,94 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
+[ Upstream commit 8f51e3929470942e6a8744061254fdeef646cd36 ]
 
-The LPAR migration implementation and userspace-initiated cpu hotplug
-can interleave their executions like so:
+create_physical_mapping expects physical addresses, but creating and
+splitting these mappings after boot is supplying virtual (effective)
+addresses. This can be irritated by booting with mem= to limit memory
+then probing an unused physical memory range:
 
-1. Set cpu 7 offline via sysfs.
+  echo <addr> > /sys/devices/system/memory/probe
 
-2. Begin a partition migration, whose implementation requires the OS
-   to ensure all present cpus are online; cpu 7 is onlined:
+This mostly works by accident, firstly because __va(__va(x)) == __va(x)
+so the virtual address does not get corrupted. Secondly because pfn_pte
+masks out the upper bits of the pfn beyond the physical address limit,
+so a pfn constructed with a 0xc000000000000000 virtual linear address
+will be masked back to the correct physical address in the pte.
 
-     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
-
-   This sets cpu 7 online in all respects except for the cpu's
-   corresponding struct device; dev->offline remains true.
-
-3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
-   already online and returns success. The driver core (device_online)
-   sets dev->offline = false.
-
-4. The migration completes and restores cpu 7 to offline state:
-
-     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
-
-This leaves cpu7 in a state where the driver core considers the cpu
-device online, but in all other respects it is offline and
-unused. Attempts to online the cpu via sysfs appear to succeed but the
-driver core actually does not pass the request to the lower-level
-cpuhp support code. This makes the cpu unusable until the cpu device
-is manually set offline and then online again via sysfs.
-
-Instead of directly calling cpu_up/cpu_down, the migration code should
-use the higher-level device core APIs to maintain consistent state and
-serialize operations.
-
-Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Fixes: 6cc27341b21a8 ("powerpc/mm: add radix__create_section_mapping()")
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
+Link: https://lore.kernel.org/r/20190724084638.24982-1-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/book3s64/radix_pgtable.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index fff2eb22427d0..65cd96c3b1d60 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -871,15 +871,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
- 		return 0;
+diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+index 8deb432c29754..2b6cc823046a3 100644
+--- a/arch/powerpc/mm/book3s64/radix_pgtable.c
++++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+@@ -901,7 +901,7 @@ int __meminit radix__create_section_mapping(unsigned long start, unsigned long e
+ 		return -1;
+ 	}
  
- 	for_each_cpu(cpu, cpus) {
-+		struct device *dev = get_cpu_device(cpu);
-+
- 		switch (state) {
- 		case DOWN:
--			cpuret = cpu_down(cpu);
-+			cpuret = device_offline(dev);
- 			break;
- 		case UP:
--			cpuret = cpu_up(cpu);
-+			cpuret = device_online(dev);
- 			break;
- 		}
--		if (cpuret) {
-+		if (cpuret < 0) {
- 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
- 					__func__,
- 					((state == UP) ? "up" : "down"),
-@@ -968,6 +970,8 @@ int rtas_ibm_suspend_me(u64 handle)
- 	data.token = rtas_token("ibm,suspend-me");
- 	data.complete = &done;
- 
-+	lock_device_hotplug();
-+
- 	/* All present CPUs must be online */
- 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
- 	cpuret = rtas_online_cpus_mask(offline_mask);
-@@ -1007,6 +1011,7 @@ out_hotplug_enable:
- 				__func__);
- 
- out:
-+	unlock_device_hotplug();
- 	free_cpumask_var(offline_mask);
- 	return atomic_read(&data.error);
+-	return create_physical_mapping(start, end, nid);
++	return create_physical_mapping(__pa(start), __pa(end), nid);
  }
+ 
+ int __meminit radix__remove_section_mapping(unsigned long start, unsigned long end)
 -- 
 2.20.1
 
