@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB25C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391EAC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C0220862
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7712087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 15:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDQ07kAw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtS6gs70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfJFPL6 (ORCPT
+        id S1726895AbfJFPL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 11:11:58 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37045 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfJFPLt (ORCPT
+        Sun, 6 Oct 2019 11:11:56 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:43536 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbfJFPLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 11:11:49 -0400
-Received: by mail-yb1-f196.google.com with SMTP id z125so3818106ybc.4;
-        Sun, 06 Oct 2019 08:11:49 -0700 (PDT)
+        Sun, 6 Oct 2019 11:11:46 -0400
+Received: by mail-yb1-f194.google.com with SMTP id y204so3802544yby.10;
+        Sun, 06 Oct 2019 08:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=geeVhlPEQCZLJDo40X4CwybS5cFswh73El6LvFzVdzQ=;
-        b=bDQ07kAw8hj9ATv79TvjeaQJHFCbTMypdgdq2WRhn1IW8cwmfmbgiLTDLYgIM4Z0pC
-         VFHqe+Bjbhf1PPnLkZvgc8vPtdAVket41QxrG3y54fQGtoLi483lo+RVOs5Q9n0ua3G4
-         aly8Pprt20Lt8jOLb8Uobf3gZ8IXj/ZJ5CFnuQ60YPIsQuXwmNfuXapraFAbCAJ+FwSR
-         1LX7TBNNQ31xwXJhsNidyh4wr6Bb4GQ5/dpci21wjgXQL7RRLltRVQpi8E91BFiIQXe6
-         GSsjEEfZFlEH4dbC3oGNVMhuOPtXojMU1+z5xYJAp1WfuyOIAHLXMPkdroDHKj0I9bqn
-         8Lqg==
+        bh=GAGfzyUV4XhvgurCxyCR2EqX3tIH+KR8HXshRAb1W4M=;
+        b=GtS6gs70VznAEpE2zLW1HedOyrDMpLzJ6UeoorAujopSa+qhwD4xHWRXDvRRAag8ec
+         BIBJF6kT8KUbQj6YnDOh5lhx5NXR/lmeOmS7WUiYvEQnZveYblSgpxEcmTDrO3FVRjGV
+         evXGitZJ/SL52CNaHwt7OoxAWvFw7FcX2QJgUQznma4XmqSeVJSETalBItQb8XU2qKhq
+         QVlxodWNhRAUek3TjPVeE7Ta7nq4MzvQB0cd4Efu+un9Z2Seu30mePZj61R5PrGuHvvE
+         uooT9HKxO52RzljoGFGHw3IWoJeQNI05NkX7fLoccXAaiJm4V+rkbW/rmaumdbUWGjqh
+         cY4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=geeVhlPEQCZLJDo40X4CwybS5cFswh73El6LvFzVdzQ=;
-        b=XCM0FQEMwiUEdJCDB80EAsuUxg2cvYODEJGqlmcP+kLJ4RxkFReZuk8nSGm78Pdm//
-         0LgFUAQKdDVO/y8L3k6/D7v15xrKlGpkKSOKPWB7wFJi56UXZNT2CSktm+pd1MZs5OTK
-         z7zfPQge0CQM6lYe4QrGlGK/b9jITlWupF4tgokmAlwix/hd3c+SZDn3NOIoPzvl43XK
-         UoiJNpV71TRqlJUdyGcdJGgqrCMtWZ0H28ZALCPttUQ47w75DSZ6MqwU7QuO3bNUsMWW
-         aIWke74nNn3Y/SzPSi6id2RJ45NC1LXnOon3DeGJTb/2UfnvU+ckrGMbbl4yvYMku5cm
-         Erww==
-X-Gm-Message-State: APjAAAUiHtY0c2PukAZeFVlhLZPifW2+caaxEvW8koRpvmOtC8MWcq8R
-        G4xfrqU/JV20qIwI805BRE0=
-X-Google-Smtp-Source: APXvYqxEbdF6JrMdp16LycSVfspUweDrvzwE9I69SsN4+SG9ziT9N3nyksIppdmVg4VQWKYQJ9vE2Q==
-X-Received: by 2002:a25:ad47:: with SMTP id l7mr8471252ybe.59.1570374708628;
-        Sun, 06 Oct 2019 08:11:48 -0700 (PDT)
+        bh=GAGfzyUV4XhvgurCxyCR2EqX3tIH+KR8HXshRAb1W4M=;
+        b=YwQnPxcSMfT/nJzif6hsbPdjXaeC3EeM5Luhr9kzyF8lDS3Kzl4EegMxNAcUwi/qel
+         A7LRRgKIt3rnPGF/ivPJTMzVX1clqH5NpmwYHKQ4lXAdUEQj22ETpVxUakddAT0XDekO
+         4TfykbSMn8btVazEyErMhk4/rLnpK1UrtiFDkavToanNSA1+sZw9PtnAN81VmUoPFUQ3
+         CHOAJ3bnZWFL/hQzVaJrhFSPrD9nyLL/AGeIXCJxQNSrTE0YdvoEPKKnEvdOw0/rMOm8
+         x5UWBEqF9HK8DobOH/PLtBfUxKi3WkZVJxwCyp6upn4a2FecOJGnDEEOXK4qeFxrbnoM
+         Vj4g==
+X-Gm-Message-State: APjAAAVfUwMO+1FyhHVCbQRNFnpA+wIE61eWmYUDOLALkCdcXbD7U5+I
+        689UfTTP+1YzD5WfrDkW7tY=
+X-Google-Smtp-Source: APXvYqyq3uVVL9kPfmFGH4SOWTus7M7n/0M7rzZEKBUlMww+5mkAvPmWOzPbLiX69cClqOpDe2/zkg==
+X-Received: by 2002:a25:76ce:: with SMTP id r197mr7978156ybc.158.1570374705731;
+        Sun, 06 Oct 2019 08:11:45 -0700 (PDT)
 Received: from localhost.localdomain (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id e82sm2662434ywc.43.2019.10.06.08.11.47
+        by smtp.gmail.com with ESMTPSA id e82sm2662434ywc.43.2019.10.06.08.11.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2019 08:11:47 -0700 (PDT)
+        Sun, 06 Oct 2019 08:11:45 -0700 (PDT)
 From:   William Breathitt Gray <vilhelm.gray@gmail.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
@@ -67,9 +67,9 @@ Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
         geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
         sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk,
         William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v16 11/14] thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
-Date:   Sun,  6 Oct 2019 11:11:08 -0400
-Message-Id: <8e85aa4ccead5c330d7abdbda292f32a0c48902e.1570374078.git.vilhelm.gray@gmail.com>
+Subject: [PATCH v16 09/14] gpio: uniphier: Utilize for_each_set_clump8 macro
+Date:   Sun,  6 Oct 2019 11:11:06 -0400
+Message-Id: <158460d4e9cb33a9a29aacf9596ac65227b5f2b1.1570374078.git.vilhelm.gray@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1570374078.git.vilhelm.gray@gmail.com>
 References: <cover.1570374078.git.vilhelm.gray@gmail.com>
@@ -80,126 +80,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize for_each_set_clump8 macro, and the bitmap_set_value8 and
-bitmap_get_value8 functions, where appropriate. In addition, remove the
-now unnecessary temp_mask and temp_shift members of the
-intel_soc_dts_sensor_entry structure.
+Replace verbose implementation in set_multiple callback with
+for_each_set_clump8 macro to simplify code and improve clarity. An
+improvement in this case is that banks that are not masked will now be
+skipped.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
- drivers/thermal/intel/intel_soc_dts_iosf.c | 29 +++++++++++++---------
- drivers/thermal/intel/intel_soc_dts_iosf.h |  2 --
- 2 files changed, 17 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-uniphier.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/thermal/intel/intel_soc_dts_iosf.c b/drivers/thermal/intel/intel_soc_dts_iosf.c
-index 5716b62e0f73..901f64bb5b9c 100644
---- a/drivers/thermal/intel/intel_soc_dts_iosf.c
-+++ b/drivers/thermal/intel/intel_soc_dts_iosf.c
-@@ -6,6 +6,7 @@
+diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+index 93cdcc41e9fb..3e4b15d0231e 100644
+--- a/drivers/gpio/gpio-uniphier.c
++++ b/drivers/gpio/gpio-uniphier.c
+@@ -15,9 +15,6 @@
+ #include <linux/spinlock.h>
+ #include <dt-bindings/gpio/uniphier-gpio.h>
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define UNIPHIER_GPIO_BANK_MASK		\
+-				GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
+-
+ #define UNIPHIER_GPIO_IRQ_MAX_NUM	24
  
-+#include <linux/bitops.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
-@@ -102,6 +103,7 @@ static int update_trip_temp(struct intel_soc_dts_sensor_entry *dts,
+ #define UNIPHIER_GPIO_PORT_DATA		0x0	/* data */
+@@ -147,15 +144,14 @@ static void uniphier_gpio_set(struct gpio_chip *chip,
+ static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
+ 				       unsigned long *mask, unsigned long *bits)
  {
- 	int status;
- 	u32 temp_out;
-+	unsigned long update_ptps;
- 	u32 out;
- 	u32 store_ptps;
- 	u32 store_ptmc;
-@@ -120,8 +122,9 @@ static int update_trip_temp(struct intel_soc_dts_sensor_entry *dts,
- 	if (status)
- 		return status;
- 
--	out = (store_ptps & ~(0xFF << (thres_index * 8)));
--	out |= (temp_out & 0xFF) << (thres_index * 8);
-+	update_ptps = store_ptps;
-+	bitmap_set_value8(&update_ptps, temp_out & 0xFF, thres_index * 8);
-+	out = update_ptps;
- 	status = iosf_mbi_write(BT_MBI_UNIT_PMC, MBI_REG_WRITE,
- 				SOC_DTS_OFFSET_PTPS, out);
- 	if (status)
-@@ -223,6 +226,7 @@ static int sys_get_curr_temp(struct thermal_zone_device *tzd,
- 	u32 out;
- 	struct intel_soc_dts_sensor_entry *dts;
- 	struct intel_soc_dts_sensors *sensors;
-+	unsigned long temp_raw;
- 
- 	dts = tzd->devdata;
- 	sensors = dts->sensors;
-@@ -231,7 +235,8 @@ static int sys_get_curr_temp(struct thermal_zone_device *tzd,
- 	if (status)
- 		return status;
- 
--	out = (out & dts->temp_mask) >> dts->temp_shift;
-+	temp_raw = out;
-+	out = bitmap_get_value8(&temp_raw, dts->id * 8);
- 	out -= SOC_DTS_TJMAX_ENCODING;
- 	*temp = sensors->tj_max - out * 1000;
- 
-@@ -281,10 +286,13 @@ static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
- {
- 	char name[10];
- 	int trip_count = 0;
-+	int writable_trip_count = 0;
- 	int trip_mask = 0;
- 	u32 store_ptps;
- 	int ret;
+-	unsigned int bank, shift, bank_mask, bank_bits;
 -	int i;
 +	unsigned long i;
-+	unsigned long trip;
-+	unsigned long ptps;
++	unsigned long bank_mask;
++	unsigned long bank;
++	unsigned long bank_bits;
  
- 	/* Store status to restor on exit */
- 	ret = iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ,
-@@ -293,11 +301,10 @@ static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
- 		goto err_ret;
+-	for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
++	for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
+ 		bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
+-		shift = i % BITS_PER_LONG;
+-		bank_mask = (mask[BIT_WORD(i)] >> shift) &
+-						UNIPHIER_GPIO_BANK_MASK;
+-		bank_bits = bits[BIT_WORD(i)] >> shift;
++		bank_bits = bitmap_get_value8(bits, i);
  
- 	dts->id = id;
--	dts->temp_mask = 0x00FF << (id * 8);
--	dts->temp_shift = id * 8;
- 	if (notification_support) {
- 		trip_count = min(SOC_MAX_DTS_TRIPS, trip_cnt);
--		trip_mask = BIT(trip_count - read_only_trip_cnt) - 1;
-+		writable_trip_count = trip_count - read_only_trip_cnt;
-+		trip_mask = GENMASK(writable_trip_count - 1, 0);
- 	}
- 
- 	/* Check if the writable trip we provide is not used by BIOS */
-@@ -306,11 +313,9 @@ static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
- 	if (ret)
- 		trip_mask = 0;
- 	else {
--		for (i = 0; i < trip_count; ++i) {
--			if (trip_mask & BIT(i))
--				if (store_ptps & (0xff << (i * 8)))
--					trip_mask &= ~BIT(i);
--		}
-+		ptps = store_ptps;
-+		for_each_set_clump8(i, trip, &ptps, writable_trip_count * 8)
-+			trip_mask &= ~BIT(i / 8);
- 	}
- 	dts->trip_mask = trip_mask;
- 	dts->trip_count = trip_count;
-diff --git a/drivers/thermal/intel/intel_soc_dts_iosf.h b/drivers/thermal/intel/intel_soc_dts_iosf.h
-index adfb09af33fc..c54945748200 100644
---- a/drivers/thermal/intel/intel_soc_dts_iosf.h
-+++ b/drivers/thermal/intel/intel_soc_dts_iosf.h
-@@ -24,8 +24,6 @@ struct intel_soc_dts_sensors;
- 
- struct intel_soc_dts_sensor_entry {
- 	int id;
--	u32 temp_mask;
--	u32 temp_shift;
- 	u32 store_status;
- 	u32 trip_mask;
- 	u32 trip_count;
+ 		uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
+ 					 bank_mask, bank_bits);
 -- 
 2.23.0
 
