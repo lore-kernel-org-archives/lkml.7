@@ -6,105 +6,106 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D910EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 12:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2061CC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 12:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A2E2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 12:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18592084B
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Oct 2019 12:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfJFMPj (ORCPT
+        id S1726473AbfJFMPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 08:15:39 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:41257 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfJFMPj (ORCPT
+        Sun, 6 Oct 2019 08:15:49 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45730 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfJFMPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 08:15:39 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 10C0D1005D063;
-        Sun,  6 Oct 2019 14:15:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id BDDED29FBEE; Sun,  6 Oct 2019 14:15:36 +0200 (CEST)
-Date:   Sun, 6 Oct 2019 14:15:36 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Oliver Neukum <oneukum@suse.com>, linux-usb@vger.kernel.org,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Mario.Limonciello@dell.com,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 05/22] thunderbolt: Add helper macros to iterate over
- switch ports
-Message-ID: <20191006121536.6u7noudvfiri5h3s@wunner.de>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-6-mika.westerberg@linux.intel.com>
- <1570025874.2472.14.camel@suse.com>
- <20191002142859.GF2819@lahna.fi.intel.com>
+        Sun, 6 Oct 2019 08:15:48 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 626FA80463; Sun,  6 Oct 2019 14:15:31 +0200 (CEST)
+Date:   Sun, 6 Oct 2019 14:15:45 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Kurt Roeckx <kurt@roeckx.be>, linux-kernel@vger.kernel.org
+Subject: Re: Stop breaking the CSRNG
+Message-ID: <20191006121545.GF24605@amd>
+References: <20191002165533.GA18282@roeckx.be>
+ <20191003033655.GA3226@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="lIrNkN/7tmsD/ALM"
 Content-Disposition: inline
-In-Reply-To: <20191002142859.GF2819@lahna.fi.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191003033655.GA3226@mit.edu>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 05:28:59PM +0300, Mika Westerberg wrote:
-> On Wed, Oct 02, 2019 at 04:17:54PM +0200, Oliver Neukum wrote:
-> > Am Dienstag, den 01.10.2019, 14:38 +0300 schrieb Mika Westerberg:
-> > > @@ -1975,10 +1972,8 @@ void tb_switch_suspend(struct tb_switch *sw)
-> > >         if (err)
-> > >                 return;
-> > >  
-> > > -       for (i = 1; i <= sw->config.max_port_number; i++) {
-> > > -               if (tb_port_has_remote(&sw->ports[i]))
-> > > -                       tb_switch_suspend(sw->ports[i].remote->sw);
-> > > -       }
-> > > +       tb_switch_for_each_remote_port(sw, i)
-> > > +               tb_switch_suspend(sw->ports[i].remote->sw);
-> > 
-> > This macro looks a bit prone to misunderstanding.
-> > I guess the function would be better if the test could be seen.
-> 
-> The macro does not really save too many lines so I think I can just drop
-> this patch for now and keep these open-coded.
 
-Introducing a macro is fine.
+--lIrNkN/7tmsD/ALM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-However instead of using an index "i" as iterator, I'd suggest using a
-pointer to struct tb_port.  This reduces the horizontal width of the
-code because you can replace the "sw->ports[i]" with just "port".
+On Wed 2019-10-02 23:36:55, Theodore Y. Ts'o wrote:
+> On Wed, Oct 02, 2019 at 06:55:33PM +0200, Kurt Roeckx wrote:
+> >=20
+> > But it seems people are now thinking about breaking getrandom() too,
+> > to let it return data when it's not initialized by default. Please
+> > don't.
+>=20
+> "It's complicated"
+>=20
+> The problem is that whether a CRNG can be considered secure is a
+> property of the entire system, including the hardware, and given the
+> large number of hardware configurations which the kernel and OpenSSL
+> can be used, in practice, we can't assure that getrandom(2) is
+> "secure" without making certain assumptions.  For example, if we
+> assume that the CPU is an x86 processor new enough to support RDRAND,
+> and that RDRAND is competently implemented (e.g., it won't disappear
+> after a suspend/resume) and doesn't have any backdoors implanted in
+> it, then it's easy to say that getrandom() will always be secure.
 
-In most of the loops this also saves 1 line for an assignment:
-"struct tb_port *port = &sw->ports[i];"
+Actually... if we have buggy AMD CPU with broken RDRAND, we should
+still be able to get enough entropy during boot so that getrandom() is
+cryptographically secure.
 
-In fact, I've already proposed such a macro more than a year ago
-but it never got merged:
+I don't think we get that right at the moment.
 
-https://lore.kernel.org/patchwork/patch/983863/ 
+> Bottom line, we can do the best we can with each of our various
+> components, but without control over the hardware that will be in use,
+> or for OpenSSL, what applications are trying to call OpenSSL for, and
+> when they might try to generate long-term public keys during the first
+> boot, perfection is always going to be impossible to achieve.  The
+> only thing we can choose is how do we handle failure.
+>=20
+> And Linus has laid down the law that a performance improving commit
+> should never cause boot-ups to hang due to the lack of randomness.
+> Given that I can't control when some application might try to call
+> OpenSSL to generate a long-term public key, and OpenSSL certainly
+> can't control if it gets called during early boot, if getrandom(2)
+> ever boots, we can't meet Linus's demand.
 
-/**
- * tb_sw_for_each_port() - iterate over ports on a switch
- * @switch: pointer to struct tb_switch over whose ports shall be iterated
- * @port: pointer to struct tb_port which shall be used as the iterator
- *
- * Excludes port 0, which is the switch itself and therefore irrelevant for
- * most iterations.
- */
-#define tb_sw_for_each_port(switch, port)				 \
-	for (port = &(switch)->ports[1];				 \
-	     port <= &(switch)->ports[(switch)->config.max_port_number]; \
-	     port++)
+You can. You can just access disk while the userpsace is blocked on
+getrandom. ("find /").
 
-Thanks,
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Lukas
+--lIrNkN/7tmsD/ALM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2Z2vEACgkQMOfwapXb+vKfXwCfabBwBy1NSsdYvWFokr8878nN
+mtEAn0xKb8plDgbKxaqnpvotbEMhhc6b
+=JIat
+-----END PGP SIGNATURE-----
+
+--lIrNkN/7tmsD/ALM--
