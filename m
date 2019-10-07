@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E20C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C5AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1460220867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DA520867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfJGIpH convert rfc822-to-8bit (ORCPT
+        id S1727448AbfJGIpR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:45:07 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:42833 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfJGIpG (ORCPT
+        Mon, 7 Oct 2019 04:45:17 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:60991 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfJGIpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:45:06 -0400
+        Mon, 7 Oct 2019 04:45:17 -0400
 X-Originating-IP: 86.250.200.211
 Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B1759E0011;
-        Mon,  7 Oct 2019 08:45:02 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 10:45:01 +0200
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E24661C0015;
+        Mon,  7 Oct 2019 08:45:11 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 10:45:11 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Mason Yang <masonccyang@mxic.com.tw>
 Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
@@ -34,12 +34,12 @@ Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
         linux-kernel@vger.kernel.org, frieder.schrempf@kontron.de,
         gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org,
         tglx@linutronix.de
-Subject: Re: [PATCH RFC 3/3] mtd: rawnand: Add support Macronix power down
- mode
-Message-ID: <20191007104501.1b4ed8ed@xps13>
-In-Reply-To: <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
+Subject: Re: [PATCH RFC 2/3] mtd: rawnand: Add support Macronix Block
+ Protection function
+Message-ID: <20191007104511.5aa7b8f2@xps13>
+In-Reply-To: <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
 References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
-        <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
+        <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
@@ -52,142 +52,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Mason,
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Wed, 18 Sep 2019 15:56:26
+Mason Yang <masonccyang@mxic.com.tw> wrote on Wed, 18 Sep 2019 15:56:25
 +0800:
 
-> Macronix AD series support using power down command to
-> enter a minimum power consumption state.
+> Macronix AC series support using SET/GET_FEATURES to change
+> Block Protection and Unprotection.
 > 
-> MTD default _suspend/_resume function replacement by
-> manufacturer postponed initialization.
-> 
+> MTD default _lock/_unlock function replacement by manufacturer
+> postponed initialization.
+
+Why would we do that?
+
+Anyway your solution looks overkill, if we ever decide to
+implement these hooks for raw nand, it is better just to not
+overwrite them in nand_scan_tail() if they have been filled
+previously (ie. by the manufacturer code).
+
 > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 > ---
->  drivers/mtd/nand/raw/nand_macronix.c | 78 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 77 insertions(+), 1 deletion(-)
+>  drivers/mtd/nand/raw/nand_macronix.c | 80 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 75 insertions(+), 5 deletions(-)
 > 
 > diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index 991c636..99a7b2e 100644
+> index 58511ae..991c636 100644
 > --- a/drivers/mtd/nand/raw/nand_macronix.c
 > +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -15,6 +15,8 @@
->  #define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
->  #define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
+> @@ -11,6 +11,10 @@
+>  #define MACRONIX_READ_RETRY_BIT BIT(0)
+>  #define MACRONIX_NUM_READ_RETRY_MODES 6
 >  
-> +#define NAND_CMD_POWER_DOWN 0xB9
+> +#define ONFI_FEATURE_ADDR_MXIC_PROTECTION 0xA0
+> +#define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
+> +#define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
 > +
 >  struct nand_onfi_vendor_macronix {
 >  	u8 reserved;
 >  	u8 reliability_func;
-> @@ -78,6 +80,12 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
+> @@ -57,10 +61,7 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
+>   * the timings unlike what is declared in the parameter page. Unflag
+>   * this feature to avoid unnecessary downturns.
+>   */
+> -static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+> -{
+> -	unsigned int i;
+> -	static const char * const broken_get_timings[] = {
+> +static const char * const broken_get_timings[] = {
+>  		"MX30LF1G18AC",
+>  		"MX30LF1G28AC",
+>  		"MX30LF2G18AC",
+> @@ -75,7 +76,11 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+>  		"MX30UF4G18AC",
+>  		"MX30UF4G16AC",
 >  		"MX30UF4G28AC",
->  };
->  
-> +static const char * const nand_power_down[] = {
-> +		"MX30LF1G28AD",
-> +		"MX30LF2G28AD",
-> +		"MX30LF4G28AD",
+> -	};
 > +};
 > +
->  static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
->  {
->  	unsigned int i;
-> @@ -144,8 +152,64 @@ static int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
->  	return ret;
+> +static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+> +{
+> +	unsigned int i;
+>  
+>  	if (!chip->parameters.supports_set_get_features)
+>  		return;
+> @@ -105,6 +110,71 @@ static int macronix_nand_init(struct nand_chip *chip)
+>  	return 0;
 >  }
 >  
-> +int nand_power_down_op(struct nand_chip *chip)
+> +static int mxic_nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 > +{
+> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
 > +	int ret;
 > +
-> +	if (nand_has_exec_op(chip)) {
-> +		struct nand_op_instr instrs[] = {
-> +			NAND_OP_CMD(NAND_CMD_POWER_DOWN, 0),
-> +		};
+> +	feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
+> +	nand_select_target(chip, 0);
+> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
+> +				feature);
+> +	nand_deselect_target(chip);
+> +	if (ret)
+> +		pr_err("%s all blocks failed\n", __func__);
 > +
-> +		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
-> +
-> +		ret = nand_exec_op(chip, &op);
-> +		if (ret)
-> +			return ret;
-> +
-> +	} else {
-> +		chip->legacy.cmdfunc(chip, NAND_CMD_POWER_DOWN, -1, -1);
-> +	}
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> +static int mxic_nand_suspend(struct mtd_info *mtd)
+> +static int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 > +{
 > +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
+> +	int ret;
 > +
-> +	mutex_lock(&chip->lock);
-> +
+> +	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
 > +	nand_select_target(chip, 0);
-> +	nand_power_down_op(chip);
+> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
+> +				feature);
 > +	nand_deselect_target(chip);
+> +	if (ret)
+> +		pr_err("%s all blocks failed\n", __func__);
 > +
-> +	chip->suspend = 1;
-> +	mutex_unlock(&chip->lock);
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> +static void mxic_nand_resume(struct mtd_info *mtd)
+> +/*
+> + * Macronix AC series support using SET/GET_FEATURES to change
+> + * Block Protection and Unprotection.
+> + *
+> + * MTD call-back function replacement by manufacturer postponed
+> + * initialization.
+> + */
+> +static void macronix_nand_post_init(struct nand_chip *chip)
 > +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +	unsigned int i, blockprotected = 0;
+> +	struct mtd_info *mtd = nand_to_mtd(chip);
 > +
-> +	mutex_lock(&chip->lock);
-> +	// toggle #CS pin to resume NAND device
-
-C++ style comments are forbidden in code.
-
-> +	nand_select_target(chip, 0);
-
-On several NAND controllers there is no way to act on the CS line
-without actually writing bytes to the NAND chip. So basically this
-is very likely to not work.
-
-> +	ndelay(20);
-
-Is this delay known somewhere? Is this purely experimental?
-
-> +	nand_deselect_target(chip);
-> +
-> +	if (chip->suspend)
-> +		chip->suspended = 0;
-> +	else
-> +		pr_err("%s call for a chip which is not in suspended state\n",
-> +		       __func__);
-> +	mutex_unlock(&chip->lock);
-> +}
-> +
->  /*
-> - * Macronix AC series support using SET/GET_FEATURES to change
-> + * Macronix AC and AD series support using SET/GET_FEATURES to change
->   * Block Protection and Unprotection.
->   *
->   * MTD call-back function replacement by manufacturer postponed
-> @@ -163,6 +227,18 @@ static void macronix_nand_post_init(struct nand_chip *chip)
->  		}
->  	}
->  
-> +	for (i = 0; i < ARRAY_SIZE(nand_power_down); i++) {
-> +		if (!strcmp(nand_power_down[i], chip->parameters.model)) {
+> +	for (i = 0; i < ARRAY_SIZE(broken_get_timings); i++) {
+> +		if (!strcmp(broken_get_timings[i], chip->parameters.model)) {
 > +			blockprotected = 1;
 > +			break;
 > +		}
 > +	}
 > +
-> +	if (i < ARRAY_SIZE(nand_power_down)) {
-> +		mtd->_suspend = mxic_nand_suspend;
-> +		mtd->_resume = mxic_nand_resume;
-> +	}
+> +	if (blockprotected && chip->parameters.supports_set_get_features) {
+> +		bitmap_set(chip->parameters.set_feature_list,
+> +			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
+> +		bitmap_set(chip->parameters.get_feature_list,
+> +			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
 > +
->  	if (blockprotected && chip->parameters.supports_set_get_features) {
->  		bitmap_set(chip->parameters.set_feature_list,
->  			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
+> +		mtd->_lock = mxic_nand_lock;
+> +		mtd->_unlock = mxic_nand_unlock;
+> +	}
+> +}
+> +
+>  const struct nand_manufacturer_ops macronix_nand_manuf_ops = {
+>  	.init = macronix_nand_init,
+> +	.post_init = macronix_nand_post_init,
+>  };
+
 
 Thanks,
 Miquèl
