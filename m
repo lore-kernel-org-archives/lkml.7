@@ -2,170 +2,124 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850AEC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6EDECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3CE206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA12206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uRm/bFYP"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1g4svc2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbfJGSI6 (ORCPT
+        id S1729324AbfJGSJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:08:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34830 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbfJGSI5 (ORCPT
+        Mon, 7 Oct 2019 14:09:17 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46358 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728665AbfJGSJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:08:57 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c3so5768354plo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:08:57 -0700 (PDT)
+        Mon, 7 Oct 2019 14:09:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b8so2332576pgm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JwC6F2GJvmhpWHGCr7xF/n4f6KLR7+2yf2OOH5GEsgU=;
-        b=uRm/bFYPsstoaYyKukSFhdRLDpzni7itu2EEZfLPwBlxu+qsX3FN7N7lVTsrFB6a6K
-         vt7+5nD3qCBr++/ITUQKwWu6K1dnnVKEt8by7hgTzUOMuW8aSJmqfpxVW8GC6fnd69ap
-         1pnD3I89VMIFfNvvpwCzdpEh/qO1Od6mzoyPAlHrefC1wGCje/aK5MwPIXZ6chgkFXhK
-         KsuQVX0urhlgK8mFNDKZcv7vS+scCHKzOFH+oTcfTWojqCVkR+D+/dCzZmS4njEVH2Bl
-         PtJO3eKNJwpLPfTs5A30TwFHfGYk+h+QE5LMOVXSkqZiGpYH1O9FH2LEOwp4700pX9OZ
-         2g4g==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=GeChysEpyXENIdkz70FTwZQNrGJAliQm6LKcOJ4pwgg=;
+        b=1g4svc2i2jhyiyQgS7H2WqaqlY4rawaEfSSoyLIcO9cblF0u1gFFqp/KTw35+0FZfc
+         MwzkbFI30GsMRmv2OloegWaVbSjb8KDnm+dfMEbweYWsOm1wGCxZsUSg/z+13uH3xzh1
+         RupL3Su0rST4Jq9HoZjj9nGm9XoyTwDep1/8UQyx/IVu9uLc6qpUfKWUlHyLvUMgJXNW
+         aB2X3gCDtmoi4cYwtVghiMaLgJrHmdzn/5lss3HRCyoE4uQU4faG8oZ0vBV7mGtmCjn5
+         1yBEDl3LzEuJXvBb0Jp2SepKw/cROrKcSFBMbcUwB1odwRJ0Wn5DcdTOh2g1tJhlI8t4
+         bchA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JwC6F2GJvmhpWHGCr7xF/n4f6KLR7+2yf2OOH5GEsgU=;
-        b=Hc2tPgKoq586y0gpdY+Uplcx45mXi/hJ2SrBuyrzsBoiiMQ+S7miY5qhc1F1VKAvon
-         Xs/k5Xnf8Nus9vlVrr23YwnkZ0lfoqcB10t+vtyqLaW2madJ2gnIQca/5SFUjzZ9Avbt
-         D05/9Y5T6ZaKWTD+WeZjuvm+v3syd08z/+Pw9btI/QF+cPJV2lQVXr0OHP4dcALgEuX3
-         lw3bqqgnAL7dMwLQYYBxEu0O1pr+y556j3P5S5d4KeqDm2ENMZLMV0nluCdiERSsOt/x
-         y3b9H224gAtKxWWtztBnGrQCXS2+H6nEhRygsYIbx2OE24YyB2vLpmvMH/RXZQj6pfuy
-         xRzg==
-X-Gm-Message-State: APjAAAUJadF37oB1ii1bVgOyGdOp2ehyzrX1Q+JKvzvV5OBxTj+NwvF6
-        gPvq1L45ozqNMDpBhGuFMY4OQfl05ceUidL8uhYCSg==
-X-Google-Smtp-Source: APXvYqzOl3JXsj4sTtvjvilp+o9GzSCOZkl0A9M3zcxvheER0viyb3/IMPpVI+XWTbKtuhaCp0QRNTl7H6IBggmcCXE=
-X-Received: by 2002:a17:902:7c08:: with SMTP id x8mr29403977pll.119.1570471736235;
- Mon, 07 Oct 2019 11:08:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=GeChysEpyXENIdkz70FTwZQNrGJAliQm6LKcOJ4pwgg=;
+        b=h0n8l18oj0xaVB6OntcZ3dfIEfmWnolidoOglqpb3NFaDBxg+SmW2gpOpW2Qns5Dmh
+         obfT6C0FnpWidx0BTKAZXJBZl8atJ75Qu1ashnN44FMw79rM3JcBQVMxlKUypmoBNGWk
+         EJZDXG5aldFym62U3EVULhlqs38OMf5yIVxP0a9nSu4yUuIetI1nb7OuCs8nqHUN7+rv
+         VcNMIJf6+Oi1VpPcMqcy6aMG0pM8XIU0Le47gRUnAdxFFpxGWoC7E0dDeKUuOvaoAvph
+         aJB9cf+RkVPZDtjpNmD+cKwyAvYFqMd1JHSxzZl/Xj9cjUrDW4AcHSC+mCJ0T+0szUxM
+         2Gqw==
+X-Gm-Message-State: APjAAAUxxlUD99SxarIgPEPeXCtpUo3af70JMw9TbDb4nhmZWI80+Q2k
+        KPdTp+PYshCwWZz+ZJdKJjF73w==
+X-Google-Smtp-Source: APXvYqyCq2Sjyl//q7G2IzZThRFyehP3F/3geHI2eKnTCZnkHRsOjKjZK4tPTO1jHMEhvfanawQuGw==
+X-Received: by 2002:a65:688a:: with SMTP id e10mr31994989pgt.221.1570471756657;
+        Mon, 07 Oct 2019 11:09:16 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:bd18:5fe6:bf81:d473])
+        by smtp.gmail.com with ESMTPSA id s73sm155793pjb.15.2019.10.07.11.09.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 07 Oct 2019 11:09:16 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     YueHaibing <yuehaibing@huawei.com>, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, joel@jms.id.au, andrew@aj.id.au,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        computersforpeace@gmail.com, gregory.0xf0@gmail.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linus.walleij@linaro.org, baruch@tkos.co.il, paul@crapouillou.net,
+        vz@mleia.com, slemieux.tyco@gmail.com, eddie.huang@mediatek.com,
+        sean.wang@mediatek.com, matthias.bgg@gmail.com,
+        patrice.chotard@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, mripard@kernel.org, wens@csie.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux@prisktech.co.nz, michal.simek@xilinx.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH -next 16/34] rtc: meson: use devm_platform_ioremap_resource() to simplify code
+In-Reply-To: <20191006102953.57536-17-yuehaibing@huawei.com>
+References: <20191006102953.57536-1-yuehaibing@huawei.com> <20191006102953.57536-17-yuehaibing@huawei.com>
+Date:   Mon, 07 Oct 2019 11:09:15 -0700
+Message-ID: <7hk19gfmwk.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <cover.1570292505.git.joe@perches.com> <2e0111756153d81d77248bc8356bac78925923dc.1570292505.git.joe@perches.com>
-In-Reply-To: <2e0111756153d81d77248bc8356bac78925923dc.1570292505.git.joe@perches.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 7 Oct 2019 11:08:45 -0700
-Message-ID: <CAKwvOdmtfUfpGhKODa=UBtq7AKDaJa9cndf7fkjJw1R37SsR6A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] net: sctp: Rename fallthrough label to unhandled
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-sctp@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 5, 2019 at 9:46 AM Joe Perches <joe@perches.com> wrote:
+YueHaibing <yuehaibing@huawei.com> writes:
+
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
 >
-> fallthrough may become a pseudo reserved keyword so this only use of
-> fallthrough is better renamed to allow it.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+
 > ---
->  net/sctp/sm_make_chunk.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/rtc/rtc-meson.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-> index e41ed2e0ae7d..48d63956a68c 100644
-> --- a/net/sctp/sm_make_chunk.c
-> +++ b/net/sctp/sm_make_chunk.c
-> @@ -2155,7 +2155,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->         case SCTP_PARAM_SET_PRIMARY:
->                 if (ep->asconf_enable)
->                         break;
-> -               goto fallthrough;
-> +               goto unhandled;
->
->         case SCTP_PARAM_HOST_NAME_ADDRESS:
->                 /* Tell the peer, we won't support this param.  */
-> @@ -2166,11 +2166,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->         case SCTP_PARAM_FWD_TSN_SUPPORT:
->                 if (ep->prsctp_enable)
->                         break;
-> -               goto fallthrough;
-> +               goto unhandled;
->
->         case SCTP_PARAM_RANDOM:
->                 if (!ep->auth_enable)
-> -                       goto fallthrough;
-> +                       goto unhandled;
->
->                 /* SCTP-AUTH: Secion 6.1
->                  * If the random number is not 32 byte long the association
-> @@ -2187,7 +2187,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->
->         case SCTP_PARAM_CHUNKS:
->                 if (!ep->auth_enable)
-> -                       goto fallthrough;
-> +                       goto unhandled;
->
->                 /* SCTP-AUTH: Section 3.2
->                  * The CHUNKS parameter MUST be included once in the INIT or
-> @@ -2203,7 +2203,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->
->         case SCTP_PARAM_HMAC_ALGO:
->                 if (!ep->auth_enable)
-> -                       goto fallthrough;
-> +                       goto unhandled;
->
->                 hmacs = (struct sctp_hmac_algo_param *)param.p;
->                 n_elt = (ntohs(param.p->length) -
-> @@ -2226,7 +2226,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->                         retval = SCTP_IERROR_ABORT;
->                 }
->                 break;
-> -fallthrough:
-> +unhandled:
->         default:
-
-Interesting control flow (goto from one case to the default case, not
-sure "fallthrough" was ever the right word for that).  Thanks for the
-patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->                 pr_debug("%s: unrecognized param:%d for chunk:%d\n",
->                          __func__, ntohs(param.p->type), cid);
-> --
-> 2.15.0
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> diff --git a/drivers/rtc/rtc-meson.c b/drivers/rtc/rtc-meson.c
+> index e08b981..9bd8478 100644
+> --- a/drivers/rtc/rtc-meson.c
+> +++ b/drivers/rtc/rtc-meson.c
+> @@ -292,7 +292,6 @@ static int meson_rtc_probe(struct platform_device *pdev)
+>  	};
+>  	struct device *dev = &pdev->dev;
+>  	struct meson_rtc *rtc;
+> -	struct resource *res;
+>  	void __iomem *base;
+>  	int ret;
+>  	u32 tm;
+> @@ -312,8 +311,7 @@ static int meson_rtc_probe(struct platform_device *pdev)
+>  	rtc->rtc->ops = &meson_rtc_ops;
+>  	rtc->rtc->range_max = U32_MAX;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	base = devm_ioremap_resource(dev, res);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> -- 
+> 2.7.4
