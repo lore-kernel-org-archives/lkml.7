@@ -2,117 +2,154 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B18C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9046AECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A344021835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D6A2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570454669;
+	bh=VihV6dbAFqYapoc2NQzCD6WaB/LSQjIdFqbcjmbSvH4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=AdI2JlgsImny3/lELMvPBCz5KGW7r5HWZQ2tJtT40TIzsIbFBTWC+HmbR6o1gFZbb
+	 K8MvA1O0+mzfsucyY4dTrvZHX1NWfT4/gXS4l+pNhjax+ji/YwNoZMpyKkuAVIfFCW
+	 lCnns+dHzPkHQv1A7VGNV+6uUrMRoefz3czdwThY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfJGNYS (ORCPT
+        id S1728098AbfJGNY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:24:18 -0400
-Received: from know-smtprelay-omc-4.server.virginmedia.net ([80.0.253.68]:43217
-        "EHLO know-smtprelay-omc-4.server.virginmedia.net"
+        Mon, 7 Oct 2019 09:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGNYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:24:17 -0400
-Received: from mail0.xen.dingwall.me.uk ([82.47.84.47])
-        by cmsmtp with ESMTPA
-        id HSzli2qKKikXKHSzli2z4j; Mon, 07 Oct 2019 14:24:14 +0100
-X-Originating-IP: [82.47.84.47]
-X-Authenticated-User: james.dingwall@blueyonder.co.uk
-X-Spam: 0
-X-Authority: v=2.3 cv=JpzfUvwC c=1 sm=1 tr=0 a=0bfgdX8EJi0Cr9X0x0jFDA==:117
- a=0bfgdX8EJi0Cr9X0x0jFDA==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=xqWC_Br6kY4A:10 a=XobE76Q3jBoA:10 a=5IRWAbXhAAAA:8
- a=VwQbUJbxAAAA:8 a=iox4zFpeAAAA:8 a=yPCof4ZbAAAA:8 a=8Yx54hmJfqv9zaizVboA:9
- a=NA0mioxrYjfIsyVE:21 a=yyYMGV6NDAEi3BFP:21 a=CjuIK1q_8ugA:10
- a=xo7gz2vLY8DhO4BdlxfM:22 a=AjGcO6oz07-iQ99wixmX:22 a=WzC6qhA0u3u7Ye7llzcV:22
-Received: from localhost (localhost [IPv6:::1])
-        by mail0.xen.dingwall.me.uk (Postfix) with ESMTP id ED85511B8E9;
-        Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at dingwall.me.uk
-Received: from mail0.xen.dingwall.me.uk ([IPv6:::1])
-        by localhost (mail0.xen.dingwall.me.uk [IPv6:::1]) (amavisd-new, port 10024)
-        with ESMTP id GHLMn-0h2pRW; Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
-Received: from behemoth.dingwall.me.uk (behemoth.dingwall.me.uk [IPv6:2001:470:695c:302::c0a8:105])
-        by dingwall.me.uk (Postfix) with ESMTP id A18BE11B8E6;
-        Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
-Received: by behemoth.dingwall.me.uk (Postfix, from userid 1000)
-        id 821AD107673; Mon,  7 Oct 2019 13:24:12 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 13:24:12 +0000
-From:   James Dingwall <james@dingwall.me.uk>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH] xen/xenbus: fix self-deadlock after killing user process
-Message-ID: <20191007132412.GA27773@dingwall.me.uk>
-References: <20191001150355.25365-1-jgross@suse.com>
- <547479f7-bbb3-609c-fcc7-4e2e609823ae@oracle.com>
+        id S1727490AbfJGNY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:24:28 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57A5B2084D;
+        Mon,  7 Oct 2019 13:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570454656;
+        bh=VihV6dbAFqYapoc2NQzCD6WaB/LSQjIdFqbcjmbSvH4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zqA6UiTXH1B2jUHHJ7cyZ2HETPfjBI5GZ7X74v1prqwaIHNu2sNw+CCVDmfs4r24i
+         dCWhA5QhGg7SpBELP4QjMEZc5I3exypt1HpSigICcpmCJLgE1fUwojjrefSUxT5SA9
+         2sj0tITXpHw7U4pvJFajGOQh2FmfyD1XXetT6BZo=
+Date:   Mon, 7 Oct 2019 08:24:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
+ pci_legacy_resume_early()
+Message-ID: <20191007132414.GA19294@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <547479f7-bbb3-609c-fcc7-4e2e609823ae@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-CMAE-Envelope: MS4wfIW4I2E6zkZiCpUZ/S++fnzYeMMvjbPi6fGFkK6rapdFbM9gdoLT5/gBGyVI0nLCPpuIS1EWXnWGEK9ohK85n8r6/YHwXApZFYAhqkCEQCWPhPiuMCAN
- GsaxkL3utAI5Leyjbfkc9u4c8PTx3F0se5gXKJi4WC6J7G1/V2odnrG286MMHIWHDLv3GWTlVjq19j4LIELouDgy49UiZCObAu6etPwa/clnf2ECtyHQiHGl
- MpSeu6ptLegHZP457w/haphrNUeOY2x7ulIuCnLRIA5ojWeUYaKYCVoHO4mcvksI7G4rzIPoGaQ66Mw/hic5UUs4A6ihH+guhJSOTAHJc0Y=
+In-Reply-To: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:37:24PM -0400, Boris Ostrovsky wrote:
-> On 10/1/19 11:03 AM, Juergen Gross wrote:
-> > In case a user process using xenbus has open transactions and is killed
-> > e.g. via ctrl-C the following cleanup of the allocated resources might
-> > result in a deadlock due to trying to end a transaction in the xenbus
-> > worker thread:
-> >
-> > [ 2551.474706] INFO: task xenbus:37 blocked for more than 120 seconds.
-> > [ 2551.492215]       Tainted: P           OE     5.0.0-29-generic #5
-> > [ 2551.510263] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > [ 2551.528585] xenbus          D    0    37      2 0x80000080
-> > [ 2551.528590] Call Trace:
-> > [ 2551.528603]  __schedule+0x2c0/0x870
-> > [ 2551.528606]  ? _cond_resched+0x19/0x40
-> > [ 2551.528632]  schedule+0x2c/0x70
-> > [ 2551.528637]  xs_talkv+0x1ec/0x2b0
-> > [ 2551.528642]  ? wait_woken+0x80/0x80
-> > [ 2551.528645]  xs_single+0x53/0x80
-> > [ 2551.528648]  xenbus_transaction_end+0x3b/0x70
-> > [ 2551.528651]  xenbus_file_free+0x5a/0x160
-> > [ 2551.528654]  xenbus_dev_queue_reply+0xc4/0x220
-> > [ 2551.528657]  xenbus_thread+0x7de/0x880
-> > [ 2551.528660]  ? wait_woken+0x80/0x80
-> > [ 2551.528665]  kthread+0x121/0x140
-> > [ 2551.528667]  ? xb_read+0x1d0/0x1d0
-> > [ 2551.528670]  ? kthread_park+0x90/0x90
-> > [ 2551.528673]  ret_from_fork+0x35/0x40
-> >
-> > Fix this by doing the cleanup via a workqueue instead.
-> >
-> > Reported-by: James Dingwall <james@dingwall.me.uk>
-> > Fixes: fd8aa9095a95c ("xen: optimize xenbus driver for multiple concurrent xenstore accesses")
-> > Cc: <stable@vger.kernel.org> # 4.11
-> > Signed-off-by: Juergen Gross <jgross@suse.com>
+On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
 > 
-> Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
 > 
+> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
+> but the current code misses the pci_legacy_resume_early() path, so the
+> state remains in PCI_UNKNOWN in that path. As a result, in the resume
+> phase of hibernation, this causes an error for the Mellanox VF driver,
+> which fails to enable MSI-X because pci_msi_supported() is false due
+> to dev->current_state != PCI_D0:
+> 
+> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
+> mlx4_core a6d1:00:02.0: Sending reset
+> mlx4_core a6d1:00:02.0: Sending vhcr0
+> mlx4_core a6d1:00:02.0: HCA minimum page size:512
+> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
+> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+> PM: Device a6d1:00:02.0 failed to thaw: error -95
+> 
+> To be more accurate, the "resume" phase means the "thaw" callbacks which
+> run before the system enters hibernation: when the user runs the command
+> "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
+> all the devices and creates a hibernation image, then the kernel "thaws"
+> the devices including the disk/NIC, writes the memory to the disk, and
+> powers down. This patch fixes the error message for the Mellanox VF driver
+> in this phase.
+> 
+> When the system starts again, a fresh kernel starts to run, and when the
+> kernel detects that a hibernation image was saved, the kernel "quiesces"
+> the devices, and then "restores" the devices from the saved image. In this
+> path:
+> device_resume_noirq() -> ... ->
+>   pci_pm_restore_noirq() ->
+>     pci_pm_default_resume_early() ->
+>       pci_power_up() moves the device states back to PCI_D0. This path is
+> not broken and doesn't need my patch.
+> 
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-Tested-by: James Dingwall <james@dingwall.me.uk>
+This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
+D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
+5839ee7389e8 was?
 
-This patch does resolve the observed issue although for my (extreme and 
-not representative of our normal workload) test case the worker still 
-gets blocked for some time if the xenstore-rm is interrupted and no 
-concurrent xenstore commands can run.  I assume that the worker 
-completes the rm and then does a rollback in the background rather than 
-being interrupted early as a result of the userspace program being 
-terminated.
+Rafael, could you confirm?
 
-Thanks,
-James
+> ---
+> 
+> changes in v2:
+> 	Updated the changelog with more details.
+> 
+>  drivers/pci/pci-driver.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 36dbe960306b..27dfc68db9e7 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  			return error;
+>  	}
+>  
+> -	if (pci_has_legacy_pm_support(pci_dev))
+> -		return pci_legacy_resume_early(dev);
+> -
+>  	/*
+>  	 * pci_restore_state() requires the device to be in D0 (because of MSI
+>  	 * restoration among other things), so force it into D0 in case the
+>  	 * driver's "freeze" callbacks put it into a low-power state directly.
+>  	 */
+>  	pci_set_power_state(pci_dev, PCI_D0);
+> +
+> +	if (pci_has_legacy_pm_support(pci_dev))
+> +		return pci_legacy_resume_early(dev);
+> +
+>  	pci_restore_state(pci_dev);
+>  
+>  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> -- 
+> 2.19.1
+> 
