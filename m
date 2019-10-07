@@ -2,142 +2,117 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9650DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F4BC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7E520684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17EB20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dKPWMRIq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDyOL8Af"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfJGRyO (ORCPT
+        id S1729372AbfJGRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:54:14 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39912 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729372AbfJGRyL (ORCPT
+        Mon, 7 Oct 2019 13:54:37 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34961 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbfJGRyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:54:11 -0400
-Received: from pendragon.ideasonboard.com (modemcable118.64-20-96.mc.videotron.ca [96.20.64.118])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D4881B2D;
-        Mon,  7 Oct 2019 19:54:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1570470849;
-        bh=22A5q4Pj5aS9Ff9hTyiY7gnGGMylAQ77eyxkCoEXOro=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dKPWMRIq8/069H17TkSvP+k3h6vSY3B1ZBLwR7MMMtu2u5dBFQuRdvLVelL9dTWoy
-         IhwyXyf/TxovIw7mlzeI7VqqrjQTgTLgvHecItoKfwW5QthxKGHluz4dP8qMPzbf+t
-         w67aZXlFwA0PBwRn9DmhpGXGzP6qxxkcQUV4zm7g=
-Date:   Mon, 7 Oct 2019 20:54:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, bjorn.andersson@linaro.org,
-        a.hajda@samsung.com, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        jonathan@marek.ca
-Subject: Re: [PATCH RFC v2 1/5] drm/bridge: analogix-anx78xx: add support for
- avdd33 regulator
-Message-ID: <20191007175404.GH11781@pendragon.ideasonboard.com>
-References: <20191007014509.25180-1-masneyb@onstation.org>
- <20191007014509.25180-2-masneyb@onstation.org>
+        Mon, 7 Oct 2019 13:54:37 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w2so13490508qkf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=chm4+pVZmsumVF0HJu/5iYzdACVCyceJBu876a91SHA=;
+        b=DDyOL8AfJ8mhpbpT+/dnBo73nA4Aq0nS3BtajVASoI1KcY0G7bbu6hrwgJuutTHcfZ
+         mIaznFLDOc69jxYOdRdo7o12FGIN4EQlM2/uVEdewuaqJ+Lns6tt9c2OhGJY6R5b10Ma
+         +0VoZfu1IFPUbCQPD0SIZVAKV9k/ePXRZcgSgkRrtU66lRzsvQnjocowjkMrkv5zFUjM
+         4/XJZs/oc5/dfv5TRkoFhQmr20n9Tx0a/ljynKW/OAuoH4E3a9VkcgIQbQDifjAImru2
+         b4RPjGFtaeF6TR1+svI76vQSYtf22NzJLBvJ/CpT8bbVgPKNs8zTQrKVZwRR5vpX/Ifv
+         PF5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=chm4+pVZmsumVF0HJu/5iYzdACVCyceJBu876a91SHA=;
+        b=teek1QpOmBB0toSctyMVddGb2KKwNRqfpIuZsd7pknAmYkXO01UhoK7dfrD5YAemeP
+         tpZSxAgDw9oQB1+9R/q3evtEc8tn1Secp5Spts3ldAtZg8ihkf4EvGb9o50UobqG6M7P
+         aRQWIVr/teLU0O7OG5bEW4kG+WOA+9uC/8WrUJk75Da6tcfuADqby/9lAS1oRVnisMNl
+         2WlDkDsatf8F97mKfsieILNdg00C047Sq2ouOv+24StNnLp78nqTQEPz8AP53kPoP0X3
+         +qUV9Bg5zrFIA70kUPopbMW7siBvM75unZLdS8FuXJMYQF3lPn35+Ca0rWvrNg4LhUxi
+         VH+g==
+X-Gm-Message-State: APjAAAUxiQAAvxSsyK2lwn7HuQHCHGFZ6F7gVzPKrqyUvZe6y02tvsNi
+        SV6HwKtN6/hh7AP10Bzf3mY=
+X-Google-Smtp-Source: APXvYqwVmJ4UlHQywYLNcrWm7aqbamCdkRWyXhoEauxVz0tc2kjehxlWXJ2MO+Z7TQttVGJUhS60Uw==
+X-Received: by 2002:a37:ad8:: with SMTP id 207mr25405804qkk.38.1570470874752;
+        Mon, 07 Oct 2019 10:54:34 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id f27sm7447938qtv.85.2019.10.07.10.54.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 10:54:34 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 7 Oct 2019 13:54:32 -0400
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>, linux-kernel@vger.kernel.org
+Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
+Message-ID: <20191007175430.GA32537@rani.riverdale.lan>
+References: <20191007022454.GA5270@rani.riverdale.lan>
+ <20191007073448.GA882@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191007014509.25180-2-masneyb@onstation.org>
+In-Reply-To: <20191007073448.GA882@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brian,
-
-Thank you for the patch.
-
-On Sun, Oct 06, 2019 at 09:45:05PM -0400, Brian Masney wrote:
-> Add support for the avdd33 regulator to the analogix-anx78xx driver.
-> Note that the regulator is currently enabled during driver probe and
-> disabled when the driver is removed. This is currently how the
-> downstream MSM kernel sources do this.
+On Mon, Oct 07, 2019 at 09:34:48AM +0200, Christoph Hellwig wrote:
+> Hi Arvind,
 > 
-> Let's not merge this upstream for the mean time until I get the external
-> display fully working on the Nexus 5 and then I can submit proper
-> support then that powers down this regulator in the power off function.
-
-Please then also update the corresponding DT bindings to describe the
-avdd33 supply.
-
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Changes since v1:
-> - None
+> can you try the patch below?
 > 
->  drivers/gpu/drm/bridge/analogix-anx78xx.c | 33 +++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> index dec3f7e66aa0..e25fae36dbe1 100644
-> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> @@ -56,6 +56,7 @@ static const u8 anx781x_i2c_addresses[] = {
->  
->  struct anx78xx_platform_data {
->  	struct regulator *dvdd10;
-> +	struct regulator *avdd33;
->  	struct gpio_desc *gpiod_hpd;
->  	struct gpio_desc *gpiod_pd;
->  	struct gpio_desc *gpiod_reset;
-> @@ -715,10 +716,42 @@ static int anx78xx_start(struct anx78xx *anx78xx)
->  	return err;
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 3f974919d3bd..52b709bf2b55 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -3775,6 +3775,13 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
+>  	return nelems;
 >  }
 >  
-> +static void anx78xx_disable_regulator_action(void *_data)
+> +static u64 intel_get_required_mask(struct device *dev)
 > +{
-> +	struct anx78xx_platform_data *pdata = _data;
-> +
-> +	regulator_disable(pdata->avdd33);
+> +	if (!iommu_need_mapping(dev))
+> +		return dma_direct_get_required_mask(dev);
+> +	return DMA_BIT_MASK(32);
 > +}
 > +
->  static int anx78xx_init_pdata(struct anx78xx *anx78xx)
->  {
->  	struct anx78xx_platform_data *pdata = &anx78xx->pdata;
->  	struct device *dev = &anx78xx->client->dev;
-> +	int err;
-> +
-> +	/* 3.3V digital core power regulator  */
-> +	pdata->avdd33 = devm_regulator_get(dev, "avdd33");
-> +	if (IS_ERR(pdata->avdd33)) {
-> +		err = PTR_ERR(pdata->avdd33);
-> +		if (err != -EPROBE_DEFER)
-> +			DRM_ERROR("avdd33 regulator not found\n");
-> +
-> +		return err;
-> +	}
-> +
-> +	err = regulator_enable(pdata->avdd33);
-> +	if (err) {
-> +		DRM_ERROR("Failed to enable avdd33 regulator: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = devm_add_action(dev, anx78xx_disable_regulator_action,
-> +			      pdata);
-> +	if (err < 0) {
-> +		dev_err(dev, "Failed to setup regulator cleanup action %d\n",
-> +			err);
-> +		return err;
-> +	}
+>  static const struct dma_map_ops intel_dma_ops = {
+>  	.alloc = intel_alloc_coherent,
+>  	.free = intel_free_coherent,
+> @@ -3787,6 +3794,7 @@ static const struct dma_map_ops intel_dma_ops = {
+>  	.dma_supported = dma_direct_supported,
+>  	.mmap = dma_common_mmap,
+>  	.get_sgtable = dma_common_get_sgtable,
+> +	.get_required_mask = intel_get_required_mask,
+>  };
 >  
->  	/* 1.0V digital core power regulator  */
->  	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+>  static void
 
--- 
-Regards,
+It doesn't boot with the patch. Won't it go
+	dma_get_required_mask
+	-> intel_get_required_mask
+	-> iommu_need_mapping
+	-> dma_get_required_mask
+?
 
-Laurent Pinchart
+Should the call to dma_get_required_mask in iommu_need_mapping be
+replaced with dma_direct_get_required_mask on top of your patch?
