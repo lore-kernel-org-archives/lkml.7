@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFAAC352AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4413DC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830DB21E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A3E20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570448126;
-	bh=pK20S9w9jPx4oDEOoBNNwlgSdse6dCqOTIYN8MTHsOo=;
+	s=default; t=1570448132;
+	bh=EInH/vgdsDUyVee6E6f5mXVy6rfJLICDUbdSSURr+hQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWLnmQSJMgu9WYJ5My9kva2MNnQDMnP0S5UcLiQNldxV+lu5GeFVkgcdl+mooq03o
-	 LHgAp4RNVxLsFqBh4VLVUf4+931xWD3WYVOCohmUMtapI1Ps5ErdPPCDNI8Brlyxt3
-	 8je/n88UTW1dkrEC8jVW4Sfegf0bLhySEqONrt74=
+	b=cP9mqgy6/iqCIeQ9tn7NCxg1f2xTI0RqNDtH5HFVGN4gAMViprWROh8kFnir99Yxu
+	 9eBwLmZRlYtzsSvyBwPlvME8VHYxkiHMY9PJenHgzxVhGzOcLKm3m79U01De3gRPHv
+	 Cw3SfRq55kR4ViabXYU9oUFwj4ZcG4vP1O85wq1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfJGLfZ (ORCPT
+        id S1727946AbfJGLfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:35:25 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42497 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbfJGLfT (ORCPT
+        Mon, 7 Oct 2019 07:35:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42823 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727799AbfJGLfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:35:19 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c195so9006000lfg.9;
-        Mon, 07 Oct 2019 04:35:17 -0700 (PDT)
+        Mon, 7 Oct 2019 07:35:15 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so13215460lje.9;
+        Mon, 07 Oct 2019 04:35:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pmVOhqPV32NcE6/VgCf74tZc8Nj51x40T3jhqugB4as=;
-        b=hZU5BIigDKrW3EbZX/srO/Xz3nHbo3ImZokKfx48aUdKpTGjL6CP+4ORzzsufI/N/i
-         6Gec15jpJMUE2EppJ3+Ai0s//8aQfCzBupOtna58ZsrqmTFHnMIYG3tNieW4YcvPB6ix
-         HFb87XSsqChGb5e2/rjy19V7d6LIHonqDFfWVQTzCInUh+3oX/22FI0PYVaaTNURBR7B
-         dph2E30s+s2mMAFtKNAsNWZyNlOIYOOGqBaD7OVAZ7smvzOeqOtQq/WF8uro0V//i8WH
-         /VHY9q1o6ZBwbLtRhdEavsXbRe80Z5d9eoxVRZp1aUJ1LgoW/SL3v2bEycRC1IegT96t
-         Lvow==
-X-Gm-Message-State: APjAAAXOcXzxndoE3oTLYLAG/aTXv+eiSUTNhWqX40CabJmOZCRfZTnT
-        rkv5HwYFtk4fesDNTqyjFYo=
-X-Google-Smtp-Source: APXvYqy9XxrNLq2MEaMQGnjZ56QD7dlDtRgKrb3Pgk4e1h2O/nZiZfcSvqfBKoTTk7Seo5suBxbXhg==
-X-Received: by 2002:ac2:44a3:: with SMTP id c3mr15246729lfm.17.1570448116812;
-        Mon, 07 Oct 2019 04:35:16 -0700 (PDT)
+        bh=Gfi7av1677y2cplYp6Mr+tclh8Fz7p32JQ7/mzFpucw=;
+        b=RLzs3p/fLRAbLFx0P7dce2696f+CqikL0Qa3r/ho2TjNyeBbjWH10KyKgvOGqJ04sZ
+         cpkPdnLLFCrxEpUbzJGWSjFuDomqZd7rqRNfXdWH7DC5O0QeruoJB3VExo23QqBAqR9u
+         rSM2kS90dH1xgB0KTattAdeAHKGrkn61HJw7bc/LGZoO3LCz4T/soBzZ9sy1IfEcp+mS
+         18KiQyxF3ivUzfB/gwlEauiCULeO3fm343Hc5dU9uU2Ugg6cXvVdwPPmqomFs0lHexz4
+         AtBxVlYIp0FXrdaMRFO1XeHVF1vY3ub0dJQpaoI/nJrWpmqu7asHDE7/H7ryFiL+si65
+         R2iw==
+X-Gm-Message-State: APjAAAWGum/NgBMO/uPrvLRIT46/DymgHieokylMtU04dDiDpsL3qFRy
+        dKJ3v35FwGvqSdBhSJsOtIE=
+X-Google-Smtp-Source: APXvYqxriWcuCywlzFNFeFfqlrM/bXbs+7FKl8JMpSjGSlHrJBW2KHo36FL2ZqBnDKiaCPLqOkPvxA==
+X-Received: by 2002:a05:651c:1132:: with SMTP id e18mr18303142ljo.33.1570448112821;
+        Mon, 07 Oct 2019 04:35:12 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id b25sm3666047ljj.36.2019.10.07.04.35.15
+        by smtp.gmail.com with ESMTPSA id b25sm3666047ljj.36.2019.10.07.04.35.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 04:35:15 -0700 (PDT)
+        Mon, 07 Oct 2019 04:35:11 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v10 8/8] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
-Date:   Mon,  7 Oct 2019 13:35:02 +0200
-Message-Id: <20191007113502.11746-9-ribalda@kernel.org>
+Subject: [PATCH v10 5/8] media: add V4L2_CID_UNIT_CELL_SIZE control
+Date:   Mon,  7 Oct 2019 13:34:59 +0200
+Message-Id: <20191007113502.11746-6-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191007113502.11746-1-ribalda@kernel.org>
 References: <20191007113502.11746-1-ribalda@kernel.org>
@@ -69,49 +69,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the product brief, the unit cell size is 1120 nanometers^2.
+This control returns the unit cell size in nanometres. The struct provides
+the width and the height in separated fields to take into consideration
+asymmetric pixels and/or hardware binning.
+This control is required for automatic calibration of sensors/cameras.
 
-https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
- drivers/media/i2c/imx214.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 5 +++++
+ include/uapi/linux/v4l2-controls.h   | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index 159a3a604f0e..adcaaa8c86d1 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -47,6 +47,7 @@ struct imx214 {
- 	struct v4l2_ctrl *pixel_rate;
- 	struct v4l2_ctrl *link_freq;
- 	struct v4l2_ctrl *exposure;
-+	struct v4l2_ctrl *unit_size;
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 96cab2e173d3..bf50d37ef6c1 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -996,6 +996,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+ 	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+ 	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
++	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
  
- 	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
+ 	/* FM Radio Modulator controls */
+ 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+@@ -1377,6 +1378,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+ 		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+ 		break;
++	case V4L2_CID_UNIT_CELL_SIZE:
++		*type = V4L2_CTRL_TYPE_AREA;
++		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
++		break;
+ 	default:
+ 		*type = V4L2_CTRL_TYPE_INTEGER;
+ 		break;
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index a2669b79b294..5a7bedee2b0e 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -1034,6 +1034,7 @@ enum v4l2_jpeg_chroma_subsampling {
+ #define V4L2_CID_TEST_PATTERN_GREENR		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 5)
+ #define V4L2_CID_TEST_PATTERN_BLUE		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 6)
+ #define V4L2_CID_TEST_PATTERN_GREENB		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 7)
++#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 8)
  
-@@ -948,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
- 	static const s64 link_freq[] = {
- 		IMX214_DEFAULT_LINK_FREQ,
- 	};
-+	static const struct v4l2_area unit_size = {
-+		.width = 1120,
-+		.height = 1120,
-+	};
- 	int ret;
  
- 	ret = imx214_parse_fwnode(dev);
-@@ -1029,6 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
- 					     V4L2_CID_EXPOSURE,
- 					     0, 3184, 1, 0x0c70);
- 
-+	imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
-+				NULL,
-+				V4L2_CID_UNIT_CELL_SIZE,
-+				v4l2_ctrl_ptr_create((void *)&unit_size));
- 	ret = imx214->ctrls.error;
- 	if (ret) {
- 		dev_err(&client->dev, "%s control init failed (%d)\n",
+ /* Image processing controls */
 -- 
 2.23.0
 
