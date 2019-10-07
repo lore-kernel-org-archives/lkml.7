@@ -2,149 +2,100 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B02C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972CBC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AD22084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5D9206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z32D50Xw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfJGKKt (ORCPT
+        id S1727324AbfJGKKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:10:49 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:53273 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfJGKKs (ORCPT
+        Mon, 7 Oct 2019 06:10:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34256 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfJGKKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:10:48 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 57274240012;
-        Mon,  7 Oct 2019 10:10:37 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 12:10:37 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     a.zummo@towertech.it, joel@jms.id.au, andrew@aj.id.au,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        computersforpeace@gmail.com, gregory.0xf0@gmail.com,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linus.walleij@linaro.org, baruch@tkos.co.il, paul@crapouillou.net,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        eddie.huang@mediatek.com, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, patrice.chotard@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        mripard@kernel.org, wens@csie.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux@prisktech.co.nz,
-        michal.simek@xilinx.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH -next 00/34] rtc: use devm_platform_ioremap_resource() to
- simplify code
-Message-ID: <20191007101037.GE4254@piout.net>
-References: <20191006102953.57536-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191006102953.57536-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 7 Oct 2019 06:10:53 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b128so8363896pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 03:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=XO1tUWwVg3ldpvvlr197QyBHXOPBJs+Oz3B5tCIDh7E=;
+        b=z32D50XwrbQhoMs5ZlCwo6nkE3o2ABiqql4DpVNn93SVGIxKiBRu2bX3xhk6VLxzj0
+         0L2ofFTziab40NeP8sLgVezl0TJJ+PW9E8mJcJsKRWZjippsF+DSNYmQ5xs20yRWAbcE
+         mCRkN31mP6Xk5ZsB3SQL2k82fS+NRAnLw1dbjXYWHR2VpzTWCyMeaj75tGi8HPB9wE6z
+         eOjzScJt1omj1BhxBAfCbXwCY4HTpcn2z6ImgJPTB/g0VTqlTdLnJnbYVlWfSj2jjYQg
+         klO9JOZBDAQeybsbSeI+0t5mS74wXVrtJsmlJZcQVRe9yA1ywDwItK9rx0FrEkoauhbH
+         gtjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XO1tUWwVg3ldpvvlr197QyBHXOPBJs+Oz3B5tCIDh7E=;
+        b=EWqlb/bgMiykgFP0M2lpY9S4v1Tk3sBhR1hEX6+/F+y0TYo1aVzxiX2YYSrPSgpRtO
+         J5cuPlp48xurns+nMQzcxZPZk32ZAZ+iM9+tvHA1fmj22rl/l66lEpP6GK4f+a9oZ4/w
+         7Bh+xc6bVXYXufXcyvp5M7bQnhsGgzPgu5fJkcnvSDmAOyuGOxNfVraWV8Ce5kG21FCy
+         qMPqPclCXDWVLFutM2et5Vtfq7pUWsSxMqPJOZjEhdIUXD/4rTRwA2jQHKiNmWtJltCI
+         OauWhkpUbThoXHyKU+ogiFKdvAnYCcdgA5ABaGaJH2R/vpjoqcwwoDXDM0ZixpRa9fjG
+         Aa+Q==
+X-Gm-Message-State: APjAAAVv+6PNPtYxXK2dQv2J1Bi0hqsySiNuMrzU0/JClV/tehc5XLlg
+        Hx/6ePPl6JF9Ywo2e7W3B6vFA5ugkQ==
+X-Google-Smtp-Source: APXvYqwnDB36e9vSf5ng1nGbWTuo/pYuBppzVrHRrTabh7OcBrr9kil8al08FbBTpHhuKA6wPFzfPA==
+X-Received: by 2002:aa7:96c1:: with SMTP id h1mr33214998pfq.111.1570443053002;
+        Mon, 07 Oct 2019 03:10:53 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:801:5b45:54fa:fc3f:2c55:c2df])
+        by smtp.gmail.com with ESMTPSA id z4sm17465132pfn.45.2019.10.07.03.10.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 03:10:51 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] Add support for ADUX1020 sensor
+Date:   Mon,  7 Oct 2019 15:40:25 +0530
+Message-Id: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/10/2019 18:29:19+0800, YueHaibing wrote:
-> devm_platform_ioremap_resource() internally have platform_get_resource()
-> and devm_ioremap_resource() in it. So instead of calling them separately
-> use devm_platform_ioremap_resource() directly.
-> 
-> YueHaibing (34):
->   rtc: asm9260: use devm_platform_ioremap_resource() to simplify code
->   rtc: rtc-aspeed: use devm_platform_ioremap_resource() to simplify code
->   rtc: brcmstb-waketimer: use devm_platform_ioremap_resource() to
->     simplify code
->   rtc: at91sam9: use devm_platform_ioremap_resource() to simplify code
->   rtc: cadence: use devm_platform_ioremap_resource() to simplify code
->   rtc: coh901331: use devm_platform_ioremap_resource() to simplify code
->   rtc: davinci: use devm_platform_ioremap_resource() to simplify code
->   rtc: digicolor: use devm_platform_ioremap_resource() to simplify code
->   rtc: ds1216: use devm_platform_ioremap_resource() to simplify code
->   rtc: ds1511: use devm_platform_ioremap_resource() to simplify code
->   rtc: ds1553: use devm_platform_ioremap_resource() to simplify code
->   rtc: ep93xx: use devm_platform_ioremap_resource() to simplify code
->   rtc: jz4740: use devm_platform_ioremap_resource() to simplify code
->   rtc: lpc24xx: use devm_platform_ioremap_resource() to simplify code
->   rtc: lpc32xx: use devm_platform_ioremap_resource() to simplify code
->   rtc: meson: use devm_platform_ioremap_resource() to simplify code
->   rtc: mt7622: use devm_platform_ioremap_resource() to simplify code
->   rtc: mv: use devm_platform_ioremap_resource() to simplify code
->   rtc: omap: use devm_platform_ioremap_resource() to simplify code
->   rtc: pic32: use devm_platform_ioremap_resource() to simplify code
->   rtc: rtd119x: use devm_platform_ioremap_resource() to simplify code
->   rtc: s3c: use devm_platform_ioremap_resource() to simplify code
->   rtc: sa1100: use devm_platform_ioremap_resource() to simplify code
->   rtc: spear: use devm_platform_ioremap_resource() to simplify code
->   rtc: stk17ta8: use devm_platform_ioremap_resource() to simplify code
->   rtc: ds1286: use devm_platform_ioremap_resource() to simplify code
->   rtc: st-lpc: use devm_platform_ioremap_resource() to simplify code
->   rtc: stm32: use devm_platform_ioremap_resource() to simplify code
->   rtc: sunxi: use devm_platform_ioremap_resource() to simplify code
->   rtc: tegra: use devm_platform_ioremap_resource() to simplify code
->   rtc: tx4939: use devm_platform_ioremap_resource() to simplify code
->   rtc: vt8500: use devm_platform_ioremap_resource() to simplify code
->   rtc: xgene: use devm_platform_ioremap_resource() to simplify code
->   rtc: zynqmp: use devm_platform_ioremap_resource() to simplify code
-> 
->  drivers/rtc/rtc-asm9260.c           | 4 +---
->  drivers/rtc/rtc-aspeed.c            | 4 +---
->  drivers/rtc/rtc-at91sam9.c          | 4 +---
->  drivers/rtc/rtc-brcmstb-waketimer.c | 4 +---
->  drivers/rtc/rtc-cadence.c           | 4 +---
->  drivers/rtc/rtc-coh901331.c         | 4 +---
->  drivers/rtc/rtc-davinci.c           | 4 +---
->  drivers/rtc/rtc-digicolor.c         | 4 +---
->  drivers/rtc/rtc-ds1216.c            | 4 +---
->  drivers/rtc/rtc-ds1286.c            | 4 +---
->  drivers/rtc/rtc-ds1511.c            | 4 +---
->  drivers/rtc/rtc-ds1553.c            | 4 +---
->  drivers/rtc/rtc-ep93xx.c            | 4 +---
->  drivers/rtc/rtc-jz4740.c            | 4 +---
->  drivers/rtc/rtc-lpc24xx.c           | 4 +---
->  drivers/rtc/rtc-lpc32xx.c           | 4 +---
->  drivers/rtc/rtc-meson.c             | 4 +---
->  drivers/rtc/rtc-mt7622.c            | 4 +---
->  drivers/rtc/rtc-mv.c                | 4 +---
->  drivers/rtc/rtc-omap.c              | 4 +---
->  drivers/rtc/rtc-pic32.c             | 4 +---
->  drivers/rtc/rtc-rtd119x.c           | 4 +---
->  drivers/rtc/rtc-s3c.c               | 4 +---
->  drivers/rtc/rtc-sa1100.c            | 4 +---
->  drivers/rtc/rtc-spear.c             | 4 +---
->  drivers/rtc/rtc-st-lpc.c            | 4 +---
->  drivers/rtc/rtc-stk17ta8.c          | 4 +---
->  drivers/rtc/rtc-stm32.c             | 4 +---
->  drivers/rtc/rtc-sunxi.c             | 4 +---
->  drivers/rtc/rtc-tegra.c             | 4 +---
->  drivers/rtc/rtc-tx4939.c            | 4 +---
->  drivers/rtc/rtc-vt8500.c            | 4 +---
->  drivers/rtc/rtc-xgene.c             | 4 +---
->  drivers/rtc/rtc-zynqmp.c            | 5 +----
->  34 files changed, 34 insertions(+), 103 deletions(-)
-> 
+Hello,
 
-I've quashed and applied.
+This patchset adds initial IIO driver support for ADUX1020 Photometric
+sensor from Analog Devices. This sensor is usable for multiple optical
+measurement applications, including gesture control and proximity sensing.
 
-> -- 
-> 2.7.4
-> 
-> 
+This initial driver includes support for only proximity mode with event
+based interrupt. The driver validation has been performed using Shiratech
+LTE mezzanine [1] connected to 96Boards Dragonboard410c [2].
+
+Thanks,
+Mani
+
+[1] https://www.96boards.org/product/shiratech-lte/
+[2] https://www.96boards.org/product/dragonboard410c/
+
+Manivannan Sadhasivam (2):
+  dt-bindings: iio: light: Add binding for ADUX1020
+  iio: light: Add support for ADUX1020 sensor
+
+ .../bindings/iio/light/adux1020.txt           |  22 +
+ drivers/iio/light/Kconfig                     |  11 +
+ drivers/iio/light/Makefile                    |   1 +
+ drivers/iio/light/adux1020.c                  | 783 ++++++++++++++++++
+ 4 files changed, 817 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/adux1020.txt
+ create mode 100644 drivers/iio/light/adux1020.c
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
