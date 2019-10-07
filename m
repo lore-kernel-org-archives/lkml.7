@@ -2,120 +2,112 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4E2C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD68AC352AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1110A21721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:34:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aG4VfqZU"
+	by mail.kernel.org (Postfix) with ESMTP id 9CFC220867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 11:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570448108;
+	bh=6ac8kTJntsMzmWlR5pyO0oj18UmaHG7pkiOgOQ3MbEU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FAJKd0x49zmV8ovOi1+WdQ2pFCOQjBf0310HR1tioNkjL/MMSUxSP4hv7oYIs7MUE
+	 D+R1vIIconQXlnsBB3mHyNyBv2K9tp5znux7HF+4+JWvrdzV6XwRFLPc/zNpXskhVB
+	 4LOhU91nENUSH2IKJMM+KeXkI09yjDT82EPt+HGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfJGLeZ (ORCPT
+        id S1727754AbfJGLfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 07:34:25 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:13994 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfJGLeZ (ORCPT
+        Mon, 7 Oct 2019 07:35:08 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42807 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfJGLfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 07:34:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1570448063; x=1601984063;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=1YbtA/WEl6PxCyNf7o7k7KSePi3o5gW3urK3q2YrmNg=;
-  b=aG4VfqZUCGr5E15Vka+p/o9cv+SBuoN+AumejQtaq5Bx0Tn6bJcDh9BU
-   ePMro4KkQDB3uDukc7hwjyhqWTxqxfJAKX1lt/XgPpWspG5rxasLNSQys
-   cnySjOoUk5fqKBA00vIQOpTfvrTzGpHWZ53M+uQrusVvWvaU1ne750xrg
-   c=;
-X-IronPort-AV: E=Sophos;i="5.67,268,1566864000"; 
-   d="scan'208";a="426527686"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 07 Oct 2019 11:34:19 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id AFDCDA1F08;
-        Mon,  7 Oct 2019 11:34:18 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 7 Oct 2019 11:34:18 +0000
-Received: from [10.125.238.52] (10.43.162.245) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 7 Oct
- 2019 11:34:09 +0000
-Subject: Re: [UNVERIFIED SENDER] Re: [PATCH v4 2/2] soc: amazon: al-pos-edac:
- Introduce Amazon's Annapurna Labs POS EDAC driver
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <arnd@arndb.de>,
-        <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-References: <1570102361-11696-1-git-send-email-talel@amazon.com>
- <1570102361-11696-3-git-send-email-talel@amazon.com>
- <86k19gztil.wl-maz@kernel.org>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <6815f9e9-f250-bd62-33b3-e3ab30aa47e2@amazon.com>
-Date:   Mon, 7 Oct 2019 14:34:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 7 Oct 2019 07:35:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so13215036lje.9;
+        Mon, 07 Oct 2019 04:35:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9OkHrCrmsq5rv5ybBjtQNnmB2o3XGmppMHCT3GiUxYk=;
+        b=COe86PyqWVgEpFeXo0R7JBjwVWO9PX5nbAXdPNfo2livMfwfQ5uybkLc6zzphK4Lr/
+         SrfEgdLWnglHmz87YKVz59ION4pyAajspxHtDvwrCZsjqCc8lgUO7D238Pwd9rQa3SmV
+         rNrM2RIdwrG1jGw00F2QqE1k8HwC9V66xkYyqMBIg6DVLAOiF993In1MlaPiXbN3vvq3
+         rMtwIII8Jhv68o1yIe9FRg9gvu6GmS/uyTDfGqyB4E8oQfl5My1FEy/jr+fyDdZhP11V
+         FEeiHu62sTdMjA9MPJjXDaR4YyKvnYUv14KYX+u3u/OE45HBkwQwR9AaaVWm3rHo1sv6
+         5UcQ==
+X-Gm-Message-State: APjAAAXYEcTcESGG2hMXSiSJUkugoywqiXnLpPy8+F6fHXhdgLFI+dq4
+        mu9KidnH/qeu3mYMJI4VwaI=
+X-Google-Smtp-Source: APXvYqzV+N7AAf0iyf2cJ9iFIfWJiUrxBNJ+mfUx9sP6xnWrueohhVdJH4ARnWyyWW2P2j5USK7d2g==
+X-Received: by 2002:a2e:9f52:: with SMTP id v18mr17618144ljk.166.1570448105444;
+        Mon, 07 Oct 2019 04:35:05 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id b25sm3666047ljj.36.2019.10.07.04.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 04:35:04 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v10 0/8] Implement UNIT_CELL_SIZE control
+Date:   Mon,  7 Oct 2019 13:34:54 +0200
+Message-Id: <20191007113502.11746-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <86k19gztil.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.162.245]
-X-ClientProxiedBy: EX13D03UWA001.ant.amazon.com (10.43.160.141) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thanks for the review
+UNIT_CELL_SIZE is a control that represents the size of a cell (pixel).
+We required a bit of boilerplate to add this control :)
+- New way to init compount controls
+- New control type
 
-On 10/7/2019 2:26 PM, Marc Zyngier wrote:
-> On Thu, 03 Oct 2019 12:32:41 +0100,
-> Talel Shenhar <talel@amazon.com> wrote:
->> +	log1 = readl(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
-> I already commented on the misuse of strict accesses. Unless you can
-> explain and document *why* you need the extra ordering, please use
-> relaxed accesses.
-agreeing on relaxed, shall be part of v5
->
->> +
->> +	if (al_pos->irq > 0) {
->> +		ret = devm_request_irq(&pdev->dev,
->> +				       al_pos->irq,
->> +				       al_pos_irq_handler,
->> +				       0,
->> +				       pdev->name,
->> +				       pdev);
->> +		if (ret != 0) {
->> +			dev_err(&pdev->dev,
->> +				"failed to register to irq %d (%d)\n",
->> +				al_pos->irq, ret);
->> +			goto err_remove_edac;
-> Would it be worth continuing without interrupts? After all, the
-> interrupt seems to be an optional part of the device...
+Thanks to Hans, Jacopo and Philipp for your help.
 
-indeed interrupts are optional, however, this is optional for some of 
-the systems.
+You might want to see the series at my github repository if needed.
 
-in some cases (and some systems), this error event is critical and 
-should cause fast handling. for those, we define the interrupts.
+https://github.com/ribalda/linux/tree/unit-size-v10
 
-so bottom line, i would like to keep this error in case of error in 
-interrupt.
+v10: Typos in documentation and minor color style
 
->
-> Thanks,
->
-> 	M.
->
+v9: Rename helper to v4l2_ctrl_ptr_create
+
+v8: Fix my email on some patches (sorry for the mess)
+
+v7: Add new helper v4l2_ctrl_ptr_from_void
+
+v4, v5 of this patchset never reached the mailing list.
+
+Ricardo Ribalda Delgado (8):
+  media: v4l2-core: Implement v4l2_ctrl_new_std_compound
+  Documentation: v4l2_ctrl_new_std_compound
+  media: add V4L2_CTRL_TYPE_AREA control type
+  Documentation: media: Document V4L2_CTRL_TYPE_AREA
+  media: add V4L2_CID_UNIT_CELL_SIZE control
+  Documentation: media: Describe V4L2_CID_UNIT_CELL_SIZE
+  media: v4l2-ctrl: Add new helper v4l2_ctrl_ptr_create
+  media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
+
+ Documentation/media/kapi/v4l2-controls.rst    |  9 +++
+ .../media/uapi/v4l/ext-ctrls-image-source.rst |  9 +++
+ .../media/uapi/v4l/vidioc-queryctrl.rst       |  6 ++
+ drivers/media/i2c/imx214.c                    |  9 +++
+ drivers/media/v4l2-core/v4l2-ctrls.c          | 76 +++++++++++++++++--
+ include/media/v4l2-ctrls.h                    | 75 ++++++++++++++++++
+ include/uapi/linux/v4l2-controls.h            |  1 +
+ include/uapi/linux/videodev2.h                |  6 ++
+ 8 files changed, 184 insertions(+), 7 deletions(-)
+
+-- 
+2.23.0
+
