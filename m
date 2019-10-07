@@ -2,195 +2,241 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD556ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54600ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C732053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:20:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9r2HWfJ"
+	by mail.kernel.org (Postfix) with ESMTP id 22DC42053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfJGPUy (ORCPT
+        id S1728137AbfJGPWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:20:54 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38081 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJGPUx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:20:53 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u186so12947159qkc.5;
-        Mon, 07 Oct 2019 08:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2XCAaj09dK9PFMXyIfqQJxhCJ1/sGcx1oaMzSLYOyzU=;
-        b=c9r2HWfJ2JP2aHcQEm5jXuT3Y/mgUr2wKANfK1AyOhsDWEaenY1CnitFOjhsbcSRBT
-         S6daY+BV6iblJnHKW9ETaQhNNRSibq9hvg9sBIXOlyRo68iGG/wzvnxLQUvNxoZJN+2c
-         62TUOMfKrNR9eRF3j3ZCp5+7voKcqxCTwADOhOVMRMCCReNiSalKL0hSNx0UgN0JyuwF
-         ZnJAykWAVAgUtF3aWVjqMwWyaBFO+bHPw6OsuGFczZ2iYaffiL+70A4r4BRupDn3rv+w
-         Q0shGg8vIBIr6a2Ay3HDUrhUVC1y81p0n5frQ0bObbsXEXE9/C4sOFiRlhc/XeIzDtAw
-         g0hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2XCAaj09dK9PFMXyIfqQJxhCJ1/sGcx1oaMzSLYOyzU=;
-        b=HfmuubfpjXwPRg5mliFr3eaM6vfA0o5P3k9xSKuXbYYo2Q622/uFWsksAliU+Q1x/W
-         oz4+7CX9fN+eb4t2MzoV8dwSmcXt1InrvOayPnH0juX+Ryk6bhECe3ijQRmZ59GmsDD7
-         vOxusv7oOAUSzNdCS84l3ccNYKDzw6+0UTjZ1u3C8prcp0BH/fCw2w5d7tgnWdlqM+dh
-         8BGZZEpkPyICOiC4eQqUbmf58jax3xZ4uCAlHMesJ1FCc2F4V5a6ENLyEfScBf0fFBJj
-         IlTwldWymfRyn/Jkzgg7Uo0UrUfudj3omIY8gtdrLDrc4I6FrUqlH1+O+6Qfc+QdSk1O
-         66ig==
-X-Gm-Message-State: APjAAAUUiSzdBueZAIjPJS4X/eti9Yfum0tGGOGnDI1lU2BY/mnqb5qr
-        eWcAHDiiPxb4QSbJRpvUQHw=
-X-Google-Smtp-Source: APXvYqxjrrymmH4+uWeXv9AswdZK3ZCmEZ6MFpdaPlUexTXm1g46iohpHZkEynqVbiwm2FyGR2odCQ==
-X-Received: by 2002:a37:5cc1:: with SMTP id q184mr24265246qkb.212.1570461651900;
-        Mon, 07 Oct 2019 08:20:51 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c185sm7602621qkf.122.2019.10.07.08.20.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 08:20:51 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 7 Oct 2019 11:20:49 -0400
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
-Message-ID: <20191007152049.GA384920@rani.riverdale.lan>
-References: <20191007134724.4019-1-hdegoede@redhat.com>
- <20191007140022.GA29008@gmail.com>
- <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
- <20191007142230.GA117630@gmail.com>
- <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
- <20191007144600.GB59713@gmail.com>
+        Mon, 7 Oct 2019 11:22:12 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:47925 "EHLO gecko.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfJGPWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:22:11 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id x97FLk7N003194
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Oct 2019 17:21:46 +0200
+Received: from [139.23.77.210] ([139.23.77.210])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x97FKInq030040;
+        Mon, 7 Oct 2019 17:20:18 +0200
+Subject: Re: [PATCH v5 2/2] x86/jailhouse: Only enable platform UARTs if
+ available
+To:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        jailhouse-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>
+References: <20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de>
+ <20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <26021872-8be0-566f-870e-bddbaf2b0dd4@siemens.com>
+Date:   Mon, 7 Oct 2019 17:20:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191007144600.GB59713@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:46:00PM +0200, Ingo Molnar wrote:
+On 07.10.19 14:38, Ralf Ramsauer wrote:
+> ACPI tables aren't available if Linux runs as guest of the hypervisor
+> Jailhouse. This makes the 8250 driver probe for all platform UARTs as
+> it assumes that all platform are present in case of !ACPI. Jailhouse
+> will stop execution of Linux guest due to port access violation.
 > 
-> * Hans de Goede <hdegoede@redhat.com> wrote:
+> So far, these access violations could be solved by tuning the
+> 8250.nr_uarts parameter but it has limitations: We can, e.g., only map
+> consecutive platform UARTs to Linux, and only in the sequence 0x3f8,
+> 0x2f8, 0x3e8, 0x2e8.
 > 
-> > Hi,
-> > 
-> > On 07-10-2019 16:22, Ingo Molnar wrote:
-> > > 
-> > > * Hans de Goede <hdegoede@redhat.com> wrote:
-> > > 
-> > > > Hi,
-> > > > 
-> > > > On 07-10-2019 16:00, Ingo Molnar wrote:
-> > > > > 
-> > > > > * Hans de Goede <hdegoede@redhat.com> wrote:
-> > > > > 
-> > > > > > The purgatory code now uses the shared lib/crypto/sha256.c sha256
-> > > > > > implementation. This needs memzero_explicit, implement this.
-> > > > > > 
-> > > > > > Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > > > Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
-> > > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > > > > ---
-> > > > > > Changes in v2:
-> > > > > > - Add barrier_data() call after the memset, making the function really
-> > > > > >     explicit. Using barrier_data() works fine in the purgatory (build)
-> > > > > >     environment.
-> > > > > > ---
-> > > > > >    arch/x86/boot/compressed/string.c | 6 ++++++
-> > > > > >    1 file changed, 6 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
-> > > > > > index 81fc1eaa3229..654a7164a702 100644
-> > > > > > --- a/arch/x86/boot/compressed/string.c
-> > > > > > +++ b/arch/x86/boot/compressed/string.c
-> > > > > > @@ -50,6 +50,12 @@ void *memset(void *s, int c, size_t n)
-> > > > > >    	return s;
-> > > > > >    }
-> > > > > > +void memzero_explicit(void *s, size_t count)
-> > > > > > +{
-> > > > > > +	memset(s, 0, count);
-> > > > > > +	barrier_data(s);
-> > > > > > +}
-> > > > > 
-> > > > > So the barrier_data() is only there to keep LTO from optimizing out the
-> > > > > seemingly unused function?
-> > > > 
-> > > > I believe that Stephan Mueller (who suggested adding the barrier)
-> > > > was also worried about people using this as an example for other
-> > > > "explicit" functions which actually might get inlined.
-> > > > 
-> > > > This is not so much about protecting against LTO as it is against
-> > > > protecting against inlining, which in this case boils down to the
-> > > > same thing. Also this change makes the arch/x86/boot/compressed/string.c
-> > > > and lib/string.c versions identical which seems like a good thing to me
-> > > > (except for the code duplication part of it).
-> > > > 
-> > > > But I agree a comment would be good, how about:
-> > > > 
-> > > > void memzero_explicit(void *s, size_t count)
-> > > > {
-> > > > 	memset(s, 0, count);
-> > > > 	/* Avoid the memset getting optimized away if we ever get inlined */
-> > > > 	barrier_data(s);
-> > > > }
-> > > 
-> > > Well, the standard construct for preventing inlining would be 'noinline',
-> > > right? Any reason that wouldn't work?
-> > 
-> > Good question. I guess the worry is that modern compilers are getting
-> > more aggressive with optimizing and then even if not inlined if the
-> > function gets compiled in the same scope, then the compiler might
-> > still notice it is only every writing to the memory passed in; and
-> > then optimize it away of the write happens to memory which lifetime
-> > ends immediately afterwards. I mean removing the call is not inlining,
-> > so compiler developers might decide that that is still fine to do.
-> > 
-> > IMHO with trickycode like this is is best to just use the proven
-> > version from lib/string.c
-> > 
-> > I guess I made the comment to specific though, so how about:
-> > 
-> > void memzero_explicit(void *s, size_t count)
-> > {
-> > 	memset(s, 0, count);
-> > 	/* Tell the compiler to never remove / optimize away the memset */
-> > 	barrier_data(s);
-> > }
+> Beginning from setup_data version 2, Jailhouse will place information of
+> available platform UARTs in setup_data. This allows for selective
+> activation of platform UARTs.
 > 
-> Ok, I guess this will work.
+> This patch queries the setup_data version and activates only available
+> UARTS. It comes with backward compatibility, and will still support
+> older setup_data versions. In this case, Linux falls back to the old
+> behaviour.
 > 
-> Thanks,
+> Signed-off-by: Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+> ---
+>  arch/x86/include/uapi/asm/bootparam.h |  3 +
+>  arch/x86/kernel/jailhouse.c           | 83 +++++++++++++++++++++++----
+>  2 files changed, 74 insertions(+), 12 deletions(-)
 > 
-> 	Ingo
+> diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+> index 43be437c9c71..db1e24e56e94 100644
+> --- a/arch/x86/include/uapi/asm/bootparam.h
+> +++ b/arch/x86/include/uapi/asm/bootparam.h
+> @@ -152,6 +152,9 @@ struct jailhouse_setup_data {
+>  		__u8	standard_ioapic;
+>  		__u8	cpu_ids[255];
+>  	} __attribute__((packed)) v1;
+> +	struct {
+> +		__u32	flags;
+> +	} __attribute__((packed)) v2;
+>  } __attribute__((packed));
+>  
+>  /* The so-called "zeropage" */
+> diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
+> index b9647add0063..95550c08ab23 100644
+> --- a/arch/x86/kernel/jailhouse.c
+> +++ b/arch/x86/kernel/jailhouse.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/acpi_pmtmr.h>
+>  #include <linux/kernel.h>
+>  #include <linux/reboot.h>
+> +#include <linux/serial_8250.h>
+>  #include <asm/apic.h>
+>  #include <asm/cpu.h>
+>  #include <asm/hypervisor.h>
+> @@ -23,9 +24,22 @@
+>  
+>  static __initdata struct jailhouse_setup_data setup_data;
+>  #define SETUP_DATA_V1_LEN	(sizeof(setup_data.hdr) + sizeof(setup_data.v1))
+> +#define SETUP_DATA_V2_LEN	(SETUP_DATA_V1_LEN + sizeof(setup_data.v2))
+>  
+>  static unsigned int precalibrated_tsc_khz;
+>  
+> +static void jailhouse_setup_irq(unsigned int irq)
+> +{
+> +	struct mpc_intsrc mp_irq = {
+> +		.type		= MP_INTSRC,
+> +		.irqtype	= mp_INT,
+> +		.irqflag	= MP_IRQPOL_ACTIVE_HIGH | MP_IRQTRIG_EDGE,
+> +		.srcbusirq	= irq,
+> +		.dstirq		= irq,
+> +	};
+> +	mp_save_irq(&mp_irq);
+> +}
+> +
+>  static uint32_t jailhouse_cpuid_base(void)
+>  {
+>  	if (boot_cpu_data.cpuid_level < 0 ||
+> @@ -79,11 +93,6 @@ static void __init jailhouse_get_smp_config(unsigned int early)
+>  		.type = IOAPIC_DOMAIN_STRICT,
+>  		.ops = &mp_ioapic_irqdomain_ops,
+>  	};
+> -	struct mpc_intsrc mp_irq = {
+> -		.type = MP_INTSRC,
+> -		.irqtype = mp_INT,
+> -		.irqflag = MP_IRQPOL_ACTIVE_HIGH | MP_IRQTRIG_EDGE,
+> -	};
+>  	unsigned int cpu;
+>  
+>  	jailhouse_x2apic_init();
+> @@ -100,12 +109,12 @@ static void __init jailhouse_get_smp_config(unsigned int early)
+>  	if (setup_data.v1.standard_ioapic) {
+>  		mp_register_ioapic(0, 0xfec00000, gsi_top, &ioapic_cfg);
+>  
+> -		/* Register 1:1 mapping for legacy UART IRQs 3 and 4 */
+> -		mp_irq.srcbusirq = mp_irq.dstirq = 3;
+> -		mp_save_irq(&mp_irq);
+> -
+> -		mp_irq.srcbusirq = mp_irq.dstirq = 4;
+> -		mp_save_irq(&mp_irq);
+> +		if (IS_ENABLED(CONFIG_SERIAL_8250) &&
+> +		    setup_data.hdr.version < 2) {
+> +			/* Register 1:1 mapping for legacy UART IRQs 3 and 4 */
+> +			jailhouse_setup_irq(3);
+> +			jailhouse_setup_irq(4);
+> +		}
+>  	}
+>  }
+>  
+> @@ -138,6 +147,53 @@ static int __init jailhouse_pci_arch_init(void)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_SERIAL_8250
+> +static bool jailhouse_uart_enabled(unsigned int uart_nr)
+> +{
+> +	return setup_data.v2.flags & BIT(uart_nr);
+> +}
+> +
+> +static void jailhouse_serial_fixup(int port, struct uart_port *up,
+> +				   u32 *capabilities)
+> +{
+> +	static const u16 pcuart_base[] = {0x3f8, 0x2f8, 0x3e8, 0x2e8};
+> +	unsigned int n;
+> +
+> +	for (n = 0; n < ARRAY_SIZE(pcuart_base); n++) {
+> +		if (pcuart_base[n] != up->iobase)
+> +			continue;
+> +
+> +		if (jailhouse_uart_enabled(n)) {
+> +			pr_info("Enabling UART%u (port 0x%lx)\n", n,
+> +				up->iobase);
+> +			jailhouse_setup_irq(up->irq);
+> +		} else {
+> +			/* Deactivate UART if access isn't allowed */
+> +			up->iobase = 0;
+> +		}
+> +		break;
+> +	}
+> +}
+> +
+> +static void jailhouse_serial_workaround(void)
+> +{
+> +	/*
+> +	 * There are flags inside setup_data that indicate availability of
+> +	 * platform UARTs since setup data version 2.
+> +	 *
+> +	 * In case of version 1, we don't know which UARTs belong Linux. In
+> +	 * this case, unconditionally register 1:1 mapping for legacy UART IRQs
+> +	 * 3 and 4.
+> +	 */
+> +	if (setup_data.hdr.version > 1)
+> +		serial8250_set_isa_configurator(jailhouse_serial_fixup);
+> +}
+> +#else /* !CONFIG_SERIAL_8250 */
+> +static inline void jailhouse_serial_workaround(void)
+> +{
+> +}
+> +#endif /* CONFIG_SERIAL_8250 */
+> +
+>  static void __init jailhouse_init_platform(void)
+>  {
+>  	u64 pa_data = boot_params.hdr.setup_data;
+> @@ -188,7 +244,8 @@ static void __init jailhouse_init_platform(void)
+>  	if (setup_data.hdr.version == 0 ||
+>  	    setup_data.hdr.compatible_version !=
+>  		JAILHOUSE_SETUP_REQUIRED_VERSION ||
+> -	    (setup_data.hdr.version >= 1 && header.len < SETUP_DATA_V1_LEN))
+> +	    (setup_data.hdr.version == 1 && header.len < SETUP_DATA_V1_LEN) ||
+> +	    (setup_data.hdr.version >= 2 && header.len < SETUP_DATA_V2_LEN))
+>  		goto unsupported;
+>  
+>  	pmtmr_ioport = setup_data.v1.pm_timer_address;
+> @@ -204,6 +261,8 @@ static void __init jailhouse_init_platform(void)
+>  	 * are none in a non-root cell.
+>  	 */
+>  	disable_acpi();
+> +
+> +	jailhouse_serial_workaround();
+>  	return;
+>  
+>  unsupported:
+> 
 
-With the barrier in there, is there any reason to *not* inline the
-function? barrier_data() is an asm statement that tells the compiler
-that the asm uses the memory that was set to zero, thus preventing it
-from removing the memset even if nothing else uses that memory later. A
-more detailed comment is there in compiler-gcc.h. I can't see why it
-wouldn't work even if it were inlined.
+This was missing yet:
 
-If the function can indeed be inlined, we could just make the common
-implementation a macro and avoid duplicating it? As mentioned in another
-mail, we otherwise will likely need another duplicate implementation for
-arch/s390/purgatory as well.
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+
+Thanks,
+Jan
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
