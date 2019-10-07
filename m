@@ -2,102 +2,131 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA4AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BFCECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DF420684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CC020684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4ugxChb"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="F2owVDi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfJGR7A (ORCPT
+        id S1729354AbfJGR7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:59:00 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40611 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfJGR7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:59:00 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y144so13461346qkb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 10:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KFgo0wRkFEy6VhLxhfmWq5wGyMcJAzeHEJSjpxS5JhQ=;
-        b=r4ugxChb5Z8WaG92upUlgKtopDOd0jvBxfboaSQMlL5n8aYxvo3EndkzcWFdNdu5HK
-         p8zBEs2dkUz+YTcydHpvpj9kYiT/RzgcYASZYocUIed2h7iMmo/rlMt1Ms+q3WxSm+Xj
-         Th/g2QOxV9UpjnkP2VsMCK1tw1ZaI8srhwCs5ElLA2XmR1jy4Qj9kJMwfCZ9a/JgYrOd
-         6Yq+1P36LUeD3VePs+vnJqrfqXoDNmV5ezOXb2n+tGgppGT/xIlrQ8NHHLfummEfWFzj
-         MRv3uaWRAHbaf/ykvDlFTkJWaLVLrwIiVKlkYm1aoGe0BMcz7kkUKQ/Ov9zTVfbYM7rM
-         pOLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KFgo0wRkFEy6VhLxhfmWq5wGyMcJAzeHEJSjpxS5JhQ=;
-        b=A9Y2kb+AMGqMcVWWhxq35FUYwc/zNtJVQsa9aB5+ZppA7vWI5yPrewP6GuMrB4ONJE
-         ykF/MonuZZ8Em5qqTJf80FVk6KFrfShACtkfGHSYqZZsX7SfHFFLDthAOakySvC0xhyv
-         vCO0tf/DILY+tM7+xRbiaLIg967kLTl0LsGLk8wUz6QT1MFztpcPVqEd19HrH6b2OYF7
-         niJlEIli+kBcx+YNBcW70X3qV9PgdViKmUYrGYaqAdyImR4H4EpfTNvku8gQ6i2ZeZZn
-         5n3Dhu+Gy/vyyUktwZOCx4k6ROtmwlaV6RVYwE8v3pZZGNzmh+VyZe936AZD1nXHGe7V
-         HqQA==
-X-Gm-Message-State: APjAAAWaeKco70EmYnRMsI/TtCKQ6CFSwtr98iKA2Svls+Pp3UiZdygx
-        1URIgY3+lKqDIQELDFiY3d1CjQaR+pTEEg==
-X-Google-Smtp-Source: APXvYqxiPNuXSPerijni5MUYE58863lxwEhaLkgXUhUry09vaEDR8Lg2wXQU//wlHlGgPOLVE841/g==
-X-Received: by 2002:a37:7282:: with SMTP id n124mr24917289qkc.259.1570471139072;
-        Mon, 07 Oct 2019 10:58:59 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x15sm6187114qkh.44.2019.10.07.10.58.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 10:58:58 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 7 Oct 2019 13:58:57 -0400
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-kernel@vger.kernel.org
-Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
-Message-ID: <20191007175856.GA42018@rani.riverdale.lan>
-References: <20191007022454.GA5270@rani.riverdale.lan>
- <20191007073448.GA882@lst.de>
- <20191007175430.GA32537@rani.riverdale.lan>
- <20191007175528.GA21857@lst.de>
- <20191007175630.GA28861@infradead.org>
+        Mon, 7 Oct 2019 13:59:20 -0400
+Received: from mail-eopbgr710135.outbound.protection.outlook.com ([40.107.71.135]:35603
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728079AbfJGR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:59:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H9oUNSm8wAr8U4FKsnyjQQcpo9hf83F7ac+/bDqnC1SYDxDDH4+cW0exlLnF3GFR8V6VUV8C4EF8zu6CPpodV6OOn6oeBSrCvdfdLUDpPl0BR2K7erqlT5ICE4fag77G2NWAXdei/PkN+JaE45tz9SDjy2aqHFEnsk2tcVXuErHMx0IsWTmQyCSCNUxEvf9ilpXKl3KhNSzET+xgO3SaSJFLhXsahsYqI267ww4xebZw2gscgfXRem9uDu/MGePj48t9W3p/gJUsAY2GzZ8dwLpSz08i9vW6IcAtjzRLcGb31ROqcdT8XOGVKslMRnTQ9AKWgk3Izcws5uPiDsC56A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YpugprrxkpYyCFw31flchiDPUSvNqCsv1FxjbiTbckE=;
+ b=ZXNm3aK67PYosKiNxq8eEX5jS5a018BQ7ZNADFo2oUWQtkcbMK49e552AAmdOu5go3KnOlsN9uZcMrDhpmxnL1lQF8ZyFF/Q4Hy0GArXxyG+hsRgDR/+Gx4be6rOL6NpAphSHm0z1n/AGxcVyZZopvWpb7BiHGwT1YqT98Tpr6nLalAQvp4wva/8BUKtVhht8EgIFhS9VUpDri0nAyMZlOlm+F53kwRuNFeh2LMvfvVTRIRIqLaqEeXS6AkUbqK/yz3Xz1B+pOfFfk6fFLu7TLYEVWETgOmvbc4VJsgtyVMfgwYNVBwV8tFI4LOzMnWCQdZhP8dNBa+wk0/2VE69BQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YpugprrxkpYyCFw31flchiDPUSvNqCsv1FxjbiTbckE=;
+ b=F2owVDi7Ep01desXvKu6V0T9Ii8Wy4dIZLgNPwk8GLzK3dZ9AhN1hx7K9RlIRS988lljt1WbaWPNgocLXh5QounfcWC3QDCxBq6SxwSMuwIU0SxZTkrBXgJ73yz8SVZj6zEjc50kFEsc5Fazs5AH6o04MMBOE7+N3Bx4w/dmNT8=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1470.namprd22.prod.outlook.com (10.174.170.143) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Mon, 7 Oct 2019 17:59:18 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::3050:9a38:9d8e:8033]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::3050:9a38:9d8e:8033%5]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
+ 17:59:18 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Aurabindo Jayamohanan <mail@aurabindo.in>
+CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "armijn@tjaldur.nl" <armijn@tjaldur.nl>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] mips: check for dsp presence only once before
+ save/restore
+Thread-Topic: [PATCH] mips: check for dsp presence only once before
+ save/restore
+Thread-Index: AQHVfTjwGrGVHbSFvECLy1pIiGJbFw==
+Date:   Mon, 7 Oct 2019 17:59:18 +0000
+Message-ID: <MWHPR2201MB1277E7B787B02B8ADB37E2D9C19B0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190913120206.9234-1-mail@aurabindo.in>
+In-Reply-To: <20190913120206.9234-1-mail@aurabindo.in>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0016.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::29) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57346c07-708f-4d0c-3e87-08d74b5012a6
+x-ms-traffictypediagnostic: MWHPR2201MB1470:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB1470EC7A15495F3FC0802255C19B0@MWHPR2201MB1470.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39840400004)(396003)(376002)(366004)(136003)(199004)(189003)(52116002)(33656002)(7416002)(7696005)(76176011)(99286004)(6436002)(256004)(14444005)(476003)(74316002)(42882007)(11346002)(4326008)(446003)(229853002)(7736002)(305945005)(44832011)(486006)(102836004)(6116002)(3846002)(6246003)(71190400001)(71200400001)(6506007)(386003)(26005)(2906002)(186003)(1250700005)(52536014)(9686003)(4744005)(6916009)(54906003)(316002)(5660300002)(25786009)(66066001)(6306002)(14454004)(66446008)(55016002)(478600001)(8936002)(81156014)(66946007)(64756008)(66476007)(81166006)(966005)(8676002)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1470;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1alN3vTzsY3RTyU0nGRudf5JMTk8sZm1JsEorVs7MmuNFoTnSYF8Nd4H9NbvnYZiS7zX3t8OKZMu+3jKVTvvXUCxQqFitkhmZhkin8hP4uG34MK/Ks8t5Ib1xRPBuSF5VhOXq96qmnPvKIQet9wBgLcfvtxkHpwsLKirlWpzgnauPp5VkmCV9J5+/45Dl/Elx5kTqU1JWg5MT+RbkI5ykZrBy4Ukgz+Ef48fybuldVAyknlL6lOpWpFmW01VyNaSetrEuzB+Lqp7Ao2i+Wouoj5+DJdFZZyN9KQd66cOcdbAnj2uAkRONfHw++rJIWBYGBbWDdwK/AtdkxDP5Wj12Oh0LRcjRjdYe8OCXj4arxpTSgBfka3yPdJS4BVoH1RqPtnjVgFuYhmTyG/iXkSNYBQCy8AgN44Bsblpg9Cm3xB/0x/Zb2c7pAcSJE86LFfEakmsGHuzBvP92cLv/Y6QYg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191007175630.GA28861@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57346c07-708f-4d0c-3e87-08d74b5012a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 17:59:18.0935
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SzzS65YKhm6dYiHdazvzdXi9Ly8mJHJ5V8YXO0NITXGCY0MohgmEaV9wCj3Jp0znVfa9zp+AK3ICTTfy5rImfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1470
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 10:56:30AM -0700, Christoph Hellwig wrote:
-> On Mon, Oct 07, 2019 at 07:55:28PM +0200, Christoph Hellwig wrote:
-> > On Mon, Oct 07, 2019 at 01:54:32PM -0400, Arvind Sankar wrote:
-> > > It doesn't boot with the patch. Won't it go
-> > > 	dma_get_required_mask
-> > > 	-> intel_get_required_mask
-> > > 	-> iommu_need_mapping
-> > > 	-> dma_get_required_mask
-> > > ?
-> > > 
-> > > Should the call to dma_get_required_mask in iommu_need_mapping be
-> > > replaced with dma_direct_get_required_mask on top of your patch?
-> > 
-> > Yes, sorry.
-> 
-> Actually my patch already calls dma_direct_get_required_mask.
-> How did you get the loop?
+Hello,
 
-The function iommu_need_mapping (not changed by your patch) calls
-dma_get_required_mask internally, to check whether the device's dma_mask
-is big enough or not. That's the call I was asking whether it needs to
-be changed.
+Aurabindo Jayamohanan wrote:
+> {save,restore}_dsp() internally checks if the cpu has dsp support.
+> Therefore, explicit check is not required before calling them in
+> {save,restore}_processor_state()
+
+Applied to mips-next.
+
+> commit 9662dd752c14
+> https://git.kernel.org/mips/c/9662dd752c14
+>=20
+> Signed-off-by: Aurabindo Jayamohanan <mail@aurabindo.in>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
