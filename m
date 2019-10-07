@@ -2,101 +2,197 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4336ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15AFC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A252070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U+yUAqFY"
+	by mail.kernel.org (Postfix) with ESMTP id C25312070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570476108;
+	bh=5zDKPxaV7hXaN+fZt5hOw/+sUsN/Lk5sRwVdA4WDI9A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DXd3u/8fJ8pLylDhUf9LdhQT1HeUH0zwmlSFoY7WNfqnoD1loyzGkDddneRQGoKPZ
+	 PdzD1gfDYqcNblNVR6YkQ5+W3mUKspe1Wm8YFnpouLt16lQg2hSPvb9Q+Ak3rw7Ka2
+	 MYIIbBFgm8WBQkAiC6+SBxv9RPcC8wJ2hrFEZzSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfJGTVg (ORCPT
+        id S1729091AbfJGTVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:21:36 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:50641 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbfJGTVf (ORCPT
+        Mon, 7 Oct 2019 15:21:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42105 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJGTVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:21:35 -0400
-Received: by mail-pl1-f201.google.com with SMTP id y13so9214118plr.17
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:21:34 -0700 (PDT)
+        Mon, 7 Oct 2019 15:21:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c195so10093648lfg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=1VVXgUvR9hWEet6YOYgZ2IeUcSu3A+eaEhovhtmPmIo=;
-        b=U+yUAqFYeHHpdnN4YEdLlFF1AhG1b7N+2naMp7QDH4pwQHeswCujHlHYYJCUbyrG+3
-         9T0y0iiz5pN9qNjelyooOAuvKV7Z+QqWeAZbFBDSaSfElxWf8R6rRlw0RWXd26JAonXm
-         ejc1zRq4FBawp3Kpi5HNu5C82KsGULvUdeBYLbeRBscMRIn1/VClkN2DWU+eSsIGHOEi
-         xlauBgsLhXw75OORMdN/3lIo9lGaK39bBLq9BrZX6rH1SOnNbhhqG/2SJcr6YnzlBk7o
-         zvVrXRz6FryXXWr1urkVzWbt8K2cfzowghhrMpjsJ+4ymyOmMTlFGlK3/AHNJ7twW9ux
-         4fRg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VFolWvA8AaXdh9ZyhMpVCFlYfwdpykqAkgVuEEtjT4c=;
+        b=DGDxvoHLenwBiT3keA12cf3qIdtGE8JgVYthwpOS6Y91simLELViZ2X9F16Wk/CPut
+         BAEzKUfXIkWVWKJv76bYZYrGW05mS3cOGVy/wnB44wIxnCbAwtIfJjqV6sPfSQ3k4JjF
+         WU9fdfY7Scd5Iwr0B/lpOCalbTk3zgbY8AmbU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=1VVXgUvR9hWEet6YOYgZ2IeUcSu3A+eaEhovhtmPmIo=;
-        b=FmACHStvZ8jDyJkwlsb0SI+HXTG3sdE8xcGYYsNj06iaqOeqRyIxmLw5EwziRmdo9J
-         zfL8MrttKIYS8ioLfdzPY5kSCVrlcpy3U0cobLI3TTwaKT123IzO8QGV+qGUFrzxkRPc
-         kPsiERvwmzbPAlhIkjsSUMGZlaHfCpchlZMapucY1GC+VFFm6s/vlH+ONxB5sviTPoXL
-         wt9hB0DuWHYWOJGby78xoNyZ4mRme25Ezp3MIyuB6WmxxVbmVwgDsQZQmukItHpHv2zn
-         qBI2FKPLy1VarXSB90Bule4I7vtwZGToKXsR+S0HkHqUzGzqsrLlEfzXaWcbIpJqb7fl
-         P42g==
-X-Gm-Message-State: APjAAAWQxT3BAGCshPyGzSwWcUI0PSrdntX4R2px50+AwOVWIqXbUpnu
-        tGQik+iTk/w/nDaEDVOrMd4BnZytUN1EpVoIQWs=
-X-Google-Smtp-Source: APXvYqxTl7q50f9e4Q7HvkTPiDHc+nE01KQDZLPBvfC0BpelR9V3gPGtcdxezE39V9fsz82yJ/1RS5ad8AOHbeLdDis=
-X-Received: by 2002:a63:1a53:: with SMTP id a19mr32165157pgm.58.1570476093401;
- Mon, 07 Oct 2019 12:21:33 -0700 (PDT)
-Date:   Mon,  7 Oct 2019 12:21:29 -0700
-Message-Id: <20191007192129.104336-1-samitolvanen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [PATCH] x86/cpu/vmware: use the full form of inl in VMWARE_PORT
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Thomas Hellstrom <thellstrom@vmware.com>, pv-drivers@vmware.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     hpa@zytor.com, Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VFolWvA8AaXdh9ZyhMpVCFlYfwdpykqAkgVuEEtjT4c=;
+        b=B7KqH0NGnNII2rLlHSyJvG6+dmxIFzduMt91UOEs+NPFGG950r7f3fl1QrPVrGuAO4
+         xa4IT26eTKNrADupGWqRal6hBZFGMj+r5OLYZd58SAmM733Bi52yrTaxfXb9RmQaRcnw
+         Qkz+b6lfZfMwWOCb8vqEapTfpie1qkhUpqaO1EfdIdbS9qiviVOnAmAvNg2JFis/gnNf
+         sOmalj+KNPoHI+eSLm8NVvBYIvkWbujfo1wvNTxorRuyfd/rAkvL+NGJRXzKF7mU4/dQ
+         HL3LddIDRtAfht8rltY5p1/SRoNUNVcyXaJl8/aeGdR8R5usMsdZ6dHsDeXumljARfhQ
+         nLQQ==
+X-Gm-Message-State: APjAAAWvkFAeN9WRdCQnRigmBXNJL+NCuyTTJSTTdd2sXVbA6AArtbSL
+        PeD3EKfP68bm0e/15PIXvztiryf9j+Q=
+X-Google-Smtp-Source: APXvYqwhs8/E/tNZuH4Ryb2ar07pGSa+adYbcfrwEZ/410Xio5w2YRAfr45HEmRulHvMi+rEtkIsTw==
+X-Received: by 2002:ac2:5091:: with SMTP id f17mr18202398lfm.107.1570476103319;
+        Mon, 07 Oct 2019 12:21:43 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id q124sm3359721ljb.28.2019.10.07.12.21.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 12:21:42 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id u28so10086791lfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:21:42 -0700 (PDT)
+X-Received: by 2002:a19:f204:: with SMTP id q4mr17554989lfh.29.1570476102121;
+ Mon, 07 Oct 2019 12:21:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191006222046.GA18027@roeck-us.net>
+In-Reply-To: <20191006222046.GA18027@roeck-us.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 7 Oct 2019 12:21:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgvz6k88hxY_G3=itbQ-iVz7Hc9fbF3kZ_nePA7XgvDTg@mail.gmail.com>
+Message-ID: <CAHk-=wgvz6k88hxY_G3=itbQ-iVz7Hc9fbF3kZ_nePA7XgvDTg@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Michael Cree <mcree@orcon.net.nz>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000323800059456f6b9"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLVM's assembler doesn't accept the short form inl (%%dx) instruction,
-but instead insists on the output register to be explicitly specified:
+--000000000000323800059456f6b9
+Content-Type: text/plain; charset="UTF-8"
 
-  <inline asm>:1:7: error: invalid operand for instruction
-          inl (%dx)
-             ^
-  LLVM ERROR: Error parsing inline asm
+On Sun, Oct 6, 2019 at 3:20 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> this patch causes all my sparc64 emulations to stall during boot. It causes
+> all alpha emulations to crash with [1a] and [1b] when booting from a virtual
+> disk, and one of the xtensa emulations to crash with [2].
 
-Use the full form of the instruction to fix the build.
+So I think your alpha emulation environment may be broken, because
+Michael Cree reports that it works for him on real hardware, but he
+does see the kernel unaligned count being high.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/x86/kernel/cpu/vmware.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But regardless, this is my current fairly minimal patch that I think
+should fix the unaligned issue, while still giving the behavior we
+want on x86. I hope Al can do something nicer, but I think this is
+"acceptable".
 
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 9735139cfdf8..46d732696c1c 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -49,7 +49,7 @@
- #define VMWARE_CMD_VCPU_RESERVED 31
- 
- #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
--	__asm__("inl (%%dx)" :						\
-+	__asm__("inl (%%dx), %%eax" :					\
- 		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
- 		"a"(VMWARE_HYPERVISOR_MAGIC),				\
- 		"c"(VMWARE_CMD_##cmd),					\
--- 
-2.23.0.581.g78d2f28ef7-goog
+I'm running this now on x86, and I verified that x86-32 code
+generation looks sane too, but it woudl be good to verify that this
+makes the alignment issue go away on other architectures.
 
+                Linus
+
+--000000000000323800059456f6b9
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k1gswtlm0>
+X-Attachment-Id: f_k1gswtlm0
+
+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCB8IDIzICsrKysrKysrKysrKysrKysrKysr
+KysKIGZzL3JlYWRkaXIuYyAgICAgICAgICAgICAgICAgICB8IDQ0ICsrLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogaW5jbHVkZS9saW51eC91YWNjZXNzLmggICAgICAg
+IHwgIDYgKysrKy0tCiAzIGZpbGVzIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDQ0IGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCBiL2Fy
+Y2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaAppbmRleCAzNWMyMjVlZGUwZTQuLjYxZDkzZjA2
+MmEzNiAxMDA2NDQKLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vzcy5oCisrKyBiL2Fy
+Y2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaApAQCAtNzM0LDUgKzczNCwyOCBAQCBkbyB7CQkJ
+CQkJCQkJCVwKIAlpZiAodW5saWtlbHkoX19ndV9lcnIpKSBnb3RvIGVycl9sYWJlbDsJCQkJCVwK
+IH0gd2hpbGUgKDApCiAKKy8qCisgKiBXZSB3YW50IHRoZSB1bnNhZmUgYWNjZXNzb3JzIHRvIGFs
+d2F5cyBiZSBpbmxpbmVkIGFuZCB1c2UKKyAqIHRoZSBlcnJvciBsYWJlbHMgLSB0aHVzIHRoZSBt
+YWNybyBnYW1lcy4KKyAqLworI2RlZmluZSB1bnNhZmVfY29weV9sb29wKGRzdCwgc3JjLCBsZW4s
+IHR5cGUsIGxhYmVsKQkJCVwKKwl3aGlsZSAobGVuID49IHNpemVvZih0eXBlKSkgewkJCQkJXAor
+CQl1bnNhZmVfcHV0X3VzZXIoKih0eXBlICopc3JjLCh0eXBlIF9fdXNlciAqKWRzdCxsYWJlbCk7
+CVwKKwkJZHN0ICs9IHNpemVvZih0eXBlKTsJCQkJCVwKKwkJc3JjICs9IHNpemVvZih0eXBlKTsJ
+CQkJCVwKKwkJbGVuIC09IHNpemVvZih0eXBlKTsJCQkJCVwKKwl9CisKKyNkZWZpbmUgdW5zYWZl
+X2NvcHlfdG9fdXNlcihfZHN0LF9zcmMsX2xlbixsYWJlbCkJCQlcCitkbyB7CQkJCQkJCQkJXAor
+CWNoYXIgX191c2VyICpfX3VjdV9kc3QgPSAoX2RzdCk7CQkJCVwKKwljb25zdCBjaGFyICpfX3Vj
+dV9zcmMgPSAoX3NyYyk7CQkJCQlcCisJc2l6ZV90IF9fdWN1X2xlbiA9IChfbGVuKTsJCQkJCVwK
+Kwl1bnNhZmVfY29weV9sb29wKF9fdWN1X2RzdCwgX191Y3Vfc3JjLCBfX3VjdV9sZW4sIHU2NCwg
+bGFiZWwpOwlcCisJdW5zYWZlX2NvcHlfbG9vcChfX3VjdV9kc3QsIF9fdWN1X3NyYywgX191Y3Vf
+bGVuLCB1MzIsIGxhYmVsKTsJXAorCXVuc2FmZV9jb3B5X2xvb3AoX191Y3VfZHN0LCBfX3VjdV9z
+cmMsIF9fdWN1X2xlbiwgdTE2LCBsYWJlbCk7CVwKKwl1bnNhZmVfY29weV9sb29wKF9fdWN1X2Rz
+dCwgX191Y3Vfc3JjLCBfX3VjdV9sZW4sIHU4LCBsYWJlbCk7CVwKK30gd2hpbGUgKDApCisKICNl
+bmRpZiAvKiBfQVNNX1g4Nl9VQUNDRVNTX0ggKi8KIApkaWZmIC0tZ2l0IGEvZnMvcmVhZGRpci5j
+IGIvZnMvcmVhZGRpci5jCmluZGV4IDE5YmVhNTkxYzNmMS4uNmUyNjIzZTU3YjJlIDEwMDY0NAot
+LS0gYS9mcy9yZWFkZGlyLmMKKysrIGIvZnMvcmVhZGRpci5jCkBAIC0yNyw1MyArMjcsMTMgQEAK
+IC8qCiAgKiBOb3RlIHRoZSAidW5zYWZlX3B1dF91c2VyKCkgc2VtYW50aWNzOiB3ZSBnb3RvIGEK
+ICAqIGxhYmVsIGZvciBlcnJvcnMuCi0gKgotICogQWxzbyBub3RlIGhvdyB3ZSB1c2UgYSAid2hp
+bGUoKSIgbG9vcCBoZXJlLCBldmVuIHRob3VnaAotICogb25seSB0aGUgYmlnZ2VzdCBzaXplIG5l
+ZWRzIHRvIGxvb3AuIFRoZSBjb21waWxlciAod2VsbCwKLSAqIGF0IGxlYXN0IGdjYykgaXMgc21h
+cnQgZW5vdWdoIHRvIHR1cm4gdGhlIHNtYWxsZXIgc2l6ZXMKLSAqIGludG8ganVzdCBpZi1zdGF0
+ZW1lbnRzLCBhbmQgdGhpcyB3YXkgd2UgZG9uJ3QgbmVlZCB0bwotICogY2FyZSB3aGV0aGVyICd1
+NjQnIG9yICd1MzInIGlzIHRoZSBiaWdnZXN0IHNpemUuCi0gKi8KLSNkZWZpbmUgdW5zYWZlX2Nv
+cHlfbG9vcChkc3QsIHNyYywgbGVuLCB0eXBlLCBsYWJlbCkgCQlcCi0Jd2hpbGUgKGxlbiA+PSBz
+aXplb2YodHlwZSkpIHsJCQkJXAotCQl1bnNhZmVfcHV0X3VzZXIoZ2V0X3VuYWxpZ25lZCgodHlw
+ZSAqKXNyYyksCVwKLQkJCSh0eXBlIF9fdXNlciAqKWRzdCwgbGFiZWwpOwkJXAotCQlkc3QgKz0g
+c2l6ZW9mKHR5cGUpOwkJCQlcCi0JCXNyYyArPSBzaXplb2YodHlwZSk7CQkJCVwKLQkJbGVuIC09
+IHNpemVvZih0eXBlKTsJCQkJXAotCX0KLQotLyoKLSAqIFdlIGF2b2lkIGRvaW5nIDY0LWJpdCBj
+b3BpZXMgb24gMzItYml0IGFyY2hpdGVjdHVyZXMuIFRoZXkKLSAqIG1pZ2h0IGJlIGJldHRlciwg
+YnV0IHRoZSBjb21wb25lbnQgbmFtZXMgYXJlIG1vc3RseSBzbWFsbCwKLSAqIGFuZCB0aGUgNjQt
+Yml0IGNhc2VzIGNhbiBlbmQgdXAgYmVpbmcgbXVjaCBtb3JlIGNvbXBsZXggYW5kCi0gKiBwdXQg
+bXVjaCBtb3JlIHJlZ2lzdGVyIHByZXNzdXJlIG9uIHRoZSBjb2RlLCBzbyBpdCdzIGxpa2VseQot
+ICogbm90IHdvcnRoIHRoZSBwYWluIG9mIHVuYWxpZ25lZCBhY2Nlc3NlcyBldGMuCi0gKgotICog
+U28gbGltaXQgdGhlIGNvcGllcyB0byAidW5zaWduZWQgbG9uZyIgc2l6ZS4gSSBkaWQgdmVyaWZ5
+Ci0gKiB0aGF0IGF0IGxlYXN0IHRoZSB4ODYtMzIgY2FzZSBpcyBvayB3aXRob3V0IHRoaXMgbGlt
+aXRpbmcsCi0gKiBidXQgSSB3b3JyeSBhYm91dCByYW5kb20gb3RoZXIgbGVnYWN5IDMyLWJpdCBj
+YXNlcyB0aGF0Ci0gKiBtaWdodCBub3QgZG8gYXMgd2VsbC4KLSAqLwotI2RlZmluZSB1bnNhZmVf
+Y29weV90eXBlKGRzdCwgc3JjLCBsZW4sIHR5cGUsIGxhYmVsKSBkbyB7CVwKLQlpZiAoc2l6ZW9m
+KHR5cGUpIDw9IHNpemVvZih1bnNpZ25lZCBsb25nKSkJCVwKLQkJdW5zYWZlX2NvcHlfbG9vcChk
+c3QsIHNyYywgbGVuLCB0eXBlLCBsYWJlbCk7CVwKLX0gd2hpbGUgKDApCi0KLS8qCi0gKiBDb3B5
+IHRoZSBkaXJlbnQgbmFtZSB0byB1c2VyIHNwYWNlLCBhbmQgTlVMLXRlcm1pbmF0ZQotICogaXQu
+IFRoaXMgc2hvdWxkIG5vdCBiZSBhIGZ1bmN0aW9uIGNhbGwsIHNpbmNlIHdlJ3JlIGRvaW5nCi0g
+KiB0aGUgY29weSBpbnNpZGUgYSAidXNlcl9hY2Nlc3NfYmVnaW4vZW5kKCkiIHNlY3Rpb24uCiAg
+Ki8KICNkZWZpbmUgdW5zYWZlX2NvcHlfZGlyZW50X25hbWUoX2RzdCwgX3NyYywgX2xlbiwgbGFi
+ZWwpIGRvIHsJXAogCWNoYXIgX191c2VyICpkc3QgPSAoX2RzdCk7CQkJCVwKIAljb25zdCBjaGFy
+ICpzcmMgPSAoX3NyYyk7CQkJCVwKIAlzaXplX3QgbGVuID0gKF9sZW4pOwkJCQkJXAotCXVuc2Fm
+ZV9jb3B5X3R5cGUoZHN0LCBzcmMsIGxlbiwgdTY0LCBsYWJlbCk7CSAJXAotCXVuc2FmZV9jb3B5
+X3R5cGUoZHN0LCBzcmMsIGxlbiwgdTMyLCBsYWJlbCk7CQlcCi0JdW5zYWZlX2NvcHlfdHlwZShk
+c3QsIHNyYywgbGVuLCB1MTYsIGxhYmVsKTsJCVwKLQl1bnNhZmVfY29weV90eXBlKGRzdCwgc3Jj
+LCBsZW4sIHU4LCAgbGFiZWwpOwkJXAotCXVuc2FmZV9wdXRfdXNlcigwLCBkc3QsIGxhYmVsKTsJ
+CQkJXAorCXVuc2FmZV9wdXRfdXNlcigwLCBkc3QrbGVuLCBsYWJlbCk7CQkJXAorCXVuc2FmZV9j
+b3B5X3RvX3VzZXIoZHN0LCBzcmMsIGxlbiwgbGFiZWwpOwkJXAogfSB3aGlsZSAoMCkKIAogCmRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3VhY2Nlc3MuaCBiL2luY2x1ZGUvbGludXgvdWFjY2Vz
+cy5oCmluZGV4IGU0N2QwNTIyYTFmNC4uZDRlZTZlOTQyNTYyIDEwMDY0NAotLS0gYS9pbmNsdWRl
+L2xpbnV4L3VhY2Nlc3MuaAorKysgYi9pbmNsdWRlL2xpbnV4L3VhY2Nlc3MuaApAQCAtMzU1LDgg
+KzM1NSwxMCBAQCBleHRlcm4gbG9uZyBzdHJubGVuX3Vuc2FmZV91c2VyKGNvbnN0IHZvaWQgX191
+c2VyICp1bnNhZmVfYWRkciwgbG9uZyBjb3VudCk7CiAjaWZuZGVmIHVzZXJfYWNjZXNzX2JlZ2lu
+CiAjZGVmaW5lIHVzZXJfYWNjZXNzX2JlZ2luKHB0cixsZW4pIGFjY2Vzc19vayhwdHIsIGxlbikK
+ICNkZWZpbmUgdXNlcl9hY2Nlc3NfZW5kKCkgZG8geyB9IHdoaWxlICgwKQotI2RlZmluZSB1bnNh
+ZmVfZ2V0X3VzZXIoeCwgcHRyLCBlcnIpIGRvIHsgaWYgKHVubGlrZWx5KF9fZ2V0X3VzZXIoeCwg
+cHRyKSkpIGdvdG8gZXJyOyB9IHdoaWxlICgwKQotI2RlZmluZSB1bnNhZmVfcHV0X3VzZXIoeCwg
+cHRyLCBlcnIpIGRvIHsgaWYgKHVubGlrZWx5KF9fcHV0X3VzZXIoeCwgcHRyKSkpIGdvdG8gZXJy
+OyB9IHdoaWxlICgwKQorI2RlZmluZSB1bnNhZmVfb3Bfd3JhcChvcCwgZXJyKSBkbyB7IGlmICh1
+bmxpa2VseShvcCkpIGdvdG8gZXJyOyB9IHdoaWxlICgwKQorI2RlZmluZSB1bnNhZmVfZ2V0X3Vz
+ZXIoeCxwLGUpIHVuc2FmZV9vcF93cmFwKF9fZ2V0X3VzZXIoeCxwKSxlKQorI2RlZmluZSB1bnNh
+ZmVfcHV0X3VzZXIoeCxwLGUpIHVuc2FmZV9vcF93cmFwKF9fcHV0X3VzZXIoeCxwKSxlKQorI2Rl
+ZmluZSB1bnNhZmVfY29weV90b191c2VyKGQscyxsLGUpIHVuc2FmZV9vcF93cmFwKF9fY29weV90
+b191c2VyKGQscyxsKSxlKQogc3RhdGljIGlubGluZSB1bnNpZ25lZCBsb25nIHVzZXJfYWNjZXNz
+X3NhdmUodm9pZCkgeyByZXR1cm4gMFVMOyB9CiBzdGF0aWMgaW5saW5lIHZvaWQgdXNlcl9hY2Nl
+c3NfcmVzdG9yZSh1bnNpZ25lZCBsb25nIGZsYWdzKSB7IH0KICNlbmRpZgo=
+--000000000000323800059456f6b9--
