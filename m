@@ -2,105 +2,88 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7E2C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7235AC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E80C2133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4591520679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="trfi+lAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfJGIH5 (ORCPT
+        id S1727426AbfJGIJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:07:57 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:39954 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfJGIH4 (ORCPT
+        Mon, 7 Oct 2019 04:09:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56642 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfJGIJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:07:56 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 4E11B15AD266E7;
-        Mon,  7 Oct 2019 08:07:54 +0000 (UTC)
-Received: from saetre (p200300D267088A00E81B87A2F8884333.dip0.t-ipconnect.de [IPv6:2003:d2:6708:8a00:e81b:87a2:f888:4333])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Mon,  7 Oct 2019 08:07:54 +0000 (UTC)
-Message-ID: <3a73789b18ce109a2c9c810b638d42001c74df34.camel@archlinux.org>
-Subject: Re: [PATCH v3 3/4] HID: logitech: Add feature 0x0001: FeatureSet
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <R1ooPQVKZmsUqlvqixQWt1oSjWQh4x9pfrGMkSKOuBhCPB2QHPSUBQKtdC3E-SVODHPXI9E4a43KCtV_q_EeXDGHMY8vjss9y23_39OfS8E=@protonmail.com>
-References: <nZMYgsXB3gdFVoIR3TeMjdbHiP4STlPINtmdH7TkH-nLrHS5APVXn00Z-L89Bjnam4_EBf1GLqI5KAZDZhFnH9hyWGyCOGJQKZzpyN2tqlE=@protonmail.com>
-         <e0dc8d111e1615d35da0c87b4b93b55b3bb89f23.camel@archlinux.org>
-         <R1ooPQVKZmsUqlvqixQWt1oSjWQh4x9pfrGMkSKOuBhCPB2QHPSUBQKtdC3E-SVODHPXI9E4a43KCtV_q_EeXDGHMY8vjss9y23_39OfS8E=@protonmail.com>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-kGv6YloVMQJBMwlPHIMb"
-Date:   Mon, 07 Oct 2019 09:07:52 +0100
+        Mon, 7 Oct 2019 04:09:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dabwxm5vomV9WWpSNJ4FIDOpR0IeyzpWs0EaA1S3EiA=; b=trfi+lAPvWdu8emeBU815dHdQ
+        2QF+TogFvMx/2Np7wR/Cyq0n3QAL+LcrjhBEPtsnFVNRk1ewdsXeKXqwLOAAsqa1QMyP3P7sM3SDm
+        XSab0yll7C2SBecvBVvT72N7eG6xms1DQH5Rv/yrwakvkdyTacVD4+weEwNH79k+hpUwP2cHLD7UA
+        47K00aA77rmP/5UP4Wqf+K/kq201UJtItVoxljr8W5E4gHCKK1aF2yzMfa1aK5jKXNFEhvGGQ9Fen
+        vOrRguQgFi1UoJ/OWRIgEVG8qDsqYsT9X4ADts2VJtZoa99tSHvTT6gnJvslljoVYKSiHOC08SgvK
+        Eisa+fKYw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHO4a-0008JO-Gi; Mon, 07 Oct 2019 08:08:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1BA93305803;
+        Mon,  7 Oct 2019 10:07:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id ED45E20245BB0; Mon,  7 Oct 2019 10:08:47 +0200 (CEST)
+Date:   Mon, 7 Oct 2019 10:08:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191007080847.GB2311@hirez.programming.kicks-ass.net>
+References: <20190827180622.159326993@infradead.org>
+ <20190827181147.166658077@infradead.org>
+ <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
+ <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+ <20191003181045.7fb1a5b3@gandalf.local.home>
+ <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.0 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 04, 2019 at 10:10:47AM +0200, Daniel Bristot de Oliveira wrote:
+> 1) the enabling/disabling ftrace path
+> 2) the int3 path - if a thread/irq is running a kernel function
+> 3) the IPI - that affects all CPUs, even those that are not "hitting" trace
+> code, e.g., user-space.
+> 
+> The first one is for sure a cold-path. The second one is a hot-path: any task
+> running kernel functions will hit it. But IMHO, the hottest one is the IPIs,
+> because it will run on all CPUs, e.g., even isolated CPUs that are running in
+> user-space.
 
---=-kGv6YloVMQJBMwlPHIMb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Well, we can fix that, just like RCU. In fact, I suspect RCU has all the
+bits required to cure this.
 
-On Sun, 2019-10-06 at 19:29 +0000, Mazin Rezk wrote:
-> > >  /* -----------------------------------------------------------
-> > > --------------- */
-> > >  /* 0x0005:
-> > > GetDeviceNameType                                               =20
-> > >   */
-> > >  /* -----------------------------------------------------------
-> > > --------------- */
-> >=20
-> > Please use `DeviceNameType` here to keep in sync with the
-> > documentation.
->=20
-> Since I have not modified GetDeviceNameType in this patch, I will
-> keep it
-> the way it was for now. This could probably be changed in a different
-> and
-> unrelated patch.
-
-Ah, sorry. On my quick look it seemed to be included in the patch
-:facepalm:.
-
-Thanks,
-Filipe La=C3=ADns
-
---=-kGv6YloVMQJBMwlPHIMb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl2a8lAACgkQ+JPGdIFq
-qV2gQhAAqbcpl2tftYpSAs14KZ1Wef/yfREgL6ctnYSKsZncr8iAmPngNQ3Kzyq4
-1SBct54cKn+zN5H445nbwwrnhCb7lsusV6w0J9Lrm6Fuw4OLUBHHbgK72nmaxT2g
-IhAbth0jmNmAhFv+vpaYL7ZDKzBbeTTAEWXtdRJfrCX7TL4mT0jYEpvlYcD3VzLJ
-613PTovHRjZ8AdGgfzwEQPLRg5D1znnl2DTu8wFlqvY5WUSzVfE2Mg0UXv3WtMhv
-h1+BLrYyVcIPCT02hzG8UMR5Y8yTgiWA4pUKwzGfjd3N75HCh/M4Ii0jHs5lgD7x
-Cer/8aMhVEE4ucJ5pM022XM+VMgtgrqQBKu5YUsWVNArBdlxtge0wcbATiLx2Mda
-9YxrmQNpq43oKo2AnwY0U/18tuxbleaqL45fljn0aGV/AIaUI7BW4M4jEE3Fq4BB
-YnJDdBmeyNyDTw2g9VVJE5W7FH/3kAUzU+su2mpQelry1ia9KJB9FMnSpHtfBHqE
-b8QrGrfq5K3F73DzYp7o9UMyh0R954HG6UTJCw6W27lJoFiMzj14HFIr8+gLUoHl
-NyPEJyGKodM96M6lJ6AWdRq+t5Yxk5UKgv8oUxZx7rWzD9DL5P1yU8Rl1peaR95I
-Xojg2u8KQc3Yb4EZDzUSXH21LFyGtVskht1Qb4M8q+x9oGnpHBo=
-=zItG
------END PGP SIGNATURE-----
-
---=-kGv6YloVMQJBMwlPHIMb--
+For NOHZ_FULL CPUs you can forgo the IPI and delay it until the next kernel
+entry, just like RCU.
