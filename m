@@ -2,237 +2,123 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A91C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BFDC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCF12067B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1892F20700
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ege9LyT2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iYigjaBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfJGQhF (ORCPT
+        id S1728626AbfJGQhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:37:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34742 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGQhF (ORCPT
+        Mon, 7 Oct 2019 12:37:09 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:47046 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfJGQhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:37:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m19so11572985otp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:37:04 -0700 (PDT)
+        Mon, 7 Oct 2019 12:37:08 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k25so12190574oiw.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IZLWASCjbu6D/P+ZICftXZeMrq/yAGXEHUQsfndiqNQ=;
-        b=Ege9LyT2tOY9wE7hQ5zQr5KhCevVdL0L9EeqjZoxWdaoQsjwlJJr+fWYZ3MRouDy71
-         61qyMgC44wt82yrVC/gs1TyHwUYNKR/Cw86VN3P0UoPLjebaYTWCYUhV6K2+03wT5GLS
-         arUx/S5D6NAplPdNu+hk5Mg4jyJvKZTW0PlDfqChIp/3rKYI4ll7GOGvINjMWPSwigKo
-         9HdrLPhS10dq09/i8IlSmxVmkD1HPDUtwycEP9tAMqXZz9JprDLddCpCHJDQctVI1Yft
-         GJ6Z9uzoy1aZEvNIPsULUFPa1bQsYUwZGeDKQSnWvGAMG6oMgnRTgr22u04hsaNmeWeT
-         3RHg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M/g+TIxP8SKNK08vLgY7W9iyDhVKXTg+mETBQIQmONM=;
+        b=iYigjaBz68RW2Bfcgp0fWz6OYG118ciQXbBGXfJhyah1zWW9HRBSERHlefrRDVzDS0
+         6EKOP9bHv9wNAkSDU1yxaWcA4ueQ4XYHxEaPwmiycXashgdG/gFXU2UkJp+lsX1IFFmp
+         q+I6gtr0azcLMCJi6zWIm8q3RUDuiZnb2sKlifzfZdfoeIrodFZLckMjcl6mCvajS7km
+         p5X6XDqcqWX+J/oi7bmVjMKIy9zapHhxfuH7GV2HAKDNmx6TKYZgruQTG+BBqU6iCM0M
+         F2CnsYGbPfpTaXjr1rP5SoMQfTt8nxtzsIhk7Ocz7T1vxsr2NG+d0gT4IVMKHO6oH8wV
+         K/cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IZLWASCjbu6D/P+ZICftXZeMrq/yAGXEHUQsfndiqNQ=;
-        b=I8tG4j3xORoqRXI6ZpIW0tNuu/J7nBvrTxxCLw0jCxIBuLX6WX6NNbV/4rjj/vdsG3
-         FdOVXMTAL9vAIq0nYcC3hdWYA5Bya8NkuM1zBkcViz6Q7kzaXGbmigiB1y102/0IYKgn
-         Qq5ILCmM/OO+y2m0yVl3UQJyUy/Qyqjy1EG7xd/YmICRCu106NaeM2mnQFo840nEypL2
-         DhcO3Fj0SuVSnZEZ26sRcUK5W20QNW0qGRcskrDc6ZNtFFrreBdUr/BUOuvGyJHJSsnL
-         oWYGeKu87kDECmGOtDotewEFmP4g2eCnadslCymEGuxpERPcXnKPRskqAn6bfkYyxIsX
-         mZWw==
-X-Gm-Message-State: APjAAAVvbkx9K4JHRoFktw2+Jvg/ico04ifd1XV2GS633XbIpbgIK0mR
-        S855AM9F6EMTwW7b1OBeO4ZgEQ==
-X-Google-Smtp-Source: APXvYqxeX+GkedQBIlrnuDolFQSEic6i804WIcVagavp2bVA6UvcVs7eXpXNMsjmwLuWElyQBf8Cfw==
-X-Received: by 2002:a05:6830:14d5:: with SMTP id t21mr13122141otq.352.1570466223690;
-        Mon, 07 Oct 2019 09:37:03 -0700 (PDT)
-Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
-        by smtp.gmail.com with ESMTPSA id m25sm4428432oie.39.2019.10.07.09.37.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 09:37:02 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191006171038.266461022@linuxfoundation.org>
-From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Message-ID: <785ba642-2e01-2a1c-dd33-8d39c18bb90b@linaro.org>
-Date:   Mon, 7 Oct 2019 11:37:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M/g+TIxP8SKNK08vLgY7W9iyDhVKXTg+mETBQIQmONM=;
+        b=V8h726O7kFb1un+tBi3znaIfboC9GCrOunpA9PApplZymKJha5nEhxpKxEdtfu9x32
+         ks3/QnEF7k3nJqzb0JBzGb9qhO8nZlG6DrRCveWU8iO1tqTrDHZubHBAhb5OmrD/1I1N
+         f7CbL11rPq4Ncuh6D3oGd4Y8KfVo5aY8Q1teWLnnHZpQctrgf/4vbMmSI6WqcwlQbkXa
+         Mc4FquvJ/Xe+80V5CaQMdFGppd8xdCIwo3e/c7y+X1fIwtVDZE5aYZSuJjbxugTGqzOO
+         fZec3/ITemleKK2QMkhHoWXhvYlzmq8BnOabsi//ObMEZI7dFnjlthmIzZ4tJS8rmsmg
+         63Cw==
+X-Gm-Message-State: APjAAAWa7CmWHiypEqMHANrUmen083Q+kuYTqsHJ18H7iBqZgKKPv6OB
+        gxmQxY6n/+zwxNLkXwOkXowVaPKNrqTWogQw8Lz49A==
+X-Google-Smtp-Source: APXvYqzUhlB9PtqR7NHp3xjUlZzNM07sATiI2jyj22GcPQlMzPRghy85v1lw9NAyqiJNqoBtVLmt7pKggR/ukGEFOfw=
+X-Received: by 2002:aca:b506:: with SMTP id e6mr142694oif.39.1570466227052;
+ Mon, 07 Oct 2019 09:37:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191003145542.17490-1-cyphar@cyphar.com> <20191003145542.17490-2-cyphar@cyphar.com>
+In-Reply-To: <20191003145542.17490-2-cyphar@cyphar.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 7 Oct 2019 18:36:40 +0200
+Message-ID: <CAG48ez2LuOGAXgKftZKfDKxhdb6xcBTdoK468-HXdcpxCW4r4w@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/3] symlink.7: document magic-links more completely
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Thu, Oct 3, 2019 at 4:56 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> Traditionally, magic-links have not been a well-understood topic in
+> Linux. Given the new changes in their semantics (related to the link
+> mode of trailing magic-links), it seems like a good opportunity to shine
+> more light on magic-links and their semantics.
+[...]
+> +++ b/man7/symlink.7
+> @@ -84,6 +84,25 @@ as they are implemented on Linux and other systems,
+>  are outlined here.
+>  It is important that site-local applications also conform to these rules,
+>  so that the user interface can be as consistent as possible.
+> +.SS Magic-links
+> +There is a special class of symlink-like objects known as "magic-links" which
 
+I think names like that normally aren't hypenated in english, and
+instead of "magic-links", it'd be "magic links"? Just like how you
+wouldn't write "symbolic-link", but "symbolic link". But this is
+bikeshedding, and if you disagree, feel free to ignore this comment.
 
-On 10/6/19 12:18 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.196 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.196-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> +can be found in certain pseudo-filesystems such as
+> +.BR proc (5)
+> +(examples include
+> +.IR /proc/[pid]/exe " and " /proc/[pid]/fd/* .)
+> +Unlike normal symlinks, magic-links are not resolved through
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+nit: AFAICS symlinks are always referred to as "symbolic links"
+throughout the manpages.
 
-Summary
-------------------------------------------------------------------------
+> +pathname-expansion, but instead act as direct references to the kernel's own
+> +representation of a file handle. As such, these magic-links allow users to
+> +access files which cannot be referenced with normal paths (such as unlinked
+> +files still referenced by a running program.)
 
-kernel: 4.4.196-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-4.4.y
-git commit: 13cac61d31df3572c7a2c88f2f40c59e0a92baf2
-git describe: v4.4.195-37-g13cac61d31df
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/build/v4.4.195-37-g13cac61d31df
+Could maybe add "and files in different mount namespaces" as another
+example here; at least for me, that's the main usecases for
+/proc/*/root.
 
+[...]
+> +However, magic-links do not follow this rule. They can have a non-0777 mode,
+> +which is used for permission checks when the final
+> +component of an
+> +.BR open (2)'s
 
-No regressions (compared to build v4.4.195)
+Maybe leave out the "open" part, since the same restriction has to
+also apply to other syscalls operating on files, like truncate() and
+so on?
 
-No fixes (compared to build v4.4.195)
-
-Ran 18597 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-timers-tests
-* network-basic-tests
-* prep-tmp-disk
-* spectre-meltdown-checker-test
-* kvm-unit-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* install-android-platform-tools-r2600
-* kselftest-vsyscall-mode-native
-* ssuite
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.196-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.196-rc1-hikey-20191006-575
-git commit: 49d2751d5f3cdb81b162d5c1f7ffb0fe210f005c
-git describe: 4.4.196-rc1-hikey-20191006-575
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4-oe/build/4.4.196-rc1-hikey-20191006-575
-
-
-No regressions (compared to build 4.4.195-rc1-hikey-20191003-572)
-
-No fixes (compared to build 4.4.195-rc1-hikey-20191003-572)
-
-Ran 1520 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
-
-Greetings!
-
-Daniel Díaz
-daniel.diaz@linaro.org
-
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+> +path is a magic-link (see
+> +.BR path_resolution (7).)
