@@ -2,208 +2,105 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE1DC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96E9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B52206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94F6206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570471477;
+	bh=a/tQzknOhmzpT+cmi0zru3Okxb6K53nlRWKki8ejYMY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=R9xznI/JhpWMuARYzvKq4aBijcgvXIovwANkQpzdMVAWkkdQq8B8bBzkWfYObH7DX
+	 x7zYc+oHyUTCjuP4tioqzbSNGKWUDvdrqTWiSacm8Hjo+V9HN3hc8zP8O9ruq1PSf5
+	 bC+QNvhXuPrhcbzH/I8YHzYyY9KdFH5gkb+DRkpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfJGR75 (ORCPT
+        id S1728592AbfJGSEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:59:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33635 "EHLO mga11.intel.com"
+        Mon, 7 Oct 2019 14:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729356AbfJGR74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:59:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 10:59:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,269,1566889200"; 
-   d="scan'208";a="193161263"
-Received: from unknown (HELO labuser-Ice-Lake-Client-Platform.jf.intel.com) ([10.54.55.65])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Oct 2019 10:59:55 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     jolsa@kernel.org, namhyung@kernel.org, ak@linux.intel.com,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 02/10] perf tools: Support PERF_SAMPLE_LBR_TOS
-Date:   Mon,  7 Oct 2019 10:59:02 -0700
-Message-Id: <20191007175910.2805-3-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007175910.2805-1-kan.liang@linux.intel.com>
-References: <20191007175910.2805-1-kan.liang@linux.intel.com>
+        id S1728031AbfJGSEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:04:36 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B69206C0;
+        Mon,  7 Oct 2019 18:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570471475;
+        bh=a/tQzknOhmzpT+cmi0zru3Okxb6K53nlRWKki8ejYMY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BSPaaHWlukMgVOG2TR6oN2iz8jTqwVmp+i8EhmB5PrGAGku7715laEhDOElBtk0a9
+         +XBfArVp8w4E29UFWB1/MCnddDmf7tZQsP68aJRWa52Bcg1MsiobXTx19PhkkFskGf
+         kHEJAWkotxSN3jfc8Wt1Yn04aehJNf+wNfArJLfw=
+Received: by mail-qk1-f181.google.com with SMTP id x134so13535307qkb.0;
+        Mon, 07 Oct 2019 11:04:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAW7MWxt6yftQQDCNQhPGhuMue0GhVk79SPmKQtI3B4DfWdvFR+V
+        7volN2IIhWP9eKZ3Elw9bJyf22CN83uDY+nYkg==
+X-Google-Smtp-Source: APXvYqyc3RB0S5x2d9A+kFi6GPyadpByd7ZFwQbH6O3IVlD6OEpNglf7rl7rMw2PGZpyngtUlaRHfhL/S/P7NAZdECA=
+X-Received: by 2002:a05:620a:549:: with SMTP id o9mr25186163qko.223.1570471474614;
+ Mon, 07 Oct 2019 11:04:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191006142715.45k64cgw7mzlekm5@arbad> <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
+ <20191007170018.673p6fs6mjokihn6@arbad>
+In-Reply-To: <20191007170018.673p6fs6mjokihn6@arbad>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 7 Oct 2019 13:04:23 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK-yZnPcb=YPfygK4Y+mJ=JoYq7qWbx04_roAiUD=54Sg@mail.gmail.com>
+Message-ID: <CAL_JsqK-yZnPcb=YPfygK4Y+mJ=JoYq7qWbx04_roAiUD=54Sg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Mon, Oct 7, 2019 at 12:00 PM Andreas Klinger <ak@it-klinger.de> wrote:
+>
+> Hi Rob,
+>
+> i don't get this error. Is there anything i'm doing wrong here?
+>
+> ak@arbad:/project/opt-sw/linux-robh$ make O=3D../build-wega-robh/ dt_bind=
+ing_check
+> make[1]: Verzeichnis =E2=80=9E/project/opt-sw/build-wega-robh=E2=80=9C wi=
+rd betreten
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/net/adi,ad=
+in.yaml:
+>   ignoring, error in schema 'adi,fifo-depth-bits'
+>   warning: no schema found in file:
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/net/adi,ad=
+in.yaml
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/regulator/=
+fixed-regulator.yaml:
+>   ignoring, error in schema '0'
+>   warning: no schema found in file:
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/regulator/=
+fixed-regulator.yaml
+>     CHKDT   Documentation/devicetree/bindings/iio/proximity/maxbotix,mb12=
+32.yaml
+>     CHKDT   [...]
 
-Support new sample type PERF_SAMPLE_LBR_TOS.
+It would be in the later stage when dtc builds the exmaple. The
+unrelated errors here may be making things error out before that.
 
-Enable LBR_TOS by default in LBR call stack mode.
-If kernel doesn't support the sample type, switching it off.
+BTW, update dtschema and it will fix the first error. The 2nd one is
+pending in linux-next still.
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/include/uapi/linux/perf_event.h     |  4 +++-
- tools/perf/util/event.h                   |  1 +
- tools/perf/util/evsel.c                   | 16 +++++++++++++++-
- tools/perf/util/evsel.h                   |  1 +
- tools/perf/util/perf_event_attr_fprintf.c |  2 +-
- tools/perf/util/synthetic-events.c        |  8 ++++++++
- 6 files changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index bb7b271397a6..fe36ebb7dc2e 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -141,8 +141,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_TRANSACTION			= 1U << 17,
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
-+	PERF_SAMPLE_LBR_TOS			= 1U << 20,
- 
--	PERF_SAMPLE_MAX = 1U << 20,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
- 
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
- };
-@@ -864,6 +865,7 @@ enum perf_event_type {
- 	 *	{ u64			abi; # enum perf_sample_regs_abi
- 	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
- 	 *	{ u64			phys_addr;} && PERF_SAMPLE_PHYS_ADDR
-+	 *	{ u64			tos;} && PERF_SAMPLE_LBR_TOS
- 	 * };
- 	 */
- 	PERF_RECORD_SAMPLE			= 9,
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index a0a0c91cde4a..268c1715e032 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -130,6 +130,7 @@ struct perf_sample {
- 	u32 raw_size;
- 	u64 data_src;
- 	u64 phys_addr;
-+	u64 tos;
- 	u32 flags;
- 	u16 insn_len;
- 	u8  cpumode;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index abc7fda4a0fe..0752417bbc45 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -709,6 +709,7 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
- 					   "Falling back to framepointers.\n");
- 			} else {
- 				perf_evsel__set_sample_bit(evsel, BRANCH_STACK);
-+				perf_evsel__set_sample_bit(evsel, LBR_TOS);
- 				attr->branch_sample_type = PERF_SAMPLE_BRANCH_USER |
- 							PERF_SAMPLE_BRANCH_CALL_STACK |
- 							PERF_SAMPLE_BRANCH_NO_CYCLES |
-@@ -762,6 +763,7 @@ perf_evsel__reset_callgraph(struct evsel *evsel,
- 	perf_evsel__reset_sample_bit(evsel, CALLCHAIN);
- 	if (param->record_mode == CALLCHAIN_LBR) {
- 		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
-+		perf_evsel__reset_sample_bit(evsel, LBR_TOS);
- 		attr->branch_sample_type &= ~(PERF_SAMPLE_BRANCH_USER |
- 					      PERF_SAMPLE_BRANCH_CALL_STACK);
- 	}
-@@ -1641,6 +1643,8 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		evsel->core.attr.ksymbol = 0;
- 	if (perf_missing_features.bpf)
- 		evsel->core.attr.bpf_event = 0;
-+	if (perf_missing_features.lbr_tos)
-+		perf_evsel__reset_sample_bit(evsel, LBR_TOS);
- retry_sample_id:
- 	if (perf_missing_features.sample_id_all)
- 		evsel->core.attr.sample_id_all = 0;
-@@ -1752,7 +1756,11 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
- 	 */
--	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
-+	if (!perf_missing_features.lbr_tos && (evsel->core.attr.sample_type & PERF_SAMPLE_LBR_TOS)) {
-+		perf_missing_features.lbr_tos = true;
-+		pr_debug2("switching off LBR TOS support\n");
-+		goto fallback_missing_features;
-+	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
- 		perf_missing_features.aux_output = true;
- 		pr_debug2("Kernel has no attr.aux_output support, bailing out\n");
- 		goto out_close;
-@@ -2206,6 +2214,12 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		array++;
- 	}
- 
-+	data->tos = -1ULL;
-+	if (type & PERF_SAMPLE_LBR_TOS) {
-+		data->tos = *array;
-+		array++;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index ddc5ee6f6592..e4768c60da93 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -115,6 +115,7 @@ struct perf_missing_features {
- 	bool ksymbol;
- 	bool bpf;
- 	bool aux_output;
-+	bool lbr_tos;
- };
- 
- extern struct perf_missing_features perf_missing_features;
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index d4ad3f04923a..254f1bf8dcae 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -34,7 +34,7 @@ static void __p_sample_type(char *buf, size_t size, u64 value)
- 		bit_name(PERIOD), bit_name(STREAM_ID), bit_name(RAW),
- 		bit_name(BRANCH_STACK), bit_name(REGS_USER), bit_name(STACK_USER),
- 		bit_name(IDENTIFIER), bit_name(REGS_INTR), bit_name(DATA_SRC),
--		bit_name(WEIGHT), bit_name(PHYS_ADDR),
-+		bit_name(WEIGHT), bit_name(PHYS_ADDR), bit_name(LBR_TOS),
- 		{ .name = NULL, }
- 	};
- #undef bit_name
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 807cbca403a7..a7d02e81defe 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1228,6 +1228,9 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_PHYS_ADDR)
- 		result += sizeof(u64);
- 
-+	if (type & PERF_SAMPLE_LBR_TOS)
-+		result += sizeof(u64);
-+
- 	return result;
- }
- 
-@@ -1396,6 +1399,11 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 		array++;
- 	}
- 
-+	if (type & PERF_SAMPLE_LBR_TOS) {
-+		*array = sample->tos;
-+		array++;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.17.1
-
+Rob
