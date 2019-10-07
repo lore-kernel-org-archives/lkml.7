@@ -2,101 +2,153 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,WEIRD_PORT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AB3C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDF8C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1140D206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570475696;
-	bh=3NYteDlz2pQpKOythLE4uTVl1bYOYA3EbETiuZjI/OQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PrTivKpn1u1DxBqXTnm6eKrtP5nA5/yT4fjYu/LHibGQAPOsGnSsd3fZDz/MRtd2K
-	 HA6itvle+fbeT7Y/NiUdxR4edhbRLexPc8dzD/tuS99i6dm8QrskmU+q46KgesgMgz
-	 CxkQW1drgW0phEk/PUGhngsoLEmYMsaAeYsEk61E=
+	by mail.kernel.org (Postfix) with ESMTP id 3FC2C20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfJGTOy (ORCPT
+        id S1729000AbfJGTQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:14:54 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37265 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfJGTOy (ORCPT
+        Mon, 7 Oct 2019 15:16:07 -0400
+Received: from barracuda2.shentel.net ([204.111.1.145]:24234 "EHLO
+        barracuda4.shentel.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728187AbfJGTQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:14:54 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l21so14922211lje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DXTod068XsJ0/J/Qqj0/97Cyow7ru7du5wJrbrpf8I4=;
-        b=VMe+eQLfh8WbO//QhhRZRR3AJUuhQ6YMQsuPufHVw3/oSqP7GkJb1KHifxQO5jSf17
-         ZipMojysOuxRhaEDkhQaiJ3YNnCkQPYd57Y4JgtvTOvrZ4br1mebA4NG3Zg2WVG6nmaA
-         c1kGI+h8Yt5V6m9E+KQeP/R/IvXp5VKHWEZ6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DXTod068XsJ0/J/Qqj0/97Cyow7ru7du5wJrbrpf8I4=;
-        b=jTLHy9V77WXfvoHD9EnUaJG1SmSP0RlX5HkVDpHFSwoYJCs36nhklBbwJyi15IYIk6
-         Usu9dswAYOZl3qAsjRW8vVAfrx6jYSjtAJANztOVd/ZPR83y8Rv1zelgWUF5NwXCU5Bw
-         RW2Sb/2BnSIbVlb6NZc+xpLqOjnI54Pmregzwtmky40DhuGwzBr7W4qO1TZmC5pGu5Qa
-         p6B/6mL7qnkL0y6jFXegMaqrn1pluUOY7FZYMfN2DECnJ0+Pui36SCQBiIZpAyQQz7yk
-         DnKMp6pdss1DIUuDIgsVIFDbg4spQN3MSEbKaGHrdd7x+F70sABNP33Swjm0OGKlL5LH
-         amag==
-X-Gm-Message-State: APjAAAUSTbFkAm09h+FnGZAyDdVOi7d8DMGgTPHoo5+DSrDOkrldw0cD
-        bBr2STjP3klHkngJXVWNOEIofoDfW7k=
-X-Google-Smtp-Source: APXvYqwz455T7HTogVNj5APElJzy2IOrcFp4E8G9REOfcd7bdF//aFfCxO8kABtbwCWmMGxkjMHJBQ==
-X-Received: by 2002:a2e:2bda:: with SMTP id r87mr19488897ljr.3.1570475690935;
-        Mon, 07 Oct 2019 12:14:50 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id c6sm2882942lfh.65.2019.10.07.12.14.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 12:14:50 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id u3so10050800lfl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:14:49 -0700 (PDT)
-X-Received: by 2002:a19:2489:: with SMTP id k131mr17252511lfk.52.1570475689589;
- Mon, 07 Oct 2019 12:14:49 -0700 (PDT)
+        Mon, 7 Oct 2019 15:16:06 -0400
+X-Greylist: delayed 353 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 15:16:06 EDT
+X-ASG-Debug-ID: 1570475764-0ea5c16c431de2ff0001-xx1T2L
+Received: from mta-out1.edbg.va.oss.shentel.net ([172.26.51.4]) by barracuda4.shentel.net with ESMTP id PiyoGSX6dQrhiqYm; Mon, 07 Oct 2019 15:16:04 -0400 (EDT)
+X-Barracuda-Envelope-From: gheskett@shentel.net
+Received: from coyote.coyote.den (unknown [204.111.64.149])
+        by mta-out1.edbg.va.oss.shentel.net (Postfix) with ESMTPSA id BACCF10008E;
+        Mon,  7 Oct 2019 15:16:04 -0400 (EDT)
+From:   Gene Heskett <gheskett@shentel.net>
+X-Barracuda-Effective-Source-IP: UNKNOWN[204.111.64.149]
+X-Barracuda-Apparent-Source-IP: 204.111.64.149
+Organization: none,nada,zip
+To:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [ANNOUNCE] 4.19.72-rt25
+Date:   Mon, 7 Oct 2019 15:16:04 -0400
+X-ASG-Orig-Subj: Re: [ANNOUNCE] 4.19.72-rt25
+User-Agent: KMail/1.9.10
+Cc:     "linux-rt-users" <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com
+References: <20190916173921.6368cd62@gandalf.local.home> <201910071510.05101.gheskett@shentel.net>
+In-Reply-To: <201910071510.05101.gheskett@shentel.net>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-References: <0000000000006b7bfb059452e314@google.com> <20191007190747.GA16653@gmail.com>
-In-Reply-To: <20191007190747.GA16653@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 7 Oct 2019 12:14:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whtA4bWH=8xY8TAejDR4XyHDux0xH7_y-0jzft0XkvMfw@mail.gmail.com>
-Message-ID: <CAHk-=whtA4bWH=8xY8TAejDR4XyHDux0xH7_y-0jzft0XkvMfw@mail.gmail.com>
-Subject: Re: WARNING in filldir64
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     syzbot <syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <201910071516.04269.gheskett@shentel.net>
+X-Barracuda-Connect: UNKNOWN[172.26.51.4]
+X-Barracuda-Start-Time: 1570475764
+X-Barracuda-URL: https://172.26.193.44:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at shentel.net
+X-Barracuda-Scan-Msg-Size: 2909
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 0.50
+X-Barracuda-Spam-Status: No, SCORE=0.50 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=6.0 tests=WEIRD_PORT
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.77190
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.50 WEIRD_PORT             URI: Uses non-standard port number for HTTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 12:07 PM Eric Biggers <ebiggers@kernel.org> wrote:
+On Monday 07 October 2019 15:10:05 Gene Heskett wrote:
+
+> On Monday 16 September 2019 17:39:21 Steven Rostedt wrote:
+> > Dear RT Folks,
+> >
+> > I'm pleased to announce the 4.19.72-rt25 stable release.
+> >
+> > **** <NOTE> ****
+> >
+> > As you probably have noticed, it has been a long time since I
+> > released a stable 4.19-rt. The reason for this delay is that one of
+> > my tests failed after merging with the latest stable upstream. I
+> > refuse to push releases with a known bug in it, so I figured I would
+> > find the bug before releasing. I only spend around 4 to 6 hours a
+> > week on upstream stable RT as I have other responsibilities, and I
+> > could not debug this bug during that time (after several weeks of
+> > trying).
+> >
+> > The bug is a random NULL pointer dereference that only happens with
+> > lockdep enabled and on 32bit x86. I also found that this bug existed
+> > before the latest stable pull release but now it is much easier to
+> > trigger.
+> >
+> > I have not been able to trigger this bug in the 64 bit kernel, and
+> > as I rather do a release than waste more time on this bug and
+> > postpone the release further, I am now doing that. As a consequence,
+> > I am no longer supporting 32bit x86, as it is known to have this
+> > bug.
+> >
+> > If you are interested in this, I am willing to send out the config I
+> > am using and one of the dmesg crashes. Just ask.
+> >
+> > **** </NOTE> ****
+> >
+> >
+> > This release is just an update to the new stable 4.19.72 version
+> > and no RT specific changes have been made.
+> >
+> >
+> > You can get this release via the git tree at:
+> >
+> >  
+> > git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+> >
+> >   branch: v4.19-rt
+> >   Head SHA1: 9cd04ab6a9a162ac4189a80032261d243563ff45
 >
-> Seems this indicates a corrupt filesystem rather than a kernel bug, so using
-> WARN_ON is not appropriate.  It should either use pr_warn_once(), or be silent.
+> =====================================================================
+>
+> > Or to build 4.19.72-rt25 directly, the following patches should be
+> > applied:
+> >
+> >   http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+> >
+> >   http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.72.xz
+> >
+> >
+> > http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.7
+> >2- rt25.patch.xz
+>
+> Unfortunately, this does not work for the pi3-4 family. When its all
+> pulled in and patched, there is no arch/arm/configs bcm2709_defconfig
+> or bcm2711_defconfig for either a pi3b or the new pi4b.
+>
+> I'll go find the 5.2.14 announce and see if its any more complete.
+Its disappeared.
 
-I was going to silence it for the actual 5.4 release, but I wanted to
-see if anybody actually triggers it.
+> > Enjoy,
+> >
+> > -- Steve
+>
+> Cheers, Gene Heskett
 
-I didn't really _expect_ it to be triggered, to be honest, so it's
-interesting that it did. What is syzbot doing?
 
-If this is syzbot doing filesystem image randomization, then it falls
-under "ok, expected, ignore it, we'll silence it for 5.4"
-
-But if it's syzbot doing something else, then it would be interesting
-to hear what it's up to.
-
-                Linus
+Cheers, Gene Heskett
+-- 
+"There are four boxes to be used in defense of liberty:
+ soap, ballot, jury, and ammo. Please use in that order."
+-Ed Howdershelt (Author)
+If we desire respect for the law, we must first make the law respectable.
+ - Louis D. Brandeis
+Genes Web page <http://geneslinuxbox.net:6309/gene>
