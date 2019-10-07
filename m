@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF6C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CF3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9BE2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1FE2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfJGN1W (ORCPT
+        id S1728490AbfJGN1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:27:22 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33925 "EHLO
+        Mon, 7 Oct 2019 09:27:03 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57331 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728562AbfJGN1I (ORCPT
+        with ESMTP id S1728003AbfJGN1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:27:08 -0400
+        Mon, 7 Oct 2019 09:27:02 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9277C1C0010;
-        Mon,  7 Oct 2019 13:27:04 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9FBC71C000A;
+        Mon,  7 Oct 2019 13:26:59 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -36,9 +36,9 @@ Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 6/8] dt-bindings: iio: adc: max1027: Mark interrupts as optional
-Date:   Mon,  7 Oct 2019 15:26:55 +0200
-Message-Id: <20191007132657.4190-7-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 1/8] iio: adc: max1027: Add debugfs register read support
+Date:   Mon,  7 Oct 2019 15:26:50 +0200
+Message-Id: <20191007132657.4190-2-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
@@ -49,38 +49,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chips have a 'start conversion' and a 'end of conversion' pair of
-pins. They can be used but this is absolutely not mandatory as regular
-polling is supported by the chip depending on its internal clocking
-setup.
-
-There is no physical reason to force the use of interrupts so turn
-them optional.
-
-Also, once the interrupt turned optional, these devices fit perfectly
-the "trivial devices" described in the generic (yaml) bindings file, so
-instead of converting this text file to json schema, we can just add
-the relevant compatibles in:
-Documentation/devicetree/bindings/trivial-devices.yaml.
+Until now, only write operations were supported. Force two bytes read
+operation when reading, which should fit most of the development
+purposes. Of course, extended operations like buffered reads on
+multiple channels or even temperature + voltage reads will not be read
+entirely. Usually, just starting a new operation will work but in any
+case a software reset (done through the debufs interface too) will
+return the device in a usable state.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/iio/adc/max1027-adc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/adc/max1027.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-index e680c61dfb84..7b23d68f655c 100644
---- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-@@ -3,6 +3,8 @@
- Required properties:
-   - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
-   - reg: SPI chip select number for the device
-+
-+Optional properties:
-   - interrupts: IRQ line for the ADC
-   see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 214883458582..6cdfe9ef73fc 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -309,8 +309,11 @@ static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
+ 	struct max1027_state *st = iio_priv(indio_dev);
+ 	u8 *val = (u8 *)st->buffer;
  
+-	if (readval != NULL)
+-		return -EINVAL;
++	if (readval) {
++		int ret = spi_read(st->spi, val, 2);
++		*readval = be16_to_cpu(st->buffer[0]);
++		return ret;
++	}
+ 
+ 	*val = (u8)writeval;
+ 	return spi_write(st->spi, val, 1);
 -- 
 2.20.1
 
