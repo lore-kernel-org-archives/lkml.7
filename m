@@ -2,129 +2,120 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81CEC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEE7ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F8720867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1040620867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkUljmTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbfJGWKZ (ORCPT
+        id S1729527AbfJGWK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:10:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37999 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfJGWKZ (ORCPT
+        Mon, 7 Oct 2019 18:10:59 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39076 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfJGWK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:10:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j31so21666875qta.5;
-        Mon, 07 Oct 2019 15:10:24 -0700 (PDT)
+        Mon, 7 Oct 2019 18:10:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 4so14289248qki.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 15:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pcIqZVzzISfUOTvLwugKEQa/SxdaQBJkIfYZLHL/HF8=;
+        b=hkUljmTtezaGiXDvCEpABges9PQ04lb1jl/pWzD7hrvrGgVrBiswTbVNzqQbt322st
+         0dIiB/BCPErsZ5VdjFnFSmYJesABlwbW842qH2uJORqmP2HGdmbICUfZfLRR3ZWhL7pT
+         KPAhC9LWoW50vXlbugWAaOvvyjJ7Ps9qXkbyIwQxogVYME7wNTCNlcYUpV4q8PPnqxej
+         lyCvt/qfdryfwe6fOFneKWwvl+dNYW639iS6rt069Nf9j0rkPM5ohOaTUGnJuTrMHMRi
+         tSxo1DZdd9OvzK5m5IsNtpFujoNR+hwjN4cvRhE3dJRg9uxGX8VJIJro1bBetMiFiHpu
+         8cBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ejfq0Mc5y2dQchNRlWvp8Diy33ha1r0LaAd27i+X0Y8=;
-        b=Qqgn7ETyz0nAJYUssdCPGKpvlDATHDL5/hpbmalgdVrmHZ3uJDU//jO41xoiKsGeq8
-         G+Hx1TRhsI+ucGGRDc/JFfnrwRU65D/t7rAgREP6pgLM4Xq1HdXm2VpQlASwstv6ylp/
-         QG1EpFtr3fF1a3M2SzS/dXLl63KEW4yuc0qklcyzqgJLraVvYdbcOHotLUipOfFMyfF9
-         7MpuK/WCfUdn9DHDQc955qUjJxfRvSOJfnQVKIKrEsgA6qSNfor/MmJvSrAg5WeTP3lS
-         aK11RDh7B4VsE2aH0A9CLr8yqDJ3eoUb3bN8FZkcaYkWaB0/J+D2owqQSHUZHKDs+rbi
-         4R5g==
-X-Gm-Message-State: APjAAAVz2zNwp5+gC98vtH2BY0hpwbX2FDkqcUx8eg/ZUOsBLD0gQ3MX
-        Cll9EmuBf2WvApNtrhILu/WT5adu4rv8d8WBFT4=
-X-Google-Smtp-Source: APXvYqzPRJFxFYuWxT4+ZfBG+w2vGH6NTchROSOQUcdmM5fCIL2BX1QvKN3iJG9HKm+wYCbZZdFHqvljXGP+vRDWt10=
-X-Received: by 2002:ac8:342a:: with SMTP id u39mr32462138qtb.7.1570486224339;
- Mon, 07 Oct 2019 15:10:24 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pcIqZVzzISfUOTvLwugKEQa/SxdaQBJkIfYZLHL/HF8=;
+        b=eFs35MTbK+uIXTAmx73xqLbK9c9DJA6YlItXCcdPYALKv2nNz7QRCMPgj4cXTYmr7t
+         TUXN3sdcRnn3OCMK0qYgnrkIgVhWTeRLx7IuJ1SE0NjM3nb2/w/BSIsh4jgdoP0weu2s
+         D8+adkLwn+AQVn/vmUEmAqy2URVyqsZdgPuLI+hDY8YAxk64klxVk3YSfa56Zzq6fZZM
+         B+0rB9Pr5YzhHfXlTrsldyTF3WsINbEzb5HCmOLsVkU+LkZmd/JdCSF2yzp/K129vIoK
+         yHppVmPwdrmNDM3doBj1yuPEFAV+43EIW9akLE4oAZf2cBWt4PMAOnU6Y8OdkhINthPj
+         kSew==
+X-Gm-Message-State: APjAAAVPz1zXe7v/2iNxp5sIOuHEVhNG5MWkXdm8bwJxGBzJV3pLJP/P
+        7L2L81qdMfrpPmrkNuP9I8A=
+X-Google-Smtp-Source: APXvYqyntoOsd5Gz3HmizY5GlMxzA5EyX9iJZMYy4k1q+XyrqrvB7W8XbfUtdObMnPC30OT8J4IHeg==
+X-Received: by 2002:a37:6789:: with SMTP id b131mr7902286qkc.314.1570486257212;
+        Mon, 07 Oct 2019 15:10:57 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id v7sm7896432qte.29.2019.10.07.15.10.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 15:10:56 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 7 Oct 2019 18:10:55 -0400
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
+Message-ID: <20191007221054.GA409402@rani.riverdale.lan>
+References: <20191007022454.GA5270@rani.riverdale.lan>
+ <20191007073448.GA882@lst.de>
+ <20191007175430.GA32537@rani.riverdale.lan>
+ <20191007175528.GA21857@lst.de>
+ <20191007175630.GA28861@infradead.org>
+ <20191007175856.GA42018@rani.riverdale.lan>
+ <20191007183206.GA13589@rani.riverdale.lan>
+ <20191007184754.GB31345@lst.de>
 MIME-Version: 1.0
-References: <20190617221134.9930-1-f.fainelli@gmail.com> <CACRpkdbqW2kJNdPi6JPupaHA_qRTWG-MsUxeCz0c38MRujOSSA@mail.gmail.com>
- <0ba50ae2-be09-f633-ab1f-860e8b053882@broadcom.com> <CAK8P3a2QBQrBU+bBBL20kR+qJfmspCNjiw05jHTa-q6EDfodMg@mail.gmail.com>
- <fbdc3788-3a24-2885-b61b-8480e8464a51@gmail.com>
-In-Reply-To: <fbdc3788-3a24-2885-b61b-8480e8464a51@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 8 Oct 2019 00:10:08 +0200
-Message-ID: <CAK8P3a1E_1=_+eJXvcFMLd=a=YW_WGwjm3nzRZV7SzzZqovzRw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/6] KASan for arm
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        kvmarm@lists.cs.columbia.edu, Jonathan Corbet <corbet@lwn.net>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        drjones@redhat.com, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Jinbum Park <jinb.park7@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Landley <rob@landley.net>, philip@cog.systems,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191007184754.GB31345@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 11:35 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 7/18/19 12:51 AM, Arnd Bergmann wrote:
-> > On Thu, Jul 11, 2019 at 7:00 PM Florian Fainelli
-> > <florian.fainelli@broadcom.com> wrote:
-> >> On 7/2/19 2:06 PM, Linus Walleij wrote:
-> >
-> >>
-> >> Great, thanks a lot for taking a look. FYI, I will be on holiday from
-> >> July 19th till August 12th, if you think you have more feedback between
-> >> now and then, I can try to pick it up and submit a v7 with that feedback
-> >> addressed, or it will happen when I return, or you can pick it up if you
-> >> refer, all options are possible!
-> >>
-> >> @Arnd, should we squash your patches in as well?
-> >
-> > Yes, please do. I don't remember if I sent you all of them already,
-> > here is the list of patches that I have applied locally on top of your
-> > series to get a clean randconfig build:
-> >
-> > 123c3262f872 KASAN: push back KASAN_STACK to clang-10
->
-> This one seems to have received some feedback, not sure if it was
-> addressed or not in a subsequent patch?
+On Mon, Oct 07, 2019 at 08:47:54PM +0200, Christoph Hellwig wrote:
+> On Mon, Oct 07, 2019 at 02:32:07PM -0400, Arvind Sankar wrote:
+> > On Mon, Oct 07, 2019 at 01:58:57PM -0400, Arvind Sankar wrote:
+> > > On Mon, Oct 07, 2019 at 10:56:30AM -0700, Christoph Hellwig wrote:
+> > > > On Mon, Oct 07, 2019 at 07:55:28PM +0200, Christoph Hellwig wrote:
+> > > > > On Mon, Oct 07, 2019 at 01:54:32PM -0400, Arvind Sankar wrote:
+> > > > > > It doesn't boot with the patch. Won't it go
+> > > > > > 	dma_get_required_mask
+> > > > > > 	-> intel_get_required_mask
+> > > > > > 	-> iommu_need_mapping
+> > > > > > 	-> dma_get_required_mask
+> > > > > > ?
+> > > > > > 
+> > > > > > Should the call to dma_get_required_mask in iommu_need_mapping be
+> > > > > > replaced with dma_direct_get_required_mask on top of your patch?
+> > > > > 
+> > > > > Yes, sorry.
+> > > > 
+> > > > Actually my patch already calls dma_direct_get_required_mask.
+> > > > How did you get the loop?
+> > > 
+> > > The function iommu_need_mapping (not changed by your patch) calls
+> > > dma_get_required_mask internally, to check whether the device's dma_mask
+> > > is big enough or not. That's the call I was asking whether it needs to
+> > > be changed.
+> > 
+> > Yeah the attached patch seems to fix it.
+> 
+> That looks fine to me:
+> 
+> Acked-by: Christoph Hellwig <hch@lst.de>
 
-ebb6d35a74ce ("kasan: remove clang version check for KASAN_STACK")
+Do you want me to resend the patch as its own mail, or do you just take
+it with a Tested-by: from me? If the former, I assume you're ok with me
+adding your Signed-off-by?
 
-got applied, it seems clang will remain broken with KASAN_STACK
-for a while.
-
-> > 053555034bdf kasan: disable CONFIG_KASAN_STACK with clang on arm32
->
-> This one I did not take based on Linus' feedback that is breaks booting
-> on his RealView board.
-
-That likely means that there is still a bigger problem somewhere.
-
-      Arnd
+Thanks
