@@ -2,171 +2,154 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9A4ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B87ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3221E20673
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570456326;
-	bh=aYLV5xlZCxMG0BPRjLer+c3Uy2wYBjE8ETgH5kME4Ec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PpgPYkfTLQ+SdPuie5dW3yTCM30yjETjGmjRv0k/flGkcZcnxSAo7Yi5amMjjbFhb
-	 EjneM25bpfJBtvgs/fB9YQ01DvLlDEoyLfL8CLJVQfvDF07ihDKCFdZlD+er0ZZhIQ
-	 8BNg7dk8j6hR2WLlhX5fMgvhvjmfxLoeAn51ZGTI=
+	by mail.kernel.org (Postfix) with ESMTP id 736E420673
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfJGNwF (ORCPT
+        id S1728196AbfJGNxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:52:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35750 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfJGNwE (ORCPT
+        Mon, 7 Oct 2019 09:53:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50101 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfJGNxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:52:04 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v8so15434635wrt.2;
-        Mon, 07 Oct 2019 06:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NqDKw2q0fE+vHWOgUAiru/n1NoCQkdZ2AUuiN/uBGU8=;
-        b=ic0JkvFI48xbG9WtluZM0Hf2PaBXHEnROez7bzryeyJvDMyBL5e6TbbMM0jUfHQLcj
-         N60dwtHrD83rN8DO0nAWlFYhXP8KC2u6M4pUl5c0nz2hn71y23NUwAnaxYFkxrH4ok93
-         +qfxQR+o9B6oGOhK4vKltZbgeMC0rGmYE19yAJrAQ1/yj8WoUn37LJOzT1mjCMj3nWxf
-         T+d+hYdoZYOlliAXcaBDcfhvlDagJJO/aYGfkcviRX3zUAubMvNmWNjd1pemdF4Sv8ip
-         gy5V18KXkquelqXpy56UmV1xBTQrBaryDxBotNjsV4DVgQZQSEqRJYVQMZJf/ufLy8+j
-         SRrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NqDKw2q0fE+vHWOgUAiru/n1NoCQkdZ2AUuiN/uBGU8=;
-        b=F2J1VOxSTv/UUd15EyPRKLymaRExXtYIqlouPSkIv+MkexJG5S65b00UcjwV++cvbB
-         sOPvQ9g7XViOQVrUcsRFuPx1kZ8E1tcM0XOnJ0HKBpSZeA6aBPgXcRfq8PQYg5qMzLtH
-         wJ+AJeI7+IDjSCivz41bD3nj/kmY3nQGhQs7QPTPZpT8idjtj5KeTULwKy/o38tywrNo
-         P5pORuuHc+zG6fnkCSG767/mQyVdLupkX6kCmfqFfN87fYyA2I9W0SEmwhL4TgTG37lB
-         xzW3Qr6J+HO5upyDxh1Nrhs98Zc43cLkFv8XPZOknNnPRMs8prEqjLV0tsTpt/u/zetL
-         doRA==
-X-Gm-Message-State: APjAAAUy57t2Bdl0PIMaWVp/TqPeSP5zwk57DGjrnuQLom5ibINqZ8eu
-        seuCquREvmFozPwxZLDLLDI=
-X-Google-Smtp-Source: APXvYqwFD0AmO4hRi+9l8ADVfmGE8OkR9Fnj4QRZ24lM5fadabYkivM/y6etDxaG7ZOadEedrbv48w==
-X-Received: by 2002:a5d:6441:: with SMTP id d1mr16719177wrw.254.1570456322346;
-        Mon, 07 Oct 2019 06:52:02 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id q19sm41499530wra.89.2019.10.07.06.52.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 06:52:01 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 15:51:58 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 2/2] mm/pgtable/debug: Add test validating
- architecture page table helpers
-Message-ID: <20191007135158.GA36360@gmail.com>
-References: <1570427124-21887-1-git-send-email-anshuman.khandual@arm.com>
- <1570427124-21887-3-git-send-email-anshuman.khandual@arm.com>
- <20191007130617.GB56546@gmail.com>
- <20191007132607.4q537nauwfn5thol@box>
+        Mon, 7 Oct 2019 09:53:17 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iHTRp-0000r2-Rj; Mon, 07 Oct 2019 13:53:13 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rtl8xxxu: make arrays static, makes object smaller
+Date:   Mon,  7 Oct 2019 14:53:13 +0100
+Message-Id: <20191007135313.8443-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007132607.4q537nauwfn5thol@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
-* Kirill A. Shutemov <kirill@shutemov.name> wrote:
+Don't populate const arrays on the stack but instead make them
+static. Makes the object code smaller by 60 bytes.
 
-> On Mon, Oct 07, 2019 at 03:06:17PM +0200, Ingo Molnar wrote:
-> > 
-> > * Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> > 
-> > > This adds a test module which will validate architecture page table helpers
-> > > and accessors regarding compliance with generic MM semantics expectations.
-> > > This will help various architectures in validating changes to the existing
-> > > page table helpers or addition of new ones.
-> > > 
-> > > Test page table and memory pages creating it's entries at various level are
-> > > all allocated from system memory with required alignments. If memory pages
-> > > with required size and alignment could not be allocated, then all depending
-> > > individual tests are skipped.
-> > 
-> > > diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-> > > index 52e5f5f2240d..b882792a3999 100644
-> > > --- a/arch/x86/include/asm/pgtable_64_types.h
-> > > +++ b/arch/x86/include/asm/pgtable_64_types.h
-> > > @@ -40,6 +40,8 @@ static inline bool pgtable_l5_enabled(void)
-> > >  #define pgtable_l5_enabled() 0
-> > >  #endif /* CONFIG_X86_5LEVEL */
-> > >  
-> > > +#define mm_p4d_folded(mm) (!pgtable_l5_enabled())
-> > > +
-> > >  extern unsigned int pgdir_shift;
-> > >  extern unsigned int ptrs_per_p4d;
-> > 
-> > Any deep reason this has to be a macro instead of proper C?
-> 
-> It's a way to override the generic mm_p4d_folded(). It can be rewritten
-> as inline function + define. Something like:
-> 
-> #define mm_p4d_folded mm_p4d_folded
-> static inline bool mm_p4d_folded(struct mm_struct *mm)
-> {
-> 	return !pgtable_l5_enabled();
-> }
-> 
-> But I don't see much reason to be more verbose here than needed.
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  15133	   8768	      0	  23901	   5d5d	realtek/rtl8xxxu/rtl8xxxu_8192e.o
+  15209	   6392	      0	  21601	   5461	realtek/rtl8xxxu/rtl8xxxu_8723b.o
+ 103254	  31202	    576	 135032	  20f78	realtek/rtl8xxxu/rtl8xxxu_core.o
 
-C type checking? Documentation? Yeah, I know it's just a one-liner, but 
-the principle of the death by a thousand cuts applies here.
+After:
+   text	   data	    bss	    dec	    hex	filename
+  14861	   9024	      0	  23885	   5d4d	realtek/rtl8xxxu/rtl8xxxu_8192e.o
+  14953	   6616	      0	  21569	   5441	realtek/rtl8xxxu/rtl8xxxu_8723b.o
+ 102986	  31458	    576	 135020	  20f6c	realtek/rtl8xxxu/rtl8xxxu_core.o
 
-BTW., any reason this must be in the low level pgtable_64_types.h type 
-header, instead of one of the API level header files?
+(gcc version 9.2.1, amd64)
 
-Thanks,
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8192e.c | 6 +++---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 6 +++---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-	Ingo
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8192e.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8192e.c
+index c747f6a1922d..9f1f93d04145 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8192e.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8192e.c
+@@ -1011,7 +1011,7 @@ static void rtl8192eu_phy_iqcalibrate(struct rtl8xxxu_priv *priv,
+ 	u32 i, val32;
+ 	int path_a_ok, path_b_ok;
+ 	int retry = 2;
+-	const u32 adda_regs[RTL8XXXU_ADDA_REGS] = {
++	static const u32 adda_regs[RTL8XXXU_ADDA_REGS] = {
+ 		REG_FPGA0_XCD_SWITCH_CTRL, REG_BLUETOOTH,
+ 		REG_RX_WAIT_CCA, REG_TX_CCK_RFON,
+ 		REG_TX_CCK_BBON, REG_TX_OFDM_RFON,
+@@ -1021,11 +1021,11 @@ static void rtl8192eu_phy_iqcalibrate(struct rtl8xxxu_priv *priv,
+ 		REG_RX_TO_RX, REG_STANDBY,
+ 		REG_SLEEP, REG_PMPD_ANAEN
+ 	};
+-	const u32 iqk_mac_regs[RTL8XXXU_MAC_REGS] = {
++	static const u32 iqk_mac_regs[RTL8XXXU_MAC_REGS] = {
+ 		REG_TXPAUSE, REG_BEACON_CTRL,
+ 		REG_BEACON_CTRL_1, REG_GPIO_MUXCFG
+ 	};
+-	const u32 iqk_bb_regs[RTL8XXXU_BB_REGS] = {
++	static const u32 iqk_bb_regs[RTL8XXXU_BB_REGS] = {
+ 		REG_OFDM0_TRX_PATH_ENABLE, REG_OFDM0_TR_MUX_PAR,
+ 		REG_FPGA0_XCD_RF_SW_CTRL, REG_CONFIG_ANT_A, REG_CONFIG_ANT_B,
+ 		REG_FPGA0_XAB_RF_SW_CTRL, REG_FPGA0_XA_RF_INT_OE,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index ceffe05bd65b..61f5d2c24799 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -882,7 +882,7 @@ static void rtl8723bu_phy_iqcalibrate(struct rtl8xxxu_priv *priv,
+ 	u32 i, val32;
+ 	int path_a_ok /*, path_b_ok */;
+ 	int retry = 2;
+-	const u32 adda_regs[RTL8XXXU_ADDA_REGS] = {
++	static const u32 adda_regs[RTL8XXXU_ADDA_REGS] = {
+ 		REG_FPGA0_XCD_SWITCH_CTRL, REG_BLUETOOTH,
+ 		REG_RX_WAIT_CCA, REG_TX_CCK_RFON,
+ 		REG_TX_CCK_BBON, REG_TX_OFDM_RFON,
+@@ -892,11 +892,11 @@ static void rtl8723bu_phy_iqcalibrate(struct rtl8xxxu_priv *priv,
+ 		REG_RX_TO_RX, REG_STANDBY,
+ 		REG_SLEEP, REG_PMPD_ANAEN
+ 	};
+-	const u32 iqk_mac_regs[RTL8XXXU_MAC_REGS] = {
++	static const u32 iqk_mac_regs[RTL8XXXU_MAC_REGS] = {
+ 		REG_TXPAUSE, REG_BEACON_CTRL,
+ 		REG_BEACON_CTRL_1, REG_GPIO_MUXCFG
+ 	};
+-	const u32 iqk_bb_regs[RTL8XXXU_BB_REGS] = {
++	static const u32 iqk_bb_regs[RTL8XXXU_BB_REGS] = {
+ 		REG_OFDM0_TRX_PATH_ENABLE, REG_OFDM0_TR_MUX_PAR,
+ 		REG_FPGA0_XCD_RF_SW_CTRL, REG_CONFIG_ANT_A, REG_CONFIG_ANT_B,
+ 		REG_FPGA0_XAB_RF_SW_CTRL, REG_FPGA0_XA_RF_INT_OE,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 776bbae14a8d..de6e1efd526f 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3115,7 +3115,7 @@ static void rtl8xxxu_phy_iqcalibrate(struct rtl8xxxu_priv *priv,
+ 	u32 i, val32;
+ 	int path_a_ok, path_b_ok;
+ 	int retry = 2;
+-	const u32 adda_regs[RTL8XXXU_ADDA_REGS] = {
++	static const u32 adda_regs[RTL8XXXU_ADDA_REGS] = {
+ 		REG_FPGA0_XCD_SWITCH_CTRL, REG_BLUETOOTH,
+ 		REG_RX_WAIT_CCA, REG_TX_CCK_RFON,
+ 		REG_TX_CCK_BBON, REG_TX_OFDM_RFON,
+@@ -3125,11 +3125,11 @@ static void rtl8xxxu_phy_iqcalibrate(struct rtl8xxxu_priv *priv,
+ 		REG_RX_TO_RX, REG_STANDBY,
+ 		REG_SLEEP, REG_PMPD_ANAEN
+ 	};
+-	const u32 iqk_mac_regs[RTL8XXXU_MAC_REGS] = {
++	static const u32 iqk_mac_regs[RTL8XXXU_MAC_REGS] = {
+ 		REG_TXPAUSE, REG_BEACON_CTRL,
+ 		REG_BEACON_CTRL_1, REG_GPIO_MUXCFG
+ 	};
+-	const u32 iqk_bb_regs[RTL8XXXU_BB_REGS] = {
++	static const u32 iqk_bb_regs[RTL8XXXU_BB_REGS] = {
+ 		REG_OFDM0_TRX_PATH_ENABLE, REG_OFDM0_TR_MUX_PAR,
+ 		REG_FPGA0_XCD_RF_SW_CTRL, REG_CONFIG_ANT_A, REG_CONFIG_ANT_B,
+ 		REG_FPGA0_XAB_RF_SW_CTRL, REG_FPGA0_XA_RF_INT_OE,
+-- 
+2.20.1
+
