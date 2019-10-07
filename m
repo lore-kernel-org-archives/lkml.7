@@ -2,141 +2,105 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D62AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BCEC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DC320659
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74AD2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="aXYdfkT/"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="lJsltAwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbfJGQtG (ORCPT
+        id S1728465AbfJGQue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:49:06 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:63063 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbfJGQtG (ORCPT
+        Mon, 7 Oct 2019 12:50:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44383 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbfJGQue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:49:06 -0400
-X-Greylist: delayed 45485 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 12:49:04 EDT
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x97GmZqd019698;
-        Tue, 8 Oct 2019 01:48:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x97GmZqd019698
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570466916;
-        bh=y8kJOcEkslZAk6vscewNCsiqfVNW7HLOUn33XrjSX/8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aXYdfkT/lgvsiWWfLjWAPX0ggr0leZTUeugZDoWrJ3v1WO1pQggaUnuJJxxqDD33P
-         akR1Nz+raADcws3tEpXHnNGRGt21pZLBFZ6wNWsc31Wx/kMBfuDfUflzUJfMtG7v6Q
-         I1enx8WdkLA1WKIhMd04HK7MThbk932x/DBZOT4r3ynbjvMpb6iflWIWFJz/gpnwCZ
-         7sXW6tj0+SZ0R1Ir26uyUZ3zGsACkW54cZN0Hm1L+uQzk2o+PQ/BgxUyIqrg9047bF
-         rwmVM6HLM13vfjOTKLXQs797gmP3pgikdlUBuefD80ZBe0Pj1usplMjlHYtByqD3OZ
-         vW9bSR2haFsuQ==
-X-Nifty-SrcIP: [209.85.221.171]
-Received: by mail-vk1-f171.google.com with SMTP id f1so3117312vkh.9;
-        Mon, 07 Oct 2019 09:48:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAWUIg6L5+ycpHtZOrB28TMHIaZQPFZfEM9k2l6fmFU+Zumacbtl
-        otGyje+3sZ5Ql/MsrHwSidZaiZQLT+pQWPKQDWI=
-X-Google-Smtp-Source: APXvYqz7ukzVlMcJueOvYoOURcSnxC1SoQJMDggO8QxxUau2yVIUqwN1Rp39wa8jRdIxVVo8igICcocuPeFehW+TIOc=
-X-Received: by 2002:a1f:5243:: with SMTP id g64mr14817662vkb.26.1570466914476;
- Mon, 07 Oct 2019 09:48:34 -0700 (PDT)
+        Mon, 7 Oct 2019 12:50:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q15so7119734pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=+w6HGwIeJz41HW0Pum9Qvdf3wavqkNbTaRf9Bcybxb4=;
+        b=lJsltAwBXOB7dzBNHRpXWNUxozcGk6hPiEnSnYGI2AGONfo3Tz+aNwgBqtQj8Hwk/1
+         AGAy6E+fMSLqf4xqAgfjfRQ0JJG1SD+7XAORxZzNsdSuFUVqP2Njj0W81UoVYxvKaoOi
+         Ch3KQ+MtptGeBccMUkJD1OkVksmM2nIzJjk3YK46o79KJ2tqlbT9YWIQgWXHdXNCOzLv
+         yWXkSTfWYSUqyMQCEQMWgBas7nGOZ+GURuYNGsOnD3j68YyyA+Qraj7xocqUO+ZfHwpT
+         hMdSXfvr+tfcnP/ZXXnEogDA8CxA6I7a7fAaQCG6vp/aCtsYpkd1NRX90yOTPZawQ17U
+         oYlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=+w6HGwIeJz41HW0Pum9Qvdf3wavqkNbTaRf9Bcybxb4=;
+        b=iefXarsJzgExRaEOvTjThVj4HIYrhH1Lh5oe5XKnUAveGNf+gloFlre8dcEDX3SmkY
+         vwGkFwkgl11jGiI670xq/w7fFP+aCyqWHaDnsWsyL+1fimLaHyVM1i9vA9YxXGBX6Yrs
+         OKJ5L+iFMvvmEUp9ZyUqVXfALHiH3PWesoMmL+AZttXqfoqFPuXEGGZS5D83bge5vXW+
+         e8IuvGG5M8eL6Otbx0u4jW0S0tliejrashMZewf/QVJusTfgM62lO9LzmEJZLq5BesBd
+         Ec2BUKLfJbIsaZgECVg5oXT9sgGrbC+37j0qun069ok+Lk2dufo/+ln+rWOnsRshSznm
+         1gNA==
+X-Gm-Message-State: APjAAAXaN++VE1P06vAt6Ss2xH5pF4ACB1SIPtCt4AOOILXt0Cm22Zre
+        oVkgtoo4TbrrzR2K3/ZnBmuy6/wk6RVbyQ==
+X-Google-Smtp-Source: APXvYqyqhgEmYg2SNMgR0qFTRxWnC5C0Pd3FzJLguS6YtT9AKzecBtSMeeO78IlNFu5TcTfGadfDhg==
+X-Received: by 2002:a17:902:9b84:: with SMTP id y4mr31341979plp.189.1570467033479;
+        Mon, 07 Oct 2019 09:50:33 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.googlemail.com with ESMTPSA id w11sm880349pgl.82.2019.10.07.09.50.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 09:50:32 -0700 (PDT)
+Subject: Re: [PATCH] mm: export cma alloc and release
+To:     Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ryohei Suzuki <ryh.szk.cmnty@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Peng Fan <peng.fan@nxp.com>, linux-mm@kvack.org,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191002212257.196849-1-salyzyn@android.com>
+ <20191003085528.GB21629@arrakis.emea.arm.com> <20191005083753.GA14691@lst.de>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <aa1c5b2f-fa90-4390-edc6-33b87fab5e09@android.com>
+Date:   Mon, 7 Oct 2019 09:50:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191007040935.23436-1-yamada.masahiro@socionext.com> <CAK8P3a0g5iEtbFGk2BE6x3GrE5=zXngecLFUVFPWFqL3NZUwhg@mail.gmail.com>
-In-Reply-To: <CAK8P3a0g5iEtbFGk2BE6x3GrE5=zXngecLFUVFPWFqL3NZUwhg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 8 Oct 2019 01:47:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASQ32R1-tqGDjnGYwMuOo=+SZMhzb7T39F-nKzr+=NaNQ@mail.gmail.com>
-Message-ID: <CAK7LNASQ32R1-tqGDjnGYwMuOo=+SZMhzb7T39F-nKzr+=NaNQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] media: videodev2.h: include <linux/time.h> instead of <sys/time.h>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191005083753.GA14691@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On 10/5/19 1:37 AM, Christoph Hellwig wrote:
+> On Thu, Oct 03, 2019 at 09:55:28AM +0100, Catalin Marinas wrote:
+>> Aren't drivers supposed to use the DMA API for such allocations rather
+>> than invoking cma_*() directly?
+> Yes, they are.
 
-On Tue, Oct 8, 2019 at 12:26 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Oct 7, 2019 at 6:10 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Currently, linux/videodev.h is excluded from the UAPI header test since
-> > it is not self-contained. Building it for user-space would fail.
-> >
->
-> >
-> > Replacing <sys/time.h> with <linux/time.h> solves it, and allow more
-> > headers to join the UAPI header test.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> > I am not 100% sure about the compatibility
-> > between <sys/time.h> and <linux/time.h>, hence RFC.
-> >
-> > But, if they were not compatible,
-> > I guess it would have broken already.
-> >
-> > I CCed Arnd Bergmann, who might have a better insight.
-> >
-> > A related comment is here:
-> > https://lkml.org/lkml/2019/6/4/1046
->
-> I don't think this can work, there are multiple problems here:
->
-> * linux/time.h is still incompatible with sys/time.h, so any application
->   tries to include both sys/time.h and linux/videodev2.h now also
->   gets the compile-time error.
+We have an engineer assigned to rewriting the ion memory driver to use 
+dma_buf interfaces. Hopefully that effort will solve the problem of 
+requiring these interfaces to be exported so that that driver (and 
+others) can be modularized.
 
-You are right.
-I am so stupidly screwed up. Palm face...
+Thanks for the reviews, drop this patch from the list and we will 
+regroup, and accept that standing code in the kernel can not be 
+modularized for the moment.
 
-Please ignore this patch,
-and thank you for your expert comments!
+Sincerely -- Mark Salyzyn
 
-
->
-> * The definition of 'struct timespec' in the kernel headers may in
->   fact be different from the one in the libc, and we do want to use
->   the one from the C library here, otherwise different parts of the
->   application may use incompatible struct layouts.
->
-> Fixing this correctly depends on one of the remaining y2038
-> patches that we still have to revisit. There are two aspects that
-> we should address:
->
-> 1. The v4l subsystem needs to be changed to handle both the
->     old and the new 32-bit layout for timespec (and timeval). Both
->     Hans and I have created patches for this in the past, but they
->     were never completed and merged.
->
-> 2. The definition of 'struct timespec' in the kernel headers needs
->    to be removed after every user of this struct is gone from
->    the kernel. In internal kernel code, the replacement is
->    timespec64 or ktime_t, and in user space interfaces, the
->    correct replacement is one of __kernel_timespec (the 64-bit
->    version), __kernel_old_timespec (the traditional layout) or
->    timespec (from the libc headers).
->
->         Arnd
-
-
-
---
-Best Regards
-
-Masahiro Yamada
