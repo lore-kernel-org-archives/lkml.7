@@ -2,88 +2,83 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7235AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2D9C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4591520679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="trfi+lAP"
+	by mail.kernel.org (Postfix) with ESMTP id 64B0320679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfJGIJR (ORCPT
+        id S1727372AbfJGIK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:09:17 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56642 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfJGIJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:09:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dabwxm5vomV9WWpSNJ4FIDOpR0IeyzpWs0EaA1S3EiA=; b=trfi+lAPvWdu8emeBU815dHdQ
-        2QF+TogFvMx/2Np7wR/Cyq0n3QAL+LcrjhBEPtsnFVNRk1ewdsXeKXqwLOAAsqa1QMyP3P7sM3SDm
-        XSab0yll7C2SBecvBVvT72N7eG6xms1DQH5Rv/yrwakvkdyTacVD4+weEwNH79k+hpUwP2cHLD7UA
-        47K00aA77rmP/5UP4Wqf+K/kq201UJtItVoxljr8W5E4gHCKK1aF2yzMfa1aK5jKXNFEhvGGQ9Fen
-        vOrRguQgFi1UoJ/OWRIgEVG8qDsqYsT9X4ADts2VJtZoa99tSHvTT6gnJvslljoVYKSiHOC08SgvK
-        Eisa+fKYw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHO4a-0008JO-Gi; Mon, 07 Oct 2019 08:08:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 7 Oct 2019 04:10:26 -0400
+Received: from mx2.freebsd.org ([96.47.72.81]:49700 "EHLO mx2.freebsd.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfJGIK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:10:26 -0400
+X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 04:10:25 EDT
+Received: from mx1.freebsd.org (mx1.freebsd.org [IPv6:2610:1c1:1:606c::19:1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx2.freebsd.org (Postfix) with ESMTPS id 4FF5790EE1;
+        Mon,  7 Oct 2019 08:03:48 +0000 (UTC)
+        (envelope-from manu@freebsd.org)
+Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx1.freebsd.org (Postfix) with ESMTPS id 46mtKH6GlSz4RM4;
+        Mon,  7 Oct 2019 08:03:47 +0000 (UTC)
+        (envelope-from manu@freebsd.org)
+Received: from skull.home.blih.net (ip-9.net-89-3-105.rev.numericable.fr [89.3.105.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1BA93305803;
-        Mon,  7 Oct 2019 10:07:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ED45E20245BB0; Mon,  7 Oct 2019 10:08:47 +0200 (CEST)
-Date:   Mon, 7 Oct 2019 10:08:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191007080847.GB2311@hirez.programming.kicks-ass.net>
-References: <20190827180622.159326993@infradead.org>
- <20190827181147.166658077@infradead.org>
- <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
- <20191002182106.GC4643@worktop.programming.kicks-ass.net>
- <20191003181045.7fb1a5b3@gandalf.local.home>
- <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
+        (Authenticated sender: manu)
+        by smtp.freebsd.org (Postfix) with ESMTPSA id E083D1D173;
+        Mon,  7 Oct 2019 08:03:46 +0000 (UTC)
+        (envelope-from manu@freebsd.org)
+From:   Emmanuel Vadot <manu@freebsd.org>
+To:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH] ARM: dts: Set status to disable for MMC3
+Date:   Mon,  7 Oct 2019 10:03:39 +0200
+Message-Id: <20191007080339.57209-1-manu@freebsd.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 10:10:47AM +0200, Daniel Bristot de Oliveira wrote:
-> 1) the enabling/disabling ftrace path
-> 2) the int3 path - if a thread/irq is running a kernel function
-> 3) the IPI - that affects all CPUs, even those that are not "hitting" trace
-> code, e.g., user-space.
-> 
-> The first one is for sure a cold-path. The second one is a hot-path: any task
-> running kernel functions will hit it. But IMHO, the hottest one is the IPIs,
-> because it will run on all CPUs, e.g., even isolated CPUs that are running in
-> user-space.
+Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+fixed the mmc instances on the l3 interconnect but removed the disabled status.
+Fix this and let boards properly define it if it have it.
 
-Well, we can fix that, just like RCU. In fact, I suspect RCU has all the
-bits required to cure this.
+Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-For NOHZ_FULL CPUs you can forgo the IPI and delay it until the next kernel
-entry, just like RCU.
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index fb6b8aa12cc5..b3a1fd9e39fa 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -260,6 +260,7 @@
+ 				ti,needs-special-reset;
+ 				interrupts = <29>;
+ 				reg = <0x0 0x1000>;
++				status = "disabled";
+ 			};
+ 		};
+ 
+-- 
+2.22.0
+
