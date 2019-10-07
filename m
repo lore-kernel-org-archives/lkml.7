@@ -2,210 +2,253 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905ADC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A61C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E00920656
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="A/5d4dVI"
+	by mail.kernel.org (Postfix) with ESMTP id 931DE21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 04:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570421570;
+	bh=NvJ8bTWepqmevLrYGwD+hBTZmbey9o2QVAaex2Uvh7Q=;
+	h=Date:From:To:Subject:List-ID:From;
+	b=Sftmke0eF7zkCLFKMUe8+nKZYjEpWXtpnOtNtDP5ZYgrYsZzm7gVHEc3n4HPxblIk
+	 4T9s/V381QFPXY8RdvSFxzF8c7uWk+fxGd/zho0Ueybcle5+hYASu96i8EqyHjV+EK
+	 7PPYiLU6uQJpLSIR+3q6swG0/v6zpyyIi9zC+7aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfJGELA (ORCPT
+        id S1727243AbfJGEMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 00:11:00 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:19204 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfJGELA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 00:11:00 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x9749g3X018731;
-        Mon, 7 Oct 2019 13:09:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x9749g3X018731
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570421383;
-        bh=Qc7kdQEQSeKLCS/0wAc93VS/IctKNqs8VpX26LsuFE8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A/5d4dVIrqN2WaWhbcE02/wOFnI0M06+MISGepHGVg4j0vPmj2QAzi6Ii95u/qmqi
-         kCEltsICPi5l3akHJ8G7v/NybUuquWnBddU3XXM/glsFo/ocAbRKjjSBCdYdLr7dg2
-         ivepUNDchYZSJAtDPs1xe8jMf4+RrIXn610OdYvCFcVsKrPaEQeEzGoHkZ54DLu51m
-         24F0QEn3ZBq6Yu6Ik7V18BCezhTEQS0BwRBSr7KXPRsx8eoTuOGx8EQ1pJIptwTNE3
-         knUGeHE9y7FTGFJnXI/IUkhy1RT0Hn433mPRqZNxJ2wM1yMOHqR7549Svb7XGHKdBE
-         1vtpSootLRSaA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] media: videodev2.h: include <linux/time.h> instead of <sys/time.h>
-Date:   Mon,  7 Oct 2019 13:09:35 +0900
-Message-Id: <20191007040935.23436-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 7 Oct 2019 00:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbfJGEMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 00:12:49 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B995320656;
+        Mon,  7 Oct 2019 04:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570421568;
+        bh=NvJ8bTWepqmevLrYGwD+hBTZmbey9o2QVAaex2Uvh7Q=;
+        h=Date:From:To:Subject:From;
+        b=FQSAYS/n7lGIYqvc1rGIO8KTEiZlP1u+4kPIaSVIQyGm8h+RJ3GTWuLUC7SLWwji+
+         Mmi3Sufr7j8kBinzl8+PkgwQySpW+iNHNQGytNH2xN4xM2GeadgJFrQMHxTFrbO16c
+         vDB1wurBTQIzzpZoecxBaRBqTHFYMtbXTIdZeHJQ=
+Date:   Sun, 06 Oct 2019 21:12:47 -0700
+From:   akpm@linux-foundation.org
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2019-10-06-21-12 uploaded
+Message-ID: <20191007041247.SC6Ovr6OU%akpm@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, linux/videodev.h is excluded from the UAPI header test since
-it is not self-contained. Building it for user-space would fail.
+The mm-of-the-moment snapshot 2019-10-06-21-12 has been uploaded to
 
-------------------------(build log1 begin)------------------------
+   http://www.ozlabs.org/~akpm/mmotm/
 
-  CC      usr/include/linux/videodev2.h.s
-In file included from <command-line>:32:0:
-./usr/include/linux/videodev2.h:2320:20: error: field ‘timestamp’ has incomplete type
-  struct timespec   timestamp;
-                    ^~~~~~~~~
+mmotm-readme.txt says
 
--------------------------(build log1 end)-------------------------
+README for mm-of-the-moment:
 
-The in-kernel timespec definition exists in include/uapi/linux/time.h,
-but just including <linux/time.h> causes a lot of redefinition errors.
+http://www.ozlabs.org/~akpm/mmotm/
 
-------------------------(build log2 begin)------------------------
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
 
-  CC      usr/include/linux/videodev2.h.s
-In file included from ./usr/include/linux/videodev2.h:63:0,
-                 from <command-line>:32:
-./usr/include/linux/time.h:16:8: error: redefinition of ‘struct timeval’
- struct timeval {
-        ^~~~~~~
-In file included from /usr/include/x86_64-linux-gnu/sys/time.h:25:0,
-                 from ./usr/include/linux/videodev2.h:60,
-                 from <command-line>:32:
-/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:8:8: note: originally defined here
- struct timeval
-        ^~~~~~~
-In file included from ./usr/include/linux/videodev2.h:63:0,
-                 from <command-line>:32:
-./usr/include/linux/time.h:30:0: warning: "ITIMER_REAL" redefined
- #define ITIMER_REAL  0
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
 
-In file included from ./usr/include/linux/videodev2.h:60:0,
-                 from <command-line>:32:
-/usr/include/x86_64-linux-gnu/sys/time.h:92:0: note: this is the location of the previous definition
- #define ITIMER_REAL ITIMER_REAL
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
 
-In file included from ./usr/include/linux/videodev2.h:63:0,
-                 from <command-line>:32:
-./usr/include/linux/time.h:31:0: warning: "ITIMER_VIRTUAL" redefined
- #define ITIMER_VIRTUAL  1
-
-In file included from ./usr/include/linux/videodev2.h:60:0,
-                 from <command-line>:32:
-/usr/include/x86_64-linux-gnu/sys/time.h:95:0: note: this is the location of the previous definition
- #define ITIMER_VIRTUAL ITIMER_VIRTUAL
-
-In file included from ./usr/include/linux/videodev2.h:63:0,
-                 from <command-line>:32:
-./usr/include/linux/time.h:32:0: warning: "ITIMER_PROF" redefined
- #define ITIMER_PROF  2
-
-In file included from ./usr/include/linux/videodev2.h:60:0,
-                 from <command-line>:32:
-/usr/include/x86_64-linux-gnu/sys/time.h:99:0: note: this is the location of the previous definition
- #define ITIMER_PROF ITIMER_PROF
-
-In file included from ./usr/include/linux/videodev2.h:63:0,
-                 from <command-line>:32:
-./usr/include/linux/time.h:39:8: error: redefinition of ‘struct itimerval’
- struct itimerval {
-        ^~~~~~~~~
-In file included from ./usr/include/linux/videodev2.h:60:0,
-                 from <command-line>:32:
-/usr/include/x86_64-linux-gnu/sys/time.h:104:8: note: originally defined here
- struct itimerval
-        ^~~~~~~~~
-
--------------------------(build log2 end)-------------------------
-
-Replacing <sys/time.h> with <linux/time.h> solves it, and allow more
-headers to join the UAPI header test.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-I am not 100% sure about the compatibility
-between <sys/time.h> and <linux/time.h>, hence RFC.
-
-But, if they were not compatible,
-I guess it would have broken already.
-
-I CCed Arnd Bergmann, who might have a better insight.
-
-A related comment is here:
-https://lkml.org/lkml/2019/6/4/1046
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
 
 
- include/uapi/linux/videodev2.h | 4 +---
- usr/include/Makefile           | 7 -------
- 2 files changed, 1 insertion(+), 10 deletions(-)
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 530638dffd93..2571130aa1ca 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -57,11 +57,9 @@
- #ifndef _UAPI__LINUX_VIDEODEV2_H
- #define _UAPI__LINUX_VIDEODEV2_H
- 
--#ifndef __KERNEL__
--#include <sys/time.h>
--#endif
- #include <linux/compiler.h>
- #include <linux/ioctl.h>
-+#include <linux/time.h>
- #include <linux/types.h>
- #include <linux/v4l2-common.h>
- #include <linux/v4l2-controls.h>
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index 57b20f7b6729..dafa6cb9b07e 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -23,7 +23,6 @@ header-test- += asm/shmbuf.h
- header-test- += asm/signal.h
- header-test- += asm/ucontext.h
- header-test- += drm/vmwgfx_drm.h
--header-test- += linux/am437x-vpfe.h
- header-test- += linux/android/binder.h
- header-test- += linux/android/binderfs.h
- header-test-$(CONFIG_CPU_BIG_ENDIAN) += linux/byteorder/big_endian.h
-@@ -33,13 +32,10 @@ header-test- += linux/elfcore.h
- header-test- += linux/errqueue.h
- header-test- += linux/fsmap.h
- header-test- += linux/hdlc/ioctl.h
--header-test- += linux/ivtv.h
- header-test- += linux/kexec.h
--header-test- += linux/matroxfb.h
- header-test- += linux/netfilter_ipv4/ipt_LOG.h
- header-test- += linux/netfilter_ipv6/ip6t_LOG.h
- header-test- += linux/nfc.h
--header-test- += linux/omap3isp.h
- header-test- += linux/omapfb.h
- header-test- += linux/patchkey.h
- header-test- += linux/phonet.h
-@@ -49,9 +45,6 @@ header-test- += linux/sctp.h
- header-test- += linux/signal.h
- header-test- += linux/sysctl.h
- header-test- += linux/usb/audio.h
--header-test- += linux/v4l2-mediabus.h
--header-test- += linux/v4l2-subdev.h
--header-test- += linux/videodev2.h
- header-test- += linux/vm_sockets.h
- header-test- += sound/asequencer.h
- header-test- += sound/asoc.h
--- 
-2.17.1
+http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
 
+
+
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
+
+A git copy of this tree is available at
+
+	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
+
+and use of this tree is similar to
+http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
+
+
+This mmotm tree contains the following patches against 5.4-rc2:
+(patches marked "*" will be included in linux-next)
+
+* ocfs2-clear-zero-in-unaligned-direct-io.patch
+* fs-ocfs2-fix-possible-null-pointer-dereferences-in-ocfs2_xa_prepare_entry.patch
+* fs-ocfs2-fix-a-possible-null-pointer-dereference-in-ocfs2_write_end_nolock.patch
+* fs-ocfs2-fix-a-possible-null-pointer-dereference-in-ocfs2_info_scan_inode_alloc.patch
+* panic-ensure-preemption-is-disabled-during-panic.patch
+* mm-memremap-drop-unused-section_size-and-section_mask.patch
+* writeback-fix-use-after-free-in-finish_writeback_work.patch
+* mm-fix-wmissing-prototypes-warnings.patch
+* memcg-only-record-foreign-writebacks-with-dirty-pages-when-memcg-is-not-disabled.patch
+* kernel-sysctlc-do-not-override-max_threads-provided-by-userspace.patch
+* z3fold-claim-page-in-the-beginning-of-free.patch
+* mm-page_alloc-fix-a-crash-in-free_pages_prepare.patch
+* mm-vmpressure-fix-a-signedness-bug-in-vmpressure_register_event.patch
+* mm-proportional-memorylowmin-reclaim.patch
+* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
+* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
+* mm-slb-improve-memory-accounting.patch
+* mm-slb-guarantee-natural-alignment-for-kmallocpower-of-two.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-page_owner-fix-off-by-one-error-in-__set_page_owner_handle.patch
+* mm-page_owner-decouple-freeing-stack-trace-from-debug_pagealloc.patch
+* mm-page_owner-rename-flag-indicating-that-page-is-allocated.patch
+* kmemleak-do-not-corrupt-the-object_list-during-clean-up.patch
+* mm-slub-fix-a-deadlock-in-show_slab_objects.patch
+* lib-generic-radix-treec-add-kmemleak-annotations.patch
+* genalloc-fix-a-set-of-docs-build-warnings.patch
+* ocfs2-protect-extent-tree-in-the-ocfs2_prepare_inode_for_write.patch
+* ocfs2-protect-extent-tree-in-the-ocfs2_prepare_inode_for_write-checkpatch-fixes.patch
+* ocfs2-remove-unused-function-ocfs2_prepare_inode_for_refcount.patch
+* ocfs2-fix-passing-zero-to-ptr_err-warning.patch
+* ramfs-support-o_tmpfile.patch
+  mm.patch
+* mm-slab-make-kmalloc_info-contain-all-types-of-names.patch
+* mm-slab-remove-unused-kmalloc_size.patch
+* mm-slab_common-use-enum-kmalloc_cache_type-to-iterate-over-kmalloc-caches.patch
+* mm-slub-print-the-offset-of-fault-addresses.patch
+* mm-memcg-clean-up-reclaim-iter-array.patch
+* mm-vmscan-get-number-of-pages-on-the-lru-list-in-memcgroup-base-on-lru_zone_size.patch
+* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
+* mm-drop-mmap_sem-before-calling-balance_dirty_pages-in-write-fault.patch
+* shmem-pin-the-file-in-shmem_fault-if-mmap_sem-is-dropped.patch
+* mm-emit-tracepoint-when-rss-changes.patch
+* mm-mmapc-remove-a-never-trigger-warning-in-__vma_adjust.patch
+* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
+* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region-checkpatch-fixes.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* mm-rmapc-reuse-mergeable-anon_vma-as-parent-when-fork.patch
+* mm-rmapc-reuse-mergeable-anon_vma-as-parent-when-fork-fix.patch
+* mm-swap-piggyback-lru_add_drain_all-calls.patch
+* mm-mmapc-prev-could-be-retrieved-from-vma-vm_prev.patch
+* mm-mmapc-__vma_unlink_prev-is-not-necessary-now.patch
+* mm-mmapc-extract-__vma_unlink_list-as-counter-part-for-__vma_link_list.patch
+* mm-hotplug-reorder-memblock_-calls-in-try_remove_memory.patch
+* memory_hotplug-add-a-bounds-check-to-__add_pages.patch
+* mm-memory_hotplug-export-generic_online_page.patch
+* hv_balloon-use-generic_online_page.patch
+* mm-memory_hotplug-remove-__online_page_free-and-__online_page_increment_counters.patch
+* mm-memunmap-dont-access-uninitialized-memmap-in-memunmap_pages.patch
+* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
+* mm-memory_hotplug-dont-access-uninitialized-memmaps-in-shrink_pgdat_span.patch
+* mm-memory_hotplug-dont-access-uninitialized-memmaps-in-shrink_zone_span.patch
+* mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
+* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
+* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
+* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
+* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
+* mm-memory_hotplug-cleanup-__remove_pages.patch
+* mm-vmalloc-remove-unnecessary-highmem_mask-from-parameter-of-gfpflags_allow_blocking.patch
+* selftests-vm-add-fragment-config_test_vmalloc.patch
+* mm-vmscan-remove-unused-scan_control-parameter-from-pageout.patch
+* z3fold-add-inter-page-compaction.patch
+* mm-support-memblock-alloc-on-the-exact-node-for-sparse_buffer_init.patch
+* mm-oom-avoid-printk-iteration-under-rcu.patch
+* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
+* hugetlbfs-hugetlb_fault_mutex_hash-cleanup.patch
+* hugetlb-region_chg-provides-only-cache-entry.patch
+* hugetlb-remove-duplicated-code.patch
+* hugetlb-remove-duplicated-code-checkpatch-fixes.patch
+* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash.patch
+* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash-fix.patch
+* mm-hugetlb-avoid-looping-to-the-same-hugepage-if-pages-and-vmas.patch
+* mm-thp-do-not-queue-fully-unmapped-pages-for-deferred-split.patch
+* mm-thp-make-set_huge_zero_page-return-void.patch
+* mm-cmac-switch-to-bitmap_zalloc-for-cma-bitmap-allocation.patch
+* mm-export-cma-alloc-and-release.patch
+* userfaultfd-use-vma_pagesize-for-all-huge-page-size-calculation.patch
+* userfaultfd-remove-unnecessary-warn_on-in-__mcopy_atomic_hugetlb.patch
+* userfaultfd-wrap-the-common-dst_vma-check-into-an-inlined-function.patch
+* uffd-wp-clear-vm_uffd_missing-or-vm_uffd_wp-during-userfaultfd_register.patch
+* mm-shmemc-make-array-values-static-const-makes-object-smaller.patch
+* mm-fix-struct-member-name-in-function-comments.patch
+* mm-fix-typo-in-the-comment-when-calling-function-__setpageuptodate.patch
+* mm-memory_hotplugc-remove-__online_page_set_limits.patch
+* mm-vmscan-remove-unused-lru_pages-argument.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* proc-change-nlink-under-proc_subdir_lock.patch
+* proc-delete-useless-len-variable.patch
+* proc-shuffle-struct-pde_opener.patch
+* proc-fix-confusing-macro-arg-name.patch
+* gitattributes-use-dts-diff-driver-for-dts-files.patch
+* linux-build_bugh-change-type-to-int.patch
+* linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch
+* kernel-notifierc-intercepting-duplicate-registrations-to-avoid-infinite-loops.patch
+* kernel-notifierc-remove-notifier_chain_cond_register.patch
+* kernel-notifierc-remove-blocking_notifier_chain_cond_register.patch
+* hung_task-allow-printing-warnings-every-check-interval.patch
+* printf-add-support-for-printing-symbolic-error-codes.patch
+* printf-add-support-for-printing-symbolic-error-codes-fix.patch
+* get_maintainer-add-signatures-from-fixes-badcommit-lines-in-commit-message.patch
+* lib-genallocc-export-symbol-addr_in_gen_pool.patch
+* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
+* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
+* string-add-stracpy-and-stracpy_pad-mechanisms.patch
+* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
+* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
+* epoll-simplify-ep_poll_safewake-for-config_debug_lock_alloc.patch
+* elf-delete-unused-interp_map_addr-argument.patch
+* elf-extract-elf_read-function.patch
+* uaccess-disallow-int_max-copy-sizes.patch
+* aio-simplify-read_events.patch
+* lib-ubsan-dont-seralize-ubsan-report.patch
+* ipc-consolidate-all-xxxctl_down-functions.patch
+  linux-next.patch
+  linux-next-rejects.patch
+  linux-next-git-rejects.patch
+  diff-sucks.patch
+* samples-watch_queue-watch_test-fix-build.patch
+* pinctrl-fix-pxa2xxc-build-warnings.patch
+* hacking-group-sysrq-kgdb-ubsan-into-generic-kernel-debugging-instruments.patch
+* hacking-create-submenu-for-arch-special-debugging-options.patch
+* hacking-group-kernel-data-structures-debugging-together.patch
+* hacking-move-kernel-testing-and-coverage-options-to-same-submenu.patch
+* hacking-move-oops-into-lockups-and-hangs.patch
+* hacking-move-sched_stack_end_check-after-debug_stack_usage.patch
+* hacking-create-a-submenu-for-scheduler-debugging-options.patch
+* hacking-move-debug_bugverbose-to-printk-and-dmesg-options.patch
+* hacking-move-debug_fs-to-generic-kernel-debugging-instruments.patch
+* drivers-tty-serial-sh-scic-suppress-warning.patch
+* fix-read-buffer-overflow-in-delta-ipc.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
