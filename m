@@ -2,86 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C267C4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E69CC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107B521872
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B9421655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:33:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="qMGfFR5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfJGJcm (ORCPT
+        id S1727556AbfJGJdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:32:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:32438 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJGJcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:32:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 02:32:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,267,1566889200"; 
-   d="scan'208";a="206374733"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 07 Oct 2019 02:32:37 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 07 Oct 2019 12:32:36 +0300
-Date:   Mon, 7 Oct 2019 12:32:36 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Matthias Andree <matthias.andree@gmx.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] PCI: Add missing link delays
-Message-ID: <20191007093236.GP2819@lahna.fi.intel.com>
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <811277ae-bec1-1724-23ce-c13407bd79c5@gmx.de>
- <20191004130619.GI2819@lahna.fi.intel.com>
- <ed169065-1a2a-4729-b052-6ec8b1bf4835@gmx.de>
+        Mon, 7 Oct 2019 05:33:20 -0400
+Received: from mail-eopbgr60044.outbound.protection.outlook.com ([40.107.6.44]:18042
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726010AbfJGJdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 05:33:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jhlKi9yUMYdNuvqby8cNz23nd+K14XLPjs3XzL0VJBJZ5q5WTcT89LI/b+Th+xQf6V3l6T0NyKJPoYJpcZUM3z2pm56QgpyN8Ziuzpcb+hpnOiCFuURHDEUId4rMIBb3qoUsLdMQ7POyL3h8Qr/TRwjE1amxF3W5GSzEUb2UylxN+yXTswK7uatLt2dWh7F6AuSPdVF53lx+YdSabW1WBNw9TjutFz7CtArdkICbcTq026zyrWISbzK3eIqnvAnqMlOUIqHz8uR06hvWppLq0cBAhYmGGXXwHm/j56TER75+p6nHE4//sdGdk9+njJ3miSwORy5bS6Ax5/qBsMRwJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bmZkZyjXKEUah/Jlr/MgdorGKmGADLWOMr9xmVHdQQo=;
+ b=Gy9RGc4s5nMJ1Ynsy3jX8obJm+zdibuI+9BNql+LQUgPxjxpUX0FhYPDMVX+GzYtvET+8kgVFkwbhkZ+LFpG2ZSjbS4n1MOXSwEM/f3tu+Xhej0YEe5XG0XtYQh1SYr7rdTomTWkK2IIknbqiRM/SAsVy1cF/+6bYlQqXXF8IG22dc0xPjtdphf2/jGGqixdzH/HVtdEDb+IcRegaXRRV2Y59OIH4gUfqlAzCqie7JP0Slk1oOm0wTX7F84m7Vld4F0bums44faz2fhO1b/PwiBw92ApxpkolA0drmeiUEn7SXlKvbOKnBMiWfpMWr4TD6YNgp0lDXMM5yGdUGPkWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
+ dkim=pass header.d=itdev.co.uk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bmZkZyjXKEUah/Jlr/MgdorGKmGADLWOMr9xmVHdQQo=;
+ b=qMGfFR5zg8FhfEYZCaFL0lYsT6fctkhRn9GO7wdf6S1oQDgDerU2UeSMP1R3a3+X92MuoIO+OC87q4fOVf1ApqZU2xstXasf/3wybMl0c/W7669gVrwhfO5MD9vBpGW3qv0gu4FiIWIZ/BrMyKDM2vOynkSe8vvIExzwDmEXyOc=
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
+ DBBPR08MB4648.eurprd08.prod.outlook.com (10.255.78.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Mon, 7 Oct 2019 09:33:15 +0000
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::4c2f:e455:fb07:bdee]) by DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::4c2f:e455:fb07:bdee%6]) with mapi id 15.20.2327.025; Mon, 7 Oct 2019
+ 09:33:15 +0000
+From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+CC:     "outreachy-kernel@googlegroups.com" 
+        <outreachy-kernel@googlegroups.com>,
+        "forest@alittletooquiet.net" <forest@alittletooquiet.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trivial@kernel.org" <trivial@kernel.org>
+Subject: Re: [PATCH] staging: vt6656: remove duplicated blank line
+Thread-Topic: [PATCH] staging: vt6656: remove duplicated blank line
+Thread-Index: AQHVfICBMETYKv8JVkao/iXduhbl+6dO63mA
+Date:   Mon, 7 Oct 2019 09:33:14 +0000
+Message-ID: <20191007093313.GA9232@qd-ubuntu>
+References: <20191006195854.9843-1-gabrielabittencourt00@gmail.com>
+In-Reply-To: <20191006195854.9843-1-gabrielabittencourt00@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LNXP265CA0019.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5e::31) To DBBPR08MB4491.eurprd08.prod.outlook.com
+ (2603:10a6:10:d2::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.21.227.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23c6464f-353a-4406-dc27-08d74b0960bf
+x-ms-traffictypediagnostic: DBBPR08MB4648:
+x-microsoft-antispam-prvs: <DBBPR08MB46485202024FBE8BAC57B7AFB39B0@DBBPR08MB4648.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
+x-forefront-prvs: 01834E39B7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(366004)(136003)(346002)(376002)(39830400003)(189003)(199004)(486006)(6486002)(305945005)(86362001)(6512007)(66066001)(9686003)(76176011)(44832011)(4744005)(229853002)(2906002)(25786009)(476003)(99286004)(5660300002)(3846002)(446003)(71200400001)(71190400001)(6116002)(6916009)(1076003)(11346002)(6436002)(7736002)(102836004)(6246003)(6506007)(386003)(4326008)(186003)(1411001)(8676002)(508600001)(33656002)(8936002)(14454004)(81166006)(81156014)(14444005)(33716001)(256004)(54906003)(316002)(26005)(66476007)(66556008)(64756008)(66446008)(66946007)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4648;H:DBBPR08MB4491.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
+received-spf: None (protection.outlook.com: itdev.co.uk does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YQ/w6bJJF9oPqEVbU/qzkzHTihf2jX403KEZjV+KRJdW7GYXYqeNJEiFb7RpIY+x16JQOaSWMgSUoRRD3eKbWdxEmU8kAhaxfx9Ki6Oqe8QwquCkzSWENT9lVKi6CxLJhwctOxunHrPDvgLe9amFcmgNGjHQogwhUkVLrhsryv/4oanBV1Df47w7nBycjbXIwSH8BnHpqKEZMnJWmaSDrQNX444uImZPibbkkeO1dcjBpXU+Th2BAiwgZXrqCRAWBocvzIWx2y5kt8E7NEBgFMzhP8TgLyPDFl1/rQhzawh9wil27czUNifxGS2jmLtEnddqUZGo2pk0cyvwaPTmvpVGXYpZCtjS9Uc5nkVcl6N5C/zuIZfOcMp52k4nloCT4MYjXrc0THq6Su8TgTu2G2pJydttGI4iuz0DVs+6TnE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <54A2AFC5AFBD054E9BD6CA75401561CD@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ed169065-1a2a-4729-b052-6ec8b1bf4835@gmx.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: itdev.co.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23c6464f-353a-4406-dc27-08d74b0960bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 09:33:14.7629
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aHrdW3KaPmtsGH9eQY4iN5F8jfGJtunKUL3WILGJgPmJQW0O6dvGBAgimzY0194rdp2fTvi+NBqMoLt+G3LJo2mT+L41q3meMURf8BLvGMY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4648
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 09:34:41AM +0200, Matthias Andree wrote:
-> Am 04.10.19 um 15:06 schrieb Mika Westerberg:
-> > On Fri, Oct 04, 2019 at 02:57:21PM +0200, Matthias Andree wrote:
-> >> Am 04.10.19 um 14:39 schrieb Mika Westerberg:
-> >>> @Matthias, @Paul and @Nicholas, I appreciate if you could check that this
-> >>> does not cause any issues for your systems.
-> >> Just to be sure: is this intended to be applied against the 5.4-rc*
-> >> master branch?
-> > Yes, it applies on top of v5.4-rc1.
-> 
-> I am sorry to say that I cannot currently test - my computer has a
-> GeForce 1060-6GB an no onboard/on-chip graphics.
-> The nvidia module 435.21 does not compile against 5.4-rc* for me (5.3.1
-> was fine).
+On Sun, Oct 06, 2019 at 04:58:54PM -0300, Gabriela Bittencourt wrote:
+> Cleans up checks of "don't use multiple blank line"
+>=20
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> ---
+>  drivers/staging/vt6656/main_usb.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/m=
+ain_usb.c
+> index 856ba97aec4f..a1884b5cc915 100644
+> --- a/drivers/staging/vt6656/main_usb.c
+> +++ b/drivers/staging/vt6656/main_usb.c
+> @@ -362,7 +362,6 @@ static int vnt_init_registers(struct vnt_private *pri=
+v)
+>  			goto end;
+>  	}
+> =20
+> -
+>  	ret =3D vnt_mac_set_led(priv, LEDSTS_TMLEN, 0x38);
+>  	if (ret)
+>  		goto end;
+> --=20
+> 2.20.1
+>=20
 
-I think the two patches should apply cleanly on 5.3.x as well.
+Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
 
-> For some reasons I don't understand, it first complains about missing or
-> empty  Module.symvers, (which I do have and which has 12967 lines)
-> and if I bypass that check, it complains about undeclared DRIVER_PRIME
-> "here (outside a function)" - sorry for the German locale:
-
-Possibly v5.4-rcX moved/renamed some symbol(s) which than makes the
-out-of-tree driver fail to build.
+Thank you,
+Quentin
