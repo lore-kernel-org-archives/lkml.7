@@ -2,131 +2,96 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A56FECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C390AC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE2B2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958C92070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qlD40uM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfJGQ7E (ORCPT
+        id S1728871AbfJGRAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:59:04 -0400
-Received: from muru.com ([72.249.23.125]:35720 "EHLO muru.com"
+        Mon, 7 Oct 2019 13:00:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60938 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727935AbfJGQ7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:59:03 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 906858191;
-        Mon,  7 Oct 2019 16:59:35 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 09:58:59 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Emmanuel Vadot <manu@bidouilliste.com>
-Cc:     Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
-Message-ID: <20191007165859.GV5610@atomide.com>
-References: <20191007080339.57209-1-manu@freebsd.org>
- <20191007161634.GS5610@atomide.com>
- <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
+        id S1727801AbfJGRAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 13:00:06 -0400
+Received: from zn.tnic (p200300EC2F06420085D86D94306C6599.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:4200:85d8:6d94:306c:6599])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 507C01EC02C1;
+        Mon,  7 Oct 2019 19:00:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570467604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ZvNLEWaQDcZ6eL061D1WLQ0GhGCmCN49SVaTp9ErjJ4=;
+        b=qlD40uM6egLVWxGPYM9QUvus7VL5DNAFIg4gaxaXV3+/Dia/8P57RvcZ73xuZ9z8PjT00i
+        zoqbuaxC/71qMqdwhbguwQ3r3w4O7eJbuqhT+qbwkBhmuXh6pAq6G+GFa8Nkv2B2siskPZ
+        SiQujw8xlIbTLBuN4E3TWRoMFa06uDk=
+Date:   Mon, 7 Oct 2019 18:59:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>, x86@kernel.org,
+        jailhouse-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v5 2/2] x86/jailhouse: Only enable platform UARTs if
+ available
+Message-ID: <20191007165958.GE24289@zn.tnic>
+References: <20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de>
+ <20191007123819.161432-3-ralf.ramsauer@oth-regensburg.de>
+ <20191007162636.GD24289@zn.tnic>
+ <85502467-d13b-084e-cdb8-d891178e97d8@oth-regensburg.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <85502467-d13b-084e-cdb8-d891178e97d8@oth-regensburg.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Emmanuel Vadot <manu@bidouilliste.com> [191007 16:39]:
-> On Mon, 7 Oct 2019 09:16:34 -0700
-> Tony Lindgren <tony@atomide.com> wrote:
-> 
-> > Hi,
-> > 
-> > * Emmanuel Vadot <manu@freebsd.org> [191007 08:04]:
-> > > Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
-> > > fixed the mmc instances on the l3 interconnect but removed the disabled status.
-> > > Fix this and let boards properly define it if it have it.
-> > 
-> > The dts default is "okay", and should be fine for all the
-> > internal devices even if not pinned out on the board. This
-> > way the devices get properly idled during boot, and we
-> > avoid repeating status = "enabled" over and over again in
-> > the board specific dts files.
-> 
->  That is not correct, if a status != "disabled" then pinmuxing will be
-> configured for this device and if multiple devices share the same pin
-> then you have a problem. Note that I have (almost) no knowledge on Ti
-> SoC but I doubt that this is not the case on them.
+On Mon, Oct 07, 2019 at 06:44:39PM +0200, Ralf Ramsauer wrote:
+> Yep, jailhouse_serial_fixup can become __init, I didn't see that, but
+> you're right, thanks. I'm curious, how did you find that?
 
-Hmm well, that should not be needed. The pinmux configuration is always
-done in a board specific dts file.
+CONFIG_SECTION_MISMATCH_WARN_ONLY=y
 
->  Also every other boards that I work with use the standard of setting
-> every node to disabled in the dtsi and let the board enable them at
-> will. Is there something different happening in the TI world ?
+If that it off, it fails the build even:
 
-There should be no need to do that for SoC internal devices, the
-the default status = "okay" should be just fine. Setting the
-status = "disabled" for SoC internal devices and then enabling them
-again for tens of board specific dts files just generates tons of
-pointless extra churn for the board specific configuration.
+WARNING: vmlinux.o(.text+0x4fdb0): Section mismatch in reference from the function jailhouse_serial_fixup() to the variable .init.data:can_use_brk_pgt
+The function jailhouse_serial_fixup() references
+the variable __initdata can_use_brk_pgt.
+This is often because jailhouse_serial_fixup lacks a __initdata 
+annotation or the annotation of can_use_brk_pgt is wrong.
 
-> > Then the board specific dts files might want to configure
-> > devices with status = "disabled" if really needed. But this
-> > should be only done for devices that Linux must not use,
-> > such as crypto acclerators on secure devices if claimed by
-> > the secure mode.
-> > 
-> > So if this fixes something, it's almost certainly a sign
-> > of something else being broken?
-> 
->  In this case it's FreeBSD being  because (I think) we have bad support
-> for the clocks for this module so we panic when we read from it as the
-> module isn't clocked. And since I find it wrong to have device enabled
-> while it isn't present I've sent this patch.
+FATAL: modpost: Section mismatches detected.
+Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.
+make[1]: *** [scripts/Makefile.modpost:66: __modpost] Error 1
+make: *** [Makefile:1074: vmlinux] Error 2
 
-Thanks for clarifying what happens. OK, sounds like FreeBSD might be
-missing clock handling for some devices then.
+Apparently we did that with:
 
-What Linux does is probe the internal devices and then idle the
-unused ones as bootloaders often leave many things enabled. Otherwise
-the SoC power management won't work properly because device clocks
-will block deeper SoC idle states.
+47490ec141b9 ("modpost: Add flag -E for making section mismatches fatal")
 
-Regards,
+> "We" didn't notice yet. :-)
 
-Tony
+LOL.
 
-> > > Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
-> > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> > > ---
-> > >  arch/arm/boot/dts/am33xx.dtsi | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > > index fb6b8aa12cc5..b3a1fd9e39fa 100644
-> > > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > > @@ -260,6 +260,7 @@
-> > >  				ti,needs-special-reset;
-> > >  				interrupts = <29>;
-> > >  				reg = <0x0 0x1000>;
-> > > +				status = "disabled";
-> > >  			};
-> > >  		};
-> > >  
-> > > -- 
-> > > 2.22.0
-> > > 
-> 
-> 
-> -- 
-> Emmanuel Vadot <manu@bidouilliste.com>
+> BTW, we refers to the Jailhouse folks, but I will rewrite that.
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
