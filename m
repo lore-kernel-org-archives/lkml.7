@@ -7,58 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B635CECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898A1222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF8E218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570454946;
-	bh=vdbVNKK2cjLjt0uI5e0Df8suBVPHqSbN68ZVOy8d0WA=;
+	s=default; t=1570454948;
+	bh=A15UlAF/QwLEIxry1wzujIMx/0CxUPVtmvfkp0deoYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joA5lw6J02Ak6uCV274bTKDGhS87bcD08jPiqsDGcQC353E47jXz+Q6WfBB3poJSD
-	 Excezy/kitKQS9jF92eN+x89gCmVRC2KuIV0TW76+7+H0SsmLuLWtLULYGqzYwUmVJ
-	 JgX+GbNWEQJftqqW8SOtl3VDtzoi93FLtS0e9CCM=
+	b=jL9ktg9p1FxeMeqJ5gnlJM4jeeRMylXiAq/uzebtGJ7iUyQfdGhpSipptpY4WZvhu
+	 wEaXX539G8tQlaZXB+dU/5Vb4Vm/mIsSGmBJj9elgoiCekXwQJSz7+5pPW4R7LOtEe
+	 Lf+XILfcNPEIa+w1mUTGnYhR6sU7Q86VGigIydto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfJGN3F (ORCPT
+        id S1728672AbfJGN3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:29:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37107 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfJGN3E (ORCPT
+        Mon, 7 Oct 2019 09:29:07 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45942 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbfJGN3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:29:04 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l21so13664584lje.4;
-        Mon, 07 Oct 2019 06:29:03 -0700 (PDT)
+        Mon, 7 Oct 2019 09:29:06 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r134so9243943lff.12;
+        Mon, 07 Oct 2019 06:29:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B0ycQG3+LMWmEUo25NF7us/Cn/ZyGvcKYuOKAcoY2Nw=;
-        b=ih8RvjSSN0e1gfuk9UFGxwtCPxmDxUUKXDR2j7kgAAXRMu4wgyGKseslzjlGxF0wnT
-         WwiJnrNiatMEKK3fSmGpPg9jBY1snDSVhvdV42HvqvlypytByGBtbFSh2EO4P31k/tb2
-         K/urQXA3yGwM5/V9hcoFtwF1WfkhGL8LPPifu6/5Ez6EnhGiMUFO/rRpG3GFh1xY7sqJ
-         rgWCfmjMEiPthf0g3GM/5GyjYiumyFzPYIIUOt8pt6TMon6DibQbPek6IWiSkCiqgpoF
-         fiJ5eMkhGNtUH6FA9Vl3TcpgvrfMY+M9IEnRsR35ea8/OO7Nn3LXBDng52zcQV/c36h0
-         xQ/A==
-X-Gm-Message-State: APjAAAVLXZKCI2BC5D50FfJevqxIKCCBi4O8S0Xu6js28BxpbtUR8rP8
-        VByyp4U02VdzbIB/2y+oHAg=
-X-Google-Smtp-Source: APXvYqwYE/qHSZrjxd+iO9pBzFs9U39Vypyg0q0Zx4khhNEmjEkbb3i4WAdrYnHnIE40X3FEVKiN4w==
-X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr15272472lje.90.1570454942468;
-        Mon, 07 Oct 2019 06:29:02 -0700 (PDT)
+        bh=pqYD4jTL26Lkbsq1KtcLnT62csNab9jmgl1QSZGOUz0=;
+        b=HwpPyQy5MQQ/Wi7GTUG/tRb/7MfSNtVgjW7FTxduVp5StaSEnX3kkChL4bCxkOFUOd
+         6v4UcsmKAbmgwMzEkkdhYcDqIN0fNG4jyKgIv/quGZtZrCGbL1fz+sQMdT0n+2wwwHTh
+         1T9QsweUSpn+SbSkxkhjn25hez4OfMQkZKtzn47Bk3TrEsmRcGEu8rY4q8QyqxN9PShY
+         3Il2P1f6jARXhN/gVLf9dOGRJOhAbrR+O50NUAd7rJ5ZcfNtdfbnHT5pYR8SYjCAfbxU
+         QX7R2gouNpp7YGmO4JDHyTDsPB3jPRvgz9IFK0uxbs8ntIbIruHHeqIHE64wPzSIjSw6
+         XZGg==
+X-Gm-Message-State: APjAAAX9/uQgxe+za2aahXwcpQnKFQnROwYsmTJaTrBy6tSmTicw0y+E
+        LrCEmh3XH3sQmTww7ccBWU3R+UsEVRsYag==
+X-Google-Smtp-Source: APXvYqyNQpxEHd5z1D3Qz5m5IShyRZbwN+ND3vrGJDazyPxUYYpX8ZIHxfsV/SZf1y1JaBb9QFF/bA==
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr17121965lfp.21.1570454944104;
+        Mon, 07 Oct 2019 06:29:04 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id f22sm2702245lfk.56.2019.10.07.06.29.00
+        by smtp.gmail.com with ESMTPSA id f22sm2702245lfk.56.2019.10.07.06.29.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 06:29:01 -0700 (PDT)
+        Mon, 07 Oct 2019 06:29:02 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v8 1/6] media: ad5820: Define entity function
-Date:   Mon,  7 Oct 2019 15:28:51 +0200
-Message-Id: <20191007132856.27948-2-ribalda@kernel.org>
+        devicetree@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v8 2/6] media: ad5820: DT new optional field enable-gpios
+Date:   Mon,  7 Oct 2019 15:28:52 +0200
+Message-Id: <20191007132856.27948-3-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191007132856.27948-1-ribalda@kernel.org>
 References: <20191007132856.27948-1-ribalda@kernel.org>
@@ -69,31 +71,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this patch, media_device_register_entity throws a warning:
+Document new enable-gpio field. It can be used to disable the part
+without turning down its regulator.
 
-dev_warn(mdev->dev,
-	 "Entity type for entity %s was not initialized!\n",
-	 entity->name);
-
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 Acked-by: Pavel Machek <pavel@ucw.cz>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/media/i2c/ad5820.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/i2c/ad5820.c b/drivers/media/i2c/ad5820.c
-index 925c171e7797..7a49651f4d1f 100644
---- a/drivers/media/i2c/ad5820.c
-+++ b/drivers/media/i2c/ad5820.c
-@@ -309,6 +309,7 @@ static int ad5820_probe(struct i2c_client *client,
- 	v4l2_i2c_subdev_init(&coil->subdev, client, &ad5820_ops);
- 	coil->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 	coil->subdev.internal_ops = &ad5820_internal_ops;
-+	coil->subdev.entity.function = MEDIA_ENT_F_LENS;
- 	strscpy(coil->subdev.name, "ad5820 focus", sizeof(coil->subdev.name));
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+index 5940ca11c021..db596e8eb0ba 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -8,6 +8,11 @@ Required Properties:
  
- 	ret = media_entity_pads_init(&coil->subdev.entity, 0, NULL);
+   - VANA-supply: supply of voltage for VANA pin
+ 
++Optional properties:
++
++   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
++active low, a high level on the pin enables the device.
++
+ Example:
+ 
+        ad5820: coil@c {
+@@ -15,5 +20,6 @@ Example:
+                reg = <0x0c>;
+ 
+                VANA-supply = <&vaux4>;
++               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+        };
+ 
 -- 
 2.23.0
 
