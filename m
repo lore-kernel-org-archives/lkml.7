@@ -2,140 +2,148 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66476C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3C8C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B17C20862
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570414001;
-	bh=QwA8GD4clcNdAkQ7L4x4JTIm7vxwhZ7LTUJI/UxYUak=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cWWHiMoLCfORqf769Z7rdR433W6Z/vzpcXgacREmeAP/2msSBjdM082kShb/hCJXq
-	 neM3UmipXDMHlCd9qAlaOOV/U51jYF8Ux5qdeSHhyPwqP59e0oZEqgpSGuAKeipkyf
-	 Wb53K+UefllUIBL4gukBwV9dKZwXMrCPQECzCHv8=
+	by mail.kernel.org (Postfix) with ESMTP id 7A40820867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfJGCGk (ORCPT
+        id S1726908AbfJGCR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 22:06:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40732 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfJGCGk (ORCPT
+        Sun, 6 Oct 2019 22:17:26 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:18817 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726772AbfJGCR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 22:06:40 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 7so11867992ljw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 19:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0qiUHylA1kcZKMZORFgPfl/Wwk8TxgMqTrPx6EUI34c=;
-        b=SQ1klqasMPWiAPOUygJMVdAoW7sOImnFa+ky/otsy+obDuwpTyXXbJfsrm9ITmXxRc
-         iFffZqz66qKnniup6bIqMecKZCOQ9QI2qE8ok/fmyCOPS8Z+F6Dbw0tviLzaoBA7V7uo
-         4G6lDiYzHKNBbLSRX2ny8sOlnMYEJSsjOrb3E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0qiUHylA1kcZKMZORFgPfl/Wwk8TxgMqTrPx6EUI34c=;
-        b=eRm6yVu8BllO2ihGmczNTCmZKkz8uq6xfv0SJTMKQ8N+J6N5BEHhW/M2UONQmRidms
-         Ao2GSecMtLXWJdSRQPhVlWXO9528D0Ucys7vfX/OUDZoenWYmObdEb+XJo8S3fJbzt1r
-         wYz7FgWAGmaVZDIldOdWbPxvvR3+TyCFgA5fm1d7oNbAspvlVcPOmarLloI4lgcazX0H
-         XhVBm339q+D7J/ldBdxUyAdkRne8Cph6iFlmIO+PbZUki9nYNQndFEuwMW5b4JeV5faV
-         RcM2vEk7nEDkQs20ozckbtmIbdCGRptiqaskbAxnGyr8VRMWciX6I82oI6tOB5CQ1jdM
-         YfiA==
-X-Gm-Message-State: APjAAAWeZoaanE4+Q+g/WbatrEc2P40yn82n8RBI06W5j2bFL+miqD9a
-        B4U8RiXSqR3TDV+sJHOmMQJEuyigsM0=
-X-Google-Smtp-Source: APXvYqyWfA2WXUTxkFuHi3/BMikt1e24suFLrz8IYYwJ+CJzci8XMRJ3agahVWAIKOIBiJbAWlSaUg==
-X-Received: by 2002:a2e:9118:: with SMTP id m24mr16440643ljg.95.1570413997593;
-        Sun, 06 Oct 2019 19:06:37 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id y3sm2792866lji.53.2019.10.06.19.06.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2019 19:06:36 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id y3so11875843ljj.6
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 19:06:36 -0700 (PDT)
-X-Received: by 2002:a2e:7611:: with SMTP id r17mr11961696ljc.133.1570413995847;
- Sun, 06 Oct 2019 19:06:35 -0700 (PDT)
+        Sun, 6 Oct 2019 22:17:26 -0400
+X-IronPort-AV: E=Sophos;i="5.67,265,1566835200"; 
+   d="scan'208";a="76570175"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 07 Oct 2019 10:17:22 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id EF5F94CE14F5;
+        Mon,  7 Oct 2019 10:17:18 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Mon, 7 Oct 2019 10:17:21 +0800
+Subject: Re: [PATCH] NFS: Fix O_DIRECT read problem when another write is
+ going on
+To:     Trond Myklebust <trondmy@hammerspace.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1569834678-16117-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+ <d7fee2b94f4af266054c6e975cdfd4d9adbf841b.camel@hammerspace.com>
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Message-ID: <c869daa9-cb66-6221-0a3b-c73fa9c39066@cn.fujitsu.com>
+Date:   Mon, 7 Oct 2019 10:17:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
-In-Reply-To: <20191007012437.GK26530@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 6 Oct 2019 19:06:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
-Message-ID: <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d7fee2b94f4af266054c6e975cdfd4d9adbf841b.camel@hammerspace.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: EF5F94CE14F5.AC31E
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 6:24 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+
+在 2019/10/1 2:06, Trond Myklebust 写道:
+> Hi Su,
 >
-> Ugh...  I wonder if it would be better to lift STAC/CLAC out of
-> raw_copy_to_user(), rather than trying to reinvent its guts
-> in readdir.c...
+> On Mon, 2019-09-30 at 17:11 +0800, Su Yanjun wrote:
+>> In xfstests generic/465 tests failed. Because O_DIRECT r/w use
+>> async rpc calls, when r/w rpc calls are running concurrently we
+>> may read partial data which is wrong.
+>>
+>> For example as follows.
+>>   user buffer
+>> /--------\
+>>>     |XXXX|
+>>   rpc0 rpc1
+>>
+>> When rpc0 runs it encounters eof so return 0, then another writes
+>> something. When rpc1 runs it returns some data. The total data
+>> buffer contains wrong data.
+>>
+>> In this patch we check eof mark for each direct request. If
+>> encounters
+>> eof then set eof mark in the request, when we meet it again report
+>> -EAGAIN error. In nfs_direct_complete we convert -EAGAIN as if read
+>> nothing. When the reader issue another read it will read ok.
+>>
+>> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+>> ---
+>>   fs/nfs/direct.c | 14 +++++++++++++-
+>>   1 file changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+>> index 222d711..7f737a3 100644
+>> --- a/fs/nfs/direct.c
+>> +++ b/fs/nfs/direct.c
+>> @@ -93,6 +93,7 @@ struct nfs_direct_req {
+>>   				bytes_left,	/* bytes left to be
+>> sent */
+>>   				error;		/* any reported error
+>> */
+>>   	struct completion	completion;	/* wait for i/o completion */
+>> +	int			eof;		/* eof mark in the
+>> req */
+>>   
+>>   	/* commit state */
+>>   	struct nfs_mds_commit_info mds_cinfo;	/* Storage for cinfo
+>> */
+>> @@ -380,6 +381,12 @@ static void nfs_direct_complete(struct
+>> nfs_direct_req *dreq)
+>>   {
+>>   	struct inode *inode = dreq->inode;
+>>   
+>> +	/* read partial data just as read nothing */
+>> +	if (dreq->error == -EAGAIN) {
+>> +		dreq->count = 0;
+>> +		dreq->error = 0;
+>> +	}
+>> +
+>>   	inode_dio_end(inode);
+>>   
+>>   	if (dreq->iocb) {
+>> @@ -413,8 +420,13 @@ static void nfs_direct_read_completion(struct
+>> nfs_pgio_header *hdr)
+>>   	if (hdr->good_bytes != 0)
+>>   		nfs_direct_good_bytes(dreq, hdr);
+>>   
+>> -	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
+>> +	if (dreq->eof)
+>> +		dreq->error = -EAGAIN;
+>> +
+>> +	if (test_bit(NFS_IOHDR_EOF, &hdr->flags)) {
+>>   		dreq->error = 0;
+>> +		dreq->eof = 1;
+>> +	}
+>>   
+>>   	spin_unlock(&dreq->lock);
+>>   
+> Thanks for looking into this issue. I agree with your analysis of what
+> is going wrong in generic/465.
+>
+> However, I think the problem is greater than just EOF. I think we also
+> need to look at the generic error handling, and ensure that it handles
+> a truncated RPC call in the middle of a series of calls correctly.
+>
+> Please see the two patches I sent you just now and check if they fix
+> the problem for you.
 
-Yeah, I suspect that's the best option.
+The patchset you sent works for generic/465.
 
-Do something like
+Thanks a lot
 
- - lift STAC/CLAC out of raw_copy_to_user
 
- - rename it to unsafe_copy_to_user
 
- - create a new raw_copy_to_user that is just unsafe_copy_to_user()
-with the STAC/CLAC around it.
-
-and the end result would actually be cleanert than what we have now
-(which duplicates that STAC/CLAC for each size case etc).
-
-And then for the "architecture doesn't have user_access_begin/end()"
-fallback case, we just do
-
-   #define unsafe_copy_to_user raw_copy_to_user
-
-and the only slight painpoint is that we need to deal with that
-copy_user_generic() case too.
-
-We'd have to mark it uaccess_safe in objtool (but we already have that
-__memcpy_mcsafe and csum_partial_copy_generic, os it all makes sense),
-and we'd have to make all the other copy_user_generic() cases then do
-the CLAC/STAC dance too or something.
-
-ANYWAY.  As mentioned, I'm not actually all that worried about this all.
-
-I could easily also just see the filldir() copy do an extra
-
-#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-    if (len && (1 & (uint_ptr_t)dst)) .. copy byte ..
-    if (len > 1 && (2 & (uint_ptr_t)dst)) .. copy word ..
-    if (len > 3 && (4 & (uint_ptr_t)dst) && sizeof(unsigned long) > 4)
-.. copy dword ..
-#endif
-
-at the start to align the destination.
-
-The filldir code is actually somewhat unusual in that it deals with
-pretty small strings on average, so just doing this might be more
-efficient anyway.
-
-So that doesn't worry me. Multiple ways to solve that part.
-
-The "uhhuh, unaligned accesses cause more than performance problems" -
-that's what worries me.
-
-            Linus
