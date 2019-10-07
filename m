@@ -2,141 +2,154 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02F1C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8EC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57882084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:44:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cKeNR7wl"
+	by mail.kernel.org (Postfix) with ESMTP id DB35821655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 07:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfJGHo7 (ORCPT
+        id S1727334AbfJGHvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 03:44:59 -0400
-Received: from mout.web.de ([212.227.15.14]:59439 "EHLO mout.web.de"
+        Mon, 7 Oct 2019 03:51:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42058 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfJGHo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 03:44:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570434273;
-        bh=2dSyWOWDhs1Oyl8TZBuUtDp4oJHExe1QxDI3Ydw7q0w=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=cKeNR7wlq0sX/ZyvPoodQLRbTe6Ckgh5v9ZTe5qIPYC5i356rUG1jgt6Hes/R8dGo
-         MPdaRCdpmuDkBSkiPYhFcKzSyWa6kegKjsnEKRzGAAAkfbRQavt3TxH90nkvXghHRV
-         afjZpUXIZ2zdAfiY/1F27x0a4w9bBPeaRTKoBrGo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.146.95]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Mf0qf-1iSb1c2php-00ObRG; Mon, 07
- Oct 2019 09:44:33 +0200
-Subject: Re: drm/imx: Checking a kmemdup() call in imx_pd_bind()
-To:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        dri-devel@lists.freedesktop.org, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <20191004190938.15353-1-navid.emamdoost@gmail.com>
- <540321eb-7699-1d51-59d5-dde5ffcb8fc4@web.de>
- <CAEkB2ETtVwtmkpup65D3wqyLn=84ZHt0QRo0dJK5GsV=-L=qVw@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1b86ce88-ec28-0710-b624-e1eded248da2@web.de>
-Date:   Mon, 7 Oct 2019 09:44:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727103AbfJGHvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 03:51:47 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C4BD356D3
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 07:51:47 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id s14so14508941qtn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 00:51:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GOVJSTkP47ZzAOUaYmHijXMX3bsulzwv44tnyeETKMc=;
+        b=Qe8Y4qtFhsrrEQ4i54GVHGEuq0X5YXdvztnXiIpsTGF7Y4R/Ip9a1I6UrqZv+w8d5x
+         TbxooFAA45zmoLSVqfA7oYL9sWBi0ZXKL5f3KtirkAmlUpYmbFE4rq52gL4EibIGR5i2
+         r/Sy1mLORA/I56SNVW0CeShAM5At/rDvhct2UUTogPGQuOFsACKa1O/ieu6k9LvHJHDs
+         WxCy7j92ZcVvwz9qXEwcn7yCaHdy1e/6uF315ILkQbLmBQg7egTtYOmzzPSP1FGj0E2a
+         I2wuFFdENXHJWt3R+lsQ47nke8yVdkC+A987Zpnxx3re5xsyJmeU9aY1yBA1SaIttMW/
+         q/hQ==
+X-Gm-Message-State: APjAAAUjsTXRQiqHfPOjkplImMVfV4qC+shddLsy+ltWcxqS+O1sy0AE
+        Kz0fk9T6JrYy5BfsBsvEW3JA5B0PwZHDggeoiTfn+J3ixqnrWxJSzFqB3FZrAKe/u9aQ6zwGap6
+        /ZLrzfGkeEdLTT1iLP+3WhPVy
+X-Received: by 2002:ad4:44e2:: with SMTP id p2mr26157636qvt.126.1570434706378;
+        Mon, 07 Oct 2019 00:51:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyh5wy9dVPoxCeQZme5V03ZIT8bKMQdLE9hxrwP4ww6u5ZVWq39NvDUn0/7YafSrKQswir0+A==
+X-Received: by 2002:ad4:44e2:: with SMTP id p2mr26157623qvt.126.1570434706087;
+        Mon, 07 Oct 2019 00:51:46 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id f27sm6665058qkh.42.2019.10.07.00.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 00:51:45 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 03:51:40 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     jcfaracco@gmail.com
+Cc:     netdev@vger.kernel.org, jasowang@redhat.com, davem@davemloft.net,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, dnmendes76@gmail.com
+Subject: Re: [PATCH RFC net-next 2/2] drivers: net: virtio_net: Add
+ tx_timeout function
+Message-ID: <20191007034402-mutt-send-email-mst@kernel.org>
+References: <20191006184515.23048-1-jcfaracco@gmail.com>
+ <20191006184515.23048-3-jcfaracco@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAEkB2ETtVwtmkpup65D3wqyLn=84ZHt0QRo0dJK5GsV=-L=qVw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:/b5pm8brQdCRG2IP/nlNNxu5f7gmuqwSyWK18sL+S50SmvWN3E8
- eGDTILF3Agu2zseK1HJaQHEJ4KSTYmHK7LtAcwYT8eMi4oKVW66CiB850eM3BnZhxJW82bM
- cR4NePe6MXMtCsCl5X86jJOY6uUHwFU29X9nOeJ8i67P/6o7h5XgZmty5WdLfIrYIEIu0QU
- AL/KDiNTwZ5CTfFlv9aJQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FTj6oU+ZtOY=:8RFGc7WseGgVIaMeUNoBO1
- MHz8z7tN1Pjgb95obL1IOhYomg5lr7XLbiFbJju643XwmUquXa/NAAxklUCY9CNvaDnQUh3oN
- +w1zZLixcxC3o1+UmbLKOxvUS6cqvUdlRk5DSJSNEysXguA4QHXhoGHicGucHznXcqw7nrLAn
- Vr1hCyrnY1kAwh5uRZqjeihlzG8PXRD3ejwQdwbjfYuN3kCfiBqnQLJ4vk+tn+l6v5FOwQ5Cp
- bmFpysfUz396BNK8Uoc7LXu5fw4VAB2rjqy9Wxea4E6vsm307G8EG4W1KN5XWBhxQ+g1dpXXJ
- 9DISUhSFn4l5qba55OpGE96H7ai29C8rXY6TvSYmJ/VqI5iprrJvRu09vC5M7gRzgD6ka+Bgu
- Pt5R0Ixz6wIpV4m+RxFiwO5fEtsNKZ9jvcwEOxWCodE9JZjfE37mZVPqkc5cBxGdAoZB96W2I
- t+t0WVhkuo059ANzIM6nwvy9Aa8QNXIUrT0y05GVyuOzij527i44ls2OwwexLVbXxOWxymSfU
- pbRQhR2pPhLOCW+ZOy4714H+Ag/TV+IlrxwjU7YjH85iB2O7k4QL6PVHccO3+4DWo/It+FTjv
- /NmO4zl4wBiRS89JlMsRXKMFjLMSP03igrrpdqKPsAIBl40l51mm7Bcpwzk3oS9kPzh+OnR+b
- KlBxW8+UkLbmryUWZ3/Fa9cDYXrw2JKImVVExxhNgNWGvOHa+Fg7ujrMLgr42KfkzMVUpO1wG
- 0BrfVQKJX7THwdwKXcA51XeUQfzUgNxWP7zleMk3oVHJFIEvaZLuTUZZVU/86J6UwF+upuBQN
- zIMXaGN6dhjDhTtd7Rn+0WC9s9OdxF8W4FzzZxJUmdOjmxNHd4uYhTaK06ffI6BnD7Rij2isz
- tHjJSxtqCr9RzQpI+tU4qIthT6NKV2umqAcdBAGFhoYX/P1iDVBDyDOgtynRqigc2KkUJLyuc
- V5Ri9oEU/DRvYOxmpycHeuasRZ0hGaJewtHS941o31R3PnIlrs3UGAZBhUgIbYzwgi3MNOhuJ
- VmlZRVrlHuo55vDof5hxhJRwnZGeeD/ehYbV74PCS7fl+QnyWYVspR2ACNQSx3O8BKuKXtZJ7
- BlFAgZP5fRelS0rrTiLgeSAAe03sqqdy/YpIGP2EHrrmTf1Ih5IHV0m3e4i8HlB4p9gp6ZPFZ
- GDjY3IbJcJ4Wh3af0pjCfXTSco6sqTOA9oglvUO1rgucfVQ4LrGWwl/yqCK9LDXIjzjiFEyIe
- l4nK3e1SeWyY96jv41pBQXe45icGAeoa+CokMaExmH5S+jDsZyJDKLcTxKd0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191006184515.23048-3-jcfaracco@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I agree with you, kmemdup may fail so a null check seems necessary there.
+On Sun, Oct 06, 2019 at 03:45:15PM -0300, jcfaracco@gmail.com wrote:
+> From: Julio Faracco <jcfaracco@gmail.com>
+> 
+> To enable dev_watchdog, virtio_net should have a tx_timeout defined 
+> (.ndo_tx_timeout). This is only a skeleton to throw a warn message. It 
+> notifies the event in some specific queue of device. This function 
+> still counts tx_timeout statistic and consider this event as an error 
+> (one error per queue), reporting it.
+> 
+> Signed-off-by: Julio Faracco <jcfaracco@gmail.com>
+> Signed-off-by: Daiane Mendes <dnmendes76@gmail.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/net/virtio_net.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 27f9b212c9f5..4b703b4b9441 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -2585,6 +2585,29 @@ static int virtnet_set_features(struct net_device *dev,
+>  	return 0;
+>  }
+>  
+> +static void virtnet_tx_timeout(struct net_device *dev)
+> +{
+> +	struct virtnet_info *vi = netdev_priv(dev);
+> +	u32 i;
+> +
+> +	/* find the stopped queue the same way dev_watchdog() does */
 
-Would this place (and similar ones) be pointed out for further considerations
-also by the source code analysis tool which your software research group
-seems to be developing?
-https://github.com/umnsec/cheq/
+not really - the watchdog actually looks at trans_start.
 
-Regards,
-Markus
+> +	for (i = 0; i < vi->curr_queue_pairs; i++) {
+> +		struct send_queue *sq = &vi->sq[i];
+> +
+> +		if (!netif_xmit_stopped(netdev_get_tx_queue(dev, i)))
+> +			continue;
+> +
+> +		u64_stats_update_begin(&sq->stats.syncp);
+> +		sq->stats.tx_timeouts++;
+> +		u64_stats_update_end(&sq->stats.syncp);
+> +
+> +		netdev_warn(dev, "TX timeout on send queue: %d, sq: %s, vq: %d, name: %s\n",
+> +			    i, sq->name, sq->vq->index, sq->vq->name);
+
+this seems to assume any running queue is timed out.
+doesn't look right.
+
+also - there's already a warning in this case in the core. do we need another one?
+
+> +		dev->stats.tx_errors++;
+
+
+
+> +	}
+> +}
+> +
+>  static const struct net_device_ops virtnet_netdev = {
+>  	.ndo_open            = virtnet_open,
+>  	.ndo_stop   	     = virtnet_close,
+> @@ -2600,6 +2623,7 @@ static const struct net_device_ops virtnet_netdev = {
+>  	.ndo_features_check	= passthru_features_check,
+>  	.ndo_get_phys_port_name	= virtnet_get_phys_port_name,
+>  	.ndo_set_features	= virtnet_set_features,
+> +	.ndo_tx_timeout		= virtnet_tx_timeout,
+>  };
+>  
+>  static void virtnet_config_changed_work(struct work_struct *work)
+> @@ -3018,6 +3042,9 @@ static int virtnet_probe(struct virtio_device *vdev)
+>  	dev->netdev_ops = &virtnet_netdev;
+>  	dev->features = NETIF_F_HIGHDMA;
+>  
+> +	/* Set up dev_watchdog cycle. */
+> +	dev->watchdog_timeo = 5 * HZ;
+> +
+
+Seems to be still broken with napi_tx = false.
+
+>  	dev->ethtool_ops = &virtnet_ethtool_ops;
+>  	SET_NETDEV_DEV(dev, &vdev->dev);
+>  
+> -- 
+> 2.21.0
