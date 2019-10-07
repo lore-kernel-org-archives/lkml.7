@@ -2,310 +2,218 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208EBECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B0DC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E94206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB03206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cQshZ2d8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfJGMdE (ORCPT
+        id S1727904AbfJGMd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:33:04 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21086 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727467AbfJGMdD (ORCPT
+        Mon, 7 Oct 2019 08:33:27 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36348 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfJGMd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:33:03 -0400
-X-UUID: dc1c58b589214748a8568a22798e19f1-20191007
-X-UUID: dc1c58b589214748a8568a22798e19f1-20191007
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 730812572; Mon, 07 Oct 2019 20:32:56 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 7 Oct 2019 20:32:53 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 7 Oct 2019 20:32:53 +0800
-Message-ID: <1570451575.4686.83.camel@mtksdccf07>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Mon, 7 Oct 2019 20:32:55 +0800
-In-Reply-To: <CACT4Y+b4VX5cW3WhP6o3zyKxHjNZRo1Lokxr0+MwDcB5hV5K+A@mail.gmail.com>
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
-         <1569594142.9045.24.camel@mtksdccf07>
-         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
-         <1569818173.17361.19.camel@mtksdccf07>
-         <1570018513.19702.36.camel@mtksdccf07>
-         <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
-         <1570069078.19702.57.camel@mtksdccf07>
-         <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
-         <1570095525.19702.59.camel@mtksdccf07>
-         <1570110681.19702.64.camel@mtksdccf07>
-         <CACT4Y+aKrC8mtcDTVhM-So-TTLjOyFCD7r6jryWFH6i2he1WJA@mail.gmail.com>
-         <1570164140.19702.97.camel@mtksdccf07>
-         <1570176131.19702.105.camel@mtksdccf07>
-         <CACT4Y+ZvhomaeXFKr4za6MJi=fW2SpPaCFP=fk06CMRhNcmFvQ@mail.gmail.com>
-         <1570182257.19702.109.camel@mtksdccf07>
-         <CACT4Y+ZnWPEO-9DkE6C3MX-Wo+8pdS6Gr6-2a8LzqBS=2fe84w@mail.gmail.com>
-         <1570190718.19702.125.camel@mtksdccf07>
-         <CACT4Y+YbkjuW3_WQJ4BB8YHWvxgHJyZYxFbDJpnPzfTMxYs60g@mail.gmail.com>
-         <1570418576.4686.30.camel@mtksdccf07>
-         <CACT4Y+aho7BEvQstd2+a2be-jJ0dEsjGebH7bcUFhYp-PoRDxQ@mail.gmail.com>
-         <1570436289.4686.40.camel@mtksdccf07>
-         <CACT4Y+Z6QObZ2fvVxSmvv16YQAu4GswOqfOVQK_1_Ncz0eir_g@mail.gmail.com>
-         <1570438317.4686.44.camel@mtksdccf07>
-         <CACT4Y+Yc86bKxDp4ST8+49rzLOWkTXLkjs0eyFtohCi_uSjmLQ@mail.gmail.com>
-         <1570439032.4686.50.camel@mtksdccf07>
-         <CACT4Y+YL=8jFXrj2LOuQV7ZyDe-am4W8y1WHEDJJ0-mVNJ3_Cw@mail.gmail.com>
-         <1570440492.4686.59.camel@mtksdccf07> <1570441833.4686.66.camel@mtksdccf07>
-         <CACT4Y+Z0A=Zi4AxEjn4jpHk0xG9+Nh2Q-OYEnOmooW0wN-_vfQ@mail.gmail.com>
-         <1570449804.4686.79.camel@mtksdccf07>
-         <CACT4Y+b4VX5cW3WhP6o3zyKxHjNZRo1Lokxr0+MwDcB5hV5K+A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 7 Oct 2019 08:33:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97CXKkg026980;
+        Mon, 7 Oct 2019 07:33:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570451600;
+        bh=orB4Mt40ggPITyEUfzhbhBT5Za8iHXundC/FxfCuCrI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cQshZ2d80zjYiGr0EOEc6kGwHZ8LosOKevfIos/zRbEbGQ385bVnFPU4PIhfEdcYh
+         cemLqKOnraPsFxZJllghES9e9tw/Lo4nMad5lm0xAgRUSZdnclr7qDblgdFM5J3Hg1
+         ngUAta5GmYTrc0iycZimtCSUQw9TQn+V1d/cBLcM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97CXKlW075007
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 07:33:20 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 07:33:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 07:33:19 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CXJMH114580;
+        Mon, 7 Oct 2019 07:33:19 -0500
+Subject: Re: [PATCH v10 06/16] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191001145620.11123-1-dmurphy@ti.com>
+ <20191001145620.11123-7-dmurphy@ti.com>
+ <d674fcb2-922e-7801-a3a1-ee86f571eb64@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2395f219-ce2f-6809-a082-035f5f1a8a6b@ti.com>
+Date:   Mon, 7 Oct 2019 07:35:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <d674fcb2-922e-7801-a3a1-ee86f571eb64@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 14:19 +0200, Dmitry Vyukov wrote:
-> On Mon, Oct 7, 2019 at 2:03 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > > > > > > > > On Mon, Oct 7, 2019 at 10:18 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > > > > > > > > > The patchsets help to produce KASAN report when size is negative numbers
-> > > > > > > > > > > in memory operation function. It is helpful for programmer to solve the
-> > > > > > > > > > > undefined behavior issue. Patch 1 based on Dmitry's review and
-> > > > > > > > > > > suggestion, patch 2 is a test in order to verify the patch 1.
-> > > > > > > > > > >
-> > > > > > > > > > > [1]https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> > > > > > > > > > > [2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/
-> > > > > > > > > > >
-> > > > > > > > > > > Walter Wu (2):
-> > > > > > > > > > > kasan: detect invalid size in memory operation function
-> > > > > > > > > > > kasan: add test for invalid size in memmove
-> > > > > > > > > > >
-> > > > > > > > > > >  lib/test_kasan.c          | 18 ++++++++++++++++++
-> > > > > > > > > > >  mm/kasan/common.c         | 13 ++++++++-----
-> > > > > > > > > > >  mm/kasan/generic.c        |  5 +++++
-> > > > > > > > > > >  mm/kasan/generic_report.c | 12 ++++++++++++
-> > > > > > > > > > >  mm/kasan/tags.c           |  5 +++++
-> > > > > > > > > > >  mm/kasan/tags_report.c    | 12 ++++++++++++
-> > > > > > > > > > >  6 files changed, 60 insertions(+), 5 deletions(-)
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > commit 5b3b68660b3d420fd2bd792f2d9fd3ccb8877ef7
-> > > > > > > > > > > Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
-> > > > > > > > > > > Date:   Fri Oct 4 18:38:31 2019 +0800
-> > > > > > > > > > >
-> > > > > > > > > > >     kasan: detect invalid size in memory operation function
-> > > > > > > > > > >
-> > > > > > > > > > >     It is an undefined behavior to pass a negative numbers to
-> > > > > > > > > > > memset()/memcpy()/memmove()
-> > > > > > > > > > >     , so need to be detected by KASAN.
-> > > > > > > > > > >
-> > > > > > > > > > >     If size is negative numbers, then it has two reasons to be defined
-> > > > > > > > > > > as out-of-bounds bug type.
-> > > > > > > > > > >     1) Casting negative numbers to size_t would indeed turn up as a
-> > > > > > > > > > > large
-> > > > > > > > > > >     size_t and its value will be larger than ULONG_MAX/2, so that this
-> > > > > > > > > > > can
-> > > > > > > > > > >     qualify as out-of-bounds.
-> > > > > > > > > > >     2) Don't generate new bug type in order to prevent duplicate reports
-> > > > > > > > > > > by
-> > > > > > > > > > >     some systems, e.g. syzbot.
-> > > > > > > > > > >
-> > > > > > > > > > >     KASAN report:
-> > > > > > > > > > >
-> > > > > > > > > > >      BUG: KASAN: out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
-> > > > > > > > > > >      Read of size 18446744073709551608 at addr ffffff8069660904 by task
-> > > > > > > > > > > cat/72
-> > > > > > > > > > >
-> > > > > > > > > > >      CPU: 2 PID: 72 Comm: cat Not tainted
-> > > > > > > > > > > 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
-> > > > > > > > > > >      Hardware name: linux,dummy-virt (DT)
-> > > > > > > > > > >      Call trace:
-> > > > > > > > > > >       dump_backtrace+0x0/0x288
-> > > > > > > > > > >       show_stack+0x14/0x20
-> > > > > > > > > > >       dump_stack+0x10c/0x164
-> > > > > > > > > > >       print_address_description.isra.9+0x68/0x378
-> > > > > > > > > > >       __kasan_report+0x164/0x1a0
-> > > > > > > > > > >       kasan_report+0xc/0x18
-> > > > > > > > > > >       check_memory_region+0x174/0x1d0
-> > > > > > > > > > >       memmove+0x34/0x88
-> > > > > > > > > > >       kmalloc_memmove_invalid_size+0x70/0xa0
-> > > > > > > > > > >
-> > > > > > > > > > >     [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> > > > > > > > > > >
-> > > > > > > > > > >     Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > > > > > > > > >     Reported -by: Dmitry Vyukov <dvyukov@google.com>
-> > > > > > > > > > >     Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> > > > > > > > > > >
-> > > > > > > > > > > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> > > > > > > > > > > index 6814d6d6a023..6ef0abd27f06 100644
-> > > > > > > > > > > --- a/mm/kasan/common.c
-> > > > > > > > > > > +++ b/mm/kasan/common.c
-> > > > > > > > > > > @@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
-> > > > > > > > > > >  #undef memset
-> > > > > > > > > > >  void *memset(void *addr, int c, size_t len)
-> > > > > > > > > > >  {
-> > > > > > > > > > > -       check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-> > > > > > > > > > > +       if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-> > > > > > > > > > > +               return NULL;
-> > > > > > > > > > >
-> > > > > > > > > > >         return __memset(addr, c, len);
-> > > > > > > > > > >  }
-> > > > > > > > > > > @@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
-> > > > > > > > > > >  #undef memmove
-> > > > > > > > > > >  void *memmove(void *dest, const void *src, size_t len)
-> > > > > > > > > > >  {
-> > > > > > > > > > > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > > > > > > > > > > -       check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > > > > > > > > > > +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-> > > > > > > > > > > +       !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-> > > > > > > > > > > +               return NULL;
-> > > > > > > > > > >
-> > > > > > > > > > >         return __memmove(dest, src, len);
-> > > > > > > > > > >  }
-> > > > > > > > > > > @@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t
-> > > > > > > > > > > len)
-> > > > > > > > > > >  #undef memcpy
-> > > > > > > > > > >  void *memcpy(void *dest, const void *src, size_t len)
-> > > > > > > > > > >  {
-> > > > > > > > > > > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > > > > > > > > > > -       check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > > > > > > > > > > +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-> > > > > > > > > > > +       !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-> > > > > > > > > > > +               return NULL;
-> > > > > > > > > > >
-> > > > > > > > > > >         return __memcpy(dest, src, len);
-> > > > > > > > > > >  }
-> > > > > > > > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > > > > > > > > > > index 616f9dd82d12..02148a317d27 100644
-> > > > > > > > > > > --- a/mm/kasan/generic.c
-> > > > > > > > > > > +++ b/mm/kasan/generic.c
-> > > > > > > > > > > @@ -173,6 +173,11 @@ static __always_inline bool
-> > > > > > > > > > > check_memory_region_inline(unsigned long addr,
-> > > > > > > > > > >         if (unlikely(size == 0))
-> > > > > > > > > > >                 return true;
-> > > > > > > > > > >
-> > > > > > > > > > > +       if (unlikely((long)size < 0)) {
-> > > > > > > > > > > +               kasan_report(addr, size, write, ret_ip);
-> > > > > > > > > > > +               return false;
-> > > > > > > > > > > +       }
-> > > > > > > > > > > +
-> > > > > > > > > > >         if (unlikely((void *)addr <
-> > > > > > > > > > >                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
-> > > > > > > > > > >                 kasan_report(addr, size, write, ret_ip);
-> > > > > > > > > > > diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-> > > > > > > > > > > index 36c645939bc9..ed0eb94cb811 100644
-> > > > > > > > > > > --- a/mm/kasan/generic_report.c
-> > > > > > > > > > > +++ b/mm/kasan/generic_report.c
-> > > > > > > > > > > @@ -107,6 +107,18 @@ static const char *get_wild_bug_type(struct
-> > > > > > > > > > > kasan_access_info *info)
-> > > > > > > > > > >
-> > > > > > > > > > >  const char *get_bug_type(struct kasan_access_info *info)
-> > > > > > > > > > >  {
-> > > > > > > > > > > +       /*
-> > > > > > > > > > > +        * If access_size is negative numbers, then it has two reasons
-> > > > > > > > > > > +        * to be defined as out-of-bounds bug type.
-> > > > > > > > > > > +        * 1) Casting negative numbers to size_t would indeed turn up as
-> > > > > > > > > > > +        * a 'large' size_t and its value will be larger than ULONG_MAX/2,
-> > > > > > > > > > > +        * so that this can qualify as out-of-bounds.
-> > > > > > > > > > > +        * 2) Don't generate new bug type in order to prevent duplicate
-> > > > > > > > > > > reports
-> > > > > > > > > > > +        * by some systems, e.g. syzbot.
-> > > > > > > > > > > +        */
-> > > > > > > > > > > +       if ((long)info->access_size < 0)
-> > > > > > > > > > > +               return "out-of-bounds";
-> > > > > > > > > >
-> > > > > > > > > > "out-of-bounds" is the _least_ frequent KASAN bug type. It won't
-> > > > > > > > > > prevent duplicates. "heap-out-of-bounds" is the frequent one.
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > >     /*
-> > > > > > > > >      * If access_size is negative numbers, then it has two reasons
-> > > > > > > > >      * to be defined as out-of-bounds bug type.
-> > > > > > > > >      * 1) Casting negative numbers to size_t would indeed turn up as
-> > > > > > > > >      * a  "large" size_t and its value will be larger than ULONG_MAX/2,
-> > > > > > > > >      *    so that this can qualify as out-of-bounds.
-> > > > > > > > >      * 2) Don't generate new bug type in order to prevent duplicate
-> > > > > > > > > reports
-> > > > > > > > >      *    by some systems, e.g. syzbot. "out-of-bounds" is the _least_
-> > > > > > > > > frequent KASAN bug type.
-> > > > > > > > >      *    It won't prevent duplicates. "heap-out-of-bounds" is the
-> > > > > > > > > frequent one.
-> > > > > > > > >      */
-> > > > > > > > >
-> > > > > > > > > We directly add it into the comment.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > OK, let's start from the beginning: why do you return "out-of-bounds" here?
-> > > > > > > >
-> > > > > > > Uh, comment 1 and 2 should explain it. :)
-> > > > > >
-> > > > > > The comment says it will cause duplicate reports. It does not explain
-> > > > > > why you want syzbot to produce duplicate reports and spam kernel
-> > > > > > developers... So why do you want that?
-> > > > > >
-> > > > > We don't generate new bug type in order to prevent duplicate by some
-> > > > > systems, e.g. syzbot. Is it right? If yes, then it should not have
-> > > > > duplicate report.
-> > > > >
-> > > > Sorry, because we don't generate new bug type. it should be duplicate
-> > > > report(only one report which may be oob or size invlid),
-> > > > the duplicate report goal is that invalid size is oob issue, too.
-> > > >
-> > > > I would not introduce a new bug type.
-> > > > These are parsed and used by some systems, e.g. syzbot. If size is
-> > > > user-controllable, then a new bug type for this will mean 2 bug
-> > > > reports.
-> > >
-> > > To prevent duplicates, the new crash title must not just match _any_
-> > > crash title that kernel can potentially produce. It must match exactly
-> > > the crash that kernel produces for this bug on other input data.
-> > >
-> > > Consider, userspace passes size=123, KASAN produces "heap-out-of-bounds in foo".
-> > > Now userspace passes size=-1 and KASAN produces "invalid-size in foo".
-> > > This will be a duplicate bug report.
-> > > Now if KASAN will produce "out-of-bounds in foo", it will also lead to
-> > > a duplicate report.
-> > > Only iff KASAN will produce "heap-out-of-bounds in foo" for size=-1,
-> > > it will not lead to a duplicate report.
-> >
-> > I think it is not easy to avoid the duplicate report(mentioned above).
-> > As far as my knowledge is concerned, KASAN is memory corruption detector
-> > in kernel space, it should only detect memory corruption and don't
-> > distinguish whether it is passed by userspace. if we want to do, then we
-> > may need to parse backtrace to check if it has copy_form_user() or other
-> > function?
-> 
-> My idea was just to always print "heap-out-of-bounds" and don't
-> differentiate if the size come from userspace or not.
+Jacek
 
-Got it.
-Would you have any other concern about this patch?
+On 10/6/19 11:12 AM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 10/1/19 4:56 PM, Dan Murphy wrote:
+>> Introduce the LP5036/30/24/18/12/9 RGB LED driver.
+>> The difference in these parts are the number of
+>> LED outputs where the:
+>>
+>> LP5036 can control 36 LEDs
+>> LP5030 can control 30 LEDs
+>> LP5024 can control 24 LEDs
+>> LP5018 can control 18 LEDs
+>> LP5012 can control 12 LEDs
+>> LP5009 can control 9 LEDs
+>>
+>> The device has the ability to group LED output into control banks
+>> so that multiple LED banks can be controlled with the same mixing and
+>> brightness.  Inversely the LEDs can also be controlled independently.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig       |  11 +
+>>   drivers/leds/Makefile      |   1 +
+>>   drivers/leds/leds-lp50xx.c | 784 +++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 796 insertions(+)
+>>   create mode 100644 drivers/leds/leds-lp50xx.c
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index cfb1ebb6517f..84f60e35c5ee 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -363,6 +363,17 @@ config LEDS_LP3952
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called leds-lp3952.
+>>   
+>> +config LEDS_LP50XX
+>> +	tristate "LED Support for TI LP5036/30/24/18/12/9 LED driver chip"
+>> +	depends on LEDS_CLASS && REGMAP_I2C
+>> +	depends on LEDS_CLASS_MULTI_COLOR
+>> +	help
+>> +	  If you say yes here you get support for the Texas Instruments
+>> +	  LP5036, LP5030, LP5024, LP5018, LP5012 and LP5009 LED driver.
+>> +
+>> +	  To compile this driver as a module, choose M here: the
+>> +	  module will be called leds-lp50xx.
+>> +
+>>   config LEDS_LP55XX_COMMON
+>>   	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
+>>   	depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index 841038cfe35b..7a208a0f7b84 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -34,6 +34,7 @@ obj-$(CONFIG_LEDS_GPIO_REGISTER)	+= leds-gpio-register.o
+>>   obj-$(CONFIG_LEDS_GPIO)			+= leds-gpio.o
+>>   obj-$(CONFIG_LEDS_LP3944)		+= leds-lp3944.o
+>>   obj-$(CONFIG_LEDS_LP3952)		+= leds-lp3952.o
+>> +obj-$(CONFIG_LEDS_LP50XX)		+= leds-lp50xx.o
+>>   obj-$(CONFIG_LEDS_LP55XX_COMMON)	+= leds-lp55xx-common.o
+>>   obj-$(CONFIG_LEDS_LP5521)		+= leds-lp5521.o
+>>   obj-$(CONFIG_LEDS_LP5523)		+= leds-lp5523.o
+>> diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
+> [...]
+>> +static int lp50xx_probe_dt(struct lp50xx *priv)
+>> +{
+>> +	u32 led_banks[LP5036_MAX_LED_MODULES];
+>> +	struct fwnode_handle *child = NULL;
+>> +	struct fwnode_handle *led_node = NULL;
+>> +	struct led_init_data init_data;
+>> +	struct lp50xx_led *led;
+>> +	int num_colors;
+>> +	u32 color_id;
+>> +	int led_number;
+>> +	size_t i = 0;
+>> +	int ret;
+>> +
+>> +	priv->enable_gpio = devm_gpiod_get_optional(&priv->client->dev,
+>> +						   "enable", GPIOD_OUT_LOW);
+>> +	if (IS_ERR(priv->enable_gpio)) {
+>> +		ret = PTR_ERR(priv->enable_gpio);
+>> +		dev_err(&priv->client->dev, "Failed to get enable gpio: %d\n",
+>> +			ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	priv->regulator = devm_regulator_get(&priv->client->dev, "vled");
+>> +	if (IS_ERR(priv->regulator))
+>> +		priv->regulator = NULL;
+>> +
+>> +	device_for_each_child_node(&priv->client->dev, child) {
+>> +		led = &priv->leds[i];
+>> +		if (fwnode_property_present(child, "ti,led-bank")) {
+>> +			ret = fwnode_property_read_u32_array(child,
+>> +							     "ti,led-bank",
+>> +							     NULL, 0);
+>> +			ret = fwnode_property_read_u32_array(child,
+>> +							     "ti,led-bank",
+>> +							     led_banks,
+>> +							     ret);
+> You could check if bank numbers are within a range.
+
+Ack
 
 
+>
+>> +			if (ret) {
+>> +				dev_err(&priv->client->dev,
+>> +					"led-bank property is missing\n");
+>> +				fwnode_handle_put(child);
+>> +				goto child_out;
+>> +			}
+>> +
+>> +			priv->num_of_banked_leds = ARRAY_SIZE(led_banks);
+>> +
+>> +			ret = lp50xx_set_banks(priv, led_banks);
+>> +			if (ret) {
+>> +				dev_err(&priv->client->dev,
+>> +					"Cannot setup banked LEDs\n");
+>> +				fwnode_handle_put(child);
+>> +				goto child_out;
+>> +			}
+>> +			led->ctrl_bank_enabled = 1;
+>> +
+>> +		} else {
+>> +			ret = fwnode_property_read_u32(child, "reg",
+>> +					       &led_number);
+> The same applies to the led_number.
+
+NACK to this.  This is checked below.  But I should probably move that 
+check up into the else case.
+
+Dan
+
+
+>
+>> +			if (ret) {
+>> +				dev_err(&priv->client->dev,
+>> +					"led reg property missing\n");
+>> +				fwnode_handle_put(child);
+>> +				goto child_out;
+>> +			}
+>> +
+>> +			led->led_number = led_number;
+>> +		}
