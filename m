@@ -2,199 +2,138 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46765ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948F4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDB6206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EE320867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NiANENA7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F6RCjFFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfJGX3R (ORCPT
+        id S1729644AbfJGXau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:29:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55584 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728980AbfJGX3Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:29:16 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a6so1130008wma.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 16:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=piaZbYWTjNBhZkZDmofwj+4KxlQj6g4yPVECpKaNgh0=;
-        b=NiANENA7BMEGBVN9ysemZd4hhOVcXGa8kHkzWeYSeDhzNZCOHOhkUkatxk11rSm62q
-         XIsUc5VDV6Hngd0MAiclj+ZLPhCH+hL8R2j48Dy+o99nvOA5sOq6I7fA9oTVoMNfuOBk
-         q0vo9i5FfaabitzQm7e4G4yU0jFasD+DQJeuCtHtuWs80eV00OAccDAsdfeKJ5Pl6LD6
-         ylv/gjadfyppKGzMNpI4Hb6VG4kMO4QFNKgPm5RXpSCdlYOW6YwaDyxJ/wMSJwNLAXHy
-         kPujoEKk6uKMMY6SGvqL47k9ASnc5Ujov5yflMax3t77c9duswCG5Gb6Mc0n0mXNDomU
-         UmTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=piaZbYWTjNBhZkZDmofwj+4KxlQj6g4yPVECpKaNgh0=;
-        b=hkUvF+TxDw1ciWJ+xM/en8EpB/HZGVhniPubb0s8E2XV02lM4GAE3sK3Acy0x5W3fA
-         /ki1qimGlcuYt72G6UUdZf9grZBbyoKRmHiHQaIB9Ink5c9b2FPhKv9GCJJQr2EBgtwR
-         P7sECZEW9VdmUWgJzNwzg+2v0P461yq6DJ96uIMFAcIiNdVFk3vONtDoAFUuWH4fViv0
-         qbv67HlhxD+Ire7owUQZgKk2iGvSAeyRDBzI09foYDdbSsUvbc0htHsXdOYBM7z0KP7K
-         eNb9Kn8AkEkaRbkVAx/Hsulq8q8gQd9vd6T3G9ktB5gahpcYShcG30TEepd+tBqfHRVp
-         Bdow==
-X-Gm-Message-State: APjAAAX7/GbtiMFiCOjM4FabtplqBpR958NaEK/xJC7XiIMvTvjUeLUN
-        9wprgaXmTISKIUk9HvDsOWkF7TNmawaosn3udTVjFg==
-X-Google-Smtp-Source: APXvYqz1rRP6Dq0sqy2os+gMYJxDYbuP41FyEHm7il/rYBtc6impu4RdlVLaJHWyKhxmS+lup4gs+XOJnCQ5bJfB8zU=
-X-Received: by 2002:a1c:3182:: with SMTP id x124mr1385909wmx.168.1570490953213;
- Mon, 07 Oct 2019 16:29:13 -0700 (PDT)
+        Mon, 7 Oct 2019 19:30:50 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54035 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729285AbfJGXau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 19:30:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46nGtt3d32z9sPV;
+        Tue,  8 Oct 2019 10:30:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570491047;
+        bh=FqTVaMNpyDmrDdMdI+Cv2npWAUeElfvrLKibIVX2eRk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F6RCjFFUQnXIXS0mo1v9QyVwKYhPK9xTtviKtKXg+IJj1QqCHGYVSTDvuPbC3ISLx
+         5LusfVEGxeIws5YsBfIwUbyLZxbOhCbxeNUV6mG88DbRq5Q55ucc1/AFcqC94oUt9r
+         sNxkle53D4q6pCJNPpEFzkYtDezb2CQXzh4WkncEvleIllVQwY2BioJBPV5IlcIL+R
+         CQx+0N/ImdzoazF8nUjrRwpsJ/bQd9y6nLadYwNBPf6j49NFa9B+CYYXi1rC3834ZW
+         sBGfT//TyDwGtcXgEZO2OHxwdBe05z07p6cxPpuGqO6GzSYs/ZcuMyUF7yhuvVtzVQ
+         QJmqSvEufvoRw==
+Date:   Tue, 8 Oct 2019 10:30:45 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20191008103045.2d4711e2@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191004001243.140897-1-xueweiz@google.com> <20191007151425.GD22412@pauld.bos.csb>
-In-Reply-To: <20191007151425.GD22412@pauld.bos.csb>
-From:   Xuewei Zhang <xueweiz@google.com>
-Date:   Mon, 7 Oct 2019 16:29:01 -0700
-Message-ID: <CAPtwhKq7Asr2L04im84HbhRVtYJrJT2zu_rydB7YiTG=fxSSNg@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: scale quota and period without losing
- quota/period ratio precision
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        trivial@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/0D2d4UAAjmMRaNL4JgY7dQR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 8:14 AM Phil Auld <pauld@redhat.com> wrote:
->
-> On Thu, Oct 03, 2019 at 05:12:43PM -0700 Xuewei Zhang wrote:
-> > quota/period ratio is used to ensure a child task group won't get more
-> > bandwidth than the parent task group, and is calculated as:
-> > normalized_cfs_quota() = [(quota_us << 20) / period_us]
-> >
-> > If the quota/period ratio was changed during this scaling due to
-> > precision loss, it will cause inconsistency between parent and child
-> > task groups. See below example:
-> > A userspace container manager (kubelet) does three operations:
-> > 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
-> > 2) Create a few children cgroups.
-> > 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-> >
-> > These operations are expected to succeed. However, if the scaling of
-> > 147/128 happens before step 3), quota and period of the parent cgroup
-> > will be changed:
-> > new_quota: 1148437ns, 1148us
-> > new_period: 11484375ns, 11484us
-> >
-> > And when step 3) comes in, the ratio of the child cgroup will be 104857,
-> > which will be larger than the parent cgroup ratio (104821), and will
-> > fail.
-> >
-> > Scaling them by a factor of 2 will fix the problem.
-> >
-> > Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-> > Signed-off-by: Xuewei Zhang <xueweiz@google.com>
->
->
-> I managed to get it to trigger the second case. It took 50,000 children (20x my initial tests).
->
-> [ 1367.850630] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 4340, cfs_quota_us = 250000)
-> [ 1370.390832] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 8680, cfs_quota_us = 500000)
-> [ 1372.914689] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 17360, cfs_quota_us = 1000000)
-> [ 1375.447431] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 34720, cfs_quota_us = 2000000)
-> [ 1377.982785] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 69440, cfs_quota_us = 4000000)
-> [ 1380.481702] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 138880, cfs_quota_us = 8000000)
-> [ 1382.894692] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 277760, cfs_quota_us = 16000000)
-> [ 1385.264872] cfs_period_timer[cpu11]: period too short, scaling up (new cfs_period_us = 555520, cfs_quota_us = 32000000)
-> [ 1393.965140] cfs_period_timer[cpu11]: period too short, but cannot scale up without losing precision (cfs_period_us = 555520, cfs_quota_us = 32000000)
->
-> I suspect going higher could cause the original lockup, but that'd be the case with the old code as well.
-> And this also gets us out of it faster.
->
->
-> Tested-by: Phil Auld <pauld@redhat.com>
+--Sig_/0D2d4UAAjmMRaNL4JgY7dQR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks a lot for the review and experiment+test Phil! Really appreciate it.
+Hi all,
 
-To other scheduler maintainers: Could someone help review and approve
-the patch? I'm happy to fix any defect in it :)
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Best regards,
-Xuewei
 
->
->
-> Cheers,
-> Phil
->
->
-> > ---
-> >  kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
-> >  1 file changed, 22 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 83ab35e2374f..b3d3d0a231cd 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4926,20 +4926,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
-> >               if (++count > 3) {
-> >                       u64 new, old = ktime_to_ns(cfs_b->period);
-> >
-> > -                     new = (old * 147) / 128; /* ~115% */
-> > -                     new = min(new, max_cfs_quota_period);
-> > -
-> > -                     cfs_b->period = ns_to_ktime(new);
-> > -
-> > -                     /* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-> > -                     cfs_b->quota *= new;
-> > -                     cfs_b->quota = div64_u64(cfs_b->quota, old);
-> > -
-> > -                     pr_warn_ratelimited(
-> > -     "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-> > -                             smp_processor_id(),
-> > -                             div_u64(new, NSEC_PER_USEC),
-> > -                             div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > +                     /*
-> > +                      * Grow period by a factor of 2 to avoid lossing precision.
-> > +                      * Precision loss in the quota/period ratio can cause __cfs_schedulable
-> > +                      * to fail.
-> > +                      */
-> > +                     new = old * 2;
-> > +                     if (new < max_cfs_quota_period) {
-> > +                             cfs_b->period = ns_to_ktime(new);
-> > +                             cfs_b->quota *= 2;
-> > +
-> > +                             pr_warn_ratelimited(
-> > +     "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> > +                                     smp_processor_id(),
-> > +                                     div_u64(new, NSEC_PER_USEC),
-> > +                                     div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > +                     } else {
-> > +                             pr_warn_ratelimited(
-> > +     "cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-> > +                                     smp_processor_id(),
-> > +                                     div_u64(old, NSEC_PER_USEC),
-> > +                                     div_u64(cfs_b->quota, NSEC_PER_USEC));
-> > +                     }
-> >
-> >                       /* reset count so we don't come right back in here */
-> >                       count = 0;
-> > --
-> > 2.23.0.581.g78d2f28ef7-goog
-> >
->
-> --
+Caused by commit
+
+  10d8f308ba3e ("cec: add cec_adapter to cec_notifier_cec_adap_unregister()=
+")
+
+interacting with commit
+
+  7e86efa2ff03 ("media: cec-gpio: add notifier support")
+
+form the v4l-dvb tree.
+
+I have applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 8 Oct 2019 10:26:05 +1100
+Subject: [PATCH] cec: fix up for "cec: add cec_adapter to
+ cec_notifier_cec_adap_unregister()"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/media/platform/cec-gpio/cec-gpio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/cec-gpio/cec-gpio.c b/drivers/media/pla=
+tform/cec-gpio/cec-gpio.c
+index 7be91e712c4a..42d2c2cd9a78 100644
+--- a/drivers/media/platform/cec-gpio/cec-gpio.c
++++ b/drivers/media/platform/cec-gpio/cec-gpio.c
+@@ -259,7 +259,7 @@ static int cec_gpio_probe(struct platform_device *pdev)
+ 	return 0;
+=20
+ unreg_notifier:
+-	cec_notifier_cec_adap_unregister(cec->notifier);
++	cec_notifier_cec_adap_unregister(cec->notifier, cec->adap);
+ del_adap:
+ 	cec_delete_adapter(cec->adap);
+ 	return ret;
+@@ -269,7 +269,7 @@ static int cec_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct cec_gpio *cec =3D platform_get_drvdata(pdev);
+=20
+-	cec_notifier_cec_adap_unregister(cec->notifier);
++	cec_notifier_cec_adap_unregister(cec->notifier, cec->adap);
+ 	cec_unregister_adapter(cec->adap);
+ 	return 0;
+ }
+--=20
+2.23.0.rc1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0D2d4UAAjmMRaNL4JgY7dQR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2byqUACgkQAVBC80lX
+0GypWwf/aWdoFi2MyJ5QKk3TnpqQcsnMcocA7U079No8epLXeXB+/ATUQPYDRB+W
+sIoM4fXcaZpx0Wtp7so8DsXgu9XpMDDpMHTTC2EnVeXnNDAOX4jFORuvfYuL9fEb
+G04YbvyWzBSma1fz2h/LOzu2VWTGRfATJ2KRQ+KgqwjtZM4vrPKw/EkV62hxEalh
+/JXc4sQ+C2/hbDq5GPFejcmlqc4VOOQFLWnS6lqcd2a+42jBOcoGE7t1gL62lv01
+97U9EpbvGCTF418zBreHc0BlMMtiBwRfoGZA7JkdXLReZjP6Rm7LrOLuDaC2WRAA
+1fw+7HZucGNuhoyAzv3TdXw6e9UjAw==
+=y+O9
+-----END PGP SIGNATURE-----
+
+--Sig_/0D2d4UAAjmMRaNL4JgY7dQR--
