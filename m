@@ -2,254 +2,65 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5DCC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E98CC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA6320867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="mNP9EwTP"
+	by mail.kernel.org (Postfix) with ESMTP id 263D32080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 01:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfJGBpd (ORCPT
+        id S1726883AbfJGByF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 21:45:33 -0400
-Received: from onstation.org ([52.200.56.107]:33064 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbfJGBpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 21:45:24 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 8ECBD3F23E;
-        Mon,  7 Oct 2019 01:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1570412723;
-        bh=Op5NIl5dzUMCbi20BwmEjr/2tRkcbaO8At1lhZxnx7s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNP9EwTPzoHbHLeLsX5BR1DF+2vSpWaVzjQyepCD3zAfHjDsbCE1AjSOGl35KZPGA
-         AA7AEj3QCxf1EI58bMkvQB0AlhkGjBs7iE+DF5EPwhS3wmZJ8al4fipsaoYtRJIOL+
-         gEZrb06eq/iomdxdPVaVjgCETgml8x66o99pfuHU=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robdclark@gmail.com, sean@poorly.run
-Cc:     bjorn.andersson@linaro.org, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, jonathan@marek.ca,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH RFC v2 5/5] ARM: dts: qcom: msm8974-hammerhead: add support for external display
-Date:   Sun,  6 Oct 2019 21:45:09 -0400
-Message-Id: <20191007014509.25180-6-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191007014509.25180-1-masneyb@onstation.org>
-References: <20191007014509.25180-1-masneyb@onstation.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 6 Oct 2019 21:54:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36034 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726789AbfJGByF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 21:54:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9ACBDAC8E;
+        Mon,  7 Oct 2019 01:54:03 +0000 (UTC)
+Date:   Mon, 07 Oct 2019 03:54:03 +0200
+Message-ID: <s5h4l0ljp6s.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc:     <alsa-devel@alsa-project.org>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Jiri Kosina" <trivial@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND TRIVIAL] sound: Fix Kconfig indentation
+In-Reply-To: <20191004144931.3851-1-krzk@kernel.org>
+References: <20191004144931.3851-1-krzk@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HDMI nodes and other supporting infrastructure in order to support
-the external display. This is based on work from Jonathan Marek.
+On Fri, 04 Oct 2019 16:49:31 +0200,
+Krzysztof Kozlowski wrote:
+> 
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+>     $ sed -e 's/^        /\t/' -i */Kconfig
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Mark Brown <broonie@kernel.org>
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-Changes since v1:
-- Regulators always on as a temporary haack.
-- Hot plug detect pin for the HDMI bridge needs to be low.
+Applied now.  Sorry for the late reaction, as I've been (still)
+traveling.
 
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 142 ++++++++++++++++++
- 1 file changed, 142 insertions(+)
+Thanks.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index b607c9ff9e12..380a805cd1f0 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -235,6 +235,36 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wlan_regulator_pin>;
- 	};
-+
-+	anx_avdd33: avdd33 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "avdd-3p3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on; // FIXME
-+
-+		gpio = <&pm8941_gpios 26 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&anx_avdd33_pin>;
-+	};
-+
-+	anx_vdd10: vdd10 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "vdd-1p0";
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1000000>;
-+		regulator-always-on; // FIXME
-+
-+		gpio = <&pm8941_gpios 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&anx_vdd10_pin>;
-+	};
- };
- 
- &soc {
-@@ -371,6 +401,40 @@
- 				function = "gpio";
- 			};
- 		};
-+
-+		hdmi_pin: hdmi {
-+			cec {
-+				pins = "gpio31";
-+				function = "hdmi_cec";
-+			};
-+
-+			ddc {
-+				pins = "gpio32", "gpio33";
-+				function = "hdmi_ddc";
-+			};
-+
-+			hpd {
-+				pins = "gpio34";
-+				function = "hdmi_hpd";
-+			};
-+		};
-+
-+		anx_msm_pin: anx {
-+			irq {
-+				pins = "gpio28";
-+				function = "gpio";
-+				drive-strength = <8>;
-+				bias-pull-up;
-+				input-enable;
-+			};
-+
-+			reset {
-+				pins = "gpio68";
-+				function = "gpio";
-+				drive-strength = <8>;
-+				bias-pull-up;
-+			};
-+		};
- 	};
- 
- 	vibrator@fd8c3450 {
-@@ -471,6 +535,28 @@
- 				default-brightness = <200>;
- 			};
- 		};
-+
-+		anx7808@72 {
-+			compatible = "analogix,anx7808";
-+			reg = <0x72>;
-+			interrupts-extended = <&msmgpio 28 IRQ_TYPE_EDGE_RISING>;
-+
-+			hpd-gpios = <&pm8941_gpios 13 GPIO_ACTIVE_LOW>;
-+			pd-gpios = <&pm8941_gpios 14 GPIO_ACTIVE_HIGH>;
-+			reset-gpios = <&msmgpio 68 GPIO_ACTIVE_LOW>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&anx_msm_pin>, <&anx_pin>;
-+
-+			dvdd10-supply = <&anx_vdd10>;
-+			avdd33-supply = <&anx_avdd33>;
-+
-+			port {
-+				anx7808_in: endpoint {
-+					remote-endpoint = <&hdmi_out>;
-+				};
-+			};
-+		};
- 	};
- 
- 	i2c@f9968000 {
-@@ -664,6 +750,29 @@
- 
- 			vddio-supply = <&pm8941_l12>;
- 		};
-+
-+		hdmi-tx@fd922100 {
-+			status = "ok";
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&hdmi_pin>;
-+
-+			qcom,hdmi-tx-ddc-clk = <&msmgpio 32 GPIO_ACTIVE_HIGH>;
-+			qcom,hdmi-tx-ddc-data = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
-+			qcom,hdmi-tx-hpd = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-+
-+			ports {
-+				port@1 {
-+					hdmi_out: endpoint {
-+						remote-endpoint = <&anx7808_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		hdmi-phy@fd922500 {
-+			status = "ok";
-+		};
- 	};
- };
- 
-@@ -700,6 +809,39 @@
- 				output-high;
- 				line-name = "otg-gpio";
- 			};
-+
-+			anx_pin: anx {
-+				cbldet {
-+					pins = "gpio13";
-+					function = "normal";
-+					input-enable;
-+					bias-pull-down;
-+					power-source = <PM8941_GPIO_S3>;
-+				};
-+
-+				pd {
-+					pins = "gpio14";
-+					function = "normal";
-+					bias-disable;
-+					power-source = <PM8941_GPIO_S3>;
-+				};
-+			};
-+
-+			anx_avdd33_pin: anxvdd3  {
-+				pins = "gpio26";
-+				function = "normal";
-+
-+				bias-disable;
-+				power-source = <PM8941_GPIO_S3>;
-+			};
-+
-+			anx_vdd10_pin: anxvdd1 {
-+				pins = "gpio8";
-+				function = "normal";
-+
-+				bias-disable;
-+				power-source = <PM8941_GPIO_S3>;
-+			};
- 		};
- 	};
- };
--- 
-2.21.0
 
+Takashi
