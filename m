@@ -2,51 +2,61 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C97BC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2474C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698FA20700
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7875420700
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="kSCt9zRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfJGQpO (ORCPT
+        id S1729087AbfJGQpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbfJGQpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 12:45:13 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5049C206BB;
-        Mon,  7 Oct 2019 16:45:11 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 12:45:09 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        hjl.tools@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>
-Subject: Re: [RFC][PATCH 0/9] Variable size jump_label support
-Message-ID: <20191007124509.72f9fd26@gandalf.local.home>
-In-Reply-To: <20191007161302.GI4643@worktop.programming.kicks-ass.net>
-References: <20191007090225.441087116@infradead.org>
-        <20191007084443.793701281@infradead.org>
-        <20191007112229.GA3221@gmail.com>
-        <20191007112606.GA44864@gmail.com>
-        <20191007111742.00d6c50b@gandalf.local.home>
-        <20191007161302.GI4643@worktop.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+Received: from mail.blih.net ([212.83.177.182]:51390 "EHLO mail.blih.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728031AbfJGQpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:45:13 -0400
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 12:45:12 EDT
+Received: from mail.blih.net (mail.blih.net [212.83.177.182])
+        by mail.blih.net (OpenSMTPD) with ESMTP id c5fe113e;
+        Mon, 7 Oct 2019 18:38:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=bidouilliste.com; h=date
+        :from:to:cc:subject:message-id:in-reply-to:references
+        :mime-version:content-type:content-transfer-encoding; s=mail;
+         bh=x8Fb8EJYC8DBijQk39x8YH5AULw=; b=kSCt9zRMRkRXIBi7Jle6eJm45QFm
+        0rHpyhYEZ/UGz7DLPG5fqEuAMDu21cHZJNxV8NGayqyJt/YmaXSbVnWdeqWdFr/F
+        k/ThBug0HPc9kTUvqEW/fs/WLAW93pbcwpIPExl0jiY6eJqLOf9jETMJy3uC+rF3
+        X5d5z/c7GEM3qfo=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=bidouilliste.com; h=date
+        :from:to:cc:subject:message-id:in-reply-to:references
+        :mime-version:content-type:content-transfer-encoding; q=dns; s=
+        mail; b=SsqDpYzYXtI8Tul7fI3I19ADwfqgOwakPKW9p6pkQqIcb24K3RKdmTT1
+        Nf8IwNs3tMDR3LC7Em3IISZDQZ+3U3Bm34owITo5s3FwSgYugS41gBZdqC30acWj
+        QY+MePjw64aoVjFmfRvqj0XS8020tQwMuQz92b9/emyGIwXS1ns=
+Received: from sonic.home.blih.net (ip-9.net-89-3-105.rev.numericable.fr [89.3.105.9])
+        by mail.blih.net (OpenSMTPD) with ESMTPSA id 1b727bdc
+        TLS version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO;
+        Mon, 7 Oct 2019 18:38:31 +0200 (CEST)
+Date:   Mon, 7 Oct 2019 18:38:30 +0200
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
+Message-Id: <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
+In-Reply-To: <20191007161634.GS5610@atomide.com>
+References: <20191007080339.57209-1-manu@freebsd.org>
+        <20191007161634.GS5610@atomide.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,28 +64,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 18:13:02 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, 7 Oct 2019 09:16:34 -0700
+Tony Lindgren <tony@atomide.com> wrote:
 
-> On Mon, Oct 07, 2019 at 11:17:42AM -0400, Steven Rostedt wrote:
-> > Actually, even back then I said that it would be best to merge all the
-> > tools into one (I just didn't have the time to implement it), and then
-> > we could pull this off. I have one of my developers working to merge
-> > record-mcount into objtool now (there's been some patches floating
-> > around).  
+> Hi,
 > 
-> Right, but while working on this I discovered GCC's -mrecord-mcount (and
-> the kernel using this), so how much do we really still need the
-> record-mcount tool?
-
-That only works for some archs, not all of them. At least not yet that
-I'm aware of.
-
+> * Emmanuel Vadot <manu@freebsd.org> [191007 08:04]:
+> > Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> > fixed the mmc instances on the l3 interconnect but removed the disabled status.
+> > Fix this and let boards properly define it if it have it.
 > 
-> Do we really only need the tool for the little hole between gcc-4.6
-> (minimal supported GCC version) and gcc-5 (when -mrecord-mcount was
-> introduced) ?
+> The dts default is "okay", and should be fine for all the
+> internal devices even if not pinned out on the board. This
+> way the devices get properly idled during boot, and we
+> avoid repeating status = "enabled" over and over again in
+> the board specific dts files.
 
-Again, it's for more than just x86 ;-)
+ That is not correct, if a status != "disabled" then pinmuxing will be
+configured for this device and if multiple devices share the same pin
+then you have a problem. Note that I have (almost) no knowledge on Ti
+SoC but I doubt that this is not the case on them.
+ Also every other boards that I work with use the standard of setting
+every node to disabled in the dtsi and let the board enable them at
+will. Is there something different happening in the TI world ?
 
--- Steve
+> Then the board specific dts files might want to configure
+> devices with status = "disabled" if really needed. But this
+> should be only done for devices that Linux must not use,
+> such as crypto acclerators on secure devices if claimed by
+> the secure mode.
+> 
+> So if this fixes something, it's almost certainly a sign
+> of something else being broken?
+
+ In this case it's FreeBSD being  because (I think) we have bad support
+for the clocks for this module so we panic when we read from it as the
+module isn't clocked. And since I find it wrong to have device enabled
+while it isn't present I've sent this patch.
+
+ Cheers,
+
+> Regards,
+> 
+> Tony
+> 
+> 
+> > Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
+> > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > ---
+> >  arch/arm/boot/dts/am33xx.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > index fb6b8aa12cc5..b3a1fd9e39fa 100644
+> > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > @@ -260,6 +260,7 @@
+> >  				ti,needs-special-reset;
+> >  				interrupts = <29>;
+> >  				reg = <0x0 0x1000>;
+> > +				status = "disabled";
+> >  			};
+> >  		};
+> >  
+> > -- 
+> > 2.22.0
+> > 
+
+
+-- 
+Emmanuel Vadot <manu@bidouilliste.com>
