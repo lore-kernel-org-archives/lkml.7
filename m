@@ -2,115 +2,191 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A6DECE595
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2BFC4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0593F20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3530620867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfJGIb3 (ORCPT
+        id S1727452AbfJGIdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:31:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42188 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727416AbfJGIbO (ORCPT
+        Mon, 7 Oct 2019 04:33:10 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:55185 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727201AbfJGIdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:31:14 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x978SMZp014167
-        for <linux-kernel@vger.kernel.org>; Mon, 7 Oct 2019 04:31:10 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vg1qd0d4p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 04:31:10 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 7 Oct 2019 09:31:08 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 7 Oct 2019 09:31:03 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x978V2QX54067400
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Oct 2019 08:31:02 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47AD611C04C;
-        Mon,  7 Oct 2019 08:31:02 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F224E11C069;
-        Mon,  7 Oct 2019 08:30:59 +0000 (GMT)
-Received: from localhost.in.ibm.com (unknown [9.124.35.220])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Oct 2019 08:30:59 +0000 (GMT)
-From:   Parth Shah <parth@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, pavel@ucw.cz, dsmythies@telus.net,
-        quentin.perret@arm.com, rafael.j.wysocki@intel.com,
-        tim.c.chen@linux.intel.com, daniel.lezcano@linaro.org
-Subject: [RFC v5 3/6] sched/core: Update turbo_sched count only when required
-Date:   Mon,  7 Oct 2019 14:00:48 +0530
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007083051.4820-1-parth@linux.ibm.com>
-References: <20191007083051.4820-1-parth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19100708-0012-0000-0000-00000354C1D2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100708-0013-0000-0000-0000218FD1A0
-Message-Id: <20191007083051.4820-4-parth@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-07_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910070088
+        Mon, 7 Oct 2019 04:33:10 -0400
+Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id HORviKciZjZ8vHORwi5MFm; Mon, 07 Oct 2019 10:33:07 +0200
+Subject: Re: [PATCH v2 3/6] media: v4l2-mem2mem: add
+ stateless_(try_)decoder_cmd ioctl helpers
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>
+Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
+        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+References: <20190929200023.215831-1-jernej.skrabec@siol.net>
+ <20190929200023.215831-4-jernej.skrabec@siol.net>
+ <6c7eeaf1-18bb-1c7e-7938-a3eb5af100b6@xs4all.nl>
+ <2840939.OS9t7MgvnY@jernej-laptop>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <cce04c8e-8211-0fdc-bd62-650aceeb3af1@xs4all.nl>
+Date:   Mon, 7 Oct 2019 10:32:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <2840939.OS9t7MgvnY@jernej-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfGHd6OSD1FLSR8tNZsbhbHQNPfX75M0V7RaZdh19iAF3oqzeutMCalTO38S5dEhgGLX4RNVSgPgzT3/UuWcy7gPiwkkXJDytiGnBYCQOsv9aYCkRfAj2
+ MnYF7yhdMrsRfwMYHBnn7TT/zRAtesy3YXAS248gZ38hAQybYnicKDyYEslBpaTrafJDsw7kwYi3dDSqZgVsPR3r5NKOG+bhH4pAPq2wfjxLDhcnSQUefHpl
+ jHy7W1K6AhV1be+LnTLlP+yPDB6sMQxo3zpMvyqoNWFrO7FT4Dkzfgq4lpRWeLxSHccktEbx1Jdh70nkHglrJGvjHUaZTWjLmH3z/I6bsGQMidN4NLUX6pcm
+ wf8Q3QejyUWYH1TsrAQ5dqw8D5ZMY2ryWhjTjrQgBynEaA7D2b7Ke9xqIZ3P8nJDLUhnV0h4XudXF3q8VCUu+wEKR4AhhpkmGvB/IlgSpGE8g5KD/qeBW/Gg
+ tcJi6TZnMAthHh0RLe0YljVcVsszECBZhT3kJE+vFyYIButqKejfe/bTuibWqAtsUbAK8lfgxSV+/kmGGicRsX3F1TIjseu1TDf94nGT0sljSmVZRmm8oL7a
+ gcnIlLSGO81YeTMEY93XIXNZhEEvMoafg2K8ogCL1I20mcPT8Qqf+hA3niWEV+vYC1vkI4cz9G3aaEDERofNo2CWMNgmPboc6s8im/JwDnd5J/rOPJxnRdvS
+ RWXEKvLCLpc3Wl2wATEXIhb1K2JJBB0NIpmzQd828jZhc4AS61C4NW0/zr265E02pNE2p2TyK3UK344I3/RrFiV8HRwGjqFyXb/3IjK2c6/YUYTUb48XbSUR
+ kijzBakVGAIeQv672mc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the get/put methods to add/remove the use of TurboSched support, such
-that the feature is turned on only in the presence of atleast one
-classified small bckground task.
+On 10/7/19 8:02 AM, Jernej Škrabec wrote:
+> Dne petek, 04. oktober 2019 ob 11:21:12 CEST je Hans Verkuil napisal(a):
+>> On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+>>> These helpers are used by stateless codecs when they support multiple
+>>> slices per frame and hold capture buffer flag is set. It's expected that
+>>> all such codecs will use this code.
+>>>
+>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>>> ---
+>>>
+>>>  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 ++++++++++++++++++++++++++
+>>>  include/media/v4l2-mem2mem.h           |  4 +++
+>>>  2 files changed, 39 insertions(+)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>> b/drivers/media/v4l2-core/v4l2-mem2mem.c index 19937dd3c6f6..2677a07e4c9b
+>>> 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>> @@ -1154,6 +1154,41 @@ int v4l2_m2m_ioctl_try_decoder_cmd(struct file
+>>> *file, void *fh,> 
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_try_decoder_cmd);
+>>>
+>>> +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
+>>> +					     struct 
+> v4l2_decoder_cmd *dc)
+>>> +{
+>>> +	if (dc->cmd != V4L2_DEC_CMD_FLUSH)
+>>> +		return -EINVAL;
+>>> +
+>>> +	dc->flags = 0;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_try_decoder_cmd);
+>>> +
+>>> +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+>>> +					 struct 
+> v4l2_decoder_cmd *dc)
+>>> +{
+>>> +	struct v4l2_fh *fh = file->private_data;
+>>> +	struct vb2_v4l2_buffer *out_vb, *cap_vb;
+>>> +	int ret;
+>>> +
+>>> +	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, dc);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	out_vb = v4l2_m2m_last_src_buf(fh->m2m_ctx);
+>>> +	cap_vb = v4l2_m2m_last_dst_buf(fh->m2m_ctx);
+>>
+>> I think this should be v4l2_m2m_next_dst_buf. If multiple capture buffers
+>> were queued up, then it can only be the first capture buffer that can be
+>> 'HELD'.
+> 
+> I'm pretty sure v4l2_m2m_last_dst_buf() is correct. We want to affect last job 
+> in the queue, all jobs before are already properly handled by comparing 
+> timestamps.
 
-Signed-off-by: Parth Shah <parth@linux.ibm.com>
----
- kernel/sched/core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+You're absolutely right.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ee5980b4e150..6e1ae8046fe0 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3141,6 +3141,9 @@ static struct rq *finish_task_switch(struct task_struct *prev)
- 		mmdrop(mm);
- 	}
- 	if (unlikely(prev_state == TASK_DEAD)) {
-+		if (unlikely(prev->flags & PF_CAN_BE_PACKED))
-+			turbo_sched_put();
-+
- 		if (prev->sched_class->task_dead)
- 			prev->sched_class->task_dead(prev);
- 
-@@ -4793,6 +4796,10 @@ static int __sched_setscheduler(struct task_struct *p,
- 
- 	prev_class = p->sched_class;
- 
-+	/* Refcount tasks classified as a small background task */
-+	if (task_packing_flag != (p->flags & PF_CAN_BE_PACKED))
-+		(task_packing_flag) ? turbo_sched_get() : turbo_sched_put();
-+
- 	__setscheduler(rq, p, attr, pi);
- 	__setscheduler_uclamp(p, attr);
- 
--- 
-2.17.1
+> 
+>>
+>> This might solve the race condition you saw with ffmpeg.
+> 
+> This actually doesn't change anything. ffmpeg currently queues only one job and 
+> then waits until it's executed. In this case it actually doesn't matter if 
+> "last" or "next" variant is used.
+
+Can you debug this a bit further? I don't want to merge this unless we know what's
+going wrong with ffmpeg.
+
+I suspect it is a race condition. I'll reply to patch 6/6 with more info.
+
+Regards,
+
+	Hans
+
+> 
+> Best regards,
+> Jernej
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>> +
+>>> +	if (out_vb)
+>>> +		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+>>> +	else if (cap_vb && cap_vb->is_held)
+>>> +		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_decoder_cmd);
+>>> +
+>>>
+>>>  /*
+>>>  
+>>>   * v4l2_file_operations helpers. It is assumed here same lock is used
+>>>   * for the output and the capture buffer queue.
+>>>
+>>> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
+>>> index c9fa96c8eed1..8ae2f56c7fa3 100644
+>>> --- a/include/media/v4l2-mem2mem.h
+>>> +++ b/include/media/v4l2-mem2mem.h
+>>> @@ -714,6 +714,10 @@ int v4l2_m2m_ioctl_try_encoder_cmd(struct file *file,
+>>> void *fh,> 
+>>>  				   struct v4l2_encoder_cmd *ec);
+>>>  
+>>>  int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
+>>>  
+>>>  				   struct v4l2_decoder_cmd *dc);
+>>>
+>>> +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
+>>> +					     struct 
+> v4l2_decoder_cmd *dc);
+>>> +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
+>>> +					 struct 
+> v4l2_decoder_cmd *dc);
+>>>
+>>>  int v4l2_m2m_fop_mmap(struct file *file, struct vm_area_struct *vma);
+>>>  __poll_t v4l2_m2m_fop_poll(struct file *file, poll_table *wait);
+> 
+> 
+> 
+> 
 
