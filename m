@@ -2,351 +2,173 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087E9ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63325ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C736720684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D22B20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6pA7nAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfJGSbG (ORCPT
+        id S1729365AbfJGScM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:31:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55048 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728031AbfJGSbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:31:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 929B4B035;
-        Mon,  7 Oct 2019 18:31:00 +0000 (UTC)
+        Mon, 7 Oct 2019 14:32:12 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45831 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfJGScL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:32:11 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c21so20597725qtj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 11:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3rnbgFnuJ98U2STRa9CikKX4jXSjq4U8XYYbtubS7J8=;
+        b=O6pA7nAG8ZfanaMkDBZItX1pIMYhKT0fhFjw90lBs34r8Mshe0qIxKB3Dci2mITiih
+         NVdOqeJQG36TF2YAvneq/c7wSpf76fxc7uHl7t9HI054TaKztCb5MzYkgAcKI/53yfxs
+         izY/eF/PtzBbiTR2lNCjzgP6UDu9C/EsvlqJXR9ZHAOshoG8iN569Dnq6Xjs/+adR9V0
+         Pvba105YGdGX4fWVtjuMzYQCY0TzOjrbdqOSxZtJgz2kiLeLbXD9SAeIK2pLREm7ymGa
+         8ON88jhIv7kdPyFfZcTrQU5WU9DTyolHkZ/OEPJ5ezEWhMP0FM4ttET1k/Yzk1Yjg1jv
+         isHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3rnbgFnuJ98U2STRa9CikKX4jXSjq4U8XYYbtubS7J8=;
+        b=LXf5Smbx9U1Z5fKE7N/3guOeVz6Ho0Ln229wJ+MNvlBsXzIysRmtEmC9rsPZ7aAPcf
+         9qgE4+qWSzRdrxZuRNXxoH5mXpmheGl+FBIey3rFROCcFtJBVaLiGdL5Njootk1yKdFg
+         ECw7oCYVswXLMhx2Jdu/RMgMhUrHCemxEoWuihqKLqYdta/FB2g5o7qZYh17iOlJ+BLY
+         k8J/2pUibqQtafQ+8Vb6+Yi3iq1YNjt3/1O9cZSA6RJt/ZZnAFhsZd6in6pr97K6KoCJ
+         E5HRE1npB5luHaDW0h67yVqpZq4pT86P2nwRNGCOWLsgRIX01Zb8/ckweFcXYmVeXNUy
+         CuBg==
+X-Gm-Message-State: APjAAAXSKtjzzrQaKCwYgoRDp8vjB3lHWYx1mkORM3mx6Mx5K1V2is7g
+        dX37yFluzPTRT0NS5XjSqkg=
+X-Google-Smtp-Source: APXvYqwydeqYAkBJGUUDSKOHyrPiENQl/bxwRYRR4luRVdClTnpwRFsFOPSgbyJfTuIIYZmDcmE81g==
+X-Received: by 2002:aed:21d1:: with SMTP id m17mr32105904qtc.17.1570473129811;
+        Mon, 07 Oct 2019 11:32:09 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n21sm8251568qka.83.2019.10.07.11.32.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 11:32:09 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 7 Oct 2019 14:32:07 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Subject: Re: ehci-pci breakage with dma-mapping changes in 5.4-rc2
+Message-ID: <20191007183206.GA13589@rani.riverdale.lan>
+References: <20191007022454.GA5270@rani.riverdale.lan>
+ <20191007073448.GA882@lst.de>
+ <20191007175430.GA32537@rani.riverdale.lan>
+ <20191007175528.GA21857@lst.de>
+ <20191007175630.GA28861@infradead.org>
+ <20191007175856.GA42018@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 07 Oct 2019 20:30:59 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, hev <r@hev.cc>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Eric Wong <e@80x24.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v4] fs/epoll: Remove unnecessary wakeups of nested
- epoll that in ET mode
-In-Reply-To: <9ceee722-d2a8-b182-c95a-e7a873b08ca1@akamai.com>
-References: <20190925015603.10939-1-r@hev.cc>
- <20190927192915.6ec24ad706258de99470a96e@linux-foundation.org>
- <c0a96dd89d0a361d8061b8c356b57ed2@suse.de>
- <9ca02c9b-85b7-dced-9c82-1fc453c49b8a@akamai.com>
- <9a82925ff7dfc314d36b3d36e54316a8@suse.de>
- <9ceee722-d2a8-b182-c95a-e7a873b08ca1@akamai.com>
-Message-ID: <cda953c3fec34fe14b231c30c75e57a1@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: multipart/mixed; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
+In-Reply-To: <20191007175856.GA42018@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-07 18:42, Jason Baron wrote:
-> On 10/7/19 6:54 AM, Roman Penyaev wrote:
->> On 2019-10-03 18:13, Jason Baron wrote:
->>> On 9/30/19 7:55 AM, Roman Penyaev wrote:
->>>> On 2019-09-28 04:29, Andrew Morton wrote:
->>>>> On Wed, 25 Sep 2019 09:56:03 +0800 hev <r@hev.cc> wrote:
->>>>> 
->>>>>> From: Heiher <r@hev.cc>
->>>>>> 
->>>>>> Take the case where we have:
->>>>>> 
->>>>>>         t0
->>>>>>          | (ew)
->>>>>>         e0
->>>>>>          | (et)
->>>>>>         e1
->>>>>>          | (lt)
->>>>>>         s0
->>>>>> 
->>>>>> t0: thread 0
->>>>>> e0: epoll fd 0
->>>>>> e1: epoll fd 1
->>>>>> s0: socket fd 0
->>>>>> ew: epoll_wait
->>>>>> et: edge-trigger
->>>>>> lt: level-trigger
->>>>>> 
->>>>>> We only need to wakeup nested epoll fds if something has been 
->>>>>> queued
->>>>>> to the
->>>>>> overflow list, since the ep_poll() traverses the rdllist during
->>>>>> recursive poll
->>>>>> and thus events on the overflow list may not be visible yet.
->>>>>> 
->>>>>> Test code:
->>>>> 
->>>>> Look sane to me.  Do you have any performance testing results which
->>>>> show a benefit?
->>>>> 
->>>>> epoll maintainership isn't exactly a hive of activity nowadays :(
->>>>> Roman, would you please have time to review this?
->>>> 
->>>> So here is my observation: current patch does not fix the described
->>>> problem (double wakeup) for the case, when new event comes exactly
->>>> to the ->ovflist.  According to the patch this is the desired 
->>>> intention:
->>>> 
->>>>    /*
->>>>     * We only need to wakeup nested epoll fds if something has been
->>>> queued
->>>>     * to the overflow list, since the ep_poll() traverses the 
->>>> rdllist
->>>>     * during recursive poll and thus events on the overflow list may
->>>> not be
->>>>     * visible yet.
->>>>     */
->>>>     if (nepi != NULL)
->>>>        pwake++;
->>>> 
->>>>     ....
->>>> 
->>>>     if (pwake == 2)
->>>>        ep_poll_safewake(&ep->poll_wait);
->>>> 
->>>> 
->>>> but this actually means that we repeat the same behavior (double 
->>>> wakeup)
->>>> but only for the case, when event comes to the ->ovflist.
->>>> 
->>>> How to reproduce? Can be easily done (ok, not so easy but it is 
->>>> possible
->>>> to try): to the given userspace test we need to add one more socket 
->>>> and
->>>> immediately fire the event:
->>>> 
->>>>     e.events = EPOLLIN;
->>>>     if (epoll_ctl(efd[1], EPOLL_CTL_ADD, s2fd[0], &e) < 0)
->>>>        goto out;
->>>> 
->>>>     /*
->>>>      * Signal any fd to let epoll_wait() to call 
->>>> ep_scan_ready_list()
->>>>      * in order to "catch" it there and add new event to ->ovflist.
->>>>      */
->>>>      if (write(s2fd[1], "w", 1) != 1)
->>>>         goto out;
->>>> 
->>>> That is done in order to let the following epoll_wait() call to 
->>>> invoke
->>>> ep_scan_ready_list(), where we can "catch" and insert new event 
->>>> exactly
->>>> to the ->ovflist. In order to insert event exactly in the correct 
->>>> list
->>>> I introduce artificial delay.
->>>> 
->>>> Modified test and kernel patch is below.  Here is the output of the
->>>> testing tool with some debug lines from kernel:
->>>> 
->>>>   # ~/devel/test/edge-bug
->>>>   [   59.263178] ### sleep 2
->>>>   >> write to sock
->>>>   [   61.318243] ### done sleep
->>>>   [   61.318991] !!!!!!!!!!! ep_poll_safewake(&ep->poll_wait);
->>>> events_in_rdllist=1, events_in_ovflist=1
->>>>   [   61.321204] ### sleep 2
->>>>   [   63.398325] ### done sleep
->>>>   error: What?! Again?!
->>>> 
->>>> First epoll_wait() call (ep_scan_ready_list()) observes 2 events
->>>> (see "!!!!!!!!!!! ep_poll_safewake" output line), exactly what we
->>>> wanted to achieve, so eventually ep_poll_safewake() is called again
->>>> which leads to double wakeup.
->>>> 
->>>> In my opinion current patch as it is should be dropped, it does not
->>>> fix the described problem but just hides it.
->>>> 
->>>> --
->> 
->> Hi Jason,
->> 
->>> 
->>> Yes, there are 2 wakeups in the test case you describe, but if the
->>> second event (write to s1fd) gets queued after the first call to
->>> epoll_wait(), we are going to get 2 wakeups anyways.
->> 
->> Yes, exactly, for this reason I print out the number of events 
->> observed
->> on first wait, there should be 1 (rdllist) and 1 (ovflist), otherwise
->> this is another case, when second event comes exactly after first
->> wait, which is legitimate wakeup.
->> 
->>> So yes, there may
->>> be a slightly bigger window with this patch for 2 wakeups, but its 
->>> small
->>> and I tried to be conservative with the patch - I'd rather get an
->>> occasional 2nd wakeup then miss one. Trying to debug missing wakeups
->>> isn't always fun...
->>> 
->>> That said, the reason for propagating events that end up on the 
->>> overflow
->>> list was to prevent the race of the wakee not seeing events because 
->>> they
->>> were still on the overflow list. In the testcase, imagine if there 
->>> was a
->>> thread doing epoll_wait() on efd[0], and then a write happends on 
->>> s1fd.
->>> I thought it was possible then that a 2nd thread doing epoll_wait() 
->>> on
->>> efd[1], wakes up, checks efd[0] and sees no events because they are
->>> still potentially on the overflow list. However, I think that case is
->>> not possible because the thread doing epoll_wait() on efd[0] is going 
->>> to
->>> have the ep->mtx, and thus when the thread wakes up on efd[1], its 
->>> going
->>> to have to be ordered because its also grabbing the ep->mtx 
->>> associated
->>> with efd[0].
->>> 
->>> So I think its safe to do the following if we want to go further than
->>> the proposed patch, which is what you suggested earlier in the thread
->>> (minus keeping the wakeup on ep->wq).
->> 
->> Then I do not understand why we need to keep ep->wq wakeup?
->> @wq and @poll_wait are almost the same with only one difference:
->> @wq is used when you sleep on it inside epoll_wait() and the other
->> is used when you nest epoll fd inside epoll fd.  Either you wake
->> both up either you don't this at all.
->> 
->> ep_poll_callback() does wakeup explicitly, ep_insert() and ep_modify()
->> do wakeup explicitly, so what are the cases when we need to do wakeups
->> from ep_scan_ready_list()?
+
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+On Mon, Oct 07, 2019 at 01:58:57PM -0400, Arvind Sankar wrote:
+> On Mon, Oct 07, 2019 at 10:56:30AM -0700, Christoph Hellwig wrote:
+> > On Mon, Oct 07, 2019 at 07:55:28PM +0200, Christoph Hellwig wrote:
+> > > On Mon, Oct 07, 2019 at 01:54:32PM -0400, Arvind Sankar wrote:
+> > > > It doesn't boot with the patch. Won't it go
+> > > > 	dma_get_required_mask
+> > > > 	-> intel_get_required_mask
+> > > > 	-> iommu_need_mapping
+> > > > 	-> dma_get_required_mask
+> > > > ?
+> > > > 
+> > > > Should the call to dma_get_required_mask in iommu_need_mapping be
+> > > > replaced with dma_direct_get_required_mask on top of your patch?
+> > > 
+> > > Yes, sorry.
+> > 
+> > Actually my patch already calls dma_direct_get_required_mask.
+> > How did you get the loop?
 > 
-> Hi Roman,
-> 
-> So the reason I was saying not to drop the ep->wq wakeup was that I was
-> thinking about a usecase where you have multi-threads say thread A and
-> thread B which are doing epoll_wait() on the same epfd. Now, the 
-> threads
-> both call epoll_wait() and are added as exclusive to ep->wq. Now a 
-> bunch
-> of events happen and thread A is woken up. However, thread A may only
-> process a subset of the events due to its 'maxevents' parameter. In 
-> that
-> case, I was thinking that the wakeup on ep->wq might be helpful, 
-> because
-> in the absence of subsequent events, thread B can now start processing
-> the rest, instead of waiting for the next event to be queued.
-> 
-> However, I was thinking about the state of things before:
-> 86c0517 fs/epoll: deal with wait_queue only once
-> 
-> Before that patch, thread A would have been removed from eq->wq before
-> the wakeup call, thus waking up thread B. However, now that thread A
-> stays on the queue during the call to ep_send_events(), I believe the
-> wakeup would only target thread A, which doesn't help since its already
-> checking for events. So given the state of things I think you are right
-> in that its not needed. However, I wonder if not removing from the
-> ep->wq affects the multi-threaded case I described. Its been around
-> since 5.0, so probably not, but it would be a more subtle performance
-> difference.
+> The function iommu_need_mapping (not changed by your patch) calls
+> dma_get_required_mask internally, to check whether the device's dma_mask
+> is big enough or not. That's the call I was asking whether it needs to
+> be changed.
 
-Now I understand what you mean. You want to prevent "idling" of events,
-while thread A is busy with the small portion of events (portion is 
-equal
-to maxevents).  On next iteration thread A will pick up the rest, no 
-doubts,
-but would be nice to give a chance to thread B immediately to deal with 
-the
-rest.  Ok, makes sense.
+Yeah the attached patch seems to fix it.
 
-But what if to make this wakeup explicit if we have more events to 
-process?
-(nothing is tested, just a guess)
+--ReaqsoxgOBHFXBhH
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment; filename="0001-iommu-vt-d-Return-the-correct-dma-mask-when-we-are-b.patch"
 
-@@ -255,6 +255,7 @@ struct ep_pqueue {
-  struct ep_send_events_data {
-         int maxevents;
-         struct epoll_event __user *events;
-+       bool have_more;
-         int res;
-  };
-@@ -1783,14 +1768,17 @@ static __poll_t ep_send_events_proc(struct 
-eventpoll *ep, struct list_head *head
-  }
+From 074e8cc145dde514427c40124913a90c4552dd6e Mon Sep 17 00:00:00 2001
+From: Arvind Sankar <nivedita@alum.mit.edu>
+Date: Mon, 7 Oct 2019 14:19:12 -0400
+Subject: [PATCH] iommu/vt-d: Return the correct dma mask when we are bypassing
+ the IOMMU
 
-  static int ep_send_events(struct eventpoll *ep,
--                         struct epoll_event __user *events, int 
-maxevents)
-+                         struct epoll_event __user *events, int 
-maxevents,
-+                         bool *have_more)
-  {
--       struct ep_send_events_data esed;
--
--       esed.maxevents = maxevents;
--       esed.events = events;
-+       struct ep_send_events_data esed = {
-+               .maxevents = maxevents,
-+               .events = events,
-+       };
+We must return a mask covering the full physical RAM when bypassing the
+IOMMU mapping. Also, in iommu_need_mapping, we need to check using
+dma_direct_get_required_mask to ensure that the device's dma_mask can
+cover physical RAM before deciding to bypass IOMMU mapping.
 
-         ep_scan_ready_list(ep, ep_send_events_proc, &esed, 0, false);
-+       *have_more = esed.have_more;
+Fixes: 249baa547901 ("dma-mapping: provide a better default ->get_required_mask")
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ drivers/iommu/intel-iommu.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 3f974919d3bd..79e35b3180ac 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3471,7 +3471,7 @@ static bool iommu_need_mapping(struct device *dev)
+ 		if (dev->coherent_dma_mask && dev->coherent_dma_mask < dma_mask)
+ 			dma_mask = dev->coherent_dma_mask;
+ 
+-		if (dma_mask >= dma_get_required_mask(dev))
++		if (dma_mask >= dma_direct_get_required_mask(dev))
+ 			return false;
+ 
+ 		/*
+@@ -3775,6 +3775,13 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
+ 	return nelems;
+ }
+ 
++static u64 intel_get_required_mask(struct device *dev)
++{
++	if (!iommu_need_mapping(dev))
++		return dma_direct_get_required_mask(dev);
++	return DMA_BIT_MASK(32);
++}
 +
-         return esed.res;
-  }
-
-@@ -1827,7 +1815,7 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-  {
-         int res = 0, eavail, timed_out = 0;
-         u64 slack = 0;
--       bool waiter = false;
-+       bool waiter = false, have_more;
-         wait_queue_entry_t wait;
-         ktime_t expires, *to = NULL;
-
-@@ -1927,7 +1915,8 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-          * more luck.
-          */
-         if (!res && eavail &&
--           !(res = ep_send_events(ep, events, maxevents)) && 
-!timed_out)
-+           !(res = ep_send_events(ep, events, maxevents, &have_more)) 
-&&
-+           !timed_out)
-                 goto fetch_events;
-
-         if (waiter) {
-@@ -1935,6 +1924,12 @@ static int ep_poll(struct eventpoll *ep, struct 
-epoll_event __user *events,
-                 __remove_wait_queue(&ep->wq, &wait);
-                 spin_unlock_irq(&ep->wq.lock);
-         }
-+       /*
-+        * We were not able to process all the events, so immediately
-+        * wakeup other waiter.
-+        */
-+       if (res > 0 && have_more && waitqueue_active(&ep->wq))
-+               wake_up(&ep->wq);
-
-         return res;
-  }
+ static const struct dma_map_ops intel_dma_ops = {
+ 	.alloc = intel_alloc_coherent,
+ 	.free = intel_free_coherent,
+@@ -3787,6 +3794,7 @@ static const struct dma_map_ops intel_dma_ops = {
+ 	.dma_supported = dma_direct_supported,
+ 	.mmap = dma_common_mmap,
+ 	.get_sgtable = dma_common_get_sgtable,
++	.get_required_mask = intel_get_required_mask,
+ };
+ 
+ static void
+-- 
+2.21.0
 
 
-PS. So what we decide with the original patch?  Remove the whole branch?
-
---
-Roman
-
-
-
-
+--ReaqsoxgOBHFXBhH--
