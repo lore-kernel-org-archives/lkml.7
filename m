@@ -2,112 +2,130 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E591BC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC71C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 03:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DD820862
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 02:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782EF2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 03:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pnBW4+yN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfJGCut (ORCPT
+        id S1726908AbfJGDAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 22:50:49 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:60916 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfJGCut (ORCPT
+        Sun, 6 Oct 2019 23:00:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42570 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfJGDAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 22:50:49 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iHJ6k-0006NC-GN; Mon, 07 Oct 2019 02:50:46 +0000
-Date:   Mon, 7 Oct 2019 03:50:46 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191007025046.GL26530@ZenIV.linux.org.uk>
-References: <20191006222046.GA18027@roeck-us.net>
- <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+        Sun, 6 Oct 2019 23:00:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z12so7279347pgp.9
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Oct 2019 20:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vTvh0FQZ/KhCJ68up9YEl9SX+BeG73ASVfHO5zvMDJM=;
+        b=pnBW4+yNeJiOvFev/FBahaxuA/+IKA/Rf8nRcxzB4pKZONAC2XLm/hnyyDBsGjehcg
+         wm8TGc/FQXnVFemowR75iS6+8TAVudcc/tBCLYGtCXx0I1phqvpnwlxx9bhiQ/VBNyDZ
+         6MWPBECh8S8kw6mPxsNixJ8AblZckIusrtc3cmIfxg98IubDa+fy0ldWi3aulLmVn7eF
+         GJ82B37gvl+J/1leoRKWvb0nnUSMCyyYRD9H1bCgrmtNCKMKyTljCRAoia6v2BdX0ReQ
+         vO6yfijhIUUPCY2Dk/tRMTrIVZBp5+LUv+qtEd07neyox/ANflXgDb7m9wQf1nKId045
+         OKsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=vTvh0FQZ/KhCJ68up9YEl9SX+BeG73ASVfHO5zvMDJM=;
+        b=frW3aAQaW3XMfJf2cCxzJuCn/LYlixkq4556MS3VyYU1aM7WOaYkqDgoiJeoa1Rwpk
+         MsqFgZmMKOQyo7cHtG0A3qUkMVusTYd1/nF8kIRgqNJV9/df4RuNe+pyCUJWgDKtRc1i
+         LYry08GLKbIdGUDJj83mSb2qTeOTYGrjkRoFxCKse6B9OA85/0ICmH3ZS4SMIuVp5FIR
+         n2nQF79ItW8czYnSWZz+wfjPH9Mi6FfKBM28pGbWdHsaBqgt5CY9TjCQxb66nBbfYmno
+         XA37RDmMWFi3pRjBYIV3wf3zTlsYuioRMJlfCkcCsLWtPi+kLqXzG8/VCZ5AqAVnT2Gs
+         FIhg==
+X-Gm-Message-State: APjAAAXRiAsDvU8aPTF5x4kdD5LE2FbRm9my62BUcWI5YWUX0pQxVBTm
+        vndPhy6Y7bGw2hkzZ9on38+yFA==
+X-Google-Smtp-Source: APXvYqw1T1sFm6H6Vjb3uGu/gG/MP1nBY1c5P92A6GhL0ICys7/bELhWv37NMbR6VjUTvd442kiViQ==
+X-Received: by 2002:a17:90a:17cb:: with SMTP id q69mr30314340pja.135.1570417241029;
+        Sun, 06 Oct 2019 20:00:41 -0700 (PDT)
+Received: from linaro.org ([121.95.100.191])
+        by smtp.googlemail.com with ESMTPSA id u9sm11554379pjb.4.2019.10.06.20.00.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 06 Oct 2019 20:00:40 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 12:04:38 +0900
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org,
+        frowand.list@gmail.com
+Cc:     james.morse@arm.com, kexec@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] arm64: kexec_file: add kdump
+Message-ID: <20191007030436.GW18778@linaro.org>
+Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org,
+        frowand.list@gmail.com, james.morse@arm.com,
+        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190912060150.10818-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190912060150.10818-1-takahiro.akashi@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 07:06:19PM -0700, Linus Torvalds wrote:
-> On Sun, Oct 6, 2019 at 6:24 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > Ugh...  I wonder if it would be better to lift STAC/CLAC out of
-> > raw_copy_to_user(), rather than trying to reinvent its guts
-> > in readdir.c...
+Reminder.
+This patch set is still applicable to v5.4-rc although there is one minor
+conflict in a comment; It is trivial and can easily be fixed.
+
+While this patch works on v5.4, we cannot read a generated core dump
+file with crash command, even, of the latest v7.2.7. This is due to
+a newly added 52-bit address support (and related changes in mm).
+The issue, as a nature of kdump, does exist with *legacy*
+(non-kexec_file_load-based) kdump, too.
+(We will need a kernel patch as well as patches on crash to fix the issue
+and some guys have already been working.)
+
+So I'd like to request you to keep reviewing my patch.
+
+Thanks,
+-Takahiro Akashi
+
+
+On Thu, Sep 12, 2019 at 03:01:47PM +0900, AKASHI Takahiro wrote:
+> This is the last piece of my kexec_file_load implementation for arm64.
+> It is now ready for being merged as some relevant patch to dtc/libfdt[1]
+> has finally been integrated in v5.3-rc1.
+> (Nothing changed since kexec_file v16[2] except adding Patch#1 and #2.)
 > 
-> Yeah, I suspect that's the best option.
+> Patch#1 and #2 are preliminary patches for libfdt component.
+> Patch#3 is to add kdump support.
 > 
-> Do something like
+> [1] commit 9bb9c6a110ea ("scripts/dtc: Update to upstream version
+>     v1.5.0-23-g87963ee20693"), in particular
+> 	7fcf8208b8a9 libfdt: add fdt_append_addrrange()
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612641.html
 > 
->  - lift STAC/CLAC out of raw_copy_to_user
+> AKASHI Takahiro (3):
+>   libfdt: define UINT32_MAX in libfdt_env.h
+>   libfdt: include fdt_addresses.c
+>   arm64: kexec_file: add crash dump support
 > 
->  - rename it to unsafe_copy_to_user
+>  arch/arm64/include/asm/kexec.h         |   4 +
+>  arch/arm64/kernel/kexec_image.c        |   4 -
+>  arch/arm64/kernel/machine_kexec_file.c | 105 ++++++++++++++++++++++++-
+>  include/linux/libfdt_env.h             |   3 +
+>  lib/Makefile                           |   2 +-
+>  lib/fdt_addresses.c                    |   2 +
+>  6 files changed, 112 insertions(+), 8 deletions(-)
+>  create mode 100644 lib/fdt_addresses.c
 > 
->  - create a new raw_copy_to_user that is just unsafe_copy_to_user()
-> with the STAC/CLAC around it.
+> -- 
+> 2.21.0
 > 
-> and the end result would actually be cleanert than what we have now
-> (which duplicates that STAC/CLAC for each size case etc).
-> 
-> And then for the "architecture doesn't have user_access_begin/end()"
-> fallback case, we just do
-> 
->    #define unsafe_copy_to_user raw_copy_to_user
-
-Callers of raw_copy_to_user():
-arch/hexagon/mm/uaccess.c:27:           uncleared = raw_copy_to_user(dest, &empty_zero_page, PAGE_SIZE);
-arch/hexagon/mm/uaccess.c:34:           count = raw_copy_to_user(dest, &empty_zero_page, count);
-arch/powerpc/kvm/book3s_64_mmu_radix.c:68:              ret = raw_copy_to_user(to, from, n);
-arch/s390/include/asm/uaccess.h:150:    size = raw_copy_to_user(ptr, x, size);
-include/asm-generic/uaccess.h:145:      return unlikely(raw_copy_to_user(ptr, x, size)) ? -EFAULT : 0;
-include/linux/uaccess.h:93:     return raw_copy_to_user(to, from, n);
-include/linux/uaccess.h:102:    return raw_copy_to_user(to, from, n);
-include/linux/uaccess.h:131:            n = raw_copy_to_user(to, from, n);
-lib/iov_iter.c:142:             n = raw_copy_to_user(to, from, n);
-lib/usercopy.c:28:              n = raw_copy_to_user(to, from, n);
-
-
-Out of those, only __copy_to_user_inatomic(), __copy_to_user(),
-_copy_to_user() and iov_iter.c:copyout() can be called on
-any architecture.
-
-The last two should just do user_access_begin()/user_access_end()
-instead of access_ok().  __copy_to_user_inatomic() has very few callers as well:
-
-arch/mips/kernel/unaligned.c:1307:                      res = __copy_to_user_inatomic(addr, fpr, sizeof(*fpr));
-drivers/gpu/drm/i915/i915_gem.c:345:    unwritten = __copy_to_user_inatomic(user_data,
-lib/test_kasan.c:471:   unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-mm/maccess.c:98:        ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
-
-So few, in fact, that I wonder if we want to keep it at all; the only
-thing stopping me from "let's remove it" is that I don't understand
-the i915 side of things.  Where does it do an equivalent of access_ok()?
-
-And mm/maccess.c one is __probe_kernel_write(), so presumably we don't
-want stac/clac there at all...
-
-So do we want to bother with separation between raw_copy_to_user() and
-unsafe_copy_to_user()?  After all, __copy_to_user() also has only few
-callers, most of them in arch/*
-
-I'll take a look into that tomorrow - half-asleep right now...
