@@ -2,154 +2,86 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9046AECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB20C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D6A2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570454669;
-	bh=VihV6dbAFqYapoc2NQzCD6WaB/LSQjIdFqbcjmbSvH4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=AdI2JlgsImny3/lELMvPBCz5KGW7r5HWZQ2tJtT40TIzsIbFBTWC+HmbR6o1gFZbb
-	 K8MvA1O0+mzfsucyY4dTrvZHX1NWfT4/gXS4l+pNhjax+ji/YwNoZMpyKkuAVIfFCW
-	 lCnns+dHzPkHQv1A7VGNV+6uUrMRoefz3czdwThY=
+	by mail.kernel.org (Postfix) with ESMTP id B15702173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfJGNY2 (ORCPT
+        id S1728167AbfJGNZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60484 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 09:25:15 -0400
+Received: from mga17.intel.com ([192.55.52.151]:55469 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfJGNY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:24:28 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727324AbfJGNZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 09:25:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 06:25:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
+   d="scan'208";a="206409797"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Oct 2019 06:25:13 -0700
+Received: from [10.251.30.58] (kliang2-mobl.ccr.corp.intel.com [10.251.30.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57A5B2084D;
-        Mon,  7 Oct 2019 13:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570454656;
-        bh=VihV6dbAFqYapoc2NQzCD6WaB/LSQjIdFqbcjmbSvH4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zqA6UiTXH1B2jUHHJ7cyZ2HETPfjBI5GZ7X74v1prqwaIHNu2sNw+CCVDmfs4r24i
-         dCWhA5QhGg7SpBELP4QjMEZc5I3exypt1HpSigICcpmCJLgE1fUwojjrefSUxT5SA9
-         2sj0tITXpHw7U4pvJFajGOQh2FmfyD1XXetT6BZo=
-Date:   Mon, 7 Oct 2019 08:24:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Message-ID: <20191007132414.GA19294@google.com>
+        by linux.intel.com (Postfix) with ESMTPS id 9C5EF5803E4;
+        Mon,  7 Oct 2019 06:25:11 -0700 (PDT)
+Subject: Re: [PATCH 1/3] perf/core: Provide a kernel-internal interface to
+ recalibrate event period
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Like Xu <like.xu@linux.intel.com>, kvm@vger.kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, peterz@infradead.org,
+        Jim Mattson <jmattson@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+References: <20190930072257.43352-1-like.xu@linux.intel.com>
+ <20190930072257.43352-2-like.xu@linux.intel.com>
+ <6439df1c-df4a-9820-edb2-0ff41b581d37@redhat.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <e2b00b05-a95a-3d03-7238-267c642a1fa0@linux.intel.com>
+Date:   Mon, 7 Oct 2019 09:25:10 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6439df1c-df4a-9820-edb2-0ff41b581d37@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
-> 
-> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
-> 
-> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
-> but the current code misses the pci_legacy_resume_early() path, so the
-> state remains in PCI_UNKNOWN in that path. As a result, in the resume
-> phase of hibernation, this causes an error for the Mellanox VF driver,
-> which fails to enable MSI-X because pci_msi_supported() is false due
-> to dev->current_state != PCI_D0:
-> 
-> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
-> mlx4_core a6d1:00:02.0: Sending reset
-> mlx4_core a6d1:00:02.0: Sending vhcr0
-> mlx4_core a6d1:00:02.0: HCA minimum page size:512
-> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
-> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
-> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
-> PM: Device a6d1:00:02.0 failed to thaw: error -95
-> 
-> To be more accurate, the "resume" phase means the "thaw" callbacks which
-> run before the system enters hibernation: when the user runs the command
-> "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
-> all the devices and creates a hibernation image, then the kernel "thaws"
-> the devices including the disk/NIC, writes the memory to the disk, and
-> powers down. This patch fixes the error message for the Mellanox VF driver
-> in this phase.
-> 
-> When the system starts again, a fresh kernel starts to run, and when the
-> kernel detects that a hibernation image was saved, the kernel "quiesces"
-> the devices, and then "restores" the devices from the saved image. In this
-> path:
-> device_resume_noirq() -> ... ->
->   pci_pm_restore_noirq() ->
->     pci_pm_default_resume_early() ->
->       pci_power_up() moves the device states back to PCI_D0. This path is
-> not broken and doesn't need my patch.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
-D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
-5839ee7389e8 was?
 
-Rafael, could you confirm?
+On 10/7/2019 8:01 AM, Paolo Bonzini wrote:
+> On 30/09/19 09:22, Like Xu wrote:
+>> -static int perf_event_period(struct perf_event *event, u64 __user *arg)
+>> +static int _perf_event_period(struct perf_event *event, u64 value)
+> 
+> __perf_event_period or perf_event_period_locked would be more consistent
+> with other code in Linux.
+> 
 
-> ---
-> 
-> changes in v2:
-> 	Updated the changelog with more details.
-> 
->  drivers/pci/pci-driver.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 36dbe960306b..27dfc68db9e7 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
->  			return error;
->  	}
->  
-> -	if (pci_has_legacy_pm_support(pci_dev))
-> -		return pci_legacy_resume_early(dev);
-> -
->  	/*
->  	 * pci_restore_state() requires the device to be in D0 (because of MSI
->  	 * restoration among other things), so force it into D0 in case the
->  	 * driver's "freeze" callbacks put it into a low-power state directly.
->  	 */
->  	pci_set_power_state(pci_dev, PCI_D0);
-> +
-> +	if (pci_has_legacy_pm_support(pci_dev))
-> +		return pci_legacy_resume_early(dev);
-> +
->  	pci_restore_state(pci_dev);
->  
->  	if (drv && drv->pm && drv->pm->thaw_noirq)
-> -- 
-> 2.19.1
-> 
+But that will be not consistent with current perf code. For example, 
+_perf_event_enable(), _perf_event_disable(), _perf_event_reset() and 
+_perf_event_refresh().
+Currently, The function name without '_' prefix is the one exported and 
+with lock. The function name with '_' prefix is the main body.
+
+If we have to use the "_locked" or "__", I think we'd better change the 
+name for other functions as well.
+
+Thanks,
+Kan
