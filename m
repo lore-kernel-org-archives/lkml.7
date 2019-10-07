@@ -2,183 +2,140 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA70C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89F7C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258DB20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W7kiBn3J"
+	by mail.kernel.org (Postfix) with ESMTP id B56DD20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbfJGPwu (ORCPT
+        id S1728459AbfJGPw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:52:50 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45184 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbfJGPwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:52:49 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o205so12064783oib.12
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=12ALqaDC3v3cYyVy/bFXTdcUuL6p/Xn/37qQBbhEtlY=;
-        b=W7kiBn3JKZJ9UvrWm0D0Jggm9a7qw6cZnjwdK2LrjfFklIQaBuacN5lUOFnNRlpR44
-         DXw2lBd6mHGZE7i983pHw+hNxvZHetZJRX/7cX2vDuaOkTc+R55u6DU2qsnRGunu+ykb
-         VWmLdmJvbMkSD6/Wt/N4fjdy3PhKXrV1yLIoOhfQGdT+l5BOzeeyAqzGejgLPG76WmQD
-         qvWDNuvUMByBhLdWXgjUF42xCkkW8lln8+ctqiXZFeLcc8Ap/gd0EGj/ZiCBMc8k8Go/
-         zJAbVv/lW/+Y0/P01LwE7UZ/RMYwgCksIEDtRRGbgGQXFx9V3MD/cEbvxG6ffdHLleUR
-         GqKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=12ALqaDC3v3cYyVy/bFXTdcUuL6p/Xn/37qQBbhEtlY=;
-        b=Xj5AXjZi4fT920eplJFw2E4v/veaa9f5/Z7+Prp4dA1AD+WzUqK5tX4vy83XOKQFum
-         s7vpypgBiXFuoRgHyLvsyi8TSlDgzVhg2YZjhswmjBVt90TXod2IQ6ie569HOOvDody3
-         1GHgmM7LgpR3r8S6WPn/nRbeBU/pppflr2UU2lhsQpXVd+3ENwg4cuR2FmPtIId3Rhgp
-         YyAySo7Lmzkye3Ykw/tjw7jRN+BA/kZqZi96h2ThOm5jUfd0VO5Xd9+IfzNl8WNzUmbG
-         LPe+Ddat3r8f+okK/fy8T5fKkPvZ0d+QUAQEtWAGdT0xXY4XRy9Vvus7oS8tqbIiQYay
-         NmGw==
-X-Gm-Message-State: APjAAAWW9g7/M7kkh+pTYEnwgHAQCfNorvmty2o46BlKqLtub622rX5B
-        L+I7wvuFvDVqBUxf7RX1HH7Ejg==
-X-Google-Smtp-Source: APXvYqwKCgvkl+v42MR98xVsK+56ACzjwkv7mGVEm9CDmaOTjQXqgUN3tU26IpVIlEadT1pxMzDXXw==
-X-Received: by 2002:aca:58c5:: with SMTP id m188mr18131347oib.74.1570463568088;
-        Mon, 07 Oct 2019 08:52:48 -0700 (PDT)
-Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
-        by smtp.gmail.com with ESMTPSA id 91sm4753211otn.36.2019.10.07.08.52.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 08:52:47 -0700 (PDT)
-Subject: Re: [PATCH 4.14 00/68] 4.14.148-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, ben.hutchings@codethink.co.uk,
-        stable@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, linux@roeck-us.net
-References: <20191006171108.150129403@linuxfoundation.org>
-From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Message-ID: <f952f3cb-42e0-af22-33e4-f08d995a6af7@linaro.org>
-Date:   Mon, 7 Oct 2019 10:52:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 7 Oct 2019 11:52:58 -0400
+Received: from muru.com ([72.249.23.125]:35610 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727912AbfJGPw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:52:58 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5F8B980A5;
+        Mon,  7 Oct 2019 15:53:29 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 08:52:52 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+Message-ID: <20191007155252.GQ5610@atomide.com>
+References: <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+ <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+ <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi,
 
-
-On 10/6/19 12:20 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.148 release.
-> There are 68 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+* H. Nikolaus Schaller <hns@goldelico.com> [191005 16:59]:
+> Hi all,
+> with the arrival of v5.4-rc1 some of Tony's sysc patches have arrived
+> upstream, so we do no longer need them here.
 > 
-> Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
-> Anything received after that time might be too late.
+> Therefore, I have rebased my drivers/staging/pvr driver [1] and fixed some
+> more issues:
+> * omap4 build only needs to distinguish between omap4420/30/60 and omap4470,
+>   because the latter has an sgx544 inside and the other sgx540
+>   This is solved by creating a new omap4470.dts
+> * I have added proper reg values and interrupts to the omap4 device
+>   tree node of the sgx (child node of the target-module)
+> * some updates to my sgxdump and sgxdemo scripts (assuming simple
+>   Debian Stretch rootfs)
+> * James Hilliard has contributed a fix for osfunc.c
+> * omap2plus also needs to be configured for STAGING and PREEMPT
+>   to be able to compile the driver
+> * I have added the __always_inline fix [2] which is needed for v5.4 with
+>   CONFIG_CC_OPTIMIZE_FOR_SIZE=y (which I are enabled on the Letux builds)
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.148-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
+> Unfortunately Tero's rstctrl patches did not yet make it upstream (or even
+> linux-next) so I also have a copy in this branch.
 > 
-> thanks,
+> Results of first testing are:
+> * OMAP3530 (OpenPandora, BeagleBoard C): fails with
+> [  559.247558] PVR_K:(Error): SysLocateDevices: platform_get_resource failed
 > 
-> greg k-h
+> * DM3730 (GTA04, BeagleBoard XM): kernel module loads
+> 
+> * OMAP4460 (Pandaboard ES): kernel module loads
+> 
+> * AM335x (BeagleBoneBlack): reports a problem with omap_reset_deassert:
+> [  204.246706] omap_reset_deassert: timedout waiting for gfx:0
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Please try with Tero's current github branch at github.com/t-kristo/linux-pm.git
+5.4-rc1-ipc from few days ago, the earlier versions had still issues.
 
-Summary
-------------------------------------------------------------------------
+> * OMAP5 (Pyra): fails to enable the clocks (did work with the previous version)
+> [  304.140363] clock-controller:clk:0000:0: failed to enable
+> [  304.147388] PVR_K:(Error): EnableSGXClocks: pm_runtime_get_sync failed (16)
 
-kernel: 4.14.148-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-4.14.y
-git commit: b970b501da0bee5eba4e61ea7d424adab428a165
-git describe: v4.14.147-69-gb970b501da0b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/build/v4.14.147-69-gb970b501da0b
+Hmm no idea what might be up with this one. Did some clkctrl clock
+fixes maybe cause a regression here? Tero do you have any ideas?
 
-No regressions (compared to build v4.14.147)
+> * OMAP5 with omap2plus_defconfig:
+> root@letux:~# echo on > $(find /sys -name control | grep \/5600)
+> [  213.490926] clock-controller:clk:0000:0: failed to enable
+> root@letux:~# 
+> 
+> * pvrsrvctl --start --no-module:
+>   reports (where the kernel module loads) that the uKernel does not run
+> 
+> So I have several ideas what the reasons for the problems on the non-omap5
+> devices could be:
+> * initial code may have some omap5 specific hack inside
+> * or has omap5 specific magic constants
+> * uKernel may "know" on which platform it runs and
+>   we would need differently patched user-space code
+>   for each one
+> * omap5 has a dual core sgx544 while the other
+>   have single core
+> * the register address translation is not yet correct and
+>   this inhibits communicating of the user-space libs
+>   with the uKernel
+> 
+> Maybe, if someone can point me to a complete and working BeagleBone source
+> tree (any kernel release) which makes use of 1.14.3699939 SDK, I could compare
+> code and address setup to find what makes the difference.
 
-No fixes (compared to build v4.14.147)
+Regards,
 
-Ran 23798 total tests in the following environments and test suites.
+Tony
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
-
-Greetings!
-
-Daniel Díaz
-daniel.diaz@linaro.org
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+> [1]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux-pvr
+> [2]: https://lkml.org/lkml/2019/10/2/201
