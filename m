@@ -2,120 +2,142 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB57ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99071C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4011B2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7583221721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfJGOty (ORCPT
+        id S1728918AbfJGOuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:49:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44534 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfJGOts (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:48 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUKQ-0006Ep-Qt; Mon, 07 Oct 2019 16:49:38 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8B87E1C0895;
-        Mon,  7 Oct 2019 16:49:34 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:34 -0000
-From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot: Provide memzero_explicit()
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191007134724.4019-1-hdegoede@redhat.com>
-References: <20191007134724.4019-1-hdegoede@redhat.com>
+        Mon, 7 Oct 2019 10:50:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35088 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728660AbfJGOuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:50:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 07:50:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
+   d="scan'208";a="192297760"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Oct 2019 07:50:12 -0700
+Date:   Mon, 7 Oct 2019 07:50:11 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 09/24] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20191007145011.GA18016@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-10-jarkko.sakkinen@linux.intel.com>
+ <20191005164408.GB25699@zn.tnic>
 MIME-Version: 1.0
-Message-ID: <157045977450.9978.18318761982949903126.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191005164408.GB25699@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Sat, Oct 05, 2019 at 06:44:08PM +0200, Borislav Petkov wrote:
+> On Tue, Sep 03, 2019 at 05:26:40PM +0300, Jarkko Sakkinen wrote:
+> > +/**
+> > + * __sgx_free_page - Free an EPC page
+> > + * @page:	pointer a previously allocated EPC page
+> > + *
+> > + * EREMOVE an EPC page and insert it back to the list of free pages.
+> > + *
+> > + * Return:
+> > + *   0 on success
+> > + *   SGX error code if EREMOVE fails
+> > + */
+> > +int __sgx_free_page(struct sgx_epc_page *page)
+> > +{
+> > +	struct sgx_epc_section *section = sgx_epc_section(page);
+> > +	int ret;
+> 
+> Shouldn't you be grabbing the lock here already?
+> 
+> Or nothing can happen to that page from another thread after you
+> ENCLS[EREMOVE] it and before it is added to the ->page_list of the
+> section?
 
-Commit-ID:     ee008a19f1c72c37ffa54326a592035dddb66fd6
-Gitweb:        https://git.kernel.org/tip/ee008a19f1c72c37ffa54326a592035dddb66fd6
-Author:        Hans de Goede <hdegoede@redhat.com>
-AuthorDate:    Mon, 07 Oct 2019 15:47:24 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 16:47:35 +02:00
+The caller is responsible for ensuring EREMOVE can be safely executed,
+e.g. by holding the enclave's lock.
 
-x86/boot: Provide memzero_explicit()
+For many ENCLS leafs, EREMOVE included, the CPU requires exclusive access
+to the SGX Enclave Control Structures (SECS)[*] and will signal a #GP if
+a different logical CPU is already executing an ENCLS leaf that requires
+exclusive SECS access.  The SGX subsystem uses a per-enclave mutex to
+serialize such ENCLS leafs, among other things.
 
-The purgatory code now uses the shared lib/crypto/sha256.c sha256
-implementation. This needs memzero_explicit(), implement this.
+[*] The SECS is a per-enclave page that resides in the EPC and can only be
+    directly accessed by the CPU.  It's used to track metadata about the
+    enclave, e.g. number of child pages, base, size, etc...
 
-We also have barrier_data() call after the memset, making sure
-neither the compiler nor the linker optimizes out this seemingly
-unused function.
+> > +
+> > +	ret = __eremove(sgx_epc_addr(page));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	spin_lock(&section->lock);
+> > +	list_add_tail(&page->list, &section->page_list);
+> > +	section->free_cnt++;
+> > +	spin_unlock(&section->lock);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(__sgx_free_page);
+> > +
+> > +/**
+> > + * sgx_free_page - Free an EPC page and WARN on failure
+> > + * @page:	pointer to a previously allocated EPC page
+> > + *
+> > + * EREMOVE an EPC page and insert it back to the list of free pages, and WARN
+> > + * if EREMOVE fails.  For use when the call site cannot (or chooses not to)
+> > + * handle failure, i.e. the page is leaked on failure.
+> > + */
+> > +void sgx_free_page(struct sgx_epc_page *page)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = __sgx_free_page(page);
+> > +	WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
+> 
+> That will potentially flood dmesg. Why are we even accommodating such
+> callers? They either handle the error or they don't get to alloc EPC
+> pages. There's also __must_check with which you can enforce the error
+> code checking or we simply don't allow not handling failure. Fullstop.
 
-Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-crypto@vger.kernel.org
-Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
-Link: https://lkml.kernel.org/r/20191007134724.4019-1-hdegoede@redhat.com
-[ Added comment. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/boot/compressed/string.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+It was deliberately left as a WARN as having multiple stack traces has
+been very helpful for triaging and debugging software bugs.  I agree that
+it can and should be changed to a WARN_ONCE() for upstream.
 
-diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
-index 81fc1ea..dd30e63 100644
---- a/arch/x86/boot/compressed/string.c
-+++ b/arch/x86/boot/compressed/string.c
-@@ -50,6 +50,16 @@ void *memset(void *s, int c, size_t n)
- 	return s;
- }
- 
-+void memzero_explicit(void *s, size_t count)
-+{
-+	memset(s, 0, count);
-+	/*
-+	 * Make sure this function never gets inlined and
-+	 * the memset() never gets optimized away:
-+	 */
-+	barrier_data(s);
-+}
-+
- void *memmove(void *dest, const void *src, size_t n)
- {
- 	unsigned char *d = dest;
+As for why it exists at all, the WARN will only fire if there is a kernel
+and/or CPU bug.  In the vast majority of cases, EREMOVE is guaranteed to
+be successful (assuming no bugs).  In those situations, if EREMOVE fails
+there really isn't a sane option other to WARN and leak the page, e.g.
+the kernel can't override the CPUs protection to forcefully EREMOVE the
+page.
+
+The non-warn variant, __sgx_free_page(), is provided for the (currently)
+one case where EREMOVE failure is expected/tolerable (opportunstically
+freeing EPC pages when the enclave is killed).
