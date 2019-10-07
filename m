@@ -2,129 +2,99 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAD6C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E4C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6494C206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8602E206C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfJGTjI (ORCPT
+        id S1728567AbfJGTrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:39:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:50904 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbfJGTjI (ORCPT
+        Mon, 7 Oct 2019 15:47:41 -0400
+Received: from www17.your-server.de ([213.133.104.17]:42296 "EHLO
+        www17.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJGTrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:39:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id f5so28401269iob.17
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:39:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kKDb/JioBJlC3ZSH7Ra1D6u0wPhnpnLccidK2R6RBOc=;
-        b=gAgwYyok8wAhjPjfB9RqdVY/TVnDEnUNSz1It1o+Zw2P0bAohmTj3pO5wtqV1Xp/f3
-         DuYlYK4BjRzNcQffsl3rdBo0/N+tShWV5yDDrKScQXx50bwXo2pXGhKlE4+UC3xdjqqj
-         WO9dcMUkIQqqZIg8lsgpXNe1IcyvvYDV1qyvAGbxIstt7y9DS8A4Wm1DAJP2VjnAwRPn
-         DmWnXWMqNvja7kyGHjCteAwISygzdcNy85urr5F8fnbxbbltSsd43BeC1c/FJlDPksaX
-         3p7E7pieAfESBU809RYwj5CQSM21Z2qHGC7no4ya+O6QGWDIDuDbag/Gui1kXBADl70H
-         /7QQ==
-X-Gm-Message-State: APjAAAUqF8oKayoJPOOan5Se2Ks2L3s8AkLFuHw9rhykt3DYB2fM0C3e
-        WNV4kXbnqQe4EKxu2ODOwRouCa8pKhAxfC4qZ7pY8nDV1hB8
-X-Google-Smtp-Source: APXvYqxldHRIjyw1O4EjayR7Y53v5Fqnw/B/xW7orK7MItW9khT42lcNa9DPDqCKODNcniseUWxW2QA80sICOI8pqFH/Y0jO79O1
+        Mon, 7 Oct 2019 15:47:40 -0400
+X-Greylist: delayed 1120 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 15:47:39 EDT
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www17.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iHYgk-0000RR-24; Mon, 07 Oct 2019 21:28:58 +0200
+Received: from [2a02:908:4c22:ec00:8ad5:993:4cda:a89f] (helo=localhost.localdomain)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iHYgj-000I8G-RV; Mon, 07 Oct 2019 21:28:57 +0200
+From:   Thomas Meyer <thomas@m3y3r.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux@rasmusvillemoes.dk, Thomas Meyer <thomas@m3y3r.de>
+Subject: [PATCH] kernel/groups.c: use bsearch library function
+Date:   Mon,  7 Oct 2019 21:26:32 +0200
+Message-Id: <20191007192632.29535-1-thomas@m3y3r.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:5855:: with SMTP id m82mr31630600ilb.136.1570477147233;
- Mon, 07 Oct 2019 12:39:07 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 12:39:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007d25ff059457342d@google.com>
-Subject: KMSAN: uninit-value in alauda_check_media
-From:   syzbot <syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com>
-To:     glider@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: thomas@m3y3r.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25595/Mon Oct  7 10:28:44 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+commit b7b2562f7252 ("kernel/groups.c: use sort library function")
+introduced the sort library function.
+also use the bsearch library function instead of open-coding the binary
+search.
 
-syzbot found the following crash on:
-
-HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1204cc63600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=e7d46eb426883fb97efd
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123c860d600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=110631b7600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in alauda_transport+0x462/0x57f0  
-drivers/usb/storage/alauda.c:1137
-CPU: 0 PID: 12279 Comm: usb-storage Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  alauda_check_media+0x344/0x3310 drivers/usb/storage/alauda.c:460
-  alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
-  usb_stor_invoke_transport+0xf5/0x27e0 drivers/usb/storage/transport.c:606
-  usb_stor_transparent_scsi_command+0x5d/0x70  
-drivers/usb/storage/protocol.c:108
-  usb_stor_control_thread+0xca6/0x11a0 drivers/usb/storage/usb.c:380
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----status@alauda_check_media
-Variable was created at:
-  alauda_check_media+0x8e/0x3310 drivers/usb/storage/alauda.c:454
-  alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
-=====================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12279 Comm: usb-storage Tainted: G    B             5.3.0-rc7+  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  panic+0x3c9/0xc1e kernel/panic.c:219
-  kmsan_report+0x2a2/0x2b0 mm/kmsan/kmsan_report.c:131
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  alauda_check_media+0x344/0x3310 drivers/usb/storage/alauda.c:460
-  alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
-  usb_stor_invoke_transport+0xf5/0x27e0 drivers/usb/storage/transport.c:606
-  usb_stor_transparent_scsi_command+0x5d/0x70  
-drivers/usb/storage/protocol.c:108
-  usb_stor_control_thread+0xca6/0x11a0 drivers/usb/storage/usb.c:380
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/groups.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/kernel/groups.c b/kernel/groups.c
+index daae2f2dc6d4f..69561a9cb4d39 100644
+--- a/kernel/groups.c
++++ b/kernel/groups.c
+@@ -2,6 +2,7 @@
+ /*
+  * Supplementary group IDs
+  */
++#include <linux/bsearch.h>
+ #include <linux/cred.h>
+ #include <linux/export.h>
+ #include <linux/slab.h>
+@@ -96,22 +97,12 @@ EXPORT_SYMBOL(groups_sort);
+ /* a simple bsearch */
+ int groups_search(const struct group_info *group_info, kgid_t grp)
+ {
+-	unsigned int left, right;
+-
+ 	if (!group_info)
+ 		return 0;
+ 
+-	left = 0;
+-	right = group_info->ngroups;
+-	while (left < right) {
+-		unsigned int mid = (left+right)/2;
+-		if (gid_gt(grp, group_info->gid[mid]))
+-			left = mid + 1;
+-		else if (gid_lt(grp, group_info->gid[mid]))
+-			right = mid;
+-		else
+-			return 1;
+-	}
++	if (bsearch(&grp, group_info->gid, group_info->ngroups,
++		    sizeof(*group_info->gid), gid_cmp))
++		return 1;
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
+
