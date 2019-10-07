@@ -2,165 +2,108 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90928ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66279C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651DF20684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEA320684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgP9FKCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfJGSeA convert rfc822-to-8bit (ORCPT
+        id S1728459AbfJGSg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:34:00 -0400
-Received: from mail-oln040092072071.outbound.protection.outlook.com ([40.92.72.71]:17542
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728081AbfJGSd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:33:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PzC+CtRz8zApziSU6RaGpNLSv5IMrDPgfE4oXxHtt5AxwE9ZbUyNMWM2aQkm4dfMlkTi3E9Z3he6Y6zYJeCcZnaHp0SMhLmUZxsPbFymR26e3daNXIcFn1q3NlT+MJwMXJUVkvDuUERz0v8KHUktoYhzFpXGs/F/Qe1pykOxmDVmbAvWo5a62vtmLZqcSinmIWYS6TOq0++CNlEoLP04cYJuCwsYFZOIISzx2Po86BkCzN7bwr8Fcjxrn8zWOfT9SFurm1eqrTdLeRynPGHqfhZ1yZt7RCWMfNYoopr2v41Ysc7TavfZ7Eg9aImcWh1xX9Hs8KyInzDqrEyTwAPUWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gv/rWJhNzSxfYffBOdNDgTZKoNhZl/1l0r+f1m1j2SQ=;
- b=ds0o4tZr0qtPaB/bqDF+k9Nj7guMaP4BJGb8jHsh+/TBLzT/IBjQxXvG1c2WKo5imGC+u2la5J82s6aUzarTjMKnuoNVJ2G2GV4ddCMqdGM3HkSvGKbRScLxHrv/nW60qb2HClXwU/wUZRvj6gP21YyMku+m7IuLN/uKrmKuBvx0HGA0Ziq09+rh2FhRHvI5xJIsS2lHTRpeNwpRGUsE/++rSjeca9U9Lri1C1aHdajRssqn6A6fhSCR6ugYcI5HZURkbELsgJ4IYo/cMoKwF7qQ4bXz6InfmdfIFZkqavXouZq5kVrVGyBcSUrS8JfOmTSFTEp0dPJewhGPFImL7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from AM5EUR03FT023.eop-EUR03.prod.protection.outlook.com
- (10.152.16.58) by AM5EUR03HT008.eop-EUR03.prod.protection.outlook.com
- (10.152.16.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.15; Mon, 7 Oct
- 2019 18:33:53 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.16.55) by
- AM5EUR03FT023.mail.protection.outlook.com (10.152.16.169) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Mon, 7 Oct 2019 18:33:53 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::5c5a:1160:a2e0:43d8]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::5c5a:1160:a2e0:43d8%4]) with mapi id 15.20.2305.023; Mon, 7 Oct 2019
- 18:33:52 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-CC:     "kernel@collabora.com" <kernel@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage
- condition
-Thread-Topic: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage
- condition
-Thread-Index: AQHVfTc5j58jepLQQEujLcDcYkaduadPgRaA
-Date:   Mon, 7 Oct 2019 18:33:52 +0000
-Message-ID: <HE1PR06MB4011204B3FC2DAABB4BD1BACAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-4-ezequiel@collabora.com>
-In-Reply-To: <20191007174505.10681-4-ezequiel@collabora.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0221.eurprd05.prod.outlook.com
- (2603:10a6:3:fa::21) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:49284390698F95E349DEB478EB2430A8870D4DB416F62A400A8F266140FFC451;UpperCasedChecksum:4F92DD6035FE886F19CD68B67CA8F12580B75676CED0F81661C49F4223916D9C;SizeAsReceived:8137;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [3e3yQm2qrRRttsWuOTk9jkZyALgVhhVF]
-x-microsoft-original-message-id: <f89199a9-0b23-343c-7456-d003ecedce2d@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: AM5EUR03HT008:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wyoIY13z+kw+xTtJwBbf+Am7TOKkl1qpmUuxROSTL+cqkjmiMbR2ftH4GR3wAMuYXlpOvzRPRx3A35cH9VFGayKYOjpBaBmVzf+ffN1ONC6J0NR1mVpOXp3UszProbQbtn6Lrgr1kdlyTEQQ7NNgpn6aBXq1XQLb26vtqkgd7ySHMATYmd+2RKC7IYJ60zMc
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <940378B8E35A0A4AAADCC3F80571F034@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Mon, 7 Oct 2019 14:36:56 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40883 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbfJGSgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:36:55 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m61so9589330qte.7;
+        Mon, 07 Oct 2019 11:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fXL8J/OQJmreiyptvpgxHievcJo6KOM1a1ady8Gq0qE=;
+        b=cgP9FKCa+Rmg1fTWx4Msi4HhEyQYM8Leky4PtPKPdo9NVLQNF7g+tQice2NdsF1wle
+         7dMOsp5hA0jBv4ORML7x3lEzYii1kVHIj43FMVWOP7GiA83bcRuJCWAQAaAD9VMiPrvr
+         Q4TlQdpN5rBvYAGZzCI8xZtC0U28TWXpzW0r38zOei3eZDv+iAhBrWsDAkVKaAODQrx0
+         dm5G/+su7Y2HRKWxoFPFq9b1JFxMLf40knrHIHJjUdysI2s9YJSHzeuBh8+A3P33RZ12
+         oMjBE6ZB562H0IZx8QoH5hbAdYn4ah4LsJ0gVqNjUzOWIqn3nyvY7+KSV3YUZKDgNKDK
+         v1ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fXL8J/OQJmreiyptvpgxHievcJo6KOM1a1ady8Gq0qE=;
+        b=BjKfLIbtxA9rSmyNR7lGC9QPxwgB+HxZ1ZydLRFeSAXN/DBL5XsJgdv23IjPd6Aa42
+         lKcmFeEsbOJcwIauEDzDKn12k3EN/YYGYOQpJKiM8SHn4279Sj5wy20lvNAgRybw61Lf
+         oYFig1eLb6oDnwrLc5U4RLWKcVsxotHtRsrd1wBvw7YaXHztL/N+H0qemHXjvN0/PhFG
+         qRjpPbZAsYHx5Y68ysz6l0v9guCBe/ApO/3NQmsGRdAI7fsltmF6figwW0QCfyBzUtsL
+         VKC6cSVplHPZzWe056WDhVBKkEqJ+9IDBqZpayQSSwFa7EIlHkHQIwOu3HjrG6rpRFfA
+         OLHQ==
+X-Gm-Message-State: APjAAAVYR9Ld45rNtvDHSzNB5YYFGH6yR1Mdl/VPwC3UgMMI3AuEHVO7
+        EgmecaPi/QVEYqIQ/iZ9shykGNACM5D2l9xh5ZF2QnMJ
+X-Google-Smtp-Source: APXvYqy70SsUjoYiUVpnHDEy2rjlLPhOO4kwSxJXoIqnTOLmTqH8ik5f+3V4sa/1uDzyb0En521XO1kijR4HgNI3kqI=
+X-Received: by 2002:ac8:2aaf:: with SMTP id b44mr32435987qta.359.1570473414763;
+ Mon, 07 Oct 2019 11:36:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d69403e-8247-4b01-23bb-08d74b54e68b
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 18:33:52.7590
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR03HT008
+References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
+ <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
+ <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
+ <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+In-Reply-To: <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+From:   Tony Luck <tony.luck@gmail.com>
+Date:   Mon, 7 Oct 2019 11:36:43 -0700
+Message-ID: <CA+8MBb+VKk0aQZaJ+tMbFV7+s37HrQ6pzy4sHDAA3yqS-3nVwA@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-07 19:45, Ezequiel Garcia wrote:
-> From: Francois Buergisser <fbuergisser@chromium.org>
+On Mon, Oct 7, 2019 at 11:28 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> The setting of the motion vectors usage and the setting of motion
-> vectors address are currently done under different conditions.
+> On Sun, Oct 6, 2019 at 8:11 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > >
+> > > The last two should just do user_access_begin()/user_access_end()
+> > > instead of access_ok().  __copy_to_user_inatomic() has very few callers as well:
+> >
+> > Yeah, good points.
 >
-> When decoding pre-recorded videos, this results of leaving the motion
-> vectors address unset, resulting in faulty memory accesses. Fix it
-> by using the same condition everywhere, which matches the profiles
-> that support motion vectors.
+> Looking at it some more this morning, I think it's actually pretty painful.
 
-This does not fully match hantro sdk:
+Late to this party ,,, but my ia64 console today is full of:
 
-  enable direct MV writing and POC tables for high/main streams.
-  enable it also for any "baseline" stream which have main/high tools enabled.
+irqbalance(5244): unaligned access to 0x2000000800042f9b, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x2000000800042fbb, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x2000000800042fdb, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x2000000800042ffb, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x200000080004301b, ip=0xa0000001002fef90
+ia64_handle_unaligned: 95 callbacks suppressed
+irqbalance(5244): unaligned access to 0x2000000800042f9b, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x2000000800042fbb, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x2000000800042fdb, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x2000000800042ffb, ip=0xa0000001002fef90
+irqbalance(5244): unaligned access to 0x200000080004301b, ip=0xa0000001002fef90
+ia64_handle_unaligned: 95 callbacks suppressed
 
-  (sps->profile_idc > 66 && sps->constrained_set0_flag == 0) ||
-  sps->frame_mbs_only_flag != 1 ||
-  sps->chroma_format_idc != 1 ||
-  sps->scaling_matrix_present_flag != 0 ||
-  pps->entropy_coding_mode_flag != 0 ||
-  pps->weighted_pred_flag != 0 ||
-  pps->weighted_bi_pred_idc != 0 ||
-  pps->transform8x8_flag != 0 ||
-  pps->scaling_matrix_present_flag != 0
+Those ip's point into filldir64()
 
-Above check is used when DIR_MV_BASE should be written.
-And WRITE_MVS_E is set to nal_ref_idc != 0 when above is true.
-
-I think it may be safer to always set DIR_MV_BASE and keep the existing nal_ref_idc check for WRITE_MVS_E.
-(That is what I did in my "media: hantro: H264 fixes and improvements" series, v2 is incoming)
-Or have you found any video that is having issues in such case?
-
-Regards,
-Jonas
-
->
-> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-> Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> v2:
-> * New patch.
->
->  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> index 7ab534936843..c92460407613 100644
-> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
->  	if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
->  		reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
->  	reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
-> -	if (dec_param->nal_ref_idc)
-> +	if (sps->profile_idc > 66)
->  		reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
->  
->  	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
-
+-Tony
