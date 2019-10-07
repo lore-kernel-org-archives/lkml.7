@@ -2,145 +2,217 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B2DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CC7ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5815F20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8EF20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eF+BFSLd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EkvVh0rV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FCzc0dVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbfJGXjK (ORCPT
+        id S1729704AbfJGXjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:39:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60806 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbfJGXjJ (ORCPT
+        Mon, 7 Oct 2019 19:39:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41223 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729145AbfJGXjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:39:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4FAEF60AA3; Mon,  7 Oct 2019 23:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570491548;
-        bh=pHvuvtluuEtoXPJ6Nnr1FZAfPESLSfIJNq3Czhj/Tf0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eF+BFSLdZW6kWhi8Bj27TYR6OHxiDD7OqHapXYILW4v7iMIud07GZ2DtwbmHjwOxB
-         gwYJsnXlzaeEM2u6lj0zOYRZcFK8yckCPp5MDM8WrZQGoZmN4+vJmhtC+hYkPq0usD
-         OoE7FI1LWujVigJ4/dyVz6PZc/tO5uReQabiI0uM=
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB48D602D8;
-        Mon,  7 Oct 2019 23:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570491546;
-        bh=pHvuvtluuEtoXPJ6Nnr1FZAfPESLSfIJNq3Czhj/Tf0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EkvVh0rV3EOnNjWHRYMlU5CKZy+jEwzajJnDFeq1Wy1Lvy+Sc9EqofQf1mlt41XTn
-         1U/Qx61m2O4QGVq3i0nXF+s3f4zRd2PfklU/1LTfuNxYrmd8Xl/XIj/1ArKXu6z+Iz
-         6iYD1+JRqWey4KK3yrExKcOsC3pz0Vnjwrmx/9TY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB48D602D8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Mon, 7 Oct 2019 16:39:04 -0700
-From:   Jack Pham <jackp@codeaurora.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC][PATCH v2 2/5] usb: dwc3: Execute GCTL Core Soft Reset
- while switch mdoe for Hisilicon Kirin Soc
-Message-ID: <20191007233904.GC9754@jackp-linux.qualcomm.com>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-3-john.stultz@linaro.org>
+        Mon, 7 Oct 2019 19:39:49 -0400
+Received: by mail-io1-f68.google.com with SMTP id n26so32537337ioj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 16:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PjC4IOE74uqk6BvdzjxTzi5lzmlkVlCf5u8wFkWOV1M=;
+        b=FCzc0dVJaMula/54qVHjHdG5+S3RTJZtsnEQjayFHj/UgaXAkTNDkQvxpIyV2MbkVM
+         VJCnCpcF/C5uksbCumurz92HwZiD2yiJo2mVj2UtgqibAfCSjpfxYpeLt67xQ3Go/Oj7
+         qvR2ZwnciZv5TNaaBpr2KS/KnRvSVQfEqQO9U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PjC4IOE74uqk6BvdzjxTzi5lzmlkVlCf5u8wFkWOV1M=;
+        b=iIeZaEpDSqeW+QSIZ5SAxkyEjl/h+KuP3elBaPtP+KuDDMW/1v6HXwMJmaHmrxiGOG
+         vTsNO4+8FOVJ/F7UI8pbn5fodzQIKgfuORDSsl4d3kkDMCJ/P6kKHqjKtjHI39NUZ07Q
+         wrACFh0yyzKXPQ51cwBRfMv19ZJgev8XcNSX26nZWZoudKdP+b/0PDV11XPKz+jC5iF8
+         FGeMU9E9L1tHBh7H/jqrX6dr4uarLnnbNPiyJ7nglBkkJRZJiLK0kHebY5olCbt4unfP
+         54/zRq6QbPB9BMTG5S6lYGybkT++XzBVTUay/keT3V1BGJIKimfloY8wd9M/JMpse1AQ
+         /+mw==
+X-Gm-Message-State: APjAAAXfWJdSsgtnZV8zk0EX8Wk1bQ4Rh1Htq5+M28hNSdljdhQocQob
+        raZRGjO8w1djHHXDajA7TmMKywtjdkk=
+X-Google-Smtp-Source: APXvYqxGgpDIfI6bRbQA5N2iERhWGX8+vn29ae4YYI3U+aYNXWCHcFw1Y5loFQOKKYjv875bWPqRbQ==
+X-Received: by 2002:a02:a70c:: with SMTP id k12mr29645364jam.75.1570491587693;
+        Mon, 07 Oct 2019 16:39:47 -0700 (PDT)
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com. [209.85.166.41])
+        by smtp.gmail.com with ESMTPSA id r12sm7009595ilq.70.2019.10.07.16.39.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Oct 2019 16:39:47 -0700 (PDT)
+Received: by mail-io1-f41.google.com with SMTP id c25so32538133iot.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 16:39:45 -0700 (PDT)
+X-Received: by 2002:a92:4a11:: with SMTP id m17mr31969418ilf.142.1570491585206;
+ Mon, 07 Oct 2019 16:39:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007175553.66940-3-john.stultz@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190722193939.125578-1-dianders@chromium.org>
+ <CAPDyKFoND5Kaam72zxO4wChO0z_1XL2KWX6oNjVcMUGA7G8RFg@mail.gmail.com>
+ <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com> <CAPDyKFrPHguMrMvXN0yHbD9GmEg4m=J1Un=LcpE0PB7WqMRYSg@mail.gmail.com>
+In-Reply-To: <CAPDyKFrPHguMrMvXN0yHbD9GmEg4m=J1Un=LcpE0PB7WqMRYSg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 7 Oct 2019 16:39:32 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W-qh2NnDc-C1_Tki3=D7vzNGG2PgnZjCjdLU9gL68AxA@mail.gmail.com>
+Message-ID: <CAD=FV=W-qh2NnDc-C1_Tki3=D7vzNGG2PgnZjCjdLU9gL68AxA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] mmc: core: Fix Marvell WiFi reset by adding SDIO
+ API to replug card
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Andreas Fenkart <afenkart@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        netdev <netdev@vger.kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John, Yu, Felipe,
+Hi,
 
-On Mon, Oct 07, 2019 at 05:55:50PM +0000, John Stultz wrote:
-> From: Yu Chen <chenyu56@huawei.com>
-> 
-> A GCTL soft reset should be executed when switch mode for dwc3 core
-> of Hisilicon Kirin Soc.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/usb/dwc3/core.c | 20 ++++++++++++++++++++
->  drivers/usb/dwc3/core.h |  3 +++
->  2 files changed, 23 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 999ce5e84d3c..440261432421 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
->  	dwc->current_dr_role = mode;
->  }
->  
-> +static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
-> +{
-> +	u32 reg;
-> +
-> +	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-> +	reg |= DWC3_GCTL_CORESOFTRESET;
-> +	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-> +
-> +	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-> +	reg &= ~DWC3_GCTL_CORESOFTRESET;
-> +	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-> +}
-> +
->  static void __dwc3_set_mode(struct work_struct *work)
->  {
->  	struct dwc3 *dwc = work_to_dwc(work);
-> @@ -156,6 +169,10 @@ static void __dwc3_set_mode(struct work_struct *work)
->  
->  	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
->  
-> +	/* Execute a GCTL Core Soft Reset when switch mode */
-> +	if (dwc->gctl_reset_quirk)
-> +		dwc3_gctl_core_soft_reset(dwc);
-> +
+On Mon, Sep 16, 2019 at 2:25 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 11 Sep 2019 at 23:26, Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Jul 25, 2019 at 6:28 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > >
+> > > On Mon, 22 Jul 2019 at 21:41, Douglas Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > As talked about in the thread at:
+> > > >
+> > > > http://lkml.kernel.org/r/CAD=FV=X7P2F1k_zwHc0mbtfk55-rucTz_GoDH=PL6zWqKYcpuw@mail.gmail.com
+> > > >
+> > > > ...when the Marvell WiFi card tries to reset itself it kills
+> > > > Bluetooth.  It was observed that we could re-init the card properly by
+> > > > unbinding / rebinding the host controller.  It was also observed that
+> > > > in the downstream Chrome OS codebase the solution used was
+> > > > mmc_remove_host() / mmc_add_host(), which is similar to the solution
+> > > > in this series.
+> > > >
+> > > > So far I've only done testing of this series using the reset test
+> > > > source that can be simulated via sysfs.  Specifically I ran this test:
+> > > >
+> > > > for i in $(seq 1000); do
+> > > >   echo "LOOP $i --------"
+> > > >   echo 1 > /sys/kernel/debug/mwifiex/mlan0/reset
+> > > >
+> > > >   while true; do
+> > > >     if ! ping -w15 -c1 "${GW}" >/dev/null 2>&1; then
+> > > >       fail=$(( fail + 1 ))
+> > > >       echo "Fail WiFi ${fail}"
+> > > >       if [[ ${fail} == 3 ]]; then
+> > > >         exit 1
+> > > >       fi
+> > > >     else
+> > > >       fail=0
+> > > >       break
+> > > >     fi
+> > > >   done
+> > > >
+> > > >   hciconfig hci0 down
+> > > >   sleep 1
+> > > >   if ! hciconfig hci0 up; then
+> > > >     echo "Fail BT"
+> > > >     exit 1
+> > > >   fi
+> > > > done
+> > > >
+> > > > I ran this several times and got several hundred iterations each
+> > > > before a failure.  When I saw failures:
+> > > >
+> > > > * Once I saw a "Fail BT"; manually resetting the card again fixed it.
+> > > >   I didn't give it time to see if it would have detected this
+> > > >   automatically.
+> > > > * Once I saw the ping fail because (for some reason) my device only
+> > > >   got an IPv6 address from my router and the IPv4 ping failed.  I
+> > > >   changed my script to use 'ping6' to see if that would help.
+> > > > * Once I saw the ping fail because the higher level network stack
+> > > >   ("shill" in my case) seemed to crash.  A few minutes later the
+> > > >   system recovered itself automatically.  https://crbug.com/984593 if
+> > > >   you want more details.
+> > > > * Sometimes while I was testing I saw "Fail WiFi 1" indicating a
+> > > >   transitory failure.  Usually this was an association failure, but in
+> > > >   one case I saw the device do "Firmware wakeup failed" after I
+> > > >   triggered the reset.  This caused the driver to trigger a re-reset
+> > > >   of itself which eventually recovered things.  This was good because
+> > > >   it was an actual test of the normal reset flow (not the one
+> > > >   triggered via sysfs).
+> > > >
+> > > > Changes in v2:
+> > > > - s/routnine/routine (Brian Norris, Matthias Kaehlcke).
+> > > > - s/contining/containing (Matthias Kaehlcke).
+> > > > - Add Matthias Reviewed-by tag.
+> > > > - Removed clear_bit() calls and old comment (Brian Norris).
+> > > > - Explicit CC of Andreas Fenkart.
+> > > > - Explicit CC of Brian Norris.
+> > > > - Add "Fixes" pointing at the commit Brian talked about.
+> > > > - Add Brian's Reviewed-by tag.
+> > > >
+> > > > Douglas Anderson (2):
+> > > >   mmc: core: Add sdio_trigger_replug() API
+> > > >   mwifiex: Make use of the new sdio_trigger_replug() API to reset
+> > > >
+> > > >  drivers/mmc/core/core.c                     | 28 +++++++++++++++++++--
+> > > >  drivers/mmc/core/sdio_io.c                  | 20 +++++++++++++++
+> > > >  drivers/net/wireless/marvell/mwifiex/sdio.c | 16 +-----------
+> > > >  include/linux/mmc/host.h                    | 15 ++++++++++-
+> > > >  include/linux/mmc/sdio_func.h               |  2 ++
+> > > >  5 files changed, 63 insertions(+), 18 deletions(-)
+> > > >
+> > >
+> > > Doug, thanks for sending this!
+> > >
+> > > As you know, I have been working on additional changes for SDIO
+> > > suspend/resume (still WIP and not ready for sharing) and this series
+> > > is related.
+> > >
+> > > The thing is, that even during system suspend/resume, synchronizations
+> > > are needed between the different layers (mmc host, mmc core and
+> > > sdio-funcs), which is common to the problem you want to solve.
+> > >
+> > > That said, I need to scratch my head a bit more before I can provide
+> > > you some feedback on $subject series. Moreover, it's vacation period
+> > > at my side so things are moving a bit slower. Please be patient.
+> >
+> > I had kinda forgotten about this series after we landed it locally in
+> > Chrome OS, but I realized that it never got resolved upstream.  Any
+> > chance your head has been sufficiently scratched and you're now happy
+> > with $subject series?  ;-)
+>
+> It's still on my TODO list. Apologize for the delay, but I still need
+> more time to look into it, possibly later this week.
+>
+> In any case, let's make sure we get this problem resolved for v5.5.
 
-In fact it is mentioned in the Synopsys databook to perform a GCTL
-CoreSoftReset when changing the PrtCapDir between device & host modes.
-So I think this should apply generally without a quirk. Further, it
-states to do this *prior* to writing PrtCapDir, so should it go before
-dwc3_set_prtcap() instead?
+Hi Ulf.  It's your friendly pest, Doug, here to ask how things are going.  :-P
 
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+-Doug
