@@ -2,93 +2,79 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C326C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71160ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F55F21721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:04:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570457081;
-	bh=5omN2jBYwOSbtTmeKuQo/TnEkXR2hkcbbfkJqjWEXJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mQ3TJ+/iwIm/1WPU90CO9ak4WoXP6jnFx+LsENVLwE+xf6IUwoIUc2pZYtXCNi7g/
-	 kobyiAVNlUD+QamZk7JYbAraiY6sYJKjPskWieIPBMhVWnD1npWirNYW6DyOIVG5j0
-	 BYwpe6fSoenuGSKZMBdveDS6IHTDryOIjEVpFCkM=
+	by mail.kernel.org (Postfix) with ESMTP id 48CBF21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfJGOEk (ORCPT
+        id S1728102AbfJGOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:04:40 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40283 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJGOEk (ORCPT
+        Mon, 7 Oct 2019 10:06:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50516 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfJGOGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:04:40 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m61so8193388qte.7;
-        Mon, 07 Oct 2019 07:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mpNfxUl1mCUdiXjigudrtwHaG1qAsCzBGZZW+s8y3Fo=;
-        b=Um7Uzaoy6WSIMMNIRXztMQowXtuRFa7RULiv7B9t5bBMGNXcozcvndCrdDyXlOfiPZ
-         Lq0/fy/VmhNyhoH8BCKnypBZ9GOl99U+VqFX4quLcIYC4A7UfXN7mJ+pQMgphzZ1QYrf
-         A/n3W1h5crEuesmUr9jYQI3o9hXR3So2qOBxqrINQ6fMNRHiu3yzeTePxIBzBYG85aPR
-         13AUWabvuF7GX2ePud2dCkGuJ9eyq4PBNikP2XbLEwE/o2gQHCK1pn2lPIxnlnAa+aR/
-         1J/kuQnVSnRHCp/SYbYipfo5WDD9cKYEKq/tqOGNoWBdpADyvE5Lqi7i26hK9O9eB2lo
-         ikqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mpNfxUl1mCUdiXjigudrtwHaG1qAsCzBGZZW+s8y3Fo=;
-        b=ZyOJsuKEPQvInWWZ7x1MZbah2nmE91cI8IvTCg2OJQyVBArSQgGkIRkiDruiKhYFsW
-         nPzGPozLQgsxVhg9i8Csxd9jBaH97yqN8thE/fxNsNZLivSW08/HoA6IzHNmjr1vCUFf
-         1IiNQFgQbASeCt7R9siwJikAdyXIrLrdgpY2JymzCRrtfr1s+YQ6nIje4b5NKPqjkFtC
-         rIz1koz0zDZvvRKm8r+7L+nB083mMEni79LgoQAuB5fEDhCbselW53mJaMNEwTGMkllv
-         OfNZMuR6m28Pfp3AodbOmEqHuV6P4GqtfW4APgkXWHjt7DjNX6gYvI/Cj7wIXcvDkRmT
-         sIjQ==
-X-Gm-Message-State: APjAAAUCsqSI4EBmHRqwbXHyloGsG3qJjUwOD8oh062CLRT3VB8C+qtY
-        hrngX1vjtWae5G+A+bXdsOc=
-X-Google-Smtp-Source: APXvYqwPO+Nc3byElLX/MFKjYwBl57P51x05qK0mMVXxCG/r46I05iaMlsMB1rYASu4whzW/6iX9yQ==
-X-Received: by 2002:a0c:eb10:: with SMTP id j16mr26693246qvp.207.1570457077309;
-        Mon, 07 Oct 2019 07:04:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:a536])
-        by smtp.gmail.com with ESMTPSA id d69sm7580319qkc.87.2019.10.07.07.04.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Oct 2019 07:04:36 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 07:04:33 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingfangsen@huawei.com
-Subject: Re: [PATCH] cgroup: short-circuit current_cgns_cgroup_from_root() on
- the default hierarchy
-Message-ID: <20191007140433.GC3404308@devbig004.ftw2.facebook.com>
-References: <20190929080658.11430-1-linmiaohe@huawei.com>
+        Mon, 7 Oct 2019 10:06:02 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iHTeC-0001ld-4b; Mon, 07 Oct 2019 14:06:00 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: rzn1: array reg_drive static, makes object smaller
+Date:   Mon,  7 Oct 2019 15:05:59 +0100
+Message-Id: <20191007140559.11840-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190929080658.11430-1-linmiaohe@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 04:06:58PM +0800, Miaohe Lin wrote:
-> Like commit 13d82fb77abb ("cgroup: short-circuit cset_cgroup_from_root() on
-> the default hierarchy"), short-circuit current_cgns_cgroup_from_root() on
-> the default hierarchy.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied to cgroup/for-5.5.
+Don't populate the array reg_drive on the stack but instead make it
+static. Makes the object code smaller by 32 bytes.
 
-Thanks.
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  31991	  15696	      0	  47687	   ba47	drivers/pinctrl/pinctrl-rzn1.o
 
+After:
+   text	   data	    bss	    dec	    hex	filename
+  31863	  15792	      0	  47655	   ba27	drivers/pinctrl/pinctrl-rzn1.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/pinctrl/pinctrl-rzn1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rzn1.c b/drivers/pinctrl/pinctrl-rzn1.c
+index 0f6f8a10a53a..39538d40dbf3 100644
+--- a/drivers/pinctrl/pinctrl-rzn1.c
++++ b/drivers/pinctrl/pinctrl-rzn1.c
+@@ -487,7 +487,7 @@ static int rzn1_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
+ {
+ 	struct rzn1_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
+ 	enum pin_config_param param = pinconf_to_config_param(*config);
+-	const u32 reg_drive[4] = { 4, 6, 8, 12 };
++	static const u32 reg_drive[4] = { 4, 6, 8, 12 };
+ 	u32 pull, drive, l1mux;
+ 	u32 l1, l2, arg = 0;
+ 
 -- 
-tejun
+2.20.1
+
