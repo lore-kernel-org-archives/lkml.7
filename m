@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A705C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AC1ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A9221924
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E876521871
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfJGN1E (ORCPT
+        id S1728164AbfJGN1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:27:04 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:40995 "EHLO
+        Mon, 7 Oct 2019 09:27:07 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:51433 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728453AbfJGN1D (ORCPT
+        with ESMTP id S1728495AbfJGN1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:27:03 -0400
+        Mon, 7 Oct 2019 09:27:05 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 976E91C0008;
-        Mon,  7 Oct 2019 13:27:00 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9D4161C0015;
+        Mon,  7 Oct 2019 13:27:02 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -36,9 +36,9 @@ Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 2/8] iio: adc: max1027: Make it optional to use interrupts
-Date:   Mon,  7 Oct 2019 15:26:51 +0200
-Message-Id: <20191007132657.4190-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 4/8] iio: adc: max1027: Prepare the introduction of different resolutions
+Date:   Mon,  7 Oct 2019 15:26:53 +0200
+Message-Id: <20191007132657.4190-5-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
@@ -49,89 +49,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chip has a 'start conversion' and a 'end of conversion' pair of
-pins. They can be used but this is absolutely not mandatory as regular
-polling of the value is totally fine with the current internal
-clocking setup. Turn the interrupts optional and do not error out if
-they are not inquired in the device tree. This has the effect to
-prevent triggered buffers use though.
+Maxim's max1027/29/31 series returns the measured voltages with a
+resolution of 10 bits. There is a very similar series, max1227/29/31
+which works identically but uses a resolution of 12 bits. Prepare the
+support for these chips by turning the 'depth' into a macro parameter
+instead of hardcoding it everywhere. Also reorganize just a bit the
+macros at the top to avoid repeating tens of lines when adding support
+for a new chip.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 26 deletions(-)
+ drivers/iio/adc/max1027.c | 74 +++++++++++++++++----------------------
+ 1 file changed, 32 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 6cdfe9ef73fc..823223b77a70 100644
+index f9b473ee6711..8b449044bef5 100644
 --- a/drivers/iio/adc/max1027.c
 +++ b/drivers/iio/adc/max1027.c
-@@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
- 		return -ENOMEM;
+@@ -83,7 +83,7 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
+ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+ #endif
+ 
+-#define MAX1027_V_CHAN(index)						\
++#define MAX1027_V_CHAN(index, depth)					\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+@@ -93,7 +93,7 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+ 		.scan_index = index + 1,				\
+ 		.scan_type = {						\
+ 			.sign = 'u',					\
+-			.realbits = 10,					\
++			.realbits = depth,				\
+ 			.storagebits = 16,				\
+ 			.shift = 2,					\
+ 			.endianness = IIO_BE,				\
+@@ -115,52 +115,42 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+ 		},							\
  	}
  
--	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
--					&iio_pollfunc_store_time,
--					&max1027_trigger_handler, NULL);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
--		return ret;
--	}
-+	if (spi->irq) {
-+		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-+						      &iio_pollfunc_store_time,
-+						      &max1027_trigger_handler,
-+						      NULL);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
-+			return ret;
-+		}
++#define MAX1X27_CHANNELS(depth)			\
++	MAX1027_T_CHAN,				\
++	MAX1027_V_CHAN(0, depth),		\
++	MAX1027_V_CHAN(1, depth),		\
++	MAX1027_V_CHAN(2, depth),		\
++	MAX1027_V_CHAN(3, depth),		\
++	MAX1027_V_CHAN(4, depth),		\
++	MAX1027_V_CHAN(5, depth),		\
++	MAX1027_V_CHAN(6, depth),		\
++	MAX1027_V_CHAN(7, depth)
++
++#define MAX1X29_CHANNELS(depth)			\
++	MAX1X27_CHANNELS(depth),		\
++	MAX1027_V_CHAN(8, depth),		\
++	MAX1027_V_CHAN(9, depth),		\
++	MAX1027_V_CHAN(10, depth),		\
++	MAX1027_V_CHAN(11, depth)
++
++#define MAX1X31_CHANNELS(depth)			\
++	MAX1X27_CHANNELS(depth),		\
++	MAX1X29_CHANNELS(depth),		\
++	MAX1027_V_CHAN(12, depth),		\
++	MAX1027_V_CHAN(13, depth),		\
++	MAX1027_V_CHAN(14, depth),		\
++	MAX1027_V_CHAN(15, depth)
++
+ static const struct iio_chan_spec max1027_channels[] = {
+-	MAX1027_T_CHAN,
+-	MAX1027_V_CHAN(0),
+-	MAX1027_V_CHAN(1),
+-	MAX1027_V_CHAN(2),
+-	MAX1027_V_CHAN(3),
+-	MAX1027_V_CHAN(4),
+-	MAX1027_V_CHAN(5),
+-	MAX1027_V_CHAN(6),
+-	MAX1027_V_CHAN(7)
++	MAX1X27_CHANNELS(10),
+ };
  
--	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
--							indio_dev->name);
--	if (st->trig == NULL) {
--		ret = -ENOMEM;
--		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
--		return ret;
--	}
-+		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
-+						  indio_dev->name);
-+		if (st->trig == NULL) {
-+			ret = -ENOMEM;
-+			dev_err(&indio_dev->dev,
-+				"Failed to allocate iio trigger\n");
-+			return ret;
-+		}
+ static const struct iio_chan_spec max1029_channels[] = {
+-	MAX1027_T_CHAN,
+-	MAX1027_V_CHAN(0),
+-	MAX1027_V_CHAN(1),
+-	MAX1027_V_CHAN(2),
+-	MAX1027_V_CHAN(3),
+-	MAX1027_V_CHAN(4),
+-	MAX1027_V_CHAN(5),
+-	MAX1027_V_CHAN(6),
+-	MAX1027_V_CHAN(7),
+-	MAX1027_V_CHAN(8),
+-	MAX1027_V_CHAN(9),
+-	MAX1027_V_CHAN(10),
+-	MAX1027_V_CHAN(11)
++	MAX1X29_CHANNELS(10),
+ };
  
--	st->trig->ops = &max1027_trigger_ops;
--	st->trig->dev.parent = &spi->dev;
--	iio_trigger_set_drvdata(st->trig, indio_dev);
--	iio_trigger_register(st->trig);
-+		st->trig->ops = &max1027_trigger_ops;
-+		st->trig->dev.parent = &spi->dev;
-+		iio_trigger_set_drvdata(st->trig, indio_dev);
-+		iio_trigger_register(st->trig);
+ static const struct iio_chan_spec max1031_channels[] = {
+-	MAX1027_T_CHAN,
+-	MAX1027_V_CHAN(0),
+-	MAX1027_V_CHAN(1),
+-	MAX1027_V_CHAN(2),
+-	MAX1027_V_CHAN(3),
+-	MAX1027_V_CHAN(4),
+-	MAX1027_V_CHAN(5),
+-	MAX1027_V_CHAN(6),
+-	MAX1027_V_CHAN(7),
+-	MAX1027_V_CHAN(8),
+-	MAX1027_V_CHAN(9),
+-	MAX1027_V_CHAN(10),
+-	MAX1027_V_CHAN(11),
+-	MAX1027_V_CHAN(12),
+-	MAX1027_V_CHAN(13),
+-	MAX1027_V_CHAN(14),
+-	MAX1027_V_CHAN(15)
++	MAX1X31_CHANNELS(10),
+ };
  
--	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
--					iio_trigger_generic_data_rdy_poll,
--					NULL,
--					IRQF_TRIGGER_FALLING,
--					spi->dev.driver->name, st->trig);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
--		return ret;
-+		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
-+						iio_trigger_generic_data_rdy_poll,
-+						NULL,
-+						IRQF_TRIGGER_FALLING,
-+						spi->dev.driver->name,
-+						st->trig);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
-+			return ret;
-+		}
- 	}
- 
- 	/* Disable averaging */
+ static const unsigned long max1027_available_scan_masks[] = {
+@@ -284,7 +274,7 @@ static int max1027_read_raw(struct iio_dev *indio_dev,
+ 			break;
+ 		case IIO_VOLTAGE:
+ 			*val = 2500;
+-			*val2 = 10;
++			*val2 = chan->scan_type.realbits;
+ 			ret = IIO_VAL_FRACTIONAL_LOG2;
+ 			break;
+ 		default:
 -- 
 2.20.1
 
