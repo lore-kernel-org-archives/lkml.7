@@ -2,133 +2,104 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF80ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6312FECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDAE20640
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3544C21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eo44T3ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbfJGPjd (ORCPT
+        id S1729226AbfJGPjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:39:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:38726 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbfJGPj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:39:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 959B71576;
-        Mon,  7 Oct 2019 08:39:28 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [10.1.197.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C8633F6C4;
-        Mon,  7 Oct 2019 08:39:25 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v11 16/22] x86: mm+efi: Convert ptdump_walk_pgd_level() to take a mm_struct
-Date:   Mon,  7 Oct 2019 16:38:16 +0100
-Message-Id: <20191007153822.16518-17-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191007153822.16518-1-steven.price@arm.com>
-References: <20191007153822.16518-1-steven.price@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 7 Oct 2019 11:39:36 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39769 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729199AbfJGPje (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 11:39:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e1so8443831pgj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=aqxBeTv+Uaor0p8Sdaehy27crOZap/vMuOdocajh3K8=;
+        b=Eo44T3ue9PTyK90zuRJpURaKwjZEippo0XCcpL1sQTu3b1SYC11r0oG760/AMone7/
+         oxxU5fvuJmJkaGMzctM59CMsVLzNd4+bj0Mzrbk2Od7v8bD70h+Oh+6hiipr411VftEC
+         otDSZD7sKX3dtf9n1t2MFjO5mgkWp6Sy5roRv0+oJkJ3eYFZFqeCQYRpCW1ik6E60ERo
+         3If7rHRQ9V6/H4YVOofEu5Tm/4LA1NSZ3SbzL3XeS8RBAkVf5y1fejGv52F2Z9Dkvf3C
+         mNGExhBVcDTxPQxsS+49oK+vxFenxEAOGJX476kAHo6Gu1PoesP+rukD6pXkstRuzzy2
+         u3Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aqxBeTv+Uaor0p8Sdaehy27crOZap/vMuOdocajh3K8=;
+        b=R1vsidcpRA/at8oorf83CaJPswIdSzLbxNlWaXkwKKQWti6cR0d03PqtKFEjarlygi
+         AGfHhgJGYzbxXl0ovWK1ldN/maSH81v9ZzZqE1RX+NAjxr6zNzLyxBraqdQ/pKehrE31
+         lXs+HhP5GsyCzv3zku/dEO/95kTm/LLz5PBw1Al+zo9oufpi4x/Homk3QisEP3KN0JCP
+         UKGBR4/5uqnpmYsTPNkTCDY4pgw8pNMjmZdVmRipilCCV0dFBQGb92IpBHb5pwkJq4SF
+         Zg5IhrtYudfNc1bSwyTUrNslY+oPqRcMyxu0qSHlF8uIGnS9q6wU9OG/FJekaInzyb9h
+         k4xQ==
+X-Gm-Message-State: APjAAAX+zGytb2Q8WsdAjbd8nJvquLkUcUjRHkaX77ZfdlaPgkApLdoj
+        o/KFuT5EDcr4BbKu4mIhy/Ya
+X-Google-Smtp-Source: APXvYqxp9EVNuIxWAF4JhI63OtaIYOBD0UTnkXJOxhywvLLiF23kdWSzZs3AK8N9xrT/wgs6bfQNFw==
+X-Received: by 2002:a63:350f:: with SMTP id c15mr31560380pga.225.1570462773734;
+        Mon, 07 Oct 2019 08:39:33 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:7088:cb7f:1889:38a3:2d:5880])
+        by smtp.gmail.com with ESMTPSA id d69sm15945077pfd.175.2019.10.07.08.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 08:39:32 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     ars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc:     alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/2] Add support for ADUX1020 sensor
+Date:   Mon,  7 Oct 2019 21:09:15 +0530
+Message-Id: <20191007153917.13611-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable x86 to use the generic walk_page_range() function, the
-callers of ptdump_walk_pgd_level() need to pass an mm_struct rather
-than the raw pgd_t pointer. Luckily since commit 7e904a91bf60
-("efi: Use efi_mm in x86 as well as ARM") we now have an mm_struct
-for EFI on x86.
+Hello,
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/x86/include/asm/pgtable.h | 2 +-
- arch/x86/mm/dump_pagetables.c  | 4 ++--
- arch/x86/platform/efi/efi_32.c | 2 +-
- arch/x86/platform/efi/efi_64.c | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
+This patchset adds initial IIO driver support for ADUX1020 Photometric
+sensor from Analog Devices. This sensor is usable for multiple optical
+measurement applications, including gesture control and proximity sensing.
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 6986a451619e..1a2b469f6e75 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -29,7 +29,7 @@
- extern pgd_t early_top_pgt[PTRS_PER_PGD];
- int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
- 
--void ptdump_walk_pgd_level(struct seq_file *m, pgd_t *pgd);
-+void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user);
- void ptdump_walk_pgd_level_checkwx(void);
- void ptdump_walk_user_pgd_level_checkwx(void);
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 4dc6f4df40af..24fe76325b31 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -567,9 +567,9 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 		pr_info("x86/mm: Checked W+X mappings: passed, no W+X pages found.\n");
- }
- 
--void ptdump_walk_pgd_level(struct seq_file *m, pgd_t *pgd)
-+void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm)
- {
--	ptdump_walk_pgd_level_core(m, pgd, false, true);
-+	ptdump_walk_pgd_level_core(m, mm->pgd, false, true);
- }
- 
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user)
-diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
-index 9959657127f4..1616074075c3 100644
---- a/arch/x86/platform/efi/efi_32.c
-+++ b/arch/x86/platform/efi/efi_32.c
-@@ -49,7 +49,7 @@ void efi_sync_low_kernel_mappings(void) {}
- void __init efi_dump_pagetable(void)
- {
- #ifdef CONFIG_EFI_PGT_DUMP
--	ptdump_walk_pgd_level(NULL, swapper_pg_dir);
-+	ptdump_walk_pgd_level(NULL, &init_mm);
- #endif
- }
- 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 08ce8177c3af..3cb63cd369d6 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -614,9 +614,9 @@ void __init efi_dump_pagetable(void)
- {
- #ifdef CONFIG_EFI_PGT_DUMP
- 	if (efi_enabled(EFI_OLD_MEMMAP))
--		ptdump_walk_pgd_level(NULL, swapper_pg_dir);
-+		ptdump_walk_pgd_level(NULL, &init_mm);
- 	else
--		ptdump_walk_pgd_level(NULL, efi_mm.pgd);
-+		ptdump_walk_pgd_level(NULL, &efi_mm);
- #endif
- }
- 
+This initial driver includes support for only proximity mode with event
+based interrupt. The driver validation has been performed using Shiratech
+LTE mezzanine [1] connected to 96Boards Dragonboard410c [2].
+
+Thanks,
+Mani
+
+[1] https://www.96boards.org/product/shiratech-lte/
+[2] https://www.96boards.org/product/dragonboard410c/
+
+Changes in v2:
+
+* Converted the devicetree binding to YAML
+
+Manivannan Sadhasivam (2):
+  dt-bindings: iio: light: Add binding for ADUX1020
+  iio: light: Add support for ADUX1020 sensor
+
+ .../bindings/iio/light/adux1020.yaml          |  47 ++
+ drivers/iio/light/Kconfig                     |  11 +
+ drivers/iio/light/Makefile                    |   1 +
+ drivers/iio/light/adux1020.c                  | 783 ++++++++++++++++++
+ 4 files changed, 842 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/adux1020.yaml
+ create mode 100644 drivers/iio/light/adux1020.c
+
 -- 
-2.20.1
+2.17.1
 
