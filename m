@@ -2,108 +2,167 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66279C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67E8ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEA320684
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgP9FKCa"
+	by mail.kernel.org (Postfix) with ESMTP id C028720684
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 18:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570473516;
+	bh=NAn+q6yf4CHs6Mu3N4wO/Uqn6OEuK70VfBhue/aQrmw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A+nzzp8ULurAMHRb+bNuD8XASkxUIDyjuZ4GTb9olWptS+TDPpuX14DNG8vTKEilV
+	 wzt0zbLwMp/HrEuXKSvEoNJ4q2rW6xgfKYdr2ib5RPQB5WONuUyLQCvWZNbHC4PVgh
+	 W/O6U7sgqadjhUot7gwuQ4gQMp1iHh0FH0wfdKvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfJGSg4 (ORCPT
+        id S1728707AbfJGSif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 14:36:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40883 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbfJGSgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:36:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m61so9589330qte.7;
-        Mon, 07 Oct 2019 11:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fXL8J/OQJmreiyptvpgxHievcJo6KOM1a1ady8Gq0qE=;
-        b=cgP9FKCa+Rmg1fTWx4Msi4HhEyQYM8Leky4PtPKPdo9NVLQNF7g+tQice2NdsF1wle
-         7dMOsp5hA0jBv4ORML7x3lEzYii1kVHIj43FMVWOP7GiA83bcRuJCWAQAaAD9VMiPrvr
-         Q4TlQdpN5rBvYAGZzCI8xZtC0U28TWXpzW0r38zOei3eZDv+iAhBrWsDAkVKaAODQrx0
-         dm5G/+su7Y2HRKWxoFPFq9b1JFxMLf40knrHIHJjUdysI2s9YJSHzeuBh8+A3P33RZ12
-         oMjBE6ZB562H0IZx8QoH5hbAdYn4ah4LsJ0gVqNjUzOWIqn3nyvY7+KSV3YUZKDgNKDK
-         v1ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fXL8J/OQJmreiyptvpgxHievcJo6KOM1a1ady8Gq0qE=;
-        b=BjKfLIbtxA9rSmyNR7lGC9QPxwgB+HxZ1ZydLRFeSAXN/DBL5XsJgdv23IjPd6Aa42
-         lKcmFeEsbOJcwIauEDzDKn12k3EN/YYGYOQpJKiM8SHn4279Sj5wy20lvNAgRybw61Lf
-         oYFig1eLb6oDnwrLc5U4RLWKcVsxotHtRsrd1wBvw7YaXHztL/N+H0qemHXjvN0/PhFG
-         qRjpPbZAsYHx5Y68ysz6l0v9guCBe/ApO/3NQmsGRdAI7fsltmF6figwW0QCfyBzUtsL
-         VKC6cSVplHPZzWe056WDhVBKkEqJ+9IDBqZpayQSSwFa7EIlHkHQIwOu3HjrG6rpRFfA
-         OLHQ==
-X-Gm-Message-State: APjAAAVYR9Ld45rNtvDHSzNB5YYFGH6yR1Mdl/VPwC3UgMMI3AuEHVO7
-        EgmecaPi/QVEYqIQ/iZ9shykGNACM5D2l9xh5ZF2QnMJ
-X-Google-Smtp-Source: APXvYqy70SsUjoYiUVpnHDEy2rjlLPhOO4kwSxJXoIqnTOLmTqH8ik5f+3V4sa/1uDzyb0En521XO1kijR4HgNI3kqI=
-X-Received: by 2002:ac8:2aaf:: with SMTP id b44mr32435987qta.359.1570473414763;
- Mon, 07 Oct 2019 11:36:54 -0700 (PDT)
+        Mon, 7 Oct 2019 14:38:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728081AbfJGSif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 14:38:35 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 810AF21655;
+        Mon,  7 Oct 2019 18:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570473513;
+        bh=NAn+q6yf4CHs6Mu3N4wO/Uqn6OEuK70VfBhue/aQrmw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h6OBPyL/UW1tVbfEOBO4SpOwNmrWpZKcca/DqzkkWBlQW89u7QwvHRvL5eWfgt5b9
+         jk0hyfEQaCOvfSHuhYr+gsoSZdrtb8IDXXbMTudalWPQ7BHV89kvap97lRstRxPXO+
+         wCNY3dXkEBaNBT0LxAFO25hBZMbmMzNixvTlekuY=
+Received: by mail-qk1-f182.google.com with SMTP id f16so13598023qkl.9;
+        Mon, 07 Oct 2019 11:38:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAWMktNLSAOM7GZb2N3v9iNLLYr3i98UObOKZ/LzUjsKOW8L99qk
+        aDWb6mDLhTilcpk3TpPjAyRTi1CzltF/xiw4xg==
+X-Google-Smtp-Source: APXvYqw1uMDNOBK4id6x2x90eI0DouFlvWMcqOx1OkyvNHbflg90LosKjYFToraQFwlrtde7/0IP7Djz+EDPbZVrG/U=
+X-Received: by 2002:a05:620a:549:: with SMTP id o9mr25361081qko.223.1570473512597;
+ Mon, 07 Oct 2019 11:38:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191006222046.GA18027@roeck-us.net> <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
- <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net> <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
-In-Reply-To: <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
-From:   Tony Luck <tony.luck@gmail.com>
-Date:   Mon, 7 Oct 2019 11:36:43 -0700
-Message-ID: <CA+8MBb+VKk0aQZaJ+tMbFV7+s37HrQ6pzy4sHDAA3yqS-3nVwA@mail.gmail.com>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <20191007175553.66940-1-john.stultz@linaro.org> <20191007175553.66940-5-john.stultz@linaro.org>
+In-Reply-To: <20191007175553.66940-5-john.stultz@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 7 Oct 2019 13:38:20 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+Message-ID: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 11:28 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
 >
-> On Sun, Oct 6, 2019 at 8:11 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > >
-> > > The last two should just do user_access_begin()/user_access_end()
-> > > instead of access_ok().  __copy_to_user_inatomic() has very few callers as well:
-> >
-> > Yeah, good points.
+> Add necessary compatible flag for HiSi's DWC3 so
+> dwc3-of-simple will probe.
 >
-> Looking at it some more this morning, I think it's actually pretty painful.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> ---
+>  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
 
-Late to this party ,,, but my ia64 console today is full of:
+Can you make this a schema.
 
-irqbalance(5244): unaligned access to 0x2000000800042f9b, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x2000000800042fbb, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x2000000800042fdb, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x2000000800042ffb, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x200000080004301b, ip=0xa0000001002fef90
-ia64_handle_unaligned: 95 callbacks suppressed
-irqbalance(5244): unaligned access to 0x2000000800042f9b, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x2000000800042fbb, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x2000000800042fdb, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x2000000800042ffb, ip=0xa0000001002fef90
-irqbalance(5244): unaligned access to 0x200000080004301b, ip=0xa0000001002fef90
-ia64_handle_unaligned: 95 callbacks suppressed
+> diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> new file mode 100644
+> index 000000000000..3a3e5c320f2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> @@ -0,0 +1,52 @@
+> +HiSi SuperSpeed DWC3 USB SoC controller
+> +
+> +Required properties:
+> +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> +- clocks:              A list of phandle + clock-specifier pairs for the
+> +                       clocks listed in clock-names
+> +- clock-names:         Should contain the following:
+> +  "clk_abb_usb"                USB reference clk
+> +  "aclk_usb3otg"       USB3 OTG aclk
+> +
+> +- assigned-clocks:     Should be:
+> +                               HI3660_ACLK_GATE_USB3OTG
+> +- assigned-clock-rates: Should be:
+> +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> +
+> +Optional properties:
+> +- resets:              Phandle to reset control that resets core and wrapper.
 
-Those ip's point into filldir64()
+Looks like 4 resets though.
 
--Tony
+> +
+> +Required child node:
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in dwc3.txt.
+> +
+> +Example device nodes:
+> +
+> +       usb3: hisi_dwc3 {
+> +               compatible = "hisilicon,hi3660-dwc3";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +               clock-names = "clk_abb_usb", "aclk_usb3otg";
+> +
+> +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +               assigned-clock-rates = <229 000 000>;
+> +               resets = <&crg_rst 0x90 8>,
+> +                        <&crg_rst 0x90 7>,
+> +                        <&crg_rst 0x90 6>,
+> +                        <&crg_rst 0x90 5>;
+> +
+> +               dwc3: dwc3@ff100000 {
+
+If it's only clocks and resets for the wrapper node, just make this
+all one node.
+
+And 'usb3' for the node name.
+
+> +                       compatible = "snps,dwc3";
+> +                       reg = <0x0 0xff100000 0x0 0x100000>;
+> +                       interrupts = <0 159 4>, <0 161 4>;
+> +                       phys = <&usb_phy>;
+> +                       phy-names = "usb3-phy";
+> +                       dr_mode = "otg";
+> +
+> +                       ...
+> +               };
+> +       };
+> --
+> 2.17.1
+>
