@@ -2,102 +2,91 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA341C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDDDC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAB821835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="C1PaEp39"
+	by mail.kernel.org (Postfix) with ESMTP id 5470F21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 10:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570444059;
+	bh=o/3HX+sqnNh7vr3SYYCutqGAasG1AMtER1h8gM4+CBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ulq34X7fJTWWQYLLpPTSsMoh1cn3rI1r8+3BfOaZ1YFv1/vlop/cd6z5IYjdxkN8g
+	 g+YX/cEl4nfQyr8UcJU4OOGkOL+4xhOIKsAXliOrSgYgUIZMChcfyI71ZwPnf9xIoy
+	 1zaJMsx+OZHa9TdflBhHmYkhBr6XnMyIc5PY2nhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfJGK0f (ORCPT
+        id S1727710AbfJGK1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 06:26:35 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28598 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfJGK0e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 06:26:34 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x97AKnkm026209;
-        Mon, 7 Oct 2019 12:25:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=aRKA0Hvxqsr1NU6FxTX9pHJ5jFSSMvepSuS2dat7KfY=;
- b=C1PaEp39aGplqzUO+AEhqlnEjwrL8KCqz6cf3NU+SbEGoVaZoHpQ0D+7WbUBls+xhTER
- D0rm5F1dZaNV0owRLPZuNFb8HczCS2pOuIZVzujC09CRsdUa3bQX1AyKxYkPM1d9TMrL
- 4EIKogGmOhoXsUfnIN2HBitZ80QQTruxzMDeMUPicGVSi3Dyn1gGUyBiElBb+MAKmrLL
- XgrBYvjdXZqrt0ge+FUtwhTUgNNMyOWERPnRpPV+yZNjyNqGBfdeqOYYC3Ju+yL8JOZV
- 51j00jaXVwNTHGJhVFlN6Bdddr/F3ZXGvvfLOt8b1S+I8Ihgfkxw56dr7kugyAh1r0R/ FA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vegxvhrn4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Oct 2019 12:25:56 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 90BF810002A;
-        Mon,  7 Oct 2019 12:25:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 817AE2BFE0A;
-        Mon,  7 Oct 2019 12:25:55 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 7 Oct 2019 12:25:55
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Alexandru Ardelean <alexaundru.ardelean@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH 1/3] dt-bindings: media: Fix id path for sun4i-a10-csi
-Date:   Mon, 7 Oct 2019 12:25:50 +0200
-Message-ID: <20191007102552.19808-2-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007102552.19808-1-alexandre.torgue@st.com>
-References: <20191007102552.19808-1-alexandre.torgue@st.com>
+        Mon, 7 Oct 2019 06:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfJGK1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 06:27:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 026F7206BB;
+        Mon,  7 Oct 2019 10:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570444057;
+        bh=o/3HX+sqnNh7vr3SYYCutqGAasG1AMtER1h8gM4+CBo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jVyox7Ty4EgYsSneZb3KoxWcLIsY8yooYV1lyMOfV5nrrDlBzcueVtqupZbxCNCoB
+         iisw6VDNuCnOHbvJg6o76eKW+Q9obYfeXL7yMqsyt0RFDHSewKV8iK+mhdQ+Zy5fOl
+         LtLtslBBAFup2HpSDXzURN8U6U4Zc7S962nKSHMc=
+Date:   Mon, 7 Oct 2019 12:27:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, Larry.Finger@lwfinger.net,
+        florian.c.schilhabel@googlemail.com, nishkadg.linux@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org, trivial@kernel.org
+Subject: Re: [PATCH] staging: rtl8712: align block comments
+Message-ID: <20191007102735.GA345628@kroah.com>
+References: <20191006203420.11202-1-gabrielabittencourt00@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-07_02:2019-10-07,2019-10-07 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191006203420.11202-1-gabrielabittencourt00@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit fixes id path of allwinner,sun4i-a10-csi.yaml location.
+On Sun, Oct 06, 2019 at 05:34:20PM -0300, Gabriela Bittencourt wrote:
+> Cleans up warnings of "Block comments should align the * on each line"
+> 
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> ---
+>  drivers/staging/rtl8712/recv_linux.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8712/recv_linux.c b/drivers/staging/rtl8712/recv_linux.c
+> index 84c4c8580f9a..70a4dcd4a1e5 100644
+> --- a/drivers/staging/rtl8712/recv_linux.c
+> +++ b/drivers/staging/rtl8712/recv_linux.c
+> @@ -115,8 +115,8 @@ void r8712_recv_indicatepkt(struct _adapter *adapter,
+>  	skb->protocol = eth_type_trans(skb, adapter->pnetdev);
+>  	netif_rx(skb);
+>  	recvframe->u.hdr.pkt = NULL; /* pointers to NULL before
+> -					* r8712_free_recvframe()
+> -					*/
+> +				      * r8712_free_recvframe()
+> +				      */
+>  	r8712_free_recvframe(recvframe, free_recv_queue);
+>  	return;
+>  _recv_indicatepkt_drop:
 
-Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+This patch did not apply to my tree at all.  Be sure you are working
+against the staging-next branch of the staging.git tree, or off of
+linux-next which includes this branch as well.
 
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-index 27f38eed389e..5dd1cf490cd9 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-+$id: http://devicetree.org/schemas/media/allwinner,sun4i-a10-csi.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
--- 
-2.17.1
+thanks,
 
+greg k-h
