@@ -2,183 +2,143 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44AEC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CC1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF2620673
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gggESg/a"
+	by mail.kernel.org (Postfix) with ESMTP id D491921655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfJGQT4 (ORCPT
+        id S1728786AbfJGQUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:19:56 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:35555 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfJGQT4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:19:56 -0400
-Received: by mail-yb1-f195.google.com with SMTP id f4so4874440ybm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fuxnneegK0n5AQkn3Efg7QQxvRdE8FlI4AZRcfswJc0=;
-        b=gggESg/a8iQOk/eiOTYXQcYqkbR3kHUOK4ySOsws+CmrSgKU4qCuh6MRVhVwZrOSqH
-         EAVlps2UTDr67pjAIsQp6XjADyOhQByETJApt/rPvGhO4mx+JUJc8a6WCAEw2o94ZVpp
-         puHtiiLQI3X9djyBadmRMxRWZJ6Otqn7YHM4X2WzEML79wT25lncdGXCFPMnx3jfFxzI
-         WozJkgi2KYnGBwwTGFvSlydzybZrzld2q7kJshd4T/uUKvvgx93IrP8zbRk0jpTeo6+c
-         +klcRS1tsciAetBVSSO4cns8cCH1Ox95p+8JHTky6IFRRQ0zFbUEBN3hvRvzwDteUtTk
-         sONQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fuxnneegK0n5AQkn3Efg7QQxvRdE8FlI4AZRcfswJc0=;
-        b=jpklN5n5JEw8HhORMdz03txBsRKXRdRWygCMqV8EpE68b08lSWo9Wt4WPpG+a9xOVN
-         N6Je62TRdVjo5XBv5lc6sWDBONiAAi8ILv0/CLNS1V131G7TaUztpg5E9eqwbPrac6FT
-         6QYic+f02vG5vkYwxGfQTYIXc7t4wJQNk3STXhP5EcgKzTaTergBszLODf50rGr4SzP9
-         ZYa9h7AAjd0LPvOXv842cUaMHJLQvGOgG280CuM78tdBWSMNdvmecRuJRtpQtc/PM1cU
-         Noonpim+CycuC5Sic82/GTuF87GszLWsinXPpdWvl1oHNnOzwMWKj6zpa90tH3YZBO5X
-         5efQ==
-X-Gm-Message-State: APjAAAWXUCVNoUMXwDOG9ei1ud9k8u3v4ZOpf5owU+shNliTRy1zn4gA
-        Zhf+5FrZskpXa1nTgcPEF+sVjjDF1JkKHuemQ94QNA==
-X-Google-Smtp-Source: APXvYqwsVP7yARKuOjpTCziICZb3EqEs18JlF2GJwWix24wKGGcr2npXgkv47FEXsEOdQO6ilnSn55kjSDH227sF/7Q=
-X-Received: by 2002:a25:df8d:: with SMTP id w135mr10874114ybg.453.1570465192707;
- Mon, 07 Oct 2019 09:19:52 -0700 (PDT)
+        Mon, 7 Oct 2019 12:20:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:40048 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728132AbfJGQUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:20:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2548142F;
+        Mon,  7 Oct 2019 09:20:34 -0700 (PDT)
+Received: from [10.1.197.21] (unknown [10.1.197.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EFC43F68E;
+        Mon,  7 Oct 2019 09:20:32 -0700 (PDT)
+Subject: Re: [PATCH v11 14/22] mm: pagewalk: Add 'depth' parameter to pte_hole
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20191007153822.16518-1-steven.price@arm.com>
+ <20191007153822.16518-15-steven.price@arm.com>
+ <20191007161049.GA13229@ziepe.ca>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <6e570d6d-b29f-f4cb-1eb9-6ff6cab15a2e@arm.com>
+Date:   Mon, 7 Oct 2019 17:20:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <87h84rbile.fsf@intel.com> <20191002102428.zaid63hp6wpd7w34@holly.lan>
- <8736gbbf2b.fsf@intel.com> <CAL_quvQkFjkBjJC5wH2t5XmyEq9OKWYSbAv39BJWT1hrKO7j8g@mail.gmail.com>
- <87h84q9pcj.fsf@intel.com> <CAL_quvQoWnWqS5OQAqbLcBO-bR9_obr1FBc6f6mA1T00n1DJNQ@mail.gmail.com>
- <CAOw6vbJ7XX8=nrJDENfn2pacf4MqQOkP+x8JV0wbqzoMfLvZWQ@mail.gmail.com>
-In-Reply-To: <CAOw6vbJ7XX8=nrJDENfn2pacf4MqQOkP+x8JV0wbqzoMfLvZWQ@mail.gmail.com>
-From:   Mat King <mathewk@google.com>
-Date:   Mon, 7 Oct 2019 10:19:40 -0600
-Message-ID: <CAL_quvTe_v9Vsbd0u4URitojmD-_VFeaOQ1BBYZ_UGwYWynjVA@mail.gmail.com>
-Subject: Re: New sysfs interface for privacy screens
-To:     Sean Paul <seanpaul@chromium.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>, rafael@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        David Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191007161049.GA13229@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 7:09 AM Sean Paul <seanpaul@chromium.org> wrote:
->
-> On Thu, Oct 3, 2019 at 3:57 PM Mat King <mathewk@google.com> wrote:
-> >
-> > On Thu, Oct 3, 2019 at 2:59 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > >
-> > > On Wed, 02 Oct 2019, Mat King <mathewk@google.com> wrote:
-> > > > On Wed, Oct 2, 2019 at 4:46 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > > >>
-> > > >> On Wed, 02 Oct 2019, Daniel Thompson <daniel.thompson@linaro.org> wrote:
-> > > >> > On Wed, Oct 02, 2019 at 12:30:05PM +0300, Jani Nikula wrote:
-> > > >> >> On Tue, 01 Oct 2019, Mat King <mathewk@google.com> wrote:
-> > > >> >> > Resending in plain text mode
->
-> /snip
->
-> >
-> > So my proposal would now be to add a new standard property to
-> > drm_connector called "privacy_screen" this property would be an enum
-> > which can take one of three values.
-> >
-> > PRIVACY_UNSUPPORTED - Privacy is not available for this connector
-> > PRIVACY_DISABLED - Privacy is available but turned off
-> > PRIVACY_ENABLED - Privacy is available and turned on
->
-> Agree with Jani, use the property presence to determine if it's supported
+On 07/10/2019 17:10, Jason Gunthorpe wrote:
+> On Mon, Oct 07, 2019 at 04:38:14PM +0100, Steven Price wrote:
+>> diff --git a/mm/hmm.c b/mm/hmm.c
+>> index 902f5fa6bf93..34fe904dd417 100644
+>> +++ b/mm/hmm.c
+>> @@ -376,7 +376,7 @@ static void hmm_range_need_fault(const struct hmm_vma_walk *hmm_vma_walk,
+>>  }
+>>  
+>>  static int hmm_vma_walk_hole(unsigned long addr, unsigned long end,
+>> -			     struct mm_walk *walk)
+>> +			     __always_unused int depth, struct mm_walk *walk)
+> 
+> It this __always_unused on function arguments something we are doing
+> now?
 
-That makes sense; just to confirm can a property be added or removed
-after the connector is registered?
+$ git grep __always_unused | wc -l
+191
 
->
-> >
-> > When the connector is initized the privacy screen property is set to
-> > PRIVACY_UNSUPPORTED and cannot be changed unless a drm_privacy_screen
-> > is registered to the connector. drm_privacy_screen will look something
-> > like
-> >
-> > struct drm_privacy_screen_ops {
-> >     int (*get_privacy_state)(struct drm_privacy_screen *);
-> >     int (*set_privacy_state)(struct drm_privacy_screen *, int);
-> > }
-> >
-> > struct drm_privacy_screen {
-> >     /* The privacy screen device */
-> >     struct device *dev;
-> >
-> >     /* The connector that the privacy screen is attached */
-> >     struct drm_connector *connector;
-> >
-> >     /* Ops to get and set the privacy screen state */
-> >     struct drm_privacy_screen_ops *ops;
-> >
-> >     /* The current state of the privacy screen */
-> >     int state;
-> > }
-> >
-> > Privacy screen device drivers will call a function to register the
-> > privacy screen with the connector.
->
-> Do we actually need dedicated drivers for privacy screen? It seems
-> like something that is panel-specific hardware, so I'd suggest just
-> using the panel driver.
+It's elsewhere in the kernel tree. It seems like a good way of both
+documenting and silencing compiler warnings. But I'm open to other
+suggestions.
 
-The privacy screen is physically part of the display but the control
-interface, at least in all current use cases, is ACPI. Is there a way
-to control an ACPI device with the panel driver?
+> Can we have negative depth? Should it be unsigned?
 
->
-> Sean
->
-> >
-> > int drm_privacy_screen_register(struct drm_privacy_screen_ops *ops,
-> > struct device *dev, struct drm_connector *);
-> >
-> > Calling this will set a new field on the connector "struct
-> > drm_privacy_screen *privacy_screen" and change the value of the
-> > property to ops->get_privacy_state(). When
-> > drm_mode_connector_set_obj_prop() is called with the
-> > privacy_screen_proptery if a privacy_screen is registered to the
-> > connector the ops->set_privacy_state() will be called with the new
-> > value.
-> >
-> > Setting of this property (and all drm properties) is done in user
-> > space using ioctrl.
-> >
-> > Registering the privacy screen with a connector may be tricky because
-> > the driver for the privacy screen will need to be able to identify
-> > which connector it belongs to and we will have to deal with connectors
-> > being added both before and after the privacy screen device is added
-> > by it's driver.
-> >
-> > How does that sound? I will work on a patch if that all sounds about right.
-> >
-> > One question I still have is there a way to not accept a value that is
-> > passed to drm_mode_connector_set_obj_prop()? In this case if a privacy
-> > screen is not registered the property must stay PRIVACY_UNSUPPORTED
-> > and if a privacy screen is registered then PRIVACY_UNSUPPORTED must
-> > never be set.
+As per the documentation added in this patch:
+
+ * @pte_hole:	if set, called for each hole at all levels,
+ *		depth is -1 if not known, 0:PGD, 1:P4D, 2:PUD, 3:PMD
+ *		4:PTE. Any folded depths (where PTRS_PER_P?D is equal
+ *		to 1) are skipped.
+
+So it's signed to allow "-1" in the cases where pte_hole is called
+without knowing the actual depth. This is used in the function
+walk_page_test() because it don't walk the actual page tables, but is
+called on a VMA instead. This means that there may not be a single depth
+for the range provided.
+
+Steve
+
+>>  {
+>>  	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+>>  	struct hmm_range *range = hmm_vma_walk->range;
+>> @@ -564,7 +564,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+>>  again:
+>>  	pmd = READ_ONCE(*pmdp);
+>>  	if (pmd_none(pmd))
+>> -		return hmm_vma_walk_hole(start, end, walk);
+>> +		return hmm_vma_walk_hole(start, end, 0, walk);
+>>  
+>>  	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
+>>  		bool fault, write_fault;
+>> @@ -666,7 +666,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>>  again:
+>>  	pud = READ_ONCE(*pudp);
+>>  	if (pud_none(pud))
+>> -		return hmm_vma_walk_hole(start, end, walk);
+>> +		return hmm_vma_walk_hole(start, end, 0, walk);
+>>  
+>>  	if (pud_huge(pud) && pud_devmap(pud)) {
+>>  		unsigned long i, npages, pfn;
+>> @@ -674,7 +674,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>>  		bool fault, write_fault;
+>>  
+>>  		if (!pud_present(pud))
+>> -			return hmm_vma_walk_hole(start, end, walk);
+>> +			return hmm_vma_walk_hole(start, end, 0, walk);
+>>  
+>>  		i = (addr - range->start) >> PAGE_SHIFT;
+>>  		npages = (end - addr) >> PAGE_SHIFT;
+> 
+> Otherwise this mechanical change to hmm.c looks OK to me
+> 
+> Jason
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
