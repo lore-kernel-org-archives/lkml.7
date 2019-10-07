@@ -2,92 +2,96 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53772ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BF1ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308FF20640
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2529120640
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RPW4WwWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfJGPmC (ORCPT
+        id S1728413AbfJGPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:42:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53648 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfJGPmC (ORCPT
+        Mon, 7 Oct 2019 11:43:20 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4546 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727745AbfJGPnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:42:02 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iHV8x-0000bB-Pu; Mon, 07 Oct 2019 15:41:51 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i915: make array hw_engine_mask static, makes object smaller
-Date:   Mon,  7 Oct 2019 16:41:51 +0100
-Message-Id: <20191007154151.23245-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 7 Oct 2019 11:43:20 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x97FQnAJ023875;
+        Mon, 7 Oct 2019 17:43:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=STMicroelectronics;
+ bh=UTHD69iAxHI4Q+BO79OUIRdFG9H6XecRAFidEkGXZRg=;
+ b=RPW4WwWq7gR3ZFkXAf216UPqDWG1PZ/yCNDOvW0Y6K1dEnNlz42dbw6HpT+pW8Mwc08d
+ 5wVr+5IzVa9MN5vW1khBKZd+Li/pO0eyGnhnF2T1L+8O9i4YamU+sNxPlvLlsU2bd+CJ
+ z7DOXCp3KRUiys0CJKb//CS9VEohKQhouvT/ZTyIQIVWkAY63zsbDwIFzKMzZWLvMSav
+ NenOhoS1LLhVT/OslXvPRc+eY/TKtqga5jO7CJHuTWG1Q/nPbiaYbvauPBiiq+mZvngu
+ LmWdegyys2KP6eX6GXJrY8xQxEKH1TV9dJwqmYfJFdcZaBn9568B9p85lsb4PgSVgMlV bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vegaguhpa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Oct 2019 17:43:17 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4156C10002A;
+        Mon,  7 Oct 2019 17:43:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3A9832B1E43;
+        Mon,  7 Oct 2019 17:43:17 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Oct 2019 17:43:16
+ +0200
+From:   Antonio Borneo <antonio.borneo@st.com>
+To:     Richard Cochran <richardcochran@gmail.com>,
+        <netdev@vger.kernel.org>
+CC:     Antonio Borneo <antonio.borneo@st.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ptp: fix typo of "mechanism" in Kconfig help text
+Date:   Mon, 7 Oct 2019 17:43:02 +0200
+Message-ID: <20191007154306.95827-1-antonio.borneo@st.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-07_03:2019-10-07,2019-10-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Fix typo s/mechansim/mechanism/
 
-Don't populate the array hw_engine_mask on the stack but instead make it
-static. Makes the object code smaller by 316 bytes.
-
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  34004	   4388	    320	  38712	   9738	gpu/drm/i915/gt/intel_reset.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
-  33528	   4548	    320	  38396	   95fc	gpu/drm/i915/gt/intel_reset.o
-
-(gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
 ---
- drivers/gpu/drm/i915/gt/intel_reset.c | 4 ++--
+ drivers/ptp/Kconfig | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_reset.c b/drivers/gpu/drm/i915/gt/intel_reset.c
-index eeb3bd0c4d69..db58ca9bee3a 100644
---- a/drivers/gpu/drm/i915/gt/intel_reset.c
-+++ b/drivers/gpu/drm/i915/gt/intel_reset.c
-@@ -285,7 +285,7 @@ static int gen6_reset_engines(struct intel_gt *gt,
- 			      unsigned int retry)
- {
- 	struct intel_engine_cs *engine;
--	const u32 hw_engine_mask[] = {
-+	static const u32 hw_engine_mask[] = {
- 		[RCS0]  = GEN6_GRDOM_RENDER,
- 		[BCS0]  = GEN6_GRDOM_BLT,
- 		[VCS0]  = GEN6_GRDOM_MEDIA,
-@@ -408,7 +408,7 @@ static int gen11_reset_engines(struct intel_gt *gt,
- 			       intel_engine_mask_t engine_mask,
- 			       unsigned int retry)
- {
--	const u32 hw_engine_mask[] = {
-+	static const u32 hw_engine_mask[] = {
- 		[RCS0]  = GEN11_GRDOM_RENDER,
- 		[BCS0]  = GEN11_GRDOM_BLT,
- 		[VCS0]  = GEN11_GRDOM_MEDIA,
+diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+index 960961fb0d7c..0517272a268e 100644
+--- a/drivers/ptp/Kconfig
++++ b/drivers/ptp/Kconfig
+@@ -97,8 +97,8 @@ config PTP_1588_CLOCK_PCH
+ 	help
+ 	  This driver adds support for using the PCH EG20T as a PTP
+ 	  clock. The hardware supports time stamping of PTP packets
+-	  when using the end-to-end delay (E2E) mechansim. The peer
+-	  delay mechansim (P2P) is not supported.
++	  when using the end-to-end delay (E2E) mechanism. The peer
++	  delay mechanism (P2P) is not supported.
+ 
+ 	  This clock is only useful if your PTP programs are getting
+ 	  hardware time stamps on the PTP Ethernet packets using the
 -- 
-2.20.1
+2.23.0
 
