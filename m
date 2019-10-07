@@ -2,96 +2,102 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A15C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F83C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D7C2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:04:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbxYapSC"
+	by mail.kernel.org (Postfix) with ESMTP id 217812084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 00:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfJGAEO (ORCPT
+        id S1726843AbfJGAF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Oct 2019 20:04:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46157 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfJGAEO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Oct 2019 20:04:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b8so748310pgm.13;
-        Sun, 06 Oct 2019 17:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0OGHKPj+Wv5bJqZl+51TCg/isw7AhFW5RqOkp5nI8pY=;
-        b=RbxYapSCPmtOvzif62cXaYKpWjbEj/Acwk/Pec1HgdvlFcj6qTE/b1FaaocjPpdZbI
-         5RHuFu6c24q0fQG3/lVTrwMJopULCDK5xWD0SRCIVhjsAiYgkAj5bcYjrjQs9zgJ48JC
-         NwHL4RG+EB9QWu4yH9rhlL6NCCJ4G8qt5i/2vr7nGzOCfP59oJSgktxzsXF7jVebT4q0
-         nAzQ4OwKKZf2isV+MJtaE+55w4xv/Q4nH8+Tw1Eqrw57EMTGrxdmYDSakv2aBitfKu/m
-         YXu1KSurW+vJx3mRDEuHKaLMOCh/2kJjFXXn23P5OehPGGTFNn2R74eoVEKHXw7e7vuC
-         BiDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0OGHKPj+Wv5bJqZl+51TCg/isw7AhFW5RqOkp5nI8pY=;
-        b=lmeXznYnS093z+IJ6GcrA+Mn+jxnVsFy6i/bou0k88H0XaBYfrViVd34Zm1g20MgKo
-         Gin121ykW7kXv9tZ/vzPk4rHZh0Trri8+cEMRqPObaSyAIqpa5OTRmKEwji78GkoHgpX
-         vTATvw2ylHjpE9n9O4uNtwQBdLpqcW/fgPpdi7hYJG4w1T0vMOOduz47sKZGm0mDyUAG
-         41owrh12S5lZfcJDpyFLv26z3yq4O4xES/SksVxNQUvJSti9WGguvLiysskPaqoyqubq
-         69WqQfU0BUHsqz6A4iFNXQ2ZbhF6lLIYxa3KBgqBfRdPHfcyTZPC+y7MRvhGKSMagPMH
-         GSOA==
-X-Gm-Message-State: APjAAAV0U1rbVumfERnr3mEHt95PJs9FW2DkmevMqgviZbxHXHqR63q1
-        98MCmDFz3X09BFmgQ7kZx7x/vhP2
-X-Google-Smtp-Source: APXvYqxTcoktvi7Wqs0TBFmvZqRdSJTpKxwLszug0YozOpo72qXAHkhogNUlWB93Xo0nYv2fMRgJCA==
-X-Received: by 2002:aa7:928b:: with SMTP id j11mr30350725pfa.237.1570406652891;
-        Sun, 06 Oct 2019 17:04:12 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y36sm2055693pgk.66.2019.10.06.17.04.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 06 Oct 2019 17:04:11 -0700 (PDT)
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20191006222046.GA18027@roeck-us.net>
- <CAHk-=wgrqwuZJmwbrjhjCFeSUu2i57unaGOnP4qZAmSyuGwMZA@mail.gmail.com>
- <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
-Date:   Sun, 6 Oct 2019 17:04:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 6 Oct 2019 20:05:29 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28126 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfJGAF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Oct 2019 20:05:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Oct 2019 17:05:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
+   d="scan'208";a="204904213"
+Received: from mwebb1-mobl.ger.corp.intel.com (HELO localhost) ([10.251.93.103])
+  by orsmga002.jf.intel.com with ESMTP; 06 Oct 2019 17:05:22 -0700
+Date:   Mon, 7 Oct 2019 03:05:20 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        "Wiseman, Monty (GE Global Research, US)" <monty.wiseman@ge.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191007000520.GA17116@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjRPerXedTDoBbJL=tHBpH+=sP6pX_9NfgWxpnmHC5RtQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/6/19 4:35 PM, Linus Torvalds wrote:
-[ ... ]
-
-> Anyway, let me think about this, but just for testing, does the
-> attached patch make any difference? It's not the right thing in
-> general (and most definitely not on x86), but for testing whether this
-> is about unaligned accesses it might work.
+On Fri, Oct 04, 2019 at 07:56:01PM +0000, Safford, David (GE Global Research, US) wrote:
 > 
+> > From: linux-integrity-owner@vger.kernel.org <linux-integrity-
+> > owner@vger.kernel.org> On Behalf Of Jarkko Sakkinen
+> > Sent: Friday, October 4, 2019 2:27 PM
+> > Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+> > 
+> > If you are able to call tpm_get_random(), the driver has already registered
+> > TPN as hwrng. With this solution you fail to follow the principle of defense in
+> > depth. If the TPM random number generator is compromissed (has a bug)
+> > using the entropy pool will decrease the collateral damage.
+> 
+> And if the entropy pool has a bug or is misconfigured, you lose everything.
+> That does not sound like defense in depth to me. In the real world
+> I am not aware of a single instance of RNG vulnerability on a TPM.
+> I am directly aware of several published vulnerabilities in embedded systems 
+> due to a badly ported version of the kernel random pool. In addition, 
+> the random generator in a TPM is hardware isolated, and less likely to be
+> vulnerable to side channel or memory manipulation errors. The TPM
+> RNG is typically FIPS certified.  The use of the TPM RNG was a deliberate
+> design choice in trusted keys.
 
-All my alpha, sparc64, and xtensa tests pass with the attached patch
-applied on top of v5.4-rc2. I didn't test any others.
+Hmm... so is RDRAND opcode FIPS certified.
 
-I'll (try to) send you some disassembly next.
+Kernel has the random number generator for two reasons:
 
-Guenter
+1. To protect against bugs in hwrng's.
+2. To protect against deliberate backdoors in hwrng's.
+
+How TPM RNG is guaranteed to protect against both 1 and 2?
+
+If I would agree what you say, that'd be argument against using kernel
+random number generator *anywhere* in the kernel. Even with the entropy
+issues it is least worst thing to use for key generations for better
+or worse.
+
+/Jarkko
