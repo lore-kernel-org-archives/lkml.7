@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27190ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32625ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACCF206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A98206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 17:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfJGRrB (ORCPT
+        id S1729282AbfJGRrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 13:47:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60854 "EHLO
+        Mon, 7 Oct 2019 13:47:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60856 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbfJGRrA (ORCPT
+        with ESMTP id S1728121AbfJGRrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 13:47:00 -0400
+        Mon, 7 Oct 2019 13:47:05 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 3C5F428D406
+        with ESMTPSA id D87EB28D41F
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org
 Cc:     kernel@collabora.com,
@@ -38,9 +38,9 @@ Cc:     kernel@collabora.com,
         fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 for 5.4 3/4] media: hantro: Fix motion vectors usage condition
-Date:   Mon,  7 Oct 2019 14:45:04 -0300
-Message-Id: <20191007174505.10681-4-ezequiel@collabora.com>
+Subject: [PATCH v2 for 5.4 4/4] media: hantro: Fix picture order count table enable
+Date:   Mon,  7 Oct 2019 14:45:05 -0300
+Message-Id: <20191007174505.10681-5-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191007174505.10681-1-ezequiel@collabora.com>
 References: <20191007174505.10681-1-ezequiel@collabora.com>
@@ -53,13 +53,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Francois Buergisser <fbuergisser@chromium.org>
 
-The setting of the motion vectors usage and the setting of motion
-vectors address are currently done under different conditions.
+The picture order count table only makes sense for profiles
+higher than Baseline. This is confirmed by the H.264 specification
+(See 8.2.1 Decoding process for picture order count), which
+clarifies how POC are used for features not present in Baseline.
 
-When decoding pre-recorded videos, this results of leaving the motion
-vectors address unset, resulting in faulty memory accesses. Fix it
-by using the same condition everywhere, which matches the profiles
-that support motion vectors.
+"""
+Picture order counts are used to determine initial picture orderings
+for reference pictures in the decoding of B slices, to represent picture
+order differences between frames or fields for motion vector derivation
+in temporal direct mode, for implicit mode weighted prediction in B slices,
+and for decoder conformance checking.
+"""
+
+As a side note, this change matches various vendors downstream codebases,
+including ChromiumOS and IMX VPU libraries.
 
 Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
 Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
@@ -68,22 +76,25 @@ Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 v2:
 * New patch.
 
- drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/hantro/hantro_g1_h264_dec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-index 7ab534936843..c92460407613 100644
+index c92460407613..05576dbd39e2 100644
 --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
 +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-@@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
+@@ -34,9 +34,9 @@ static void set_params(struct hantro_ctx *ctx)
+ 	reg = G1_REG_DEC_CTRL0_DEC_AXI_WR_ID(0x0);
  	if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
  		reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
- 	reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
--	if (dec_param->nal_ref_idc)
-+	if (sps->profile_idc > 66)
- 		reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+-	reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+ 	if (sps->profile_idc > 66)
+-		reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
++		reg = G1_REG_DEC_CTRL0_PICORD_COUNT_E |
++		      G1_REG_DEC_CTRL0_WRITE_MVS_E;
  
  	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
+ 	    (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD ||
 -- 
 2.22.0
 
