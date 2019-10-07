@@ -2,98 +2,93 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214A3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A2CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCA921721
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PDXaEe+z"
+	by mail.kernel.org (Postfix) with ESMTP id A40FC21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfJGMpH (ORCPT
+        id S1727933AbfJGMpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:45:07 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47298 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbfJGMpF (ORCPT
+        Mon, 7 Oct 2019 08:45:03 -0400
+Received: from mtaout.hs-regensburg.de ([194.95.104.10]:60530 "EHLO
+        mtaout.hs-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfJGMpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 08:45:05 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97Ciugh028200;
-        Mon, 7 Oct 2019 07:44:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570452296;
-        bh=X7hzJJQEkRzJAXvPctxNxtYyBZx2IAS1X6Y1pIA69ek=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PDXaEe+zywyKLTzecfN+i9+Oe9wmoZQLk9VNCQrrBVZV794PO0uObtD+JothZSEk3
-         /SnvxRMntXMa2h6O4LJEyfjP9ZI0OEJstp6pur1ZaSGMLCXU56YXJ4HPESoTAn0HQt
-         5VMzecKtBwYHkkTQv8XJy8kUg8RKP2EwlD6ado5Y=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97CiuUT109883
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Oct 2019 07:44:56 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
- 2019 07:44:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 7 Oct 2019 07:44:53 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97CitWe040869;
-        Mon, 7 Oct 2019 07:44:55 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <sre@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v9 1/5] leds: populate the device's of_node
-Date:   Mon, 7 Oct 2019 14:44:33 +0200
-Message-ID: <20191007124437.20367-2-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191007124437.20367-1-jjhiblot@ti.com>
-References: <20191007124437.20367-1-jjhiblot@ti.com>
+        Mon, 7 Oct 2019 08:45:03 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Oct 2019 08:45:01 EDT
+Received: from pluto.lfdr (im-mob-039.hs-regensburg.de [172.20.37.154])
+        by mtaout.hs-regensburg.de (Postfix) with ESMTP id 46n0Q44Z2Zzy16;
+        Mon,  7 Oct 2019 14:38:20 +0200 (CEST)
+From:   Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        jailhouse-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+Subject: [PATCH v5 0/2] x86/jailhouse: improve probing of platform UARTs
+Date:   Mon,  7 Oct 2019 14:38:17 +0200
+Message-Id: <20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-PMX-Version: 6.3.3.2656215, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.7.123317, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.7.5650001
+X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
+ MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODYTEXTP_SIZE_3000_LESS 0, BODY_SIZE_1900_1999 0, BODY_SIZE_2000_LESS 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, LEGITIMATE_SIGNS 0, MULTIPLE_REAL_RCPTS 0, URI_ENDS_IN_HTML 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __CC_NAME 0, __CC_NAME_DIFF_FROM_ACC 0, __CC_REAL_NAMES 0, __CP_URI_IN_BODY 0, __CTE 0, __FROM_DOMAIN_IN_ANY_CC1 0, __FROM_DOMAIN_IN_RCPT 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_X_MAILER 0, __HTTPS_URI 0, __INVOICE_MULTILINGUAL 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MULTIPLE_RCPTS_CC_X2 0, __MULTIPLE_RCPTS_TO_X5 0, __MULTIPLE_URI_TEXT 0, __NO_HTML_TAG_RAW 0, __SANE_MSGID 0, __SUBJ_ALPHA_END 0, __TO_MALFORMED_2 0, __TO_NAME 0, __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NS , __URI_WITH_PATH 0'
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If initialization data is available and its fwnode is actually a of_node,
-store this information in the led device's structure. This will allow the
-device to use or provide OF-based API such (devm_xxx).
+Hi,
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/led-class.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+probing of platform UARTs is a problem for x86 jailhouse non-root
+cells: Linux doesn't know which UARTs belong to the cell and will probe
+for all platform UARTs. This crashes the guest if access isn't
+permitted. Current workarounds (tuning via 8250.nr_uarts) are hacky and
+limited.
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 647b1263c579..bfa1b1033274 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -276,8 +276,10 @@ int led_classdev_register_ext(struct device *parent,
- 		mutex_unlock(&led_cdev->led_access);
- 		return PTR_ERR(led_cdev->dev);
- 	}
--	if (init_data && init_data->fwnode)
-+	if (init_data && init_data->fwnode) {
- 		led_cdev->dev->fwnode = init_data->fwnode;
-+		led_cdev->dev->of_node = to_of_node(init_data->fwnode);
-+	}
- 
- 	if (ret)
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+But we do have some flags inside setup_data that indicate availability
+of UARTs, so simply use it.
+
+  Ralf
+
+since v4:
+  - Link: https://lore.kernel.org/r/20190909151030.152012-1-ralf.ramsauer@oth-regensburg.de
+          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07483.html
+  - rebase and test on latest master and resolve conflicts
+  - Add linux-kernel ML
+
+since v3:
+  - Link: https://lore.kernel.org/r/20190819183408.988013-1-ralf.ramsauer@oth-regensburg.de
+          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07365.html
+  - Address Thomas' comments (and it really looks nicer)
+  - Address Jan's comment on patch 1 and add his Reviewed-by tag
+
+since v2:
+  - Link: https://lore.kernel.org/r/20190812110650.631305-1-ralf.ramsauer@oth-regensburg.de
+          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07334.html
+  - avoid imbalances of early_memremap and early_memunmap
+
+since v1:
+  - Link: https://lore.kernel.org/r/20190802123333.4008-1-ralf.ramsauer@oth-regensburg.de
+  -       alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07283.html
+  - setup data version check wasn't really prepared for extensions of
+    the structure. Add a patch that improves the checks.
+
+
+Ralf Ramsauer (2):
+  x86/jailhouse: improve setup data version comparison
+  x86/jailhouse: Only enable platform UARTs if available
+
+ arch/x86/include/uapi/asm/bootparam.h |  25 +++--
+ arch/x86/kernel/jailhouse.c           | 131 ++++++++++++++++++++------
+ 2 files changed, 117 insertions(+), 39 deletions(-)
+
 -- 
-2.17.1
+2.23.0
 
