@@ -2,171 +2,163 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E17CC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC3ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551CD2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205162070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 15:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YT1reUWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfJGPJU (ORCPT
+        id S1729329AbfJGPJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 11:09:20 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:49288 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfJGPJK (ORCPT
+        Mon, 7 Oct 2019 11:09:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37384 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbfJGPHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:09:10 -0400
-Received: by mail-io1-f70.google.com with SMTP id e14so27157613iot.16
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 08:09:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gmo3MNz9xfKzNnITqaWUMkwRN0WlLGJGgGYObtDrNng=;
-        b=Rw9hEyV1RJn4W4mG8SmGTCGx9hyun93E1sosI/ww2+l35gd6Sq1vzmvIUtTPSlA2VK
-         5rQY0JmwrzgKGWHlPHWgnfauS6LkmQdBAkoGAUBI8aOR7Axe1sUR7dzZ3POBl46pigmQ
-         4km10GK+nLz4xRDV39YVz/Te6ML122PfZdzpKoG1z5ChJzkzPhBwmGurcfiHtEEeLwKZ
-         FcKIbCYwWbWjHOFgC6TRhnLqKNhy5lLEy9skgNNgxpx5Jeyubwvhd5BbXiv0BTjkXc5t
-         Em9Z8Fj0vZuun1cDgL3u7KkI80WIPqPGyCjsIGiZWWLXXd4PI4ftByFfwZKJmEOkaetL
-         4EYA==
-X-Gm-Message-State: APjAAAXd1wOvO4YvqjOMYBidpZA32kfOV3hOER0WLq2bkN015V9xbMAR
-        QMQvzOjMbi96iY78H8t2B139UyAw4DnG7nfZ/ieK0EsJ0TNX
-X-Google-Smtp-Source: APXvYqyoxl0OUNr6+mTzCmNDiY9rlgQM5WIhwnJ3imJhR2nES9yjP9P3VZU+njR7WPuRJWlf6++jH9ZrXDmb/JHSnjHggf4rQZGu
+        Mon, 7 Oct 2019 11:07:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x97F7eNb066221;
+        Mon, 7 Oct 2019 10:07:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570460860;
+        bh=VmitdgajHHJkSVwVVJXNsT523zGlYCY363KbSQpWfJQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=YT1reUWlKGrELyV8v4mct+FVOE8+1f+6k7eA0StHD9VcRWlyAYky7IePXPZB7CD1e
+         NQpuAs0+t4ct29yztMnpDZypOzYgNRS3w/Dt7KHUmR+/gq7GZ6bltcXVV4/IjPNMxL
+         /f6KbozjV03kp8Jc3qCOPb+gsDX9s7zTDZDkh7Ko=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x97F7eTO023671
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Oct 2019 10:07:40 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 7 Oct
+ 2019 10:07:38 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 7 Oct 2019 10:07:40 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x97F7aFA055156;
+        Mon, 7 Oct 2019 10:07:40 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v3 04/21] media: ti-vpe: vpe: Remove unnecessary use of container_of
+Date:   Mon, 7 Oct 2019 10:09:52 -0500
+Message-ID: <20191007151009.22095-5-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191007151009.22095-1-bparrot@ti.com>
+References: <20191007151009.22095-1-bparrot@ti.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:87d7:: with SMTP id q23mr23388461ios.126.1570460948564;
- Mon, 07 Oct 2019 08:09:08 -0700 (PDT)
-Date:   Mon, 07 Oct 2019 08:09:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f91a330594536e3c@google.com>
-Subject: KMSAN: uninit-value in ax88772_hw_reset
-From:   syzbot <syzbot+bf5335246831e5f75f99@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        swinslow@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tranmanphong@gmail.com, yang.wei9@zte.com.cn,
-        zhang.run@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
+later have to use container_of to retrieve the actual pointer to the
+context structure, which seems to confuse static code analysis tool
+anyways, just save the pointer to the actual structure and then retrieve
+it directly.
 
-syzbot found the following crash on:
-
-HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=149bdd47600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=bf5335246831e5f75f99
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bf5335246831e5f75f99@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in ax88772_bind+0x6ad/0x11f0  
-drivers/net/usb/asix_devices.c:730
-CPU: 1 PID: 31 Comm: kworker/1:1 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  ax88772_hw_reset+0x507/0xb40 drivers/net/usb/asix_devices.c:368
-  ax88772_bind+0x6ad/0x11f0 drivers/net/usb/asix_devices.c:730
-  usbnet_probe+0x10ae/0x3960 drivers/net/usb/usbnet.c:1722
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
-  kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
-  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
-  ax88772_bind+0xa12/0x11f0 drivers/net/usb/asix_devices.c:720
-  usbnet_probe+0x10ae/0x3960 drivers/net/usb/usbnet.c:1722
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----buf.i@asix_get_phy_addr
-Variable was created at:
-  asix_read_cmd drivers/net/usb/asix_common.c:313 [inline]
-  asix_read_phy_addr drivers/net/usb/asix_common.c:296 [inline]
-  asix_get_phy_addr+0x4d/0x280 drivers/net/usb/asix_common.c:315
-  ax88772_bind+0x472/0x11f0 drivers/net/usb/asix_devices.c:720
-=====================================================
-
-
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 56f60dbea15c..0e9cb0319a92 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
+ 	return 0;
+ }
+ 
+-/*
+- * Return the vpe_ctx structure for a given struct file
+- */
+-static struct vpe_ctx *file2ctx(struct file *file)
+-{
+-	return container_of(file->private_data, struct vpe_ctx, fh);
+-}
+-
+ /*
+  * mem2mem callbacks
+  */
+@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
+ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vb2_queue *vq;
+ 	struct vpe_q_data *q_data;
+ 	int i;
+@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 
+ static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_fmt *fmt = find_format(f);
+ 
+ 	if (V4L2_TYPE_IS_OUTPUT(f->type))
+@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
+ static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	int ret;
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 
+ 	ret = vpe_try_fmt(file, priv, f);
+ 	if (ret)
+@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
+ static int vpe_g_selection(struct file *file, void *fh,
+ 		struct v4l2_selection *s)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_q_data *q_data;
+ 	bool use_c_rect = false;
+ 
+@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
+ static int vpe_s_selection(struct file *file, void *fh,
+ 		struct v4l2_selection *s)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_q_data *q_data;
+ 	struct v4l2_selection sel = *s;
+ 	int ret;
+@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
+ 	init_adb_hdrs(ctx);
+ 
+ 	v4l2_fh_init(&ctx->fh, video_devdata(file));
+-	file->private_data = &ctx->fh;
++	file->private_data = ctx;
+ 
+ 	hdl = &ctx->hdl;
+ 	v4l2_ctrl_handler_init(hdl, 1);
+@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
+ static int vpe_release(struct file *file)
+ {
+ 	struct vpe_dev *dev = video_drvdata(file);
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 
+ 	vpe_dbg(dev, "releasing instance %p\n", ctx);
+ 
+-- 
+2.17.1
+
