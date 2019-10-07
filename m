@@ -2,44 +2,74 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC045ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E42BC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9528621479
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C512084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 20:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="U7mWq69C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyU/jqzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfJGUcJ (ORCPT
+        id S1729177AbfJGUd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 16:32:09 -0400
-Received: from vps.xff.cz ([195.181.215.36]:46262 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbfJGUcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 16:32:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1570480327; bh=y/VyM0hZNMJuHkjWlJoe2Ll8Mns+SaZDNjGgFDEV18I=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=U7mWq69C5aY5UbL5IUH5mlWMNXL0uskF1Tstjk+xrzodsueFjYSuV5veHA2a3rISH
-         xhxnrdtLhDqetLQLJrG7g6uHG7nQmidwsuRUl9/BLEt233uhubXarE03aKX1REfddb
-         nl67Dl0TEbmuBlCMDrgE/0gQ8+yeCNpseyVi4jzw=
-From:   megous@megous.com
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ondrej Jirman <megous@megous.com>
-Subject: [RESEND PATCH 1/2] arm64: dts: allwinner: h6: Add pin configs for uart1
-Date:   Mon,  7 Oct 2019 22:31:51 +0200
-Message-Id: <20191007203152.3889947-2-megous@megous.com>
-In-Reply-To: <20191007203152.3889947-1-megous@megous.com>
-References: <20191007203152.3889947-1-megous@megous.com>
+        Mon, 7 Oct 2019 16:33:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35765 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJGUd3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 16:33:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so6826093pgl.2;
+        Mon, 07 Oct 2019 13:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YIGB5rJKa3Nx+y5Yme8n/YvLb1Ib/S8pJqTx4xDiXH0=;
+        b=LyU/jqzmdtoaohFHiEUWVKJU4XnVKA0WlP9CkJCjGUe0SV4/BIBd6pw8HXM8Pvd52O
+         sH0slGqUYiWPO2+0ej9aBsJ7bnh6Kkoz4A1dZX2LpbyUF6i7m9zFdJZxCll6Bb92ONGX
+         6iNbCXMJA3XM2jsBQ9rvunwFmrWAcxNuDdUtrPKEiDvyjGSa1Zt+zGoR185DFe68c1oM
+         KlRLZWqU+lclAlAQR0uPCKsSq+AHb5kmSgeQjLur5WZZBS22/WrIkwSvZ2Rx/do5Y1c6
+         mdNOsAiFcBzfoYx0NFPdGM5kcbSTc56hVnBEUPdO4Odli0WHT7gFXpvo6aUpSOVWLQmG
+         QVZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YIGB5rJKa3Nx+y5Yme8n/YvLb1Ib/S8pJqTx4xDiXH0=;
+        b=D/bdCidi0kRC3yMCvEVQiqiFVmCuRN/ySCfm8T0QwaTZno8uhoPk8X6IWGeJBN1UCm
+         twkkm6HL775clOZ6u2YeycFdWGta58oaWnCG0ejBG2dCu1zNei1d9+b2uX/VjcP3GSoB
+         qJ5oTFydqpaxXhtOqNvvW20Cs3FkgFbvIfwfvYVOTzp3spuEZOz/N84hwlS25OqY1rBf
+         uABQxFU1VeSqmUbl+ytqKMFeFPYrwCc3G1fYx43/x61XDzsj8dzijd+PbDB1XmrRcisg
+         zc+PY1dkU3MLM1N/RbofTMc6m4lSd4W4E3mEe4eCkrNxTp9PjYapykF4AclkfRssEiMz
+         pIOQ==
+X-Gm-Message-State: APjAAAUJbcZXVJNgj8gK1FC9r6GGvopb0FaojId3TwfNHZwPbU/J9HV6
+        Ael09h+GfoMfGMWuxuCNkQ8=
+X-Google-Smtp-Source: APXvYqwavWe8oRsj1hCM4qAecyeDctcm+6+xa8gLklkRlAhhFJeuKwgfoVdYJtH1e+uIAY1L+UD0ZQ==
+X-Received: by 2002:a65:4506:: with SMTP id n6mr32113258pgq.240.1570480407088;
+        Mon, 07 Oct 2019 13:33:27 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id c8sm16734359pfi.117.2019.10.07.13.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 13:33:26 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     freedreno@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] drm/msm: fix rd dumping for split-IB1
+Date:   Mon,  7 Oct 2019 13:31:07 -0700
+Message-Id: <20191007203108.18667-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,37 +77,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Rob Clark <robdclark@chromium.org>
 
-Orange Pi 3 uses UART1 for bluetooth. Add pinconfigs so that we can use
-them.
+When IB1 is split into multiple cmd buffers, we'd emit multiple
+RD_CMDSTREAM_ADDR per submit.  But after this packet is handled
+by the cffdump parser, it resets it's known buffers on the next
+GPUADDR packet, so subsequent RD_CMDSTREAM_ADDR packets from the
+same submit would not find their buffers.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
+Re-work the loop to snapshot all buffers before RD_CMDSTREAM_ADDR
+to avoid this problem.
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/msm/msm_rd.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 67f920e0fc33..7657e816096b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -298,6 +298,16 @@
- 				pins = "PH0", "PH1";
- 				function = "uart0";
- 			};
-+
-+			uart1_pins: uart1-pins {
-+				pins = "PG6", "PG7";
-+				function = "uart1";
-+			};
-+
-+			uart1_rts_cts_pins: uart1-rts-cts-pins {
-+				pins = "PG8", "PG9";
-+				function = "uart1";
-+			};
- 		};
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index 76d3fdd17bf8..f8f654301def 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -382,7 +382,6 @@ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 			snapshot_buf(rd, submit, i, 0, 0);
  
- 		gic: interrupt-controller@3021000 {
+ 	for (i = 0; i < submit->nr_cmds; i++) {
+-		uint64_t iova = submit->cmd[i].iova;
+ 		uint32_t szd  = submit->cmd[i].size; /* in dwords */
+ 
+ 		/* snapshot cmdstream bo's (if we haven't already): */
+@@ -390,6 +389,11 @@ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 			snapshot_buf(rd, submit, submit->cmd[i].idx,
+ 					submit->cmd[i].iova, szd * 4);
+ 		}
++	}
++
++	for (i = 0; i < submit->nr_cmds; i++) {
++		uint64_t iova = submit->cmd[i].iova;
++		uint32_t szd  = submit->cmd[i].size; /* in dwords */
+ 
+ 		switch (submit->cmd[i].type) {
+ 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
 -- 
-2.23.0
+2.21.0
 
