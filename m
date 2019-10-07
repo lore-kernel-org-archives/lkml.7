@@ -2,133 +2,88 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDA8C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17A2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929C22070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989BA2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lg9PCB+U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CoU+pLP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfJGQ5C (ORCPT
+        id S1728996AbfJGQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:57:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55112 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727935AbfJGQ5C (ORCPT
+        Mon, 7 Oct 2019 12:58:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60766 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfJGQ60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:57:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570467420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ds6pyGFUgAlo48+0gNzJE98Ix35K9s00JTvg/dMmXpk=;
-        b=Lg9PCB+UuKMRGR1/tIz/qyFn6/OGB7LddGnEDQ5+VTazjurP/bOtw7afUOU2eoE36Yv5Lu
-        phPruF75IL3+l3Y5HqhAxVP6SI5urjXrT6KlmeSXJcWuViGsLTfy1rKORu/0yz4m/aSYI+
-        DXWvvsmep/DtdtjzIaF1Km0Y/boe9DU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-CQtL6-aaNvO_3W3XPS_59w-1; Mon, 07 Oct 2019 12:56:56 -0400
-Received: by mail-ed1-f71.google.com with SMTP id o92so9405116edb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:56:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P1CSWLKvlWejbOftg/y2xVMNmqQ4hHOqwQAeyYB2Yp4=;
-        b=jJ1bUgCoTfnJZQomD0tFYDsG2JHOSOs1TXIRakbUyn1b0InOZ1Fc2wM8Xk6U9Pg5UO
-         JYJvtjBCa+/R6eeTU5MQ2nOzsjJBhrPnDmFodsAiKODL/SimL0R6GbqeRBk2ryFuKTZB
-         uSulgtLr7I9PcVQsytjEzqw2z34WGSHxb+Uj5al5gu2w1ZwilKgjIG1S65tobqhXuwGw
-         lk3CAfHrd/HOPX0TlOZfkzZOZZx762A1b3ut8/gc+4Asjrumdu0egDroRqNdOOog6FLv
-         R7U3DT4NDoS00IRM/xm/nuNex27iHIPVqOP1Vp8RwiM9dBnv1yFD6PAkUtfB5N3FbXXw
-         V3rw==
-X-Gm-Message-State: APjAAAWKMEHcWfGmcPDnK+Eiy+DZFi2EiXdhUzO5Ukcjpsf2sSFm4jNN
-        PS7sIHxHXtB/axlaZdH+KIkqOe1i7Jvo00Ruu48IuzYxxKYbIMQBqMvj+Kt7CaVEy4xQAq3GbFE
-        pGmIAgG+ZrmCpOds6ef+Xrgc1
-X-Received: by 2002:a17:906:768f:: with SMTP id o15mr24985414ejm.42.1570467414799;
-        Mon, 07 Oct 2019 09:56:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxSl+2GSUrWpgPgOw3FgxH7Lck4WvUWk/mcp8CpPB4ba6sOS3wsZM/I84eKupqoeizw41CTBQ==
-X-Received: by 2002:a17:906:768f:: with SMTP id o15mr24985404ejm.42.1570467414588;
-        Mon, 07 Oct 2019 09:56:54 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id bo6sm1882177ejb.30.2019.10.07.09.56.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 09:56:53 -0700 (PDT)
-Subject: Re: kexec breaks with 5.4 due to memzero_explicit
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        x86@kernel.org
-References: <20191007030939.GB5270@rani.riverdale.lan>
- <28f3d204-47a2-8b4f-f6a7-11d73c2d87c8@redhat.com>
- <0f083019-61e8-7ed5-dde7-99e1aa363d9c@redhat.com>
- <20191007132005.GB269842@rani.riverdale.lan>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ec3b0807-efd0-12fc-670e-98cad9fcf754@redhat.com>
-Date:   Mon, 7 Oct 2019 18:56:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 7 Oct 2019 12:58:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DNC+6fO8Y7VsQGNpxImS/ME5ZTTCJiI/xs8ualzyIZg=; b=CoU+pLP43na+N69/nRTFBOZiG
+        OiFkiBH+m077C6YpIUknzK/1tOnPM3WFkO8c6SsxyGbgiSrrzT4H+P9gkTuUHXtWNbWiP+zkVzRin
+        sd7HalyjK7hc0yfISDxAKc40hanzYRybd9e5VpwGyfwqMyo1mdwpS1SEbFB3+4DojiAP8KWRrusJP
+        onEYKOkRepj4A2Hm9ccKrb95FMV0fXiYQEAuo2yD40m8yxBDNgm1ITOgqIdruZSw0JNZz7SKsxDY1
+        8FvPJKTtiYTYoHgTxXxaL3WkrEjosBTzEiiOvPmFLH2x6BWqU8/xGMDz+VIc0HouZ+binjUVmri2N
+        cpPacYw2w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iHWL1-0001MY-46; Mon, 07 Oct 2019 16:58:23 +0000
+Date:   Mon, 7 Oct 2019 09:58:23 -0700
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        "alankao@andestech.com" <alankao@andestech.com>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "johan@kernel.org" <johan@kernel.org>
+Subject: Re: [v6 PATCH] RISC-V: Remove unsupported isa string info print
+Message-ID: <20191007165823.GA5116@infradead.org>
+References: <20191001002318.7515-1-atish.patra@wdc.com>
+ <20191001070236.GA7622@infradead.org>
+ <b0c39a9895698d74e2f44eb1f2faed46eee54bc3.camel@wdc.com>
+ <20191001101016.GB23507@infradead.org>
+ <20191002015338.GA28086@andestech.com>
+ <bc0d2f2803950ebb38fd487fddb0fcf8a370512e.camel@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20191007132005.GB269842@rani.riverdale.lan>
-Content-Language: en-US
-X-MC-Unique: CQtL6-aaNvO_3W3XPS_59w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc0d2f2803950ebb38fd487fddb0fcf8a370512e.camel@wdc.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Oct 02, 2019 at 06:28:59AM +0000, Atish Patra wrote:
+> On Wed, 2019-10-02 at 09:53 +0800, Alan Kao wrote:
+> > On Tue, Oct 01, 2019 at 03:10:16AM -0700, hch@infradead.org wrote:
+> > > On Tue, Oct 01, 2019 at 08:22:37AM +0000, Atish Patra wrote:
+> > > > riscv_of_processor_hartid() or seems to be a better candidate. We
+> > > > already check if "rv" is present in isa string or not. I will
+> > > > extend
+> > > > that to check for rv64i or rv32i. Is that okay ?
+> > > 
+> > > I'd rather lift the checks out of that into a function that is
+> > > called
+> > > exactly once per hart on boot (and future cpu hotplug).
+> > 
+> @Christoph
+> Do you mean to lift the checks for "rv" as well from
+> riscv_of_processor_hartid as well or leave that as it is? 
 
-On 07-10-2019 15:20, Arvind Sankar wrote:
-> On Mon, Oct 07, 2019 at 11:10:18AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 07-10-2019 10:50, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 07-10-2019 05:09, Arvind Sankar wrote:
->>>> Hi, arch/x86/purgatory/purgatory.ro has an undefined symbol
->>>> memzero_explicit. This has come from commit 906a4bb97f5d ("crypto:
->>>> sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
->>>> according to git bisect.
->>>
->>> Hmm, it (obviously) does build for me and using kexec still also works
->>> for me.
->>>
->>> But it seems that you are right and that this should not build, weird.
->>
->> Ok, I understand now, it seems that the kernel will happily build with
->> undefined symbols in the purgatory and my kexec testing did not hit
->> the sha256 check path (*) so it did not crash. I can reproduce this befo=
-re my patch:
->=20
-> Yes -- this should really be fixed. purgatory build should fail if there
-> are undefined symbols, in fact the Makefile apparently is trying to do
-> something to catch undefined references?
->=20
-> LDFLAGS_purgatory.ro :=3D -e purgatory_start -r --no-undefined -nostdlib =
--z nodefaultlib
->=20
-> This doesn't seem to actually do anything though. Anyone know of a way
-> to force ld to error if the resulting object would have undefined
-> symbols?
-
-I've figured out a way to get an error for the missing symbol, I will
-Cc you on the patch which I will post upstream soon.
-
-I will also write a similar patch for s390 and post that upstream
-(untested) separately.
-
-Regards,
-
-Hans
-
+Sounds good to me (as a separate patch).  Again it makes much more
+sense to validate this once early at boot time rather than a function
+that can be called many tims during run time.
