@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A44DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C33AECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E0E20867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555D92084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570454479;
-	bh=PmCPnqhm+mqW3NHQMWFGyIY08DssuymUnMjh8Unf1tM=;
+	s=default; t=1570454484;
+	bh=bVuSLpTvdW4BifGY1uYuDsq1DfGbsMyMvoeNSs5oiYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gd4CnaYQzP7ujGBXkslVXyI4DjTJaSeqW3MO/4THIEm20VRGzmJtzFQupwnIOHSbs
-	 GbrYOFI1hfl5ueEseiUE5ewi/tDqMoQntfWl2MwURwoQvrs1ZIMWXY9+zajS2SQVdP
-	 D4jYVs9PdCsSg2cTeuKF/iVeCtcEWUsDIfZ9nFBk=
+	b=Bu6KwfgHkJWYThAZsxYX6wTgLBsfB6abhtZy1z+lj5zjhEHtvBMbl79f/urK1WpZp
+	 Q2EThQRgg1bz5w8CnrQC45X1JZzlj3z1Eg3Bv8M9PaC96MWWizzwZrjfuYBLb3OQB0
+	 TLVhETFnLl6SsqGnQpAVAcQQBaqpordDNjzRHA8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfJGNVR (ORCPT
+        id S1728488AbfJGNVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:21:17 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37019 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbfJGNVP (ORCPT
+        Mon, 7 Oct 2019 09:21:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35130 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbfJGNVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:21:15 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w67so9267647lff.4;
-        Mon, 07 Oct 2019 06:21:13 -0700 (PDT)
+        Mon, 7 Oct 2019 09:21:20 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so13637799lji.2;
+        Mon, 07 Oct 2019 06:21:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RtunKeo/Z/Gny4X+yFZnXKaRyWAlxIelYmZYNvgXgHc=;
-        b=Ka5bOMMFJ/ZtuOb7sfZzbQVHCDB9ieZBWcybhs0o7p2HT5/c7YYfbYzB8uFc3tECiV
-         ihOtsMEI2B9JFYaja39ed+gX6i72rHW0//AGpJfPc8bhltEz0e9JE9N87IckWvDjt8qI
-         bWoO1nwqqwUS4ZrxWL+NQhAXZwun7uwqPsRqEvanlKH3Kd43giJiJvcgehm8XJB/ZuHt
-         RDXSAPXN3cwSQp61B3zEPS0CJmWq6oVU6dfvaS/hSChRqfbSxvZ1ZEIF9YGWDtjK8G3i
-         F7tm8LVUHS4pKUkvy6T/sDoPuUQqcOTug41Migk6yXmFzNjGN/cfRKbg+I/qqSNl1EI9
-         13vg==
-X-Gm-Message-State: APjAAAUPhTaaoePV19ff3jnqK1Y7/Ut+dW3RaLef8iAdaGjHHQ9BcNoA
-        XkI8/+k7xLYmDDCmhJpfnZQ=
-X-Google-Smtp-Source: APXvYqz5Ank+tQbMh1INUagugHlpRR8z9/MgJYX3dFe2x4wABZiMRjkJRW5Yv+VHcApQQ7hb/2QDOw==
-X-Received: by 2002:ac2:4902:: with SMTP id n2mr17058988lfi.0.1570454472955;
-        Mon, 07 Oct 2019 06:21:12 -0700 (PDT)
+        bh=85dVJxc5Go/ZeDNecXfIZl1Or+Zhk6XQDSwO01sY1ps=;
+        b=Wcoeo6mzx3dncHyYoUB6QXVPbMPJgY0JzBpYJxcpjrhVGruroDOpyg7d6+UOAPAP4W
+         LbMt47VIPh7Pt8918clafZPMYmprN1m0vySSdItMxwNM16nS4oAxhLvsXof3Zz+VL6iI
+         Y0leTFn8pjESVNztS+Mr6fBBQ4hSaS6tH4TLtJQYHoOhsE2UD3Rkx8YxbF9sscr8KPca
+         nBxaw6GSzWWtrW8++b7K/WzN/TtjsOJ/qcTO4qA1TXFCYqlgJzB7Dm2rmPV/jh5wtiIW
+         VdRJ7IGCyCdXa++gO/VSuH94JEMbKNjJ3wD2XWlCffnQEYvWs0aPNXcdN6czgchz8S94
+         Qhag==
+X-Gm-Message-State: APjAAAXZ3LGKcEMwg56KdecFkk6Pea1uOSmaieF+3h3vbuA+UrVJwrbS
+        bylRzLXGS9qfj/KqqGtICbU=
+X-Google-Smtp-Source: APXvYqwiLSTKdVOFIY8WgaeBunLsCGFVcf3kuoeei/5/yKb+L3k/LDhcTnI6Y1NHVwQ5NjvySirDVA==
+X-Received: by 2002:a2e:9652:: with SMTP id z18mr14259586ljh.249.1570454477573;
+        Mon, 07 Oct 2019 06:21:17 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id z14sm2687360lfh.30.2019.10.07.06.21.10
+        by smtp.gmail.com with ESMTPSA id z14sm2687360lfh.30.2019.10.07.06.21.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 06:21:11 -0700 (PDT)
+        Mon, 07 Oct 2019 06:21:16 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 4/6] ad5820: Add support for of-autoload
-Date:   Mon,  7 Oct 2019 15:20:45 +0200
-Message-Id: <20191007132050.27298-8-ribalda@kernel.org>
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 5/6] ad5820: DT new compatible devices
+Date:   Mon,  7 Oct 2019 15:20:47 +0200
+Message-Id: <20191007132050.27298-10-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191007132050.27298-1-ribalda@kernel.org>
 References: <20191007132050.27298-1-ribalda@kernel.org>
@@ -69,45 +69,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kernel 4.16, i2c devices with DT compatible tag are modprobed
-using their DT modalias.
-Without this patch, if this driver is build as module it would never
-be autoprobed.
+Document new compatible devices.
 
-There is no need to mask it with CONFIG_OF to allow ACPI loading, this
-also builds find with CONFIG_OF=n.
-
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/ad5820.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ad5820.c b/drivers/media/i2c/ad5820.c
-index 76aab651f217..5651609e5095 100644
---- a/drivers/media/i2c/ad5820.c
-+++ b/drivers/media/i2c/ad5820.c
-@@ -364,12 +364,19 @@ static const struct i2c_device_id ad5820_id_table[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ad5820_id_table);
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+index db596e8eb0ba..5764cbedf9b7 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -2,7 +2,10 @@
  
-+static const struct of_device_id ad5820_of_table[] = {
-+	{ .compatible = "adi,ad5820" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad5820_of_table);
-+
- static SIMPLE_DEV_PM_OPS(ad5820_pm, ad5820_suspend, ad5820_resume);
+ Required Properties:
  
- static struct i2c_driver ad5820_i2c_driver = {
- 	.driver		= {
- 		.name	= AD5820_NAME,
- 		.pm	= &ad5820_pm,
-+		.of_match_table = ad5820_of_table,
- 	},
- 	.probe		= ad5820_probe,
- 	.remove		= ad5820_remove,
+-  - compatible: Must contain "adi,ad5820"
++  - compatible: Must contain one of:
++		- "adi,ad5820"
++		- "adi,ad5821"
++		- "adi,ad5823"
+ 
+   - reg: I2C slave address
+ 
 -- 
 2.23.0
 
