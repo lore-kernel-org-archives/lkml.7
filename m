@@ -2,103 +2,72 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E1EC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4B5C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A0E20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390D320679
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfJGIL4 (ORCPT
+        id S1727472AbfJGIMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:11:56 -0400
-Received: from mail-ed1-f52.google.com ([209.85.208.52]:42441 "EHLO
-        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfJGILz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:11:55 -0400
-Received: by mail-ed1-f52.google.com with SMTP id y91so11495166ede.9;
-        Mon, 07 Oct 2019 01:11:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Snb3N5jBGTny2lV0Bq/REXN2i4LAg5y7Btj+sL3kJn0=;
-        b=HEvhTPA4qHs6T6/sy02D9eFAWTzmDfB1jFt6FEPxhKdwdpkhD5vUgLzsZIbLRgCc4I
-         pumDtrj/jmWtRdW6odENJeG1Cx3wmA+i9u4iQJZ8XJ9e7OvGTao9Zt/9uT2x8v9KhTBX
-         GoonaqKZ0wwJNP/7FgGclw99BGLVTml8BghWh/4LfbK1OdbOkLaDONpARLP2XAnP+1J2
-         KegtuO92RZ4QpZYFaJpP2JzkrDIpWqxfu11BhGiRNwhXGUEOxO05+efOM51oFMq9hbvN
-         DD0I7hbl411Yxk19E30UcCNdathUK4ZqpQKo0v6eZaac1q0rspVu5iiJaCJaCwZKIhZZ
-         j0ew==
-X-Gm-Message-State: APjAAAWsl6iy3KT4kPJsASwWYorNnE8eEIVhVbR93JZn/1Vsb4JmQ3pl
-        b7Ctogek6KuAUEvE3KPvcspHqnHIOfM=
-X-Google-Smtp-Source: APXvYqwKEy92PmoUYu5LIOejZ5tSC1KCR6qRXx8Fh4kR45McOjqJCicxqtG76cszVJU4WmE9Clca0A==
-X-Received: by 2002:aa7:c614:: with SMTP id h20mr27114269edq.209.1570435911803;
-        Mon, 07 Oct 2019 01:11:51 -0700 (PDT)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id g9sm1745327ejj.51.2019.10.07.01.11.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 01:11:50 -0700 (PDT)
-Received: by mail-wr1-f41.google.com with SMTP id q9so14042546wrm.8;
-        Mon, 07 Oct 2019 01:11:49 -0700 (PDT)
-X-Received: by 2002:adf:fe8b:: with SMTP id l11mr16979718wrr.23.1570435909394;
- Mon, 07 Oct 2019 01:11:49 -0700 (PDT)
+        Mon, 7 Oct 2019 04:12:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26507 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfJGIMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:12:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:11:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,265,1566889200"; 
+   d="scan'208";a="196220046"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga003.jf.intel.com with ESMTP; 07 Oct 2019 01:11:56 -0700
+Subject: Re: [BISECTED] Suspend / USB broken on XPS 9370 + TB16
+To:     Carlo Caione <carlo.caione@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     andrew.smirnov@gmail.com, rrangel@chromium.org,
+        gregkh@linuxfoundation.org, kamal@canonical.com,
+        khalid.elmously@canonical.com
+References: <2f2f62bc-558f-70d1-44bf-a95334453f8a@gmail.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <294a9515-962a-d64b-c113-b73e9fe85fa8@linux.intel.com>
+Date:   Mon, 7 Oct 2019 11:13:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191006102953.57536-1-yuehaibing@huawei.com> <20191006102953.57536-30-yuehaibing@huawei.com>
-In-Reply-To: <20191006102953.57536-30-yuehaibing@huawei.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 7 Oct 2019 16:11:38 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64hUaddO-29=ZP53HDrrOUKqfa52Qk9Q2dGf_RkfwZfyA@mail.gmail.com>
-Message-ID: <CAGb2v64hUaddO-29=ZP53HDrrOUKqfa52Qk9Q2dGf_RkfwZfyA@mail.gmail.com>
-Subject: Re: [PATCH -next 29/34] rtc: sunxi: use devm_platform_ioremap_resource()
- to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        joel@jms.id.au, andrew@aj.id.au,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        ludovic.desroches@microchip.com,
-        Brian Norris <computersforpeace@gmail.com>,
-        gregory.0xf0@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        "open list:BROADCOM BCM281XX..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Baruch Siach <baruch@tkos.co.il>, paul@crapouillou.net,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>, eddie.huang@mediatek.com,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        jonathanh@nvidia.com, Tony Prisk <linux@prisktech.co.nz>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2f2f62bc-558f-70d1-44bf-a95334453f8a@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 6:39 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On 7.10.2019 10.21, Carlo Caione wrote:
+> Hi,
+> I bisected an issue down to commit f7fac17ca925 "xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()".
+> 
+> Setup:
+> XPS 9370 + Thunderbolt dock Dell TB16
+> 
+> Issue:
+> The laptop is unable to go to sleep. It never really goes to sleep and after a few seconds the USB dies.
+> 
+> Log:
+> https://termbin.com/icix
+> 
+> Cheers!
+> 
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Does the below patch help?  Greg just applied it to his usb-linus branch.
+
+ac343366846a xhci: Increase STS_SAVE timeout in xhci_suspend()
+Link: https://lore.kernel.org/r/1570190373-30684-8-git-send-email-mathias.nyman@linux.intel.com
+
+-Mathias
