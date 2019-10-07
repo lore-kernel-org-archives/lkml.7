@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E05ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C9CC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676392064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB6E20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 12:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570452964;
-	bh=i9NYvr6zx0jKXPuCOMhiVuM8EBAjrGopT/RS3mD+5fs=;
+	s=default; t=1570452967;
+	bh=1MZ/l6uuu7Cqc9S5ukpxXs7IiWud8DMwhrEnBlntDH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuD3y43DjCYQF/cTLIf7vof/bu9Xjk9J9gk4vL+atr72lbgINY+CkQyPZdlsh5+ma
-	 Z+mC2Sj252EZSennyxVcBFbCWWaVIzhLoBt6M417QMFBHpQFFqP31KFEL7vh6loQUN
-	 GQlmcAnYW6d2m1gO6LsbtXW+beuDgY0d1xWFQeWY=
+	b=AjiDDI+0pByyi6VJzZxtnB7Mmi4FwAK41JmCCisbj85vUPDSGfCWEGLPkbup1YJrm
+	 Qv3r20YD3yfKsNHlJXZtta88imYveKdBtvGnX/nL+6z8fDfLk9xpWtIo134F/TO4b5
+	 8HUiqC/E91SgfDsGMu7sa9SAjR8jDWjQHRFPpKSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfJGMyE (ORCPT
+        id S1728045AbfJGMyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 08:54:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36920 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbfJGMyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 08:54:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52596 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727572AbfJGMx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 08:53:56 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DD27D85542;
-        Mon,  7 Oct 2019 12:53:59 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 049D018C8921;
+        Mon,  7 Oct 2019 12:53:56 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4262D5DA8C;
-        Mon,  7 Oct 2019 12:53:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D98F5D9CC;
+        Mon,  7 Oct 2019 12:53:54 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -42,138 +42,142 @@ Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 06/36] libperf: Add perf_mmap__unmap() function
-Date:   Mon,  7 Oct 2019 14:53:14 +0200
-Message-Id: <20191007125344.14268-7-jolsa@kernel.org>
+Subject: [PATCH 04/36] libperf: Add perf_mmap__mmap() function
+Date:   Mon,  7 Oct 2019 14:53:12 +0200
+Message-Id: <20191007125344.14268-5-jolsa@kernel.org>
 In-Reply-To: <20191007125344.14268-1-jolsa@kernel.org>
 References: <20191007125344.14268-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 07 Oct 2019 12:54:00 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 07 Oct 2019 12:53:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move perf_mmap__unmap() from tools/perf to libperf, to internal header
-internal/mmap.h. It will be used in the following patches. And rename
-the existing perf's function to mmap__munmap().
+Move perf_mmap__mmap() from tools/perf to libperf, it will be used in
+the following patches. And rename the existing perf's function to
+mmap__mmap().
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-45-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-43-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/internal/mmap.h |  1 +
- tools/perf/lib/mmap.c                  | 10 ++++++++++
- tools/perf/util/evlist.c               |  4 ++--
- tools/perf/util/mmap.c                 | 11 +++--------
+ tools/perf/lib/include/internal/mmap.h |  2 ++
+ tools/perf/lib/mmap.c                  | 18 ++++++++++++++++++
+ tools/perf/util/evlist.c               |  2 +-
+ tools/perf/util/mmap.c                 | 12 +++---------
  tools/perf/util/mmap.h                 |  2 +-
- 5 files changed, 17 insertions(+), 11 deletions(-)
+ 5 files changed, 25 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/lib/include/internal/mmap.h b/tools/perf/lib/include/internal/mmap.h
-index 2e68974bffb4..5c2ca9ab12cd 100644
+index e7a67260940c..7067b70c6f61 100644
 --- a/tools/perf/lib/include/internal/mmap.h
 +++ b/tools/perf/lib/include/internal/mmap.h
-@@ -39,6 +39,7 @@ size_t perf_mmap__mmap_len(struct perf_mmap *map);
+@@ -37,5 +37,7 @@ struct perf_mmap_param {
+ size_t perf_mmap__mmap_len(struct perf_mmap *map);
+ 
  void perf_mmap__init(struct perf_mmap *map, bool overwrite);
- int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
- 		    int fd, int cpu);
-+void perf_mmap__munmap(struct perf_mmap *map);
- void perf_mmap__get(struct perf_mmap *map);
++int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
++		    int fd, int cpu);
  
  #endif /* __LIBPERF_INTERNAL_MMAP_H */
 diff --git a/tools/perf/lib/mmap.c b/tools/perf/lib/mmap.c
-index b765e0505bb6..6eb228d89206 100644
+index cc4284da4d99..b216a7db857f 100644
 --- a/tools/perf/lib/mmap.c
 +++ b/tools/perf/lib/mmap.c
-@@ -32,6 +32,16 @@ int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
- 	return 0;
- }
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <sys/mman.h>
+ #include <internal/mmap.h>
+ #include <internal/lib.h>
  
-+void perf_mmap__munmap(struct perf_mmap *map)
-+{
-+	if (map && map->base != NULL) {
-+		munmap(map->base, perf_mmap__mmap_len(map));
-+		map->base = NULL;
-+		map->fd = -1;
-+		refcount_set(&map->refcnt, 0);
-+	}
-+}
-+
- void perf_mmap__get(struct perf_mmap *map)
+@@ -13,3 +14,20 @@ size_t perf_mmap__mmap_len(struct perf_mmap *map)
  {
- 	refcount_inc(&map->refcnt);
+ 	return map->mask + 1 + page_size;
+ }
++
++int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
++		    int fd, int cpu)
++{
++	map->prev = 0;
++	map->mask = mp->mask;
++	map->base = mmap(NULL, perf_mmap__mmap_len(map), mp->prot,
++			 MAP_SHARED, fd, 0);
++	if (map->base == MAP_FAILED) {
++		map->base = NULL;
++		return -1;
++	}
++
++	map->fd  = fd;
++	map->cpu = cpu;
++	return 0;
++}
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index a7ba22e18e7b..2e5eaac6325e 100644
+index 666339d4d1cd..055f625dc630 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -577,11 +577,11 @@ static void evlist__munmap_nofree(struct evlist *evlist)
+@@ -671,7 +671,7 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 		if (*output == -1) {
+ 			*output = fd;
  
- 	if (evlist->mmap)
- 		for (i = 0; i < evlist->core.nr_mmaps; i++)
--			perf_mmap__munmap(&evlist->mmap[i]);
-+			mmap__munmap(&evlist->mmap[i]);
- 
- 	if (evlist->overwrite_mmap)
- 		for (i = 0; i < evlist->core.nr_mmaps; i++)
--			perf_mmap__munmap(&evlist->overwrite_mmap[i]);
-+			mmap__munmap(&evlist->overwrite_mmap[i]);
- }
- 
- void evlist__munmap(struct evlist *evlist)
+-			if (perf_mmap__mmap(&maps[idx], mp, *output, evlist_cpu) < 0)
++			if (mmap__mmap(&maps[idx], mp, *output, evlist_cpu) < 0)
+ 				return -1;
+ 		} else {
+ 			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
 diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index be691b58d8ab..2c73b5bcf74e 100644
+index a8e81c4cbae8..acef6e3f6b80 100644
 --- a/tools/perf/util/mmap.c
 +++ b/tools/perf/util/mmap.c
-@@ -115,7 +115,7 @@ void perf_mmap__put(struct mmap *map)
- 	BUG_ON(map->core.base && refcount_read(&map->core.refcnt) == 0);
- 
- 	if (refcount_dec_and_test(&map->core.refcnt))
--		perf_mmap__munmap(map);
-+		mmap__munmap(map);
+@@ -353,7 +353,7 @@ static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params
+ 		CPU_SET(map->core.cpu, &map->affinity_mask);
  }
  
- void perf_mmap__consume(struct mmap *map)
-@@ -306,19 +306,14 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
- }
- #endif
- 
--void perf_mmap__munmap(struct mmap *map)
-+void mmap__munmap(struct mmap *map)
+-int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
++int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
  {
-+	perf_mmap__munmap(&map->core);
- 	perf_mmap__aio_munmap(map);
- 	if (map->data != NULL) {
- 		munmap(map->data, mmap__mmap_len(map));
- 		map->data = NULL;
- 	}
--	if (map->core.base != NULL) {
--		munmap(map->core.base, mmap__mmap_len(map));
+ 	/*
+ 	 * The last one will be done at perf_mmap__consume(), so that we
+@@ -369,18 +369,12 @@ int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+ 	 * perf_evlist__filter_pollfd().
+ 	 */
+ 	refcount_set(&map->core.refcnt, 2);
+-	map->core.prev = 0;
+-	map->core.mask = mp->core.mask;
+-	map->core.base = mmap(NULL, mmap__mmap_len(map), mp->core.prot,
+-			 MAP_SHARED, fd, 0);
+-	if (map->core.base == MAP_FAILED) {
++
++	if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
+ 		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
+ 			  errno);
 -		map->core.base = NULL;
--		map->core.fd = -1;
--		refcount_set(&map->core.refcnt, 0);
--	}
- 	auxtrace_mmap__munmap(&map->auxtrace_mmap);
- }
+ 		return -1;
+ 	}
+-	map->core.fd = fd;
+-	map->core.cpu = cpu;
+ 
+ 	perf_mmap__setup_affinity_mask(map, mp);
  
 diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index a73402ee8fe0..6a18b2990059 100644
+index 2b97dc6d9ee2..a60e6ead7255 100644
 --- a/tools/perf/util/mmap.h
 +++ b/tools/perf/util/mmap.h
-@@ -43,7 +43,7 @@ struct mmap_params {
+@@ -42,7 +42,7 @@ struct mmap_params {
+ 	struct auxtrace_mmap_params auxtrace_mp;
  };
  
- int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu);
--void perf_mmap__munmap(struct mmap *map);
-+void mmap__munmap(struct mmap *map);
+-int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu);
++int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu);
+ void perf_mmap__munmap(struct mmap *map);
  
- void perf_mmap__put(struct mmap *map);
- 
+ void perf_mmap__get(struct mmap *map);
 -- 
 2.21.0
 
