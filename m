@@ -2,152 +2,118 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35C2ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFDFC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C467A20700
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223BB20867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 13:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="i8lGx3PR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U93WlJGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfJGNQS (ORCPT
+        id S1728080AbfJGNQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 09:16:18 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:50556 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727010AbfJGNQR (ORCPT
+        Mon, 7 Oct 2019 09:16:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35068 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfJGNQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 09:16:17 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E094CC04D7;
-        Mon,  7 Oct 2019 13:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1570454175; bh=CB+MCFkvr75LsBxqlWLirA5N20X/hfSItzHVLkD4d4Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=i8lGx3PRFFqdXuc0BBXmAcU5uPhpC8Fe5gFYzAGGQ0ybAiAeSVvV7cs63ByRCIOqq
-         uInhvsy8XO7M2QekatyQGxWoQevzH1qK+3VtMyUvBL8H9E9Mrj7b6WgYlbbVQq8UYr
-         +a7LNiCAYyUZrhvWKlb0ZcPB9vGRmZGZ1xUDvCAvrVugoe950MM9EzHMyih3JJC1te
-         NPUmzUDExR3hgl+M/be9vLaX/f35C2TxmIE/3X2Vxw/kf0Nl9Z0L1ACqTLbOhfOLpJ
-         gvTlL3qY9mHExLKEgY36jn151Yl/dddbqxnEfmFUnnSuCfxp+wi3sVn0m6SWw6d+HK
-         /R/rdETbFAf/A==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 279D2A005C;
-        Mon,  7 Oct 2019 13:16:11 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: stmmac: Fix sparse warning
-Date:   Mon,  7 Oct 2019 15:16:08 +0200
-Message-Id: <b59904022c2f96aca956aa693040faf0dddeb802.1570454078.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 7 Oct 2019 09:16:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so8670851pfw.2;
+        Mon, 07 Oct 2019 06:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PwiaLPNEero/RDkqXHKNpda6jyXODSLqhlH8GfScxo4=;
+        b=U93WlJGywOW4GYdmFpjLSbINCeD5e5GpJ2UlnKRkpeLbKA45F/xZjIQjq0CqmxWaRc
+         rYF0hBu+qMVKCBEvYbVAEykbc/A21OMZHembtBRw3nR29KuAVu8WLk1p3euuN3vDw0H9
+         h9tzVebTCZgobqlu8/sjCsg9Pq9stdW/1AYzLxTmNBLHnRJ6srFQrpw44A3TgwUHnbwt
+         W7YQJpxSa4WvSTanPX6pG+mVVKLdr9OdP5PqhKoVXp8VbPAg2FRoSFb5qRayfQisyMf7
+         iEnYEWz46FCUjnTIM1/pUI9OHquzBjIVoNtejSSZckTud93bBGD7/TqoMDuFTzu3QbWI
+         ThEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PwiaLPNEero/RDkqXHKNpda6jyXODSLqhlH8GfScxo4=;
+        b=KMXQK9+B9oc/ffZjEJiiY73Y5/hhxdum83mbnwCPjfzqBCzgE0gIARs+vqBJIrYtN/
+         GYRXq8e/a4MtYaEGCHTp4RwN3owcZx82vKUOfO1KNV8V9nVAHQQVAt/p/HRynGI8V85D
+         yNnz8v0SZqfPbco0MvaNLroIXuEZI+mO85jEc5KmXFJcImjUNKClVZF4SFQJQ31NgQeF
+         8pWdANYCpSek3HjhD9LJTGCYU0s5NXHgvs6BbwwsJwr6l52A1LuzZvsZjShp+MNBKgqO
+         J+xmozQ+CZ9jJVvhVWzqQ+mU4pYsOjbyoq0gRQCjRkoLm34UAcRi99mIwattrPGw8YqK
+         k7HA==
+X-Gm-Message-State: APjAAAXzznkImC31cFEcji3D1B8TGyl81JwOdPMK3dP0GOIkkRX2bu/f
+        P398uFx131ST+IV5UYfd/AE=
+X-Google-Smtp-Source: APXvYqyvHEaEyr+JjSbY/h5Ukr9XMbNo6ALxq6sKOkJD/pII8Vb1ifPUfHXL2MqvRnu0ESu3/zKdCA==
+X-Received: by 2002:a62:82c8:: with SMTP id w191mr31574553pfd.99.1570454218199;
+        Mon, 07 Oct 2019 06:16:58 -0700 (PDT)
+Received: from localhost.localdomain ([103.51.74.138])
+        by smtp.gmail.com with ESMTPSA id r186sm16938650pfr.40.2019.10.07.06.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2019 06:16:57 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFCv1 0/5] Odroid N2 failes to boot using upstream kernel & u-boot
+Date:   Mon,  7 Oct 2019 13:16:44 +0000
+Message-Id: <20191007131649.1768-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VID is converted to le16 so the variable must be __le16 type.
+We am trying to build the upstream u-boot and upstream kernel,
+but it fails to pass the initialization of PWM_MESON driver.
+So these patches help boot the kernel on microSD card.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: c7ab0b8088d7 ("net: stmmac: Fallback to VLAN Perfect filtering if HASH is not available")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Patchs based on Linux 5.4-rc2
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 2 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h          | 2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c   | 5 +++--
- 4 files changed, 6 insertions(+), 5 deletions(-)
+Boot log failed are shown below.
+[0] https://pastebin.com/cEtWq2iX
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index df11376ee735..090ebceb288a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -733,7 +733,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
- }
- 
- static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				    u16 perfect_match, bool is_double)
-+				    __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 5cda360d5d07..e24382d00e62 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -555,7 +555,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
- }
- 
- static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				      u16 perfect_match, bool is_double)
-+				      __le16 perfect_match, bool is_double)
- {
- 	void __iomem *ioaddr = hw->pcsr;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 1303d1e9a18f..509daeefdb79 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -357,7 +357,7 @@ struct stmmac_ops {
- 			     struct stmmac_rss *cfg, u32 num_rxq);
- 	/* VLAN */
- 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
--				 u16 perfect_match, bool is_double);
-+				 __le16 perfect_match, bool is_double);
- 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
- 	/* TX Timestamp */
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8b76745a7ec4..40b0756f3a14 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4207,6 +4207,7 @@ static u32 stmmac_vid_crc32_le(__le16 vid_le)
- static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- {
- 	u32 crc, hash = 0;
-+	__le16 pmatch = 0;
- 	int count = 0;
- 	u16 vid = 0;
- 
-@@ -4221,11 +4222,11 @@ static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- 		if (count > 2) /* VID = 0 always passes filter */
- 			return -EOPNOTSUPP;
- 
--		vid = cpu_to_le16(vid);
-+		pmatch = cpu_to_le16(vid);
- 		hash = 0;
- 	}
- 
--	return stmmac_update_vlan_hash(priv, priv->hw, hash, vid, is_double);
-+	return stmmac_update_vlan_hash(priv, priv->hw, hash, pmatch, is_double);
- }
- 
- static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
+[    1.569240] meson-gx-mmc ffe05000.sd: Got CD GPIO
+[    1.599227] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
+[    1.600605] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
+[    1.607166] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
+[    1.613273] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
+[    1.619931] hctosys: unable to open rtc device (rtc0)
+
+My guess their is not much issue with eMMC module, if their is
+other approach to resolve this issue, I will give this a try.
+
+Best Regards
+-Anand
+
+Anand Moon (5):
+  arm64: dts: meson: Add missing 5V_EN gpio signal for VCC5V regulator
+  arm64: dts: meson: Add missing pwm control gpio signal for
+    pwm-regulator
+  arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator
+    to FLASH_VDD
+  arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to
+    VDDIO_C/TF_IO
+  arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+
+ .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
+ arch/arm64/configs/defconfig                        |  2 +-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
 -- 
-2.7.4
+2.23.0
 
