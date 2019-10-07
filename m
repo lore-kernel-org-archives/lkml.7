@@ -2,134 +2,192 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB14AC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E20C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D08020867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1460220867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfJGIog (ORCPT
+        id S1727412AbfJGIpH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:44:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:16703 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbfJGIof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:44:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:44:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,267,1566889200"; 
-   d="scan'208";a="276727970"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 07 Oct 2019 01:44:31 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iHOd3-0005O0-Rr; Mon, 07 Oct 2019 11:44:29 +0300
-Date:   Mon, 7 Oct 2019 11:44:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
-        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk
-Subject: Re: [PATCH v16 11/14] thermal: intel: intel_soc_dts_iosf: Utilize
- for_each_set_clump8 macro
-Message-ID: <20191007084429.GN32742@smile.fi.intel.com>
-References: <cover.1570374078.git.vilhelm.gray@gmail.com>
- <8e85aa4ccead5c330d7abdbda292f32a0c48902e.1570374078.git.vilhelm.gray@gmail.com>
+        Mon, 7 Oct 2019 04:45:07 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:42833 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfJGIpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:45:06 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B1759E0011;
+        Mon,  7 Oct 2019 08:45:02 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 10:45:01 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
+        bbrezillon@kernel.org, computersforpeace@gmail.com,
+        vigneshr@ti.com, marcel.ziswiler@toradex.com, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, frieder.schrempf@kontron.de,
+        gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org,
+        tglx@linutronix.de
+Subject: Re: [PATCH RFC 3/3] mtd: rawnand: Add support Macronix power down
+ mode
+Message-ID: <20191007104501.1b4ed8ed@xps13>
+In-Reply-To: <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
+References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
+        <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e85aa4ccead5c330d7abdbda292f32a0c48902e.1570374078.git.vilhelm.gray@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 06, 2019 at 11:11:08AM -0400, William Breathitt Gray wrote:
-> Utilize for_each_set_clump8 macro, and the bitmap_set_value8 and
-> bitmap_get_value8 functions, where appropriate. In addition, remove the
-> now unnecessary temp_mask and temp_shift members of the
-> intel_soc_dts_sensor_entry structure.
+Hi Mason,
 
-Since it perhaps will be next version, I have few style comments here
-(ignore them if you are not going to send a new version by some other reasons).
+Mason Yang <masonccyang@mxic.com.tw> wrote on Wed, 18 Sep 2019 15:56:26
++0800:
 
->  	int status;
->  	u32 temp_out;
+> Macronix AD series support using power down command to
+> enter a minimum power consumption state.
+> 
+> MTD default _suspend/_resume function replacement by
+> manufacturer postponed initialization.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  drivers/mtd/nand/raw/nand_macronix.c | 78 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 77 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+> index 991c636..99a7b2e 100644
+> --- a/drivers/mtd/nand/raw/nand_macronix.c
+> +++ b/drivers/mtd/nand/raw/nand_macronix.c
+> @@ -15,6 +15,8 @@
+>  #define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
+>  #define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
+>  
+> +#define NAND_CMD_POWER_DOWN 0xB9
+> +
+>  struct nand_onfi_vendor_macronix {
+>  	u8 reserved;
+>  	u8 reliability_func;
+> @@ -78,6 +80,12 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
+>  		"MX30UF4G28AC",
+>  };
+>  
+> +static const char * const nand_power_down[] = {
+> +		"MX30LF1G28AD",
+> +		"MX30LF2G28AD",
+> +		"MX30LF4G28AD",
+> +};
+> +
+>  static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+>  {
+>  	unsigned int i;
+> @@ -144,8 +152,64 @@ static int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>  	return ret;
+>  }
+>  
+> +int nand_power_down_op(struct nand_chip *chip)
+> +{
+> +	int ret;
+> +
+> +	if (nand_has_exec_op(chip)) {
+> +		struct nand_op_instr instrs[] = {
+> +			NAND_OP_CMD(NAND_CMD_POWER_DOWN, 0),
+> +		};
+> +
+> +		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
+> +
+> +		ret = nand_exec_op(chip, &op);
+> +		if (ret)
+> +			return ret;
+> +
+> +	} else {
+> +		chip->legacy.cmdfunc(chip, NAND_CMD_POWER_DOWN, -1, -1);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxic_nand_suspend(struct mtd_info *mtd)
+> +{
+> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +
+> +	mutex_lock(&chip->lock);
+> +
+> +	nand_select_target(chip, 0);
+> +	nand_power_down_op(chip);
+> +	nand_deselect_target(chip);
+> +
+> +	chip->suspend = 1;
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mxic_nand_resume(struct mtd_info *mtd)
+> +{
+> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +
+> +	mutex_lock(&chip->lock);
+> +	// toggle #CS pin to resume NAND device
 
-> +	unsigned long update_ptps;
+C++ style comments are forbidden in code.
 
-I think it's better to put it one line below.
+> +	nand_select_target(chip, 0);
 
->  	u32 out;
->  	u32 store_ptps;
->  	u32 store_ptmc;
+On several NAND controllers there is no way to act on the CS line
+without actually writing bytes to the NAND chip. So basically this
+is very likely to not work.
 
-> -	out = (store_ptps & ~(0xFF << (thres_index * 8)));
-> -	out |= (temp_out & 0xFF) << (thres_index * 8);
-> +	update_ptps = store_ptps;
-> +	bitmap_set_value8(&update_ptps, temp_out & 0xFF, thres_index * 8);
-> +	out = update_ptps;
+> +	ndelay(20);
 
-+ blank line?
+Is this delay known somewhere? Is this purely experimental?
 
-After this change it seems we may drop temp_out and use out instead.
-
-> -	out = (out & dts->temp_mask) >> dts->temp_shift;
-> +	temp_raw = out;
-> +	out = bitmap_get_value8(&temp_raw, dts->id * 8);
-
->  	out -= SOC_DTS_TJMAX_ENCODING;
->  	*temp = sensors->tj_max - out * 1000;
-
-We may also join these together, though it's up to you.
-
->  	char name[10];
->  	int trip_count = 0;
-
-> +	int writable_trip_count = 0;
-
-Perhaps move it after next line, or before previous one.
-
->  	int trip_mask = 0;
->  	u32 store_ptps;
->  	int ret;
-
-> -	int i;
-> +	unsigned long i;
-
-We may skip this change, but if we go with it, better to place before
-'int ret;' line.
-
-> +	unsigned long trip;
-> +	unsigned long ptps;
-
-I would group each of these with relative group of definitions above.
-
->  	if (notification_support) {
->  		trip_count = min(SOC_MAX_DTS_TRIPS, trip_cnt);
-> +		writable_trip_count = trip_count - read_only_trip_cnt;
-
-Maybe writable_trip_count -> writable_trip_cnt? (in align with r/o one).
-
-> +		trip_mask = GENMASK(writable_trip_count - 1, 0);
+> +	nand_deselect_target(chip);
+> +
+> +	if (chip->suspend)
+> +		chip->suspended = 0;
+> +	else
+> +		pr_err("%s call for a chip which is not in suspended state\n",
+> +		       __func__);
+> +	mutex_unlock(&chip->lock);
+> +}
+> +
+>  /*
+> - * Macronix AC series support using SET/GET_FEATURES to change
+> + * Macronix AC and AD series support using SET/GET_FEATURES to change
+>   * Block Protection and Unprotection.
+>   *
+>   * MTD call-back function replacement by manufacturer postponed
+> @@ -163,6 +227,18 @@ static void macronix_nand_post_init(struct nand_chip *chip)
+>  		}
 >  	}
+>  
+> +	for (i = 0; i < ARRAY_SIZE(nand_power_down); i++) {
+> +		if (!strcmp(nand_power_down[i], chip->parameters.model)) {
+> +			blockprotected = 1;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (i < ARRAY_SIZE(nand_power_down)) {
+> +		mtd->_suspend = mxic_nand_suspend;
+> +		mtd->_resume = mxic_nand_resume;
+> +	}
+> +
+>  	if (blockprotected && chip->parameters.supports_set_get_features) {
+>  		bitmap_set(chip->parameters.set_feature_list,
+>  			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Miquèl
