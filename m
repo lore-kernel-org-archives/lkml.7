@@ -2,123 +2,120 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692FFECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB57ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408452173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570459806;
-	bh=oWc5xK1y+xZRbVDdLDr9f32Jf8TFQA/JnTekh/Csnvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JdpbqyPylzVD9LUCQkb5FTHS+AkaVrV2rr8yWT7A1ii3P4Li+HlIgG5ck2f3XbWR+
-	 rqu4b93sQjQ184LQT2ZfokhugeWMHbcarJ5s4vjUnWgtEvkGa5Rql9RuB3orBSPfJR
-	 M5N8mFat3F6+1gL7lq3YRVNw/5RKur5cf+OVyc9c=
+	by mail.kernel.org (Postfix) with ESMTP id 4011B2173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfJGOuF (ORCPT
+        id S1728825AbfJGOty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:50:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46834 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728853AbfJGOt6 (ORCPT
+        Mon, 7 Oct 2019 10:49:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44534 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728718AbfJGOts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o18so15622754wrv.13
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 07:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1dSA+SmdtisGu5FvnubDfiZYtTOdvCNLpWjAeop5PWM=;
-        b=NY8Xdb2ENlkzoJiW5PfDLGVYgGYdgNXK+IbonkVtqUPW/pzgaekJMC0r9d1t9BRglK
-         ZkLuJZknhOk7P8pwkwxjiLjYPXtP8xcTXdkF+8jCVX7w+H/2Vgwp1ynXNJT1cTOfESPT
-         GlxUW1wVfpPTCZc77iP2oFYsrKHJofNIUyVcf+XQW4LW7OQnDNuinCCVjzmZtg6iths7
-         YdN6n+XP4ZWSS+gngqtK1i+IjCHuPYCOX7EdYh/IPt+b7Jo0qniQx8XsK1LKToS1W2Ya
-         OaIiLyaedb5+UbjEAdh9MCCE4qnzyQFW8kPxslW/Yv5bk5tWUH9mfowPKvYp6E/sG3u1
-         Vddg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1dSA+SmdtisGu5FvnubDfiZYtTOdvCNLpWjAeop5PWM=;
-        b=ROv0eVEKUWLess2APpjgvEgplpkwjS7EV2ycSG+7Z/lz/RR28Qd2G9tasoHCmlYW+V
-         E5JZ+/EMcakHA5FGES8q6A+w2SM7yNiGeQ4tHyImaydsYmAH/eAxSngaVT2oCMrXNy4d
-         NazO3HclM6GHDeV3MvWDYm/eCbd3xNlQXgaddMJpLmtyuD2ZJzZDKhGi7rKPKuOPZmTr
-         BNFGRKDdTw59oRLoPsUdmuuwIcRX/gMVAM1OURqlvBAAsltYW78ObTWo1G6M6bsSLjod
-         +8Vq4Ys77w9ABZXOXyKDH5HEpiLxV/Okrt3sSUz8GL6k2U+sIhNHTOJkb65LkTpJuq0H
-         bTWQ==
-X-Gm-Message-State: APjAAAUYBHVKQds8BBtVlP6CYo7skVjZym8FXbn3KjKt/6QxiCKLf5id
-        ++QR8o1/RndOALoNqGReOso=
-X-Google-Smtp-Source: APXvYqxnjVycBya9OcagKu5r/lYVAHREqMIN0OHFlE91rLh+HzE+DyCFddjRTujDUYIyZ/CViOk83Q==
-X-Received: by 2002:adf:ef0d:: with SMTP id e13mr23871392wro.300.1570459796728;
-        Mon, 07 Oct 2019 07:49:56 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id q124sm26948893wma.5.2019.10.07.07.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 07:49:56 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 16:49:54 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: Fix inheritance of aux_output groups
-Message-ID: <20191007144954.GA88143@gmail.com>
-References: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
+        Mon, 7 Oct 2019 10:49:48 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iHUKQ-0006Ep-Qt; Mon, 07 Oct 2019 16:49:38 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8B87E1C0895;
+        Mon,  7 Oct 2019 16:49:34 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:34 -0000
+From:   "tip-bot2 for Hans de Goede" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/boot: Provide memzero_explicit()
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191007134724.4019-1-hdegoede@redhat.com>
+References: <20191007134724.4019-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004125729.32397-1-alexander.shishkin@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157045977450.9978.18318761982949903126.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/urgent branch of tip:
 
-* Alexander Shishkin <alexander.shishkin@linux.intel.com> wrote:
+Commit-ID:     ee008a19f1c72c37ffa54326a592035dddb66fd6
+Gitweb:        https://git.kernel.org/tip/ee008a19f1c72c37ffa54326a592035dddb66fd6
+Author:        Hans de Goede <hdegoede@redhat.com>
+AuthorDate:    Mon, 07 Oct 2019 15:47:24 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 07 Oct 2019 16:47:35 +02:00
 
-> Commit
-> 
->   b43762ef010 ("perf: Allow normal events to output AUX data")
+x86/boot: Provide memzero_explicit()
 
-Missing 'a', the proper SHA1 is:
+The purgatory code now uses the shared lib/crypto/sha256.c sha256
+implementation. This needs memzero_explicit(), implement this.
 
-    ab43762ef010 ("perf: Allow normal events to output AUX data")
+We also have barrier_data() call after the memset, making sure
+neither the compiler nor the linker optimizes out this seemingly
+unused function.
 
-:-)
+Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-crypto@vger.kernel.org
+Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+Link: https://lkml.kernel.org/r/20191007134724.4019-1-hdegoede@redhat.com
+[ Added comment. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/boot/compressed/string.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> forgets to configure aux_output relation in the inherited groups, which
-> results in child PEBS events forever failing to schedule.
-> 
-> Fix this by setting up the AUX output link in the inheritance path.
-> 
-> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> ---
->  kernel/events/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f5bb2557d5f6..761995f21b30 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -12024,6 +12024,10 @@ static int inherit_group(struct perf_event *parent_event,
->  					    child, leader, child_ctx);
->  		if (IS_ERR(child_ctr))
->  			return PTR_ERR(child_ctr);
-> +
-> +		if (sub->aux_event == parent_event &&
-> +		    !perf_get_aux_event(child_ctr, leader))
-> +			return -EINVAL;
-
-Could this explain weird 'perf top' failures I'm seeing on my desktop, 
-which I was just about to debug and report?
-
-Thanks,
-
-	Ingo
+diff --git a/arch/x86/boot/compressed/string.c b/arch/x86/boot/compressed/string.c
+index 81fc1ea..dd30e63 100644
+--- a/arch/x86/boot/compressed/string.c
++++ b/arch/x86/boot/compressed/string.c
+@@ -50,6 +50,16 @@ void *memset(void *s, int c, size_t n)
+ 	return s;
+ }
+ 
++void memzero_explicit(void *s, size_t count)
++{
++	memset(s, 0, count);
++	/*
++	 * Make sure this function never gets inlined and
++	 * the memset() never gets optimized away:
++	 */
++	barrier_data(s);
++}
++
+ void *memmove(void *dest, const void *src, size_t n)
+ {
+ 	unsigned char *d = dest;
