@@ -2,95 +2,113 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6559BC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865F5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329812133F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD812133F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 23:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570489579;
-	bh=7bMEka5pHwJt2nAcv9S9/A9NpGqy+zgg2XVYjqPnToM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=TRg0Q2joEHH7R/T8IQxtn5bEBKkQpMARKuGflsJ0h7Y2zr01BfaPrwmbaorUbArr9
-	 c+96af4ygTKoUJ5L3e6DHEXgxGFqvuT70F2ksbeocBdocVUqOQg7t71+DgRanVwQLk
-	 /W48v+xtqnv03V6A2teEtx98FFWNdJxvRR9i35rI=
+	s=default; t=1570489631;
+	bh=bL1DOSyEb/qxbhDlweEucVwiBW7WVdbO5MG3zj7dRCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BuofdyUKZrihmTVv9jtTqtBcDSzBx6vzamBo5+XRAmxyacCBr/sdk1uLicHJV3s8d
+	 exGucxGrXjiJXFlmXa0v8n1QXFnUf4Nqcc9Iiag37bcfH+LScBKaB30/Zeo40qN6x2
+	 lCc+GJA2mk57H8ABT35+AzRAwtCsg8nWMHIjxDhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfJGXGS (ORCPT
+        id S1729635AbfJGXHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 19:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54648 "EHLO mail.kernel.org"
+        Mon, 7 Oct 2019 19:07:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbfJGXGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 19:06:18 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728980AbfJGXHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 19:07:09 -0400
+Received: from localhost (unknown [216.52.21.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28D8220835;
-        Mon,  7 Oct 2019 23:06:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF04F20835;
+        Mon,  7 Oct 2019 23:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570489577;
-        bh=7bMEka5pHwJt2nAcv9S9/A9NpGqy+zgg2XVYjqPnToM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=E5PEHebLlzo5gMfozaes03gIrd+tcH0T/VEQizR+m75/dUxJ7DEJDcV6TVgoXGMh+
-         rKANVAxj0225BLpuDcA6PgH1lb/1w78R9389UMgefFnFQ92U+PbL/SZTbOpZa5RY12
-         RoWWp4JJqe0TWyGfpqDxfqmR4rv1+1yTYdRe6yCY=
-Subject: Re: [PATCH] Documentation: kunit: Fix verification command
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        SeongJae Park <sj38.park@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <1567890091-9712-1-git-send-email-sj38.park@gmail.com>
- <CAFd5g46MNYcY-o8Z-1tSi0Kva02CjhcWC-xwkeNc6kfiDzLpLQ@mail.gmail.com>
- <CAFd5g47sUx6ZRxcH4KdKjftv=wo9HmWn+bZukd8gU-YcJv24zQ@mail.gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6e4527d8-613a-9972-ee04-139a54915b67@kernel.org>
-Date:   Mon, 7 Oct 2019 17:06:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        s=default; t=1570489629;
+        bh=bL1DOSyEb/qxbhDlweEucVwiBW7WVdbO5MG3zj7dRCw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H307XciXNSJ9Om7E3sSk8Huddv4awbDFeokMUDR0/TkexMrYlM5Xfq4qP4CNY2v1J
+         rDM4bMSGrpk2RFB/qaHnQhKZTiwRfsdp85XP1S14AdavkKW3kqcIqPj974uQ6FAdPj
+         Qz4AjhkDQcJA637urhtR5oKv58Aj5xdYqVJWgAzc=
+Date:   Mon, 7 Oct 2019 19:07:08 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+Message-ID: <20191007230708.GA1396@sasha-vm>
+References: <20191006171038.266461022@linuxfoundation.org>
+ <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+ <20191007144951.GB966828@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g47sUx6ZRxcH4KdKjftv=wo9HmWn+bZukd8gU-YcJv24zQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191007144951.GB966828@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 4:04 PM, Brendan Higgins wrote:
-> On Sun, Sep 8, 2019 at 4:40 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
+On Mon, Oct 07, 2019 at 04:49:51PM +0200, Greg Kroah-Hartman wrote:
+>On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
+>> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
+>> > This is the start of the stable review cycle for the 4.4.196 release.
+>> > There are 36 patches in this series, all will be posted as a response
+>> > to this one.  If anyone has any issues with these being applied, please
+>> > let me know.
+>> >
+>> > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+>> > Anything received after that time might be too late.
+>> >
 >>
->> On Sat, Sep 7, 2019 at 2:01 PM SeongJae Park <sj38.park@gmail.com> wrote:
->>>
->>> kunit wrapper script ('kunit.py') receives a sub-command (only 'run' for
->>> now) as its argument.  If no sub-command is given, it prints help
->>> message and just quit.  However, an example command in the kunit
->>> documentation for a verification of kunit is missing the sub-command.
->>> This commit fixes the example.
->>>
->>> Signed-off-by: SeongJae Park <sj38.park@gmail.com>
+>> powerpc:defconfig fails to build.
 >>
->> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> 
-> Shuah, can you apply this to the kselftest KUnit branch? This should
-> not require a resend.
-> 
+>> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
+>> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
+>>
+>> It has a point:
+>>
+>> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
+>> $ git grep eeh_for_each_pe
+>> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
+>> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
+>>
+>> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
+>> Full report will follow later.
+>
+>Thanks for letting me know, I've dropped this from the queue now and
+>pushed out a -rc2 with that removed.
+>
+>Sasha, I thought your builder would have caught stuff like this?
 
+Interesting, the 4.4 build fails for me with vanilla 4.4 LTS kernel
+(which is why this was missed):
 
-Done. Applied to
+  AS      arch/powerpc/kernel/systbl.o
+arch/powerpc/kernel/exceptions-64s.S: Assembler messages:
+arch/powerpc/kernel/exceptions-64s.S:1599: Warning: invalid register expression
+arch/powerpc/kernel/exceptions-64s.S:1640: Warning: invalid register expression
+arch/powerpc/kernel/exceptions-64s.S:839: Error: attempt to move .org backwards
+arch/powerpc/kernel/exceptions-64s.S:840: Error: attempt to move .org backwards
+arch/powerpc/kernel/exceptions-64s.S:864: Error: attempt to move .org backwards
+arch/powerpc/kernel/exceptions-64s.S:865: Error: attempt to move .org backwards
+scripts/Makefile.build:375: recipe for target 'arch/powerpc/kernel/head_64.o' failed
 
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git 
-test
+I'll look into it.
 
-thanks,
--- Shuah
+--
+Thanks,
+Sasha
