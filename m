@@ -4,188 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C5AC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58024ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DA520867
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AE821655
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 08:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfJGIpR convert rfc822-to-8bit (ORCPT
+        id S1727473AbfJGIpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 04:45:17 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:60991 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfJGIpR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 04:45:17 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E24661C0015;
-        Mon,  7 Oct 2019 08:45:11 +0000 (UTC)
-Date:   Mon, 7 Oct 2019 10:45:11 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
-        bbrezillon@kernel.org, computersforpeace@gmail.com,
-        vigneshr@ti.com, marcel.ziswiler@toradex.com, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, frieder.schrempf@kontron.de,
-        gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org,
-        tglx@linutronix.de
-Subject: Re: [PATCH RFC 2/3] mtd: rawnand: Add support Macronix Block
- Protection function
-Message-ID: <20191007104511.5aa7b8f2@xps13>
-In-Reply-To: <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
-References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
-        <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 7 Oct 2019 04:45:52 -0400
+Received: from mga11.intel.com ([192.55.52.93]:57972 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfJGIpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 04:45:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Oct 2019 01:45:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,267,1566889200"; 
+   d="scan'208";a="192226354"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Oct 2019 01:45:47 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iHOeI-0005Oq-FC; Mon, 07 Oct 2019 11:45:46 +0300
+Date:   Mon, 7 Oct 2019 11:45:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de,
+        sean.nyekjaer@prevas.dk, morten.tiljeset@prevas.dk
+Subject: Re: [PATCH v16 14/14] gpio: pca953x: Utilize the for_each_set_clump8
+ macro
+Message-ID: <20191007084546.GO32742@smile.fi.intel.com>
+References: <cover.1570374078.git.vilhelm.gray@gmail.com>
+ <e72393325e58778b7ba59c80c6b79c1f93b81d8d.1570374078.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e72393325e58778b7ba59c80c6b79c1f93b81d8d.1570374078.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On Sun, Oct 06, 2019 at 11:11:11AM -0400, William Breathitt Gray wrote:
+> Replace verbose implementation in set_multiple callback with
+> for_each_set_clump8 macro to simplify code and improve clarity.
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Wed, 18 Sep 2019 15:56:25
-+0800:
+I can test this along with 74x164 at the same time.
 
-> Macronix AC series support using SET/GET_FEATURES to change
-> Block Protection and Unprotection.
-> 
-> MTD default _lock/_unlock function replacement by manufacturer
-> postponed initialization.
-
-Why would we do that?
-
-Anyway your solution looks overkill, if we ever decide to
-implement these hooks for raw nand, it is better just to not
-overwrite them in nand_scan_tail() if they have been filled
-previously (ie. by the manufacturer code).
-
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Cc: Phil Reid <preid@electromag.com.au>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 > ---
->  drivers/mtd/nand/raw/nand_macronix.c | 80 +++++++++++++++++++++++++++++++++---
->  1 file changed, 75 insertions(+), 5 deletions(-)
+>  drivers/gpio/gpio-pca953x.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index 58511ae..991c636 100644
-> --- a/drivers/mtd/nand/raw/nand_macronix.c
-> +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -11,6 +11,10 @@
->  #define MACRONIX_READ_RETRY_BIT BIT(0)
->  #define MACRONIX_NUM_READ_RETRY_MODES 6
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index de5d1383f28d..10b669b8f27d 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -10,6 +10,7 @@
 >  
-> +#define ONFI_FEATURE_ADDR_MXIC_PROTECTION 0xA0
-> +#define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
-> +#define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
-> +
->  struct nand_onfi_vendor_macronix {
->  	u8 reserved;
->  	u8 reliability_func;
-> @@ -57,10 +61,7 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
->   * the timings unlike what is declared in the parameter page. Unflag
->   * this feature to avoid unnecessary downturns.
->   */
-> -static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
-> -{
-> -	unsigned int i;
-> -	static const char * const broken_get_timings[] = {
-> +static const char * const broken_get_timings[] = {
->  		"MX30LF1G18AC",
->  		"MX30LF1G28AC",
->  		"MX30LF2G18AC",
-> @@ -75,7 +76,11 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
->  		"MX30UF4G18AC",
->  		"MX30UF4G16AC",
->  		"MX30UF4G28AC",
-> -	};
-> +};
-> +
-> +static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
-> +{
-> +	unsigned int i;
+>  #include <linux/acpi.h>
+>  #include <linux/bits.h>
+> +#include <linux/bitops.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+> @@ -456,7 +457,8 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
+>  				      unsigned long *mask, unsigned long *bits)
+>  {
+>  	struct pca953x_chip *chip = gpiochip_get_data(gc);
+> -	unsigned int bank_mask, bank_val;
+> +	unsigned long offset;
+> +	unsigned long bank_mask;
+>  	int bank;
+>  	u8 reg_val[MAX_BANK];
+>  	int ret;
+> @@ -466,15 +468,10 @@ static void pca953x_gpio_set_multiple(struct gpio_chip *gc,
+>  	if (ret)
+>  		goto exit;
 >  
->  	if (!chip->parameters.supports_set_get_features)
->  		return;
-> @@ -105,6 +110,71 @@ static int macronix_nand_init(struct nand_chip *chip)
->  	return 0;
->  }
+> -	for (bank = 0; bank < NBANK(chip); bank++) {
+> -		bank_mask = mask[bank / sizeof(*mask)] >>
+> -			   ((bank % sizeof(*mask)) * 8);
+> -		if (bank_mask) {
+> -			bank_val = bits[bank / sizeof(*bits)] >>
+> -				  ((bank % sizeof(*bits)) * 8);
+> -			bank_val &= bank_mask;
+> -			reg_val[bank] = (reg_val[bank] & ~bank_mask) | bank_val;
+> -		}
+> +	for_each_set_clump8(offset, bank_mask, mask, gc->ngpio) {
+> +		bank = offset / 8;
+> +		reg_val[bank] &= ~bank_mask;
+> +		reg_val[bank] |= bitmap_get_value8(bits, offset) & bank_mask;
+>  	}
 >  
-> +static int mxic_nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> +	int ret;
-> +
-> +	feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
-> +	nand_select_target(chip, 0);
-> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
-> +				feature);
-> +	nand_deselect_target(chip);
-> +	if (ret)
-> +		pr_err("%s all blocks failed\n", __func__);
-> +
-> +	return ret;
-> +}
-> +
-> +static int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> +	int ret;
-> +
-> +	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
-> +	nand_select_target(chip, 0);
-> +	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
-> +				feature);
-> +	nand_deselect_target(chip);
-> +	if (ret)
-> +		pr_err("%s all blocks failed\n", __func__);
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Macronix AC series support using SET/GET_FEATURES to change
-> + * Block Protection and Unprotection.
-> + *
-> + * MTD call-back function replacement by manufacturer postponed
-> + * initialization.
-> + */
-> +static void macronix_nand_post_init(struct nand_chip *chip)
-> +{
-> +	unsigned int i, blockprotected = 0;
-> +	struct mtd_info *mtd = nand_to_mtd(chip);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(broken_get_timings); i++) {
-> +		if (!strcmp(broken_get_timings[i], chip->parameters.model)) {
-> +			blockprotected = 1;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (blockprotected && chip->parameters.supports_set_get_features) {
-> +		bitmap_set(chip->parameters.set_feature_list,
-> +			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
-> +		bitmap_set(chip->parameters.get_feature_list,
-> +			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
-> +
-> +		mtd->_lock = mxic_nand_lock;
-> +		mtd->_unlock = mxic_nand_unlock;
-> +	}
-> +}
-> +
->  const struct nand_manufacturer_ops macronix_nand_manuf_ops = {
->  	.init = macronix_nand_init,
-> +	.post_init = macronix_nand_post_init,
->  };
+>  	pca953x_write_regs(chip, chip->regs->output, reg_val);
+> -- 
+> 2.23.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Thanks,
-Miquèl
