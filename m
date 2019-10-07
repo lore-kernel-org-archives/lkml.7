@@ -2,144 +2,95 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3A8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45856C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2ED2173B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1102173B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570459802;
+	bh=r4K7HAwLnCeGJFkWlb4lenJOAqclCLAOXkLixnCX080=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nv2A+9pyOC+ujpFg27bST5yf8eH/fhVqWixk9GJKNiLAElJZzI1sYGOXA12UmGGiv
+	 X+TZnnGBk8IcjiEPBd2jObqkjHdMnfaytfnfPP9YXKCxKgpi4RTcoIkc2IXMttDzlA
+	 lM9WRH2j9kn9asmwOWOFrQNkUregnbRpRRjsH1h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbfJGOt5 (ORCPT
+        id S1728888AbfJGOuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:49:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44539 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbfJGOtu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:49:50 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUKO-0006E3-DR; Mon, 07 Oct 2019 16:49:36 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 55D351C079B;
-        Mon,  7 Oct 2019 16:49:32 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:32 -0000
-From:   "tip-bot2 for Mike Travis" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] x86/platform/uv: Save OEM_ID from ACPI MADT probe
-Cc:     Mike Travis <mike.travis@hpe.com>, Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190910145839.732237241@stormcage.eag.rdlabs.hpecorp.net>
-References: <20190910145839.732237241@stormcage.eag.rdlabs.hpecorp.net>
+        Mon, 7 Oct 2019 10:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728827AbfJGOtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:49:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 795EB21721;
+        Mon,  7 Oct 2019 14:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570459794;
+        bh=r4K7HAwLnCeGJFkWlb4lenJOAqclCLAOXkLixnCX080=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D52K+4pPEnFckx8ZJgeQB5pQg9bw/NPoVMCLRzoJC/bFTaCjswMxxBhdMP2PqRmNX
+         MXB9/A1fV1FaZ8fb8tfslbeiQR+vEv2T9gP+0vyMEr5b7n/nBALrofKtuhOozThz28
+         mYWblVLt26i79NTfFjiVgatl2Jswp0V47JYfdWhI=
+Date:   Mon, 7 Oct 2019 16:49:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/36] 4.4.196-stable review
+Message-ID: <20191007144951.GB966828@kroah.com>
+References: <20191006171038.266461022@linuxfoundation.org>
+ <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
 MIME-Version: 1.0
-Message-ID: <157045977229.9978.6327888558896438069.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d3e1e6ae-8ca4-a43b-d30d-9a9a9a7e5752@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/platform branch of tip:
+On Mon, Oct 07, 2019 at 05:53:55AM -0700, Guenter Roeck wrote:
+> On 10/6/19 10:18 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.196 release.
+> > There are 36 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Tue 08 Oct 2019 05:07:10 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> 
+> powerpc:defconfig fails to build.
+> 
+> arch/powerpc/kernel/eeh_driver.c: In function ‘eeh_handle_normal_event’:
+> arch/powerpc/kernel/eeh_driver.c:678:2: error: implicit declaration of function ‘eeh_for_each_pe’; did you mean ‘bus_for_each_dev’?
+> 
+> It has a point:
+> 
+> ... HEAD is now at 13cac61d31df Linux 4.4.196-rc1
+> $ git grep eeh_for_each_pe
+> arch/powerpc/kernel/eeh_driver.c:       eeh_for_each_pe(pe, tmp_pe)
+> arch/powerpc/kernel/eeh_driver.c:                               eeh_for_each_pe(pe, tmp_pe)
+> 
+> Caused by commit 3fb431be8de3a ("powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag").
+> Full report will follow later.
 
-Commit-ID:     61e5ddca9c2a312f933bf5b12bc08484189fefe6
-Gitweb:        https://git.kernel.org/tip/61e5ddca9c2a312f933bf5b12bc08484189fefe6
-Author:        Mike Travis <mike.travis@hpe.com>
-AuthorDate:    Tue, 10 Sep 2019 09:58:40 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 07 Oct 2019 13:42:09 +02:00
+Thanks for letting me know, I've dropped this from the queue now and
+pushed out a -rc2 with that removed.
 
-x86/platform/uv: Save OEM_ID from ACPI MADT probe
+Sasha, I thought your builder would have caught stuff like this?
 
-Save the OEM_ID and OEM_TABLE_ID passed to the apic driver probe function
-for later use.  Also, convert the char list arg passed from the kernel
-to a true null-terminated string.
+thanks,
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Hedi Berriche <hedi.berriche@hpe.com>
-Cc: Justin Ernst <justin.ernst@hpe.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russ Anderson <russ.anderson@hpe.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190910145839.732237241@stormcage.eag.rdlabs.hpecorp.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/apic/x2apic_uv_x.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index e6230af..66b38a6 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -14,6 +14,7 @@
- #include <linux/memory.h>
- #include <linux/export.h>
- #include <linux/pci.h>
-+#include <linux/acpi.h>
- 
- #include <asm/e820/api.h>
- #include <asm/uv/uv_mmrs.h>
-@@ -31,6 +32,10 @@ static u64			gru_dist_base, gru_first_node_paddr = -1LL, gru_last_node_paddr;
- static u64			gru_dist_lmask, gru_dist_umask;
- static union uvh_apicid		uvh_apicid;
- 
-+/* Unpack OEM/TABLE ID's to be NULL terminated strings */
-+static u8 oem_id[ACPI_OEM_ID_SIZE + 1];
-+static u8 oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
-+
- /* Information derived from CPUID: */
- static struct {
- 	unsigned int apicid_shift;
-@@ -248,11 +253,20 @@ static void __init uv_set_apicid_hibit(void)
- 	}
- }
- 
--static int __init uv_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
-+static void __init uv_stringify(int len, char *to, char *from)
-+{
-+	/* Relies on 'to' being NULL chars so result will be NULL terminated */
-+	strncpy(to, from, len-1);
-+}
-+
-+static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
- {
- 	int pnodeid;
- 	int uv_apic;
- 
-+	uv_stringify(sizeof(oem_id), oem_id, _oem_id);
-+	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
-+
- 	if (strncmp(oem_id, "SGI", 3) != 0) {
- 		if (strncmp(oem_id, "NSGI", 4) == 0) {
- 			uv_hubless_system = true;
+greg k-h
