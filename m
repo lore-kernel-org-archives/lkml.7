@@ -2,136 +2,103 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FE3ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D99ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A31E206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799BE206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 19:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570477088;
+	bh=Vb5ysbfySnG05gTtQswSr0L15TWxpqB+n08NNR19Wjk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NlTNZrvqADwiUAHX++v5lTkg8LsxY1mdNCsFMvF24zFRCOYAQYfkjyOxSB3ab2beh
+	 GL0TMxexBPADnwIUky5I9sRpzNBMS+z7QK97IcHdGyoFsB70n2qoUw+r/r7ZJh5abu
+	 FebY52z3GfsboKSVVSHtM4Q8R4/CT3tlXdTWKT9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfJGTga (ORCPT
+        id S1729099AbfJGTiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 15:36:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55020 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbfJGTg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 15:36:29 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D8D6751EF1
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Oct 2019 19:36:28 +0000 (UTC)
-Received: by mail-ed1-f70.google.com with SMTP id a21so2905502edt.19
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:36:28 -0700 (PDT)
+        Mon, 7 Oct 2019 15:38:07 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35403 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbfJGTiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 15:38:07 -0400
+Received: by mail-lf1-f66.google.com with SMTP id w6so10124217lfl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2i1Jq3dJE/lAwP5Offu74j3OydK/atOoSX/tgmiHVj4=;
+        b=hdThZ7WJaP5NZ+W5fWwbMjwhAKsU2IIErvTKIQlco2XJO/gh/WPWgizXSZfMfMvPMR
+         Lt5468syXhWT3u+eK1aPLWb2z7cC5aOBEwZjVM4OWNS1QKUpF27EIuBFJW/pJroTQjZn
+         vTOduqk65jZlKK9oPQYY5Z9UMMdfYcg2+Lark=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ljeQp8GB5NCWoYLQPc6omSfgvu4MNul47KparjzcLdc=;
-        b=KV7NO21ZYiaXLB5uIuRXJhEbO7UPfx+pMVhBrd3B0C/4aNBO1VefDG0EaB6NRQb6Hc
-         yR7zmPISh/dhXP5z1rmHXFFtS1Gh0aZFPrOqWFeMYwB5GTVrIa3o6cN6Dzrug+tRQHjn
-         N4ETamfTtD13/iMbx7+7GX9I9MwKa/mmEY8HNWNeoPNZwiN85hxRB4aflfgQGSvGOms/
-         HYxmKQwv3gVmXyPdUNswx+zROgAnH49QnnT6iZm8EF/9xOm/4+XpUzSrgrEsDcO/rJbc
-         01lS1pUATsKyaXDjsoMv8w6uai0omq7Tmxy4VrxowXnnn233mpHNrg7arWsEdZND28Xc
-         i/YA==
-X-Gm-Message-State: APjAAAWwXI5ajXYaMVf75jIUyt0WaL7SXzv366u/6pruW0JiW1248Wh1
-        TGORzrQvJoStPt1GSAVF+wKDTILwar8Qnqpoe0/h7JBCc/gpPbpgc2HK1/IwK0rcoh+QLT5YhbT
-        TcgTGksEH4yKTRZCHMgt6AiX6
-X-Received: by 2002:a17:906:cec3:: with SMTP id si3mr25362437ejb.145.1570476987601;
-        Mon, 07 Oct 2019 12:36:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz6Da4NEDWiQMcaC9fAtmpy1da8A1+7AzwgtoUpoptiUpd1fibFowoiKw31dJ8eZhCyne3fDw==
-X-Received: by 2002:a17:906:cec3:: with SMTP id si3mr25362409ejb.145.1570476987315;
-        Mon, 07 Oct 2019 12:36:27 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id x5sm1967822ejc.53.2019.10.07.12.36.25
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2i1Jq3dJE/lAwP5Offu74j3OydK/atOoSX/tgmiHVj4=;
+        b=AE3tcvfBbOea/R6vSPFag3Pljdr5kaEBg+CJm3Cux9ggsOB3gSgMgnSn3Y5Zn4Lh4p
+         S5T+sS+aN6I58eirw4Rsl19Zh0ai4Agy85UzAVgGiteryoai1GKnFEiKeimG1KlgC+Ee
+         l5Z9hJmlSRyhSL4fwtXBZoZJ2ZVxBoWtu/ojQv2+D9b7GNQbaTVejEE7Aq0fe+HybvUM
+         KQC8xZvBao9fuu2Pr4R8HHpF7IPVaxsHcTc4/1B786GCnqJR4m+xAM/7izwVY0TbFHGb
+         4CifE7mUNQpN+AJuGFJePA7AF8pFyD/c8vHNnrt9zSjZzJA8VTsXVH4BCNdpfr1Hp0gS
+         iIfQ==
+X-Gm-Message-State: APjAAAXhFTizrKo9ZvP//DUWL1BWN1Dtksr55vbKasZa7vP5PR/bzMpQ
+        P5f79Z2pwxNrkoDFijobu5hB2ZbKUzY=
+X-Google-Smtp-Source: APXvYqyidwcj2jdNt4A31IQ0H3a04yJkhW3bDImfvsKRH3d6nKOSOJv9rr6nGvIXbRVOJQDfvbTbeA==
+X-Received: by 2002:a19:a408:: with SMTP id q8mr9953143lfc.94.1570477084509;
+        Mon, 07 Oct 2019 12:38:04 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id t24sm2862934lfq.13.2019.10.07.12.38.03
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Oct 2019 12:36:26 -0700 (PDT)
-Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stephan Mueller <smueller@chronox.de>,
-        linux-s390@vger.kernel.org
-References: <20191007134724.4019-1-hdegoede@redhat.com>
- <20191007140022.GA29008@gmail.com>
- <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
- <20191007142230.GA117630@gmail.com>
- <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
- <20191007144600.GB59713@gmail.com>
- <20191007152049.GA384920@rani.riverdale.lan>
- <20191007154007.GA96929@gmail.com>
- <20191007184237.GB13589@rani.riverdale.lan>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1d17349e-98ab-b582-6981-b484b0e970b6@redhat.com>
-Date:   Mon, 7 Oct 2019 21:36:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 07 Oct 2019 12:38:03 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id y23so14963034lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 12:38:03 -0700 (PDT)
+X-Received: by 2002:a2e:551:: with SMTP id 78mr20042479ljf.48.1570477083246;
+ Mon, 07 Oct 2019 12:38:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191007184237.GB13589@rani.riverdale.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAO+szGtvxCo9he+pYjvMjVkMqBHLrXh6gNM4AHRYUWXQp_LnOw@mail.gmail.com>
+In-Reply-To: <CAO+szGtvxCo9he+pYjvMjVkMqBHLrXh6gNM4AHRYUWXQp_LnOw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 7 Oct 2019 12:37:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiK0Mmo-9qkuoBj4Syx_q9Lbn-ZZLb8BGpvuCf8OHjMgQ@mail.gmail.com>
+Message-ID: <CAHk-=wiK0Mmo-9qkuoBj4Syx_q9Lbn-ZZLb8BGpvuCf8OHjMgQ@mail.gmail.com>
+Subject: Re: Decoding an oops
+To:     Francis M <fmcbra@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Oct 7, 2019 at 7:58 AM Francis M <fmcbra@gmail.com> wrote:
+>
+> Attached is a JPEG of what I've been able to capture from the console.
+> I'm guessing it's probably not enough to go on, but hoping someone
+> might have an 'ahh, that looks familiar' moment.
 
-On 07-10-2019 20:42, Arvind Sankar wrote:
-> On Mon, Oct 07, 2019 at 05:40:07PM +0200, Ingo Molnar wrote:
->>
->> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
->>
->>> With the barrier in there, is there any reason to *not* inline the
->>> function? barrier_data() is an asm statement that tells the compiler
->>> that the asm uses the memory that was set to zero, thus preventing it
->>> from removing the memset even if nothing else uses that memory later. A
->>> more detailed comment is there in compiler-gcc.h. I can't see why it
->>> wouldn't work even if it were inlined.
->>>
->>> If the function can indeed be inlined, we could just make the common
->>> implementation a macro and avoid duplicating it? As mentioned in another
->>> mail, we otherwise will likely need another duplicate implementation for
->>> arch/s390/purgatory as well.
->>
->> I suspect macro would be justified in this case. Mind sending a v3 patch
->> to demonstrate how it would all look like?
->>
->> I'll zap v2 if the macro solution looks better.
->>
->> Thanks,
->>
->> 	Ingo
-> 
-> Patch attached to turn memzero_explicit into inline function.
+That is an awkwardly small snippet and not showing any of the real
+oops state at all (the code/rip dump is actually the user space state
+at the time of the system call that then causes the problem).
 
-Hehe, I had prepared and have just tested the exact same patch
-(only the commit msg was different).
+Can you make your VM use a bigger terminal so that it shows more of
+the oops? Assuming your virtual environment supports the usual VESA
+VGA modes, it might be as easy as just booting with "vga=775" to get a
+1280x1024 console.
 
-I've just booted a kernel build with that patch and that works
-fine (as expected).
+See
 
-So your patch is:
+     https://en.wikipedia.org/wiki/VESA_BIOS_Extensions#Linux_video_mode_numbers
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
+for more commentary.
 
-Since this is a bit of a core change though, I think it is
-best if you send it to the linux-kernel list (with my tags from above
-added) as is normally done for kernel patches. Then others, who may
-not be following this thread, will get a chance to give feedback on it.
+That *might* work, and get you more of the dump.
 
-Regards,
-
-Hans
+              Linus
