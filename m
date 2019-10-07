@@ -2,167 +2,257 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DCCC47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7938BC47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279B9206BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:17:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="e2W87CE1"
+	by mail.kernel.org (Postfix) with ESMTP id 4B6A6206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfJGORM (ORCPT
+        id S1728325AbfJGORr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:17:12 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:8591 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfJGORL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 10:17:11 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: omg2YT47CKvJ02GmeBKUWMzVv55uV0TYovxXP4BkFBczeD7A0atDvfukWfeR4SFTAOnvY5MGHR
- UdEugJwCGlUyKMxvicTZ2sNRW2XojoEcW/5nD5t7nLcIwT/PCy/LG9OwAkKao2s1KTdz7n0M1y
- EgQbd7YOxVO+toiUfhkJobL1qGz8L+H52e3t3/3dPCbevxKTBMGJXXvwnz5hVKzjSMGypGXU29
- D39BDZkref4ot/sbdLki58Pk9CoBPQKex9KJ2PX9PjPRVobNqUOj+yFw57LBZtNVV9IcDkcYt6
- Fr4=
-X-IronPort-AV: E=Sophos;i="5.67,268,1566889200"; 
-   d="scan'208";a="50681831"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Oct 2019 07:17:10 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 7 Oct 2019 07:17:10 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 7 Oct 2019 07:17:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aVzR1FjDHSYQP/sJ2K4+ny2xf9JTVWIMhkF3h2KNQxIc96Mb1O8A4ZfnxX8GzC4G+rQrsYwHJXuwP8hNE8I3jwdWiTvPUk7/9Gp6tg2w5weC1aHMKCr0YfPAuNnLhcCOGpUvOBySg3wIXBgyGXxCrrKciYF5D4lhelZk9lf4Kvq14y1OX+XPaRQ+TzKMnzwvESnDnHMpHkJeyjg9YuiIrhgsC+bDHUcId04F36ILM8YOhTFs5a0Eq4mIgDcyOjM2JlGkxkrPifB68U2lGj+7pKach5Xvfj1vuNhn8mjRDJdzsicsc1WVEwuu4rMRufERl8v6xzXDnPh9mTeVsq1CqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gnH1V09UE7UdGTxZFztDT6VrhYa1pDi9LtqE3OXRvRU=;
- b=Z7/Qq6WwQMYePOAuNtlRZPS2s44ciyef8LStliU0AcSnx6Y2UZngyzFQNw9MREMwr1GzUgPxX4Y5eimO7PJnk/NQW6w54nsW5aI/dQFpY/QS31otF0Y6LGpQaeCALNCT1+88lw40tUIvUBR+S9bn6YxGGCHsN8UUCN+biIAQWuyjhWS6kJJyAbUfw4dwVakB2QNY8YL0jMePIuHVomuTpT1mR8MkW7fckivj9zPGdBUu0yDmms+/+2SNDFfaAz6o1e11cjsXnjTvvvLh+PE6bdeqaEFkTGAcvrc40iy1hTtkZ2YWt1dr7SvFDU0ZeIVAjtVO9gP0/6c0EPT06PHcxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gnH1V09UE7UdGTxZFztDT6VrhYa1pDi9LtqE3OXRvRU=;
- b=e2W87CE1vaJKmWS/EUd2FkXqUtcO4g6mPnuOz+HgHELnLP+0yXd1geCu2i/GqPTZEIsE9q6AsS/Bq1Ak+RLBYfwgiSEnZtWHqdSi3gEERzOgrZ66HRozKkQPmFxRnxZHtcY4mO8WScs4OozAcdmP1qKMq+qeFabSzuoCEPVkjeM=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1386.namprd11.prod.outlook.com (10.168.106.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Mon, 7 Oct 2019 14:17:07 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::b125:76c1:c9b1:34f4]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::b125:76c1:c9b1:34f4%10]) with mapi id 15.20.2327.026; Mon, 7 Oct 2019
- 14:17:07 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <linux@roeck-us.net>
-CC:     <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <wim@linux-watchdog.org>,
-        <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Thread-Topic: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Thread-Index: AQHVePP1mVCAVHNqYEKA4n6lujXEMadHVTuAgAeBQgCAAE9UAIAACneAgAAQAwA=
-Date:   Mon, 7 Oct 2019 14:17:07 +0000
-Message-ID: <f07d299f-574b-8f48-9412-c9a9b50ccd3a@microchip.com>
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
- <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
- <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
- <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
- <20191007131348.GH4254@piout.net>
-In-Reply-To: <20191007131348.GH4254@piout.net>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0701CA0060.eurprd07.prod.outlook.com
- (2603:10a6:800:5f::22) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20191007171124760
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 784933f9-b5ea-498b-2f3d-08d74b310911
-x-ms-traffictypediagnostic: DM5PR11MB1386:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB138675662C32FA3CD5ACE77AE89B0@DM5PR11MB1386.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01834E39B7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(110136005)(2616005)(102836004)(6436002)(11346002)(8936002)(54906003)(476003)(5660300002)(52116002)(305945005)(36756003)(486006)(81166006)(81156014)(6486002)(6246003)(31686004)(8676002)(99286004)(2906002)(26005)(6512007)(107886003)(4326008)(446003)(71190400001)(256004)(25786009)(66476007)(66556008)(66446008)(31696002)(386003)(53546011)(66066001)(71200400001)(14454004)(186003)(64756008)(86362001)(3846002)(316002)(229853002)(66946007)(7736002)(76176011)(478600001)(6116002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1386;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HK24lH1fFOtWOaiboUnreUg4jKhTltI7q2VA9bNx6s23yZIeyF8rL5+pInnvw2hAqbf0M5GFkRYdDFTnzGylG+A9FITGVmh72FGQViaqDRXNHT8nf1Taki4BAfjqfsFn2CJ/+xGYbClvsYcGt69K4WYevRP/fGQfG8WDq6gX6fMdX02g0xOpCbF0/YEGW2Lf96k30xj19JNbwyaACkgWr8kmCBWxWSQE8RPEG5qVy/kFvZnhvC44WQB31X2ajtiKaSOWJ6TiX3luSk1x0GenDmhlYLy2KVfGKI/8ba/ed92gLFJE0W9mjgedpf+w39nG4p/O1mDPcU9PamCOvnXzpHiTlodNeQOMOq8Huf3zvJB7ECXn/xGdIBR7RPL9IyJNpqli9FtCGJAzdzDbR4h8Bv4er4PmIFriuCLXvGYSloA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2CADD20031B0D44993430B4B4818B0D0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 7 Oct 2019 10:17:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:36064 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfJGORr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Oct 2019 10:17:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6527D142F;
+        Mon,  7 Oct 2019 07:17:46 -0700 (PDT)
+Received: from E120351.arm.com (unknown [10.1.28.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC6CF3F703;
+        Mon,  7 Oct 2019 07:17:41 -0700 (PDT)
+Date:   Mon, 7 Oct 2019 15:17:38 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
+        ira.weiny@intel.com
+Subject: Re: [PATCH V8 2/2] arm64/mm: Enable memory hot remove
+Message-ID: <20191007141738.GA93112@E120351.arm.com>
+References: <1569217425-23777-1-git-send-email-anshuman.khandual@arm.com>
+ <1569217425-23777-3-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 784933f9-b5ea-498b-2f3d-08d74b310911
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Oct 2019 14:17:07.5725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x8Cw+Ld4Jk5SFpyo7IacVYMHwTzG00lngVtt2Rg9gIvY655GCgcipy6Xfg4zYqy6HKrJK+BeG8r7Nx1ux9Lx637R0fabLv3BkF8pRCRJJ7Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1386
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569217425-23777-3-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA3LjEwLjIwMTkgMTY6MTQsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KDQo+IA0K
-PiBPbiAwNy8xMC8yMDE5IDA1OjM2OjM4LTA3MDAsIEd1ZW50ZXIgUm9lY2sgd3JvdGU6DQo+PiBP
-biAxMC83LzE5IDEyOjU4IEFNLCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+
-PiBbIC4uLiBdDQo+Pj4gSGVsbG8gR3VlbnRlciwNCj4+Pg0KPj4+IFRoYW5rIHlvdSBmb3IgdGhl
-IGZlZWRiYWNrLg0KPj4+IEFmdGVyIHJldmlld2luZyB0aGlzLCBjYW4geW91IHBsZWFzZSBndWlk
-ZSBtZSB0b3dhcmRzIG9uZSBvZiB0aGUNCj4+PiBwb3NzaWJsZSB0d28gZGlyZWN0aW9uczogbWVy
-Z2UgdGhpcyBkcml2ZXIgd2l0aCBzYW1hNWQ0X3dkdCAsIGFuZCBoYXZlIGENCj4+PiBzaW5nbGUg
-ZHJpdmVyIHdpdGggc3VwcG9ydCBmb3IgYm90aCBoYXJkd2FyZSBibG9ja3M7IG9yLCBoYXZlIHRo
-aXMNCj4+PiBkcml2ZXIgc2VwYXJhdGVseSAsIGFzIGluIHRoaXMgcGF0Y2ggc2VyaWVzPw0KPj4+
-DQo+Pg0KPj4gSSBub3RpY2VkIHRoZSBzaW1pbGFyaXRpZXMuIEkgZG9uJ3Qga25vdyBpZiBpdCBt
-YWtlcyBzZW5zZSB0byByZWNvbmNpbGUNCj4+IHRoZSB0d28gZHJpdmVyczsgaXQgc2VlbXMgdG8g
-bWUgdGhlIG5ldyBjaGlwIHVzZXMgdGhlIHNhbWUgYmFzaWMgY29yZSB3aXRoDQo+PiBlbmhhbmNl
-bWVudHMuIEluIGdlbmVyYWwsIEkgcHJlZmVyIGEgc2luZ2xlIGRyaXZlciwgYnV0IG9ubHkgaWYg
-dGhlIHJlc3VsdA0KPj4gZG9lc24ndCBlbmQgdXAgYmVpbmcgYW4gaWYvZWxzZSBtZXNzLiBVbHRp
-bWF0ZWx5LCBpdCBpcyByZWFsbHkgeW91ciBjYWxsDQo+PiB0byBtYWtlLg0KPj4NCj4gDQo+IE1v
-c3QgaWYgbm90IGFsbCB5b3VyIGNvbW1lbnRzIHdlcmUgYWxyZWFkeSBhZGRyZXNzZWQgaW4gdGhl
-IG90aGVyDQo+IGRyaXZlci4gVGhlIG1haW4gZGlmZmVyZW5jZSBpbiB0aGUgcmVnaXN0ZXIgaW50
-ZXJmYWNlIGlzIHRoZSBsb2NhdGlvbiBvZg0KPiB0aGUgY291bnRlciB0aGF0IG9ubHkgcmVhbGx5
-IGFmZmVjdHMgc2FtYTVkNF93ZHRfc2V0X3RpbWVvdXQgYW5kIHRoYXQNCj4gY291bGQgYmUgYWJz
-dHJhY3RlZCBhd2F5IGJ5IHVzaW5nIGEgZGlmZmVyZW50IHN0cnVjdCB3YXRjaGRvZ19vcHMuDQo+
-IEludGVycnVwdCBlbmFibGluZyBpcyBhbHNvIGRvbmUgZGlmZmVyZW50bHksIEkgZG9uJ3QgdGhp
-bmsgaXQgaGFzIGEgaHVnZQ0KPiBpbXBhY3QuDQo+IA0KDQpUaGFuayB5b3UgR3VlbnRlciBhbmQg
-QWxleGFuZHJlLA0KDQpJIHdpbGwgc3RhcnQgd29ya2luZyBvbiBhIHYyIHdpdGggYSBtZXJnZWQg
-ZHJpdmVyLg0KDQpUaGFua3MgYWdhaW4sDQpFdWdlbg0K
+On Mon, Sep 23, 2019 at 11:13:45AM +0530, Anshuman Khandual wrote:
+> The arch code for hot-remove must tear down portions of the linear map and
+> vmemmap corresponding to memory being removed. In both cases the page
+> tables mapping these regions must be freed, and when sparse vmemmap is in
+> use the memory backing the vmemmap must also be freed.
+> 
+> This patch adds unmap_hotplug_range() and free_empty_tables() helpers which
+> can be used to tear down either region and calls it from vmemmap_free() and
+> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
+> backing memory will be freed.
+
+Can you change the 'sparse_vmap' name to something more meaningful which
+would suggest freeing of the backing memory?
+
+> It makes two distinct passes over the kernel page table. In the first pass
+> with unmap_hotplug_range() it unmaps, invalidates applicable TLB cache and
+> frees backing memory if required (vmemmap) for each mapped leaf entry. In
+> the second pass with free_empty_tables() it looks for empty page table
+> sections whose page table page can be unmapped, TLB invalidated and freed.
+> 
+> While freeing intermediate level page table pages bail out if any of its
+> entries are still valid. This can happen for partially filled kernel page
+> table either from a previously attempted failed memory hot add or while
+> removing an address range which does not span the entire page table page
+> range.
+> 
+> The vmemmap region may share levels of table with the vmalloc region.
+> There can be conflicts between hot remove freeing page table pages with
+> a concurrent vmalloc() walking the kernel page table. This conflict can
+> not just be solved by taking the init_mm ptl because of existing locking
+> scheme in vmalloc(). So free_empty_tables() implements a floor and ceiling
+> method which is borrowed from user page table tear with free_pgd_range()
+> which skips freeing page table pages if intermediate address range is not
+> aligned or maximum floor-ceiling might not own the entire page table page.
+> 
+> While here update arch_add_memory() to handle __add_pages() failures by
+> just unmapping recently added kernel linear mapping. Now enable memory hot
+> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
+> 
+> This implementation is overall inspired from kernel page table tear down
+> procedure on X86 architecture and user page table tear down method.
+> 
+> Acked-by: Steve Capper <steve.capper@arm.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Given the amount of changes since version 7, do the acks still stand?
+
+[...]
+> +static void free_pte_table(pmd_t *pmdp, unsigned long addr, unsigned long end,
+> +			   unsigned long floor, unsigned long ceiling)
+> +{
+> +	struct page *page;
+> +	pte_t *ptep;
+> +	int i;
+> +
+> +	if (!pgtable_range_aligned(addr, end, floor, ceiling, PMD_MASK))
+> +		return;
+> +
+> +	ptep = pte_offset_kernel(pmdp, 0UL);
+> +	for (i = 0; i < PTRS_PER_PTE; i++) {
+> +		if (!pte_none(READ_ONCE(ptep[i])))
+> +			return;
+> +	}
+> +
+> +	page = pmd_page(READ_ONCE(*pmdp));
+
+Arguably, that's not the pmd page we are freeing here. Even if you get
+the same result, pmd_page() is normally used for huge pages pointed at
+by the pmd entry. Since you have the ptep already, why not use
+virt_to_page(ptep)?
+
+> +	pmd_clear(pmdp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	free_hotplug_pgtable_page(page);
+> +}
+> +
+> +static void free_pmd_table(pud_t *pudp, unsigned long addr, unsigned long end,
+> +			   unsigned long floor, unsigned long ceiling)
+> +{
+> +	struct page *page;
+> +	pmd_t *pmdp;
+> +	int i;
+> +
+> +	if (CONFIG_PGTABLE_LEVELS <= 2)
+> +		return;
+> +
+> +	if (!pgtable_range_aligned(addr, end, floor, ceiling, PUD_MASK))
+> +		return;
+> +
+> +	pmdp = pmd_offset(pudp, 0UL);
+> +	for (i = 0; i < PTRS_PER_PMD; i++) {
+> +		if (!pmd_none(READ_ONCE(pmdp[i])))
+> +			return;
+> +	}
+> +
+> +	page = pud_page(READ_ONCE(*pudp));
+
+Same here, virt_to_page(pmdp).
+
+> +	pud_clear(pudp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	free_hotplug_pgtable_page(page);
+> +}
+> +
+> +static void free_pud_table(pgd_t *pgdp, unsigned long addr, unsigned  long end,
+> +			   unsigned long floor, unsigned long ceiling)
+> +{
+> +	struct page *page;
+> +	pud_t *pudp;
+> +	int i;
+> +
+> +	if (CONFIG_PGTABLE_LEVELS <= 3)
+> +		return;
+> +
+> +	if (!pgtable_range_aligned(addr, end, floor, ceiling, PGDIR_MASK))
+> +		return;
+> +
+> +	pudp = pud_offset(pgdp, 0UL);
+> +	for (i = 0; i < PTRS_PER_PUD; i++) {
+> +		if (!pud_none(READ_ONCE(pudp[i])))
+> +			return;
+> +	}
+> +
+> +	page = pgd_page(READ_ONCE(*pgdp));
+
+As above.
+
+> +	pgd_clear(pgdp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	free_hotplug_pgtable_page(page);
+> +}
+> +
+> +static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+> +				    unsigned long end, bool sparse_vmap)
+> +{
+> +	struct page *page;
+> +	pte_t *ptep, pte;
+> +
+> +	do {
+> +		ptep = pte_offset_kernel(pmdp, addr);
+> +		pte = READ_ONCE(*ptep);
+> +		if (pte_none(pte))
+> +			continue;
+> +
+> +		WARN_ON(!pte_present(pte));
+> +		page = sparse_vmap ? pte_page(pte) : NULL;
+> +		pte_clear(&init_mm, addr, ptep);
+> +		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+> +		if (sparse_vmap)
+> +			free_hotplug_page_range(page, PAGE_SIZE);
+
+You could only set 'page' if sparse_vmap (or even drop 'page' entirely).
+The compiler is probably smart enough to optimise it but using a
+pointless ternary operator just makes the code harder to follow.
+
+> +	} while (addr += PAGE_SIZE, addr < end);
+> +}
+[...]
+> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
+> +				 unsigned long end)
+> +{
+> +	pte_t *ptep, pte;
+> +
+> +	do {
+> +		ptep = pte_offset_kernel(pmdp, addr);
+> +		pte = READ_ONCE(*ptep);
+> +		WARN_ON(!pte_none(pte));
+> +	} while (addr += PAGE_SIZE, addr < end);
+> +}
+> +
+> +static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
+> +				 unsigned long end, unsigned long floor,
+> +				 unsigned long ceiling)
+> +{
+> +	unsigned long next;
+> +	pmd_t *pmdp, pmd;
+> +
+> +	do {
+> +		next = pmd_addr_end(addr, end);
+> +		pmdp = pmd_offset(pudp, addr);
+> +		pmd = READ_ONCE(*pmdp);
+> +		if (pmd_none(pmd))
+> +			continue;
+> +
+> +		WARN_ON(!pmd_present(pmd) || !pmd_table(pmd) || pmd_sect(pmd));
+> +		free_empty_pte_table(pmdp, addr, next);
+> +		free_pte_table(pmdp, addr, next, floor, ceiling);
+
+Do we need two closely named functions here? Can you not collapse
+free_empty_pud_table() and free_pte_table() into a single one? The same
+comment for the pmd/pud variants. I just find this confusing.
+
+> +	} while (addr = next, addr < end);
+
+You could make these function in two steps: first, as above, invoke the
+next level recursively; second, after the do..while loop, check whether
+it's empty and free the pmd page as in free_pmd_table().
+
+> +}
+[...]
+
+-- 
+Catalin
