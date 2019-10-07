@@ -2,127 +2,122 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602A9C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43632ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322EC20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cOdxOZ32"
+	by mail.kernel.org (Postfix) with ESMTP id 1EE9420835
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 22:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfJGWRy (ORCPT
+        id S1729465AbfJGWSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 18:17:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46084 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfJGWRy (ORCPT
+        Mon, 7 Oct 2019 18:18:22 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45632 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfJGWSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 18:17:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97MEP1n121984;
-        Mon, 7 Oct 2019 22:17:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=24wnltpbsNiSThDHipt5aPeUqzFk/94/Ub8cB2WcU3I=;
- b=cOdxOZ32xX614k7xA+i0Ri2RSrfLJldIjb3ipoLtkDxP7KU+Tiqpjy1G2SNzD2oPF2wL
- 2PIYbZyPrWn0FgrOGnHx/X9E+7C45Ls1jk+BiapyHyj46pN0ntsxVkk2rNtTN7upnofY
- UVgbM5EwSqeSxzu3zvmMAyqTRvZInTCe17w2dSgzbGlZ6YTl/yvLMU90cweeAZQbdozf
- l11k1bEwTfPllmlJuhsrzuNnH9t9YeinKoYyur/4YbIyXDtCtnca8rHIQFXvnRsT9iQl
- bimdKQSXd+1DZDG4FgyUEY/55l+K8BGNK6RflwphF7oosdWetQc/Do7vMCsRo/JCm00J Zg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2vejku9rc1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 22:17:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x97MDncm095674;
-        Mon, 7 Oct 2019 22:15:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2vg1yurgs1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Oct 2019 22:15:35 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x97MFXYF031629;
-        Mon, 7 Oct 2019 22:15:33 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Oct 2019 15:15:33 -0700
-Subject: Re: [rfc] mm, hugetlb: allow hugepage allocations to excessively
- reclaim
-To:     David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-References: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com>
- <d7752ddf-ccdc-9ff4-ab9f-529c2cd7f041@suse.cz>
- <alpine.DEB.2.21.1910031243050.88296@chino.kir.corp.google.com>
- <20191004092808.GC9578@dhcp22.suse.cz>
- <alpine.DEB.2.21.1910041058330.16371@chino.kir.corp.google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <3c220179-09cc-569f-8cfa-8e2ab5212faa@oracle.com>
-Date:   Mon, 7 Oct 2019 15:15:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 7 Oct 2019 18:18:21 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 5045980555; Tue,  8 Oct 2019 00:18:03 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 00:18:17 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: x86/random: Speculation to the rescue
+Message-ID: <20191007221817.GA4027@amd>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <20191006114129.GD24605@amd>
+ <CAHk-=wjvhovO6V4-zT=xEMFnRonYteZvsPo-S0_n_DetSTUk5A@mail.gmail.com>
+ <20191006173501.GA31243@amd>
+ <CAHk-=whgfz2+OgBTVrHLoHK57emYb4gN6TtJ_s-607U=jBQ+ig@mail.gmail.com>
+ <20191006182103.GA2394@amd>
+ <20191007114734.GA6104@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910041058330.16371@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910070197
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9403 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910070197
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
+Content-Disposition: inline
+In-Reply-To: <20191007114734.GA6104@mit.edu>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/4/19 11:02 AM, David Rientjes wrote:
-> On Fri, 4 Oct 2019, Michal Hocko wrote:
-> 
->> Requesting the userspace to drop _all_ page cache in order allocate a
->> number of hugetlb pages or any other affected __GFP_RETRY_MAYFAIL
->> requests is simply not reasonable IMHO.
-> 
-> It can be used as a fallback when writing to nr_hugepages and the amount 
-> allocated did not match expectation.  Again, I'll defer all of this to 
-> Mike when he returns: he expressed his preference, I suggested an 
-> alternative to consider, and he can make the decision to ack or nack this 
-> patch because he has a better understanding of that expectation from users 
-> who use hugetlb pages.
 
-I believe these modifications to commit b39d0ee2632d are absolutely necessary
-to maintain expected hugetlbfs functionality.  Michal's simple test in the
-rewritten commit message shows the type of regressions that I expect some
-hugetlbfs users to experience.  The expectation today is that the kernel will
-try hard to allocate the requested number of hugetlb pages.  These pages are
-often used for very long running processes.  Therefore, the tradeoff of more
-reclaim (and compaction) activity up front to create the pages is generally
-acceptable.
+--wac7ysb48OaltWcw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My apologies if the 'testing' I did in [1] was taken as an endorsement of
-b39d0ee2632d working well with hugetlbfs.  It was a limited test that I knew
-did not cover all cases.  Therefore, I suggested that if b39d0ee2632d went
-forward there should be an exception for __GFP_RETRY_MAYFAIL requests.
+On Mon 2019-10-07 07:47:34, Theodore Y. Ts'o wrote:
+> On Sun, Oct 06, 2019 at 08:21:03PM +0200, Pavel Machek wrote:
+> > Even without cycle counter... if we _know_ we are trying to generate
+> > entropy and have MMC available, we don't care about power and
+> > performance.
+> >=20
+> > So we can just...
+> >=20
+> >    issue read request on MMC
+> >    while (!interrupt_done)
+> >    	 i++
+> > 	=20
+> > ...and then use i++ as poor man's version of cycle counter.
+>=20
+> I suggest that you try that and see how much uncertainty you really
+> have before you assume that this is actually going to work.  Again, on
+> "System on a Chip" systems, there is very likely a single master
+> oscillator, and the eMMC is going to be on the the same silicon die as
+> the CPU.  At least for spinning rust platters it's on a physically
 
-[1] https://lkml.kernel.org/r/3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com
--- 
-Mike Kravetz
+I have many systems including SoC here, but technology needed for NAND
+flash is different from technology for CPU, so these parts do _not_
+share a silicon die. They do not even share same package. (Also RTC
+tends to be on separate chip, connected using i2c).
+
+Would you have an example of Linux-capable system where eMMC is on
+same chip as CPU?
+
+> P.S.  Note that this Don Davis's paper[1] claims that they were able
+> to extract 100 independent unpredictable bits per _minute_.  Given
+> that modern init scripts want us to be able to boot in under a few
+
+Well, for now I'm arguing that it is possible to gather entropy, not
+neccessarily that it is going to be fast. Still waiting minute and a
+half during boot is better than generating non-random keys.
+
+Linux already credits interrupts with some entropy, so all I really
+need to do is generate some interrupts. And "find /" generates lots of
+those on embedded systems. (Even with nfsroot as long as network card
+is not being polled...)
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--wac7ysb48OaltWcw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2buakACgkQMOfwapXb+vIMKACfTYD726DRhIKO8U/fIqbhpkhb
+6X0AnjicfyhZGiQk6WZBcx++vPb4LCtJ
+=U6l+
+-----END PGP SIGNATURE-----
+
+--wac7ysb48OaltWcw--
