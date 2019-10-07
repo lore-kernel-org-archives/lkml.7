@@ -2,202 +2,390 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDFCC4740A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28565ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC6721655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E884120867
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 09:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfJGJo0 (ORCPT
+        id S1727395AbfJGJun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 05:44:26 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:50589 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfJGJo0 (ORCPT
+        Mon, 7 Oct 2019 05:50:43 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26566 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726010AbfJGJum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 05:44:26 -0400
-Received: from [IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8] ([IPv6:2001:983:e9a7:1:3d61:cdd2:8085:cc8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id HPZ0iLENKjZ8vHPZ1i5nUm; Mon, 07 Oct 2019 11:44:24 +0200
-Subject: Re: [PATCH v2 3/6] media: v4l2-mem2mem: add
- stateless_(try_)decoder_cmd ioctl helpers
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>
-Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
-        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-References: <20190929200023.215831-1-jernej.skrabec@siol.net>
- <20190929200023.215831-4-jernej.skrabec@siol.net>
- <6c7eeaf1-18bb-1c7e-7938-a3eb5af100b6@xs4all.nl>
- <2840939.OS9t7MgvnY@jernej-laptop>
- <cce04c8e-8211-0fdc-bd62-650aceeb3af1@xs4all.nl>
-Message-ID: <bc9e3e73-c2aa-c70e-5d81-f77d1bf898e7@xs4all.nl>
-Date:   Mon, 7 Oct 2019 11:44:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 7 Oct 2019 05:50:42 -0400
+X-UUID: 23e673f395924adba624ab38a8c68235-20191007
+X-UUID: 23e673f395924adba624ab38a8c68235-20191007
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1013611174; Mon, 07 Oct 2019 17:50:34 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 7 Oct 2019 17:50:31 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 7 Oct 2019 17:50:31 +0800
+Message-ID: <1570441833.4686.66.camel@mtksdccf07>
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Mon, 7 Oct 2019 17:50:33 +0800
+In-Reply-To: <1570440492.4686.59.camel@mtksdccf07>
+References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
+         <1569594142.9045.24.camel@mtksdccf07>
+         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+         <1569818173.17361.19.camel@mtksdccf07>
+         <1570018513.19702.36.camel@mtksdccf07>
+         <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
+         <1570069078.19702.57.camel@mtksdccf07>
+         <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
+         <1570095525.19702.59.camel@mtksdccf07>
+         <1570110681.19702.64.camel@mtksdccf07>
+         <CACT4Y+aKrC8mtcDTVhM-So-TTLjOyFCD7r6jryWFH6i2he1WJA@mail.gmail.com>
+         <1570164140.19702.97.camel@mtksdccf07>
+         <1570176131.19702.105.camel@mtksdccf07>
+         <CACT4Y+ZvhomaeXFKr4za6MJi=fW2SpPaCFP=fk06CMRhNcmFvQ@mail.gmail.com>
+         <1570182257.19702.109.camel@mtksdccf07>
+         <CACT4Y+ZnWPEO-9DkE6C3MX-Wo+8pdS6Gr6-2a8LzqBS=2fe84w@mail.gmail.com>
+         <1570190718.19702.125.camel@mtksdccf07>
+         <CACT4Y+YbkjuW3_WQJ4BB8YHWvxgHJyZYxFbDJpnPzfTMxYs60g@mail.gmail.com>
+         <1570418576.4686.30.camel@mtksdccf07>
+         <CACT4Y+aho7BEvQstd2+a2be-jJ0dEsjGebH7bcUFhYp-PoRDxQ@mail.gmail.com>
+         <1570436289.4686.40.camel@mtksdccf07>
+         <CACT4Y+Z6QObZ2fvVxSmvv16YQAu4GswOqfOVQK_1_Ncz0eir_g@mail.gmail.com>
+         <1570438317.4686.44.camel@mtksdccf07>
+         <CACT4Y+Yc86bKxDp4ST8+49rzLOWkTXLkjs0eyFtohCi_uSjmLQ@mail.gmail.com>
+         <1570439032.4686.50.camel@mtksdccf07>
+         <CACT4Y+YL=8jFXrj2LOuQV7ZyDe-am4W8y1WHEDJJ0-mVNJ3_Cw@mail.gmail.com>
+         <1570440492.4686.59.camel@mtksdccf07>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-In-Reply-To: <cce04c8e-8211-0fdc-bd62-650aceeb3af1@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfBhg/py6knYnvxMkJcNfVQ+HaYw1/5QCmKHnBYtRPv76Qm2AoD1c/Ql55QjfH0qG5LPLO1GSLVNPHUFKeJlbTOeuOz7RbyBpURJPL14hyhGGupB0RNCp
- mRKRFdLcj/L52Oxde2u3TfEr9XaNfGHsAfgV3C9SN6kvhZPBjvcMRd2eXePmKr43x76IDztL9jl7Dykw8+7wOgOqBbqyzKD/MvQMpZWjCL2WX4WiYdtGjDNW
- x3QLglAwFbVgyGcn8zmLoFn469yVAP1AmOwY58Uy7WCNxhvofVAyc1vfsn7nRUhcXIyQl4A75L9SrOVWvBmCqnQV/7UHRidLfMr8rRUgQG74dIvpwmdfLLit
- IaYQp/ZbAe8g2wf39hvt5sqMeccaLxo9liVvx9p1BplHSykj/XUSSx3kjsSxRwjidSSl2jJ+p6GRxT8Mq8NhNXihAyHMQxgRl1qwKyVg8V3uJZDNT1En7ndD
- TvT7Y3o2lD7kjTOx773li/ShhTUO03Rb0KNWN41ZondLwOtrhdk5dxRy9Eyo9e5Vhgf/SsMTasQ4t8y0FyNBURY6pCECM2eWv/PZMHLjG8zcJ52tHccbu2tH
- tY0NliwdJTMkxVb+CloozwUHKG+iE/sWOBPGHVPFZNf7GWk+VxncTNjC5dRKV2Z70y7FOkttLisWv60oWmTItcad0A7cUiU0vmc+vjIPK/aFo2CHsXfIQKwS
- n3t0r5yi3Q3mokY5rkoTseCC7cQTmcLVGgd4q0IT33WoLzcGwXvedEEybcr92xfrbIjFv49/SFv3ACNBnaGGelMyhxZZv0ps8jMRvSvrJAXWcVbVMNPcABz2
- 2qJ/vX1ll17fLGgpykc=
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/7/19 10:32 AM, Hans Verkuil wrote:
-> On 10/7/19 8:02 AM, Jernej Škrabec wrote:
->> Dne petek, 04. oktober 2019 ob 11:21:12 CEST je Hans Verkuil napisal(a):
->>> On 9/29/19 10:00 PM, Jernej Skrabec wrote:
->>>> These helpers are used by stateless codecs when they support multiple
->>>> slices per frame and hold capture buffer flag is set. It's expected that
->>>> all such codecs will use this code.
->>>>
->>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->>>> ---
->>>>
->>>>  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 ++++++++++++++++++++++++++
->>>>  include/media/v4l2-mem2mem.h           |  4 +++
->>>>  2 files changed, 39 insertions(+)
->>>>
->>>> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c
->>>> b/drivers/media/v4l2-core/v4l2-mem2mem.c index 19937dd3c6f6..2677a07e4c9b
->>>> 100644
->>>> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
->>>> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
->>>> @@ -1154,6 +1154,41 @@ int v4l2_m2m_ioctl_try_decoder_cmd(struct file
->>>> *file, void *fh,> 
->>>>  }
->>>>  EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_try_decoder_cmd);
->>>>
->>>> +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
->>>> +					     struct 
->> v4l2_decoder_cmd *dc)
->>>> +{
->>>> +	if (dc->cmd != V4L2_DEC_CMD_FLUSH)
->>>> +		return -EINVAL;
->>>> +
->>>> +	dc->flags = 0;
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_try_decoder_cmd);
->>>> +
->>>> +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
->>>> +					 struct 
->> v4l2_decoder_cmd *dc)
->>>> +{
->>>> +	struct v4l2_fh *fh = file->private_data;
->>>> +	struct vb2_v4l2_buffer *out_vb, *cap_vb;
->>>> +	int ret;
->>>> +
->>>> +	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, dc);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	out_vb = v4l2_m2m_last_src_buf(fh->m2m_ctx);
->>>> +	cap_vb = v4l2_m2m_last_dst_buf(fh->m2m_ctx);
->>>
->>> I think this should be v4l2_m2m_next_dst_buf. If multiple capture buffers
->>> were queued up, then it can only be the first capture buffer that can be
->>> 'HELD'.
->>
->> I'm pretty sure v4l2_m2m_last_dst_buf() is correct. We want to affect last job 
->> in the queue, all jobs before are already properly handled by comparing 
->> timestamps.
+On Mon, 2019-10-07 at 17:28 +0800, Walter Wu wrote:
+> On Mon, 2019-10-07 at 11:10 +0200, Dmitry Vyukov wrote:
+> > On Mon, Oct 7, 2019 at 11:03 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > >
+> > > On Mon, 2019-10-07 at 10:54 +0200, Dmitry Vyukov wrote:
+> > > > On Mon, Oct 7, 2019 at 10:52 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > > >
+> > > > > On Mon, 2019-10-07 at 10:24 +0200, Dmitry Vyukov wrote:
+> > > > > > On Mon, Oct 7, 2019 at 10:18 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > > > > > The patchsets help to produce KASAN report when size is negative numbers
+> > > > > > > in memory operation function. It is helpful for programmer to solve the
+> > > > > > > undefined behavior issue. Patch 1 based on Dmitry's review and
+> > > > > > > suggestion, patch 2 is a test in order to verify the patch 1.
+> > > > > > >
+> > > > > > > [1]https://bugzilla.kernel.org/show_bug.cgi?id=199341
+> > > > > > > [2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/
+> > > > > > >
+> > > > > > > Walter Wu (2):
+> > > > > > > kasan: detect invalid size in memory operation function
+> > > > > > > kasan: add test for invalid size in memmove
+> > > > > > >
+> > > > > > >  lib/test_kasan.c          | 18 ++++++++++++++++++
+> > > > > > >  mm/kasan/common.c         | 13 ++++++++-----
+> > > > > > >  mm/kasan/generic.c        |  5 +++++
+> > > > > > >  mm/kasan/generic_report.c | 12 ++++++++++++
+> > > > > > >  mm/kasan/tags.c           |  5 +++++
+> > > > > > >  mm/kasan/tags_report.c    | 12 ++++++++++++
+> > > > > > >  6 files changed, 60 insertions(+), 5 deletions(-)
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > commit 5b3b68660b3d420fd2bd792f2d9fd3ccb8877ef7
+> > > > > > > Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
+> > > > > > > Date:   Fri Oct 4 18:38:31 2019 +0800
+> > > > > > >
+> > > > > > >     kasan: detect invalid size in memory operation function
+> > > > > > >
+> > > > > > >     It is an undefined behavior to pass a negative numbers to
+> > > > > > > memset()/memcpy()/memmove()
+> > > > > > >     , so need to be detected by KASAN.
+> > > > > > >
+> > > > > > >     If size is negative numbers, then it has two reasons to be defined
+> > > > > > > as out-of-bounds bug type.
+> > > > > > >     1) Casting negative numbers to size_t would indeed turn up as a
+> > > > > > > large
+> > > > > > >     size_t and its value will be larger than ULONG_MAX/2, so that this
+> > > > > > > can
+> > > > > > >     qualify as out-of-bounds.
+> > > > > > >     2) Don't generate new bug type in order to prevent duplicate reports
+> > > > > > > by
+> > > > > > >     some systems, e.g. syzbot.
+> > > > > > >
+> > > > > > >     KASAN report:
+> > > > > > >
+> > > > > > >      BUG: KASAN: out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
+> > > > > > >      Read of size 18446744073709551608 at addr ffffff8069660904 by task
+> > > > > > > cat/72
+> > > > > > >
+> > > > > > >      CPU: 2 PID: 72 Comm: cat Not tainted
+> > > > > > > 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
+> > > > > > >      Hardware name: linux,dummy-virt (DT)
+> > > > > > >      Call trace:
+> > > > > > >       dump_backtrace+0x0/0x288
+> > > > > > >       show_stack+0x14/0x20
+> > > > > > >       dump_stack+0x10c/0x164
+> > > > > > >       print_address_description.isra.9+0x68/0x378
+> > > > > > >       __kasan_report+0x164/0x1a0
+> > > > > > >       kasan_report+0xc/0x18
+> > > > > > >       check_memory_region+0x174/0x1d0
+> > > > > > >       memmove+0x34/0x88
+> > > > > > >       kmalloc_memmove_invalid_size+0x70/0xa0
+> > > > > > >
+> > > > > > >     [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+> > > > > > >
+> > > > > > >     Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > > > >     Reported -by: Dmitry Vyukov <dvyukov@google.com>
+> > > > > > >     Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > > > >
+> > > > > > > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> > > > > > > index 6814d6d6a023..6ef0abd27f06 100644
+> > > > > > > --- a/mm/kasan/common.c
+> > > > > > > +++ b/mm/kasan/common.c
+> > > > > > > @@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
+> > > > > > >  #undef memset
+> > > > > > >  void *memset(void *addr, int c, size_t len)
+> > > > > > >  {
+> > > > > > > -       check_memory_region((unsigned long)addr, len, true, _RET_IP_);
+> > > > > > > +       if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
+> > > > > > > +               return NULL;
+> > > > > > >
+> > > > > > >         return __memset(addr, c, len);
+> > > > > > >  }
+> > > > > > > @@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
+> > > > > > >  #undef memmove
+> > > > > > >  void *memmove(void *dest, const void *src, size_t len)
+> > > > > > >  {
+> > > > > > > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> > > > > > > -       check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> > > > > > > +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
+> > > > > > > +       !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
+> > > > > > > +               return NULL;
+> > > > > > >
+> > > > > > >         return __memmove(dest, src, len);
+> > > > > > >  }
+> > > > > > > @@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t
+> > > > > > > len)
+> > > > > > >  #undef memcpy
+> > > > > > >  void *memcpy(void *dest, const void *src, size_t len)
+> > > > > > >  {
+> > > > > > > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> > > > > > > -       check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> > > > > > > +       if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
+> > > > > > > +       !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
+> > > > > > > +               return NULL;
+> > > > > > >
+> > > > > > >         return __memcpy(dest, src, len);
+> > > > > > >  }
+> > > > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > > > > > > index 616f9dd82d12..02148a317d27 100644
+> > > > > > > --- a/mm/kasan/generic.c
+> > > > > > > +++ b/mm/kasan/generic.c
+> > > > > > > @@ -173,6 +173,11 @@ static __always_inline bool
+> > > > > > > check_memory_region_inline(unsigned long addr,
+> > > > > > >         if (unlikely(size == 0))
+> > > > > > >                 return true;
+> > > > > > >
+> > > > > > > +       if (unlikely((long)size < 0)) {
+> > > > > > > +               kasan_report(addr, size, write, ret_ip);
+> > > > > > > +               return false;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > >         if (unlikely((void *)addr <
+> > > > > > >                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
+> > > > > > >                 kasan_report(addr, size, write, ret_ip);
+> > > > > > > diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
+> > > > > > > index 36c645939bc9..ed0eb94cb811 100644
+> > > > > > > --- a/mm/kasan/generic_report.c
+> > > > > > > +++ b/mm/kasan/generic_report.c
+> > > > > > > @@ -107,6 +107,18 @@ static const char *get_wild_bug_type(struct
+> > > > > > > kasan_access_info *info)
+> > > > > > >
+> > > > > > >  const char *get_bug_type(struct kasan_access_info *info)
+> > > > > > >  {
+> > > > > > > +       /*
+> > > > > > > +        * If access_size is negative numbers, then it has two reasons
+> > > > > > > +        * to be defined as out-of-bounds bug type.
+> > > > > > > +        * 1) Casting negative numbers to size_t would indeed turn up as
+> > > > > > > +        * a 'large' size_t and its value will be larger than ULONG_MAX/2,
+> > > > > > > +        * so that this can qualify as out-of-bounds.
+> > > > > > > +        * 2) Don't generate new bug type in order to prevent duplicate
+> > > > > > > reports
+> > > > > > > +        * by some systems, e.g. syzbot.
+> > > > > > > +        */
+> > > > > > > +       if ((long)info->access_size < 0)
+> > > > > > > +               return "out-of-bounds";
+> > > > > >
+> > > > > > "out-of-bounds" is the _least_ frequent KASAN bug type. It won't
+> > > > > > prevent duplicates. "heap-out-of-bounds" is the frequent one.
+> > > > >
+> > > > >
+> > > > >     /*
+> > > > >      * If access_size is negative numbers, then it has two reasons
+> > > > >      * to be defined as out-of-bounds bug type.
+> > > > >      * 1) Casting negative numbers to size_t would indeed turn up as
+> > > > >      * a  "large" size_t and its value will be larger than ULONG_MAX/2,
+> > > > >      *    so that this can qualify as out-of-bounds.
+> > > > >      * 2) Don't generate new bug type in order to prevent duplicate
+> > > > > reports
+> > > > >      *    by some systems, e.g. syzbot. "out-of-bounds" is the _least_
+> > > > > frequent KASAN bug type.
+> > > > >      *    It won't prevent duplicates. "heap-out-of-bounds" is the
+> > > > > frequent one.
+> > > > >      */
+> > > > >
+> > > > > We directly add it into the comment.
+> > > >
+> > > >
+> > > > OK, let's start from the beginning: why do you return "out-of-bounds" here?
+> > > >
+> > > Uh, comment 1 and 2 should explain it. :)
+> > 
+> > The comment says it will cause duplicate reports. It does not explain
+> > why you want syzbot to produce duplicate reports and spam kernel
+> > developers... So why do you want that?
+> > 
+> We don't generate new bug type in order to prevent duplicate by some
+> systems, e.g. syzbot. Is it right? If yes, then it should not have
+> duplicate report.
 > 
-> You're absolutely right.
-> 
->>
->>>
->>> This might solve the race condition you saw with ffmpeg.
->>
->> This actually doesn't change anything. ffmpeg currently queues only one job and 
->> then waits until it's executed. In this case it actually doesn't matter if 
->> "last" or "next" variant is used.
-> 
-> Can you debug this a bit further? I don't want to merge this unless we know what's
-> going wrong with ffmpeg.
-> 
-> I suspect it is a race condition. I'll reply to patch 6/6 with more info.
+Sorry, because we don't generate new bug type. it should be duplicate
+report(only one report which may be oob or size invlid),
+the duplicate report goal is that invalid size is oob issue, too.
 
-I've decided to make a v3 of this series. There are major locking issues with this
-and this will require a bit of rework.
 
-Regards,
+I would not introduce a new bug type. 
+These are parsed and used by some systems, e.g. syzbot. If size is 
+user-controllable, then a new bug type for this will mean 2 bug 
+reports. 
+> > > > > > >         if (addr_has_shadow(info->access_addr))
+> > > > > > >                 return get_shadow_bug_type(info);
+> > > > > > >         return get_wild_bug_type(info);
+> > > > > > > diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
+> > > > > > > index 0e987c9ca052..b829535a3ad7 100644
+> > > > > > > --- a/mm/kasan/tags.c
+> > > > > > > +++ b/mm/kasan/tags.c
+> > > > > > > @@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t
+> > > > > > > size, bool write,
+> > > > > > >         if (unlikely(size == 0))
+> > > > > > >                 return true;
+> > > > > > >
+> > > > > > > +       if (unlikely((long)size < 0)) {
+> > > > > > > +               kasan_report(addr, size, write, ret_ip);
+> > > > > > > +               return false;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > >         tag = get_tag((const void *)addr);
+> > > > > > >
+> > > > > > >         /*
+> > > > > > > diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
+> > > > > > > index 969ae08f59d7..012fbe3a793f 100644
+> > > > > > > --- a/mm/kasan/tags_report.c
+> > > > > > > +++ b/mm/kasan/tags_report.c
+> > > > > > > @@ -36,6 +36,18 @@
+> > > > > > >
+> > > > > > >  const char *get_bug_type(struct kasan_access_info *info)
+> > > > > > >  {
+> > > > > > > +       /*
+> > > > > > > +        * If access_size is negative numbers, then it has two reasons
+> > > > > > > +        * to be defined as out-of-bounds bug type.
+> > > > > > > +        * 1) Casting negative numbers to size_t would indeed turn up as
+> > > > > > > +        * a 'large' size_t and its value will be larger than ULONG_MAX/2,
+> > > > > > > +        * so that this can qualify as out-of-bounds.
+> > > > > > > +        * 2) Don't generate new bug type in order to prevent duplicate
+> > > > > > > reports
+> > > > > > > +        * by some systems, e.g. syzbot.
+> > > > > > > +        */
+> > > > > > > +       if ((long)info->access_size < 0)
+> > > > > > > +               return "out-of-bounds";
+> > > > > > > +
+> > > > > > >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> > > > > > >         struct kasan_alloc_meta *alloc_meta;
+> > > > > > >         struct kmem_cache *cache;
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > commit fb5cf7bd16e939d1feef229af0211a8616c9ea03
+> > > > > > > Author: Walter-zh Wu <walter-zh.wu@mediatek.com>
+> > > > > > > Date:   Fri Oct 4 18:32:03 2019 +0800
+> > > > > > >
+> > > > > > >     kasan: add test for invalid size in memmove
+> > > > > > >
+> > > > > > >     Test size is negative vaule in memmove in order to verify
+> > > > > > >     if it correctly get KASAN report.
+> > > > > > >
+> > > > > > >     Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > > > >
+> > > > > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > > > > > > index 49cc4d570a40..06942cf585cc 100644
+> > > > > > > --- a/lib/test_kasan.c
+> > > > > > > +++ b/lib/test_kasan.c
+> > > > > > > @@ -283,6 +283,23 @@ static noinline void __init
+> > > > > > > kmalloc_oob_in_memset(void)
+> > > > > > >         kfree(ptr);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static noinline void __init kmalloc_memmove_invalid_size(void)
+> > > > > > > +{
+> > > > > > > +       char *ptr;
+> > > > > > > +       size_t size = 64;
+> > > > > > > +
+> > > > > > > +       pr_info("invalid size in memmove\n");
+> > > > > > > +       ptr = kmalloc(size, GFP_KERNEL);
+> > > > > > > +       if (!ptr) {
+> > > > > > > +               pr_err("Allocation failed\n");
+> > > > > > > +               return;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       memset((char *)ptr, 0, 64);
+> > > > > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
+> > > > > > > +       kfree(ptr);
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static noinline void __init kmalloc_uaf(void)
+> > > > > > >  {
+> > > > > > >         char *ptr;
+> > > > > > > @@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
+> > > > > > >         kmalloc_oob_memset_4();
+> > > > > > >         kmalloc_oob_memset_8();
+> > > > > > >         kmalloc_oob_memset_16();
+> > > > > > > +       kmalloc_memmove_invalid_size();
+> > > > > > >         kmalloc_uaf();
+> > > > > > >         kmalloc_uaf_memset();
+> > > > > > >         kmalloc_uaf2();
+> 
 
-	Hans
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>
->> Best regards,
->> Jernej
->>
->>>
->>> Regards,
->>>
->>> 	Hans
->>>
->>>> +
->>>> +	if (out_vb)
->>>> +		out_vb->flags &= ~V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
->>>> +	else if (cap_vb && cap_vb->is_held)
->>>> +		v4l2_m2m_buf_done(cap_vb, VB2_BUF_STATE_DONE);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_stateless_decoder_cmd);
->>>> +
->>>>
->>>>  /*
->>>>  
->>>>   * v4l2_file_operations helpers. It is assumed here same lock is used
->>>>   * for the output and the capture buffer queue.
->>>>
->>>> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
->>>> index c9fa96c8eed1..8ae2f56c7fa3 100644
->>>> --- a/include/media/v4l2-mem2mem.h
->>>> +++ b/include/media/v4l2-mem2mem.h
->>>> @@ -714,6 +714,10 @@ int v4l2_m2m_ioctl_try_encoder_cmd(struct file *file,
->>>> void *fh,> 
->>>>  				   struct v4l2_encoder_cmd *ec);
->>>>  
->>>>  int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
->>>>  
->>>>  				   struct v4l2_decoder_cmd *dc);
->>>>
->>>> +int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
->>>> +					     struct 
->> v4l2_decoder_cmd *dc);
->>>> +int v4l2_m2m_ioctl_stateless_decoder_cmd(struct file *file, void *priv,
->>>> +					 struct 
->> v4l2_decoder_cmd *dc);
->>>>
->>>>  int v4l2_m2m_fop_mmap(struct file *file, struct vm_area_struct *vma);
->>>>  __poll_t v4l2_m2m_fop_poll(struct file *file, poll_table *wait);
->>
->>
->>
->>
-> 
 
