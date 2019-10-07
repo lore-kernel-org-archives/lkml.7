@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732C7C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE55ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5184F206C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B29D218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 14:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfJGOvW convert rfc822-to-8bit (ORCPT
+        id S1729090AbfJGOvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 10:51:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44397 "EHLO
+        Mon, 7 Oct 2019 10:51:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44393 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbfJGOte (ORCPT
+        with ESMTP id S1728459AbfJGOte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Oct 2019 10:49:34 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iHUKH-000646-Lo; Mon, 07 Oct 2019 16:49:29 +0200
+        id 1iHUJx-0005pO-UU; Mon, 07 Oct 2019 16:49:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 75F0B1C0DD5;
-        Mon,  7 Oct 2019 16:49:17 +0200 (CEST)
-Date:   Mon, 07 Oct 2019 14:49:17 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 72A151C032F;
+        Mon,  7 Oct 2019 16:49:09 +0200 (CEST)
+Date:   Mon, 07 Oct 2019 14:49:09 -0000
+From:   "tip-bot2 for Dave Young" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers uapi: Sync asm-generic/mman-common.h
- with the kernel
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Minchan Kim <minchan@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Subject: [tip: efi/urgent] efi/x86: Do not clean dummy variable in kexec path
+Cc:     Dave Young <dyoung@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-n40y6c4sa49p29q6sl8w3ufx@git.kernel.org>
-References: <tip-n40y6c4sa49p29q6sl8w3ufx@git.kernel.org>
+In-Reply-To: <20191002165904.8819-8-ard.biesheuvel@linaro.org>
+References: <20191002165904.8819-8-ard.biesheuvel@linaro.org>
 MIME-Version: 1.0
-Message-ID: <157045975738.9978.17486571735826931174.tip-bot2@tip-bot2>
+Message-ID: <157045974933.9978.15804393838159237805.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -61,87 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the efi/urgent branch of tip:
 
-Commit-ID:     b1ba55cf1cfb9f3e0e00d743534684a25bf66d28
-Gitweb:        https://git.kernel.org/tip/b1ba55cf1cfb9f3e0e00d743534684a25bf66d28
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Fri, 27 Sep 2019 11:30:30 -03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 30 Sep 2019 17:28:44 -03:00
+Commit-ID:     2ecb7402cfc7f22764e7bbc80790e66eadb20560
+Gitweb:        https://git.kernel.org/tip/2ecb7402cfc7f22764e7bbc80790e66eadb20560
+Author:        Dave Young <dyoung@redhat.com>
+AuthorDate:    Wed, 02 Oct 2019 18:59:04 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 07 Oct 2019 15:24:36 +02:00
 
-tools headers uapi: Sync asm-generic/mman-common.h with the kernel
+efi/x86: Do not clean dummy variable in kexec path
 
-To pick the changes from:
+kexec reboot fails randomly in UEFI based KVM guest.  The firmware
+just resets while calling efi_delete_dummy_variable();  Unfortunately
+I don't know how to debug the firmware, it is also possible a potential
+problem on real hardware as well although nobody reproduced it.
 
-  1a4e58cce84e ("mm: introduce MADV_PAGEOUT")
-  9c276cc65a58 ("mm: introduce MADV_COLD")
+The intention of the efi_delete_dummy_variable is to trigger garbage collection
+when entering virtual mode.  But SetVirtualAddressMap can only run once
+for each physical reboot, thus kexec_enter_virtual_mode() is not necessarily
+a good place to clean a dummy object.
 
-That result in these changes in the tools:
+Drop the efi_delete_dummy_variable so that kexec reboot can work.
 
-  $ tools/perf/trace/beauty/madvise_behavior.sh > before
-  $ cp include/uapi/asm-generic/mman-common.h tools/include/uapi/asm-generic/mman-common.h
-  $ git diff
-  diff --git a/tools/include/uapi/asm-generic/mman-common.h b/tools/include/uapi/asm-generic/mman-common.h
-  index 63b1f506ea67..c160a5354eb6 100644
-  --- a/tools/include/uapi/asm-generic/mman-common.h
-  +++ b/tools/include/uapi/asm-generic/mman-common.h
-  @@ -67,6 +67,9 @@
-   #define MADV_WIPEONFORK 18             /* Zero memory on fork, child only */
-   #define MADV_KEEPONFORK 19             /* Undo MADV_WIPEONFORK */
-
-  +#define MADV_COLD      20              /* deactivate these pages */
-  +#define MADV_PAGEOUT   21              /* reclaim these pages */
-  +
-   /* compatibility flags */
-   #define MAP_FILE       0
-
-  $ tools/perf/trace/beauty/madvise_behavior.sh > after
-  $ diff -u before after
-  --- before	2019-09-27 11:29:43.346320100 -0300
-  +++ after	2019-09-27 11:30:03.838570439 -0300
-  @@ -16,6 +16,8 @@
-   	[17] = "DODUMP",
-   	[18] = "WIPEONFORK",
-   	[19] = "KEEPONFORK",
-  +	[20] = "COLD",
-  +	[21] = "PAGEOUT",
-   	[100] = "HWPOISON",
-   	[101] = "SOFT_OFFLINE",
-   };
-  $
-
-I.e. now when madvise gets those behaviours as args, it will be able to
-translate from the number to a human readable string.
-
-This addresses the following perf build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman-common.h' differs from latest version at 'include/uapi/asm-generic/mman-common.h'
-  diff -u tools/include/uapi/asm-generic/mman-common.h include/uapi/asm-generic/mman-common.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-n40y6c4sa49p29q6sl8w3ufx@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Acked-by: Matthew Garrett <mjg59@google.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Talbert <swt@techie.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191002165904.8819-8-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/include/uapi/asm-generic/mman-common.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/platform/efi/efi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/tools/include/uapi/asm-generic/mman-common.h b/tools/include/uapi/asm-generic/mman-common.h
-index 63b1f50..c160a53 100644
---- a/tools/include/uapi/asm-generic/mman-common.h
-+++ b/tools/include/uapi/asm-generic/mman-common.h
-@@ -67,6 +67,9 @@
- #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
- #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index c202e1b..425e025 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -917,9 +917,6 @@ static void __init kexec_enter_virtual_mode(void)
  
-+#define MADV_COLD	20		/* deactivate these pages */
-+#define MADV_PAGEOUT	21		/* reclaim these pages */
-+
- /* compatibility flags */
- #define MAP_FILE	0
+ 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
+ 		runtime_code_page_mkexec();
+-
+-	/* clean DUMMY object */
+-	efi_delete_dummy_variable();
+ #endif
+ }
  
