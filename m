@@ -2,260 +2,134 @@ Return-Path: <SRS0=z8wE=YA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4370C47404
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D73C47404
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F242070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1424B206BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Oct 2019 16:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="FJqwZjxV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="m4QDHaY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfJGQor (ORCPT
+        id S1729082AbfJGQot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Oct 2019 12:44:47 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:41530 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfJGQoo (ORCPT
+        Mon, 7 Oct 2019 12:44:49 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34943 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbfJGQos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:44:44 -0400
-Received: by mail-yb1-f195.google.com with SMTP id 206so4885840ybc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:44:42 -0700 (PDT)
+        Mon, 7 Oct 2019 12:44:48 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w6so9771637lfl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Oct 2019 09:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mS7sB/58XsSxkboHmbK13TsSVS2ybGG0SGJkhPLzIRA=;
-        b=FJqwZjxVOe6UsLTNkV6cNOcVkQDkC4KclLXXo4pRQPaTooIORzEaZBlqgEJeBPOOD3
-         IJQUhOl2gpWpgG1j1CKSDYGLzeqAVgiFW2TicYYsu+Q1pQl+4rWLpGMHSz+gmo8/sdef
-         4xi+IBkorshJTxmB9ad2V6X1MF6kmcgw7GD5sR4YoOZv9/m5a1pYaTFZgtIn+WkJUzB6
-         9LJed7khMsczg24yP8Qh6TOa8wiJN2M8PC9lyanJtYECU2f8MvPAwAe983h359YDoDZ3
-         K2zL4QAkwA3zmBcxhurUBINhBfwbLvkPULM+XvXvbImd6H3qCjdwP8yYXR+0QdCI9Zw/
-         gWKw==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uGS436HRux8Qi7+bTLo6awpzRjQ2y9zvJJmtOyjTy/k=;
+        b=m4QDHaY9wDH4anvI3npqUIjOWHwZwVW9tFDgDtWfAkgb2tRUbHrib/Hfh3GsBfV6xI
+         8XGs3WyeKiX7I+C5+2+8Cimoy7SwINY2CQjJNAbQT7A/B+otoNHjyn8YoRdPxdCBvgTy
+         Rc1Zgal0G06EAMaNutfcGukP1UXn6JsZRqi8a9ScvO3UL7xH/8gF/CznKXx0cY0ZFwyF
+         C6tkrvLh+Oqk5Rxl97h1DU/XhFIBKYDe6ef+HKAwzSeDBnmi7goNkdvGrFFaSCzPFs1P
+         bP6Xhq+Yi05Kx9v4P6tQgq+McVUpcC+AN7y7WY0Vt/4IvEleG80GW86mPcOeZNvYBRMJ
+         Hq2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mS7sB/58XsSxkboHmbK13TsSVS2ybGG0SGJkhPLzIRA=;
-        b=eIs1RTYSgv5T/Uddw5q5YKBRKYy+Z2pd2DoQlzqDHJFJ1/kryYhhCOgQkr8S9cSRId
-         ShHCsPXKCS4ft7iY/SoqqQl1hmQQyUFBQz7FfEicK32r07IhaNQNm2Xc9Jq7CWpQWGis
-         e1/ZgFU69M7s+PRoEURNWt6Ggj4TOI0TqTayW35ohpfAZx20eTDFIrwXTk3zN1hhPnCV
-         otJWYzCMppncZzogbvzahWXztA9CuJmh/EV+ktmGCZkZ0KKNMv3lO34lLznmcNoWulgG
-         dBPOUj1LckwrVapR84zsadILLbtrs3cdd03oLRc6uPeLKrLFrF7d6gnLRl+OT/TznQ9h
-         IL1Q==
-X-Gm-Message-State: APjAAAWNg+1ZuTNbgCsZ3HCmIvga+ePe2tZvIGFARxWHykYoh9BneKy2
-        7wsgHsjcacCV/nOuzR5O++nzyQ==
-X-Google-Smtp-Source: APXvYqwPFh/oPWw5D1v70gKt9HcmvrDgbglMJChBEx8hH0KZ84ySsjUBo3BnYKMDcqeaE3bgeD+pGA==
-X-Received: by 2002:a25:8107:: with SMTP id o7mr11026920ybk.292.1570466682206;
-        Mon, 07 Oct 2019 09:44:42 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id p204sm4078445ywp.110.2019.10.07.09.44.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 09:44:41 -0700 (PDT)
-Date:   Mon, 7 Oct 2019 12:44:41 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     "dbasehore ." <dbasehore@chromium.org>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>, Sean Paul <sean@poorly.run>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, nd <nd@arm.com>
-Subject: Re: [v8,2/4] drm/panel: set display info in panel attach
-Message-ID: <20191007164441.GB126146@art_vandelay>
-References: <20190925225833.7310-3-dbasehore@chromium.org>
- <20190929052307.GA28304@jamwan02-TSP300>
- <CAGAzgspEA0mcEHwgxyWWh3Gn-iC+a21g5GUrhsRJrTHQ_OAYqQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uGS436HRux8Qi7+bTLo6awpzRjQ2y9zvJJmtOyjTy/k=;
+        b=fyX28NCaaDAzUbCOCCsIDiplaBcuKGiXm7URRP/0MijPcFKbQOOz5KnFCwRTZVEmK4
+         3Aii97Ylkxwr4fwK478orEXxyTMXBklSYZHf2XLNDF9A+sX5hTW8HfFFIWUPi5AC/q0Z
+         owIdpobio8KqyahQDEXAVd0DfMRXRcfIDy6iFkVA+KJ64mzmYpkSlCj0LBndCglqPH9r
+         iWJ+Uxr/3d3lOjlWwG/DEBLSeNlKF7Ih1QYjfZ+SQDGtqSCZOyjpf1rlJH/WfLYb5xap
+         pi9cBuF1xyXTVsx68J49cedIBTpx6KN4keE/Vq72UUmsEjpcSIFF2CVvp+uWBVoicas0
+         aIBw==
+X-Gm-Message-State: APjAAAWt5R5V28WXbzMFS5j8Gm8eM200ZF8GZ41MNezXmFzTUd0cRAiX
+        WRPuLm/FWyFby1LP5HFUVfv9WFMA5/+OZSK285v+zw==
+X-Google-Smtp-Source: APXvYqyD8xebRWeDAhv/SXKGNKe39rkLCr9IKa58cOL5jGUyw5j1ilBYyphmOtOiQeF6Sb9unlTDSdpPR5KU2T4pSbc=
+X-Received: by 2002:a19:8a0b:: with SMTP id m11mr17305439lfd.4.1570466685517;
+ Mon, 07 Oct 2019 09:44:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGAzgspEA0mcEHwgxyWWh3Gn-iC+a21g5GUrhsRJrTHQ_OAYqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1569885755-10947-1-git-send-email-alan.mikhak@sifive.com> <20191007061324.GB17978@infradead.org>
+In-Reply-To: <20191007061324.GB17978@infradead.org>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Mon, 7 Oct 2019 09:44:33 -0700
+Message-ID: <CABEDWGyovfKuXsNpfhsSCJ0sryg3EpAsaqRTHxBGC9LFM+=dww@mail.gmail.com>
+Subject: Re: [PATCH] scatterlist: Validate page before calling PageSlab()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+        alexios.zavras@intel.com, ming.lei@redhat.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        Jason Gunthorpe <jgg@ziepe.ca>, christophe.leroy@c-s.fr,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 04:14:54PM -0700, dbasehore . wrote:
-> On Sat, Sep 28, 2019 at 10:23 PM james qian wang (Arm Technology
-> China) <james.qian.wang@arm.com> wrote:
+On Sun, Oct 6, 2019 at 11:13 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Mon, Sep 30, 2019 at 04:22:35PM -0700, Alan Mikhak wrote:
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
 > >
-> > On Wed, Sep 25, 2019 at 03:58:31PM -0700, Derek Basehore wrote:
-> > > Devicetree systems can set panel orientation via a panel binding, but
-> > > there's no way, as is, to propagate this setting to the connector,
-> > > where the property need to be added.
-> > > To address this, this patch sets orientation, as well as other fixed
-> > > values for the panel, in the drm_panel_attach function. These values
-> > > are stored from probe in the drm_panel struct.
-> > >
-> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > > ---
-> > >  drivers/gpu/drm/drm_panel.c | 28 +++++++++++++++++++++
-> > >  include/drm/drm_panel.h     | 50 +++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 78 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > > index 0909b53b74e6..1cd2b56c9fe6 100644
-> > > --- a/drivers/gpu/drm/drm_panel.c
-> > > +++ b/drivers/gpu/drm/drm_panel.c
-> > > @@ -104,11 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
-> > >   */
-> > >  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
-> > >  {
-> > > +     struct drm_display_info *info;
-> > > +
-> > >       if (panel->connector)
-> > >               return -EBUSY;
-> > >
-> > >       panel->connector = connector;
-> > >       panel->drm = connector->dev;
-> > > +     info = &connector->display_info;
-> > > +     info->width_mm = panel->width_mm;
-> > > +     info->height_mm = panel->height_mm;
-> > > +     info->bpc = panel->bpc;
-> > > +     info->panel_orientation = panel->orientation;
-> > > +     info->bus_flags = panel->bus_flags;
-> > > +     if (panel->bus_formats)
-> > > +             drm_display_info_set_bus_formats(&connector->display_info,
-> > > +                                              panel->bus_formats,
-> > > +                                              panel->num_bus_formats);
-> > >
-> > >       return 0;
-> > >  }
-> > > @@ -126,6 +138,22 @@ EXPORT_SYMBOL(drm_panel_attach);
-> > >   */
-> > >  void drm_panel_detach(struct drm_panel *panel)
-> > >  {
-> > > +     struct drm_display_info *info;
-> > > +
-> > > +     if (!panel->connector)
-> > > +             goto out;
-> > > +
-> > > +     info = &panel->connector->display_info;
-> > > +     info->width_mm = 0;
-> > > +     info->height_mm = 0;
-> > > +     info->bpc = 0;
-> > > +     info->panel_orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-> > > +     info->bus_flags = 0;
-> > > +     kfree(info->bus_formats);
-> > > +     info->bus_formats = NULL;
-> > > +     info->num_bus_formats = 0;
-> > > +
-> > > +out:
-> > >       panel->connector = NULL;
-> > >       panel->drm = NULL;
-> > >  }
-> > > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > > index d16158deacdc..f3587a54b8ac 100644
-> > > --- a/include/drm/drm_panel.h
-> > > +++ b/include/drm/drm_panel.h
-> > > @@ -141,6 +141,56 @@ struct drm_panel {
-> > >        */
-> > >       const struct drm_panel_funcs *funcs;
-> > >
+> > Modify sg_miter_stop() to validate the page pointer
+> > before calling PageSlab(). This check prevents a crash
+> > that will occur if PageSlab() gets called with a page
+> > pointer that is not backed by page struct.
 > >
-> > All these new added members seems dupliated with drm_display_info,
-> > So I think, can we add a new drm_plane_funcs func:
-> >
-> > int (*set_display_info)(struct drm_panel *panel,
-> >                         struct drm_display_info *info);
-> 
-> I don't disagree personally, since I originally wrote it this way, but
-> 2 maintainers, Daniel Vetter and Thierry Reding, requested that it be
-> changed. Unless that decision is reversed, I won't be changing this.
-> 
+> > A virtual address obtained from ioremap() for a physical
+> > address in PCI address space can be assigned to a
+> > scatterlist segment using the public scatterlist API
+> > as in the following example:
+>
+> As Jason pointed out that is not a valid use of scatterlist.  What
+> are you trying to do here at a higher level?
 
-Reading back the feedback on v1, I don't think anyone said they were against
-storing a drm_display_info struct in drm_panel (no one really weighed in on
-it one way or another). IMO duplicating a bunch of fields feels pretty icky.
+I am developing a PCI endpoint framework function driver to bring-up
+an NVMe device over PCIe. The NVMe endpoint function driver connects
+to an x86_64 or other root-complex host over PCIe. Internally, the
+NVMe endpoint function driver connects to the unmodified Linux NVMe
+target driver running on the embedded CPU. The Linux NVMe target
+operates an NVMe namespace as determined for the application.
+Currently, the Linux NVMe target code operates a file-based namespace
+which is backed by the loop device. However, the application can be
+expanded to operate on non-volatile storage such as flash or
+battery-backed RAM. Currently, I am able to mount such an NVMe
+namespace from the x86_64 Debian Linux host across PCIe using the
+Disks App and perform Partition Benchmarking. I am also able to save
+and load files, such as trace files for debugging the NVMe endpoint
+with KernelShark, on the NVMe namespace partition nvme0n1p1.
 
-I think most fields in drm_display_info have pretty reasonable defaults, so I'd
-recommend just storing a copy in drm_panel. As Thierry suggests, we can
-populate the dt parts in probe (orientation) and then copy over all or a subset
-of the struct to connector on attach.
+My goal is to not modify the Linux NVMe target code at all. The NVMe
+endpoint function driver currently does the work that is required. It
+maps NVMe PRPs and PRP Lists from the host, formats a scatterlist that
+NVMe target driver can consume, and executes the NVMe command with the
+scatterlist on the NVMe target controller on behalf of the host. The
+NVMe target controller can therefore read and write directly to host
+buffers using the scatterlist as it does if the scatterlist had
+arrived over the NVMe fabric.
 
-Sean
+In my current platform, there are no page struct backing for the PCIe
+memory address space. Nevertheless, I am able to feed the virtual
+addresses I obtain from ioremap() to the scatterlist as shown in my
+example earlier. The scatterlist code has no problem traversing the
+scatterlist that is formed from such addresses that were obtained from
+ioremap(). The only place the scatterlist code prevents such usage is
+in sg_miter_stop() when it calls PageSlab() to decide if it should
+flush the page. I added a check to see if the page is valid and not
+call PageSlab() if it is not a page struct backed page. That is all I
+had to do to be able to pass scatterlists to the NVMe target.
 
-> >
-> > Then in drm_panel_attach(), via this interface the specific panel
-> > driver can directly set connector->display_info. like
-> >
-> >    ...
-> >    if (panel->funcs && panel->funcs->set_display_info)
-> >                 panel->funcs->unprepare(panel, connector->display_info);
-> >    ...
-> >
-> > Thanks
-> > James
-> >
-> > > +     /**
-> > > +      * @width_mm:
-> > > +      *
-> > > +      * Physical width in mm.
-> > > +      */
-> > > +     unsigned int width_mm;
-> > > +
-> > > +     /**
-> > > +      * @height_mm:
-> > > +      *
-> > > +      * Physical height in mm.
-> > > +      */
-> > > +     unsigned int height_mm;
-> > > +
-> > > +     /**
-> > > +      * @bpc:
-> > > +      *
-> > > +      * Maximum bits per color channel. Used by HDMI and DP outputs.
-> > > +      */
-> > > +     unsigned int bpc;
-> > > +
-> > > +     /**
-> > > +      * @orientation
-> > > +      *
-> > > +      * Installation orientation of the panel with respect to the chassis.
-> > > +      */
-> > > +     int orientation;
-> > > +
-> > > +     /**
-> > > +      * @bus_formats
-> > > +      *
-> > > +      * Pixel data format on the wire.
-> > > +      */
-> > > +     const u32 *bus_formats;
-> > > +
-> > > +     /**
-> > > +      * @num_bus_formats:
-> > > +      *
-> > > +      * Number of elements pointed to by @bus_formats
-> > > +      */
-> > > +     unsigned int num_bus_formats;
-> > > +
-> > > +     /**
-> > > +      * @bus_flags:
-> > > +      *
-> > > +      * Additional information (like pixel signal polarity) for the pixel
-> > > +      * data on the bus.
-> > > +      */
-> > > +     u32 bus_flags;
-> > > +
-> > >       /**
-> > >        * @list:
-> > >        *
-> 
-> Thanks for the review
+Given that the PCIe memory address space is large, the cost of adding
+page structs for that region is substantial enough for me to ask that
+it be considered here to modify scatterlist code to support such
+memory pointers that were obtained from ioremap(). If not acceptable,
+the solution would be to pay to price and add page structs for the
+PCIe memory address space.
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Regards,
+Alan
